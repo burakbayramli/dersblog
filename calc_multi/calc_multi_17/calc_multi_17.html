@@ -1,0 +1,196 @@
+<h1>Ders 17</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ders 17
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Önceki derste </p>
+<p>$$ \int \int (1-x^2-y^2) \mathrm{d} A $$</p>
+<p>$$ x^2+y^2 \le 1 $$</p>
+<p>$$ x,y \ge 0 $$</p>
+<p>entegralini hesapladık, fakat kullandığımız yöntem biraz karmaşıklığa yol
+açtı. Daha iyi bir yöntem kutupsal forma geçmektir. </p>
+<p>Hatırlarsak $x,y$ kordinat sisteminde çift entegral için entegrasyon alanını
+yatay, dikey şekilde parçalara ayırmıştık, $dA = \mathrm{d} y \mathrm{d} x$ haline
+gelmişti. Kutupsal formda</p>
+<p>$$ \int \int  ... \mathrm{d} r \mathrm{d} \theta$$</p>
+<p>şeklinde bir form olur, önce $r$ üzerinden entegrasyon en kolayı. Bu
+demektir ki $\theta$'yi sabitleriz, ve $r$ üzerinde hareket ederiz. </p>
+<p><img alt="" src="17_1.png" /></p>
+<p>Birim disk örneğinde bu hareket basit, $r=0$'dan başlanır, ve 1 değerine
+gelinceye kadar hareket edilir. $\theta$ için 0'dan başlanır, üstteki alana
+göre, $\pi/2$'ya gelinceye kadar hareket edilir. Sınırlar şöyle olur:</p>
+<p>$$ \int_0^{\pi/2} \int_0^1  ... \mathrm{d} r \mathrm{d} \theta$$</p>
+<p>Fakat, dikkat, bu önemli bir nokta, $dA$ büyüklüğü $\mathrm{d} r \mathrm{d} \theta$'ya eşit
+<em>değildir</em>.</p>
+<p><img alt="" src="17_2.png" /></p>
+<p>Üstteki resimdeki içi karalanmış ufak dikdörtgeni düşünelim, dikdörtgenin
+kenarlarından biri biraz eğimlidir (çemberin parçası olduğu için) fakat
+kenarlar küçüldükçe bu ufak alan dikdörtgen olarak görülebilir. Neyse,
+kenarların biri $\Delta r$ (bu kolay), diğeri? Öteki kenar $\Delta \theta$
+değil, çünkü o kenar çemberin bir parçası, o zaman $r \ \Delta \theta$.</p>
+<p>Bu demektir ki kenarları sonsuz küçülttüğümüz zamanda bile </p>
+<p>$$ dA = r \mathrm{d} r \mathrm{d} \theta $$</p>
+<p>olacak. Entegral</p>
+<p>$$ \int_0^{\pi/2} \int_0^1  f \mathrm{d} r \mathrm{d} \theta$$</p>
+<p>$$ f =  (1-x^2-y^2)$$</p>
+<p>Kutupsal forma tabii ki mekanik bir şekilde</p>
+<p>$$ x = r\cos\theta $$</p>
+<p>$$ y = r\sin\theta $$</p>
+<p>eşitliklerini alıp $f$ içinde yerlerine koyabiliriz, fakat biraz dikkatli
+bakarsak $-x^2-y^2$ aslında $-(x^2+y^2)$ ve $r^2=x^2+y^2$ olduğuna göre,
+bunu kullanabiliriz</p>
+<p>$$ f =   1-r^2 $$</p>
+<p>Yani</p>
+<p>$$ \int_0^{\pi/2} \int_0^1  1-r^2 \mathrm{d} r \mathrm{d} \theta$$</p>
+<p>$$ \int_0^{\pi/2}  \bigg[ \frac{r^2}{2} - \frac{r^4}{4} \bigg]_0^1 \mathrm{d} \theta$$</p>
+<p>$$
+\int_0^{\pi/2} \frac{1}{4} \mathrm{d} \theta =
+\frac{1}{4} \frac{\pi}{2} = \frac{\pi}{8}
+$$</p>
+<p>Önceki derse göre daha kolay oldu. </p>
+<p>Çift entegraller ne işe yarar? </p>
+<p>Önceki derste çift entegralleri hacim hesaplama bağlamında işledik. Fakat
+hacim hesabı tek uygulama alanları değil, aynen tek değişkenli entegralin
+sadece alan hesaplamada kullanılmadığı gibi. Çift entegralleri
+belli bir bölgedeki fonksiyonları toplama olarak görmek daha iyi [1], belki bu
+fonksiyonun o bölgedeki ortalamasını hesaplamak istiyoruz, vs. Bazı
+kullanımları listeleyelim:</p>
+<p>Uygulamalar </p>
+<p>1) Belli bir bölge $R$'nin alanını hesaplamak. </p>
+<p><img alt="" src="17_3.png" /></p>
+<p>Bazı durumlarda bu hesap tek entegral ile yapılabiliyor, ama çift entegral
+ile daha kolay. Şöyle</p>
+<p>$$ Alan(R) = \int \int_R 1 \mathrm{d} A $$</p>
+<p>Eğer çift entegralleri illa hacim olarak görmek istiyorsak, üstteki hesap
+yüksekliği 1, baz alanı $R$ olan bir "hacmi" hesaplıyor. Hacim = baz alan
+X yükseklik'tir, ama yükseklik 1 olduğu için, üstteki hesap aynı sadece baz
+alanın ne olduğunu hesaplar! Güzel bir cinlik değil mi?</p>
+<p>Ya da, diyelim ki yassı / düz bir objenin kütlesini hesaplamak istiyoruz,
+ve yoğunluk $\delta = \textit{kütle} / \textit{birim alan}$ olarak verilmiş. Her
+ufak parça için kütle</p>
+<p>$$ \Delta m = \delta \cdot \Delta A $$</p>
+<p>Tüm kütleyi üstteki ufak kütleleri toplayarak elde edebiliriz. </p>
+<p>$$ \int \int_R \delta \cdot \mathrm{d} A $$</p>
+<p>Eğer yoğunluk objenin her noktasında aynıysa, $\delta$ değişkenini
+formülden çıkartabiliriz tabii, ama her $x,y$ noktasında değişme durumu var
+ise, üstteki entegral hesabı güzelce yapacaktır.</p>
+<p>2) $R$ bölgesinde $f$'in ortalaması </p>
+<p>Bir ortalama hesabını normalde, mesela belli sayılar için, nasıl
+yapacağımızı biliyoruz. Sayıları alıyoruz, toplamlarını kaç sayı olduğuyla
+bölüyoruz. Benzer şekilde, içinde olduğunuz odanın ortalama sıcaklığını
+hesaplamak istesek bir sürü noktada sıcaklık ölçümü alıp, onları toplayıp
+bölmemiz gerekir. Fakat bu sıcaklık ölçümü için potansiyel olarak sonsuz
+tane ölçüm olabilir. Bu hesabın matematiksel şekli ölçüm fonksiyonunu alan
+üzerinden entegre etmek, sonra alan büyüklüğüyle bölmektir. </p>
+<p>Notasyon</p>
+<p>$$ \textit{f'nin ortalaması} = \bar{f} $$</p>
+<p>$$ \bar{f} = \frac{1}{Alan(R)} \int \int f \mathrm{d} A $$</p>
+<p>2a) Üstteki ortalama birörnek (uniform) bir ortalama, her noktaya
+aynı önemi veriyoruz. Eğer bazı noktalara daha fazla ağırlık vermek
+istersek, ağırlıklı ortalama (weighted average) hesabı yapabiliriz.</p>
+<p>$$ 
+\textit{f'nin ağırlıklı ortalaması} = \frac{1}{\textrm{Kütle}(R)} 
+\int \int_R f \ \delta \mathrm{d} A
+$$</p>
+<p>Ağırlıklı ortalama kütle merkezi (center of mass) hesaplarında ise
+yarar. Belki bir objenin bazı tarafları diğerlerine göre daha ağır, bu
+objenin kütle merkez hesabı bunu hesaba katmalı. </p>
+<p>2 Boyutta kütle merkezi $(\bar{x},\bar{y})$, </p>
+<p>$$  \bar{x}  = \frac{1}{\textrm{Kütle}} \int \int_R x \delta \mathrm{d} A  $$</p>
+<p>$$  \bar{y}  = \frac{1}{\textrm{Kütle}} \int \int_R y \delta \mathrm{d} A  $$</p>
+<p>3) Dönme direnci (moment of intertia): Bu kavram bir objenin dönüşe
+karşı gösterdiği dirençtir, aynen itilmeye karşı direnişin kütle olduğu
+gibi. Bir objeyi ne kadar ileri fırlatabileceğim onun kütlesine bağlıdır,
+onu ne kadar döndürebileceğim dönme direncine bağlıdır. </p>
+<p>DD hesabı için bir eksen tanımlanması gereklidir, çünkü "neyin etrafında
+dönüleceği" ancak bir eksene göre anlamlıdır. Hesap nasıl yapılır? </p>
+<p>Ana fikir kinetik enerjiyi kullanmak. Eğer noktasal bir kütle $m$ hız $v$
+ile hareket ediyorsa, kinetik enerji $1/2 mv^2$. </p>
+<p>İtmek yerine kütleyi bir eksen etrafında $r$ uzaklıkta $\omega$ rotasyonel
+hızda dönecek şekilde hareket ettirirsem,</p>
+<p><img alt="" src="17_4.png" /></p>
+<p>$$ \frac{1}{2}mv^2 = \frac{1}{2}mr^2\omega^2  $$</p>
+<p>Dönme direncinin itilmeyle olan bağlantısı formülde gözüküyor, $m$ itilme
+formülünde $v^2$'in katsayısı. $mr^2$ ise $\omega^2$'nin katsayısı.</p>
+<p>Fakat bu basit bir noktasal kütle için. Daha çetrefil bir objeyi döndürmek
+istiyorsak, bu objenin tüm DD'si objenin içindeki tüm noktasal DD'lerin
+toplamı olacaktır. </p>
+<p>Yoğunluğu $\delta$ olan bir obje için </p>
+<p>$$ \Delta m = \delta \Delta A $$</p>
+<p>DD</p>
+<p>$$ \Delta m r^2 = r^2 \delta \Delta A $$</p>
+<p>Üstteki parçaları bir bölge üzerinden toplarsam, tüm DD'yi bulurum. Nihai
+formül</p>
+<p>$$ I_0 = \int \int_R r^2 \delta \mathrm{d} A $$</p>
+<p><img alt="" src="17_5.png" /></p>
+<p>Rotasyonel kinetik enerji $\frac{1}{2}I_0 \omega^2$</p>
+<p>Peki diğer tür dönme hareketleri? Mesela objeyi $x$ ekseni etrafında da
+döndürebilirdim. </p>
+<p><img alt="" src="17_6.png" /></p>
+<p>Hesap benzer kavramları kullanır, dönme eksenine olan uzaklık $r$
+kullanılır. Üstteki resimde kırmızı noktayı ele alalım, uzaklığı kırmızı
+okla gösteriliyor. Bu uzaklık aslında $|y|$ değil midir? $r^2$ lazım, o
+zaman $y^2$ kullanırız. </p>
+<p>$$ I_x = \int \int y^2 \delta \mathrm{d} A $$</p>
+<p>Örnek</p>
+<p>$a$ yarıçapındaki bir dışkı orijin etrafında döndürmek istiyoruz </p>
+<p><img alt="" src="17_7.png" /></p>
+<p>Yoğunluk birörnek ve $\delta = 1$. Dönme direnci nedir? </p>
+<p>$$ I_0 = \int \int r^2 \mathrm{d} A $$</p>
+<p>$r$ ne? İnsanın içinden hemen $a$ demek gelebilir, ama değil. Unutmayalım,
+"her nokta" için DD hesaplıyoruz, yani disk içindeki her nokta dikkate
+alınmalı, ve bu noktaların hepsi $a$ uzaklığında değiller, uzaklıkları $\le
+a$. </p>
+<p>Kutupsal kordinata geçmek iyi olur mu? Evet. </p>
+<p>$$ = \int_0^{2\pi} \int_0^a r^2 r \mathrm{d} r \mathrm{d}\theta $$</p>
+<p>$$ = 2\pi \frac{a^4}{4} = \frac{\pi a^4}{2} $$</p>
+<p><img alt="" src="17_8.png" /></p>
+<p>Ya orijin yerine üstteki yeşil noktada etrafında döndürmek isteseydim? Hani
+frizbiyi alıp parmağınız etrafında döndürdüğünüzde olduğu gibi. </p>
+<p>Bu hesap için iki seçenek var. Eğer kordinat sistemi olduğu gibi kalırsa,
+işler biraz zor. Ama sistemi değiştirip yeşil noktayı yeni orijin haline
+getirirsek, işler biraz daha kolay. </p>
+<p><img alt="" src="17_9.png" /></p>
+<p>Formül yine aynı</p>
+<p>$$ I_0 = \int \int r^2 r \mathrm{d} r \mathrm{d}\theta $$</p>
+<p>Sınırlar nasıl hesaplanır? </p>
+<p><img alt="" src="17_10.png" /></p>
+<p>[Yeni] orijinden $i\sin$ gönderdiğimizi düşünelim, bu ışınlar çemberden nerede
+dışarı çıkar? Yani işaretli yerin uzunluğu nedir? $2a \cos\theta$. Peki
+$\theta$ sınırları nedir? $-\pi$ ile $\pi$, yani $y$ ekseninin tamamen sağ
+tarafı. "Ama y ekseni üzerindeyken çembere girip çıkmıyoruz" düşüncesi
+akla gelebilir, fakat orada teğet halindeyiz, yani sınırlar doğru. </p>
+<p>$$ I_0 = \int_{-\pi/2}^{\pi/2} \int_0^{2a \cos\theta} r^2 r \mathrm{d} r \mathrm{d}\theta $$</p>
+<p>İç</p>
+<p>$$ = \bigg[ \frac{r^4}{4} \bigg]_{0}^{2a \cos\theta} =
+4a^4 \cos^4\theta
+$$</p>
+<p>Dış</p>
+<p>$$ I_0 = \int_{-\pi/2}^{\pi/2} 4a^4 \cos^4\theta \mathrm{d}\theta $$</p>
+<p>Ders Notları 3B içinde bu formülün çabuk hesabı var. Sonuç</p>
+<p>$$  = \frac{3}{2} \pi a^4 $$</p>
+<p>Yani bir frizbiyi ortasından döndürmek yerine kenar noktası etrafında
+döndürmek 3 kat daha zor. </p>
+<p>Kaynaklar</p>
+<p>[1] Bu konu hakkında ek bölümdeki <em>Entegralleri Nasıl Düşünelim</em>
+yazısının okunması da tavsiye edilir.</p>

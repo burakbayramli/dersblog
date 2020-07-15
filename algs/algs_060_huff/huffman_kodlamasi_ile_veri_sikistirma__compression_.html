@@ -1,0 +1,65 @@
+<h1>Huffman Kodlamasi ile Veri Sıkıştırma (Compression)</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Huffman Kodlamasi ile Veri Sıkıştırma (Compression)
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>[1, sf. 159]</p>
+<pre><code class="python">from heapq import heapify, heappush, heappop
+from itertools import count
+def huffman(seq, frq):
+    num = count()
+    trees = list(zip(frq, num, seq))
+    heapify(trees)
+    while len(trees) &gt; 1:
+       fa, _, a = heappop(trees)
+       fb, _, b = heappop(trees)
+       n = next(num)
+       heappush(trees, (fa+fb, n, [a, b]))
+    return trees[0][-1]
+
+seq = &quot;abcdefghi&quot;
+frq = [4, 5, 6, 9, 11, 12, 15, 16, 20]
+tree = huffman(seq, frq)
+print tree
+</code></pre>
+
+<pre><code>[['i', [['a', 'b'], 'e']], [['f', 'g'], [['c', 'd'], 'h']]]
+</code></pre>
+
+<pre><code class="python">def codes(tree, prefix=&quot;&quot;):
+    if len(tree) == 1:
+        yield (tree, prefix)                    # A leaf with its code
+        return
+    for bit, child in zip(&quot;01&quot;, tree):          # Left (0) and right (1)
+        for pair in codes(child, prefix + bit): # Get codes recursively
+            yield pair
+
+print list(codes(tree))
+</code></pre>
+
+<pre><code>[('i', '00'), ('a', '0100'), ('b', '0101'), ('e', '011'), ('f', '100'), ('g', '101'), ('c', '1100'), ('d', '1101'), ('h', '111')]
+</code></pre>
+
+<p>[devam edecek]</p>
+<p>Kaynaklar</p>
+<p>[1] Heatland, <em>Python Algorithms</em></p>

@@ -1,0 +1,230 @@
+<h1>Ders 22</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ders 22
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Diyelim ki genel bir vektör alanımız var, ve bu alan muhafazakar değil, biz
+kapalı bir eğri içinde çizgi entegrali hesaplamak istiyoruz, bu entegral
+sıfır olmayacak. Bu hesabı iki metotla yapabiliriz. Ya direk entegral
+hesabı yaparız, ya da Green'in Teoremi adlı bir tekniği kullanırız. </p>
+<p>Green'in Teorisi</p>
+<p>Eğer $C$ eğrisi $R$ alanını tanımlayan kapalı bir eğriyse, bu eğri
+üzerindeki hareket saat yönünün tersi ise, ve elimde eğrinin ve içindeki
+alanın her noktasında tanımlı ve türevi alınabilir bir vektör alanı
+$\vec{F}$ var ise, o zaman </p>
+<p>$$ \oint_C \vec{F} \cdot \mathrm{d}\vec{r} = \int \int_R \mathrm{curl} \vec{F} \mathrm{d} A $$</p>
+<p>Diğer bir formda </p>
+<p>$$ \oint_C M \mathrm{d} x + N \mathrm{d} y = \int \int_R (N_x - M_y) \mathrm{d} A $$</p>
+<p>Üstteki her iki formülde de eşitliğin iki tarafının birbirinden ne kadar
+farklı hesaplar olduğuna dikkat edelim. Mesela bir üstteki formülün sol
+tarafı bir çizgi entegrali, bir (mesela) $t$ üzerinden birbirine bağlı iki
+$x,y$ değişkeninin, bir şekilde birbirine bağlı şekilde değişen $x,y$
+değişkenleri üzerinden bir entegral hesabı bu. Ama aynı formülde eşitliğin
+sağ tarafı eğrinin "içindeki" bölgede, bu bölgedeki her nokta için
+geçerli. Bu bölgede $x,y$ birbirinden bağımsız. </p>
+<p>Peki niye saat yönü tersi dedik? Bu aslında herhangi bir yön olabilir, ama
+bu yön $N_x-M_y$ ile uyumlu, eğer saat yönü olursa, ona göre bir $M_x,N_y$
+ifadesinin kullanılması gerekir. </p>
+<p>Örnek</p>
+<p>$C$ eğrisi $(2,0)$ noktasında çizilmiş 1 yarıçaplı bir çember
+olsun. Gidişat saat yönü tersinde. </p>
+<p><img alt="" src="22_1.png" /></p>
+<p>$$ \oint_C ye^{-x} \mathrm{d} x + (\frac{1}{2}x^2 - e^{-x}) \mathrm{d} y $$</p>
+<p>Direk olarak</p>
+<p>$$ x = 2 + \cos\theta, dx = -\sin\theta \mathrm{d}\theta $$</p>
+<p>$$ y = \sin\theta, dy = \cos\theta \mathrm{d}\theta $$</p>
+<p>Sonra üstteki iki satırdaki formülleri alıp entegrale koyardım, ve 0 ile
+$\pi$ sınırları arasında entegrali hesaplardım. </p>
+<p>Tüm bu işlemler yerine Green'in Teorisini kullanalım. Yani çift entegral
+hesabını yapalım. $M,N$ nedir? </p>
+<p>$$ \oint_C 
+\underbrace{ye^{-x}}_{M} dx + 
+\underbrace{(\frac{1}{2}x^2 - e^{-x})}_{N}dy $$</p>
+<p>Çift entegral o zaman şöyle</p>
+<p>$$ \int \int_R (N_x - N_y) \mathrm{d} A =
+$$</p>
+<p>$R$ nedir? Çemberin içindeki her şeydir (çizgili alan). </p>
+<p><img alt="" src="22_2.png" /></p>
+<p>$$=  \int \int_R  \bigg( x+ e^{-x} \bigg) - e^{-x} \mathrm{d} A $$</p>
+<p>$$=  \int \int_R  x \mathrm{d} A $$</p>
+<p>Peki bu çift entegrali nasıl hesaplayacağız? Tüm cebirsel işlemi
+yapabiliriz, ya da, bir kısayol düşünelim. </p>
+<p>$$ = Alan(R) \ \bar{x} $$</p>
+<p>Çünkü çift entegral bir alan hesabı yapıyor. $\bar{x}$ ise $R$ alanının
+yatay ekşendeki kütle merkezi, ki örneğimiz için bu merkez 2
+noktasında. Alan zaten $\pi$, sonuç</p>
+<p>$$ = 2\pi $$</p>
+<p>Bu arada $\bar{x}$'in tanımı</p>
+<p>$$ \bar{x} = \frac{1}{Alan} \int \int x \mathrm{d} A $$</p>
+<p>Şimdi Green Teorisinin niye işlediğini, yani ispatını görelim. </p>
+<p>Özel Durum </p>
+<p>$\mathrm{curl} \vec{F} = 0$</p>
+<p>Bu durumda $\vec{F}$ muhafazakar. </p>
+<p>$$ \oint_C \vec{F} \cdot \mathrm{d}\vec{r} = \int \int_R \mathrm{curl} \vec{F} \mathrm{d} A $$</p>
+<p>Ama curl sıfır ise, o zaman sıfırın entegrali alınır, bu da sıfırdır. </p>
+<p>$$ = 0 $$</p>
+<p>Bu aynı zamanda eğer kapalı eğri içindeki her noktada $\mathrm{curl} \vec{F} = 0$ ise,
+o zaman $\oint_C \vec{F} \cdot \mathrm{d}\vec{r} = 0$ olduğunun ispatıdır, bu da
+$\vec{F}$'in muhafazakar olduğunun ispatıdır.</p>
+<p>Problem Set 8 Problem 2 için Green Teorisi uygulanamıyor, çünkü $C$
+içinde orijin var. </p>
+<p>İspat</p>
+<p>Şunu ispatlamaya uğraşıyoruz</p>
+<p>$$ \oint_C M \mathrm{d} x + N \mathrm{d} y = \int \int_R (N_x - M_y) \mathrm{d} A $$</p>
+<p>İşimizi kolaylaştırmak için daha basit bir ifadeyi ispat edelim. Üstteki
+formülün özel bir hali</p>
+<p>$$ \oint_C M \mathrm{d} x  = \int \int_R -M_y \mathrm{d} A $$</p>
+<p>bu durumda $N=0$, ve vektör alanında sadece $x$ bileşeni var. </p>
+<p>Peki bu özel şart niye yeterli? İddia o ki eğer bu daha basit ifadeyi ispat
+edebilirsem, sadece $y$ bileşenin olduğu diğer şartı da ispat edebilirim,
+sonra bu iki özel şartı toplarsam genel şartı elde ederim. </p>
+<p>Diğer özel şart</p>
+<p>$$ \oint_C N \mathrm{d} y  = \int \int_R N_x \mathrm{d} A $$</p>
+<p>Bir problem daha var, eğer eğri çetrefil ise çift entegrali oluşturmak zor
+olabilir. </p>
+<p><img alt="" src="22_3.png" /></p>
+<p>O zaman daha basit eğrilerle ise başlamak daha iyi. </p>
+<p>Bir diğer gözlem daha, $R$'i daha basit bölgelere ayırabiliriz. </p>
+<p><img alt="" src="22_4.png" /></p>
+<p><img alt="" src="22_5.png" /></p>
+<p>Eğer </p>
+<p>$$ \oint_{c_1} M \mathrm{d} x  = \int \int_{R_1} -M_y \mathrm{d} A $$</p>
+<p>$$ \oint_{c_2} M \mathrm{d} x  = \int \int_{R_2} -M_y \mathrm{d} A $$</p>
+<p>ifadelerinin doğru olduğunu ispatlarsam, o zaman $C$ için olan ifadenin
+doğruluğunu ispatlayabilirim, çünkü üstteki iki formülü toplayabilirim. </p>
+<p>Peki üstteki iki formülde sol taraf toplandığında $R$ bölgesini kabaca
+ortadan bölen eğriyi iki kere toplamış olmaz mıyım? Aslında evet, ama o
+eğri üzerindeki gidişata dikkat, biri yukarı, diğeri aşağı yönde. O zaman o
+parça iki kere toplanınca birbirlerini iptal edecekler ve sonuç sıfır olacak.</p>
+<p>O zaman </p>
+<p>$$
+\oint_C M \mathrm{d} x = \oint_{C_1} + \oint_{C_2} =
+\int \int_{R_1} + \int \int_{R_2} = \int \int_R -M_y \mathrm{d} A
+$$</p>
+<p>Örnek olarak şöyle bir şekli alalım. Bu şekli dikey ve "basit" olarak ve
+5 parçaya bölüyoruz.</p>
+<p><img alt="" src="22_6.png" /></p>
+<p>Bu ne demek? </p>
+<p>$$ a &lt; x &lt; b, \ f_1(x) &lt; y &lt; f_2(x) $$</p>
+<p>Kesik çizgilerin x bileşenini $a,b$ olarak alırsak, bu noktaların $y$
+değerleri de dikey (kesik) çizgiler arasında kalıyor. </p>
+<p>Ana İşlem</p>
+<p>Eğer $R$ dikey ve basit ise, ve $C$, saat yönü tersi olmak üzere $R$'nin
+sınırını oluşturuyorsa, </p>
+<p>$$ \oint_C M \mathrm{d} x  = \int \int_R -M_y \mathrm{d} A $$</p>
+<p>ifadesini ispatla. </p>
+<p><img alt="" src="22_7.png" /></p>
+<p>Üstteki de basit olarak bölünmüş bir bölgeyi gösteriyor. Çizgili bölümü
+nasıl hesaplarız?</p>
+<p><img alt="" src="22_8.png" /></p>
+<p>Eğriyi 4 parçaya ayırırız. </p>
+<p>$C_1$</p>
+<p>$$ y = f_1(x) $$</p>
+<p>$x$ değeri $a$'dan $b$'ye gidiyor. </p>
+<p>$$ \int_{c_1}M(x,y) \mathrm{d} x = \int_a^b M(x,f_1(x)) \mathrm{d} x$$</p>
+<p>Burada tek değişken üzerinden entegral alabilirim. Tabii bu ispatta $M$
+ifadesini bilmediğim için bunu yapamam, tanımı burada bırakırım. </p>
+<p>$C_2$</p>
+<p>$x$ değeri $b$, $dx = 0$</p>
+<p>$$ \int_{c_2}M(x,y) \mathrm{d} x = 0$$</p>
+<p>Aynı şekilde $C_4$ sıfır olur. </p>
+<p>$C_3$</p>
+<p>$$ y = f_2(x) $$</p>
+<p>$x$ değeri $b$'dan $a$'ya gidiyor. </p>
+<p>$$
+\int_{c_2}M(x,y) \mathrm{d} x = \int_b^a M(x,f_2(x)) \mathrm{d} x = - \int_a^b M(x,f_2(x)) \mathrm{d} x 
+$$</p>
+<p>Hepsini toplarsak</p>
+<p>$$
+\oint_C M \mathrm{d} x  =
+\int_a^b M(x,f_1(x)) \mathrm{d} x - \int_a^b M(x,f_2(x)) \mathrm{d} x 
+\qquad (1)
+$$</p>
+<p>Şimdi çift entegrale bakıyorum, ve bakalım bu çift entegrali üstteki
+ifadeye eşitleyebilecek miyim. </p>
+<p>$$
+\int \int_R -M_y \mathrm{d} A
+= - \int_a^b \int_{f_1(x)}^{f_2(x)} \frac{\partial M}{\partial y} \mathrm{d} y \mathrm{d} x
+$$</p>
+<p>Daha önce söylemiştik, bölgeyi belli basit, belli bir şekilde seçmemizin
+sebebi $dy,dx$'i ayarlamamızın kolay olması içindi. Yani çift entegral için
+kesitler hazırlarken bu kesitlerin kolay olması için bölgeyi böyle
+seçtik. </p>
+<p>İçteki entegral</p>
+<p>$$ \int_{f_1(x)}^{f_2(x)} \frac{\partial M}{\partial y} \mathrm{d} y =
+M(x,f_2(x)) - M(x,f_1(x))
+ $$</p>
+<p>Geri koyarsak</p>
+<p>$$
+\int \int_R -M_y \mathrm{d} A
+= - \int_a^b M(x,f_2(x)) - M(x,f_1(x)) \mathrm{d} x
+$$</p>
+<p>Bu ifade (1) ifadesi ile aynı. İspat tamamlandı. Çünkü özel şart dikeysel
+basit bölgelerde ispat geçerli, bu faraziyeyi ortadan kaldırırsak, tüm
+bölgeler için ispat geçerli. $y$ bileşeni için de aynı şey geçerli, o zaman
+genel teori ispatlanmış oldu.</p>
+<p>Güzel Bir Örnek </p>
+<p>Green'in Teorisi için bir örnek şudur. Bilgisayarlar bu kadar yaygın olmadan
+önce deneysel fizikçiler deneylerden sonra bir kağıt, düzey üzerinde
+deneylerinin sonuçlarını baskı halinde alırlardı. Bu noktalar belli
+bölgede, bir eğri içinde olurdu. Fakat bu bölgenin alanı lazımdı, bu hesap
+nasıl yapılacaktı?</p>
+<p><img alt="" src="22_9.png" /></p>
+<p>Üstteki planımeter denen alet buna yarıyordu. Kollardan birini alttaki gibi
+bir çıktı üzerinde, onun eğrileri üzerinde gezdirip, başladığınız noktaya
+dönünce, alet pat diye size hemen sonucu söylüyordu. Nasıl ?</p>
+<p><img alt="" src="22_10.png" /></p>
+<p>Bunu çizgisel entegrali hesaplayarak yapıyordu. Green'in Teorisine göre
+çizgisel entegral, alanı içeren entegrale eşit olduğu için doğru sonucu
+veriyordu.</p>
+<p>$$ \oint_C x \mathrm{d} y  = \int \int_R 1 \mathrm{d} A = Alan(R) $$</p>
+<p>Alet eşitliğin solundaki hesabı yapıyor, bize aradığımız sağdaki sonucu
+veriyordu yani. </p>
+<p>Eğer aletin nasıl işlediği hakkında bir spekülasyon yapmak gerekirse,
+vektör alanı $x$'i ele alalım (çizmek için gerekli kod ile)</p>
+<pre><code class="python">x = linspace(0,10.,10)
+y = linspace(0,10.,10)
+x,y = meshgrid(x,y)
+u = x*10
+v = np.zeros(y.shape)
+q = plt.quiver(x,y,u,v,angles='xy',scale=1000,color='r')
+p = plt.quiverkey(q,1,16.5,50,&quot;50 m/s&quot;,coordinates='data',color='r')
+plt.savefig('field_x.png')
+</code></pre>
+
+<p><img alt="" src="field_x.png" /></p>
+<p>Bu vektörler mekanik alet içinde belki teller, ya da demir çubuklar olarak
+gösteriliyor olabilir. Hareket ettirilen kol, kadran gezdirilirken "dikey
+hareket farkı" yani $dy$ bir şekilde alınıyor (belki de işi basitleştirmek
+için önceden tanımlı bir sabit olarak kabul edildi), sonra gezdirilme
+sırasında hangi tele (vektöre) "çarpıldıysa" dikey fark bu vektörün
+değeri ile bir şekilde çarpılıp, başka bir mekanik bileşende
+toplanıyor. Başa dönülünce eldeki toplam aranan alan değeri olacaktır.</p>
+<p>Not: En basit ok çizimi için alttaki kod kullanılabilir</p>
+<pre><code class="python">u = 200
+v = 200
+q = plt.quiver(10,10,u,v,angles='xy',scale=1000,color='r')
+p = plt.quiverkey(q,1,16.5,50,&quot;50 m/s&quot;,coordinates='data',color='r')
+xl = plt.xlabel(&quot;x (km)&quot;)
+yl = plt.ylabel(&quot;y (km)&quot;)
+</code></pre>

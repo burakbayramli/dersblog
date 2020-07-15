@@ -1,0 +1,328 @@
+<h1>Ders 23</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ders 23
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Bu derste birinci dereceden, sabit katsayılı (coefficients) lineer
+diferansiyel denklem sistemini çözmeye göreceğiz. Form</p>
+<p>$$ \frac{du}{dt} = A u $$</p>
+<p>şeklinde olacak. Katsayılar $A$ matrisi içinde. Temel fikir: sabit katsayılı
+lineer diferansiyel denklemlerin çözümü üsteldir (exponential). Sonucun
+üstel olduğunu bilince bulmamız gereken üstel değerin ne olduğu, yani $e$
+üzerine ne geldiği, onu neyin çarptığı, ki bunları bulmak lineer cebirin
+işi olacak.</p>
+<p>Bir örnekle başlayalım</p>
+<p>$$ \frac{du_1}{dt} = -u_1 + 2u_2 $$</p>
+<p>$$ \frac{du_2}{dt} = u_1 - 2u_2 $$</p>
+<p>Üstteki sistemin katsayılarını dışarı çekersek $A$ matrisi şu olur</p>
+<p>$$ A = 
+\left[\begin{array}{cc}
+-1 &amp; 2 \\
+1 &amp; -2
+\end{array}\right]
+ $$</p>
+<p>Başlangıç değerleri şöyle olsun</p>
+<p>$$ u(0) = 
+\left[\begin{array}{c}
+1 \\
+0
+\end{array}\right]
+ $$</p>
+<p>Eğer $u_1$ ve $u_2$'yi bu sistemin temsil ettiği iki kap gibi görsek
+(mesela), her şey $u_1$'in "içinde" olarak başlayacaktı, sonra zaman
+geçtikçe oradan çıkacak, $u_2$'ye doğru akacak. Tüm bunları $A$ matrisinin
+özdeğer/vektörlerine bakarak anlayabilmemiz lazım. O zaman ilk işimiz
+özdeğer/vektörleri bulmak olmalı. </p>
+<p>$A$'ya bakınca ne görüyoruz? Bir kolon diğerinin katı, o zaman matris
+eşsiz (singular), bu demektir ki bir özdeğer $\lambda = 0$. Diğer
+özdeğer için bir numara kullanalım; özdeğerlerin toplamı matris izine
+(trace) yani çaprazdaki sayıların toplamına eşit olduğuna göre, ve toplam
+$=-3$, o zaman ikinci özdeğer $-3$ olmalı. Özvektörler ise</p>
+<p>$$ 
+\left[\begin{array}{c}
+2 \\ 1
+\end{array}\right] 
+,
+\left[\begin{array}{c}
+1 \\ -1
+\end{array}\right]
+ $$</p>
+<p>O zaman çözüm iki çözümün toplamı olacak</p>
+<p>$$ u(t) = c_1 e^{\lambda_1 t}x_1 + c_2 e^{\lambda_2 t}x_2$$</p>
+<p>Bu genel çözüm. Genel çözüm $c_1, c_2$ haricindeki birinci ve ikinci
+terimdeki "pür üstel" çözümlerden oluşuyor. Hakikaten mesela
+$e^{\lambda_1 t}x_1$ diferansiyel denklemi çözüyor değil mi? Kontrol
+edelim. Denklem</p>
+<p>$$ \frac{du}{dt} = Au$$</p>
+<p>$u$ için $e^{\lambda_1t}x_1$ koyalım, türev $t$'ye göre alındığına göre</p>
+<p>$$ \lambda_1 e^{\lambda_1t}x_1 = A e^{\lambda_1t}x_1$$</p>
+<p>İki taraftaki üstel değerler iptal olur, geri kalanlar</p>
+<p>$$ \lambda_1 x_1 = A x_1$$</p>
+<p>Bu da özdeğer/vektör formülüdür. Artık $u(t)$'nin son formülünü
+yazabiliriz. </p>
+<p>$$ u(t) =
+c_1 \cdot 1 \cdot 
+\left[\begin{array}{c}
+2 \\ 1
+\end{array}\right]
++
+c_2 e^{-3t} \cdot 
+\left[\begin{array}{r}
+1 \\ -1
+\end{array}\right]
+ $$</p>
+<p>$t=0$ anında</p>
+<p>$$ u(t) =
+c_1 
+\left[\begin{array}{c}
+2 \\ 1
+\end{array}\right]
++
+c_2 
+\left[\begin{array}{r}
+1 \\ -1
+\end{array}\right] = 
+\left[\begin{array}{c}
+1 \\ 0
+\end{array}\right] 
+ $$</p>
+<p>İki tane formül, iki tane bilinmeyen var. Sonuç</p>
+<p>$$ c_1 = \frac{1}{3},\ c_2 = \frac{1}{3}$$</p>
+<p>yani</p>
+<p>$$ u(t) =
+\frac{1}{3} \left[\begin{array}{c} 2 \\ 1 \end{array}\right]
++
+\frac{1}{3}  e^{-3t}  \left[\begin{array}{r} 1 \\ -1 \end{array}\right] 
+ $$</p>
+<p>Denklem kararlı konuma (steady-state) gelince, yani $t \rightarrow \infty$ için,
+üstel bölüm yokolacaktır, ve baştaki terim kalacaktır. </p>
+<p>$$ u(\infty) =
+\frac{1}{3}
+\left[\begin{array}{c}
+2 \\ 1
+\end{array}\right]
+ $$</p>
+<p>Fakat üstteki durum, yani sabit bir istikrarlı konuma yaklaşmak her zaman
+mümkün olmayabilir. Bazen sıfıra, bazen de sonsuzluğa da yaklaşabiliriz. </p>
+<p>1) Stabilite </p>
+<p>Ne zaman $u(t) \rightarrow 0$? Özdeğerler negatif ise, çünkü o zaman eksi
+üstel değer olarak küçültücü etki yapacaklar. Eğer $\lambda$ kompleks bir
+sayı olsaydı, mesela </p>
+<p>$$ e^{(-3 + 6i)} $$</p>
+<p>Bu sayı ne kadar büyüktür? Mutlak değeri (absolute value) nedir? </p>
+<p>$$ | e^{(-3 + 6i)t}| = e^{-3t} $$</p>
+<p>çünkü </p>
+<p>$$ |e^{6it}| = 1 $$</p>
+<p>Niye 1? Çünkü kesin değer işareti içindeki $e^{6it} = \cos(6t)+i\sin(6t)$, ve
+sağdaki $a+ib$ formudur, hatırlarsak kompleks eksenlerde $a$ ve $b$ üçgenin
+iki kenarıdır, hipotenüs ise, üstte kesin değer olarak betimlenen şeydir,
+uzunluğu $a^2 + b^2$, yani $\cos^2(6t) + \sin^2(6t) = 1$. Aslında $\cos$ ve
+$\sin$ içine ne gelse sonuç değişmezdi. </p>
+<p>Yani kompleks kısım konumuz için önemli değil, çünkü nasıl olsa 1 olacak,
+esas çözümü patlatabilecek (sonsuza götürecek), ya da küçültecek olan şey
+reel kısım. Altta Re ile reel bölüm demek istiyoruz.</p>
+<p>2) İstikrarlı konum: $\lambda_1 = 0$ ve öteki $Re \ \lambda &lt; 0$. </p>
+<p>3) Patlama: herhangi bir $Re \ \lambda &gt; 0$ ise. </p>
+<hr />
+<p>Şu formülün matris formu nedir?</p>
+<p>$$ u(0) =
+c_1 
+\left[\begin{array}{c}
+2 \\ 1
+\end{array}\right]
++
+c_2 
+\left[\begin{array}{c}
+1 \\ -1
+\end{array}\right] 
+=
+\left[\begin{array}{c}
+1 \\ 0
+\end{array}\right] 
+$$</p>
+<p>Şöyle</p>
+<p>$$ 
+\left[\begin{array}{cc}
+2 &amp; 1 \\ 1 &amp; -1
+\end{array}\right]
+\left[\begin{array}{c}
+c_1 \\ c_2
+\end{array}\right] 
+=
+\left[\begin{array}{c}
+1 \\ 0
+\end{array}\right] 
+ $$</p>
+<p>Soldaki matris, özvektör matrisi $S$. O zaman $Sc = u_0$ </p>
+<hr />
+<p>Probleme bakmanın değişik şekillerinden biri, onu "bağlantısız
+(decoupled)" hale getirmek. Başlangıç formülüne dönersek</p>
+<p>$$ \frac{du}{dt} = Au $$</p>
+<p>Bu $A$ bağlantılı (coupled) bir halde. $u = Sv$ kullanırsak</p>
+<p>$$ S\frac{dv}{dt} = ASv$$</p>
+<p>$S$ özvektör matrisi. </p>
+<p>$$ \frac{dv}{dt} = S^{-1}ASv = \Lambda v$$</p>
+<p>Bu geçişte iyi bilinen eşitlik $AS=S\Lambda$'nin $S^{-1}AS = \Lambda$
+halini kullandık. Bu eşitliğin detayları için [1]'e bakabiliriz.</p>
+<p>Böylece denklemler arasındaki bağlantıdan kurtulmuş olduk. Tüm sistem şu
+hale geldi:</p>
+<p>$$ \frac{dv_1}{dt} = \lambda_1 v_1$$</p>
+<p>$$ \frac{dv_2}{dt} = \lambda_2 v_2$$</p>
+<p>..</p>
+<p>Bu sistemi çözmek daha kolay, her biri için ayrı ayrı çözümü yazalım,
+mesela $v_1$</p>
+<p>$$ v_1(t) = e^{\lambda_1 t} v_1(0) $$</p>
+<p>Tamamı için</p>
+<p>$$ v(t) = e^{\Lambda t} v(0) $$</p>
+<p>Eğer $u=Sv$ ise o zaman $v=S^{-1}u$, ve $v(0)=S^{-1}u(0)$</p>
+<p>$$ S^{-1}u(t) = e^{\Lambda t} S^{-1}u $$</p>
+<p>$$ u(t) = Se^{\Lambda t}S^{-1} u(0) $$</p>
+<p>Aradığımız formül üstteki şu bölüm</p>
+<p>$$ e^{At} = Ae^{\Lambda t} S^{-1} $$</p>
+<p>Ama bir matrisin üstel değer haline gelmesi ne demektir? Problemimizde elde
+ettiğimiz çözüm bu öncelikle, yani $du/dt = Au$'nun çözümü $e^{At}$. Fakat,
+yine soralım, bu demek? </p>
+<p>Güç serilerini (power series) hatırlayalım. $e^{x}$ için güç serisi nedir? </p>
+<p>$$ e^x = 1 + x + \frac{1}{2}x^2 + \frac{1}{6}x^3 + ... $$</p>
+<p>1 yerine $I$ (birim matris), ve $x$ yerine $At$ alırsak</p>
+<p>$$ e^{At} = I + At + \frac{(At)^2}{2} + \frac{(At)^3}{6} + ... +
+ \frac{(At)^n}{n!} + ..
+$$</p>
+<p>Bu "güzel" bir Taylor serisi. Aslında matematikte iki tane çok güzel,
+temiz Taylor serisi vardır, bir tanesi</p>
+<p>$$ e^x = \sum_0^{\infty} \frac{x^n}{n!} $$</p>
+<p>Öteki de Geometrik seri</p>
+<p>$$ \frac{1}{1-x} = \sum_0^{\infty} x^n$$</p>
+<p>Bu da en güzel güç serisidir. Onu da matris formunda kullanabilirdik aslında</p>
+<p>$$ (I-At)^{-1} = I + At + (At)^2 + (At)^3 + ... $$</p>
+<p>Bu formül, bu arada, eğer $t$ küçük bir değerse bir matrisin tersini
+hesaplamanın iyi yaklaşıksal yöntemlerinden biri olabilir. Çünkü üstü
+alınan küçük $t$ değerleri daha da küçülüyor demektir; üstteki terimlerin
+çoğunu bir noktadan kesip atarız (yaklaşıksallık bu demek), ve sadece $I =
+At + (At)^2$ hesabı yaparak matris tersini yaklaşıksal olarak
+hesaplayabiliriz.</p>
+<p>Zihin egzersizine devam edelim: $e^{At}$ açılımı $(I-At)^{-1}$ açılımından
+hangisi daha iyi? İkincisi daha temiz, ama birincisi bir değere yakınsıyor
+(converges), çünkü gitgide büyüyen $n$ değerleriyle bölüm yapıyorum. Demek
+ki $t$ ne kadar buyurse büyüsün, toplam bir sonlu (finite) sayıya doğru
+gidiyor. Fakat ikinci açılım öyle değil. Eğer $A$'nin 1'den büyük özdeğeri
+var ise, toplam patlar ($At$ tüm özdeğerleri 1'den küçükse durum değişir
+tabii, yani $|\lambda(At)| &lt; 1$ ise).</p>
+<p>Neyse, konumuza dönelim. $e^{At}$'nin $Se^{\Lambda t}S^{-1}$ ile bağlantılı
+olduğunu nasıl görebilirim? $e^{At}$'yi anlamak için $S$ ve $\Lambda$'yi
+anlamaya çalışmak lazım, $S$ zaten özvektör matrisi, $\Lambda$ ise köşegen
+(diagonal) bir matris, tüm değerleri çaprazında, bunlar nispeten temiz
+formlar, onları anlarsak işimiz kolaylaşacak.</p>
+<p>Peki geçişi nasıl yapalım? $e^{At}$ açılımı olan güç serisini kullanarak bu
+seriden $S$ ve $\Lambda$ çıkmasını sağlayabilir miyim acaba? Şunu zaten
+biliyoruz: $A = S \Lambda S^{-1}$. Peki $A^2$ nedir?</p>
+<p>$$ A^2 = (S \Lambda S^{-1})(S \Lambda S^{-1}) $$</p>
+<p>$$ = S \Lambda S^{-1}S \Lambda S^{-1} $$</p>
+<p>ortadaki $S$ ve $S^{-1}$ birbirini iptal eder. </p>
+<p>$$ = S \Lambda^2 S^{-1} $$</p>
+<p>O zaman </p>
+<p>$$ e^{At} = I + S \Lambda S^{-1} t + \frac{S \Lambda^2 S^{-1}}{2}t^2 + ...$$</p>
+<p>Dışarı tüm $S$'leri çıkartmak istiyorum. O zaman $I$'yi şu şekilde yazarsam
+daha iyi olacak (ki içinden $S$'leri çekip çıkartabilelim), $I = SS^{-1}$</p>
+<p>$$ = SS^{-1} + S \Lambda S^{-1} t + \frac{S \Lambda^2 S^{-1}}{2}t^2 + ...$$</p>
+<p>ve</p>
+<p>$$ = S (I + \Lambda t + \frac{\Lambda^2}{2}t^2 + ...) S^{-1}$$</p>
+<p>Ortada kalanlar $e^{\Lambda t}$ değil mi? O zaman</p>
+<p>$$ = S e^{\Lambda t}S^{-1} $$</p>
+<p>Böylece geçişi yapmış olduk. Soru: bu formül hep işler mi? Hayır. Ne zaman
+işler? Eğer $A$ köşegenleştirilebilen bir matris ise işler, yani içinden
+$\Lambda$ matrisi çekip çıkartılabilecek matrisler için. Onu yapmanın ön
+şartı ise $A$'nin tersine çevirelebilir olması, yani tüm özvektörlerinin
+bağımsız olmasıdır.</p>
+<p>Peki $e^{\Lambda t}$ nedir? Yani köşegen bir matris üstel değer olarak
+karşımıza çıkınca sonuç ne olur? $\Lambda$ nedir?</p>
+<p>$$ \Lambda =
+\left[\begin{array}{ccc}
+\lambda_1 &amp;&amp; \\
+&amp;&amp;.. \\
+&amp;&amp; \lambda_n
+\end{array}\right]
+ $$</p>
+<p>Bunu $e$ üzeri olarak hesaplayınca ne elde ederiz? Şunu elde ederiz:</p>
+<p>$$ e^{\Lambda t} =
+\left[\begin{array}{ccc}
+e^{\lambda_1t} &amp;&amp; \\
+&amp;&amp;.. \\
+&amp;&amp; e^{\lambda_n t}
+\end{array}\right]
+ $$</p>
+<p>Not: Üstteki açılım sezgisel olarak tahmin edilebilecek bir şey olsa da,
+üstel olarak bir matris olunca, beklenen her işlem yapılamayabiliyor. Mesela 
+eğer matris</p>
+<p>$$ 
+\left[\begin{array}{cc}
+a &amp; b \\ c &amp; d
+\end{array}\right]
+ $$</p>
+<p>olsaydı o zaman her elemanı üstel olarak $e^{a}$, $e^b$ şeklinde kullanmak
+ve matris içindeki yerine yazmak ise yaramazdı. Üstel matris dünyasının
+kendine has bazı kuralları var.</p>
+<p>Örnek</p>
+<p>$$ y" + by' + Ky = 0 $$</p>
+<ol>
+<li>dereceden bu denklemi 1. dereceden formüllerden oluşan 2x2 bir
+"sisteme" dönüştürebiliriz. Ekstra bir denklem ortaya çıkaracağız, eğer
+$y$ yerine bir vektör formundaki $u$'yu şu şekilde kullanırsak</li>
+</ol>
+<p>$$ u = 
+\left[\begin{array}{c}
+y' \\ y
+\end{array}\right]
+ $$</p>
+<p>$u$'nun türevi şöyle olur</p>
+<p>$$ 
+u' = 
+\left[\begin{array}{c}
+y" \\ y'
+\end{array}\right]
+ $$</p>
+<p>$u'$ formuna göre 2. derece denklemi şu şekilde temsil edebiliriz</p>
+<p>$$ 
+\left[\begin{array}{cc}
+-b &amp; -K \\
+1 &amp; 0
+\end{array}\right]
+\left[\begin{array}{c}
+y' \\ y
+\end{array}\right]
+ $$</p>
+<p>Genel olarak, mesela 5. dereceden bir denklemi alıp 5x5 boyutlarında 1. 
+derece denklem sistemine geçmek te mümkündür. Bu geçiş alttaki matrisin 
+üst satırına katsayı değerleri atayacak, ve onun altından başlayarak 1 
+değerleri dolduracaktır. </p>
+<p>$$ 
+\left[\begin{array}{rrrrr}
+- &amp; - &amp; - &amp; - &amp; - \\
+1 &amp;&amp;&amp;&amp; \\
+&amp; 1 &amp;&amp;&amp; \\
+&amp;&amp; 1 &amp;&amp; \\
+&amp;&amp;&amp; 1 &amp; 
+\end{array}\right]
+ $$</p>
+<p>Kaynaklar</p>
+<p>[1] Bayramli, Hesapsal Bilim, <em>Ders 6</em></p>

@@ -1,0 +1,188 @@
+<h1>Analitik PDE - Ders 1</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Analitik PDE - Ders 1
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Dersin kullanacağı ana kitap L. C. Evans'ın Kısmi Türevsel Denklemler
+(partial differential equations -PDE-) kitabı olacak. Bir sonraki ders için
+okuma ödevi şöyle:</p>
+<ol>
+<li>
+<p>Sf. 1-13'teki özet</p>
+</li>
+<li>
+<p>Alt bölüm 2.1 sf. 17-19</p>
+</li>
+<li>
+<p>Bölüm 3 sf. 91-115 arasını tamamen. </p>
+</li>
+</ol>
+<p>PDE'leri incelerken çoğunlukla onların temsil ettiği fiziksel fenomenleri
+de inceleyeceğiz. Mesela transportasyon (transport) denklemleri, ki</p>
+<p>$$ \partial_t u + \vec{b} \cdot \vec{\nabla} u = 0 $$</p>
+<p>Üstteki ifadede gradyan operatörü var, bu bilindiği gibi</p>
+<p>$$ \vec{\nabla} = \bigg( 
+\frac{\partial }{\partial x_1},.., 
+\frac{\partial }{\partial x_n},
+\bigg)
+$$</p>
+<p>$\vec{b}$ içinde sabitler olan bir vektör olabilir</p>
+<p>$$ \vec{b} = (b_1,...,b_n)
+ $$</p>
+<p>Bu denklem 1. derece PDE'lerin özel bir durumudur bu arada. 1. derece
+PDE'ler </p>
+<p>$$ F(x, u(x), Du(x)) = 0 $$</p>
+<p>şeklindedir. $D$ notasyonu Evans'ın gradyan için kullandığı notasyon,
+alışsak iyi olur. Yani</p>
+<p>$$ Du = \nabla u $$</p>
+<p>Üstteki gibi denklemlere bakacağız, çözümlerini göreceğiz. Mesela üstteki
+denklem direk ODE yaklaşımı ile çözülebiliyor. Bu hakikaten ilginç bir şey,
+yani üstteki gibi geniş bir PDE kategorisi, $n$ tane değişken içerebilen
+türden denklemler ODE'lere indirgenerek çözülebiliyor. Bu yönteme
+"karakteristikler metotu (method of characteristics)" ismi veriliyor.</p>
+<p>Bu arada</p>
+<p>$$ F(x, u(x), Du(x)) = 0 $$</p>
+<p>formu oldukça geneldir, çok genel gayrı lineer, normal (ordinary)
+diferansiyel denklemin formudur. Bir örnek</p>
+<p>$$ |\nabla u|^2 = n^2(x) $$</p>
+<p>denklemidir, ki bu denklem dalga denkleminde dalgaların uç noktalarını
+(wavefront) incelerken ortaya çıkar. </p>
+<p>Lineer PDE</p>
+<p>Lineer PDE'lerin örnekleri mesela işi denklemi (heat equation), ya da
+yayılma / difüzyon (diffusion) denklemi.</p>
+<p>$$ \frac{\partial u}{\partial t} = 
+\nabla  u
+$$</p>
+<p>Bir diğer örnek dalga denklemi (wave equation)</p>
+<p>$$ \frac{1}{c^2} \frac{\partial ^2}{\partial t^2}u = \nabla u$$</p>
+<p>yayılmanın hızı $c$ sabiti olarak gösteriliyor. </p>
+<p>Shrodinger denklemi ise şöyle</p>
+<p>$$ i \frac{\partial }{\partial t}\psi  = -\nabla \psi $$</p>
+<p>Isı denklemiyle alakalı önemli bir nokta denge (equilibrium)
+noktasıdır. Denklem uzun zaman zarfı bağlamında incelendiğinde bir denge
+noktasına eriştiği görülecektir. Ki bu bizi Laplaca denklemine götürür. </p>
+<p>$$ \nabla u = 0 $$</p>
+<p>Ya da daha genel olarak </p>
+<p>$$ \nabla u = f $$</p>
+<p>ise bu denkleme Poisson denklemi adı veriliyor. </p>
+<p>Tüm bu denklemler aslında pek çok uygulama alanında ortaya çıkan, çok geniş
+belli başlı bazı kategorilerin prototipidirler. Mesela İşi denklemine
+parabolik (paraboliç) kısmı denklem kategorisi deniyor. Dalga denklemi
+hiperbolik (hyperboliç) kategorisi, Schrödinger ise dağılan (dispursive)
+PDE kategorisi olarak anılıyor. Laplaca, Poisson denklemlerine elliptik
+(elliptic) kategorisi ismi veriliyor. </p>
+<p>Tüm bu denklemleri incelerken onları temsil ettikleri daha geniş
+kategorinin örnekleri olarak göreceğiz. </p>
+<p>Şimdi PDE'lerin ortaya çıktığı çok basit bir örneği görelim. </p>
+<p>Elimizde bir $\Omega$ bölgesi / alanı olduğunu hayal edelim, ki $\Omega \in
+\mathbb{R}^n$ olsun, yani alttaki resimde çizdiğimiz $\mathbb{R}^2$.</p>
+<p>Yine diyelim ki bu $\Omega$ bölgesinin etrafında bir tür sıvıyla kaplı, ve
+bu sıvı hareket ediyor. Bu hareketi sabit bir hız vektör alanı olarak
+gösteriyoruz. </p>
+<p><img alt="" src="1_1.png" /></p>
+<p>$\mathbb{R}^n$'deki bu sabit hız alanını $\vec{V}$ olarak gösterelim. $\vec{V}$'nin vektör işaretini 
+koyduk, ama ileride bunu yapmayabiliriz, ama anlatımın çerçevesinden bir
+şeyin  vektör olup olmadığını anlamak kolay. </p>
+<p>Yani bu sıvıyı oluşturan parçacıkler birörnek (üniform) hızda hareket
+ediyorlar. </p>
+<p>Sıvının $x$ noktasındaki $t$ anındaki yoğunluğu $\rho(x,t)$ olarak
+gösterilsin. O zaman $t$ anında $\Omega$ alanındaki kütleyi hesaplamak
+istiyorsam, o zaman yoğunluğun hacim üzerinden entegralini alırım. </p>
+<p>$$ \textit{Kutle } = \int_\Omega \rho(x,t) \mathrm{d} x $$</p>
+<p>Birimleri kontrol edeli, $\rho(x,t)$ kütle / hacim (mesela $kg / cm^3$)
+birimine sahip, hacim üzerinden entegral alınca elimize kütle geçer. </p>
+<p>Bu sıvı belirlenen alan üzerinden sürekli akıyor. O alan içindeki kütlenin
+değişim oranını merak ediyorum. Şu hesabı yapmam lazım</p>
+<p>$$ \frac{d}{dt} \int_\Omega \rho(x,t) \mathrm{d} x   $$</p>
+<p>Değişim oranı $\Omega$ bölgesinin sınırlarından ne geçiyorsa o'dur. </p>
+<p>Bölgenin dış sınırına dik olan birim normal vektörler düşünelim. Eğer bu
+vektörlerden kırmızı okla gösterilen soldaki normale bakarsak, sıvı akisi
+ona pek etki etmiyor, yani zarın o bölgesinde çıkış fazla yok. Fakat sağda
+işaretli normal üzerinden oldukça fazla akış var.</p>
+<p><img alt="" src="1_2.png" /></p>
+<p>Bu durumu da</p>
+<p>$$ \frac{d}{dt} \int_\Omega \rho(x,t) \mathrm{d} x   = 
+- \int_{\partial \Omega} \rho(x,t) \vec{v} \cdot \vec{n} \mathrm{d} S 
+$$</p>
+<p>şeklinde gösterebiliriz (eşitliğin sağ tarafını şimdi ekledik). $\partial
+\Omega$ bölgenin "sınırı" anlamında kullanıldı, eğer 2 boyutlu düzlemde isek
+$\partial \Omega$ sınırı bir eğridir, eğer 3 boyutta isek sınır 2 boyutlu bir
+yüzey (surface), vs (genel kural olarak $n-1$ boyutlu bir yüzeydir).</p>
+<p>$\vec{n}$ resimde çizilen birim normaller. </p>
+<p>Bu denklemin tek söylediği içeri giren ile çıkanın birbirine (eksi işaret
+sonrasında) birbirine eşit olduğu. İki tarafın kütle / zaman birimine sahip
+olduğunu kontrol edebiliriz. </p>
+<p>Şimdi İleri Calculus'tan hatırlayabileceğiniz bir kural </p>
+<p>Gauss'un Teorisi</p>
+<p>$F: \mathbb{R}^n \to \mathbb{R}^n$ üzerinde tanımlı herhangi bir vektör alanı için,
+$x \mapsto F(x)$ olmak üzere, $\mapsto$ işareti eşlenme (maps to) anlamına
+geliyor, $\Omega \subset \mathbb{R}^n$ bölgesi var ise, ve bu vektör alanı
+pürüzsüz (smooth) bir vektör alani ise (bu vektör bileşenlerinin
+türevi alınabilir fonksiyonlar olduğunu söyler), o zaman şu da
+doğrudur. Vektör alanının sapmasını (divergence) entegre ediyorum, </p>
+<p>$$ 
+\int_\Omega \nabla \cdot F \mathrm{d} x =
+\int_{\partial \Omega} F \cdot n \mathrm{d} S
+$$</p>
+<p>$\nabla \cdot$ operatörü $div$ anlamında kullanıldı, ve $\Omega$ bir alan. </p>
+<p>Gauss'un Teorisi, Calculus'un Temel Teorisinin çok boyutlu bir karşılığı
+olarak düşünülebilir aslında.</p>
+<p>Gauss'un Teorisini bizim formülasyona uygulayalım</p>
+<p>$$ \int_{\partial \Omega} \rho \vec{v} \cdot \vec{n} \mathrm{d} S =
+\int_\Omega \nabla \cdot (\rho \vec{v}) \mathrm{d} x 
+$$</p>
+<p>Şimdi şunu yazabilirim</p>
+<p>$$
+\frac{d}{dt} \int_\Omega \rho \mathrm{d} x = 
+\int_\Omega \nabla \cdot (\rho \vec{v}) \mathrm{d} x
+ $$</p>
+<p>Eşitliğin solundaki türevi alıp, sağ tarafı sola taşıyalım</p>
+<p>$$ \int_\Omega \bigg( 
+\partial_t \rho + \nabla \cdot (\rho \vec{v}) 
+\bigg)dx = 0
+ $$</p>
+<p>$\Omega$ işareti $\mathbb{R}^n$ içinde herhangi bir hacim ise (iki boyutta bir
+alan, 3 boyutta hacim), bu hacimi sonsuz küçülttüğümüzde artık şu ifadenin </p>
+<p>$$ \partial_t \rho + \nabla \cdot (\rho \vec{v})  = 0 $$</p>
+<p>noktasal (pointwise) olarak her $x,t$ için doğru olduğunu görebiliriz, eğer
+$\rho$ yeterinç pürüzsüz bir fonksiyon ise tabii ki.</p>
+<p>Üstteki fonksiyon suna da eşittir</p>
+<p>$$ \partial_t \rho + \vec{v} \cdot \nabla \rho = 0$$</p>
+<p>Bu denklem $F(x,\rho,\nabla \rho)=0$ formundaki bir denklemdir, genel
+olarak bu formla ilgileniriz, bir üstteki örnek ise bu formun en basit
+örneklerinden biri, transportasyon fenomeni (transport phenomena) denklemi.</p>
+<p>Şimdi transport denklemini çözelim, önce direk olarak, sonra biraz dolaylı
+gibi gözükebilecek bir şekilde ama sonra göreceğiz ki bu dolaylı yöntem
+aslında çözüm için çok uygun. </p>
+<p>Tek boyutta formül şu formda</p>
+<p>$$ \partial_t \rho + v \partial_x \rho = 0 $$</p>
+<p>Daha genel olarak diyelim ki </p>
+<p>$$ \partial_t u + c\partial_x u = 0, \ \ c&gt;0 $$</p>
+<p>var diyelim, başlangıç şartı</p>
+<p>$$ u(x,0) = F(x) $$</p>
+<p>Böyle problemlere çoğunlukla Başlangıç Şart Problemleri (İnitial Value
+Problem) ismi verilir. </p>
+<p>Diyelim başlangıç şartı $F \in C'$  şöyle bir fonksiyon</p>
+<p><img alt="" src="1_3.png" /></p>
+<p>Çözüm nedir? Sudur </p>
+<p>$$ u(x,t) = F(x-ct) $$</p>

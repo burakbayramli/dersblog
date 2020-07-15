@@ -1,0 +1,190 @@
+<h1>Ders 13</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ders 13
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Bugünkü dersimizin hedefi özel çözümler bulmak. Formu yazalım</p>
+<p>$$ y" + Ay' + By = f(x) $$</p>
+<p>Ve genel çözüm $y = y_p + c_1y_1 + c_2y_2$ formunda olacak. </p>
+<p>Gerçek şu ki eşitliğin sağ tarafına yazılabilecek her fonksiyon o kadar
+ilginç değil. İlginç olanlardan bir tanesi üstel (exponential)
+fonksiyonlar, yani $e^{ax}$ formundaki fonksiyonlar, ki çoğunlukla $a&lt;0$
+kullanılır. Diğer bazı ilginç olanlar </p>
+<p>$$ \sin \omega x $$</p>
+<p>$$ \cos \omega x $$</p>
+<p>gibi salınım örnekleri, ki bunlar da elektriksel devrem bağlamında
+alternatif AC/DC akımı temsil ediyorlar.</p>
+<p>Ya da "gittikçe yokolan salınım" ilginç. Burada,</p>
+<p>$$ e^{ax}\sin \omega x $$</p>
+<p>$$ e^{ax}\cos \omega x $$</p>
+<p>gibi örnekler var. Ama aslında üstteki tüm ilginç fonksiyonlar genel tek
+bir forma bağlanabilir, bu form için üstel sayının kompleks olmasına izin
+vermek gerekiyor. Form şöyle</p>
+<p>$$ e^{(a+i\omega)x} $$</p>
+<p>$\omega = 0$ ise o zaman $e^{ax}$ elde ederim. $a=0$ ise $\sin\omega x$,
+$\cos\omega x$ elde ederim. İkisi de sıfır değilse o zaman gittikçe yokolan
+salınımı elde ederim. </p>
+<p>Bundan sonra habire $a+i\omega$ yazmamak için onun yerine $\alpha$
+kullanacağız, $\alpha$'yi görünce onun bir kompleks sayı olduğunu
+anlayın. Yanı eşitliğin sağ tarafı $e^{\alpha x}$ olacak. </p>
+<p>Birazdan göreceğimiz üzere, bu tür bir girdi kullanmak aslında kolaylıkla
+çözüm sağlıyor. Yerine geçirme (substitution) kuralını kullanarak çözüme
+erişmek çok kolay. </p>
+<p>$$ y" + Ay' + By = f(x) $$</p>
+<p>Polinom operatör kullanırsak</p>
+<p>$$ (D^2 + AD + B )y = f(x) $$</p>
+<p>Parantez içindekine $p(D)$ diyelim. Ve şu formülü ortaya atalım. </p>
+<p>$$ p(D)e^{\alpha x} = p(\alpha)e^{\alpha x}  $$</p>
+<p>Bu yerine geçirme kuralı (substitution rule). </p>
+<p>İspat</p>
+<p>$$ (D^2 + AD + B )e^{\alpha x} $$</p>
+<p>$$ = D^2e^{\alpha x} + ADe^{\alpha x} + Be^{\alpha x} $$</p>
+<p>$$ = \alpha^2 e^{\alpha x} + A \alpha e^{\alpha x} + Be^{\alpha x} $$</p>
+<p>$$ = e^{\alpha x}(\alpha^2  + A \alpha + B)$$</p>
+<p>Parentez içinin $p(\alpha)$ olduğunu görüyoruz. </p>
+<p>$$ = e^{\alpha x}p(\alpha)$$</p>
+<p>Şimdi bunları yeni bir teori için kullanalım</p>
+<p>Üstel Girdi Teorisi </p>
+<p>Bu teori Üstel Cevap Formülü (Exponential Response Formülü -ERF- olarak ta
+biliniyor).</p>
+<p>ODE</p>
+<p>$$ y" + Ay' + By = e^{\alpha x} $$</p>
+<p>$e^{\alpha x}$, problemde $e^{(3+i)x}$ olabilir mesela, o zaman $\alpha
+= (3+i)$ olacaktır. </p>
+<p>Operatör formunda,</p>
+<p>$$ p(D)y = e^{\alpha x} $$</p>
+<p>için özel çözüm şudur</p>
+<p>$$ y_p = \frac{e^{\alpha x}}{p(\alpha)} $$</p>
+<p>Bu teori bu dersin en önemli teorilerinden biri. Bu dersteki pek çok
+kavramı yanyana getiriyor. </p>
+<p>İspat</p>
+<p>İspatlamak için çözüm $y_p$'yi ana denkleme koyalım ve alttaki ifadenin doğru
+olup olmayacağına bakalım. ODE'yi tekrar ifade edelim, </p>
+<p>$$ p(D)y =  e^{\alpha x} $$</p>
+<p>ama $y$ yerine $y_p$ koyalım, ve bakalım ifadenin sol tarafını
+dönüştürünce, sağ taraftaki aynı sonuç çıkacak mı?</p>
+<p>$$ = p(D)y_p$$</p>
+<p>$$ = p(D)\frac{e^{\alpha x}}{p(\alpha)}  $$</p>
+<p>Üst taraf için yerine geçirme kuralını kullanalım</p>
+<p>$$ = \frac{p(\alpha)e^{\alpha x}}{p(\alpha)} $$</p>
+<p>$$ = e^{\alpha x} $$</p>
+<p>Sağ tarafta aynı ifadeye eriştik, demek ki teori doğru. Peki ya $p(\alpha)
+= 0$ olsaydı? Bu önemli bir istisnai durum, ama problemde böyle olmadığını
+ farzediyoruz.</p>
+<p>Örnek </p>
+<p>$$ y" - y' + 2y = 10e^{-x}\sin(x) $$</p>
+<p>Sağ taraf gittikçe çürüyen (decaying) bir salınım. Genel çözümü bul.</p>
+<p>Özel çözümü bulalım ve sağ tarafı kompleksleştirelim. </p>
+<p>$$ (D^2 - D + 2)y = 10 e ^{(-1 + i)x} $$</p>
+<p>Kompleksleştirmeyi nasıl yaptım? Dikkat edersek, $10e^{-x}\sin(x)$ ifadesi
+$10 e^{(-1 + i)x}$ ifadesinin kompleks kısmını temsil ediyor. </p>
+<p>$$ e ^{(-1 + i)x} = e^{-x} e^{ix} $$</p>
+<p>Euler açılımına göre $e^{ix} = \cos(x) + i\sin(x)$, sadece hayali kısmı alırsak</p>
+<p>$$ e^{-x} \sin(x)  $$</p>
+<p>Başındaki 10'u da eklemeyi unutmuyoruz tabii. Bu tekniği daha önce de
+kullanmıştık, ve kullandığımız zaman orijinal ODE'deki değişkenin üzerine
+bir dalga işareti koymuştuk, çünkü elimizde farklı bir ODE var, farklı
+ODE'den aldığımız çözümün kompleks kısmını almak gerekecek. Yeni formül</p>
+<p>$$ (D^2 - D + 2)\tilde{y} = 10 e ^{(-1 + i)x} $$</p>
+<p>Özel çözüm ne? ERF'ten hareketle</p>
+<p>$$ \tilde{y}_p = \frac{10 e^{(-1+i)x}}{(-1+i)^2 - (-1+i) + 2} $$</p>
+<p>$$  = \frac{10 e^{(-1+i)x}}{3 - 3i} $$</p>
+<p>$$ = \frac{10}{3}\frac{(1+i)}{2} e^{-x} \bigg( \cos(x) + i\sin(x) \bigg)$$</p>
+<p>$y_p$, $\tilde{y}_p$'nin hayali kısmı olacak</p>
+<p>$$ \frac{5}{3}e^{-x}( \cos(x) + \sin(x)) $$</p>
+<p>Bu son formdan hoşlanmıyorsak, onu hemen çevirebiliriz, dik üçgeni
+hatırlayalım, kenarlar 1 ve 1 ise hipotenüsü $\sqrt{2}$</p>
+<p>$$ = \frac{5}{3}e^{-x} \sqrt{2}\cos(x - \frac{\pi}{4})$$</p>
+<p>Ya $p(\alpha) = 0$ Olursa?</p>
+<p>Bu durumda ERF yerine yeni bir formül gerekecek. Bu yeni formül için de
+yeni bir Yerine Geçirme Kanunu gerekecek. </p>
+<p>Bu noktada $\alpha$ sembolü yerine $a$ sembolünü kullanacağız, ama temsil
+edilen şey hala kompleks bir sayı (not: kompleks olması garanti değil bu
+arada, en azından kompleks olmasına izin veriliyor). </p>
+<p>Üstel Kaydırma Kanunu (Exponential Shift Law)</p>
+<p>Bu kanun alttaki ifadeyi basitleştirmekte kullanılıyor. Önce bu ifadenin
+içerdiği cebirsel zorluğu görelim.</p>
+<p>$$ p(D)e^{ax}u(x) $$</p>
+<p>Eğer bu formülün türevini alırsak, $u(x)$'in 2. hatta daha fazla
+derecelerdeki türevini almamız gerecek. Bundan kurtulmanın bir yolu yok mu?
+Var. Üstel Kaydırma Kanununa göre eğer $e^{ax}$ $p(D)$ üzerinden sol tarafa
+geçerse, $p(D)$ değişerek $p(D+a)$ haline gelir. </p>
+<p>$$ p(D)e^{ax}u(x) = e^{ax}p(D+a)u(x)$$</p>
+<p>İspat</p>
+<p>Özel bir şarta bakalım, $p(D) = D$ olsun. O zaman </p>
+<p>$$ p(D)e^{ax}u(x) $$</p>
+<p>şu hale gelir</p>
+<p>$$ = De^{ax}u$$</p>
+<p>$$ = De^{ax}Du + ae^{ax}u $$</p>
+<p>$$ = De^{ax}Du + ae^{ax}u $$</p>
+<p>$$ = e^{ax}(D + a)u $$</p>
+<p>ki son ifade kaydırma kanununu ile uyumlu. </p>
+<p>Peki $P(D) = D^2$ olsaydı? Bunun ispatı için üstteki işlemlerin hepsini
+tekrarlamaya gerek yok, mesela $D^2e^{ax}$ hesabı yapmaya gerek yok,
+önceki hesabı kullanalım, $De^{ax}u$'u zaten biliyoruz</p>
+<p>$$  D^2e^{ax}u = D(De^{ax}u) = D(e^{ax}(D+a)u)  $$</p>
+<p>$$ = e^{ax}(D+a)[(D+a)u] = e^{ax}(D+a)^2u $$</p>
+<p>Bu sonucun $D^3$, $D^4$, vs. için genelleştirilebileceğini görebiliyoruz
+herhalde. Matematiksel tümevarım (induction) ile $D^NN$ için bu formül
+ispatlanabilir. </p>
+<p>Devam edelim</p>
+<p>$$ (D^2+AD+B)y = e^{ax} $$</p>
+<p>$a$'nin kompleks olabileceğini unutmayalım, ama problemimiz şu: $p(a) =
+0$. Şimdi özel çözümü nasıl elde edeceğim? </p>
+<p>$$ y_p = \frac{x e^{ax}}{p'(a)} $$</p>
+<p>Peki ya $p'(a) = 0$  olursa? Bunun için $a$'nın $p(D)$'nin basit bir kökü
+olduğunu farzedeceğiz, çünkü bu faraziye sayesinde $p'(a)$ hiçbir zaman
+sıfır olamaz. </p>
+<p>Ya iki kökün ikisi de $a$ olsaydı? Elde ikiden fazla kök olamaz tabii,
+çünkü bir karesel denklemin ancak o kadar kökü olabilir. O zaman özel çözüm
+şöyle olacaktı</p>
+<p>$$ y_p = \frac{x^2e^{ax}}{p"(a)} $$</p>
+<p>Daha üst seviye polinomlar için bu işin nereye gittiği belli oluyor
+herhalde. </p>
+<p>Bunlardan birini ispatlayalım isterseniz. Şunu mesela</p>
+<p>$$ y_p = \frac{x e^{ax}}{p'(a)} $$</p>
+<p>Bu ispatı üstel kaydırma kanunu kullanarak yapacağız. </p>
+<p>İspat</p>
+<p>Basit kök durumu</p>
+<p>$$ p(D) = (D-b)(D-a) $$</p>
+<p>ve $b \ne a$ çünkü iki tane farklı kök var. O zaman türevi alırsak</p>
+<p>$$ p'(D) = (D-a) + (D-b) $$</p>
+<p>$$ p'(a) = a-b $$</p>
+<p>Önerdiğimiz özel çözüm şuydu</p>
+<p>$$ \frac{P(D) e^{ax} x}{p'(a)} $$</p>
+<p>Amacımız bu çözüm içine daha önce elde ettiğimiz sonuçları koyarsak,
+ODE'nin sağ tarafını, girdiyi elde etmek, böylece elimizde bir çözüm
+olduğunu anlayabilmiş olacağız. </p>
+<p>$$ = e^{ax}(D+a-b)\frac{Dx}{p'(a)} = e^{ax} \frac{(a-b) \cdot 1}{a-b} $$</p>
+<p>$$ = e^{ax} $$</p>
+<p>Örnek</p>
+<p>$$ y" - 3y + 2y = e^x $$</p>
+<p>$e^x$ ile $e^{ax}$ formunu karşılaştırırsak, $a$'nin 1 olduğunu görürüz,
+yani $a$ reel bir sayı. Ayrıca $a$, $D^2-3D+2$'nin basit bir koku, yerine
+koyarsak $D^2-3D+2$'nin sıfır verdiğini görürdük. </p>
+<p>$$ y_p = \frac{xe^x}{-1} $$</p>
+<p>alttaki -1 nereden geldi? </p>
+<p>$$ p'(D) = 2D - 3 $$</p>
+<p>$$ p'(1) = -1 $$</p>
+<p>Yani nihai sonuç</p>
+<p>$$ y_p = -xe^x $$</p>

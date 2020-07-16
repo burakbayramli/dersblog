@@ -67,7 +67,9 @@ alias em="cd $HOME/Documents/kod; bash emacs3.sh"
 Bizim Emacs ayarlari [surada](https://github.com/burakbayramli/kod/tree/master/site-lisp).
 
 
-[1] https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other
+Kaynaklar
+
+[1] [AskUbuntu](https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other)
 
 
 

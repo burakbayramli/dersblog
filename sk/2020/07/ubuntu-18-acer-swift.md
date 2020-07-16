@@ -28,12 +28,17 @@ xmodmap -e "keycode 105 = Pointer_Button3"
 xkbset m
 ```
 
-Dikkat: Touchpad uzerinden sag tiklama icin taam alt koseden basmak
-lazim. Pek kullanisli denemez, tuslarla daha iyi.
+Dikkat: Touchpad üzerinden sağ tıklama için taam alt köşeden basmak
+lazım. Pek kullanışlı denemez, tuşlarla daha iyi.
+
+Ubuntu kurulusu ile pek cok yazilim gelir, Transmission gibi. Alttaki
+paketler ek isletilen `apt-get install`,
 
 
-
-
+```
+git chromium-browser emacs xkbset virtualenv texlive-full pygmentize
+vlc mplayer xvkbd htop make libportaudio2 portaudio19-dev python3-dev
+```
 
 
 [1] https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other

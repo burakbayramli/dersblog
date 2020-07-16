@@ -16,7 +16,7 @@ gsettings set org.gnome.shell.app-switcher current-workspace-only true
 Böylece Alt-Tab sadece aynı iş alanındaki problemlere geçiş yapar.
 
 Tuş üzerinden mouse tıklaması yapmak için bu makinada bazı kodlar
-farklı, bizde ÇAPS => Ctrl, sağ tıklama => Ctrl, sol tıklama => Alt
+farklı, bizde CAPS => Ctrl, sağ tıklama => Ctrl, sol tıklama => Alt
 Gr, ve Windows tuşu olur, bunun için `.bashrc` içinde
 
 ```
@@ -30,9 +30,6 @@ xkbset m
 
 Dikkat: Touchpad uzerinden sag tiklama icin taam alt koseden basmak
 lazim. Pek kullanisli denemez, tuslarla daha iyi.
-
-
-
 
 
 

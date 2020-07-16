@@ -41,6 +41,11 @@ git chromium-browser emacs xkbset virtualenv texlive-full pygmentize
 vlc mplayer xvkbd htop make libportaudio2 portaudio19-dev python3-dev
 ```
 
+Emacs ıle F tuşlarını kullananlar için, bu tuşlar Acer tarafından
+kullanılmakta. Eğer iptal etmek ile uğraşmak istemiyorsanız, Emacs
+ıcinde FN tuşu ile beraber F1, F2, vs. basmak normal F1, F2 etkisi
+yapar. 
+
 
 [1] https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other
 

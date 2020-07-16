@@ -33,7 +33,7 @@ Dikkat: Touchpad üzerinden sağ tıklama için taam alt köşeden basmak
 lazım. Pek kullanışlı denemez, tuşlarla daha iyi.
 
 Ubuntu kurulusu ile pek cok yazilim gelir, Transmission gibi. Alttaki
-paketler ek isletilen `apt-get install`,
+paketler ilk işlettiğimiz `apt-get install` listesi,
 
 
 ```

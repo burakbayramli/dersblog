@@ -16,6 +16,10 @@ gsettings set org.gnome.shell.app-switcher current-workspace-only true
 
 Böylece Alt-Tab sadece aynı iş alanındaki programlara geçiş yapar.
 
+Çalışma alanları arasında gidip gelmek için sol üst köşede
+`Activities` seçilir, ekranın sağında bir seçim alanı çıkıyor, buradan
+alan değişimi olabiliyor.
+
 Tuş üzerinden mouse tıklaması yapmak için bu makinada bazı kodlar
 farklı, bizde CAPS => Ctrl, sağ tıklama => Ctrl, sol tıklama => Alt
 Gr, ve Windows tuşu olur, bunun için `.bashrc` içinde

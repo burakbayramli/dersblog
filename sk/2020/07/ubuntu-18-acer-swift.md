@@ -42,9 +42,9 @@ vlc mplayer xvkbd htop make libportaudio2 portaudio19-dev python3-dev
 ```
 
 Emacs ile F tuşlarını kullananlar için, bu tuşlar Acer tarafından
-kullanılmakta. Eğer iptal etmek ile uğraşmak istemiyorsanız, Emacs
-içinde FN tuşu ile beraber F1, F2, vs. basmak normal F1, F2 etkisi
-yapar.
+kullanılmakta, ses, ışık ayarı gibi... Eğer iptal etmek ile uğraşmak
+istemiyorsanız, Emacs içinde FN tuşu ile beraber F1, F2, vs. basmak
+normal F1, F2 etkisi yapar.
 
 Emacs'ı her zaman bir Python
 [virtualenv](../../2018/08/virtualenv-python-izole-sanal-calsma.md)

@@ -41,10 +41,29 @@ git chromium-browser emacs xkbset virtualenv texlive-full pygmentize
 vlc mplayer xvkbd htop make libportaudio2 portaudio19-dev python3-dev
 ```
 
-Emacs ıle F tuşlarını kullananlar için, bu tuşlar Acer tarafından
+Emacs ile F tuşlarını kullananlar için, bu tuşlar Acer tarafından
 kullanılmakta. Eğer iptal etmek ile uğraşmak istemiyorsanız, Emacs
 ıcinde FN tuşu ile beraber F1, F2, vs. basmak normal F1, F2 etkisi
-yapar. 
+yapar.
+
+Emacs'ı her zaman bir Python `virtualenv` ortamından başlatmak iyi
+fikirdir, böylece komut satırında işletilen `python` çağrısı ortamda
+kurulan paketlere erisebilmiş olur. Bizim mesela bir `emacs3.sh`
+script var, orada hem `virtualenv` girişi yapılır, ardından Emacs
+başlatılır,
+
+```
+source /home/burak/Documents/env3/bin/activate 
+/usr/bin/emacs25 &
+```
+
+Bu script icin de bir `alias` yaratabiliriz,
+
+```
+alias em="cd $HOME/Documents/kod; bash emacs3.sh"
+```
+
+
 
 
 [1] https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other

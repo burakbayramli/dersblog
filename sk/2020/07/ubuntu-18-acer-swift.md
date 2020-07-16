@@ -46,11 +46,11 @@ kullanılmakta, ses, ışık ayarı gibi... Eğer iptal etmek ile uğraşmak
 istemiyorsanız, Emacs içinde FN tuşu ile beraber F1, F2, vs. basmak
 normal F1, F2 etkisi yapar.
 
-Emacs'ı her zaman bir Python
+Emacs'i her zaman bir Python
 [virtualenv](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
 ortamından başlatmak iyi fikirdir, böylece komut satırında işletilen
 `python` çağrısı ortamda kurulan paketlere erisebilmiş olur. Bizim
-mesela bir `emacs3.sh` script var, program böyle başlatılıyor, orada
+mesela bir `emacs.sh` script var, program böyle başlatılıyor, orada
 hem `virtualenv` girişi yapılır, ardından Emacs başlatılır,
 
 ```

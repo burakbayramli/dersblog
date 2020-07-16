@@ -14,7 +14,7 @@ geçiş var. Bunu bilinen hale çevirmek için
 gsettings set org.gnome.shell.app-switcher current-workspace-only true
 ```
 
-Böylece Alt-Tab sadece aynı iş alanındaki problemlere geçiş yapar.
+Böylece Alt-Tab sadece aynı iş alanındaki programlara geçiş yapar.
 
 Tuş üzerinden mouse tıklaması yapmak için bu makinada bazı kodlar
 farklı, bizde CAPS => Ctrl, sağ tıklama => Ctrl, sol tıklama => Alt
@@ -70,6 +70,10 @@ Bizim Emacs ayarlari [surada](https://github.com/burakbayramli/kod/tree/master/s
 Kaynaklar
 
 [1] [AskUbuntu](https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other)
+
+
+
+
 
 
 

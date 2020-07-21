@@ -57,6 +57,9 @@ işletilebilir. Mesela
 
 ![](chrono.png)
 
+Üstteki simülasyon ağır bir topu bir tuğla duvara doğru itiyor. Bu
+itişi farklı kuvvetler ile yapabiliriz, ve fiziksel sonuçlarını
+simülasyon içinde gözleyebiliriz.
 
 Eğer kendi kodladığımız, kendi başına ayrı bir projeyi Chrono
 kullanacak şekilde derlemek istiyorsak, `chrono/template_project`

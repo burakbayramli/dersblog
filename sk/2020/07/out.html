@@ -1,0 +1,68 @@
+
+<html>
+<head>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({  tex2jax: {inlineMath: [["$","$"]  ]}});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+<body>
+
+<h1>3D Fizik Simulasyonu, Chrono</h1>
+<p>Daha önce 2 boyut için gördüğümüz simülasyon yazılımının 3 boyutta
+karşılı Chrono. Derlemek için bazı bilgiler,</p>
+<p>http://api.projectchrono.org/4.0.0/tutorial_install_chrono.html</p>
+<p>Kurmak için önce</p>
+<p>https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz</p>
+<p>Açıp dizine girilir, ve</p>
+<pre><code>mkdir build_dir
+
+cd build_dir
+
+cmake ..
+
+sudo make install
+</code></pre>
+
+<p>Eigen sadece header .h dosyaları, derlenen bir şey yok.</p>
+<p>Chrono derlemeden önce kurulması gereken Ubuntu programları,</p>
+<pre><code>sudo apt-get install libirrlicht-dev swig freeglut3-dev libgl1-mesa-dev libx11-dev
+</code></pre>
+
+<p>Simdi Chrono paketinin kendisine gelelim,</p>
+<p>Chrono</p>
+<pre><code>git clone https://github.com/projectchrono/chrono.git
+
+cd chrono
+
+mkdir build_dir
+
+cd build_dir
+
+cmake -DENABLE_MODULE_IRRLICHT=TRUE \
+      -DENABLE_MODULE_PYTHON=TRUE \
+      -DENABLE_MODULE_POSTPROCESS=TRUE \
+      -DCMAKE_BUILD_TYPE=Debug ..
+</code></pre>
+
+<p>Artık <code>chrono/build_dir/bin</code> altında görülen bir sürü program
+işletilebilir. Mesela</p>
+<pre><code>./demo_IRR_bricks
+</code></pre>
+
+<p><img alt="" src="chrono.png" /></p>
+<p>Eğer kendi kodladığımız, kendi başına ayrı bir projeyi Chrono
+kullanacak şekilde derlemek istiyorsak, <code>chrono/template_project</code>
+altına gidebiliriz (ya da oradaki kodları herhangi bir yere
+kopyalayıp, vs), ve</p>
+<pre><code>cmake -DCMAKE_BUILD_TYPE=Debug \
+      -DChrono_DIR=/home/user/Downloads/repos/chrono/build_dir/cmake \
+      /home/user/Downloads/repos/chrono/template_project
+</code></pre>
+
+<p>işletiriz. Bu işlem bir <code>Makefile</code> üretmiş olmalı. onu <code>make</code> ile
+derleriz, ve <code>template_project/build/myexe</code> olarak bir işletilebilir
+program üretilmiş olmalı. Onu rahatlıkla işletebiliriz. </p>
+
+</body>
+</html>
+

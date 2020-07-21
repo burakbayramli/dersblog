@@ -1,7 +1,7 @@
 # 3D Fizik Simulasyonu, Chrono
 
-Daha önce 2 boyut için gördüğümüz simülasyon yazılımının 3 boyutta
-karşılı Chrono. Derlemek için bazı bilgiler,
+Daha önce 2 boyut için [gördüğümüz](katı-gövde-fizik-simülasyon-rigid-body-physics-pymunk.md)
+simülasyon yazılımının 3 boyutta karşılığı Chrono. Derlemek için bazı bilgiler,
 
 http://api.projectchrono.org/4.0.0/tutorial_install_chrono.html
 

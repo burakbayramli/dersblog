@@ -4,7 +4,7 @@
 Direnc
 
 raspberry pi 3
-https://www.direnc.net/raspberry-pi-4-seti-gelistirme-karti-1gb-ram-standart-kilif-guc-kaynagi
+https://www.direnc.net/raspberry-pi-3
 https://www.direnc.net/10-metre-hdmi-kablosu
 
 breadboard

@@ -7,61 +7,39 @@
 </head>
 <body>
 
-<h1>3D Fizik Simulasyonu, Chrono</h1>
-<p>Daha önce 2 boyut için gördüğümüz simülasyon yazılımının 3 boyutta
-karşılı Chrono. Derlemek için bazı bilgiler,</p>
-<p>http://api.projectchrono.org/4.0.0/tutorial_install_chrono.html</p>
-<p>Kurmak için önce</p>
-<p>https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.tar.gz</p>
-<p>Açıp dizine girilir, ve</p>
-<pre><code>mkdir build_dir
-
-cd build_dir
-
-cmake ..
-
-sudo make install
+<h1>Raspberry Pi</h1>
+<p>RPi kurmak icin Mikro SD kart gerekli. Eger aldiginiiz paketten icinde
+RPi isletim sistemi olan bir SD cikmadiysa dizustu bilgisayardan
+kurmaniz lazim . Ayri puruz benim bilgisayarda SD okuyucu var (daha
+buyuk).  SD / MicroSD çevirici aldık, </p>
+<p><img alt="" src="sd.jpg" /></p>
+<p>Ubuntu'ya bunu taktik. Ubuntu'da <code>Disks</code> programı ile takılan disk
+bulunur ve FAT için formatlanır. Şimdi RPi işletim sistemi imajını
+SD'ye "yakma" zamanı geldi. [2]'den "Raspberry Pi İmager for Ubuntu"
+indirilir, bir deb dosyası.</p>
+<pre><code>sudo apt-get install qml-module-qt-labs-settings
 </code></pre>
 
-<p>Eigen sadece header .h dosyaları, derlenen bir şey yok.</p>
-<p>Chrono derlemeden önce kurulması gereken Ubuntu programları,</p>
-<pre><code>sudo apt-get install libirrlicht-dev swig freeglut3-dev libgl1-mesa-dev libx11-dev
+<p>problem verdi,</p>
+<pre><code>sudo apt --fix-broken install
 </code></pre>
 
-<p>Simdi Chrono paketinin kendisine gelelim,</p>
-<p>Chrono</p>
-<pre><code>git clone https://github.com/projectchrono/chrono.git
-
-cd chrono
-
-mkdir build_dir
-
-cd build_dir
-
-cmake -DENABLE_MODULE_IRRLICHT=TRUE \
-      -DENABLE_MODULE_PYTHON=TRUE \
-      -DENABLE_MODULE_POSTPROCESS=TRUE \
-      -DCMAKE_BUILD_TYPE=Debug ..
+<p>düzeltti. Ardından alinan deb uzerinde,</p>
+<pre><code>sudo dpkg -i imager_1.4_amd64.deb
 </code></pre>
 
-<p>Artık <code>chrono/build_dir/bin</code> altında görülen bir sürü program
-işletilebilir. Mesela</p>
-<pre><code>./demo_IRR_bricks
+<p>Simdi</p>
+<pre><code>rpi-imager
 </code></pre>
 
-<p><img alt="" src="chrono.png" /></p>
-<p>Eğer kendi kodladığımız, kendi başına ayrı bir projeyi Chrono
-kullanacak şekilde derlemek istiyorsak, <code>chrono/template_project</code>
-altına gidebiliriz (ya da oradaki kodları herhangi bir yere
-kopyalayıp, vs), ve</p>
-<pre><code>cmake -DCMAKE_BUILD_TYPE=Debug \
-      -DChrono_DIR=/home/user/Downloads/repos/chrono/build_dir/cmake \
-      /home/user/Downloads/repos/chrono/template_project
-</code></pre>
-
-<p>işletiriz. Bu işlem bir <code>Makefile</code> üretmiş olmalı. onu <code>make</code> ile
-derleriz, ve <code>template_project/build/myexe</code> olarak bir işletilebilir
-program üretilmiş olmalı. Onu rahatlıkla işletebiliriz. </p>
+<p>ile program başlatılır. Çıkan listede "İşletim Sistemi Seç (Choose
+OS)" için ilk görülen Raspberry Pi seçilebilir. "SD Kart Seç (Choose
+SD Card)" için daha önce formatlamış olduğumüz kart seçilir. Tamam
+dedikten sonra bu işlem 1 GB üzerinde bir indirme yapacak, yani hızlı
+ve yeterince kapasitesi olan bir bağlantı iyi olur.</p>
+<p>Kaynaklar</p>
+<p>[1] https://www.raspberrypi.org/documentation/installation/noobs.md</p>
+<p>[2] https://www.raspberrypi.org/downloads/</p>
 
 </body>
 </html>

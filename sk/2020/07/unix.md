@@ -166,6 +166,8 @@ tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
 Dosya sahibi (admin) hariç başka kimsenin dosyaya yazma hakkı
 olmadığını görüyoruz.
 
+Izinleri değiştirmek icin [chmod](chmod.md) kullanılır.
+
 Pek çok şey kabuk etrafında döner dedik, program başlatmak bunlardan
 en önemlisi. Bir program ismini yazarak onu komut satırından
 başlatırız, ama o programı arka plana atarak ta işletebiliriz. Burada

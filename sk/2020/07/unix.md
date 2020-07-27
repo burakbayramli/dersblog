@@ -29,6 +29,8 @@ listesi var. Hakikaten şu anda Emacs içindeyim, arka planda Firefox
 işliyor, vs. Bunların hepsi görülüyor. Bu surecler yokedilebilir, vs.,
 bkz [Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md).
 
+Süreç listesini daha renkli olarak htop komutu ile görebiliriz (bağlantı altta). 
+
 Komut Satırı, Kabuk
 
 Ünix'te pek çok şey komut satırı etrafında döner, en azından usta
@@ -65,14 +67,27 @@ deyince
 /bin/bash
 ```
 
-cevabi aliyorum. 
+cevabı alıyorum. 
 
+Bu arada `SHELL` bir çevre değişkeni (environment variable), bir
+anlamda içinde olduğumüz sürecin "çevresini" tanımlıyor, bu açıdan
+uygun isim. Çevre değişkenleri her kabuk için farklı olabilir,
+birinden set ettiğimiz değişkeni diğerinden göremeyebiliriz,
+`ALI=veli` deyin, `echo $ALI` bir `veli` sonucunu verir, bir diğer
+bash ekranına gidin, aynı komut boş sonuç verecektir.
 
+Her `bash` penceresinin başlangıç değerleri ana / ev (home) dizindeki
+`.bashrc` içinde set edilir. Dikkat, farklı kabuk kullananlar için bu
+başlangıç dosyası farklı olur, mesela `csh` için `.csh`.
 
+Ev dizini her kullanıcı için ana dizindir, `echo $HOME` ile ne
+olduğunu görebilirsiniz. Ubuntu'da bu benim icin `/home/burak` mesela.
 
 Referans
 
 [Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md)
 
 [Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
+
+[htop](../../2012/12/htop.md)
 

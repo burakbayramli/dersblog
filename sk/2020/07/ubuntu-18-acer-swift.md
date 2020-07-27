@@ -4,6 +4,8 @@ Acer 400 dollar'dan daha az fiyatlı sağlam makina. 4 cekirdekli, 128
 GB SSD (solid state disk). Ubuntu kurmak için USB diskten
 yüklenebilir.
 
+![](acerswift.jpg)
+
 Paketten çıkan masaüstü idarecisi (desktop manager) program Unity
 kullanışlı... Fakat iş alanı (workspace) ayarı biraz garip, diğer
 alanlara program yollanabiliyor, işleyen programlar listesinden diğer

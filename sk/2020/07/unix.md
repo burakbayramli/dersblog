@@ -37,7 +37,7 @@ etmek, gözetlemek için tercih edilir, script yazabilme ve onları
 işletebilme açısından komut satırı hep faydalı olmuştur. Görsel
 tıklamayı hatırlamak yerine istenen aksiyonu temsil eden birkaç harfi
 hatırlamak ve klavyede yazmak her zaman daha hızlıdır, bu açıdan 'bir
-resim bin kelimeye bedeldir' sözü Ünix'te tepetaklak olmuştur, 'birkaç
+resim bin kelimeye bedeldir' sözü Unix'te tepetaklak olmuştur, 'birkaç
 harf bin resme bedeldir' demek daha doğru olur.
 
 Komut satırını başlattığımızda, mesela Ubuntu Linux'ta Terminal
@@ -49,10 +49,10 @@ listesine bakıyorum,
 burak    14899 14890  0 11:20 pts/0    00:00:00 bash
 ```
 
-görülüyor. Komut satırı "programı" bu işte. Tabii komut satırları tek
-tip değil, pek çok farklı program var, üstteki `bash`, ona has
-özellikleri var, ama `sh` de var, ya da `tsch` var, vs. Terminale
-gidip
+görülüyor. Komut satırı, "kabuk (shell)" programı bu işte. Tabii komut
+satırları tek tip değil, pek çok farklı program var, üstteki `bash`,
+ona has özellikleri var, ama `sh` de var, ya da `tsch` var,
+vs. Terminale gidip
 
 ```
 echo $SHELL

@@ -6,9 +6,24 @@ yüklenebilir.
 
 ![](acerswift.jpg)
 
+Ubuntu İmaj
+
+Sistemi kurabilmek için bir USB flash disk üzerine onu "yakmak" lazım.
+
+https://releases.ubuntu.com/18.04/
+
+adresinden `ubuntu-18.04.4-desktop-amd64.iso.torrent` dosyasını
+indirdim, ve Torrent ile imajı aldım. Yakma işlemi için
+
+https://help.ubuntu.com/community/BurningIsoHowto
+
+adresine danıştık, benim bir önceki sistemim de Ubuntu olduğu için
+Startup Disk Creator programını başlattık, oradan indirilen iso, ve
+hedef olarak USB dışkı seçtik ve yakma işlemini gerçekleştirdik. 
+
 BIOS
 
-Bir USB flash diskten yukleme yapmak icin Bios hazirlanmali,
+Bir USB flash diskten yükleme yapmak için Bios hazırlanmalı,
 
 Once bilgisayari tamamen kapatin, guc dugmesini 5+ saniye basili tutun
 
@@ -112,7 +127,7 @@ gnome-desktop-item-edit --create-new ~/Desktop
 işletiriz. Bu bize bir diyalog kutusu getiriyor, orada işler kod için
 mutlak ismi verilir, `/bin/bash /home/user/vs/vs/script.sh` gibi,
 tanım vs girildikten sonra masaüstünde ikon yaratılır. Dikkat masaüstü
-ikonları çift tıklama gerektirir, Ünity hızlı erişim barındakiler tek
+ikonları çift tıklama gerektirir, Unity hızlı erişim barındakiler tek
 tıklama ile başlıyor.
 
 Android Dosya Transferi

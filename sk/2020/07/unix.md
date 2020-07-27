@@ -78,7 +78,11 @@ bash ekranına gidin, aynı komut boş sonuç verecektir.
 
 Her `bash` penceresinin başlangıç değerleri ana / ev (home) dizindeki
 `.bashrc` içinde set edilir. Dikkat, farklı kabuk kullananlar için bu
-başlangıç dosyası farklı olur, mesela `csh` için `.csh`.
+başlangıç dosyası farklı olur, mesela `csh` için `.csh`. Global
+ayarlar `.bashrc` den önce işletilen (bash icin) `/etc/profile`
+icindedir. Her kullanıcı başlangıçta yapılmasını istediği şeyleri
+kendi `.bashrc`'si içine koyabilir, admin her kullanıcı için
+işlemesini istediği şeyler varsa onları `/etc/profile` içine koyar.
 
 Ev dizini her kullanıcı için ana dizindir, `echo $HOME` ile ne
 olduğunu görebilirsiniz. Ubuntu'da bu benim icin `/home/burak` mesela.
@@ -98,10 +102,10 @@ dedik ve sonuc
 Mon Jul 27 14:21:08 EEST 2020
 ```
 
-geldi, bu komutu islettigimide arka planda birkac sey oldu. `date`
-dedik ama hangi date? Bu programin isler kodunun oldugu dosya nerede?
-Soru cevabi `which date` ile alinabilir, cevap olarak `/bin/date`
-geldi bizde. Hakikaten orada bir `date` programi var,
+geldi, bu komutu işlettiğimide arka planda birkaç şey oldu. `date`
+dedik ama hangi date? Bu programın işler kodunun olduğu dosya nerede?
+Soru cevabı `which date` ile alınabilir, cevap olarak `/bin/date`
+geldi bizde. Hakikaten orada bir `date` programı var,
 
 ```
 $ ls -al /bin/date
@@ -127,13 +131,13 @@ Hangi kullanıcı olduğumuzu `id` ile hemen bulabiliriz.
 Her harf öbeği `rwx` olabilir, tabii bu harflerden bazıları iptal
 olabilir, mesela `-w-` olabilir. Harfler sırasıyla okuma (read), yazma
 (write) ve işletme (execute) haklarını temsil eder. Yani üstteki
-`/bin/date` için gördüğümüz `-rwxr-xr-x` kullanıcı (dosyanin sahibi
-olan kullanıcı yani) için `rwx` diyor, yani tüm hakları vermiş, ama
-grup için `r-x` demiş, yani grup için yazma hakkı vermemiş.
+`/bin/date` için gördüğümüz `-rwxr-xr-x` kullanıcı (dosyanın sahibi
+olan kişi) için `rwx` diyor, yani tüm hakları vermiş, ama grup için
+`r-x` demiş, yani grup için yazma hakkı vermemiş.
 
-Grup bu tür izinleri idare etmenin bir kolay yolu bir bakıma, her Ünix
+Grup bu tür izinleri idare etmenin bir kolay yolu bir bakıma, her Unix
 kullanıcısı admin tarafından birden fazla gruba atanmış
-olabilir. Hangi gruba dahil olduğunu her kullanıcı `groups` komutunu
+olabilir. Hangi gruba dahil olunduğunu her kullanıcı `groups` komutunu
 işleterek bulabilir. Grup atamaları `/etc/groups` dosyası içinde
 tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
 `sudo ls -al /etc/group` deyin,
@@ -142,10 +146,20 @@ tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
 -rw-r--r-- 1 root root 936 Jul 20 15:46 /etc/group
 ```
 
-Dosya sahibi hariç başka kimsenin dosyaya yazma hakkı olmadığını görüyoruz.
+Dosya sahibi (admin) hariç başka kimsenin dosyaya yazma hakkı
+olmadığını görüyoruz.
 
-Pek cok sey kabuk etrafinda doner dedik, program baslatmak bunlardan
-en onemlisi. Bir program ismini yazarak 
+Pek çok şey kabuk etrafında döner dedik, program başlatmak bunlardan
+en önemlisi. Bir program ismini yazarak onu komut satırından
+başlatırız, ama o programı arka plana atarak ta işletebiliriz. Burada
+`&` işareti devreye girer, mesela `xclock` desem grafik saat programı
+başlar ama onu başlattığım komut satırının "bloklanmış" olduğunu
+görebilirim çünkü başlatan program başlatılanın bitmesini
+bekliyor. Programı üst sağ köşesindeki kapatma düğmesinden kapatırsam,
+ya da başlatan kabuktan Ctrl-C ile durdurursam, ya da `kill -9` ile, o
+zaman kabuğa geri dönüldüğünü görürüm. Eğer bu bloklamanın olmasını
+istemiyorsak, `xclock &` işletebiiriz, bu `xlock` programını arka
+plana atar, böylece ana kabukta hala başka komutlar işletebilir halde oluruz. 
 
 Referans
 
@@ -154,4 +168,7 @@ Referans
 [Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
 
 [htop](../../2012/12/htop.md)
+
+
+
 

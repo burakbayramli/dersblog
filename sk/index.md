@@ -19,6 +19,8 @@
 
 [Python](2016/01/python-dil-ogrenimi.md)
 
+[Unix](2020/07/unix)
+
 [Youtube Kanalım](https://www.youtube.com/channel/UCMAUsgUq5ODy8kMnJlUBUdQ)
 
 [Animasyonlu Matematik](https://www.youtube.com/channel/UCx64ou5qw0Q9LLkwE8xSNEg)

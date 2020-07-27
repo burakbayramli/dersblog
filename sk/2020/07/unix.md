@@ -68,7 +68,7 @@ deyince
 ```
 
 cevabı alıyorum. Kabuk tipi orada tanımlı. Bu arada `SHELL` bir çevre
-değişkeni (environment variable), bir anlamda içinde olduğumüz sürecin
+değişkeni (environment variable), bir anlamda içinde olduğumuz sürecin
 "çevresini" tanımlıyor, bu açıdan uygun isim. Çevre değişkenleri her
 kabuk için farklı olabilir, birinden set ettiğimiz değişkeni
 diğerinden göremeyebiliriz, `ALI=veli` deyin, `echo $ALI` bir `veli`
@@ -102,7 +102,7 @@ dedik ve sonuc
 Mon Jul 27 14:21:08 EEST 2020
 ```
 
-geldi, bu komutu işlettiğimide arka planda birkaç şey oldu. `date`
+geldi, bu komutu işlettiğimizde arka planda birkaç şey oldu. `date`
 dedik ama hangi date? Bu programın işler kodunun olduğu dosya nerede?
 Soru cevabı `which date` ile alınabilir, cevap olarak `/bin/date`
 geldi bizde. Hakikaten orada bir `date` programı var,
@@ -186,3 +186,5 @@ Referans
 [Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
 
 [htop](../../2012/12/htop.md)
+
+

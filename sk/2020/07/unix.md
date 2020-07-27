@@ -26,7 +26,7 @@ root     17133     2  0 11:54 ?        00:00:01 [kworker/u8:2+ev]
 ```
 
 listesi var. Hakikaten şu anda Emacs içindeyim, arka planda Firefox
-işliyor, vs. Bunların hepsi görülüyor. Bu surecler yokedilebilir, vs.,
+işliyor, vs. Bunların hepsi görülüyor. Bu süreçler yokedilebilir, vs.,
 bkz [Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md).
 
 Süreç listesini daha renkli olarak htop komutu ile görebiliriz (bağlantı altta). 
@@ -58,7 +58,6 @@ vs. Terminale gidip
 
 ```
 echo $SHELL
-
 ```
 
 deyince
@@ -186,5 +185,3 @@ Referans
 [Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
 
 [htop](../../2012/12/htop.md)
-
-

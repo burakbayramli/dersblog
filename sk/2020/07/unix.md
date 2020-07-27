@@ -77,11 +77,12 @@ verecektir.
 Her `bash` penceresinin başlangıç değerleri her kullanıcı için ana /
 ev (home) dizindeki `.bashrc` içinde set edilir. Dikkat, farklı kabuk
 kullananlar için bu başlangıç dosyası farklı olur, mesela `csh` için
-`.csh`. Global ayarlar `.bashrc` den önce işletilen (bash icin)
-`/etc/profile` icindedir. Her kullanıcı başlangıçta yapılmasını
-istediği şeyleri kendi `.bashrc`'si içine koyabilir, admin her
-kullanıcı için işlemesini istediği şeyler varsa onları `/etc/profile`
-içine koyar.
+`.csh`.
+
+Global ayarlar `.bashrc` den önce işletilen (bash icin) `/etc/profile`
+icindedir. Her kullanıcı başlangıçta yapılmasını istediği şeyleri
+kendi `.bashrc`'si içine koyabilir, admin her kullanıcı için
+işlemesini istediği şeyler varsa onları `/etc/profile` içine koyar.
 
 Ev dizini her kullanıcı için ana dizindir, `echo $HOME` ile ne
 olduğunu görebilirsiniz. Ubuntu'da bu benim icin `/home/burak` mesela.

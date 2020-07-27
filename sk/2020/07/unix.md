@@ -5,7 +5,7 @@ yıllarda başlayan ve C programlama diline yakın oluşuyla daha da
 yayılan bu sistem çekirdeksel olarak şu anda cep telefonlar dahil
 olmak üzere milyarlarca makina üzerinde işliyor.
 
-Surecler
+Süreçler
 
 Unix'i Unix yapan pek çok kavram var. Kullanıcıya pek gözükmeyen sahne
 arkasındaki programları denetleyen, işleten çekirdek seviyesinde
@@ -110,6 +110,39 @@ $ ls -al /bin/date
 
 Pek cok "sistem komutu" `/bin/` altindadir bu arada.
 
+Ustteki `ls` sonucunun soldaki kismi kafa karistirmis olabilir,
+`-rwxr-xr-x` ne demek? Alttaki resimle anlatmaya ugrasalim,
+
+![](ls.png)
+
+En soldaki harf `d` ise baktığımız şey bir dizindir, `-` ise dosyadır.
+
+Dikkat edersek kullanıcı (user) harfleri üç tane, grup (group) üç
+tane, diğerleri (other) üç tane. Bu harf üçlüleri, sırasıyla, o an
+olduğumuz kullanıcı, dahil olduğumüz grup ve diğerlerinin bu dosya
+üzerindeki izinlerini gösterir.
+
+Hangi kullanıcı olduğumuzu `id` ile hemen bulabiliriz.
+
+Her harf öbeği `rwx` olabilir, tabii bu harflerden bazıları iptal
+olabilir, mesela `-w-` olabilir. Harfler sırasıyla okuma (read), yazma
+(write) ve işletme (execute) haklarını temsil eder. Yani üstteki
+`/bin/date` için gördüğümüz `-rwxr-xr-x` kullanıcı (dosyanin sahibi
+olan kullanıcı yani) için `rwx` diyor, yani tüm hakları vermiş, ama
+grup için `r-x` demiş, yani grup için yazma hakkı vermemiş.
+
+Grup bu tür izinleri idare etmenin bir kolay yolu bir bakıma, her Ünix
+kullanıcısı admin tarafından birden fazla gruba atanmış
+olabilir. Hangi gruba dahil olduğunu her kullanıcı `groups` komutunu
+işleterek bulabilir. Grup atamaları `/etc/groups` dosyası içinde
+tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
+`sudo ls -al /etc/group` deyin,
+
+```
+-rw-r--r-- 1 root root 936 Jul 20 15:46 /etc/group
+```
+
+Dosya sahibi hariç başka kimsenin dosyaya yazma hakkı olmadığını görüyoruz.
 
 Pek cok sey kabuk etrafinda doner dedik, program baslatmak bunlardan
 en onemlisi. Bir program ismini yazarak 

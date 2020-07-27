@@ -5,9 +5,12 @@ yıllarda başlayan ve C programlama diline yakın oluşuyla daha da
 yayılan bu sistem çekirdeksel olarak şu anda cep telefonlar dahil
 olmak üzere milyarlarca makina üzerinde işliyor.
 
-Unix'i Unix yapan pek cok kavram var. Kullaniciya pek gozukmeyen sahne
-arkasindaki programlari denetleyen, isleten cekirdek seviyesinde
-yaptiklari var, dosya / dizin bazinda kullaniciya gozuken kısmı var. 
+Unix'i Ünix yapan pek çok kavram var. Kullanıcıya pek gözükmeyen sahne
+arkasındaki programları denetleyen, işleten çekirdek seviyesinde
+yaptıkları var, dosya / dizin bazında kullanıcıya gözüken kısmı var.
+
+
+[Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md)
 
 
 

@@ -83,6 +83,37 @@ başlangıç dosyası farklı olur, mesela `csh` için `.csh`.
 Ev dizini her kullanıcı için ana dizindir, `echo $HOME` ile ne
 olduğunu görebilirsiniz. Ubuntu'da bu benim icin `/home/burak` mesela.
 
+Program Baslatmak
+
+Kabuktan program baslattigimizda, mesela gunun tarihi veren `date`
+ile, satirda
+
+```
+$ date
+```
+
+dedik ve sonuc
+
+```
+Mon Jul 27 14:21:08 EEST 2020
+```
+
+geldi, bu komutu islettigimide arka planda birkac sey oldu. `date`
+dedik ama hangi date? Bu programin isler kodunun oldugu dosya nerede?
+Soru cevabi `which date` ile alinabilir, cevap olarak `/bin/date`
+geldi bizde. Hakikaten orada bir `date` programi var,
+
+```
+$ ls -al /bin/date
+-rwxr-xr-x 1 root root 100568 Jan 18  2018 /bin/date
+```
+
+Pek cok "sistem komutu" `/bin/` altindadir bu arada.
+
+
+Pek cok sey kabuk etrafinda doner dedik, program baslatmak bunlardan
+en onemlisi. Bir program ismini yazarak 
+
 Referans
 
 [Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md)

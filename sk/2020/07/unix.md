@@ -175,8 +175,9 @@ bekliyor. Programı üst sağ köşesindeki kapatma düğmesinden kapatırsam,
 ya da başlatan kabuktan Ctrl-C ile durdurursam, ya da başka bir
 pencereden `kill -9` ile, o zaman kabuğa geri dönüldüğünü
 görürüm. Eğer bu bloklamanın olmasını istemiyorsak, en başta `xclock
-&` işletebilirdik, bu `xlock` programını arka plana atar, böylece ana
-kabukta hala başka komutlar işletebilir halde oluruz.
+&` işletebilirdik, bu `xlock` programını arka plana atar, hemen geri
+döner, bekleme olmaz, böylece ana kabukta hala başka komutlar
+işletebilir halde oluruz.
 
 Referans
 

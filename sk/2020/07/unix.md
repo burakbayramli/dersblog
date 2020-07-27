@@ -65,3 +65,5 @@ Referans
 
 [Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md)
 
+[Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
+

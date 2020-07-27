@@ -12,17 +12,17 @@ Bir USB flash diskten yukleme yapmak icin Bios hazirlanmali,
 
 Once bilgisayari tamamen kapatin, guc dugmesini 5+ saniye basili tutun
 
-Bilgisayari baslatin bu sirada <F2> basili tutun, BIOS'a girin
+Bilgisayari baslatin bu sirada [F2] basili tutun, BIOS'a girin
 
-<Sag> <Sag> <Sag> ok tusu ile "Security" tab'ine gidin
+[Sag] [Sag] [Sag] ok tusu ile "Security" tab'ine gidin
 
-<Enter>'e basin supervisor password girisi yapin
+[Enter]'e basin supervisor password girisi yapin
 
-<Sag> ile Boot tab'ine
+[Sag] ile Boot tab'ine
 
-<Enter> <Asagi> <Enter> ile 'disable Secure Boot' secin
+[Enter] [Asagi] [Enter] ile 'disable Secure Boot' secin
 
-<F10> <Enter> ile Save and Exit
+[F10] [Enter] ile Save and Exit
 
 Tekrar baslayinca USB flash diskten yukleme yapilacak.
 
@@ -133,3 +133,5 @@ Kaynaklar
 [2] [AskUbuntu](https://askubuntu.com/questions/64222/how-can-i-create-launchers-on-my-desktop)
 
 [3] [Ubuntu 18.04 on Acer Swift SF114-32](http://michaelb.org/ubuntu-18-04-on-acer-swift/)
+
+

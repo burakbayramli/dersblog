@@ -130,8 +130,8 @@ işletmek istersek bunu komut satırında `/bin/date` yazarak
 yapabilirdik. Hatta script yazarken tavsiye edilen yaklaşım budur. 
 
 
-Ustteki `ls` sonucunun soldaki kismi kafa karistirmis olabilir,
-`-rwxr-xr-x` ne demek? Alttaki resimle anlatmaya ugrasalim,
+Üstteki `ls` sonucunun soldaki kısmı kafa karıştırmış olabilir,
+`-rwxr-xr-x` ne demek? Alttaki resimle anlatmaya uğraşalım,
 
 ![](ls.png)
 
@@ -184,7 +184,3 @@ Referans
 [Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
 
 [htop](../../2012/12/htop.md)
-
-
-
-

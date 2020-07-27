@@ -85,9 +85,10 @@ kendi `.bashrc`'si içine koyabilir, admin her kullanıcı için
 işlemesini istediği şeyler varsa onları `/etc/profile` içine koyar.
 
 Ev dizini her kullanıcı için ana dizindir, `echo $HOME` ile ne
-olduğunu görebilirsiniz. Ubuntu'da bu benim icin `/home/burak` mesela.
+olduğunu görebilirsiniz, tek `cd` komutu çoğu kabukta otomatik olarak
+sizi ev dizine götürür. Ubuntu'da bu benim icin `/home/burak` mesela.
 
-Program Baslatmak
+Program Başlatmak
 
 Kabuktan program başlattığımızda, mesela günün tarihi veren `date`
 ile, satırda
@@ -96,7 +97,7 @@ ile, satırda
 $ date
 ```
 
-dedik ve sonuc
+dedik ve sonuç
 
 ```
 Mon Jul 27 14:21:08 EEST 2020
@@ -186,3 +187,5 @@ Referans
 [Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
 
 [htop](../../2012/12/htop.md)
+
+

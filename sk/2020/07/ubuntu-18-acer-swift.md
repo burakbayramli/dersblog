@@ -25,9 +25,9 @@ BIOS
 
 Bir USB flash diskten yükleme yapmak için Bios hazırlanmalı,
 
-Once bilgisayari tamamen kapatin, guc dugmesini 5+ saniye basili tutun
+Önce bilgisayarı tamamen kapatın, güç düğmesini 5+ saniye basılı tutun
 
-Bilgisayari baslatin bu sirada [F2] basili tutun, BIOS'a girin
+Bilgisayarı başlatın bu sırada [F2] basılı tutun, BIOS'a girin
 
 [Sag] [Sag] [Sag] ok tusu ile "Security" tab'ine gidin
 
@@ -139,8 +139,6 @@ sudo apt install android-file-transfer
 ```
 
 
-
-
 Kaynaklar
 
 [1] [AskUbuntu](https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other)
@@ -148,5 +146,3 @@ Kaynaklar
 [2] [AskUbuntu](https://askubuntu.com/questions/64222/how-can-i-create-launchers-on-my-desktop)
 
 [3] [Ubuntu 18.04 on Acer Swift SF114-32](http://michaelb.org/ubuntu-18-04-on-acer-swift/)
-
-

@@ -1,7 +1,7 @@
 # SQL
 
-SQL ilişkisel tabanları sorgulamak için kullanılır. Iliskisel model,
-ve giris bilgileri [1]'de bulunabilir.
+SQL ilişkisel tabanları sorgulamak için kullanılır. İlişkisel model,
+ve giriş bilgileri [1]'de bulunabilir.
 
 Chinook
 
@@ -192,14 +192,4 @@ Referans
 * https://github.com/mamineofficial/Query-a-Digital-Music-Store-Part-I-SQL
 
 [9] https://shichaoji.com/2016/10/10/database-python-connection-basic/
-
-
-
-
-
-
-
-
-
-
 

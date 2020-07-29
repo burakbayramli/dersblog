@@ -333,6 +333,43 @@ Out[1]:
 0  USA  523.06
 ```
 
+Daha çetrefil birleşimler görelim, [7]'den
+line_item_track_artist.sql. Burada her fatura detayı için şarkı ve
+sanatçı isimlerinin dahil edilmesini istiyoruz.  Bu bilgi normalde
+fatura detayında yok, o zaman bir bir dörtlü birleşim (four way join)
+gerekiyor.
+
+```python
+psql("""
+SELECT InvoiceLineId, t.name as "Song", ar.Name as "Artist"
+FROM InvoiceLine i 
+JOIN Track t
+ON t.TrackId = i.TrackId
+JOIN Album a 
+ON a.AlbumId = t.AlbumId
+JOIN Artist ar 
+ON ar.ArtistId = a.ArtistId
+ORDER BY t.TrackId
+limit 10
+""")
+```
+
+```text
+Out[1]: 
+      0                                        1       2
+0   579  For Those About To Rock (We Salute You)   AC/DC
+1     1                        Balls to the Wall  Accept
+2  1154                        Balls to the Wall  Accept
+3  1728                          Fast As a Shark  Accept
+4     2                        Restless and Wild  Accept
+5   580                     Princess of the Dawn  Accept
+6     3                    Put The Finger On You   AC/DC
+7     4                         Inject The Venom   AC/DC
+8  1155                         Inject The Venom   AC/DC
+9   581                               Snowballed   AC/DC
+```
+
+
 Case When [6]
 
 `CASE WHEN` ifadeleri ile koşulsal alt işlemler yapmak

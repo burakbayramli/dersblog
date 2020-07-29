@@ -72,8 +72,8 @@ Basit
 
 `SELECT` ile satır seçimi yapılır, hangi satırlar, hangi kolonlar
 olacağı bu komutun seçeneklerindendir. En basit olan her şeyi seçmek,
-tüm sanatçılar mesela (10 tane ile sınırladık aslında ama `LİMİT`
-olmasa her şey gelir),
+her kolono, her satırı (gerçi 10 tane ile sınırladık aslında ama
+`LIMIT` olmasa her şey gelir),
 
 ```python
 psql("""SELECT * FROM Artist LIMIT 10""")
@@ -94,7 +94,7 @@ Out[1]:
 9  10          Billy Cobham
 ```
 
-Bu tablonun semasinin
+Bu tablonun şeması,
 
 ```
 CREATE TABLE [Artist]
@@ -106,7 +106,6 @@ CONSTRAINT [PK_Artist] PRIMARY KEY  ([ArtistId])
 ```
 
 Yani `ArtistId` ve `Name` almış olduk.
-
 
 Şarkılar, Türler 
 
@@ -120,11 +119,11 @@ anahtar, `GenreId`. O zaman her şarkının ait olduğu tür için `GenreId`
 ```python
 psql("""
 SELECT t.Name AS track_name,
-       g.name AS genre_name
-  FROM Track t
-  JOIN Genre g
-    ON t.GenreId = g.GenreId
- LIMIT 5""")
+g.name AS genre_name
+FROM Track t
+JOIN Genre g
+ON t.GenreId = g.GenreId
+LIMIT 5""")
 
 ```
 
@@ -138,28 +137,27 @@ Out[1]:
 4                     Princess of the Dawn  Rock
 ```
 
-Sonuçları `LIMIT 5` ile sınırladık, yoksa tüm kayıtlar geri gelirdi.
+Sonuçları gene sınırladı `LIMIT 5` ile.
 
 Biraz önce bir iç birleşim (inner join) yapmış olduk. Bu tür
-birleşimde eğer üzerinden birleşim yapılan kimlik iki tarafta da
-yoksa, sonuca alınmaz.
-
-Fakat bu derece harfiyen bir uyum olmasını her zaman
-istemeyebilirdik. Diyelim ki şarkıları o şarkının ait olabileceği
-(dikkat, olabileceği) bir fatura detay `InvoiceLine` satırıyla eşlemek
-istiyoruz. Eğer bir şarkı hiçbir zaman satılmadıysa fatura detayında
-olmayabilir. Ama biz tüm şarkıları yine de görmek istiyoruz, ve
-faturalamanın bizi sınırlamasını istemiyoruz. Bu durumda bir sol
-birleşim `LEFT JOİN` yaparız, bu durumda soldaki tablo asal tablo
-olur, onun tüm satırları her zaman geri döndürülür, ama sağda uyum
-yoksa fatura detay için boş değer gelir.
+birleşimde eğer üzerinden birleştirilen kimlik iki tarafta da yoksa,
+sonuca alınmaz. Buna iç birleşim (inner join) ismi verilir. Fakat bu
+derece harfiyen bir uyum olmasını her zaman istemeyebilirdik. Diyelim
+ki şarkıları o şarkının ait olabileceği (dikkat, olabileceği) bir
+fatura detay `InvoiceLine` satırıyla eşlemek istiyoruz. Eğer bir şarkı
+hiçbir zaman satılmadıysa fatura detayında olmayabilir. Ama biz tüm
+şarkıları yine de görmek istiyoruz, ve faturalamanın bizi
+sınırlamasını istemiyoruz. Bu durumda bir sol birleşim `LEFT JOİN`
+yaparız, o zaman soldaki tablo asal tablo olur, onun tüm satırları her
+zaman geri döndürülür, ama sağda uyum yoksa fatura detay için boş
+değer gelir.
 
 ```python
 psql("""
 SELECT t.name, t.composer, i.InvoiceLineId
-  FROM Track t
-  LEFT JOIN InvoiceLine i
-  ON t.TrackId = i.TrackId
+FROM Track t
+LEFT JOIN InvoiceLine i
+ON t.TrackId = i.TrackId
 LIMIT 8""")
 ```
 
@@ -176,15 +174,15 @@ Out[1]:
 7                          Let's Get It Up          Angus Young, Malcolm Young, Brian Johnson     NaN
 ```
 
-Sonuçlarda `Let's Get İt Up` şarkısının ait olduğu hiçbir
+Sonuçlarda `Let's Get It Up` şarkısının ait olduğu hiçbir
 `InvoiceLine` yok. Bu durumda o kimlik için boş değer var, NaN
 diyor. 
 
-Kendine Birlesim
+Kendisiyle Birleşim (Self Join)
 
-Bir tabloyu kendisiyle de birlestirebilirdik. Diyelim bir calisanin
-tum ismini ve onun amirinin tum ismini raporlamak istiyoruz. Bu
-durumda `ReportTo` kolonu tablonun kendisine isaret ediyor.
+Bir tabloyu kendisiyle de birleştirebilirdik. Diyelim bir çalışanın
+tüm ismini ve onun amirinin tüm ismini raporlamak istiyoruz. Bu
+durumda `ReportTo` kolonu tablonun kendisine işaret ediyor.
 
 ```python
 psql("""
@@ -213,7 +211,7 @@ Altsorgu (Subquery)
 Bir altsorgu ana sorgunun icinde isleyen bir gecici sorgudur. Kendi
 basina isleyebilen bir sorgu olmalidir, bu iyidir, cunku bu sekilde
 ayri test edilebilir. Mesela her ulkeden gelen hasilati yuzdesini
-hesaplamak icin once tum hasilati bilmek gerekir, bu bir altsorgu olur.
+hesaplamak icin önce tüm hasılatı bilmek gerekir, bu bir altsorgu olur.
 
 ```python
 psql("""SELECT BillingCountry,
@@ -252,7 +250,7 @@ Out[1]:
 23  United Kingdom   4.846689
 ```
 
-Bu sorgu isletilmeden once altsorgu isletilir, ardindan geri kalan isletilir.
+Bu sorgu işletilmeden önce altsorgu işletilir, ardından geri kalan işletilir.
 
 Bir altsorguyu bir geçici tablo olarak bile kullanabiliriz, mesela
 `FROM` içinde parantezler arasında bir sorgu işletip ona bir isim verirsek, bu isme
@@ -261,9 +259,10 @@ dış sorguda sanki bir tabloymuş gibi erisebiliriz.
 Örnek isminde `The` kelimesi olan sanatçıların listelemek istesek
 
 ```python
-psql("""SELECT names_with_the.*
+psql("""
+SELECT names_with_the.*
 FROM (SELECT Name 
-        FROM Artist 
+       FROM Artist 
        WHERE Name LIKE '%The%') AS names_with_the
 LIMIT 10""")
 ```
@@ -285,15 +284,17 @@ Out[1]:
 
 Gerçi dış sorguda fazla sükseli işlemler yapmadık ama yapabilirdik.
 
-`WHERE` kisminda da altsorgu kullanilabilir,
+`WHERE` kısmında da altsorgu kullanılabilir,
 
 ```python
-psql("""SELECT FirstName, LastName, BirthDate
+psql("""
+SELECT FirstName, LastName, BirthDate
 FROM Employee
-WHERE BirthDate IN (SELECT BirthDate 
-                      FROM Employee 
-                  ORDER BY BirthDate 
-                     LIMIT 10)""")
+WHERE BirthDate IN (
+  SELECT BirthDate FROM Employee ORDER BY BirthDate
+)
+LIMIT 10  
+""")
 ```
 
 ```text
@@ -311,7 +312,7 @@ Out[1]:
 
 Bu sorgu bize en yaşlı 10 çalışanın ismini verdi.
 
-İlginç bir altsorgu daha. Hangi ülkenin müşteri en çok ödeme yaptı?
+İlginç bir altsorgu daha, hangi ülkenin müşteri en çok ödeme yaptı?
 (Chinook-SQL-Exerçise/top_country.sql). Bunun için önce tüm ülkeler
 bazında satış toplamı alıyoruz, dış sorguda ise bunlar içinden
 maksimum olanını çekip çıkartıyoruz.
@@ -350,7 +351,7 @@ ON a.AlbumId = t.AlbumId
 JOIN Artist ar 
 ON ar.ArtistId = a.ArtistId
 ORDER BY t.TrackId
-limit 10
+LIMIT 10
 """)
 ```
 
@@ -409,7 +410,7 @@ Referans
 
 [2] [sqlite](../../2018/03/sqlite-basit-sekilde-hzl-diske-deger-yazma.md)
 
-[3] [psycopg2](../../2012/06/psycopg2-python-ile-api-bazli-postgresql-erisimi.md)
+[3] [psycopg2](../../2012/06/psycopg2.md)
 
 [4] https://github.com/Olamiotan/PythonStarter
 

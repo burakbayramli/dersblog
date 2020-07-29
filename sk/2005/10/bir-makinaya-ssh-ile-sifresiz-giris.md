@@ -24,15 +24,20 @@ bilgisayara) scp ya da ftp ile gönderin (scp kullanilinca simdilik
 sifre sorulacak). O bilgisayardaki kullanıcı adınız altında girin, ve
 $HOME/.ssh/ dizini altına id_rsa.pub kayıdını bırakın.
 
-Sonra, sunucu sisteminde sunu calıştırın: "cat $HOME/.ssh/id_rsa.pub
->> authorized_keys". Kutlarım. Artık ssh ya da CVS komutları
-kullanırken şifreye ihtiyacınız olmayacak.
+Sonra, sunucu sisteminde sunu calıştırın:
 
-Not: authorized_keys dosyasina ekleme yapmak yerine, baglanilan
+```
+cat $HOME/.ssh/id_rsa.pub >> authorized_keys
+```
+
+Kutlarım. Artık ssh ya da CVS komutları kullanırken şifreye
+ihtiyacınız olmayacak.
+
+Not: `authorized_keys` dosyasina ekleme yapmak yerine, baglanilan
 bilgisayardan ssh-copy-id komutu da ayni islemi yapiyor, tabii ki
 sifre soruluyor (simdilik), fakat bu yontem daha kolay.
 
-Unix cat komutu ile >> işlecini kullandığımıza dikkat edin. Bu
+Unix `cat` komutu ile `>>` işlecini kullandığımıza dikkat edin. Bu
 demektir ki, birden fazla .pub dosyasına tek bir authorized_keys
 dosyasına ekleyebiliriz. Yâni, birden fazla erişen kişi, aynı servis
 makinasına ve aynı kullanıcıya değişik açık anahtarlar ile erişebilir.
@@ -43,7 +48,9 @@ güvenliği çok açıksa, sshd bağlanmaya çalışan ssh/scp komutunu bir
 şifre girmeye zorlayacaktır. authorized_keys dosyasının yeterince
 kapalı hale getirmek için
 
+```
 chmod 600 authorized_keys
+```
 
 Çift Anahtar Bazlı Şifresiz Giriş Ne Kadar Güvenli?
 
@@ -88,11 +95,15 @@ problem, Windows ve Unix erişim hakları yöntemleri uyuşmaması. Chmod'u
 dosyada bir değişiklik olmuyor. Unix dosya haklarının Cygwin'de
 "simule" edilmesi için, cygwin.bat içine şunu eklemek lazım.
 
+```
 set CYGWIN=tty ntea
+```
 
 Bundan sonra
 
+```
 $ chmod 0600 id_rsa
+```
 
 .. ve bundan sonra ssh ve scp komutlarınız düzgün çalışacak.
 

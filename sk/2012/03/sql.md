@@ -449,8 +449,8 @@ Out[1]:
 Bu sorgu işletilmeden önce altsorgu işletilir, ardından geri kalan işletilir.
 
 Bir altsorguyu bir geçici tablo olarak bile kullanabiliriz, mesela
-`FROM` içinde parantezler arasında bir sorgu işletip ona bir isim verirsek, bu isme
-dış sorguda sanki bir tabloymuş gibi erisebiliriz.
+`FROM` içinde parantezler arasında bir sorgu işletip ona bir isim
+verirsek, bu isme dış sorguda sanki bir tabloymuş gibi erişebiliriz.
 
 Örnek isminde `The` kelimesi olan sanatçıların listelemek istesek
 
@@ -723,7 +723,3 @@ Referans
 [12] https://www.guru99.com/er-diagram-tutorial-dbms.html
 
 [13] https://www.c-sharpcorner.com/article/diving-into-basics-of-sql-server/
-
-
-
-

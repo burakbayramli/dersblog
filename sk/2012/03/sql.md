@@ -3,6 +3,12 @@
 SQL ilişkisel tabanları sorgulamak için kullanılır. İlişkisel model,
 ve giriş bilgileri [1]'de bulunabilir.
 
+2010'lu yıllarda anahtar/değer (key/value) tabanları ön plana çıkmış
+olsa da, SQL hala popüler olmaya devam ediyor. Burada SQL'un
+tasarlanma felsefesi rol oynamış olabilir, SQL ne istendiğini tarif
+eder nasıl alınacağının tarif etmez. Bu tür bir yapıyı istenen ölçeğe
+uygulamak mümkündür, hatta Google'ün BigQuery dili de aynen bunu yapıyor. 
+
 Chinook
 
 Bu tabanın sqlite ortamında nasıl kurulacağını [2]'de
@@ -17,7 +23,6 @@ ilişkileri görebiliyoruz. ER diyagramlarını çokluğu belirtmek icin
 bazı semboller kullanır [12], bunlar,
 
 ![](er.png)
-
 
 Bazı yardımcı fonksiyonlar,
 
@@ -112,7 +117,7 @@ CONSTRAINT [PK_Artist] PRIMARY KEY  ([ArtistId])
 
 Yani `ArtistId` ve `Name` almış olduk.
 
-En basit sorgulardan bir digeri satir saymak,
+En basit sorgulardan bir diğeri satır saymak,
 
 ```python
 runsql("""SELECT count(*) FROM Artist""")
@@ -163,9 +168,7 @@ Bu kavramları beraber kullanabilirim, mesela fatura miktarı 10
 dolardan yüksek olan tüm faturaları göster, ve miktara göre sırala [13],
 
 ```python
-psql("""SELECT InvoiceId  
-        , InvoiceDate  
-        , Total  
+psql("""SELECT InvoiceId, InvoiceDate, Total  
 FROM Invoice  
 WHERE Total > 10  
 ORDER BY Total LIMIT 10""")
@@ -186,7 +189,8 @@ Out[1]:
 9   47  2009-07-16 00:00:00  13.86
 ```
 
-`WHERE` icin pek cok sarti zincirlemek mumkun, `AND` ve `OR` ile bunu yapabilirim,
+`WHERE` için birden fazla şartı zincirlemek mümkün, `AND` ve `OR` ile
+bunu yapabilirim,
 
 ```python
 runsql("""SELECT count(*)
@@ -291,9 +295,9 @@ Out[1]:
 8  United Kingdom  21
 ```
 
-Şarkılar, Türler 
+Birleştirim (Join)
 
-Basit bir birleştirim (join) ile devam edelim. Tüm şarkılar `Track`
+Basit bir birleştirme işlemi ile devam edelim. Tüm şarkılar `Track`
 tablosunda, o şarkının hangi türe ait olduğu `Genre`
 tablosunda. Aradaki bağlantı `Track` üzerinde duran bir yabancı
 anahtar, `GenreId`. O zaman her şarkının ait olduğu tür için `GenreId`
@@ -361,11 +365,10 @@ Sonuçlarda `Let's Get It Up` şarkısının ait olduğu hiçbir
 `InvoiceLine` yok. Bu durumda o kimlik için boş değer var, NaN
 diyor. 
 
-Kendisiyle Birleşim (Self Join)
-
-Bir tabloyu kendisiyle de birleştirebilirdik. Diyelim bir çalışanın
-tüm ismini ve onun amirinin tüm ismini raporlamak istiyoruz. Bu
-durumda `ReportTo` kolonu tablonun kendisine işaret ediyor.
+Kendisiyle Birleşim (Self Join); Bir tabloyu kendisiyle de
+birleştirebilirdik. Diyelim bir çalışanın tüm ismini ve onun amirinin
+tüm ismini raporlamak istiyoruz. Bu durumda `ReportTo` kolonu tablonun
+kendisine işaret ediyor.
 
 ```python
 psql("""

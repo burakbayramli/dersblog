@@ -313,16 +313,16 @@ Out[1]:
 Bu sorgu bize en yaşlı 10 çalışanın ismini verdi.
 
 İlginç bir altsorgu daha, hangi ülkenin müşteri en çok ödeme yaptı?
-(Chinook-SQL-Exerçise/top_country.sql). Bunun için önce tüm ülkeler
-bazında satış toplamı alıyoruz, dış sorguda ise bunlar içinden
-maksimum olanını çekip çıkartıyoruz.
+[7]'den top_country.sql. Bunun için önce tüm ülkeler bazında satış
+toplamı alıyoruz, dış sorguda ise toplamların içinden maksimum olanını
+çekip çıkartıyoruz.
 
 
 ```python
 psql("""
-SELECT "Country", MAX("Total Sales For Country") as "Total Spent"
+SELECT Country, MAX(Total_Sales_For_Country) as Total_Spent
 FROM
-   (SELECT BillingCountry as "Country" , SUM(Total) as "Total Sales For Country"
+   (SELECT BillingCountry as Country , SUM(Total) as Total_Sales_For_Country
     FROM Invoice
     GROUP BY BillingCountry)
 """)
@@ -403,6 +403,95 @@ print (df)
 4  2009  103.95           25.74   57.42
 ```
 
+Her ülke için en popüler müzik türünü seçmek istiyoruz. Yani en fazla
+alım olan şarkıları ülke bazında gruplamak lazım. Altta `WİTH` ile bir
+altsorgu yaratılıyor, bu sonuca bir isim veriliyor, `t1`, ve bu sonuç
+bir diğer alt sorguyla `t2` üzerinden birleştiriliyor [10]. 
+
+```python
+psql("""
+WITH t1 AS (
+	SELECT
+		COUNT(i.InvoiceId) Purchases, c.Country, g.Name, g.GenreId
+	FROM Invoice i
+		JOIN Customer c ON i.CustomerId = c.CustomerId
+		JOIN InvoiceLine il ON il.Invoiceid = i.InvoiceId
+		JOIN Track t ON t.TrackId = il.Trackid
+		JOIN Genre g ON t.GenreId = g.GenreId
+	GROUP BY c.Country, g.Name
+	ORDER BY c.Country, Purchases DESC
+	)
+
+SELECT t1.*
+FROM t1
+JOIN (
+	SELECT MAX(Purchases) AS MaxPurchases, Country, Name, GenreId
+	FROM t1
+	GROUP BY Country
+	) t2
+ON t1.Country = t2.Country
+WHERE t1.Purchases = t2.MaxPurchases""")
+```
+
+```text
+Out[1]: 
+      0               1                   2  3
+0     9       Argentina  Alternative & Punk  4
+1     9       Argentina                Rock  1
+2    22       Australia                Rock  1
+3    15         Austria                Rock  1
+4    21         Belgium                Rock  1
+5    81          Brazil                Rock  1
+6   107          Canada                Rock  1
+7     9           Chile                Rock  1
+8    25  Czech Republic                Rock  1
+9    21         Denmark                Rock  1
+10   18         Finland                Rock  1
+11   65          France                Rock  1
+12   62         Germany                Rock  1
+13   11         Hungary                Rock  1
+14   25           India                Rock  1
+15   12         Ireland                Rock  1
+16   18           Italy                Rock  1
+17   18     Netherlands                Rock  1
+18   17          Norway                Rock  1
+19   22          Poland                Rock  1
+20   31        Portugal                Rock  1
+21   22           Spain                Rock  1
+22   12          Sweden               Latin  7
+23  157             USA                Rock  1
+24   37  United Kingdom                Rock  1
+```
+
+Averaj şarkı isminden daha uzun olan şarkıları geri döndür. Yine bir
+altsorgu, averaj şarkı uzunluğunu hesaplamak için [10].
+
+```python
+psql("""
+SELECT Name, Milliseconds FROM (
+	SELECT t.Name, t.Milliseconds, (SELECT AVG(Milliseconds) FROM Track) AS AvgLenght
+	FROM Track t
+	WHERE AvgLenght < t.Milliseconds
+	ORDER BY t.Milliseconds DESC  )
+LIMIT 10	
+""")
+```
+
+```text
+Out[1]: 
+                             0        1
+0       Occupation / Precipice  5286953
+1      Through a Looking Glass  5088838
+2  Greetings from Earth, Pt. 1  2960293
+3      The Man With Nine Lives  2956998
+4  Battlestar Galactica, Pt. 2  2956081
+5  Battlestar Galactica, Pt. 1  2952702
+6    Murder On the Rising Star  2935894
+7  Battlestar Galactica, Pt. 3  2927802
+8            Take the Celestra  2927677
+9                Fire In Space  2926593
+```
+
 
 Referans
 
@@ -430,4 +519,8 @@ Referans
 * https://github.com/mamineofficial/Query-a-Digital-Music-Store-Part-I-SQL
 
 [9] https://shichaoji.com/2016/10/10/database-python-connection-basic/
+
+[10] https://github.com/douglasnavarro/chinook-analysis
+
+[11] [Postgresql](../../2012/03postgresql.md)
 

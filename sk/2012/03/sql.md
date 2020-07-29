@@ -145,7 +145,10 @@ Out[1]:
 `WHERE` ile filtreleme yapabiliriz,
 
 ```python
-psql("""SELECT EmployeeId, Lastname, Firstname, Birthdate FROM Employee where  EmployeeID >= 6""")
+psql("""
+SELECT EmployeeId, Lastname, Firstname, Birthdate FROM Employee
+where  EmployeeID >= 6
+""")
 ```
 
 ```text
@@ -181,6 +184,31 @@ Out[1]:
 7   33  2009-05-15 00:00:00  13.86
 8   40  2009-06-15 00:00:00  13.86
 9   47  2009-07-16 00:00:00  13.86
+```
+
+`WHERE` icin pek cok sarti zincirlemek mumkun, `AND` ve `OR` ile bunu yapabilirim,
+
+```python
+runsql("""SELECT count(*)
+FROM Invoice  
+WHERE BillingState IS NOT NULL  
+AND BillingState = 'AZ'  
+OR BillingState = 'CA'  
+AND Total > 4 """)
+```
+
+```text
+(16,)
+```
+
+Hic sart vermeseydim,
+
+```python
+runsql("""SELECT count(*) FROM Invoice  """)
+```
+
+```text
+(412,)
 ```
 
 

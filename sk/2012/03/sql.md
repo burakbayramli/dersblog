@@ -508,6 +508,11 @@ Out[1]:
 
 Bu sorgu bize en yaşlı 10 çalışanın ismini verdi.
 
+`WHERE` içinde `BirthDate İN` görülüyor, yani `BirthDate` kolonunun
+`IN` den sonra tarif edilen küme içinde olma şartını koymuş
+oluyoruz. Bazen birleşim ve eşitlik şartı yerine bu tür tarif daha
+rahat oluyor.
+
 İlginç bir altsorgu daha, hangi ülkenin müşteri en çok ödeme yaptı?
 [7]'den top_country.sql. Bunun için önce tüm ülkeler bazında satış
 toplamı alıyoruz, dış sorguda ise toplamların içinden maksimum olanını

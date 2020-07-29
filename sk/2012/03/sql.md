@@ -78,11 +78,15 @@ Out[1]:
 4  Johnson  Sales Support Agent
 ```
 
+Bu fonksiyonları ile Python üzerinden SQL işletebilmek için kullandık,
+fakat yine [2]'de tarif edilen `sqlitebrowse` programı üzerinden de bu
+sorguları işletebiliriz.
+
 Basit
 
 `SELECT` ile satır seçimi yapılır, hangi satırlar, hangi kolonlar
 olacağı bu komutun seçeneklerindendir. En basit olan her şeyi seçmek,
-her kolono, her satırı (gerçi 10 tane ile sınırladık aslında ama
+her kolon, her satırı (gerçi 10 tane ile sınırladık aslında ama
 `LIMIT` olmasa her şey gelir),
 
 ```python
@@ -214,7 +218,6 @@ runsql("""SELECT count(*) FROM Invoice  """)
 ```text
 (412,)
 ```
-
 
 Gruplama
 
@@ -391,6 +394,13 @@ Out[1]:
 5       Robert King  Michael Mitchell
 6    Laura Callahan  Michael Mitchell
 ```
+
+Bu arada dikkat çektiyse `||` komutu var, bu komut kolon değeri
+birleştirmek için kullanılır. İsim ve soyisimi birleştirebilirim,
+arasına bir boşluk koyarak yeni bir kolon oluşturmuş olurum. Bu kolona
+`AŞ ...` şeklinde bir isim de verirsem, çıktılar buna göre
+düzenlenir. Hatta altsorgularda bile tanımlanan bu tür kolonlar üst
+sorgular tarafından kullanılabilir.
 
 Altsorgu (Subquery)
 

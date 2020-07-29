@@ -713,3 +713,5 @@ Referans
 [12] https://www.guru99.com/er-diagram-tutorial-dbms.html
 
 [13] https://www.c-sharpcorner.com/article/diving-into-basics-of-sql-server/
+
+

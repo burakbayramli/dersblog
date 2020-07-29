@@ -404,10 +404,10 @@ sorgular tarafından kullanılabilir.
 
 Altsorgu (Subquery)
 
-Bir altsorgu ana sorgunun icinde isleyen bir gecici sorgudur. Kendi
-basina isleyebilen bir sorgu olmalidir, bu iyidir, cunku bu sekilde
-ayri test edilebilir. Mesela her ulkeden gelen hasilati yuzdesini
-hesaplamak icin önce tüm hasılatı bilmek gerekir, bu bir altsorgu olur.
+Bir altsorgu ana sorgunun içinde işleyen bir geçici sorgudur. Kendi
+başına işleyebilen bir sorgu olmalıdır, bu iyidir, çünkü bu şekilde
+ayrı test edilebilir. Mesela her ülkeden gelen hasılatı yüzdesini
+hesaplamak için önce tüm hasılatı bilmek gerekir, bu bir altsorgu olur.
 
 ```python
 psql("""SELECT BillingCountry,
@@ -723,5 +723,7 @@ Referans
 [12] https://www.guru99.com/er-diagram-tutorial-dbms.html
 
 [13] https://www.c-sharpcorner.com/article/diving-into-basics-of-sql-server/
+
+
 
 

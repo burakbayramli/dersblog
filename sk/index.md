@@ -25,6 +25,8 @@
 
 [Proje İdaresi](2020/07/proje-idaresi.md)
 
+[Network, TCP/IP, Internet](2000/10/network.md)
+
 [Nereden Başlarım](2019/01/nereden.md)
 
 [Youtube Kanalım](https://www.youtube.com/channel/UCMAUsgUq5ODy8kMnJlUBUdQ)

@@ -225,7 +225,7 @@ Gruplama
 
 Bir tablodaki, ya da birleştirimler üzerinden oluşturulmuş bir sonuç
 kümesindeki kolonlar üzerinde gruplama yapmak mümkündür. Mesela fatura
-tablosunda ülkeler üzerinden gruplama yapabilirim, ve bu grubun satır
+tablosunda ülkeler üzerinden gruplama yapabilirim, ve her grubun satır
 sayısını raporlamak isteyebilirim.
 
 ```python

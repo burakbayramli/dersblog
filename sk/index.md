@@ -3,6 +3,8 @@
 
 ## En Son
 
+30/7 - [Raspberry Pi](2020/07/raspberrypi.md)
+
 27/7 - [chmod](2020/07/chmod.md)
 
 27/7 - [Unix](2020/07/unix.md)

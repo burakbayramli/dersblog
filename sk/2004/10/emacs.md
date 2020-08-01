@@ -1,64 +1,43 @@
 # Emacs
 
-
-Emacs
-
-
-
-
-
-
 Emacs hic kuşkusuz, bol özellikli, ve esnek bir editor. Emacs,  
 
- 
-  
- 
- * LISP'i andıran bir dil ile her şeyini değiştirmenize izin veriyor.  
- * Gene LISP kullanarak özellik eklemenize izin veriyor (ne isterseniz).  
- * Her programlama dili icin bir 'kip' (mode) desteği var. Mesela 'sadece' Java yazarken "if kelimesinden sonra otomatik aşağı satıra git" gibi bir tanım Emacs için cok kolay. Bu gibi ayarlar, .emacs config dosyasından rahatça yapılıyor. 
- * Emacs ve dış dünya bağlantısı rahat. Unix komutlarını Emacs içinden işletmek mümkün. (Esc-x shell) 
- * Emacs içinden dış kaynak kodları derleme, ve sonuçları tarayıp hatalı olan satırı göstermek çok rahat. 
+* LISP'i andıran bir dil ile her şeyini değiştirmenize izin veriyor.  
 
- 
-  
-  
- Ekte göstereceğimiz kodlar, benim .emacs config dosyamdan alındı. İlk önce açıklamayı, sonra kodun kendisini sunacağım.  
+* Gene LISP kullanarak özellik eklemenize izin veriyor (ne isterseniz).  
 
- 
-  
- Örnek .emacs 
-  
-  
- Emacs içinden ANT programı ile derleme yapmak.  
+* Her programlama dili icin bir 'kip' (mode) desteği var. Mesela
+  'sadece' Java yazarken "if kelimesinden sonra otomatik aşağı satıra
+  git" gibi bir tanım Emacs için cok kolay. Bu gibi ayarlar, .emacs
+  config dosyasından rahatça yapılıyor.
 
- 
-  
-  
-  
-(setq compile-command "ant -emacs -find ")
- 
+* Emacs ve dış dünya bağlantısı rahat. Unix komutlarını Emacs içinden
+  işletmek mümkün. (Esc-x shell)
 
- 
+* Emacs içinden dış kaynak kodları derleme, ve sonuçları tarayıp
+  hatalı olan satırı göstermek çok rahat.
   
+ Ekte göstereceğimiz kodlar, benim .emacs config dosyamdan alındı. İlk
+ önce açıklamayı, sonra kodun kendisini sunacağım.
   
- Metin incelerken, Emacs göstergesinden, kaçıncı satırda olduğumuzu görmek:  
+ Örnek .emacs
+  
+Emacs içinden derleme yapmak, istenilen komut buraya girilebilir,
 
- 
+```
+(setq compile-command "make ")
+```
   
-  
-  
+Metin incelerken, Emacs göstergesinden, kaçıncı satırda olduğumuzu
+görmek:
+
+```
 (setq column-number-mode t)
- 
+```
+  
+Sevdiğim renkler..  
 
- 
-  
-  
- Sevdiğim renkler..  
-
- 
-  
-  
-  
+```
 (set-face-background 'modeline "darkred")
 (set-face-foreground 'modeline "white")
 (set-face-foreground 'region "lightgrey")
@@ -66,30 +45,23 @@ Emacs hic kuşkusuz, bol özellikli, ve esnek bir editor. Emacs,
 (set-background-color  "navyblue")
 (set-foreground-color "white")
 (set-cursor-color "turquoise")
- 
+```
 
- 
-  
-  
- Sevdiğim boyutlar..  
+Sevdiğim boyutlar..  
 
- 
-  
-  
-  
+```
 (set-frame-width (selected-frame) 83)
 (set-frame-height (selected-frame) 49)
- 
+```
 
- 
-  
-  
- Tuşların ne yaptığını tamamen değiştirebilirsiniz. Şahsen ben ok tusları yerine (uzak oldukları için) Control tuşu ile alfabe harflerine beraber basarak ileri-geri gitmeyi tercih ediyorum. 4 yön için, sol = control-J, sağ = control-L, yukarı = control-P ve aşağı = control-N kullandık.  
+Tuşların ne yaptığını tamamen değiştirebilirsiniz. Şahsen ben ok
+tusları yerine (uzak oldukları için) Control tuşu ile alfabe
+harflerine beraber basarak ileri-geri gitmeyi tercih ediyorum. 4 yön
+için, sol = control-J, sağ = control-L, yukarı = control-P ve aşağı =
+control-N kullandık.
 
- 
-  
-  
-  
+
+```
 (define-key global-map "\C-m" 'newline-and-indent)
 (global-unset-key "\C-f")
 (global-unset-key "\C-w")
@@ -118,17 +90,14 @@ Emacs hic kuşkusuz, bol özellikli, ve esnek bir editor. Emacs,
 (global-set-key "\C-c\u" 'scroll-cursor-to-top)
 (global-set-key "\C-x\q" 'query-replace) ;; ara ve degistir
 (global-set-key "\C-x\g" 'goto-line) ;; satir no'ya atla
- 
+```
 
- 
-  
-  
- Emacs programlama dili kiplerinden bahsetmiştim. Bu kiplere geçmek için "Esc-x java-mode (enter)" gibi komut işletirseniz Emacs kipe geçecektir. Fakat eğer bu geçişin otomatik olmasını istiyorsanız, aşağıdakini yapabilirsiniz.   
+Emacs programlama dili kiplerinden bahsetmiştim. Bu kiplere geçmek
+için "Esc-x java-mode (enter)" gibi komut işletirseniz Emacs kipe
+geçecektir. Fakat eğer bu geçişin otomatik olmasını istiyorsanız,
+aşağıdakini yapabilirsiniz.
 
- 
-  
-  
-  
+```
 (setq auto-mode-alist
  (append '(("\\.C$"   . c++-mode)
 ("\\.cc$"  . c++-mode)
@@ -148,21 +117,22 @@ Emacs hic kuşkusuz, bol özellikli, ve esnek bir editor. Emacs,
            ("\\.?[Ff][Aa][Qq]$" . faq-mode)
            ("\\.txt$" . text-mode))
    auto-mode-alist))
- 
+```
 
- 
-  
-  
- Ayrıca, Emacs kullanırken Control tusunu çok kullanmak gerekiyor. Yeni bilgisayarların çogunda Control tuşu oldukça alttadır. Sürekli Ctrl tuşuna basacağım derken Emacs kullanıcıları el felci geçirmesin diye, çözüm olarak CAPS tuşunu Control tuşuna çevirmek iyi olabilir. CAPS düğmesi yukarıda olduğu için, sol serçe parmağı ile basmak çok rahhattır.   
+Ayrıca, Emacs kullanırken Control tusunu çok kullanmak gerekiyor. Yeni
+bilgisayarların çogunda Control tuşu oldukça alttadır. Sürekli Ctrl
+tuşuna basacağım derken Emacs kullanıcıları el felci geçirmesin diye,
+çözüm olarak CAPS tuşunu Control tuşuna çevirmek iyi olabilir. CAPS
+düğmesi yukarıda olduğu için, sol serçe parmağı ile basmak çok
+rahhattır. Bu degisimler isletim sistemi seviyesinde yapilir. Ubuntu
+yazilarinda isliyoruz. Windows'da yapmak için, [su dosyayi](capsctrl.reg)
+indirip, üzerine tıklayın. Sorulan soruya evet
+diye cevap verin. Bilgisayarı kapatıp açtıktan sonra, CAPS düğmeniz
+Control gibi işliyor olacak.
 
- 
-  
-  
- Bu değişimi Windows 2000 üzerinde yapmak için, ekteki dosyayi indirip, üzerine tıklayın. Sorulan soruya evet diye cevap verin. Bilgisayarı kapatıp açtıktan sonra, CAPS düğmeniz Control gibi işliyor olacak.    
+Referans
 
- 
-  
- 
+[Pymacs](/2009/04/pymacs.md)
 
 
 

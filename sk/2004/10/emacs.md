@@ -1,6 +1,29 @@
 # Emacs
 
-Emacs hic kuşkusuz, bol özellikli, ve esnek bir editor. Emacs,  
+Emacs hic kuşkusuz, bol özellikli, ve esnek bir editor.
+
+Ubuntu uzerinde kurmak icin
+
+```
+sudo apt-get install emacs25
+```
+
+Başlatmak için ben bir bash script yazdım, çünkü o script içinden bir
+Python sanal ortam başlatıyorum, böylece Emacs ıcindeyken istediğim
+Python paketlerine de erisebilmiş oluyorum. Çünkü Python script'leri
+çoğunlukla Emacs ıcinden işletirim, eğer Emacs süreci Python
+paketlerinden habersiz ise, script işini yapamaz. Mesela `env3` adlı
+bir ortam için
+
+```
+#!/bin/bash
+source /home/burak/Documents/env3/bin/activate 
+/usr/bin/emacs25 &
+```
+
+Bu script'i bir ikon üzerinden başlatmak için Ubuntu kuruluş notlarına bakılabilir.
+
+Emacs,  
 
 * LISP'i andıran bir dil ile her şeyini değiştirmenize izin veriyor.  
 
@@ -133,9 +156,4 @@ Control gibi işliyor olacak.
 Referans
 
 [Pymacs](/2009/04/pymacs.md)
-
-
-
-
-
 

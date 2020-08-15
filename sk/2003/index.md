@@ -10,8 +10,6 @@
 
 [Geliştirme, Deneme, Sonuç](10/gelistirme-deneme-sonuc.md)
 
-[Gereğinden Fazla Calculus](10/gereginden-fazla-calculus.md)
-
 [JDBC ile Tablo Karşılaştırmak](10/jdbc-ile-tablo-karslastrmak.md)
 
 [JStamp - Elde Taşınan Java](10/jstamp-elde-tasnan-java.md)

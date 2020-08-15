@@ -48,7 +48,7 @@
 
 [Pandas ile Birlesim (Join)](04/pandas-ile-birlesim-join.md)
 
-[plpython](04/plpython.md)
+[Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython](04/plpython.md)
 
 [Postgres Min, Partition](04/postgres-min-partition.md)
 

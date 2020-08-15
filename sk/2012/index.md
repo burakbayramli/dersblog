@@ -58,12 +58,6 @@
 
 [Python Profiler](04/python-profiler.md)
 
-[Almanya'da Calisma - Ikamet Kaydi (Anmeldung)](05/almanyada-calisma-oturma-anmeldung.md)
-
-[Almanya'da Calisma - Oturma Izni (Residence Permit, Aufenthaltstitels)](05/almanyada-calisma-oturma-izni-residence.md)
-
-[Almanya'da Calisma](05/almanyada-calisma.md)
-
 [Box ve Whisker Grafikleri](05/box-ve-whisker-grafikleri.md)
 
 [Dropdown Secimi Ile Ayri DIV Gostermek](05/dropdown-secimi-ile-ayri-div-gostermek.md)

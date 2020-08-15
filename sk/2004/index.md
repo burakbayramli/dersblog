@@ -28,5 +28,3 @@
 
 [Oracle VARCHAR İndeksleri Üzerinden Erişim Yavaş mıdır?](11/oracle-varchar-indeksleri-uzerinden.md)
 
-[Türev İşlevi Nasıl Türetilir](11/turev-islevi-nasl-turetilir.md)
-

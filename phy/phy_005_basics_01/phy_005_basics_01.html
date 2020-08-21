@@ -331,32 +331,75 @@ print (f_r, 'N')
 <p>Yokuş yukarı durumunda yerçekiminin yere doğru bastıran bileşenine bakmak lazım,
 bu tabii daha az olur, yani sürtünme etkisi azalmış olur, ama tabii eğim
 yüzünden geriye doğru yerçekim artar.</p>
-<p>Şimdi düz yerde 0-50 hızlanmasını hesaplayalım, diyelim ki bir dakika içinde bu
-hızlanmayı yapmak istiyoruz, sabit ivme ile diyelim, o zaman ivme $a = v /
-\Delta t$ ile hesaplanabilir, ki $\Delta t = 60 s$. </p>
-<pre><code class="python">dt = 120
+<p>Şimdi 0-50 hızlanmasını hesaplayalım, diyelim ki bir dakika içinde bu hızlanmayı
+yapmak istiyoruz, sabit ivme ile diyelim, o zaman ivme $a = v / \Delta t$ ile
+hesaplanabilir, ki $\Delta t = 60 s$.</p>
+<pre><code class="python">dt = 60
 a = v / dt
 f_s = m*a
 print (f_s, 'N')
 </code></pre>
 
-<pre><code>347.25 N
+<pre><code>694.5 N
 </code></pre>
 
-<p>O zaman duz ortamda hizlanma, surtunme, ve hava itisiyle mucadele etmek icin
-gereken guc</p>
+<p>O zaman düz ortamda hızlanma, sürtünme, ve hava itişiyle mücadele etmek için
+gereken güç</p>
 <pre><code class="python">print ( (f_r + f_a + f_s) * v, 'KWatt')
 </code></pre>
 
-<pre><code>17889.2364931875 KWatt
+<pre><code>22318.499261665234 KWatt
 </code></pre>
 
 <p>Tipik bir arabanın motoru 120 HP gücündedir, bu 90 KWatt demektir. Yani arabanın
 bu durum için yeterli gücü var.</p>
+<p>Şimdi yukarı çıkış durumuna bakalım. Yokus $\theta = 20$ olsun. Yerçekimi
+kuvvetinin bileşenleri şöyle ayrılabilir,</p>
+<p><img alt="" src="phy_005_basics_08.png" /></p>
+<p>Yere dik olan bileşen $m g \cos\theta$, paralel olan $m g \sin\theta$. Paralele
+$f_p$, dik olana $f_n$ diyelim,</p>
+<pre><code class="python">f_p = m * 9.8 * np.sin(np.deg2rad(20))
+print (f_p)
+</code></pre>
+
+<pre><code>10055.392213774661
+</code></pre>
+
+<p>Yeni surtunme dik olan $f_n$'e gore olacak,</p>
+<pre><code class="python">f_n = m * 9.8 * np.cos(np.deg2rad(20))
+f_r = f_n * mu
+print (f_r)
+</code></pre>
+
+<pre><code>442.0314088176914
+</code></pre>
+
+<p>Ayrıca hızı azaltalım, yoküs yükarı çıkıyoruz, 20 km/saat ile gidebilmek yeterli
+olsun, yük fazla, </p>
+<pre><code class="python">dt = 60
+v = np.round(20*1000.0 / 3600.0,2)
+a = v / dt
+f_s = m*a
+print (f_s, 'N')
+</code></pre>
+
+<pre><code>278.0 N
+</code></pre>
+
+<p>Şimdi hepsini bir araya koyalım, yoküs yükarı 0-20 hızlanması yapıyoruz,
+sürtünme, geriye doğru çekilme, ve hava ile boğuşmak lazım, gereken kuvvet,</p>
+<pre><code class="python">F = f_r + f_a + f_s + f_p
+print (F*v, 'Watt')
+</code></pre>
+
+<pre><code>62526.06762686348 Watt
+</code></pre>
+
+<p>Bir araba motoru hala bu gücü sağlayabilir.</p>
 <p>Kaynaklar </p>
 <p>[1] Strang, <em>Calculus, 4th Edition</em></p>
 <p>[2] Feynman, <em>The Feynman Lectures on Physics, Volume I</em></p>
 <p>[3] Resnick, Fundamentals of Physics, 10th Ed</p>
 <p>[4] <a href="https://physics.stackexchange.com/questions/241507/would-this-be-correct-for-kinetic-energy-in-special-relativity">https://physics.stackexchange.com/questions/241507/would-this-be-correct-for-kinetic-energy-in-special-relativity</a></p>
 <p>[5] Resnick, Fundamentals of Physics, 8th Ed</p>
-<p>[7] Bayramli, Çok Değişkenli Calculus, <em>Entegralleri Nasıl Düşünelim</em></p>
+<p>[7] Bayramlı, Çok Değişkenli Calculus, <em>Entegralleri Nasıl Düşünelim</em></p>

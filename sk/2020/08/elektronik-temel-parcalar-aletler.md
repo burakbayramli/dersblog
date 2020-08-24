@@ -44,3 +44,5 @@ prototipleme için olabilir.
 
 
 
+[devam edecek]
+

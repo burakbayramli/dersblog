@@ -162,7 +162,7 @@ class Simulation:
             data = glReadPixels(0, 0, width, height, GL_RGBA, GL_UNSIGNED_BYTE)
             image = Image.frombytes("RGBA", (width, height), data)
             image = ImageOps.flip(image) # in my case image is flipped top-bottom for some reason
-            image.save('/tmp/glutout-%00d.png' % self.i, 'PNG')
+            image.save('/tmp/glutout-%03d.png' % self.i, 'PNG')
         self.i += 1
 
         
@@ -191,8 +191,8 @@ Sonuc
 ![](pyopengl_01.png)
 
 
-Dikkat üstteki kodda duvar çarpım fiziği var fakat duvarların
-birbirine çarpa fiziği yok.
+Dikkat üstteki kodda duvar çarpım fiziği var fakat topların birbirine
+çarpma fiziği yok.
 
 
 Kaynaklar

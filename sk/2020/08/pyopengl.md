@@ -32,7 +32,7 @@ Sonra
 g++ dosya.cpp -lX11 -lGL -lGLU -lglut -g -Wall -O2 -o islet.exe
 ```
 
-Şu dizinde [2]'den alınan bir uçuş simülatörü bile var!
+Alttaki kodlarda [2]'den alınan bir uçuş simulatörü var
 
 [fly.cpp](glcode/flight/fly.cpp)
 [geometry.h](glcode/flight/geometry.h)

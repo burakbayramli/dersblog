@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>En Yakın k-Komşu (k-Nearest Neighbor)</h1>
+<h1>En Yakın k-Komşu (k-Nearest Neighbor), Geometrik Yakınlık Hesabı</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>En Yakın k-Komşu (k-Nearest Neighbor)
+    <title>En Yakın k-Komşu (k-Nearest Neighbor), Geometrik Yakınlık Hesabı
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -865,8 +865,54 @@ gerçekleştirilebilir.</p>
 <img alt="" src="knn7.png" />
 <img alt="" src="knn8.png" />
 <img alt="" src="knn9.png" /></p>
+<p>Bölec (Hash) ile Geometrik Anahtarlama</p>
+<p>Grafik, fiziksel simülasyonlarda pek çok sayıda obje 3 boyutlu ortamda dünyaya
+salinip, ayrı ayrı onlara fiziksel kurallar uygulanır ve nereye geldiklerine
+bakılır. Bu hesap sırasında objelerin birbirine çarpıp çarpmadığını hesaplamak
+gerekir. Ama bu, eğer mesela $n$ tane obje var ise, her görüntü karesinde her
+$n$ tane objenin her $n-1$ diğer objenin yakınında olup olmadığının hesabı
+demektir, ki bu hesapsal yük olarak $O(n^2)$ olur. Eğer $n$ milyonlar ise bu
+ağır bir yük demek olacaktır.</p>
+<p>Bölec tekniğini burada da kullanabiliriz, yani, mesela öyle bir sihirli bölec
+fonksiyonumuz olsaydı ki her kordinat için bir bölec değeri üretseydi ve
+birbirine yakın kordinatlar için bu değer aynı olsaydı böylece basit eşitlik
+kontrolü ile iki kordinatın birbirine yakın olup olmadığını anlasaydık? Tabii
+daha detaylı kontrol için bu yakınlık testinden geçen kordinatları daha detaylı
+test tabi tutardık ama detaylı kontrolün yapılacağı obje sayısını çok daha
+azaltmış olurduk.</p>
+<p>Böyle bir tekniği [4]'te görüyoruz. Teknik kordinate sistemini $l$ büyüklüğünde
+kutulara bölüyor, bölüm sonrası elde edilen sayıyı taban (floor) tamsayıya
+indirgiyoruz, ardından her eksen için farklı bir asal sayıyla çarpıp sonuçları
+XOR ile birleştiriyoruz (ki XOR yaygın kullanılan bir bölec birleştirme
+yaklaşımı).</p>
+<pre><code class="python">l = 5
+n = 5
+p1,p2,p3 = 73856093, 19349663, 83492791
+
+x1 = [33,4,11]
+x2 = [31,1,14]
+x3 = [10,44,19]
+
+def spatial_hash(x):
+    ix,iy,iz = np.floor(x[0]/l), np.floor(x[1]/l), np.floor(x[2]/l)
+    return (int(ix*p1) ^ int(iy*p2) ^ int(iz*p3)) % n
+
+print (spatial_hash(x1))
+print (spatial_hash(x2))
+print (spatial_hash(x3))
+</code></pre>
+
+<pre><code>1
+1
+3
+</code></pre>
+
+<p>Görüldüğü gibi ilk iki kordinat aynı bölec anahtarına düştü, ki bu kordinatlar
+birbirine yakın.</p>
 <p>Kaynaklar</p>
 <p>[1] Liu, Moore, Gray, {\em New Algorithms for Efficient High Dimensional
   Non-parametric Classification}</p>
 <p>[2] Alpaydın, <em>Introduction to Machine Learning</em></p>
 <p>[3] <em>A simple kd-tree in Python</em>, <a href="https://github.com/stefankoegl/kdtree">https://github.com/stefankoegl/kdtree</a></p>
+<p>[4] <em>Optimized Spatial Hashing for Collision Detection of Deformable Objects</em>
+    <a href="https://matthias-research.github.io/pages/publications/tetraederCollision.pdf">https://matthias-research.github.io/pages/publications/tetraederCollision.pdf</a></p>

@@ -204,7 +204,7 @@ Görüntüsüz (Headless) İsletmek
 
 Bazen uzun sürebilecek, ya da otomize şekilde script içinden grafik
 rutinleri çağırmak isteyebiliriz, ve program işlerken bir pencere
-açılip görüntü gösterilsin istemiyoruz. Bu durumda normal bir Ünix
+açılip görüntü gösterilsin istemiyoruz. Bu durumda normal bir Unix
 script çağırır gibi OpenGL ya da PyOpenGL çağrıları yapabiliriz,
 görüntüyü işletim sistemi seviyesine yakalayıp göstermemek
 lazım. `xvfb` ile bunu yapabiliriz, Ubuntu'da
@@ -213,7 +213,7 @@ lazım. `xvfb` ile bunu yapabiliriz, Ubuntu'da
 sudo apt-get install xvfb
 ```
 
-Isletmek icin
+İşletmek için
 
 ```
 xvfb-run -s "-screen 0 1x1x24"  python -u script.py
@@ -229,8 +229,3 @@ Kaynaklar
 [1] http://fab.cba.mit.edu/classes/864.05/people/knorton/01-balls/
 
 [2] https://cs.lmu.edu/~ray/notes/openglexamples/
-
-
-
-
-

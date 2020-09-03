@@ -7,7 +7,7 @@
 
 1/9 - [Piller](2020/08/elektronik-piller.md)
 
-1/9 - [Pürüzleştirilmiş Parcaçık Hidrodinamiği (Smoothed Particle Hydrodynamics -SPH-)](2020/08/sph.md)
+1/9 - [SPH](2020/08/sph.md)
 
 26/8 - [OpenGL, PyOpenGL](2020/08/pyopengl.md)
 

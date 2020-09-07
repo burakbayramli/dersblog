@@ -1,0 +1,131 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Div, Curl, Laplasyan (Laplacian)</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Div, Curl, Laplasyan (Laplacian)
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Elimizde iki türlü fonksiyon olabilir, ya skalar (tek sayı) fonksiyonu, ya da
+vektör fonksiyonu. Bu fonksiyonların skalar alan (scalar field) ve vector alanı
+(vector field) oluşturduğu söylenebilir. Alan tarifi fonksiyonların çıktısı ile
+alakalıdır, eğer fonksiyon çok boyutlu girdi alıp tek boyut (tek sayı)
+donduruyorsa skalar alan, çok boyutlu vektör döndürüyorsa vektör alanı
+tanımlıyor demektir.</p>
+<p>Mesela bir skalar alan $f(x,y,z)$ fonksiyonu ile tanımlanıyor olabilir, ve
+$f(x,y,z) = 2y^3 + 4 xz + 3x$ olabilir.</p>
+<p>Skalar alanın gradyanı bir vektördür,</p>
+<p>$$
+\nabla f = \left[
+  \frac{\partial f}{\partial x}, 
+  \frac{\partial f}{\partial y}, 
+  \frac{\partial f}{\partial z}
+\right]
+$$</p>
+<p>Vektör fonksiyonu çok boyutlu sonuç döndürür. Bir vektör fonksiyonunu $f =
+\vec{f}(x,y,z)$ düşünebiliriz.</p>
+<p>Bu arada skalar alanın gradyanı bir vektör alanı tanımlamış oldu, üstte
+gördük. Her farklı $x,y,z$ değeri için bir vektör sonucu alıyoruz.</p>
+<p>Devam edersek, vektor fonksiyonu</p>
+<p>$$
+f = \left[\begin{array}{r} f_1(x,y,z) \\ f_2(x,y,z) \\ f_3(x,y,z) \end{array}\right]
+$$</p>
+<p>ile tanimlanabilir. </p>
+<p>Uzaklaşım (divergence)</p>
+<p>Bu hesap $\mathrm{div} f$, ya da $\nabla \cdot f$ ile gösterilir. Vektör alanı
+uzaklaşımı,</p>
+<p>$$
+\mathrm{div} f = \left(
+\frac{\partial f_1}{\partial x} + 
+\frac{\partial f_2}{\partial y} + 
+\frac{\partial f_3}{\partial z} 
+\right)
+$$</p>
+<p>Gradyan $\nabla$ işareti görülüyor [4, sf. 403], fakat bu notasyonel bir
+rahatlık sadece.</p>
+<p>$$
+\nabla \cdot f = \left(
+\frac{\partial }{\partial x},
+\frac{\partial }{\partial y},
+\frac{\partial }{\partial z} 
+\right) 
+\cdot
+\left[ f_1, f_2, f_3 \right]
+$$</p>
+<h1>$$</h1>
+<p>\left( \frac{\partial }{\partial x} \right)(f_1) + 
+\left( \frac{\partial }{\partial y} \right)(f_2) + 
+\left( \frac{\partial }{\partial z} \right)(f_3) 
+$$</p>
+<h1>$$</h1>
+<p>\frac{\partial f_1}{\partial x} +
+\frac{\partial f_2}{\partial y} +
+\frac{\partial f_3}{\partial z}
+$$</p>
+<p>Uzaklaşımın fiziksel yorumu bir vektör alanındaki ufak bir yüzeyde görülen akış
+(flux) olabilir.</p>
+<p>Onu bir vektör alanının genişleme ya da küçülme oranı olarak ta görebiliriz.</p>
+<p>Laplasyan (Laplacian)</p>
+<p>Diyelim ki $f$ skalar alanı iki kez türevi alınabilir halde. O zaman $f$'nin
+gradyani $\nabla f$ de türebi alınabilir bir vektör alanıdır, ve onun da
+uzaklaşımı hesaplanabilir, ve böylece bir tane daha skalar alan daha elde
+edilebilir [3, sf. 56]. Bu skalar alan, $\nabla \cdot \nabla f$ sonucuna $f$'nin
+Laplasyanı ismi verilir, ve kendi sembolü de vardır $\nabla^2 f$, yani</p>
+<p>$$
+\nabla \cdot \nabla f = \nabla^2 f
+$$</p>
+<p>Curl, $\nabla$</p>
+<p>Curl hesabını $\nabla$ bazında yapabilir miyiz? Evet, </p>
+<p>$$
+\mathrm{curl} f = \nabla \times f
+$$</p>
+<p>Bu nasıl oldu [1, sf. 178]? </p>
+<p>$$
+= \left(
+\frac{\partial }{\partial x}, 
+\frac{\partial }{\partial y},
+\frac{\partial }{\partial z} 
+\right) 
+\times 
+\left[\begin{array}{r} f_1(x,y,z) \\ f_2(x,y,z) \\ f_3(x,y,z) \end{array}\right]
+$$</p>
+<p>$$
+= \left[\begin{array}{ccc}
+i &amp; j &amp; k \\
+\frac{\partial }{\partial x} &amp;
+\frac{\partial }{\partial y} &amp;
+\frac{\partial }{\partial z} \\
+f_1 &amp; f_2 &amp; f_3
+\end{array}\right]
+$$</p>
+<p>$$
+= \left[\begin{array}{ccc} 
+\frac{\partial f_3}{\partial y} - \frac{\partial f_2}{\partial z} &amp; 
+\frac{\partial f_1}{\partial z} - \frac{\partial f_3}{\partial x} &amp; 
+\frac{\partial f_2}{\partial x} - \frac{\partial f_1}{\partial y} 
+\end{array}\right]
+$$</p>
+<p>Kaynaklar </p>
+<p>[1] Corral, <em>Vector Calculus</em></p>
+<p>[2] 3Blue1Brown, <em>Uzaklaşım (Divergence) ve Curl, Maxwell Denklemlerinin Dili</em>,
+    <a href="https://www.youtube.com/watch?v=8kX2f2olQao">https://www.youtube.com/watch?v=8kX2f2olQao</a></p>
+<p>[3] Matthews, <em>Vector Calculus</em></p>
+<p>[4] Kreyszig, <em>Advanced Engineering Mathematics 10th Ed</em></p>

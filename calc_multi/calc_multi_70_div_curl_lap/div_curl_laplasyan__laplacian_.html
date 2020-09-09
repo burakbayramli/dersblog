@@ -42,13 +42,62 @@ $f(x,y,z) = 2y^3 + 4 xz + 3x$ olabilir.</p>
 $$</p>
 <p>Vektör fonksiyonu çok boyutlu sonuç döndürür. Bir vektör fonksiyonunu $f =
 \vec{f}(x,y,z)$ düşünebiliriz.</p>
-<p>Bu arada skalar alanın gradyanı bir vektör alanı tanımlamış oldu, üstte
-gördük. Her farklı $x,y,z$ değeri için bir vektör sonucu alıyoruz.</p>
-<p>Devam edersek, vektor fonksiyonu</p>
+<p>Skalar alanın gradyanı bir vektör alanı tanımlar. Her farklı $x,y,z$ değeri için
+bir vektör sonucu alıyoruz.</p>
+<p>Vektör fonksiyonu</p>
 <p>$$
 f = \left[\begin{array}{r} f_1(x,y,z) \\ f_2(x,y,z) \\ f_3(x,y,z) \end{array}\right]
 $$</p>
-<p>ile tanimlanabilir. </p>
+<p>ile tanımlanabilir.</p>
+<p>Örnek olarak</p>
+<p>$$
+U(x,y) = \frac{1}{3} (x^4 + y^4)
+\qquad (1)
+$$</p>
+<p>alalım,</p>
+<pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+xx = np.linspace(-5.0,5.0,20)
+yy = np.linspace(-5.0,5.0,20)
+x,y = np.meshgrid(xx,yy);
+U = 1/3*( (x**4) + (y**4))
+ax.plot_surface(x,y,U)
+plt.savefig('calc_multi_70_div_curl_lap_01.png')
+</code></pre>
+
+<p><img alt="" src="calc_multi_70_div_curl_lap_01.png" /></p>
+<p>Gradyanı analitik olarak bulabiliriz,</p>
+<p>$$
+\nabla U = \frac{4}{3} [\begin{array}{cc} x^3 &amp; y^3 \end{array}]^T
+$$</p>
+<p>Gradyan vektör alanı şöyle [6],</p>
+<pre><code class="python">u, v = 4/3*x**3, 4/3*y**3
+fig, ax = plt.subplots()
+ax.quiver(x,y,u,v)
+ax.xaxis.set_ticks([])
+ax.yaxis.set_ticks([])
+ax.axis([-6, 6, -6, 6])
+ax.set_aspect('equal')
+plt.savefig('calc_multi_70_div_curl_lap_03.png')
+</code></pre>
+
+<p><img alt="" src="calc_multi_70_div_curl_lap_03.png" /></p>
+<p>Üstte analitik sonucu grafikledik. Gradyani pur sayısal olarak
+hesaplayabilirdik, bu fonksiyon yaklaşık türev hesabını üç boyut için yapıyor,
+<code>gradient</code> çağrısını kullanıyoruz, </p>
+<pre><code class="python">uu,vv = np.gradient(U)
+fig, ax = plt.subplots()
+ax.quiver(x,y,u,v)
+ax.xaxis.set_ticks([])
+ax.yaxis.set_ticks([])
+ax.axis([-6, 6, -6, 6])
+ax.set_aspect('equal')
+plt.savefig('calc_multi_70_div_curl_lap_04.png')
+</code></pre>
+
+<p><img alt="" src="calc_multi_70_div_curl_lap_04.png" /></p>
+<p>Benzer bir sonuç elde ettik.</p>
 <p>Uzaklaşım (divergence)</p>
 <p>Bu hesap $\mathrm{div} f$, ya da $\nabla \cdot f$ ile gösterilir. Vektör alanı
 uzaklaşımı,</p>
@@ -129,21 +178,8 @@ ile de gösterilebilir, mesela iki boyut için</p>
 \frac{\partial^2 }{\partial y^2} 
 $$</p>
 <p>Sayısal olarak Laplasyan hesabını görelim.</p>
-<p>Örnek olarak</p>
-<p>$U(x,y) = \frac{1}{3} (x^4 + y^4)  $</p>
-<p>alalım,</p>
-<pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-xx = np.linspace(-5.0,5.0,20)
-yy = np.linspace(-5.0,5.0,20)
-x,y = np.meshgrid(xx,yy);
-U = 1/3*( (x**4) + (y**4))
-ax.plot_surface(x,y,U)
-plt.savefig('calc_multi_70_div_curl_lap_01.png')
-</code></pre>
-
-<p>Analitik olarak biliyoruz ki Laplasyan</p>
+<p>Örnek</p>
+<p>Analitik olarak biliyoruz ki (1)'in Laplasyanı</p>
 <p>$$
 \nabla^2 U(x,y) = 4 x^2 + 4 y^2
 $$</p>
@@ -195,7 +231,7 @@ def del2(M):
 
 </code></pre>
 
-<p>Hem fonksiyonu hem de onun ayriksal Laplasyanini grafiklersek,</p>
+<p>Ayrıksal Laplasyanini grafiklersek,</p>
 <pre><code class="python">from del2 import del2
 L = 4*del2(U);
 fig = plt.figure()
@@ -204,8 +240,7 @@ ax.plot_surface(x,y,L)
 plt.savefig('calc_multi_70_div_curl_lap_02.png')
 </code></pre>
 
-<p><img alt="" src="calc_multi_70_div_curl_lap_01.png" />
-<img alt="" src="calc_multi_70_div_curl_lap_02.png" /></p>
+<p><img alt="" src="calc_multi_70_div_curl_lap_02.png" /></p>
 <p>Evet, üst sağdaki resim $4 x^2 + 4 y^2$ gibi duruyor [5].</p>
 <p>Curl, $\nabla$</p>
 <p>Curl hesabını $\nabla$ bazında yapabilir miyiz? Evet, </p>
@@ -245,3 +280,4 @@ $$</p>
 <p>[3] Matthews, <em>Vector Calculus</em></p>
 <p>[4] Kreyszig, <em>Advanced Engineering Mathematics 10th Ed</em></p>
 <p>[5] Mathworks del2, <a href="https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5">https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5</a></p>
+<p>[6] Kazarinoff, <a href="https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html">https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html</a></p>

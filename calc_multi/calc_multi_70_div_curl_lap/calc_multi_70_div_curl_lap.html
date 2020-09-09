@@ -128,9 +128,10 @@ ile de gösterilebilir, mesela iki boyut için</p>
 \frac{\partial^2 }{\partial x^2} + 
 \frac{\partial^2 }{\partial y^2} 
 $$</p>
+<p>Sayısal olarak Laplasyan hesabını görelim.</p>
 <p>Örnek olarak</p>
 <p>$U(x,y) = \frac{1}{3} (x^4 + y^4)  $</p>
-<p>olsun.</p>
+<p>alalım,</p>
 <pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
 fig = plt.figure()
 ax = fig.add_subplot(111, projection='3d')
@@ -142,6 +143,13 @@ ax.plot_surface(x,y,U)
 plt.savefig('calc_multi_70_div_curl_lap_01.png')
 </code></pre>
 
+<p>Analitik olarak biliyoruz ki Laplasyan</p>
+<p>$$
+\nabla^2 U(x,y) = 4 x^2 + 4 y^2
+$$</p>
+<p>foksiyonuna eşit. Bakalım sayısal olarak yaklaşık olarak aynı sonucu alabilecek
+miyiz? Burada <code>del2</code> çağrısı var (iyi isim, çünkü $\nabla$ işaretine 'del'
+denir, 'del2' ile onun karesi çağrıştırılıyor),</p>
 <pre><code class="python">import numpy as np
 
 def del2(M):
@@ -187,6 +195,7 @@ def del2(M):
 
 </code></pre>
 
+<p>Hem fonksiyonu hem de onun ayriksal Laplasyanini grafiklersek,</p>
 <pre><code class="python">from del2 import del2
 L = 4*del2(U);
 fig = plt.figure()
@@ -197,6 +206,7 @@ plt.savefig('calc_multi_70_div_curl_lap_02.png')
 
 <p><img alt="" src="calc_multi_70_div_curl_lap_01.png" />
 <img alt="" src="calc_multi_70_div_curl_lap_02.png" /></p>
+<p>Evet, üst sağdaki resim $4 x^2 + 4 y^2$ gibi duruyor [5].</p>
 <p>Curl, $\nabla$</p>
 <p>Curl hesabını $\nabla$ bazında yapabilir miyiz? Evet, </p>
 <p>$$
@@ -234,3 +244,4 @@ $$</p>
     <a href="https://www.youtube.com/watch?v=8kX2f2olQao">https://www.youtube.com/watch?v=8kX2f2olQao</a></p>
 <p>[3] Matthews, <em>Vector Calculus</em></p>
 <p>[4] Kreyszig, <em>Advanced Engineering Mathematics 10th Ed</em></p>
+<p>[5] Mathworks del2, <a href="https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5">https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5</a></p>

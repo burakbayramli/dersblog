@@ -129,9 +129,57 @@ $$</p>
 \frac{\partial f_2}{\partial y} +
 \frac{\partial f_3}{\partial z}
 $$</p>
-<p>Uzaklaşımın fiziksel yorumu bir vektör alanındaki ufak bir yüzeyde görülen akış
-(flux) olabilir.</p>
-<p>Onu bir vektör alanının genişleme ya da küçülme oranı olarak ta görebiliriz.</p>
+<p>Uzaklaşımın fiziksel yorumu bir vektör alanındaki ufak bir alanda görülen akış
+(flux) olabilir. Onu bir vektör alanının genişleme ya da küçülme oranı olarak ta
+görebiliriz.</p>
+<p>Örnek olarak elimizde iki boyutlu bir vektör alanı olduğunu farzedelim, $x,y$
+kordinatları $U(x,y) = [u_1(x,y), u_2(x,y)$ ile bir vektör donduruluyor, mesela</p>
+<p>$$
+U(x,y) = [\cos(x + 2y), \sin(x - 2y)]
+$$</p>
+<p>Bu alanın uzaklaşımı analitik olarak</p>
+<p>$$
+\mathrm{div} U = - 2\cos(x - 2y) - \sin(x + 2y)
+$$</p>
+<p>Bu bize her noktada bir tek sayı değeri veriyor, o noktada akışın çıkmakta mı
+(kaynak -source-) yoksa yokolmakta mı (alıcı -sink) olduğunu bu sayı ile
+irdeleyebiliyoruz. Hem vektör alanını hem de uzaklaşım tek sayısını bir renk
+kodu ile aynı grafikte gösterirsek,</p>
+<pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+NY = 20; ymin = -2.; ymax = 2.
+dy = (ymax -ymin )/(NY-1.)
+NX = NY
+xmin = -2.; xmax = 2.
+dx = (xmax -xmin)/(NX-1.)
+
+def divergence(f):
+    num_dims = len(f)
+    print (num_dims)
+    return np.ufunc.reduce(np.add, [np.gradient(f[i], axis=i) for i in range(num_dims)])
+
+y = np.array([ ymin + float(i)*dy for i in range(NY)])
+x = np.array([ xmin + float(i)*dx for i in range(NX)])
+
+x, y = np.meshgrid( x, y, indexing = 'ij', sparse = False)
+
+Fx  = np.cos(x + 2*y)
+Fy  = np.sin(x - 2*y)
+
+F = [Fx, Fy]
+g = divergence(F)
+
+plt.pcolormesh(x, y, g, shading='nearest', cmap=plt.cm.get_cmap('coolwarm'))
+plt.colorbar()
+plt.quiver(x,y,Fx,Fy)
+plt.savefig('calc_multi_70_div_curl_lap_05.png')
+</code></pre>
+
+<pre><code>2
+</code></pre>
+
+<p><img alt="" src="calc_multi_70_div_curl_lap_05.png" /></p>
 <p>Laplasyan (Laplacian)</p>
 <p>Diyelim ki $f$ skalar alanı iki kez türevi alınabilir halde. O zaman $f$'nin
 gradyanı $\nabla f$ de türevi alınabilir bir vektör alanıdır, ve onun da
@@ -231,7 +279,7 @@ def del2(M):
 
 </code></pre>
 
-<p>Ayrıksal Laplasyanini grafiklersek,</p>
+<p>Ayrıksal Laplasyanı grafiklersek,</p>
 <pre><code class="python">from del2 import del2
 L = 4*del2(U);
 fig = plt.figure()

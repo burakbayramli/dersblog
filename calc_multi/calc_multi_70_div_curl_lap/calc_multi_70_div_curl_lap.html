@@ -98,7 +98,7 @@ plt.savefig('calc_multi_70_div_curl_lap_04.png')
 
 <p><img alt="" src="calc_multi_70_div_curl_lap_04.png" /></p>
 <p>Benzer bir sonuç elde ettik.</p>
-<p>Uzaklaşım (divergence)</p>
+<p>Uzaklaşım (Divergence)</p>
 <p>Bu hesap $\mathrm{div} f$, ya da $\nabla \cdot f$ ile gösterilir. Vektör alanı
 uzaklaşımı,</p>
 <p>$$
@@ -156,7 +156,6 @@ dx = (xmax -xmin)/(NX-1.)
 
 def divergence(f):
     num_dims = len(f)
-    print (num_dims)
     return np.ufunc.reduce(np.add, [np.gradient(f[i], axis=i) for i in range(num_dims)])
 
 y = np.array([ ymin + float(i)*dy for i in range(NY)])
@@ -176,10 +175,11 @@ plt.quiver(x,y,Fx,Fy)
 plt.savefig('calc_multi_70_div_curl_lap_05.png')
 </code></pre>
 
-<pre><code>2
-</code></pre>
-
 <p><img alt="" src="calc_multi_70_div_curl_lap_05.png" /></p>
+<p>Üstteki kodda <code>gradient</code> ile her boyut üzerinde sayısal gradyan hesabı
+yapılıyor ve sonuçlar toplanıyor. Not: vektör alanının kendisi de bir gradyan
+işleminin sonucu olabilir, o noktaya nasıl gelindiğinden bahsetmiyoruz, biz elde
+nereden gelmiş olursa olsun bir vektör alanı olduğunu farz ediyoruz.</p>
 <p>Laplasyan (Laplacian)</p>
 <p>Diyelim ki $f$ skalar alanı iki kez türevi alınabilir halde. O zaman $f$'nin
 gradyanı $\nabla f$ de türevi alınabilir bir vektör alanıdır, ve onun da

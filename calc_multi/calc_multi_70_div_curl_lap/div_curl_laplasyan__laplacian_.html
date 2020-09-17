@@ -318,10 +318,14 @@ dönmeye başlayabilir, bu dönüşü özetlemenin iyi bir yolu curl hesabıdır
 ufak bir donme yolunun yaptığı işi ayrı ayrı hesaplayabiliriz, ve sonucu aynı
 boyutta bir vektörün boyutları olarak kabul edebiliriz, ve vektörün gösterdiği
 yön etrafında sağ el kuralı dönüşün nasıl olduğunu tarif eder, vektörün
-büyüklüğü ise dönüşün hızını.</p>
-<p>Diyelim ki $F$'nin ufak bir dikdörtgen etrafında yaptığı dönüşsel işi,
-dolaşımını (circulation) hesaplayacağız. Sonra dikdörtgeni limite götürüp sonsuz
-küçükltunce bir analitik sonuca erişmiş olacağız.</p>
+büyüklüğü ise dönüşün hızını. </p>
+<p>Hatırlarsak yapılan iş $W = \int_{t=a}^{t=b} F \cdot T \mathrm{d} s$ ile hesaplanır,
+$T$ ile $F$'nin üzerinde gidilen eğrinin yansımasına bakıyoruz, $\mathrm{d} s$ bu
+eğrinin ufak bir parçası [9, sf. 1153]. Ayni islem $F \mathrm{d} \vec{r}$ ile de
+gosterilebilir.</p>
+<p>Devam edersek, şimdi diyelim ki $F$'nin ufak bir dikdörtgen etrafında yaptığı
+dönüşsel işi, dolaşımını (circulation) hesaplayacağız. Sonra dikdörtgeni limite
+götürüp sonsuz küçükltunce bir analitik sonuca erişmiş olacağız.</p>
 <p>Bu hesabı her eksen için yapmak istiyoruz, önce $z$'den başlayalım, dolaşım $xy$
 düzleminde olacak.</p>
 <p><img alt="" src="calc_multi_70_div_curl_lap_07.png" />
@@ -331,7 +335,9 @@ noktanın kordinat değeri $x,y,z$, $C_B$ üzerinde $F$'nin bileşeni $F_x$, ora
 $F_x$ değeri $F_x(x,y-\frac{\Delta y}{2}, z)$. Bu kuvveti $C_B$ boyunca
 katedilen yol $\Delta x$ ile çarpıyoruz,</p>
 <p>$$
-\int_{C_B} F_x \mathrm{d} x \approx F_x \left( x,y-\frac{\Delta y}{2}, z \right) \Delta x
+\int_{C_B} F \cdot T \mathrm{d} s =
+\int_{C_B} F_x \mathrm{d} x \approx
+F_x \left( x,y-\frac{\Delta y}{2}, z \right) \Delta x
 $$</p>
 <p>$C_T$ icin</p>
 <p>$$
@@ -340,7 +346,7 @@ $$</p>
 <p>Yukarı ve aşağı gidişi hesaplamadık çünkü o yollar $F_x$'e dik, yapılan iş
 sıfır. Üstteki sonuçları toplarsak,</p>
 <p>$$
-\int_{C_T+C_B} = - \left[
+\int_{C_T+C_B} F \cdot T \mathrm{d} s  = - \left[
 F_x \left( x,y+\frac{\Delta y}{2},z \right) -
 F_x \left( x,y-\frac{\Delta y}{2},z \right)
 \right] \Delta x
@@ -354,6 +360,39 @@ $$</p>
 }{\Delta y}
 \Delta x \Delta y
 $$</p>
+<p>$\Delta x \Delta y$ carpani tabii ki dikdortgenin alani. Onu sol tarafa alirsak,</p>
+<p>$$
+\frac{1}{\Delta S}\int_{C_T+C_B} F \cdot T \mathrm{d} s \approx
+- \dfrac{
+\left[
+  F_x \left( x,y+\dfrac{\Delta y}{2},z \right) -
+  F_x \left( x,y-\dfrac{\Delta y}{2},z \right)
+\right]<br />
+}{\Delta y}
+$$</p>
+<p>Benzer analizi dikdörtgenin sağ ve sol tarafına, $C_L$ ve $C_R$ için uygularsak,</p>
+<p>$$
+\frac{1}{\Delta S}\int_{C_L+C_R} F \cdot T \mathrm{d} s \approx
+- \dfrac{
+\left[
+  F_y \left( x+\dfrac{\Delta x}{2},y,z \right) -
+  F_y \left( x-\dfrac{\Delta x}{2},y,z \right)
+\right]<br />
+}{\Delta x}
+$$</p>
+<p>Son iki sonucu toplarız, $\Delta S$'nin limitini alırız, böylece dikdörtgen
+$x,y,z$ noktasına sonsuz küçültülmüş olur, ki bu durumda $\Delta x \to 9$ ve
+$\Delta y \to 0$, böylece nihai eriştiğimiz sonuç,</p>
+<p>$$
+\lim_{\Delta \to 0} \frac{1}{\Delta S} \oint F \cdot T \mathrm{d} s =
+\frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y}
+$$</p>
+<p>Entegralde $\int$ yerine $\oint$ kullandık ki dolaşım hesabı olduğu daha iyi
+belli olsun.</p>
+<p>Tabii bu tek eksen, $z$ ekseni etrafındaki dolaşım. Aynı işlemi diğer eksenlere
+de uygularsak,</p>
+<p><img alt="" src="calc_multi_70_div_curl_lap_09.png" />
+<img alt="" src="calc_multi_70_div_curl_lap_10.png" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar </p>
 <p>[1] Corral, <em>Vector Calculus</em></p>
@@ -365,3 +404,4 @@ $$</p>
 <p>[6] Kazarinoff, <a href="https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html">https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html</a></p>
 <p>[7] Petersdorff, <em>Example for curl and div of a 2D vector field</em>, <a href="http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4">http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4</a></p>
 <p>[8] Schey, <em>Div, Grad, Curl, All That, 4th Ed</em></p>
+<p>[9] Hass, <em>Thomas Calculus, 11th Ed</em></p>

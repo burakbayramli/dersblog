@@ -1,5 +1,13 @@
 # Octave ile Ruzgar Verisi - wind.dat
 
+Matlab ile `wind.dat` rüzgar verisi ilginç bazı analizler,
+grafiklemeler yapılabiliyor. Bu veri x,y,z kordinatlarında $u,v,w$ ile
+bir vektör alanı tanımlıyor ki vektörler o noktalarda rüzgarın hızını
+gösteriyor. Matlab'ın `curl`, `div` örnekleri kodlanmış.
+
+Veri [1]'den indirilebilir. 
+
+
 ```
 load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
 figure()
@@ -101,14 +109,15 @@ print -djpg image7.jpg
 ![](image7.jpg)
 
 
+Kaynaklar
 
+[1] https://github.com/burakbayramli/classnotes/blob/master/calc_multi/calc_multi_70_div_curl_lap/wind.mat
 
+[2] http://matlab.izmiran.ru/help/techdoc/ref/divergence.html
 
+[3] http://matlab.izmiran.ru/help/techdoc/ref/curl.html
 
-
-
-
-
+[4] https://www.mathworks.com/help/matlab/ref/quiver3.html
 
 
 

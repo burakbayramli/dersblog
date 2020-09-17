@@ -1,9 +1,12 @@
 # Octave ile Ruzgar Verisi - wind.dat
 
 Matlab ile `wind.dat` rüzgar verisi ilginç bazı analizler,
-grafiklemeler yapılabiliyor. Bu veri x,y,z kordinatlarında $u,v,w$ ile
+grafiklemeler yapılabiliyor. Bu veri x,y,z kordinatlarında u,v,w ile
 bir vektör alanı tanımlıyor ki vektörler o noktalarda rüzgarın hızını
 gösteriyor. Matlab'ın `curl`, `div` örnekleri kodlanmış.
+
+Matlab örneklerinin bazılarını onun açık yazılım kardeşi Octave'a
+geçirdik, altta bu kodlar görülebilir.
 
 Veri [1]'den indirilebilir. 
 

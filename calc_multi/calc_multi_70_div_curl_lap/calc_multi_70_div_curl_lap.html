@@ -395,6 +395,52 @@ de uygularsak,</p>
 <p><img alt="" src="calc_multi_70_div_curl_lap_09.png" />
 <img alt="" src="calc_multi_70_div_curl_lap_10.png" /></p>
 <p>Tüm bu bileşenleri bir araya koyunca (2)'de gösterilen curl vektörüne ulaşmış oluyoruz.</p>
+<p>Hesapsal olarak [10]'dan alınmış bir curl hesap kodunu alta görebiliriz,</p>
+<pre><code class="python">import vapor_utils
+def CurlFinDiff(M,N,P,dx,dy,dz,order=6):    
+    aux1 = vapor_utils.DerivFinDiff(P,1,dy,order)       #curl x bileseni
+    aux2 = vapor_utils.DerivFinDiff(N,0,dz,order)     
+    outx = aux1-aux2                        
+    aux1 = vapor_utils.DerivFinDiff(M,0,dz,order)       #curl y bileseni
+    aux2 = vapor_utils.DerivFinDiff(P,2,dx,order)
+    outy = aux1-aux2
+    aux1 = vapor_utils.DerivFinDiff(N,2,dx,order)       #curl z bileseni
+    aux2 = vapor_utils.DerivFinDiff(M,1,dy,order)
+    outz = aux1-aux2
+    return outx, outy, outz
+</code></pre>
+
+<p>Bu hesabı bizim uydurduğumuz bir üç boyutlu vektör alanına uygulayalım. </p>
+<pre><code class="python">import pandas as pd
+from mpl_toolkits.mplot3d import axes3d
+
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+ax.view_init(elev=21, azim=-44)
+x, y, z = np.meshgrid(np.arange(-0.8, 1, 0.2),
+                      np.arange(-0.8, 1, 0.2),
+                      np.arange(-0.8, 1, 0.8))
+
+u = np.sin(np.pi * x) * np.cos(np.pi * y) * np.cos(np.pi * z)
+v = -np.cos(np.pi * x) * np.sin(np.pi * y) * np.cos(np.pi * z)
+w = (np.sqrt(2.0 / 3.0) * np.cos(np.pi * x) * np.cos(np.pi * y) *
+     np.sin(np.pi * z))
+
+ax.quiver(x, y, z, u, v, w, length=0.1, color = 'black')
+
+ci,cj,ck=CurlFinDiff(u,v,w,0.2,0.2,0.8)
+
+i,j,k=1,3,2
+ax.quiver(x[i,i,k], y[i,i,k], z[i,i,k], ci[i,i,k],cj[i,i,k],ck[i,i,k], length=0.2)
+i,j,k=3,3,0
+ax.quiver(x[i,i,k], y[i,i,k], z[i,i,k], ci[i,i,k],cj[i,i,k],ck[i,i,k], length=0.2)
+plt.savefig('calc_multi_70_div_curl_lap_11.png')
+</code></pre>
+
+<p><img alt="" src="calc_multi_70_div_curl_lap_11.png" /></p>
+<p>Görüldüğü gibi akıntının çok olduğu alt kısımdaki curl vektörü oldukca büyük ve
+sağ el kuralına göre yukarı işaret ediyor. Üstteki ok aşağı yönde, orada da
+dönme etkisi var, bu o saat yönüne doğru, curl aşağı gösteriyor.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar </p>
 <p>[1] Corral, <em>Vector Calculus</em></p>
@@ -407,3 +453,4 @@ de uygularsak,</p>
 <p>[7] Petersdorff, <em>Example for curl and div of a 2D vector field</em>, <a href="http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4">http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4</a></p>
 <p>[8] Schey, <em>Div, Grad, Curl, All That, 4th Ed</em></p>
 <p>[9] Hass, <em>Thomas Calculus, 11th Ed</em></p>
+<p>[10] Vapor, <a href="https://github.com/NCAR/VAPOR.git">https://github.com/NCAR/VAPOR.git</a></p>

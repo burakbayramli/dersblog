@@ -1,4 +1,4 @@
-# Octave ile Ruzgar Verisi - wind.dat
+# Octave ile Ruzgar Verisi, wind.dat, Curl Ornekleri
 
 Matlab ile `wind.dat` rüzgar verisi ilginç bazı analizler,
 grafiklemeler yapılabiliyor. Bu veri x,y,z kordinatlarında u,v,w ile
@@ -115,9 +115,9 @@ print -djpg image7.jpg
 grafiğe sigmasi için `S` kadar küçülttük, 
 
 ```
-x = -0.8:0.2:1
-y = -0.8:0.2:1
-z = -0.8:0.8:1
+x = -0.8:0.2:1;
+y = -0.8:0.2:1;
+z = -0.8:0.8:1;
 [xx,yy,zz] = meshgrid(x, y, z);
 size(xx)
 u = sin(pi .* xx) .* cos(pi .* yy) .* cos(pi .* zz);
@@ -129,21 +129,19 @@ hold on;
 
 [CURLX, CURLY, CURLZ, CAV] = curl(xx,yy,zz,u,v,w);
 
-i=3,j=3,k=2
-ci=CURLX(i,j,k);
-cj=CURLY(i,j,k);
-ck=CURLZ(i,j,k);
-S = 10.0
-h = quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S); 
-set (h, "maxheadsize", 0.25);
+i=3;j=3;k=2;
+ci=CURLX(i,j,k)
+cj=CURLY(i,j,k)
+ck=CURLZ(i,j,k)
+S = 10.0;
+quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S); 
 hold on;
 
-i=4,j=4,k=1
-ci=CURLX(i,j,k);
-cj=CURLY(i,j,k);
-ck=CURLZ(i,j,k);
-h = quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S1);
-set (h, "maxheadsize", 0.25);
+i=4;j=4;k=1;
+ci=CURLX(i,j,k)
+cj=CURLY(i,j,k)
+ck=CURLZ(i,j,k)
+quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S);
 hold on;
 
 view(-10,-10);

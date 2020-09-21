@@ -45,7 +45,6 @@ print -djpg image2.jpg
 ```
 figure()
 load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
-wind_speed=sqrt(u.^2+v.^2+w.^2);
 wind_vel = sqrt(u.^2 + v.^2 + w.^2);
 slice(x,y,z,wind_vel,[80,90,100,110,120],Inf,Inf)
 axis equal
@@ -111,6 +110,46 @@ print -djpg image7.jpg
 
 ![](image7.jpg)
 
+
+İlginç bir örnek daha, iki noktada curl sonucunu grafikliyoruz,
+grafiğe sigmasi için `S` kadar küçülttük, 
+
+```
+x = -0.8:0.2:1
+y = -0.8:0.2:1
+z = -0.8:0.8:1
+[xx,yy,zz] = meshgrid(x, y, z);
+size(xx)
+u = sin(pi .* xx) .* cos(pi .* yy) .* cos(pi .* zz);
+v = -cos(pi .* xx) .* sin(pi .* yy) .* cos(pi .* zz);
+w = (sqrt(2.0 / 3.0) .* cos(pi .* xx) .* cos(pi .* yy) .*  sin(pi .* zz));
+h = quiver3(xx,yy,zz,u,v,w);
+set (h, "maxheadsize", 0.25);
+hold on;
+
+[CURLX, CURLY, CURLZ, CAV] = curl(xx,yy,zz,u,v,w);
+
+i=3,j=3,k=2
+ci=CURLX(i,j,k);
+cj=CURLY(i,j,k);
+ck=CURLZ(i,j,k);
+S = 10.0
+h = quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S); 
+set (h, "maxheadsize", 0.25);
+hold on;
+
+i=4,j=4,k=1
+ci=CURLX(i,j,k);
+cj=CURLY(i,j,k);
+ck=CURLZ(i,j,k);
+h = quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S1);
+set (h, "maxheadsize", 0.25);
+hold on;
+
+view(-10,-10);
+
+print -djpg image8.jpg
+```
 
 Kaynaklar
 

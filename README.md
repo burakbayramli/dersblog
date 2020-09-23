@@ -17,3 +17,7 @@ https://github.com/burakbayramli/classnotes
 If you want to follow content, go here.
 
 
+
+
+
+

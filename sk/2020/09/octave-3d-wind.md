@@ -152,7 +152,7 @@ print -djpg image8.jpg
 ![](image8.jpg)
 
 Curl kodu [5]'teki Octave kodunu kullanıyor, bu kodun basitleştirilmiş
-hali [curl3.m](curl3.m) bağlantısında bulunabilir. Üstteki kod `çürl`
+hali [curl3.m](curl3.m) bağlantısında bulunabilir. Üstteki kod `curl`
 yerine `curl3` çağrısı yaparsa aynı şekilde işleyecektir.
 
 Kaynaklar
@@ -166,4 +166,9 @@ Kaynaklar
 [4] https://www.mathworks.com/help/matlab/ref/quiver3.html
 
 [5] http://ab-initio.mit.edu/octave-Faddeeva/scripts/general/curl.m
+
+
+
+
+
 

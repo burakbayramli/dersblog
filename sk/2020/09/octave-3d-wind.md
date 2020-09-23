@@ -112,7 +112,7 @@ print -djpg image7.jpg
 
 
 İlginç bir örnek daha, iki noktada curl sonucunu grafikliyoruz,
-grafiğe sığması için `S` kadar küçülttük,
+grafiğe sığması için okları `S` kadar küçülttük,
 
 ```
 x = -0.8:0.2:1;
@@ -166,9 +166,6 @@ Kaynaklar
 [4] https://www.mathworks.com/help/matlab/ref/quiver3.html
 
 [5] http://ab-initio.mit.edu/octave-Faddeeva/scripts/general/curl.m
-
-
-
 
 
 

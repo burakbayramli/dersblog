@@ -125,7 +125,7 @@ pürüzleri çözülür, hatalar onarılır.
 Github Projesini Yerel Dosyalardan Sıfırlamayıp Yaratmak
 
 Bazen GH'daki projemizi ismen aynı tutsak bile içeriğini yerel
-dışkımizden en son dosyalardan yaratıp, Git tarihini sıfırlamak
+diskimizden en son dosyalardan yaratıp, Git tarihini sıfırlamak
 isteyebiliriz. Sebepler, belki Git kayıtlarının olduğu .git içindeki
 dosyalar bozulmuştur (corrupted), ya da Git tarihine aşırı büyük
 dosyalar commit edilmiştir, her ne kadar onların git rm ile silmişsek

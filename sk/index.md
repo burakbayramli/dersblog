@@ -15,8 +15,6 @@
 
 26/8 - [OpenGL, PyOpenGL](2020/08/pyopengl.md)
 
-31/7 - [SQL](2012/03/sql.md)
-
 
 ## Konular, Referans
 

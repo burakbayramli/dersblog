@@ -93,17 +93,14 @@ class Simulation:
                     b['pos'][2] = self.mmin
 
         for j,b in enumerate(self.balls):
-            sp = spatial_hash(self.balls[j]['pos'])
-            self.geo_hash_list[sp].append(self.balls[j])
+            self.geo_hash_list[spatial_hash(self.balls[j]['pos'])].append(self.balls[j])
 
         vDone = {}
         for j,b in enumerate(self.balls):
             if (len(self.geo_hash_list[spatial_hash(self.balls[j]['pos'])])>1):
                 otherList = self.geo_hash_list[spatial_hash(self.balls[j]['pos'])]
                 for other in otherList:
-                    if (other['i'] != b['i'] and \
-                        b['i'] not in vDone \
-                        and other['i'] not in vDone):
+                    if (other['i'] != b['i'] and b['i'] not in vDone and other['i'] not in vDone):
                         dist = lin.norm(other['pos']-b['pos'])
                         if (dist < (2*self.r)):
                             #print ('collision')

@@ -26,7 +26,7 @@
 
 <p>Önce basit bir simülasyon kodlayalım. Bazı toplar var, onları başta bir kuvvetle
 rasgele yönlere iteceğiz ve ne yapacaklarına bakacağız. Fiziksel parametreler
-şöyle, yerçekimi sabiti $g$ 0.8 (dünyadan daha az), topların birbirine ya da
+şöyle, yerçekimi sabiti $g = 0.8$ (dünyadan daha az), topların birbirine ya da
 duvara çarpması sonucu hiç enerji kaybı olmuyor.</p>
 <p>Bu tür bir sistemin konumu, o anki hali her parçacık için bazı değişkenlerin
 takip edilmesiyle olacak, bu değişkenler pozisyon, hız, kuvvet. Kütle her
@@ -158,17 +158,14 @@ class Simulation:
                     b['pos'][2] = self.mmin
 
         for j,b in enumerate(self.balls):
-            sp = spatial_hash(self.balls[j]['pos'])
-            self.geo_hash_list[sp].append(self.balls[j])
+            self.geo_hash_list[spatial_hash(self.balls[j]['pos'])].append(self.balls[j])
 
         vDone = {}
         for j,b in enumerate(self.balls):
             if (len(self.geo_hash_list[spatial_hash(self.balls[j]['pos'])])&gt;1):
                 otherList = self.geo_hash_list[spatial_hash(self.balls[j]['pos'])]
                 for other in otherList:
-                    if (other['i'] != b['i'] and \
-                        b['i'] not in vDone \
-                        and other['i'] not in vDone):
+                    if (other['i'] != b['i'] and b['i'] not in vDone and other['i'] not in vDone):
                         dist = lin.norm(other['pos']-b['pos'])
                         if (dist &lt; (2*self.r)):
                             #print ('collision')

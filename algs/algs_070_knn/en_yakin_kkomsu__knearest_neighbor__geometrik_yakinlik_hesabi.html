@@ -865,26 +865,26 @@ gerçekleştirilebilir.</p>
 <img alt="" src="knn7.png" />
 <img alt="" src="knn8.png" />
 <img alt="" src="knn9.png" /></p>
-<p>Bölec (Hash) ile Geometrik Anahtarlama</p>
+<p>Böleç (Hash) ile Geometrik Anahtarlama</p>
 <p>Grafik, fiziksel simülasyonlarda pek çok sayıda obje 3 boyutlu ortamda dünyaya
 salınıp, ayrı ayrı onlara fiziksel kurallar uygulanır ve nereye geldiklerine
 bakılır. Bu hesap sırasında objelerin birbirine çarpıp çarpmadığını hesaplamak
 gerekir fakat böyle bir hesap, eğer mesela $n$ tane obje var ise, her görüntü
 karesinde her $n$ tane objenin her $n-1$ diğer objenin yakınında olup olmadığı
-anlamına gelir, ki bu hesapsal yük $O(n^2)$ demektir. Eğer $n$ milyonlar ise bu
-ağır bir yük olurdu.</p>
+kontrolü anlamına gelir, ki hesapsal yük $O(n^2)$ olurdu. Eğer $n$ milyonlar ise
+bu ağır bir yük oluştururdu.</p>
 <p>Böleç tekniğini burada da kullanabiliriz. Öyle bir sihirli böleç fonksiyonumuz
-olsun ki her kordinat için bir böleç değeri üretse ve birbirine yakın
-kordinatlar için bu değer aynı olsa? Böylece basit eşitlik kontrolü ile iki
+olsun ki her kordinat için bir böleç değeri üretsin ve birbirine yakın
+kordinatlar için bu değer aynı olsun. Böylece basit eşitlik kontrolü ile iki
 kordinatın birbirine yakın olup olmadığını hemen anlayabilirdik. Tabii daha
 detaylı kontrol için böleçleri aynı olan kordinatları daha detaylı teste tabi
 tutardık, ama detaylı kontrolün yapılacağı obje sayısını çok daha azaltmış
 olurduk.</p>
-<p>Böyle bir tekniği [4]'te görüyoruz. Teknik kordinat sistemini $l$ büyüklüğünde
-kutulara bölüyor, her eksen değerini bu büyüklük ile bölüyoruz, bölüm sonrası
-elde edilen sayıyı taban (floor) tamsayıya indirgiyoruz, ardından her eksen için
-farklı bir asal sayıyla çarpıp sonuçları XOR ile birleştiriyoruz (ki XOR yaygın
-kullanılan bir böleç birleştirme yaklaşımı).</p>
+<p>Böyle bir tekniği [4]'te görüyoruz. Teknik ile kordinat sistemini $l$
+büyüklüğünde kutulara bölüyor, her eksen değerini bu büyüklük ile bölüyoruz,
+bölüm sonrası elde edilen sayıyı taban (floor) tamsayıya indirgiyoruz, ardından
+her eksen için farklı bir asal sayıyla çarpıp sonuçları XOR ile birleştiriyoruz
+(ki XOR yaygın kullanılan bir böleç birleştirme yaklaşımı).</p>
 <pre><code class="python">l = 5
 n = 5
 p1,p2,p3 = 73856093, 19349663, 83492791
@@ -910,7 +910,7 @@ print (spatial_hash(x3))
 <p>Görüldüğü gibi ilk iki kordinat aynı böleç anahtarına düştü, ki bu iki kordinat
 birbirine yakın.</p>
 <p>Genel algoritma şöyle olabilir. Her görüntü karesi için iki faz düşünebiliriz,
-ilk fazda tüm objelerin kordinat böleci hesaplanır, her bölec değeri altında bir
+ilk fazda tüm objelerin kordinat böleci hesaplanır, her böleç değeri altında bir
 liste vardır, ve her obje anahtarının değerine tekabül eden o listeye
 eklenir. İkinci fazda bir objeye bakarken onun üzerinde daha detaylı çarpışma
 hesabı gerekip gerekmediğini anlamak için böleç anahtarındaki listeye bakarız,

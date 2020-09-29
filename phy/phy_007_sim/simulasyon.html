@@ -32,24 +32,24 @@ duvara çarpması sonucu hiç enerji kaybı olmuyor.</p>
 takip edilmesiyle olacak, bu değişkenler pozisyon, hız, kuvvet. Kütle her
 parçacık için aynı olacak.</p>
 <p>Parçacık hareketi o parçacık üzerinde uygulanan kuvvet ile belirlenir, Newton
-denklemi $m\vec{a} = \vec{f}$, ki ivme ve kuvvet çok boyutlu dikkat
-edelim, o sebeple vektör notasyonu olarak koyu renk kullandık. Peki ivmeden,
-hıza ve yer değişikliğine nasıl gideriz? Newton formülünü bir ODE olarak tekrar
-düzenlersek onu ileri doğru entegre edebiliriz. Yer $\vec{x}$, hız
-$\vec{v}$ olmak üzere [5,6] ve her $i$ parçacığı için,</p>
+denklemi $m \bar{a} = \bar{f}$, ki ivme ve kuvvet çok boyutlu dikkat edelim, o
+sebeple vektör notasyonu olarak üstte çizgi kullandık. Peki ivmeden, hiza ve yer
+değişikliğine nasıl gideriz? Newton formülünü bir ODE olarak tekrar düzenlersek
+onu ileri doğru entegre edebiliriz. Yer $\bar{x}$, hız $\bar{v}$ olmak üzere
+[5,6] ve her $i$ parçacığı için,</p>
 <p>$$
-\dot{\vec{v}}_i = \vec{f}_i / m_i
+\dot{\bar{v}}_i = \bar{f}_i / m_i
 $$</p>
 <p>$$
-\dot{\vec{x}}_i = \vec{v}_i
+\dot{\bar{x}}_i = \bar{v}_i
 $$</p>
 <p>Bu tür bir sistemi entegre etmek için Euler'in metotu kullanılabilir [5, sf 5],
 her $n$ anında bir sonraki $n+1$ değeri için</p>
 <p>$$
-\vec{x}^{n+1} = \vec{x}^n + h \vec{v}^n
+\bar{x}^{n+1} = \bar{x}^n + h \bar{v}^n
 $$</p>
 <p>$$
-\vec{v}^{n+1} = \vec{v}^n + h \vec{a}^n
+\bar{v}^{n+1} = \bar{v}^n + h \bar{a}^n
 $$</p>
 <p>ki $h$ ufak zaman aralığı olarak alınır, bir diğer isim $\Delta t$ olabilir,
 alttaki kodda <code>dt</code> . O zaman her zaman diliminde her parçacığa etki eden
@@ -77,12 +77,15 @@ p1,p2,p3 = 73856093, 19349663, 83492791
 G = np.array([0.0, 0.0, -0.8])
 
 m = 0.1
-B = 10 # balls
-l = 0.2 # hash box size
-n = B*20 # size of hash table
+B = 10 # top
+l = 0.2 # bolec kutu buyuklugu
+n = B*20 # bolec sozluk buyuklugu
 img = True
 
 def spatial_hash(x):
+    &quot;&quot;&quot;
+    x = [x0,x1,x2] uc boyutlu kordinatlari icin bir bolec (hash) degeri uret
+    &quot;&quot;&quot;
     ix,iy,iz = np.floor((x[0]+2.0)/l), np.floor((x[1]+2.0)/l), np.floor((x[2]+2.0)/l)
     return (int(ix*p1) ^ int(iy*p2) ^ int(iz*p3)) % n
 

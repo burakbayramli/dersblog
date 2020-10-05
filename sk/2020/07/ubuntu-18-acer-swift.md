@@ -151,14 +151,11 @@ Devices | Keyboard`, ve `Keyboard shortcuts` listesinde `Switch
 applications` iptal edilir (tıkla, sil düğmesi ve set butonu),
 ardından `Switch windows` tıklanır ve ona Alt-Tab ataması yapılır.
 
+Tuşlar ile program kapatmak için ALt-F4 alışkanlık oldu, yine üstteki
+listeden Alt-F4 için başka bir program var, onu iptal ederiz, onun
+yerine program bitirme için Alt-F4 atamasını yaparız (tüslama seçimi
+üzerine tıklanır, Alt-F4 tıklanır bu kaydedilmiş olur).
 
-Android Dosya Transferi
-
-```
-sudo add-apt-repository "deb http://ppa.launchpad.net/samoilov-lex/aftl-stable/ubuntu artful main"
-Make sure to run a sudo apt update 
-sudo apt install android-file-transfer
-```
 
 Evince
 

@@ -41,6 +41,15 @@ diyebiliriz. Eğer `İSO8859-9` istersek
 
 olurdu.
 
+Eğer LaTeX kullanıyorsak, onun da kodlamayı bilmesi gerekir. Dosya başında, UTF8 için,
+
+
+```
+\usepackage[utf8]{inputenc}
+```
+
+gerekli.
+
 
 
 

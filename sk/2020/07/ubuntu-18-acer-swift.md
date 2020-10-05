@@ -64,6 +64,12 @@ Böylece Alt-Tab sadece aynı iş alanındaki programlara geçiş yapar.
 `Activities` seçilir, ekranın sağında bir seçim alanı çıkıyor, buradan
 alan değişimi olabiliyor.
 
+Soldaki program listesi hem hızla tek tıklama ile başlatmak için hem
+de işleyen programları görmek için kullanılıyor. Bu karışıklığa sebep
+olabilir, eğer bir programdan bir tane işleyen varsa, ikinci başlatmak
+için ne yapacağız? Eğer CTRL basılı tutup tıklarsak ikinci (ya da 3.,
+vs) program başlatılır. 
+
 Tuş üzerinden mouse tıklaması yapmak için bu makinada bazı kodlar
 farklı, bizde CAPS => Ctrl, sağ tıklama => Ctrl, sol tıklama => Alt
 Gr, ve Windows tuşu olur, bunun için `.bashrc` içinde

@@ -162,6 +162,15 @@ aynısını yapıyor. Her PDF aynı şekilde çıksın istiyorsanız bir PDF'i o
 hale getirin, boyut vs ayarlayın, sonra sağ üst köşeden `File Options |
 Save Current State Aş Default` seçin
 
+Ubuntu Paket Problemleri
+
+Eğer kuruluş sırasında coğrafik yer TR olarak seçildiyse yazılım
+paketlerin alınacağı yer olarak `tr.archive.ubuntu.com` adresi
+seçilmiş olabilir. Eğer bu servise bağlanmakta problem çıkarsa
+Software Updater programına girip ilk tab'deki servislerin hangi
+ülkeden olduğu değitirilebilir. Yakın olarak Netherlands, Germany, vs
+bazı seçenekler.
+
 Kaynaklar
 
 [1] [AskUbuntu](https://askubuntu.com/questions/1092758/how-to-make-ubuntu-18-04-gnome-workspace-prohibit-alt-tab-to-windows-on-other)

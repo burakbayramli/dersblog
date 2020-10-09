@@ -24,15 +24,67 @@
 </script>
 </head>
 
+<p>Kütle Muhafazası</p>
+<p>Ufak bir kutu ya da hacim ögesi düşünelim, kenarları çok küçük $\Delta x$,
+$\Delta y$, $\Delta z$ boyutlarında, ve bu kutu uzayda sabitlenmiş, içinden sıvı
+akıyor. Sabitlenmiş bir noktada olanlara baktığımız için bu Euler bakış açısı,
+detaylarını ileride göreceğiz. Neyse, şimdi sadece $x$ yönündeki kütle
+değişimine bakalım, </p>
+<p><img alt="" src="phy_050_fluid_02.jpg" /></p>
+<p>Sıvının akış hızı $u(x,y,z) = (u,v,w)$, ve yoğunluğu $\rho$ olsun. Birim zamanda
+içeri akan net kütleyi giren eksi çıkan kütle olarak hesaplayacağız. Bu zamanda
+$x$ yönünde akış kenarları $\Delta y$, $\Delta z$ ve $u(x,y,z)$ (ufak dik duran
+bir pizza kutusu gibi) olan bir kesit düşünebilir. Bu birim zamandaki akış
+hacmi.  Onu yoğunluk ile çarpınca kütle elde edilir, aynı şeyi $x + \Delta x$
+noktası için de yaparız, ve farklarını alırız,</p>
+<p>$$
+\rho(x,y,z)u(x,y,z)\Delta y \Delta z -
+\rho(x+\Delta x,y,z) u(x+\Delta x,y,z)\Delta y \Delta z
+$$</p>
+<p>Üstteki formüldeki bir bölüm bir kısmi türevi andırıyor, $\Delta x$ ile bölüp
+çarpsak,</p>
+<p>$$
+= \frac{\rho(x,y,z)u(x,y,z)}{\Delta x}\Delta x \Delta y \Delta z -
+\frac{\rho(x+\Delta x,y,z) u(x+\Delta x,y,z)}{\Delta x} \Delta x \Delta y \Delta z
+$$</p>
+<p>Evet iki bölme işlemini yaklaşık olarak kısmı türev olarak görebiliriz,</p>
+<p>$$
+\approx -\frac{\partial (\rho u) }{\partial x} \Delta x \Delta y \Delta z
+$$</p>
+<p>Benzer işlemi tüm eksenler için ayrı ayrı yapsak onlar için de kısmi türevler
+elde ederdik, o zaman tüm eksenler üzerinden olan değişim, ve farksal hacmi
+$\Delta V = \Delta x \Delta y \Delta z$ olarak gösterirsek,</p>
+<p>$$
+\left(
+-\frac{\partial (\rho u) }{\partial x} 
+-\frac{\partial (\rho u) }{\partial y} 
+-\frac{\partial (\rho u) }{\partial z} 
+\right) \Delta V
+$$</p>
+<p>Üstteki gradyan ve vektörsel olarak daha rahat gösterebiliriz,</p>
+<p>$$
+= -\nabla \cdot (\rho \vec{u} ) \Delta V
+$$</p>
+<p>Birim zamandaki kütle artışı buna eşit. Üstteki ifadeyi farklı bir açıdan, birim
+zamandaki yoğunluk artışı çarpı hacim olarak, şöyle de belirtebilirdik,</p>
+<p>$$
+\frac{\partial }{\partial t} (\rho \Delta V) 
+$$</p>
+<p>Bu ifade iki üstteki ile eşit olmalı. Ayrıca her iki taraftan $\Delta V$
+çıkartılabilir çünkü sabit bir hacim,</p>
+<p>$$
+\frac{\partial \rho}{\partial t}  = -\nabla \cdot (\rho \vec{u} )
+$$</p>
+<p>Euler ve Lagrange</p>
 <p>Euler ve Lagrange bakış açısı arasındaki farklarla başlayalım. Bu iki bakış
-açısı bir sivinin dinamiğini nasıl incelediğimiz ile alakalı. Eğer bir nehirdeki
+açısı bir sıvının dinamiğini nasıl incelediğimiz ile alakalı. Eğer bir nehirdeki
 kirlilik yoğunluğunu ölçüyorsak mesela, bunu herhangi bir $x,y,z$ noktasında
 yapabiliriz, ve diyelim ki kirlilik belli bir yerde hiç değişmiyor, ertesi gün
 gelsek aynı yerde aynı ölçümü alıyoruz [2, sf 78]. Bu yere bağımlı Euler açısı.</p>
 <p>Fakat farklı yerlerde farklı ölçümler olabilir, mesela nehir boyunca bir kayık
 içinde sabit hızda gidersek yoğunluk lineer oranda artıyor. Bu durumda pir paket
 sıvıyı takip ettiğimizi düşünebiliriz, o paketin açısından elde edilen ölçümler
-Lagrange bakış açısıdir. </p>
+Lagrange bakış açısıdır. </p>
 <p>İki bakış açısı arasında gidip gelmenin yolu materyel türev. Böylece Euler
 bazındaki değişim kullanılarak Lagrange tarifi yapılabiliyor. Bu önemli çünkü
 ölçümler çoğunlukla Euler formatında düşünülür (bir yerde duran ölçüm aleti

@@ -94,6 +94,7 @@ $\frac{\partial \rho}{\partial t} = 0 $ olur, değişim yok, süreklilik
 formülünden geri kalan</p>
 <p>$$
 \nabla \cdot \bar{u} = 0
+\qquad (2)
 $$</p>
 <p>olacaktır. </p>
 <p>Euler ve Lagrange</p>
@@ -202,7 +203,60 @@ olduğunu biliyoruz. İvme $\bar{g}$ bir vektör olarak gösterildi, bu $\bar{g}
 <p>Diğer kuvvet basınç. Yüksek basınç bölgeleri alçak basınç bölgelerinde doğru bir
 kuvvet uygular. Basıncın tüm sıvı için $p(\bar{x})$ değişkeninde olduğunu
 düşünelim, peki basınç dengesizliğini matematiksel olarak göstermenin en basit
-yolu nedir? Basıncın negatif gradyanini almak, $-\nabla p$ olur mu acaba?</p>
+yolu nedir? Basıncın negatif gradyanını almak, $-\nabla p$ olur mu acaba?  Bu
+işler. Temel Calculus'tan hatırlarsak gradyan en dik iniş yönünü gösterir, o
+zaman gradyanin negatifi yüksek basınç bölgesinden dışarı alçak basınç bölgesine
+doğru gösterecektir. Tabii ki bu etkiyi üzerinde olduğumüz sıvı paketinin hacmi
+üzerinden entegre etmemiz gerekir, ama basit bir yaklaşıklama olarak onu hacim
+$V$ ile çarpabiliriz. Tümü $F^{\textrm{basınç}} = - V \nabla p$.</p>
+<p>Üçüncü kuvvet ağdalık. Ağdalı bir sıvı deforme edilmeye karşı direnir. Bu
+kuvveti kabaca "her parçacığın yanindaki diğer parçacıkların ortalama hızında
+hareket etmesini zorlayan kuvvet" olarak görebiliriz, bir diğer deyişle
+birbirine yakın olan parçacıkların arasındaki hız farklarını minimize etmeye
+uğraşan kuvvet. Şimdi, mesela görüntü işleme literatürünü düşünürsek, o alanda
+çalışanların bir ölçünün etrafındaki ortalamadan ne kadar saptığını hesaplayan
+bir diferansiyel operatör var, bu operatör Laplasyan $\nabla \cdot \nabla$.  Bu
+operatör, aynı şekilde hacim üzerinden entegre edilince bize ağdalık kuvvetini
+verebilir, burada bir ek her sıvının farklı ağdalığını formüle dahil edebilmek
+için bir de bir dinamik ağdalık sabiti (dynamic viscosity coefficient) $\mu$ ile
+herşeyi çarpmak, o zaman $F^{\textrm{ağdalık}} = V \mu \nabla \cdot \nabla
+\bar{u}$.</p>
+<p>Hepsini bir araya koyunca,</p>
+<p>$$
+m \frac{D \bar{u}}{D t} = m\bar{g} - V \nabla p + V \mu \nabla \cdot \nabla \bar{u}
+$$</p>
+<p>Bu denklemi hacim ve kütle limite giderken düşüneceğiz, ama bu haliyle formül
+problem çıkartabilir, o zaman her şeyi $V$ ile bölersek ve sonra limiti
+düşünürsek daha iyi olabilir, ayrıca $m/V$'nin sıvı yoğunluğu $\rho$ olduğunu
+hatırlarsak,</p>
+<p>$$
+\rho \frac{D \bar{u}}{D t} = \rho \bar{g} -
+\nabla p +
+\mu \nabla \cdot \nabla \bar{u}
+$$</p>
+<p>Bu denklem bazıları için tanıdık gelebilir.. Navier-Stokes denklemine benzemiyor
+mu? Navier-Stokes denklemi,</p>
+<p>$$
+\frac{\partial \bar{u}}{\partial t} + \bar{u} + \frac{1}{\rho} \nabla p =
+\bar{g} + \nu \nabla \cdot \nabla \bar{u}
+$$</p>
+<p>$$
+\nabla \cdot \bar{u} = 0
+$$</p>
+<p>olarak gösterilir.</p>
+<p>Neyse bizim türetişle devam edersek, her şeyi yoğunluk $\rho$ ile bölelim,</p>
+<p>$$
+\frac{D \bar{u}}{D t} + \frac{1}{\rho} \nabla p =
+\bar{g}  + \frac{\mu}{\rho} \nabla \cdot \nabla \bar{u}
+$$</p>
+<p>Basitleştirme amaçıyla kinematik ağdalık $\nu = \mu / \rho$ tanımlayalım, o
+zaman </p>
+<p>$$
+\frac{D \bar{u}}{D t} + \frac{1}{\rho} \nabla p =
+\bar{g}  + \nu \nabla \cdot \nabla \bar{u}
+$$</p>
+<p>Sıkıştırılamazlığın (incompressibility) $\nabla \cdot \bar{u} = 0$ olduğunu daha
+önce (2)'de görmüştük.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Materyel Türev, Euler ve Lagrange Bakış Açısı</em>,

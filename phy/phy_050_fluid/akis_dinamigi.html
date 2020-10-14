@@ -157,30 +157,31 @@ $$</p>
 \frac{D F}{D t} = \frac{\partial F}{\partial t} + \bar{u} \cdot \nabla F
 $$</p>
 <p>ile önceki formüle eriştik.</p>
-<p>Şimdi ilginç bir noktaya geldik, süreklilik denklemi (1)'in $\rho$ ölçümu
-üzerinde materyel türev uygulanmış form olarak görmek mümkün,</p>
+<p>Şimdi ilginç bir noktaya geldik, süreklilik denklemi (1)'i, $\rho$ ölçümü
+üzerinde materyel türev uygulanmış formu olarak görmek mümkün,</p>
 <p>$$
 \frac{D \rho}{D t} + \rho \nabla \cdot \bar{u} = 0
 $$</p>
-<p>Pürüzsüz Parcaçık Dinamiği (Smoothed Partıcle Dynamics -SPH-)</p>
-<p>Sıvının akışını simüle etmek farklı alanlarda faydalı olabilecek bir
+<p>Pürüzsüz Parcaçık Dinamiği (Smoothed Particle Dynamics -SPH-)</p>
+<p>Sıvının akışını simüle etmek pek çok alanda faydalı olabilecek bir
 tekniktir. Sıvıların kendisine ek olarak gazları yoğunluğu daha az olan sıvı
 olarak görebiliriz, hatta katı maddeler de akışkanlığı çok az sıvı gibi
 düşünülebilirse, böylece aerodinamikten başlayıp, gemi tasarlamaya, oradan
-oyunlarda duman simülasyonu, ve tabii ki sıvının kendisinin simülasyonuna kadar
-giden geniş yelpazede bu simülasyon teknikleri kullanım bulabilir.</p>
-<p>SPH tekniği sıvı simülasyon yöntemlerinden birisidir. Navier-Stokes denklemleri
-bir sıvının akışını tanımlar, bu denklem simülasyon ortamında yaklaşık olarak
-çözülmelidir [5], bunu yapmanın iki yolu vardır. Önceki anlatımdan hareketle
-herhalde cevabı tahmin edebiliriz, birisi Lagrange usulü diğeri Euler usulü. SPH
-yöntemi Lagrange yaklaşımını takip eder, yani bir sıvı paketini alıp onun zaman
-ve uzayda gidişini izler. Tek bir yere mıhlanmış olmamanın (Euler usulü) pek çok
-avantajları var, mesela oyun grafiklerini çizerken daha geniş bir alanda iş
-yapabilmek mümkün, farklı maddeler arasındaki iletişim daha rahat
-halledilebiliyor, vs.</p>
+oyunlarda duman simülasyonuna kadar giden geniş yelpazede teknikler kullanım
+bulabilir.</p>
+<p>SPH tekniği bu sıvı simülasyon yöntemlerinden birisidir. Navier-Stokes
+denklemleri bir sıvının akışını tanımlar, bu denklem simülasyon ortamında
+yaklaşık olarak çözülmelidir [5], bunu yapmanın iki yolu vardır. Önceki
+anlatımdan hareketle herhalde cevabı tahmin edebiliriz, birisi Lagrange usulü
+diğeri Euler usulü. SPH yöntemi Lagrange yaklaşımını takip eder, yani bir sıvı
+paketini alıp onun zaman ve uzayda gidişini izler. Tek bir yere mıhlanmış
+olmamanın (Euler usulü) pek çok avantajları var, mesela oyun grafiklerini
+çizerken daha geniş bir alanda iş yapabilmek mümkün, farklı maddeler arasındaki
+iletişim daha rahat halledilebiliyor, vs.</p>
 <p>Formülasyon için temel fizikle başlayalım. Simüle ettiğimiz bir sıvı paketidir
 demiştik, bu paketin ivmesini takip edelim mesela, bunun önemli olacagini tahmin
-edebiliriz, oradan kuvvet, enerji bağlantıları var, materyel türev ile</p>
+edebiliriz, oradan kuvvet, enerji bağlantıları var, $F=ma$ formülünden
+hareketle, ve materyel türev ile</p>
 <p>$$
 m \frac{D \bar{u}}{D t} = F^{toplam}
 $$</p>
@@ -193,34 +194,35 @@ bir sıvı akışı sırasında sıvı paketi / parçacık üzerinde etki ediyor
 sırasıyla basınç, ağdalık, ve yerçekim olurdu herhalde, bal gibi ağdalı bir
 sıvıda parçalar birbirlerine yapışkandır, şu için daha az, bu bir
 kuvvettir. Yerçekimi bir kuvvettir doğal olarak. Basınç ta öyle, biraz derine
-dalan herkes etrafındaki suyun basıncını bir kuvvet olarak hisseder. </p>
+dalan herkes etrafındaki suyun basıncını bir kuvvet olarak hisseder. O zaman,</p>
 <p>$$
 m \frac{D \bar{u}}{D t} = F^{\textrm{basınç}} + F^{\textrm{ağdalık}} + F^{\textrm{yerçekim}} 
 $$</p>
-<p>Kuvvetlerden en basiti yerçekimi. Onun $F^{\textrm{yerçekim}} = m \bar{g}$
-olduğunu biliyoruz. İvme $\bar{g}$ bir vektör olarak gösterildi, bu $\bar{g} =
-(0, 0, 0.98)$ gibi sadece z ekseni üzerinde etki eden bir etki olacak.</p>
+<p>diyebiliriz. Kuvvetlerden en basiti yerçekimi, $F^{\textrm{yerçekim}} = m
+\bar{g}$. İvme $\bar{g}$ bir vektör olarak gösterildi, bu $\bar{g} = (0, 0,
+0.98)$ olurdu, sadece z ekseni üzerinde etki eden bir ivmelenme yani.</p>
 <p>Diğer kuvvet basınç. Yüksek basınç bölgeleri alçak basınç bölgelerinde doğru bir
 kuvvet uygular. Basıncın tüm sıvı için $p(\bar{x})$ değişkeninde olduğunu
 düşünelim, peki basınç dengesizliğini matematiksel olarak göstermenin en basit
-yolu nedir? Basıncın negatif gradyanını almak, $-\nabla p$ olur mu acaba?  Bu
-işler. Temel Calculus'tan hatırlarsak gradyan en dik iniş yönünü gösterir, o
-zaman gradyanin negatifi yüksek basınç bölgesinden dışarı alçak basınç bölgesine
-doğru gösterecektir. Tabii ki bu etkiyi üzerinde olduğumüz sıvı paketinin hacmi
-üzerinden entegre etmemiz gerekir, ama basit bir yaklaşıklama olarak onu hacim
-$V$ ile çarpabiliriz. Tümü $F^{\textrm{basınç}} = - V \nabla p$.</p>
+yolu nedir? Basıncın negatif gradyanını almak, $-\nabla p$ olur mu acaba?
+Evet. Temel Calculus'tan hatırlarsak gradyan en dik iniş yönünü gösterir, o
+zaman gradyanın negatifi yüksek basınç bölgesinden dışarı, alçak basınç
+bölgesine doğru gösterecektir. Tabii ki bu etkiyi üzerinde olduğumuz sıvı
+paketinin hacmi üzerinden entegre etmemiz gerekir, ama basit bir yaklaşıklama
+olarak onu direk hacim $V$ ile çarpabiliriz. Tümü $F^{\textrm{basınç}} = - V
+\nabla p$.</p>
 <p>Üçüncü kuvvet ağdalık. Ağdalı bir sıvı deforme edilmeye karşı direnir. Bu
-kuvveti kabaca "her parçacığın yanindaki diğer parçacıkların ortalama hızında
+kuvveti kabaca "her parçacığı yanındaki diğer parçacıkların ortalama hızında
 hareket etmesini zorlayan kuvvet" olarak görebiliriz, bir diğer deyişle
 birbirine yakın olan parçacıkların arasındaki hız farklarını minimize etmeye
 uğraşan kuvvet. Şimdi, mesela görüntü işleme literatürünü düşünürsek, o alanda
-çalışanların bir ölçünün etrafındaki ortalamadan ne kadar saptığını hesaplayan
-bir diferansiyel operatör var, bu operatör Laplasyan $\nabla \cdot \nabla$.  Bu
-operatör, aynı şekilde hacim üzerinden entegre edilince bize ağdalık kuvvetini
-verebilir, burada bir ek her sıvının farklı ağdalığını formüle dahil edebilmek
-için bir de bir dinamik ağdalık sabiti (dynamic viscosity coefficient) $\mu$ ile
-herşeyi çarpmak, o zaman $F^{\textrm{ağdalık}} = V \mu \nabla \cdot \nabla
-\bar{u}$.</p>
+çalışanlar bir ölçünün etrafındaki ortalamadan ne kadar saptığını hesaplamalak
+için bir diferansiyel operatör kullanır, bu operatör Laplasyan $\nabla \cdot
+\nabla$.  Bu operatör, aynı şekilde hacim üzerinden entegre edilince bize
+ağdalık kuvvetini verebilir, burada bir ek her sıvının farklı ağdalığını formüle
+dahil edebilmek için bir de bir dinamik ağdalık sabiti (dynamic viscosity
+coefficient) $\mu$ ile herşeyi çarpmak gerektiği, o zaman $F^{\textrm{ağdalık}}
+= V \mu \nabla \cdot \nabla \bar{u}$ formülünü elde ediyoruz.</p>
 <p>Hepsini bir araya koyunca,</p>
 <p>$$
 m \frac{D \bar{u}}{D t} = m\bar{g} - V \nabla p + V \mu \nabla \cdot \nabla \bar{u}
@@ -234,7 +236,7 @@ düşünürsek daha iyi olur, $m/V$'yi sıvı yoğunluğu $\rho$ olarak tanımla
 \mu \nabla \cdot \nabla \bar{u}
 $$</p>
 <p>Bu denklem bazıları için tanıdık gelebilir.. Navier-Stokes denklemine benzemiyor
-mu? Bu ünlü denklem,</p>
+mu? Navier-Stokes ünlü denklemi,</p>
 <p>$$
 \frac{\partial \bar{u}}{\partial t} + \bar{u} + \frac{1}{\rho} \nabla p =
 \bar{g} + \nu \nabla \cdot \nabla \bar{u}

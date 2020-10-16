@@ -25,18 +25,43 @@
 </head>
 
 <p>SPH sıvıların dinamik hareketini görmemizi sağlayan bir simülasyon
-tekniği. Lagrangian bakış açısını temel alır, yani Euler aksine, bir sıvı
-paketini takip edip nereye gittiğine, hangi değişimlere uğradığına bakarız.</p>
+tekniğidir. Lagrangian bakış açısını temel alır, yani Euler aksine, bir sıvı
+paketini takip edip nereye gittiğine, hangi değişimlere uğradığına
+bakarız.</p>
+<p>Akış dinamiğini anlatan [5]'te</p>
+<p>$$
+\rho \frac{D \bar{u}}{D t} = F^{toplam} 
+$$</p>
+<p>denklemini gördük. Bu Newton'un $F=ma$ formülasyonun bir karşılığı. Bu denklemde
+basınç, ağdalık gibi kuvvetler için terimler vardı. Toplam kuvvetleri açarsak,</p>
+<p>$$
+F^{toplam}  = F^{\textrm{basınç}} + F^{\textrm{ağdalık}} + F^{\textrm{yerçekim}} 
+$$</p>
+<p>Daha detayli hali,</p>
+<p>$$
+\rho \frac{D \bar{u}}{D t} = 
+- \nabla p + \mu \nabla \cdot \nabla \bar{u} + \rho \bar{g}
+$$</p>
+<p>SPH icin bize ivme gerekli. Kütle ve kuvvetten ivme, oradan sayısal entegrasyon
+ile simülasyon elde edilebilir, katı-gövde simülasyonunu kodlarken [6]'da bu
+anlatılmıştı. O zaman eldeki $i$'inci parçacık için toplam kuvvet $F_i$
+hesaplarsak</p>
+<p>$$
+a_i = \frac{\mathrm{d} u_i}{\mathrm{d} t} = \frac{F_i}{\rho_i}
+$$</p>
+<p>ile ivmeyi buluruz, ve oradan devam ederiz. Simülasyon ortamında bize gereken
+$\nabla p(r_i)$ ve $\nabla^2 u(r_i)$ hesaplarını yaklaşık yapabilmemizi
+sağlayacak bir yaklaşım kullanmak.</p>
 <p>Bir fonksiyon $A$'yi aradeğerleme (interpolation), yaklaşıklama üzerinden temsil
-etmek istersek [1],</p>
+edilebilir [1],</p>
 <p>$$
 A_I(r) = \int f(r') W(r-r',h) \mathrm{d} r'
 $$</p>
-<p>[4]'te bu tekniğin Dirac fonksiyonu ile bağlantıları anlatıldı. </p>
-<p>$\bar{r}=r$ bir vektör, $A_I$ aradeğerlenmiş fonksiyon, $A$ yaklaşık göstermeye
-uğraştığımız fonksiyon. $A$ simülasyon ortamında hesaplanan herhangi bir ölçüt
-olabilir, mesela herhangi bir $r=(x,y,z)$ noktasındaki basınç, sıcaklık,
-yoğunluk, vs. $W$ agirlik fonksiyonudur, bir sart,</p>
+<p>$\bar{r}=r$ bir vektör, $\mathrm{d} r'$ diferansiyel hacim öğesi. $A_I$ aradeğerlenmiş
+fonksiyon, $A$ yaklaşık göstermeye uğraştığımız fonksiyon. $A$ simülasyon
+ortamında hesaplanan herhangi bir ölçüt olabilir, mesela herhangi bir
+$r=(x,y,z)$ noktasındaki basınç, sıcaklık, yoğunluk, vs. $W$ ağırlık
+fonksiyonudur, ya da çekirdek (kernel) fonksiyonu, sahip olması gereken bir şart,</p>
 <p>$$
 \int_\Omega  W(r-r',h) \mathrm{d} r' = 1
 $$</p>
@@ -44,11 +69,15 @@ $$</p>
 <p>$$
 \lim_{h \to 0} W(r,h) = \delta(r)
 $$</p>
-<p>olmasidir [4, sf. 11].</p>
+<p>olmasıdır [4, sf. 11]. [4]'te bu tekniğin Dirac fonksiyonu ile bağlantıları
+anlatıldı. Eğer $W = \delta$ dersek, yani çekirdek için Dirac fonksiyonu
+kullanırsak, direk aradeğerlenen fonksiyonun kendisini elde ederiz. </p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>
 <p>[2] Schuermann, <em>Particle-Based Fluid Simulation with SPH</em>,
     <a href="https://lucasschuermann.com/writing/particle-based-fluid-simulation">https://lucasschuermann.com/writing/particle-based-fluid-simulation</a></p>
-<p>[3] Bayramli, <em>Hesapsal Bilim, Ders 4</em></p>
+<p>[3] Bayramlı, <em>Hesapsal Bilim, Ders 4</em></p>
 <p>[4] Kelager, <em>Lagrangian Fluid Dynamics Using Smoothed Particle Hydrodynamics</em></p>
+<p>[5] Bayramlı, <em>Fizik, Akış Dinamiği</em></p>
+<p>[6] Bayramlı, <em>Fizik, Simulasyon</em></p>

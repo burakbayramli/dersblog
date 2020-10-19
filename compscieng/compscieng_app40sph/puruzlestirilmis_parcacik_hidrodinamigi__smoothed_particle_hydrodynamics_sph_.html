@@ -42,8 +42,8 @@ $$</p>
 \rho \frac{D \bar{u}}{D t} = 
 - \nabla p + \mu \nabla \cdot \nabla \bar{u} + \rho \bar{g}
 $$</p>
-<p>Simülasyon için bize ivme gerekli. Kütle ve kuvvetten ivme, oradan sayısal
-entegrasyon ile yer değişimi elde edilebilir, katı-gövde simülasyonunu kodlarken
+<p>Simulasyon için bize ivme gerekli. Kütle ve kuvvetten ivme, oradan sayısal
+entegrasyon ile yer değişimi elde edilebilir, katı-gövde simulasyonunu kodlarken
 [6]'da bu anlatılmıştı. O zaman eldeki $i$'inci parçacık için toplam kuvvet
 $F_i$ hesaplarsak</p>
 <p>$$
@@ -55,10 +55,10 @@ yapabilmemizi sağlayacak bir yaklaşım kullanmak. SPH teknikleri bunu sağlıy
 <p>Bir fonksiyon $A$'yi aradeğerleme (interpolation), yaklaşıklama üzerinden temsil
 edilebilir [1],</p>
 <p>$$
-A_I(r) = \int f(r') W(r-r',h) \mathrm{d} r'
+A_I(r) = \int A(r') W(r-r',h) \mathrm{d} r'
 $$</p>
 <p>$\bar{r}=r$ bir vektör, $\mathrm{d} r'$ diferansiyel hacim öğesi. $A_I$ aradeğerlenmiş
-fonksiyon, $A$ yaklaşık göstermeye uğraştığımız fonksiyon. $A$ simülasyon
+fonksiyon, $A$ yaklaşık göstermeye uğraştığımız fonksiyon. $A$ simulasyon
 ortamında hesaplanan herhangi bir ölçüt olabilir, mesela herhangi bir
 $r=(x,y,z)$ noktasındaki basınç, sıcaklık, yoğunluk, vs. $W$ ağırlık
 fonksiyonudur, ya da çekirdek (kernel) fonksiyonu, sahip olması gereken bir şart,</p>
@@ -72,6 +72,32 @@ $$</p>
 <p>olmasıdır [4, sf. 11]. [4]'te bu tekniğin Dirac fonksiyonu ile bağlantıları
 anlatıldı. Eğer $W = \delta$ dersek, yani çekirdek için Dirac fonksiyonu
 kullanırsak, direk aradeğerlenen fonksiyonun kendisini elde ederiz. </p>
+<p>Aradeğerlemeyi sıvıya uygulamak için sıvıyı önce kütle öğelerine bölmemiz
+gerekli. $i$'inci öğe $m_i$ kütlesine, $\rho_i$ yoğunluğuna, ve $\bar{r}_i$
+pozisyonuna sahip olacak. $A$'nin $i$ parçacığındaki değeri $A_i$ ile
+gösterilsin. Her parcacik icin,</p>
+<p>$$
+A(r) = \int A(r') W(r-r',h) \mathrm{d} r'
+$$</p>
+<p>$$
+ = \int \frac{A(r')}{\rho(r')} W(r-r',h) \rho(r') \mathrm{d} r'
+$$</p>
+<p>Yaklaşıklık için $A_I(r)$ da diyebilirdik, ya da $\approx$
+kullanabilirdik. Devam edelim, $\rho(r')$'i hem bölen hem bölünene ekleyerek
+hiçbir değişim yaratmamış olduk, ama böylece $\rho(r') \mathrm{d} r'$ ifadesi elde
+ettik ki ona parçacık kütlesi diyebiliriz. Böylece parçacıkların kütleleri
+üzerinden bir toplam alabiliriz,</p>
+<p>$$
+A_s(r) = \sum_b m_b \frac{A_b}{\rho_b} W(r-r_b, h)
+$$</p>
+<p>Bu toplam teoride tüm parçacıklar üzerindendir, fakat pratikte $r$'ye yakın olan
+diğer parçacıklar üzerinden alınır, çoğunlukla çekirdek $2h$ gibi bir uzaklıkta
+zaten hızla sıfıra düşer, bu sebeple, ayrıca performans açısından, çok uzaktaki
+parçacıkları göz önüne almaya da gerek yoktur.</p>
+<p>Üstteki formül bana herhangi bir $r$ noktasında hesaplayabileceğim bir kestirme
+hesap (estimation) vermiş oldu. Parcaçık bazlı simülasyon yaptığımız için her
+$i$ parçacığı çevresindeki $b$ parçacıkları üzerinden bu kestirme hesabını
+yapabileceğiz.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>
@@ -81,3 +107,5 @@ kullanırsak, direk aradeğerlenen fonksiyonun kendisini elde ederiz. </p>
 <p>[4] Kelager, <em>Lagrangian Fluid Dynamics Using Smoothed Particle Hydrodynamics</em></p>
 <p>[5] Bayramlı, <em>Fizik, Akış Dinamiği</em></p>
 <p>[6] Bayramlı, <em>Fizik, Simulasyon</em></p>
+<p>[7] Monaghan, <em>Introduction to SPH Part I</em>,
+    <a href="https://www.youtu.be/tAXHCAEgSuE">https://www.youtu.be/tAXHCAEgSuE</a></p>

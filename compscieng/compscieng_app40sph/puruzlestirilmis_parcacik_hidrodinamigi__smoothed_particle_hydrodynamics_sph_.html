@@ -41,6 +41,7 @@ $$</p>
 <p>$$
 \rho \frac{D \bar{u}}{D t} = 
 - \nabla p + \mu \nabla \cdot \nabla \bar{u} + \rho \bar{g}
+\qquad (1)
 $$</p>
 <p>Simulasyon için bize ivme gerekli. Kütle ve kuvvetten ivme, oradan sayısal
 entegrasyon ile yer değişimi elde edilebilir, katı-gövde simulasyonunu kodlarken
@@ -99,6 +100,35 @@ parçacıkları göz önüne almaya gerek yoktur.</p>
 hesap (estimation) vermiş oldu. Parcaçık bazlı simülasyon yaptığımız için her
 $i$ parçacığı çevresindeki $b$ parçacıkları üzerinden bu kestirme hesabı
 yapabileceğiz.</p>
+<p>Aradeğerlemenin bize sağladığı güzel bir özellik onun üzerinden mesela gradyan
+alabilmem. Diyelim ki $A$ ölçümü basınç, yani $p$. O zaman Euler denkleminde
+görülen $-\nabla p$ formülünü üstteki entegral üzerinden açabilmem
+gerekir. $r$'de olan her $i$ parçacığı için $p(r_i)$ diyelim,</p>
+<p>$$
+p(r_i) = \sum_j \frac{m_j p_j}{\rho_j} W(r_i-r_j,h)
+$$</p>
+<p>Bu denklemin gradyanını alabiliriz şimdi,</p>
+<p>$$
+\nabla p(r_i) = \sum \frac{m_j p_j}{\rho_j} \nabla W(r_i-r_j,h)
+$$</p>
+<p>Gradyan direk $W$ üzerinde uygulanmış oldu. Burada modellemeyi yapan kişi tabii
+ki $W$'yi "gradyanı rahat alınan" fonksiyonlar arasından da seçecektir,
+böylece işler daha da kolaylaşacaktır.</p>
+<p>O zaman üstteki sonuç ile $-\nabla p$ yazarsak,</p>
+<p>$$
+F_i^{\textrm{basınç}} = - \sum_j \frac{m_j p_j}{\rho_j} \nabla W(r_i-r_j,h)
+$$</p>
+<p>elde ederiz.</p>
+<p>Fakat burada bir problem var, $j$ bölgesindeki basıncı kullanarak o fark
+üzerinden $i$ üzerindeki kuvveti hesapladık, fakat basınç farkı dolayısıyla
+$i$'nin $j$ üzerinde uyguladığı kuvvet aynı olmayabilir. Yani kuvvet simetrik
+olmaz, fakat fizik kanunlarına göre etki-tepki aynı olmalıdır. Simülasyon
+amacıyla çoğunlukla yapılan dışarıdan müdahele ile kuvveti simetrik hale
+getirmektir, mesela bir yöntem basit aritmetik ortalama almak,</p>
+<p>$$
+F_i^{\textrm{basınç}} = - \nabla p(r_i) =
+- \sum_j m_j \frac{p_i + p_j}{2 \rho_j} \nabla W(r_i-r_j,h)
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>

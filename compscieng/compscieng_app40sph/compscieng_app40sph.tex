@@ -25,6 +25,7 @@ Daha detaylý hali,
 $$
 \rho \frac{D \bar{u}}{D t} = 
 - \nabla p + \mu \nabla \cdot \nabla \bar{u} + \rho \bar{g}
+\mlabel{1}
 $$
 
 Simulasyon için bize ivme gerekli. Kütle ve kuvvetten ivme, oradan sayýsal
@@ -104,9 +105,44 @@ hesap (estimation) vermiþ oldu. Parcaçýk bazlý simülasyon yaptýðýmýz için her
 $i$ parçacýðý çevresindeki $b$ parçacýklarý üzerinden bu kestirme hesabý
 yapabileceðiz.
 
+Aradeðerlemenin bize saðladýðý güzel bir özellik onun üzerinden mesela gradyan
+alabilmem. Diyelim ki $A$ ölçümü basýnç, yani $p$. O zaman Euler denkleminde
+görülen $-\nabla p$ formülünü üstteki entegral üzerinden açabilmem
+gerekir. $r$'de olan her $i$ parçacýðý için $p(r_i)$ diyelim,
 
+$$
+p(r_i) = \sum_j \frac{m_j p_j}{\rho_j} W(r_i-r_j,h)
+$$
 
+Bu denklemin gradyanýný alabiliriz þimdi,
 
+$$
+\nabla p(r_i) = \sum \frac{m_j p_j}{\rho_j} \nabla W(r_i-r_j,h)
+$$
+
+Gradyan direk $W$ üzerinde uygulanmýþ oldu. Burada modellemeyi yapan kiþi tabii
+ki $W$'yi ``gradyaný rahat alýnan'' fonksiyonlar arasýndan da seçecektir,
+böylece iþler daha da kolaylaþacaktýr.
+
+O zaman üstteki sonuç ile $-\nabla p$ yazarsak,
+
+$$
+F_i^{\textrm{basýnç}} = - \sum_j \frac{m_j p_j}{\rho_j} \nabla W(r_i-r_j,h)
+$$
+
+elde ederiz.
+
+Fakat burada bir problem var, $j$ bölgesindeki basýncý kullanarak o fark
+üzerinden $i$ üzerindeki kuvveti hesapladýk, fakat basýnç farký dolayýsýyla
+$i$'nin $j$ üzerinde uyguladýðý kuvvet ayný olmayabilir. Yani kuvvet simetrik
+olmaz, fakat fizik kanunlarýna göre etki-tepki ayný olmalýdýr. Simülasyon
+amacýyla çoðunlukla yapýlan dýþarýdan müdahele ile kuvveti simetrik hale
+getirmektir, mesela bir yöntem basit aritmetik ortalama almak,
+
+$$
+F_i^{\textrm{basýnç}} = - \nabla p(r_i) =
+- \sum_j m_j \frac{p_i + p_j}{2 \rho_j} \nabla W(r_i-r_j,h)
+$$
 
 
 [devam edecek]

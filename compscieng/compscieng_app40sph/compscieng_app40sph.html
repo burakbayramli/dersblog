@@ -176,6 +176,30 @@ plt.savefig('compscieng_app40sph_01.png')
 </code></pre>
 
 <p><img alt="" src="compscieng_app40sph_01.png" /></p>
+<pre><code class="python">import pandas as pd
+df = pd.DataFrame(r)
+df.columns = ['r']
+df['W'] = (315./(64*np.pi*h**9)) * (h**2 - np.abs(r)**2)**3
+df['Gradyan W'] = -945./(32*np.pi*h**9) * r * (h**2 - np.abs(r)**2)**2
+df = df.set_index('r')
+df.plot()
+plt.savefig('compscieng_app40sph_02.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app40sph_02.png" /></p>
+<pre><code class="python">df = pd.DataFrame(r)
+df.columns = ['r']
+df['W'] = (315./(64*np.pi*h**9)) * (h**2 - np.abs(r)**2)**3
+df['Gradyan W'] = -945./(32*np.pi*h**9) * r * (h**2 - np.abs(r)**2)**2
+df['Laplasyan W'] = -945./(32*np.pi*h**9) * \
+                   (h**2-np.abs(r)**2) * \
+                   (3*h**2 - 7**np.abs(r)**2)
+df = df.set_index('r')
+df.plot()
+plt.savefig('compscieng_app40sph_03.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app40sph_03.png" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>

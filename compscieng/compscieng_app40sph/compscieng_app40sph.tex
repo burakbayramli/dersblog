@@ -49,10 +49,11 @@ $$
 A_I(r) = \int A(r') W(r-r',h) \ud r'
 $$
 
-$\bar{r}=r$ bir vektör, $\ud r'$ diferansiyel hacim öðesi. $A_I$ aradeðerlenmiþ
-fonksiyon, $A$ yaklaþýk göstermeye uðraþtýðýmýz fonksiyon. $A$ simulasyon
-ortamýnda hesaplanan herhangi bir ölçüt olabilir, mesela herhangi bir
-$r=(x,y,z)$ noktasýndaki basýnç, sýcaklýk, yoðunluk, vs.
+Belirtilmediði yerlerde $r = \bar{r}$, $u = \bar{u}$ kabul edilebilir, bunlar
+vektör, $\ud r'$ diferansiyel hacim öðesi. $A_I$ aradeðerlenmiþ fonksiyon, $A$
+yaklaþýk göstermeye uðraþtýðýmýz fonksiyon. $A$ simulasyon ortamýnda hesaplanan
+herhangi bir ölçüt olabilir, mesela herhangi bir $r=(x,y,z)$ noktasýndaki
+basýnç, sýcaklýk, yoðunluk, vs.
 
 $W$ aðýrlýk fonksiyonudur, ya da çekirdek (kernel) fonksiyonu, sahip olmasý
 gereken bir þart,
@@ -161,6 +162,37 @@ F_i^{\textrm{aðdalýk}} = \mu \sum_j m_j \frac{u_j-u_i}{\rho_j} \nabla^2 W (r_i-r
 $$
 
 daha uygun olur.
+
+Çekirdek Fonksiyon Seçimi
+
+[2] yazarýnýn belirttiði gibi SPH'in stabilitesi, doðruluðu ve hesap hýzý
+pürüzleþtirme çekirdeðinin doðru seçilmiþ olmasýna baðlý. Çekirdek
+fonksiyonlarýný hangisinin, hangi durumlarda iyi olacaðý aktif bir araþtýrma
+alanýdýr. Yaygýn kullanýlan bir çekirdek poly6 ismiyle bilinen 6. derece polinom
+çekirdeðidir. Bu fonksiyon,
+
+$$
+W_{poly6} (r, h) = \frac{315}{64 \pi h^9}
+\left\{ \begin{array}{ll}
+(h^2 - ||r||^2)^3 & 0 \le ||r|| \le h \\
+0 & ||r|| > h
+\end{array} \right.
+$$
+
+Fonksiyonun gradyaný,
+
+$$
+\nabla W (r, h) =
+- \frac{945}{32 \pi h^9} r ( h^2 - ||r||^2)^2
+$$
+
+Laplasyan ise,
+
+$$
+\nabla^2 W (r, h) =
+- \frac{945}{32\pi h^9} (h^2 - ||r||^2)(3 h^2 - 7||r||^2)
+$$
+
 
 
 [devam edecek]

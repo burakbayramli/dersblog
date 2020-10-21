@@ -58,10 +58,11 @@ edilebilir [1],</p>
 <p>$$
 A_I(r) = \int A(r') W(r-r',h) \mathrm{d} r'
 $$</p>
-<p>$\bar{r}=r$ bir vektör, $\mathrm{d} r'$ diferansiyel hacim öğesi. $A_I$ aradeğerlenmiş
-fonksiyon, $A$ yaklaşık göstermeye uğraştığımız fonksiyon. $A$ simulasyon
-ortamında hesaplanan herhangi bir ölçüt olabilir, mesela herhangi bir
-$r=(x,y,z)$ noktasındaki basınç, sıcaklık, yoğunluk, vs.</p>
+<p>Belirtilmediği yerlerde $r = \bar{r}$, $u = \bar{u}$ kabul edilebilir, bunlar
+vektör, $\mathrm{d} r'$ diferansiyel hacim öğesi. $A_I$ aradeğerlenmiş fonksiyon, $A$
+yaklaşık göstermeye uğraştığımız fonksiyon. $A$ simulasyon ortamında hesaplanan
+herhangi bir ölçüt olabilir, mesela herhangi bir $r=(x,y,z)$ noktasındaki
+basınç, sıcaklık, yoğunluk, vs.</p>
 <p>$W$ ağırlık fonksiyonudur, ya da çekirdek (kernel) fonksiyonu, sahip olması
 gereken bir şart,</p>
 <p>$$
@@ -142,6 +143,29 @@ o zaman</p>
 F_i^{\textrm{ağdalık}} = \mu \sum_j m_j \frac{u_j-u_i}{\rho_j} \nabla^2 W (r_i-r_j, h)
 $$</p>
 <p>daha uygun olur.</p>
+<p>Çekirdek Fonksiyon Seçimi</p>
+<p>[2] yazarının belirttiği gibi SPH'in stabilitesi, doğruluğu ve hesap hızı
+pürüzleştirme çekirdeğinin doğru seçilmiş olmasına bağlı. Çekirdek
+fonksiyonlarını hangisinin, hangi durumlarda iyi olacağı aktif bir araştırma
+alanıdır. Yaygın kullanılan bir çekirdek poly6 ismiyle bilinen 6. derece polinom
+çekirdeğidir. Bu fonksiyon,</p>
+<p>$$
+W_{poly6} (r, h) = \frac{315}{64 \pi h^9}
+\left\{ \begin{array}{ll}
+(h^2 - ||r||^2)^3 &amp; 0 \le ||r|| \le h \\
+0 &amp; ||r|| &gt; h
+\end{array} \right.
+$$</p>
+<p>Fonksiyonun gradyanı,</p>
+<p>$$
+\nabla W (r, h) =
+- \frac{945}{32 \pi h^9} r ( h^2 - ||r||^2)^2
+$$</p>
+<p>Laplasyan ise,</p>
+<p>$$
+\nabla^2 W (r, h) =
+- \frac{945}{32\pi h^9} (h^2 - ||r||^2)(3 h^2 - 7||r||^2)
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>

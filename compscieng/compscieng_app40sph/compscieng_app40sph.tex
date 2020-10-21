@@ -2,7 +2,7 @@
 \begin{document}
 Pürüzleþtirilmiþ Parcaçýk Hidrodinamiði (Smoothed Particle Hydrodynamics -SPH-)
 
-SPH sývýlarýn dinamik hareketini görmemizi saðlayan bir simülasyon
+SPH sývýlarýn dinamik hareketini görmemizi saðlayan bir simulasyon
 tekniðidir. Lagrangian bakýþ açýsýný temel alýr, yani Euler aksine, bir sývý
 paketini takip edip nereye gittiðine, hangi deðiþimlere uðradýðýna
 bakarýz.
@@ -101,7 +101,7 @@ zaten hýzla sýfýra düþtüðü için, ayrýca performans açýsýndan, çok uzaktaki
 parçacýklarý göz önüne almaya gerek yoktur.
 
 Üstteki formül bana herhangi bir $r$ noktasýnda hesaplayabileceðim bir kestirme
-hesap (estimation) vermiþ oldu. Parcaçýk bazlý simülasyon yaptýðýmýz için her
+hesap (estimation) vermiþ oldu. Parcaçýk bazlý simulasyon yaptýðýmýz için her
 $i$ parçacýðý çevresindeki $j$ parçacýklarý üzerinden bu kestirme hesabý
 yapabileceðiz.
 
@@ -135,7 +135,7 @@ elde ederiz.
 Fakat burada bir problem var, $j$ bölgesindeki basýncý kullanarak o fark
 üzerinden $i$ üzerindeki kuvveti hesapladýk, fakat basýnç farký dolayýsýyla
 $i$'nin $j$ üzerinde uyguladýðý kuvvet ayný olmayabilir. Yani kuvvet simetrik
-olmaz, fakat fizik kanunlarýna göre etki-tepki ayný olmalýdýr. Simülasyon
+olmaz, fakat fizik kanunlarýna göre etki-tepki ayný olmalýdýr. Simulasyon
 amacýyla çoðunlukla yapýlan dýþarýdan müdahele ile kuvveti simetrik hale
 getirmektir, mesela bir yöntem basit aritmetik ortalama almak,
 
@@ -143,6 +143,24 @@ $$
 F_i^{\textrm{basýnç}} = - \nabla p(r_i) =
 - \sum_j m_j \frac{p_i + p_j}{2 \rho_j} \nabla W(r_i-r_j,h)
 $$
+
+Aðdalýk kuvvetine gelelim. Ýlk baþta (1) bazlý olarak bu formül
+
+$$
+F_i^{\textrm{aðdalýk}} = \mu \sum_j m_j \frac{u_j}{\rho_j} \nabla^2 W (r_i-r_j, h)
+$$
+
+olarak yazýlabilirdi, fakat simetriklik problemi burada da var. Bu problem de
+hýza olan baðlantýyý izafi hýza çevirerek çözülebilir, çünkü fiziksel olarak
+düþünülürse esas önemli olan mutlak hýzlar deðil iki parçacýðýn hýzlarýnýn
+farký, ya da bir parçacýðýn diðerine baktýðýnda gördüðü hýz (ki bu izafi demek)
+o zaman
+
+$$
+F_i^{\textrm{aðdalýk}} = \mu \sum_j m_j \frac{u_j-u_i}{\rho_j} \nabla^2 W (r_i-r_j, h)
+$$
+
+daha uygun olur.
 
 
 [devam edecek]
@@ -164,6 +182,9 @@ Kaynaklar
 
 [7] Monaghan, {\em Introduction to SPH Part I},
     \url{https://www.youtu.be/tAXHCAEgSuE}
+
+[8] Muller, {\em Particle-Based Fluid Simulation for Interactive Applications}
+
 
 \end{document}
 

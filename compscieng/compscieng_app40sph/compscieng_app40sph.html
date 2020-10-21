@@ -24,7 +24,7 @@
 </script>
 </head>
 
-<p>SPH sıvıların dinamik hareketini görmemizi sağlayan bir simülasyon
+<p>SPH sıvıların dinamik hareketini görmemizi sağlayan bir simulasyon
 tekniğidir. Lagrangian bakış açısını temel alır, yani Euler aksine, bir sıvı
 paketini takip edip nereye gittiğine, hangi değişimlere uğradığına
 bakarız.</p>
@@ -97,7 +97,7 @@ diğer parçacıklar üzerinden alınır, çoğunlukla çekirdek $2h$ gibi bir u
 zaten hızla sıfıra düştüğü için, ayrıca performans açısından, çok uzaktaki
 parçacıkları göz önüne almaya gerek yoktur.</p>
 <p>Üstteki formül bana herhangi bir $r$ noktasında hesaplayabileceğim bir kestirme
-hesap (estimation) vermiş oldu. Parcaçık bazlı simülasyon yaptığımız için her
+hesap (estimation) vermiş oldu. Parcaçık bazlı simulasyon yaptığımız için her
 $i$ parçacığı çevresindeki $j$ parçacıkları üzerinden bu kestirme hesabı
 yapabileceğiz.</p>
 <p>Aradeğerlemenin bize sağladığı güzel bir özellik onun üzerinden mesela gradyan
@@ -122,13 +122,26 @@ $$</p>
 <p>Fakat burada bir problem var, $j$ bölgesindeki basıncı kullanarak o fark
 üzerinden $i$ üzerindeki kuvveti hesapladık, fakat basınç farkı dolayısıyla
 $i$'nin $j$ üzerinde uyguladığı kuvvet aynı olmayabilir. Yani kuvvet simetrik
-olmaz, fakat fizik kanunlarına göre etki-tepki aynı olmalıdır. Simülasyon
+olmaz, fakat fizik kanunlarına göre etki-tepki aynı olmalıdır. Simulasyon
 amacıyla çoğunlukla yapılan dışarıdan müdahele ile kuvveti simetrik hale
 getirmektir, mesela bir yöntem basit aritmetik ortalama almak,</p>
 <p>$$
 F_i^{\textrm{basınç}} = - \nabla p(r_i) =
 - \sum_j m_j \frac{p_i + p_j}{2 \rho_j} \nabla W(r_i-r_j,h)
 $$</p>
+<p>Ağdalık kuvvetine gelelim. İlk başta (1) bazlı olarak bu formül</p>
+<p>$$
+F_i^{\textrm{ağdalık}} = \mu \sum_j m_j \frac{u_j}{\rho_j} \nabla^2 W (r_i-r_j, h)
+$$</p>
+<p>olarak yazılabilirdi, fakat simetriklik problemi burada da var. Bu problem de
+hıza olan bağlantıyı izafi hıza çevirerek çözülebilir, çünkü fiziksel olarak
+düşünülürse esas önemli olan mutlak hızlar değil iki parçacığın hızlarının
+farkı, ya da bir parçacığın diğerine baktığında gördüğü hız (ki bu izafi demek)
+o zaman</p>
+<p>$$
+F_i^{\textrm{ağdalık}} = \mu \sum_j m_j \frac{u_j-u_i}{\rho_j} \nabla^2 W (r_i-r_j, h)
+$$</p>
+<p>daha uygun olur.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>
@@ -140,3 +153,4 @@ $$</p>
 <p>[6] Bayramlı, <em>Fizik, Simulasyon</em></p>
 <p>[7] Monaghan, <em>Introduction to SPH Part I</em>,
     <a href="https://www.youtu.be/tAXHCAEgSuE">https://www.youtu.be/tAXHCAEgSuE</a></p>
+<p>[8] Muller, <em>Particle-Based Fluid Simulation for Interactive Applications</em></p>

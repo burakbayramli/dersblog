@@ -144,11 +144,10 @@ F_i^{\textrm{ağdalık}} = \mu \sum_j m_j \frac{u_j-u_i}{\rho_j} \nabla^2 W (r_i
 $$</p>
 <p>daha uygun olur.</p>
 <p>Çekirdek Fonksiyon Seçimi</p>
-<p>[2] yazarının belirttiği gibi SPH'in stabilitesi, doğruluğu ve hesap hızı
-pürüzleştirme çekirdeğinin doğru seçilmiş olmasına bağlı. Çekirdek
-fonksiyonlarını hangisinin, hangi durumlarda iyi olacağı aktif bir araştırma
-alanıdır. Yaygın kullanılan bir çekirdek poly6 ismiyle bilinen 6. derece polinom
-çekirdeğidir. Bu fonksiyon,</p>
+<p>SPH'in stabilitesi, doğruluğu ve hesap hızı pürüzleştirme çekirdeğinin doğru
+seçilmiş olmasına bağlı [2]. Çekirdek fonksiyonlarını hangisinin, hangi
+durumlarda iyi olacağı aktif bir araştırma alanıdır. Yaygın kullanılan bir
+çekirdek <code>poly6</code> ismiyle bilinen 6. derece polinom çekirdeği. Bu fonksiyon,</p>
 <p>$$
 W_{poly6} (r, h) = \frac{315}{64 \pi h^9}
 \left\{ \begin{array}{ll}
@@ -156,12 +155,12 @@ W_{poly6} (r, h) = \frac{315}{64 \pi h^9}
 0 &amp; ||r|| &gt; h
 \end{array} \right.
 $$</p>
-<p>Fonksiyonun gradyanı,</p>
+<p>Gradyanı,</p>
 <p>$$
 \nabla W (r, h) =
 - \frac{945}{32 \pi h^9} r ( h^2 - ||r||^2)^2
 $$</p>
-<p>Laplasyan ise,</p>
+<p>Laplasyanı ise,</p>
 <p>$$
 \nabla^2 W (r, h) =
 - \frac{945}{32\pi h^9} (h^2 - ||r||^2)(3 h^2 - 7||r||^2)
@@ -169,15 +168,17 @@ $$</p>
 <p>Tek boyutta ve $h=1$ üzerinden her üç fonksiyonu grafikleyebiliriz,</p>
 <pre><code class="python">r = np.linspace(-1,1,100)
 h = 1
-W = (315./(64*np.pi*h**9)) * (h**2 - np.abs(r)**2)**3
-plt.plot(r,W)
-plt.ylim(0,1.8)
+import pandas as pd
+df = pd.DataFrame(r)
+df.columns = ['r']
+df['W'] = (315./(64*np.pi*h**9)) * (h**2 - np.abs(r)**2)**3
+df = df.set_index('r')
+df.plot()
 plt.savefig('compscieng_app40sph_01.png')
 </code></pre>
 
 <p><img alt="" src="compscieng_app40sph_01.png" /></p>
-<pre><code class="python">import pandas as pd
-df = pd.DataFrame(r)
+<pre><code class="python">df = pd.DataFrame(r)
 df.columns = ['r']
 df['W'] = (315./(64*np.pi*h**9)) * (h**2 - np.abs(r)**2)**3
 df['Gradyan W'] = -945./(32*np.pi*h**9) * r * (h**2 - np.abs(r)**2)**2

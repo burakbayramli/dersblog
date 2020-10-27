@@ -103,8 +103,9 @@ $i$ parçacığı çevresindeki $j$ parçacıkları üzerinden bu kestirme hesab
 yapabileceğiz.</p>
 <p>Aradeğerlemenin bize sağladığı güzel bir özellik onun üzerinden mesela gradyan
 alabilmem. Diyelim ki $A$ ölçümü basınç, yani $p$. O zaman (1)'de görülen
-$-\nabla p$ formülünü üstteki entegral üzerinden açabilmem gerekir. $r$'de olan
-her $i$ parçacığı için $p(r_i)$ diyelim,</p>
+$-\nabla p$ formülünü üstteki entegral üzerinden açabilmem gerekir ($p$
+ölçümünün ya da hesabının nereden geldiği ileride anlatılacak). $r$'de olan her
+$i$ parçacığı için $p(r_i)$ diyelim,</p>
 <p>$$
 p(r_i) = \sum_j \frac{m_j p_j}{\rho_j} W(r_i-r_j,h)
 $$</p>
@@ -201,6 +202,31 @@ plt.savefig('compscieng_app40sph_03.png')
 </code></pre>
 
 <p><img alt="" src="compscieng_app40sph_03.png" /></p>
+<p>Basınç</p>
+<p>Basınç kuvveti eğer basınç biliniyorsa hesaplanabilir, basıncın kendisini
+hesaplamak için İdeal Gaz Kanunu gerekli [9], bu kanun</p>
+<p>$$
+p V = n R T
+$$</p>
+<p>ki $V = 1 / \rho$, yani birim kütleye düşen hacim, $n$ mol üzerinden kaç tane
+gaz parçacığı olduğu, $R$ evrensel gaz sabiti, $T$ ise sıcaklık. SPH için
+eşsıcaklık (isothermal) sıvı kabul edilir, parçacıklar değişmez, o zaman üstteki
+formülün sağ tarafında bir gaz sertlik sabiti $k$ kullanılabilir [4, sf. 18], </p>
+<p>$$
+p V = k
+$$</p>
+<p>$$
+p \frac{1}{\rho} = k
+$$</p>
+<p>$$
+p  = k \rho
+$$</p>
+<p>Sayısal kodlamalarda stabilite amaçlı olarak ayrıca bir de $\rho_0$ kullanılır,
+ki her basınç hesabı için yoğunluğun bu baz $\rho_0$ ile olan farkına bakılır,
+nihai formül,</p>
+<p>$$
+p  = k (\rho - \rho_0)
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Monaghan, <em>Smoothed particle hydrodynamics, 2005</em></p>
@@ -213,3 +239,4 @@ plt.savefig('compscieng_app40sph_03.png')
 <p>[7] Monaghan, <em>Introduction to SPH Part I</em>,
     <a href="https://www.youtu.be/tAXHCAEgSuE">https://www.youtu.be/tAXHCAEgSuE</a></p>
 <p>[8] Müller, <em>Particle-Based Fluid Simulation for Interactive Applications</em></p>
+<p>[9] Bayramlı, <em>Fizik, Temel Fizik 3, Basınç, Çarpışma</em></p>

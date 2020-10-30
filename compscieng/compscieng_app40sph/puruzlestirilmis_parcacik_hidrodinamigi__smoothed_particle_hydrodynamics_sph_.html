@@ -85,8 +85,8 @@ yoğunluğu bizim basıncı, yoğunluğu etkiliyor. Kabaca düşünülünce asl�
 bakış açısının sıvıların tabiatına son derece uygun olduğu anlaşılacaktır.</p>
 <p>Yaklaşıklamayı sıvıya uygulamak için onu kütle öğelerine bölmemiz gerekli,
 $i$'inci öğe $m_i$ kütlesine, $\rho_i$ yoğunluğuna, ve $\bar{r}_i$ pozisyonuna
-sahip olacak. $A$'nın $i$ parçacığındaki değeri $A_i$ ile gösterilsin. Her
-parçacık için,</p>
+sahip olacak. $A$ ölçütü / hesabının $i$ parçacığındaki değeri $A_i$ ile
+gösterilsin. Her parçacık için,</p>
 <p>$$
 A(r) = \int A(r') W(r-r',h) \mathrm{d} r'
 $$</p>
@@ -123,13 +123,13 @@ $$</p>
 $$</p>
 <p>Gradyan direk $W$ üzerinde uygulanmış oldu. Burada modellemeyi yapan kişi tabii
 ki $W$'yi "gradyanı rahat alınan" fonksiyonlar arasından da seçecektir,
-böylece işler daha da kolaylaşacaktır.</p>
+böylece işi daha kolaylaşacaktır.</p>
 <p>O zaman üstteki sonuç ile $-\nabla p$ yazarsak,</p>
 <p>$$
 F_i^{\textrm{basınç}} = - \sum_j \frac{m_j p_j}{\rho_j} \nabla W(r_i-r_j,h)
 $$</p>
 <p>elde ederiz.</p>
-<p>Fakat burada bir problem var, $j$ bölgesindeki basıncı kullanarak o fark
+<p>Yanlız burada bir problem var, $j$ bölgesindeki basıncı kullanarak o fark
 üzerinden $i$ üzerindeki kuvveti hesapladık, fakat basınç farkı dolayısıyla
 $i$'nin $j$ üzerinde uyguladığı kuvvet aynı olmayabilir. Yani kuvvet simetrik
 olmaz, fakat fizik kanunlarına göre etki-tepki aynı olmalıdır. Simulasyon
@@ -143,7 +143,7 @@ $$</p>
 <p>$$
 F_i^{\textrm{ağdalık}} = \mu \sum_j m_j \frac{u_j}{\rho_j} \nabla^2 W (r_i-r_j, h)
 $$</p>
-<p>olarak yazılabilirdi, fakat simetriklik problemi burada da var. Bu problem de
+<p>olarak yazılabilirdi. Fakat simetriklik problemi burada da var, bu problem de
 hıza olan bağlantıyı izafi hıza çevirerek çözülebilir, çünkü fiziksel olarak
 düşünülürse esas önemli olan mutlak hızlar değil iki parçacığın hızlarının
 farkı, ya da bir parçacığın diğerine baktığında gördüğü hız (ki bu izafi demek)
@@ -218,9 +218,9 @@ p V = n R T
 $$</p>
 <p>ki $V = 1 / \rho$, yani birim kütleye düşen hacim, $n$ mol üzerinden kaç tane
 gaz parçacığı olduğu, $R$ evrensel gaz sabiti, $T$ ise sıcaklık. SPH için
-eşsıcaklık (isothermal) sıvı kabul edilir, ve parçacıkların sayısı simulasyon
-sırasında değişmez kabul edilir, o zaman üstteki formülün sağ tarafında bir gaz
-sertlik sabiti $k$ kullanılabilir [4, sf. 18],</p>
+eşsıcaklık (isothermal) sıvı, ve parçacıkların sayısı simulasyon sırasında
+değişmez kabul edilir, o zaman üstteki formülün sağ tarafında bir gaz sertlik
+(stiffness) sabiti $k$ kullanılabilir [4, sf. 18],</p>
 <p>$$
 p V = k
 $$</p>
@@ -231,8 +231,8 @@ $$</p>
 p  = k \rho
 $$</p>
 <p>Sayısal kodlamalarda stabilite amaçlı olarak ayrıca bir de $\rho_0$ kullanılır,
-ki her basınç hesabı için yoğunluğun bu baz $\rho_0$ ile olan farkına bakılır,
-nihai formül,</p>
+ki her basınç hesabı için yoğunluğun bu baz $\rho_0$ ile olan farkı bazlı
+alınır, nihai formül,</p>
 <p>$$
 p  = k (\rho - \rho_0)
 $$</p>
@@ -248,7 +248,6 @@ import numpy as np, datetime
 import sys, numpy.linalg as lin
 
 p1,p2,p3 = 73856093, 19349663, 83492791
-#G = np.array([0.0, 0.0, -9.8*12000.0])
 G = np.array([0.0, 0.0, -9.8*2])
 
 B = 10 # top

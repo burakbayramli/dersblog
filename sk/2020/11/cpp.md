@@ -190,6 +190,29 @@ gördük, `apt-get install libgl1-mesa-dev ..` vs ardından `-lGL -lGLU
 
 Dosyalar [ex1.cpp](ex1.cpp), [ex2.cpp](ex2.cpp), [cat.h](cat.h), [cat.cpp](cat.cpp)
 
+
+Niye C++
+
+C++'in hizli isledigi herkes tarafindan bilinir. Ama mesela Java'ya
+yapilan optimize edici ekler ile Java C++ hizina yaklasmadi mi?
+
+Çoğu bakımdan bu doğru fakat C++ hala bazı şeyleri yapmamıza izin
+veriyor; mesela paketten çıktığı haliyle Java'da çöp toplayıcı
+(garbage collector) açık, C++ da hiç yok. Cop toplayıcı belli
+aralıklarla bir arka plan kodunun işleyip hafızayı temizlemesi
+anlamına geliyor, ve programcının direk tanımlamadığı bu işlem kontrol
+bağlamında rahatsız edici olabiliyor, performansta düşüş
+yaşanabiliyor.
+
+Diğer cevap kültürle alakalı; C'nin devamı C++ uzun yıllardır ortada,
+ve "performans için gidilen dil" olarak ün yaptı, hızlı hesap isteyen
+bilimciler yıllardır onu kullandı, ve bir sürü kütüphane, yardımcı kod
+bu dil etrafında şekillendi. Mesela ben en son ÖpenGL konusuna
+baktığımda C++'ın bu alanda hala son derece yaygın olduğunu
+gördüm. Bilim simülasyonları hala direk bu dile gidiyorlar,
+Fortran'dan buraya geçiş yapmışlar, öteki seçeneklere bakan yok.
+
+
 Kaynaklar
 
 [1] [C++ ile Programlama Ders Notlari](https://drive.google.com/uc?export=view&id=1QXYMbZkgVj6xM0ePCqL4wYKi-O3yE2l-)

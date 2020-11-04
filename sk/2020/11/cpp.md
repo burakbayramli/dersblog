@@ -116,8 +116,8 @@ void Cat::speak()
 }
 ```
 
-Dikkat edilirse .cpp dosyasi da kendi .h dosyasini dahil ediyor, ona
-bir kod sagliyor. Onu kullanmak icin bir `main()` yazalim,
+Dikkat edilirse .cpp dosyası da kendi .h dosyasını dahil ediyor, ona
+bir kod sağlıyor. Onu kullanmak için bir `main()` yazalım,
 
 ```python
 print (open("ex2.cpp").read().strip())
@@ -193,5 +193,4 @@ Kaynaklar
 [2] https://linuxconfig.org/how-to-install-g-the-c-compiler-on-ubuntu-18-04-bionic-beaver-linux
 
 [3] https://stackoverflow.com/questions/58058/using-c-classes-in-so-libraries
-
 

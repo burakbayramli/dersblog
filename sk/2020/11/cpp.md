@@ -34,10 +34,8 @@ Kütüphanelerden .a kalıcı (statik) .sö dinamik kütüphaneler
 içindir. Aradaki fark kalıcı kütüphane kodu işler kodun parçası haline
 gelir, işler kod dosyasının bu durumda daha büyük olduğunu
 farkedersiniz zaten, dinamik ise işleme anında bu dosya otomatik
-olarak "bulunur" ve hafızaya getirilir, işletilir.
-
-Baglantilama icin de aranilan dizinler vardir, bu dizinleri `-L` ile
-`g++` a soyleriz.
+olarak "bulunur" ve hafızaya getirilir, işletilir. Bağlantılama için
+de aranılan dizinler vardir, bu dizinleri `-L` ile `g++` a söyleriz.
 
 Örnek görelim. En basit program (tek satırlık print komutu python, bu
 doküman içinden cpp dosyasını göstermek için kullanıldı sadece)
@@ -190,3 +188,5 @@ Kaynaklar
 [2] https://linuxconfig.org/how-to-install-g-the-c-compiler-on-ubuntu-18-04-bionic-beaver-linux
 
 [3] https://stackoverflow.com/questions/58058/using-c-classes-in-so-libraries
+
+

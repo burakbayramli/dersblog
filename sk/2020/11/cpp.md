@@ -149,8 +149,9 @@ print ('')
 -rw-r--r-- 1 burak burak 4392 Nov  4 11:58 /tmp/cat.o
 ```
 
-Yani bir .o dosyasının yaratıldığını görüyoruz, `-c` sayesinde. Bazı
-ek seçenekler de kullandık, bunlar
+Bir .o dosyasının yaratıldığını görüyoruz, `-c` sayesinde.
+
+Bazı ek seçenekler de kullandık, bunlar
 
 `-Wall` tüm uyarıları (hatalardan daha zayıf, uyarı gelse bile
 derlemek, işletmek mümkün) göster.

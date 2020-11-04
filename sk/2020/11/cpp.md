@@ -69,8 +69,10 @@ print ('')
 Hello, World!
 ```
 
-Header dosyalari farkli modulleri derleme, baglantilama ornegi
-gorelim. Bir kedi (cat) modulu olsun, onun .h dosyasi
+`-o` ile işler kod ismini ve yerini tanımlamış olduk.
+
+Header dosyaları farklı modülleri derleme, bağlantılama örneği
+görelim. Bir kedi (cat) modülü olsun, onun .h dosyası
 
 ```python
 print (open("cat.h").read().strip())

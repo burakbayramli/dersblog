@@ -72,7 +72,9 @@ Hello, World!
 `-o` ile işler kod ismini ve yerini tanımlamış olduk.
 
 Header dosyaları farklı modülleri derleme, bağlantılama örneği
-görelim. Bir kedi (cat) modülü olsun, onun .h dosyası
+görelim.
+
+Bir kedi (cat) modülü olsun, onun .h dosyası
 
 ```python
 print (open("cat.h").read().strip())
@@ -90,7 +92,9 @@ public:
 };
 ```
 
-Bu bir C++ sınıfı (class). Gerçekleştirimi (implementation),
+Bu bir C++ sınıfı (class). Sınıfta `speak` metotu var, o metotun
+tanımı .h dosyasında. Gerçekleştirimi (implementatıon) .cpp dosyasında
+olacak,
 
 
 ```python

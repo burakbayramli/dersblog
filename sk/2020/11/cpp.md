@@ -30,7 +30,7 @@ kütüphane (library) haline getirmek te mümkün, bu dosyalar mesela XX
 kütüphanesi için libXX.a ya da libXX.so dosyalarında olablir, onlar
 `-lXX` ile bağlantılanır.
 
-Kütüphanelerden .a kalıcı (statik) .sö dinamik kütüphaneler
+Kütüphanelerden .a kalıcı (statik) .so dinamik kütüphaneler
 içindir. Aradaki fark kalıcı kütüphane kodu işler kodun parçası haline
 gelir, işler kod dosyasının bu durumda daha büyük olduğunu
 farkedersiniz zaten, dinamik ise işleme anında bu dosya otomatik
@@ -212,14 +212,10 @@ OpenGL konusuna baktığımızda C++'ın bu alanda hala son derece yaygın
 olduğunu gördük. Bilim simülasyonları hala direk bu dile gidiyorlar,
 Fortran'dan buraya geçiş yapılmış, öteki seçeneklere bakan yok.
 
-
 Kaynaklar
 
-[1] [C++ ile Programlama Ders Notlari](https://drive.google.com/uc?export=view&id=1QXYMbZkgVj6xM0ePCqL4wYKi-O3yE2l-)
+[1] [C++ ile Programlama Ders Notları](https://drive.google.com/uc?export=view&id=1QXYMbZkgVj6xM0ePCqL4wYKi-O3yE2l-)
 
 [2] https://linuxconfig.org/how-to-install-g-the-c-compiler-on-ubuntu-18-04-bionic-beaver-linux
 
 [3] https://stackoverflow.com/questions/58058/using-c-classes-in-so-libraries
-
-
-

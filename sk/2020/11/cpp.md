@@ -176,16 +176,19 @@ Miyav Ali
 Hiç `-I` seçeneği gerekmedi, çünkü tüm dosyalar aynı dizinde, bu
 durumda `#include` çift tırnak içinde aynı dosya içinden dahil
 edebilir. Ama farklı dosyalar varsa `#include <..>` komutunun işlemesi
-için `-I` gerekli olur.
+için `-I` gerekli olacaktı.
 
 Bir diğer bilgi, çoğu yaygın kullanılan kütüphane Ubuntu'da `apt-get`
 ile kurulunca header dosyalarını ve kütüphane dosyalarını yaygın /
-bilinen ana dizinler altına koyar. Bu durumda o yerleri belirtmeye
-gerek yoktur çünkü `g++` bu iyi bilinen yerler altında arama yapmayı
-bilir. Fakat kütüphane ismini hala belirtmek gerekir, mesela OpenGL
-kullanıyorsak, [şu yazıda](../08/pyopengl.md) gördük, `apt-get install
-libgl1-mesa-dev ..` vs ardından `-lGL -lGLU -lglut` gibi o kurulmuş
-kütüphaneleri bağlantılamak istediğimizi özellikle belirtmek lazım.
+bilinen ana dizinler altına koyduğudur. Bu durumda o yerleri ayrıca
+derleyiciye belirtmeye gerek yoktur çünkü `g++` bu iyi bilinen yerler
+altında arama yapmayı bilir. Fakat kütüphane ismini hala belirtmek
+gerekir, mesela OpenGL kullanıyorsak, [şu yazıda](../08/pyopengl.md)
+gördük, `apt-get install libgl1-mesa-dev ..` vs ardından `-lGL -lGLU
+-lglut` gibi o kurulmuş kütüphaneleri bağlantılamak istediğimizi
+özellikle belirtmek lazım.
+
+Dosyalar [ex1.cpp](ex1.cpp), [ex2.cpp](ex2.cpp), [cat.h](cat.h), [cat.cpp](cat.cpp)
 
 Kaynaklar
 

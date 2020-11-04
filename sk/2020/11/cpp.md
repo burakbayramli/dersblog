@@ -37,8 +37,8 @@ farkedersiniz zaten, dinamik ise işleme anında bu dosya otomatik
 olarak "bulunur" ve hafızaya getirilir, işletilir. Bağlantılama için
 de aranılan dizinler vardir, bu dizinleri `-L` ile `g++` a söyleriz.
 
-Örnek görelim. En basit program (tek satırlık print komutu python, bu
-doküman içinden cpp dosyasını göstermek için kullanıldı sadece)
+Örnek görelim. En basit program (o tek satırlık `print` komutu python,
+bu doküman içinden cpp dosyasını göstermek için kullanıldı sadece)
 
 ```python
 print (open("ex1.cpp").read())

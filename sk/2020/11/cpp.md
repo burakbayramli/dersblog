@@ -23,16 +23,18 @@ programların arandığı dizinleri `g++` bildirmek gerekir, bunun için
 
 Derlerken bir cpp dosyasını derleriz, eğer içinde bir `main()` ifadesi
 varsa bu dosya direk bir işler kod (executable) üretebilir. Yoksa, bir
-.o dosyası alinir, onu varsa, diğer .o dosyalarıyla bağlantılarız
+.o dosyası alınır, onu varsa, diğer .o dosyalarıyla bağlantılarız
 (linking) ve işler kodu ortaya çıkartırız (bir .o içinde hala `main`
 olması gerekir). Çok sık kullanılan .o dosyalarını paketlenip bir
 kütüphane (library) haline getirmek te mümkün, bu dosyalar mesela XX
-kütüphanesi için libXX.a ya da libXX.so dosyalarında olablir,
-birincisi kalıcı (statik) ikincisi dinamik kütüphaneler için. Aradaki
-fark kalıcı kütüphane kodu işler kodun parçası haline gelir, işler kod
-dosyasının bu durumda daha büyük olduğunu farkedersiniz zaten, dinamik
-ise işleme anında bu dosya otomatik olarak "bulunur" ve hafızaya
-getirilir, işletilir.
+kütüphanesi için libXX.a ya da libXX.so dosyalarında olablir, onlar
+`-lXX` ile bağlantılanır.
+
+Kütüphanelerden .a kalıcı (statik) .sö dinamik kütüphaneler
+içindir. Aradaki fark kalıcı kütüphane kodu işler kodun parçası haline
+gelir, işler kod dosyasının bu durumda daha büyük olduğunu
+farkedersiniz zaten, dinamik ise işleme anında bu dosya otomatik
+olarak "bulunur" ve hafızaya getirilir, işletilir.
 
 Baglantilama icin de aranilan dizinler vardir, bu dizinleri `-L` ile
 `g++` a soyleriz.

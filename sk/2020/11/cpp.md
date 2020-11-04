@@ -56,9 +56,8 @@ int main()
 
 ```
 
-Şimdi derleyip işletelim (ünlem işaretini yok sayabiliriz, yine bu
-doküman içinden işletmek için kullanıldı, komut satırında ünlemsiz
-işletilir)
+Şimdi derleyip işletelim (o ünlem işaretini de yok sayabiliriz, yine
+bu doküman için kullanıldı, Unix komut satırında ünlemsiz işletilir)
 
 ```python
 ! g++ -o /tmp/ex1.exe ex1.cpp

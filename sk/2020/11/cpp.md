@@ -198,19 +198,19 @@ yapılan optimize edici ekler ile Java C++ hızına yaklaşmadı mı?
 
 Çoğu bakımdan bu doğru fakat C++ hala bazı şeyleri yapmamıza izin
 veriyor; mesela paketten çıktığı haliyle Java'da çöp toplayıcı
-(garbage collector) açık, C++ da hiç yok. Cop toplayıcı belli
+(garbage collector) açık, C++ da hiç yok. Çöp toplayıcı belli
 aralıklarla bir arka plan kodunun işleyip hafızayı temizlemesi
 anlamına geliyor, ve programcının direk tanımlamadığı bu işlem kontrol
-bağlamında rahatsız edici olabiliyor, performansta düşüş
-yaşanabiliyor.
+bağlamında rahatsız edici olabiliyor, ne zaman işliyor, ne hızda,
+vs. bu "bilinmezlik" performansta düşüş, en azından sürpriz yaratabiliyor.
 
 Diğer cevap kültürle alakalı; C'nin devamı C++ uzun yıllardır ortada,
-ve "performans için gidilen dil" olarak ün yaptı, hızlı hesap isteyen
-bilimciler yıllardır onu kullandı, ve bir sürü kütüphane, yardımcı kod
-bu dil etrafında şekillendi. Mesela ben en son ÖpenGL konusuna
-baktığımda C++'ın bu alanda hala son derece yaygın olduğunu
-gördüm. Bilim simülasyonları hala direk bu dile gidiyorlar,
-Fortran'dan buraya geçiş yapmışlar, öteki seçeneklere bakan yok.
+ve C ile beraber "performans için gidilen dil" olarak ün yaptı, hızlı
+hesap isteyen bilimciler yıllardır ona geçiş yaptı, ve bir sürü
+kütüphane, yardımcı kod bu dil etrafında şekillendi. Mesela geçende
+OpenGL konusuna baktığımızda C++'ın bu alanda hala son derece yaygın
+olduğunu gördük. Bilim simülasyonları hala direk bu dile gidiyorlar,
+Fortran'dan buraya geçiş yapılmış, öteki seçeneklere bakan yok.
 
 
 Kaynaklar

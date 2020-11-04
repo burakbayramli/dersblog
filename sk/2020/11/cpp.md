@@ -144,14 +144,16 @@ print ('')
 -rw-r--r-- 1 burak burak 4392 Nov  4 11:58 /tmp/cat.o
 ```
 
-Yani bir .o dosyasının yaratıldığını görüyoruz, `-c` bunun için. Bazı
-ek seçenekler de kullandık,
+Yani bir .o dosyasının yaratıldığını görüyoruz, `-c` sayesinde. Bazı
+ek seçenekler de kullandık, bunlar
 
 `-Wall` tüm uyarıları (hatalardan daha zayıf, uyarı gelse bile
 derlemek, işletmek mümkün) göster.
 
 `-O2`, ikinci derece optimizasyon yap (oldukca kuuvetli), işler kod seviyesinde
-bazı hızlandırma adımları böyle atılıyor. 
+bazı hızlandırma adımları böyle atılıyor.
+
+Şimdi bağlantılama ile işler kodu üretelim,
 
 
 ```python
@@ -165,21 +167,19 @@ Kedim burada, Ali!
 Miyav Ali
 ```
 
-Hiç `-İ` seçeneği gerekmedi, çünkü tüm dosyalar aynı dizinde, bu
-durumda `#include` çift tırnak içinde aynı dosya içinden dahil etmeyi
-yapabilir. Ama farklı dosyalar varsa `#include <..>` komutunun
-işlemesi için `-İ` gerekli olur.
+Hiç `-I` seçeneği gerekmedi, çünkü tüm dosyalar aynı dizinde, bu
+durumda `#include` çift tırnak içinde aynı dosya içinden dahil
+edebilir. Ama farklı dosyalar varsa `#include <..>` komutunun işlemesi
+için `-I` gerekli olur.
 
-Çoğu yaygın kullanılan kütüphane Ubuntu'da `apt-get` ile kurulunca
-header dosyalarını ve kütüphane dosyalarını bilinen ana dizinler
-altına koyar. Bu durumda o yerleri belirtmeye gerek yoktur çünkü `g++`
-bu iyi bilinen yerler altında arama yapmayı bilir. Fakat kütüphane ismini
-hala belirtmek gerekir, mesela OpenGL kullanıyorsak, [şu yazıda](../08/pyopengl.md)
-gördük, `apt-get ınstall lıbgl1-mesa-dev ..` vs ardından `-lGL -lGLU -lglut` gibi
-o kurulmuş kütüphaneleri bağlantılamak istediğimizi belirtmek lazım.
-
-
-[devam edecek]
+Bir diğer bilgi, çoğu yaygın kullanılan kütüphane Ubuntu'da `apt-get`
+ile kurulunca header dosyalarını ve kütüphane dosyalarını yaygın /
+bilinen ana dizinler altına koyar. Bu durumda o yerleri belirtmeye
+gerek yoktur çünkü `g++` bu iyi bilinen yerler altında arama yapmayı
+bilir. Fakat kütüphane ismini hala belirtmek gerekir, mesela OpenGL
+kullanıyorsak, [şu yazıda](../08/pyopengl.md) gördük, `apt-get install
+libgl1-mesa-dev ..` vs ardından `-lGL -lGLU -lglut` gibi o kurulmuş
+kütüphaneleri bağlantılamak istediğimizi özellikle belirtmek lazım.
 
 Kaynaklar
 

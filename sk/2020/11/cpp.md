@@ -193,8 +193,8 @@ Dosyalar [ex1.cpp](ex1.cpp), [ex2.cpp](ex2.cpp), [cat.h](cat.h), [cat.cpp](cat.c
 
 Niye C++
 
-C++'in hizli isledigi herkes tarafindan bilinir. Ama mesela Java'ya
-yapilan optimize edici ekler ile Java C++ hizina yaklasmadi mi?
+C++'in hızlı işlediği herkes tarafından bilinir. Ama mesela Java'ya
+yapılan optimize edici ekler ile Java C++ hızına yaklaşmadı mı?
 
 Çoğu bakımdan bu doğru fakat C++ hala bazı şeyleri yapmamıza izin
 veriyor; mesela paketten çıktığı haliyle Java'da çöp toplayıcı
@@ -220,4 +220,6 @@ Kaynaklar
 [2] https://linuxconfig.org/how-to-install-g-the-c-compiler-on-ubuntu-18-04-bionic-beaver-linux
 
 [3] https://stackoverflow.com/questions/58058/using-c-classes-in-so-libraries
+
+
 

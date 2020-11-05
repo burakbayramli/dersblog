@@ -18,7 +18,7 @@ sudo apt install build-essential
 C++, aynen ondan önceki C gibi, tanım (header) .h dosyası ve .cpp
 dosyaları üzerinden kodlanır. Tanımlara erişmek isteyenler .h
 dosyalarını `#include` ile "dahil eder". Dahil etmek için dahil edilen
-programların arandığı dizinleri `g++` bildirmek gerekir, bunun için
+programların arandığı dizinleri `g++`a bildirmek gerekir, bunun için
 `-I` kullanılır, `-I /vs/vs/dizin1` gibi.
 
 Derlerken bir cpp dosyasını derleriz, eğer içinde bir `main()` ifadesi

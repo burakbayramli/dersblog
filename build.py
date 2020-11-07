@@ -24,7 +24,7 @@ ad = '''
 <br/>
 '''
 
-TARGET_DIR = "/home/burak/Documents/dersblog2"
+TARGET_DIR = "/home/burak/Documents/dersblog"
 
 html_head = '''
 <!DOCTYPE html>
@@ -99,8 +99,6 @@ def tex_mathjax_html(texfile, htmlfile, title):
       line = line.replace("\\big\{","\\big\\\\{")
       line = line.replace("\\big\}","\\big\\\\}")
       line = re.sub(r'\\hspace\{(.*?)\}', r'\n', line)
-      line = line.replace("\\begin{center}","")
-      line = line.replace("\\end{center}","")
       line = line.replace("\\begin{itemize}","")
       line = line.replace("\\end{itemize}","")
       line = line.replace("\\begin{enumerate}","")

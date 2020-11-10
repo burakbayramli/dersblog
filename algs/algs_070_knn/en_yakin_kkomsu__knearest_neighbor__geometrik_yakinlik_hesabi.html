@@ -916,6 +916,80 @@ eklenir. İkinci fazda bir objeye bakarken onun üzerinde daha detaylı çarpı�
 hesabı gerekip gerekmediğini anlamak için böleç anahtarındaki listeye bakarız,
 listede sadece bir öğe var ise çarpışma yok, birden fazla ise o listedeki her
 diğer obje için detaylı çarpışma hesabına devam edilebilir.</p>
+<p>Bazi istatistikleri toplayalim. Acaba yaklasim ne kadar basarili?</p>
+<pre><code class="python">from collections import defaultdict 
+import numpy as np, datetime
+import numpy.linalg as lin
+
+mmin,mmax=0,400
+p1,p2,p3 = 73856093, 19349663, 83492791
+B = 500; L = 50; n = int(B/3)
+
+def spatial_hash(x):
+    ix,iy,iz = int(x[0]/L), int(x[1]/L), int(x[2]/L)
+    tmp = (ix*p1) ^ (iy*p2) ^ (iz*p3)
+    return tmp % n
+
+balls = []
+geo_hash_list = defaultdict(list)
+
+for b in range(B):
+    p = np.array([np.random.uniform(mmin,mmax,1)[0],
+                  np.random.uniform(mmin,mmax,1)[0],
+                  np.random.uniform(mmin,mmax,1)[0] ])
+    balls.append({'pos':p, 'i': b})
+
+for j,b in enumerate(balls):
+    geo_hash_list[spatial_hash(b['pos'])].append(b)
+
+tp = 0; tn = 0; fp = 0; fn = 0
+for i,b1 in enumerate(balls):
+    for j,b2 in enumerate(balls):
+        if i==j: continue
+        d = lin.norm(b1['pos']-b2['pos'])
+        h1 = spatial_hash(b1['pos'])
+        h2 = spatial_hash(b2['pos'])
+
+        if d &lt;= L and h1 == h2: tp += 1        
+        elif d &gt; L and h1 != h2: tn+=1
+        elif d &gt; L and h1 == h2: fp+=1
+        elif d &lt;= L and h1 != h2: fn+=1
+
+print ('dogru pozitif', tp)
+print ('dogru negatif', tn)
+
+print ('yanlis pozitif', fp)
+print ('yanlis negatif', fn)
+
+print (tp+tn+fp+fn)
+print (&quot;Yanlis Negatif Yuzde %0.2f&quot; % (fn / (tp+tn+fp+fn) * 100.0))
+</code></pre>
+
+<pre><code>dogru pozitif 456
+dogru negatif 246340
+yanlis pozitif 1340
+yanlis negatif 1364
+249500
+Yanlis Negatif Yuzde 0.55
+</code></pre>
+
+<p>500 tane topu rasgele bir şekilde her ekseni 0 ve 500 arasında olan bir uzaya
+dağıttık. Topların bazıları yakın düştü tabii, bazılar düşmedi. Önce tüm topları
+bölecledik ve sözlüğe koyduk. Sonra tüm topların birbiri ile olan mesafesini
+ayrı ayrı teker teker külfetli yoldan yaptık, ve bölecin bu durum hakkında ne
+söylediğine baktık. Pozitif bölec yakın diyor, negatif bölec uzak diyor
+anlamında, tabii yakınlık ve uzaklık bölec anahtar değerinin aynı olup olmadığı
+ile ölçülüyor.</p>
+<p>Kontrolün doğru pozitif bulması mesela bölecin yakın dediğinin gerçekten de
+yakın olması. Yanlış negatif tam tersi, bölec uzak diyor ama aslında toplar
+yakın.</p>
+<p>Tabii ki istediğimiz doğru hesapların değerlerin yüksek olması. Ayrıca
+tekrarlayalım, bir simülasyonda işletirken yanlış pozitifin hala çaresi var,
+bölecin yakın dediklerini bir kontrolden daha geçirirsek (problem değil o
+noktada bakılan toplar azalmış oluyor, performans kaybı olmaz), bu kontrol
+yanlış pozitifleri eleyecektir. Tek problem yanlış negatif, topların çoğu
+birbirinden uzakta olduğu için bu yanlıştan dönmek zor, fakat bu tür toplar
+yüzde 1'in altında.</p>
 <p>C++ bazlı bir kod <code>CompactNSearch</code> dizininde. </p>
 <p>Kaynaklar</p>
 <p>[1] Liu, Moore, Gray, {\em New Algorithms for Efficient High Dimensional

@@ -24,7 +24,34 @@
 </script>
 </head>
 
-<p>Yerelliğe Hassas Bölec (Locality Sensitive Hashing, -LSH-)</p>
+<p>Grafik, fiziksel simülasyonlarda pek çok sayıda obje 3 boyutlu ortamda dünyaya
+salınıp, ayrı ayrı onlara fiziksel kurallar uygulanır ve nereye geldiklerine
+bakılır. Bu hesap sırasında objelerin birbirine çarpıp çarpmadığını hesaplamak
+gerekir fakat böyle bir hesap, eğer mesela $n$ tane obje var ise, her görüntü
+karesinde her $n$ tane objenin her $n-1$ diğer objenin yakınında olup olmadığı
+kontrolü anlamına gelir, ki hesapsal yük $O(n^2)$ olurdu. Eğer $n$ milyonlar ise
+bu ağır bir yük oluştururdu.</p>
+<p>Böleç tekniğini burada da kullanabiliriz. Öyle bir sihirli böleç fonksiyonumuz
+olsun ki her kordinat için bir böleç değeri üretsin ve birbirine yakın
+kordinatlar için bu değer aynı olsun. Böylece basit eşitlik kontrolü ile iki
+kordinatın birbirine yakın olup olmadığını hemen anlayabilirdik. Tabii daha
+detaylı kontrol için böleçleri aynı olan kordinatları daha detaylı teste tabi
+tutardık, ama detaylı kontrolün yapılacağı obje sayısını çok daha azaltmış
+olurduk.</p>
+<p>Yerelliğe Hassas Böleç (Locality Sensitive Hashing, -LSH-)</p>
+<p>Bu alandaki tekniklerden biri LSH tekniği. LSH ile çok boyutlu bir kordinate
+sistemindeki noktaların yaklaşık olarak birbirine yakın olup olmadığını bölec
+üzerinden hesaplayabiliyoruz. Tekniğin temeli rasgele izdüşümdür (random
+projection). [3]'te anlatıldığı gibi rasgele izdüşümün ilginç bir özelliği
+mesafeleri koruması, yani orijinal kordinate sistemindeki noktalar birbirine
+uzaksa yansıtıldıktan sonra da uzak kalmaya meyilliler. </p>
+<p>Bunu herhangi bir (yani rasgele) 2 boyutlu düzlem üzerinde yansıtılan alttaki
+noktalarda görebiliriz. Uzak olan noktalar duzlem uzerinde hala birbirine uzak.</p>
+<p><img alt="" src="algs_073_hash_01.png" /></p>
+<p>Tabii ki her (rasgele) düzlem her iki nokta arasındaki uzaklığı mükemmel olarak
+göstermeyebilir. Fakat, eğer birkaç tane farklı düzleme yapılan yansımların bir
+birleşimi olan bir ölçüt / bölec yaratabilirsek, o zaman bu ölçüt ile bazı hızlı
+sonuçlara varabiliriz. </p>
 <pre><code class="python">vec1 = np.array([[-0.99137472, 0.61572851, -0.37733555, 0.0363575, -0.71647706]])
 vec2 = np.array([[-0.16737788, 0.83147812, -2.06947369, -0.48174425, -1.60276846]])
 vec3 = np.array([[-0.9074722, 0.75953396, 1.10696926, -0.8773451, -1.11589595]])
@@ -76,20 +103,6 @@ print (cosine_sim(vec2[0], vec3[0]))
 </code></pre>
 
 <p>Asal Sayılar ile Böleç (Hash) Tekniği</p>
-<p>Grafik, fiziksel simülasyonlarda pek çok sayıda obje 3 boyutlu ortamda dünyaya
-salınıp, ayrı ayrı onlara fiziksel kurallar uygulanır ve nereye geldiklerine
-bakılır. Bu hesap sırasında objelerin birbirine çarpıp çarpmadığını hesaplamak
-gerekir fakat böyle bir hesap, eğer mesela $n$ tane obje var ise, her görüntü
-karesinde her $n$ tane objenin her $n-1$ diğer objenin yakınında olup olmadığı
-kontrolü anlamına gelir, ki hesapsal yük $O(n^2)$ olurdu. Eğer $n$ milyonlar ise
-bu ağır bir yük oluştururdu.</p>
-<p>Böleç tekniğini burada da kullanabiliriz. Öyle bir sihirli böleç fonksiyonumuz
-olsun ki her kordinat için bir böleç değeri üretsin ve birbirine yakın
-kordinatlar için bu değer aynı olsun. Böylece basit eşitlik kontrolü ile iki
-kordinatın birbirine yakın olup olmadığını hemen anlayabilirdik. Tabii daha
-detaylı kontrol için böleçleri aynı olan kordinatları daha detaylı teste tabi
-tutardık, ama detaylı kontrolün yapılacağı obje sayısını çok daha azaltmış
-olurduk.</p>
 <p>Böyle bir tekniği [1]'de görüyoruz. Teknik ile kordinat sistemini $l$
 büyüklüğünde kutulara bölüyor, her eksen değerini bu büyüklük ile bölüyoruz,
 bölüm sonrası elde edilen sayıyı taban (floor) tamsayıya indirgiyoruz, ardından
@@ -203,5 +216,8 @@ yüzde 1'in altında.</p>
 <p>Kaynaklar</p>
 <p>[1] <em>Optimized Spatial Hashing for Collision Detection of Deformable Objects</em>
     <a href="https://matthias-research.github.io/pages/publications/tetraederCollision.pdf">https://matthias-research.github.io/pages/publications/tetraederCollision.pdf</a></p>
-<p>[2] <em>Locality Sensitive Hashing for Similar Item Search</em>,
+<p>[2] Hari, <em>Locality Sensitive Hashing for Similar Item Search</em>,
     <a href="https://towardsdatascience.com/locality-sensitive-hashing-for-music-search-f2f1940ace23">https://towardsdatascience.com/locality-sensitive-hashing-for-music-search-f2f1940ace23</a></p>
+<p>[3] Bayramli, <em>Rasgele İzdüşümü (Random Projection) ile SVD</em></p>
+<p>[4] Slaney, <em>Locality-Sensitive Hashing for Finding Nearest Neighbors</em>,
+    <a href="https://www.slaney.org/malcolm/yahoo/Slaney2008-LSHTutorial.pdf">https://www.slaney.org/malcolm/yahoo/Slaney2008-LSHTutorial.pdf</a></p>

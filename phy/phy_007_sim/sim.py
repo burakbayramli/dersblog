@@ -13,13 +13,10 @@ G = np.array([0.0, 0.0, -0.8])
 
 m = 0.1
 B = 10 # top
-l = 0.2 # bolec kutu buyuklugu
-n = B*20 # bolec sozluk buyuklugu
 img = True
 
 class Simulation:
     def __init__(self):
-        self.geo_hash_list = None
         self.i = 0
         self.r   = 0.1
         self.g   = 9.8
@@ -64,7 +61,6 @@ class Simulation:
                 b['f'] = G * m
                         
     def integrate(self):
-        self.geo_hash_list = defaultdict(list)
         
         for j,b in enumerate(self.balls):
             b['v'] += self.dt*(b['f']/m)

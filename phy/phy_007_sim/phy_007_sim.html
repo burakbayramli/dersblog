@@ -61,8 +61,9 @@ dönüşmesine her koşulda bakmıyoruz, duvarlar ve parçacıklar arası etkile
 hız üzerinde uyguluyoruz. Topların birbirine çarpma sonucu hız vektörlerinin
 hesabı [4]'te.</p>
 <p>Kodlama notu, çarpışma hesabı için her parçacığın diğer parçacığa yakınlık
-kontrolü pahalı olabilirdi, bunun için böleç tekniği kullanıldı [3]. Genel
-grafik yöntemi şurada [1] işlendi.</p>
+kontrolü pahalı olursa, daha fazla parçacık için mesela, bunun için böleç
+tekniği kullanılabilir [3].</p>
+<p>Genel grafik yöntemi şurada [1] işlendi.</p>
 <pre><code class="python">from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
@@ -81,13 +82,6 @@ B = 10 # top
 l = 0.2 # bolec kutu buyuklugu
 n = B*20 # bolec sozluk buyuklugu
 img = True
-
-def spatial_hash(x):
-    &quot;&quot;&quot;
-    x = [x0,x1,x2] uc boyutlu kordinatlari icin bir bolec (hash) degeri uret
-    &quot;&quot;&quot;
-    ix,iy,iz = np.floor((x[0]+2.0)/l), np.floor((x[1]+2.0)/l), np.floor((x[2]+2.0)/l)
-    return (int(ix*p1) ^ int(iy*p2) ^ int(iz*p3)) % n
 
 class Simulation:
     def __init__(self):
@@ -160,26 +154,21 @@ class Simulation:
                 if b['pos'][2] &lt; 0:
                     b['pos'][2] = self.mmin
 
-        for j,b in enumerate(self.balls):
-            self.geo_hash_list[spatial_hash(self.balls[j]['pos'])].append(self.balls[j])
-
         vDone = {}
         for j,b in enumerate(self.balls):
-            if (len(self.geo_hash_list[spatial_hash(self.balls[j]['pos'])])&gt;1):
-                otherList = self.geo_hash_list[spatial_hash(self.balls[j]['pos'])]
-                for other in otherList:
-                    if (other['i'] != b['i'] and b['i'] not in vDone and other['i'] not in vDone):
-                        dist = lin.norm(other['pos']-b['pos'])
-                        if (dist &lt; (2*self.r)):
-                            #print ('collision')
-                            vrel = b['v']-other['v']
-                            n = (other['pos']-b['pos']) / dist
-                            vnorm = np.dot(vrel,n)*n
-                            #print (vnorm)
-                            b['v'] = b['v'] - vnorm
-                            other['v'] = other['v'] + vnorm                            
-                            vDone[b['i']] = 1
-                            vDone[other['i']] = 1
+            for other in self.balls:
+                if (other['i'] != b['i'] and b['i'] not in vDone and other['i'] not in vDone):
+                    dist = lin.norm(other['pos']-b['pos'])
+                    if (dist &lt; (2*self.r)):
+                        #print ('collision')
+                        vrel = b['v']-other['v']
+                        n = (other['pos']-b['pos']) / dist
+                        vnorm = np.dot(vrel,n)*n
+                        #print (vnorm)
+                        b['v'] = b['v'] - vnorm
+                        other['v'] = other['v'] + vnorm                            
+                        vDone[b['i']] = 1
+                        vDone[other['i']] = 1
 
 
 
@@ -244,7 +233,7 @@ if __name__ == '__main__':
 <p>[1] Bayramlı, <em>OpenGL, PyOpenGL</em>, <a href="https://burakbayramli.github.io/dersblog/sk/2020/08/pyopengl.html">https://burakbayramli.github.io/dersblog/sk/2020/08/pyopengl.html</a></p>
 <p>[2] Bayramlı, <em>Simulasyon 1 Animasyon</em>,
     <a href="https://github.com/burakbayramli/classnotes/blob/master/phy/phy_007_sim/balls1.gif?raw=true">https://github.com/burakbayramli/classnotes/blob/master/phy/phy_007_sim/balls1.gif?raw=true</a></p>
-<p>[3] Bayramlı, Bilgisayar Bilim, <em>En Yakın k-Komşu (k-Nearest Neighbor), Geometrik Yakınlık Hesabı</em> </p>
+<p>[3] Bayramlı, <em>Bilgisayar Bilim, Geometrik Anahtarlama (Spatial Hashing) ve Izgara (Grid) ile En Yakın Noktaları Bulmak</em></p>
 <p>[4] Bayramlı, Fizik, <em>Temel Fizik 2, Dönüşler, Basınç, Çarpışma</em></p>
 <p>[5] Müller, <em>Fluid Simulation SIGGRAPH 2007 Course Notes</em>,</p>
 <p>[6] <em>Visual Interactive Simulation (Spring 15)</em>,

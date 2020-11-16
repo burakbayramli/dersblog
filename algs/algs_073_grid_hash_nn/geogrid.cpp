@@ -1,16 +1,17 @@
+// 
+// Geometrik izgara yontemi ile komsu kordinatlari bulmak
+// Keywords: Grid based nearest neighbor finding within a radius
 //
-// g++ geogrid.cpp -g -O2 -o /tmp/a.exe; /tmp/a.exe
+// Derlemek icin: g++ geogrid.cpp -g -O2 -o /tmp/a.exe; /tmp/a.exe
+// 
 //
 #include <map>
 #include <iostream>
-#include <fstream> 
 #include <vector>
 #include <cstdlib>
-#include <unordered_map> 
+#include <eigen3/Eigen/Dense>
 
 using namespace std;
-
-#include <eigen3/Eigen/Dense>
 using namespace Eigen;
 
 static int B = 200;
@@ -18,14 +19,12 @@ static int BIN_WIDTH = 20.f;
 static int BIN_NUM = 10;
 static int COORD_MAX = 200;
 
+
+// bir izgara hucresini temsil eden uc tane tam sayi bu struct icinde
 struct int3 {
 
     int i, j, k;
-
-    int3()
-    {
-	i=-1; j=-1; k=-1;
-    }
+    int3(){}
     int3(int _i, int _j, int _k)
     {
 	i=_i; j=_j; k=_k;
@@ -42,12 +41,16 @@ struct int3 {
 };
 
 
+// bir kordinatin hangi izgara hucresine dustugunu hesapla bunu hucre
+// genisligine bolerek ve birkac indis oynamasi uzerinden yapiyoruz
 static int calcBin(float x) {
     int res = (int)(x / BIN_WIDTH) + 1;
     if (res >= BIN_NUM) return BIN_NUM;
     return res;
 }
 
+// parcaciklar bu sinifta, her parcacik indisini, hangi izgara
+// hucresinde oldugunu, ve kordinatlarini bilir
 struct Particle {
     Particle() : x(0.f,0.f,0.f) {}
     Particle(float _x, float _y, float _z, int _i) : x(_x, _y, _z) {
@@ -61,11 +64,14 @@ struct Particle {
     int i;
 };
 
+
+// tum parcaciklar
 static vector<Particle> particles;
 
+// her izgara hucresindeki parcaciklari tuttugumuz yer
 std::map<int3,  std::vector<Particle>> grid_hash; 
 
-void InitSPH(void)
+void Init(void)
 {
     for(int i = 0; i<B; i++) {
 	float x = rand() % COORD_MAX;
@@ -92,11 +98,18 @@ void InitSPH(void)
 }
 
 
+// bir parcacigin tum komsularini bul, anahtari parcacik indisi degeri
+// parcacik objesi olan bir esleme / sozluk icinde donduruyoruz ki
+// boylece "bu komsu var mi yok mu?" sorusu hizla sorulabiliyor
+// (anahtar varligini kontrol cok hizlidir)
 std::map<int,  Particle>
 getNeighbors(Particle particle){
 
     std::map<int,  Particle> result;
-    
+
+    // 3d izgara hucresinin etrafindaki tum hucrelere bak, bunlar
+    // icinde oldugumuz dahil 27 tane, sag, sol, alt, ust, vs, tum
+    // yonlere bakiyoruz
     for (auto & i : {-1,0,1}) {
 	for (auto & j : {-1,0,1}) {
 	    for (auto & k : {-1,0,1}) {
@@ -104,6 +117,7 @@ getNeighbors(Particle particle){
 		int nj = particle.bin.j + j;
 		int nk = particle.bin.k + k;
 		int3 newk(ni,nj,nk);
+		// bulduklarini sonuca ekle
 		std::vector<Particle> grid_particles = grid_hash[newk];
 		for (Particle & pn : grid_particles) {
 		    result[pn.i] = pn;
@@ -120,12 +134,7 @@ int main(int argc, char** argv)
 {
     srand (0);
     
-    InitSPH();
-
-    int idx = 111;
-    std::cout << "neighbors of " << particles[idx].x << std::endl;
-    std::cout << "at " << particles[idx].bin.i << " " << particles[idx].bin.j << " " << particles[idx].bin.k << " "
-	      << std::endl;
+    Init();
 
     int tp = 0; int tn = 0; int fp = 0; int fn = 0;
     for(auto &pi : particles)
@@ -136,17 +145,21 @@ int main(int argc, char** argv)
 	    
 	    Vector3d rij = pj.x - pi.x;
 	    float d = rij.squaredNorm();
-	    
+
+	    // izgara yontemi komsu diyor ve oyle
 	    if (res.count(pj.i) == 1 && d <= BIN_WIDTH) {
 		tp++;
 	    }
-	    else if (res.count(pi.i) != 1 && d > BIN_WIDTH) {
+	    // yontem komsu degil diyor ve oyle
+	    else if (res.count(pj.i) != 1 && d > BIN_WIDTH) {
 		tn++;
 	    }
-	    else if (res.count(pi.i) == 1 && d > BIN_WIDTH) {
+	    // yontem komsu diyor ve ama oyle degil
+	    else if (res.count(pj.i) == 1 && d > BIN_WIDTH) {
 		fp++;
 	    }
-	    else if (res.count(pi.i) != 1 && d <= BIN_WIDTH) {
+	    // yontem komsu degil diyor ve oyle degil
+	    else if (res.count(pj.i) != 1 && d <= BIN_WIDTH) {
 		fn++;
 	    }
 	    
@@ -154,6 +167,11 @@ int main(int argc, char** argv)
 	
     }
 
+    //Sonuc alttaki gibi cikmali, hicbir yanlis negatif yok. 
+    //tp:200
+    //tn:38948
+    //fp:852
+    //fn:0    
     std::cout << "tp:" << tp << std::endl;
     std::cout << "tn:" << tn << std::endl;
     std::cout << "fp:" << fp << std::endl;

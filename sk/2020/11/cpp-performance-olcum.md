@@ -68,12 +68,16 @@ long fibonacci(unsigned n)
 int main()
 {    
     Timer timer;
+
+    // ilk kez baslat
     timer.start();
     for (int i=0;i<100;i++){
 	fibonacci(30);
     }
-    timer.stop();
+    timer.stop();    
     std::cout << "Milliseconds: " << timer.elapsedMilliseconds() << std::endl;
+
+    // ikinci kez baslat, onceki zamanin ustune eklenmesi lazim
     timer.start();
     for (int i=0;i<100;i++){
 	fibonacci(30);

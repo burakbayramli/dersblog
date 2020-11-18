@@ -87,10 +87,11 @@ int main()
 }
 ```
 
-```
-g++ test.cpp  -o /tmp/a.exe; /tmp/a.exe
-```
+Derlemek ve işletmek için,
 
+```
+g++ test.cpp  -o /tmp/run.exe; /tmp/run.exe
+```
 
 
 

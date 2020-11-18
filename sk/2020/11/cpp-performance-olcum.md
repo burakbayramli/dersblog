@@ -93,6 +93,11 @@ Derlemek ve işletmek için,
 g++ test.cpp  -o /tmp/run.exe; /tmp/run.exe
 ```
 
+Dikkat: Bir fonksiyonun başında `start()` sonunda `stop()` koyduğumuz
+zaman unutmayalım, bu her zaman yeterli olmayabilir, eğer fonksiyonun
+kodununun ortasında belli bazı şartlarda `return` ile direk dönüş
+yapıyorsak, o zaman bu dönüş öncesi de bir `stop` eklememiz gerekir.
+
 
 
 Kaynaklar

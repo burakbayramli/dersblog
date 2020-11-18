@@ -2,8 +2,8 @@
 
 Kodun içinde hangi bloğun ne kadar zaman aldığını ölçmek kodu optimize
 etmek için gündeme gelir. Altta bir kronometre kodu var, [1]'de
-görülen hali alttaki sınıfla bir kronometre objesi yaratmak ve onu
-başlatıp durdurduktan sonra ne kadar zaman geçtiğini raporlamak.
+görülen bir kronometre objesi yaratmak ve onu başlatıp durdurduktan
+sonra ne kadar zaman geçtiğini raporlamak.
 
 Bizim yaptığımız ek birden fazla başlatıp durdurabilmek, böylece bir
 fonksiyon pek çok kez çağrılıyorsa mesela o fonksiyon başında sonunda

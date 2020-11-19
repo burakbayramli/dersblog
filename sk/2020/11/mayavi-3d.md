@@ -8,12 +8,12 @@ olmayabilir. Belki arka planda, gözükmeyecek toplar vardır, bunları
 göstermeye gerek var mı?
 
 Bilgisayar grafikleme algoritmalarından (ki bilgisayar oyunlarında
-yaygın şekilde kullanılır) işin takip etme (ray traçıng) burada
-gerekli olabilir, görüntüye bakılma açısından sanal ışınlar hayal edip
+yaygın şekilde kullanılır) işin takip etme (ray tracing) burada gerekli
+olabilir, görüntüye bakılma açısından sanal ışınlar hayal edip
 bunların sadece ilk çarpıklarını çizmek, arka plana kalanları çizmemek
-bir hızlandırıcı ilerleme olurdu. 
+bir hızlandırıcı ilerleme olurdu.
 
-![](mayavi4.md)
+![](mayavi4.png)
 
 O zaman teker teker top ciz demek yerine tüm topların kordinatlarını
 bir seferde verip özel bir kütüphanenin görünecek olan objelere karar
@@ -77,4 +77,7 @@ Kaynaklar
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
+
+
+
 

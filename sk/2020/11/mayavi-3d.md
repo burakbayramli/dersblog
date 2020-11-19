@@ -70,6 +70,11 @@ mlab.savefig(filename='mayavi3.png')
 ![](mayavi2.png)
 ![](mayavi3.png)
 
+Bu iki grafikleme oldukca hızlı şekilde geri döndü. Eğer bir sıvı
+dinamiğini simüle ediyorsak ve milyonlarca parçacık varsa bu perfomans
+belki anlık ekranda göstermek için yeterli olmayabilir, fakat arka
+planda birkaç dakika beklenerek tüm simülasyonun gidişatı belli birkaç
+kare yanyana koyularak kabul edilir bir zaman içinde yaratılabilir.
 
 
 Kaynaklar

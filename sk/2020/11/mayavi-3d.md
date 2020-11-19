@@ -8,7 +8,7 @@ olmayabilir. Belki arka planda, gözükmeyecek toplar vardır, bunları
 göstermeye gerek var mı?
 
 Bilgisayar grafikleme algoritmalarından (ki bilgisayar oyunlarında
-yaygın şekilde kullanılır) işin takip etme (ray tracing) burada gerekli
+yaygın şekilde kullanılır) ışın takip etme (ray tracing) burada gerekli
 olabilir, görüntüye bakılma açısından sanal ışınlar hayal edip
 bunların sadece ilk çarpıklarını çizmek, arka plana kalanları çizmemek
 bir hızlandırıcı ilerleme olurdu.
@@ -82,4 +82,6 @@ Kaynaklar
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
+
+
 

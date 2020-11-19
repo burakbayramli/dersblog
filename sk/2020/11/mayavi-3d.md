@@ -8,10 +8,10 @@ olmayabilir. Belki arka planda, gözükmeyecek toplar vardır, bunları
 göstermeye gerek var mı?
 
 Bilgisayar grafikleme algoritmalarından (ki bilgisayar oyunlarında
-yaygın şekilde kullanılır) ışın takip etme (ray tracing) burada gerekli
-olabilir, görüntüye bakılma açısından sanal ışınlar hayal edip
-bunların sadece ilk çarpıklarını çizmek, arka plana kalanları çizmemek
-bir hızlandırıcı ilerleme olurdu.
+yaygın şekilde kullanılır) ışın takip etme (ray tracing) burada
+gerekli olabilir, görüntüye bakılma açısından sanal ışınlar hayal edip
+bunların sadece ilk çarpıktıklarını çizmek, arka plana kalanları
+çizmemek bir hızlandırıcı ilerleme olurdu.
 
 ![](mayavi4.png)
 

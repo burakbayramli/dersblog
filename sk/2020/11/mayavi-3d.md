@@ -17,8 +17,8 @@ bir hızlandırıcı ilerleme olurdu.
 
 O zaman teker teker top ciz demek yerine tüm topların kordinatlarını
 bir seferde verip özel bir kütüphanenin görünecek olan objelere karar
-vermesi daha mantıklı olabilir. MayaVi ve onun arka planda kullandigi
-VTK isti bu isi basariyor.
+vermesi daha mantıklı olabilir. MayaVı ve onun arka planda kullandığı
+VTK işte bu işi başarıyor.
 
 Kurmak icin
 
@@ -82,7 +82,4 @@ Kaynaklar
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
-
-
-
 

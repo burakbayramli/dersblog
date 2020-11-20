@@ -76,17 +76,8 @@ belki anlık ekranda göstermek için yeterli olmayabilir, fakat arka
 planda birkaç dakika beklenerek tüm simülasyonun gidişatı belli birkaç
 kare yanyana koyularak kabul edilir bir zaman içinde yaratılabilir.
 
-
 Kaynaklar
 
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
-
-
-
-
-
-
-
-

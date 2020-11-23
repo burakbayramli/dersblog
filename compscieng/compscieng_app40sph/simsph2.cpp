@@ -42,16 +42,16 @@ struct int3 {
     int3(){}
     int3(int _i, int _j, int _k)
     {
-	i=_i; j=_j; k=_k;
+        i=_i; j=_j; k=_k;
     }    
     bool operator==(const int3 &rhs) const
     {
         return i == rhs.i && j == rhs.j && k == rhs.k;
     }        
     bool operator<(int3 const& rhs) const
-    {	
-	return i < rhs.i || ( i == rhs.i && j < rhs.j ) 
-	    || ( i == rhs.i && j == rhs.j  && k < rhs.k ) ;
+    {   
+        return i < rhs.i || ( i == rhs.i && j < rhs.j ) 
+            || ( i == rhs.i && j == rhs.j  && k < rhs.k ) ;
     }    
 };
 
@@ -63,18 +63,18 @@ static int calcBin(float x) {
 
 struct Particle {
     Particle() {
-	//std::cout << "empty" << std::endl;
-	//exit(0);
+        //std::cout << "empty" << std::endl;
+        //exit(0);
     }
     Particle(float _x, float _y, float _z, int _i) : x(_x, _y, _z),
-				   v(0.f, 0.f, 0.f),
-				   f(0.f, 0.f, 0.f),
-				   rho(0.f),
-				   p(0.f) {
-	bin.i = calcBin(x[0]);
-	bin.j = calcBin(x[1]);
-	bin.k = calcBin(x[2]);
-	i = _i;
+                                   v(0.f, 0.f, 0.f),
+                                   f(0.f, 0.f, 0.f),
+                                   rho(0.f),
+                                   p(0.f) {
+        bin.i = calcBin(x[0]);
+        bin.j = calcBin(x[1]);
+        bin.k = calcBin(x[2]);
+        i = _i;
     }
     Vector3d x, v, f;
     int3 bin;
@@ -96,18 +96,18 @@ getNeighbors(Particle particle){
     // icinde oldugumuz dahil 27 tane, sag, sol, alt, ust, vs, tum
     // yonlere bakiyoruz
     for (auto & i : {-1,0,1}) {
-	for (auto & j : {-1,0,1}) {
-	    for (auto & k : {-1,0,1}) {
-		int ni = particle.bin.i + i;
-		int nj = particle.bin.j + j;
-		int nk = particle.bin.k + k;
-		int3 newk(ni,nj,nk);
-		// bulduklarini sonuca ekle
-		for (Particle & pn : grid_hash[newk]) {
-		    result[pn.i] = pn;
-		}
-	    }
-	}
+        for (auto & j : {-1,0,1}) {
+            for (auto & k : {-1,0,1}) {
+                int ni = particle.bin.i + i;
+                int nj = particle.bin.j + j;
+                int nk = particle.bin.k + k;
+                int3 newk(ni,nj,nk);
+                // bulduklarini sonuca ekle
+                for (Particle & pn : grid_hash[newk]) {
+                    result[pn.i] = pn;
+                }
+            }
+        }
     }
     
     return result;
@@ -120,12 +120,12 @@ void initGridHash(void)
     // sozlugune her seyi tekrar ekle
     for(auto const& [key, value]: grid_hash)
     {
-	grid_hash[key].clear();
+        grid_hash[key].clear();
     }
     for(auto &p : particles)
     {
-	int3 k(p.bin.i, p.bin.j, p.bin.k);
-	grid_hash[k].push_back(p);
+        int3 k(p.bin.i, p.bin.j, p.bin.k);
+        grid_hash[k].push_back(p);
     }
     
 }
@@ -139,16 +139,16 @@ void InitSPH(void)
     
     int balls = 0;
     for(float x = 0.f; x < 100.f; x += 5.f) { 
-	for(float y = 400.f; y < 500.f; y += 5.f) {	
-	    for(float z = 0.f; z < 100.f; z += 5.f) {
-		Particle p(x,y,z,balls);
-		p.bin.i = calcBin(p.x[0]);
-		p.bin.j = calcBin(p.x[1]);
-		p.bin.k = calcBin(p.x[2]);	
-		particles.push_back(p);
-		balls ++;
-	    }
-	}
+        for(float y = 400.f; y < 500.f; y += 5.f) {     
+            for(float z = 0.f; z < 100.f; z += 5.f) {
+                Particle p(x,y,z,balls);
+                p.bin.i = calcBin(p.x[0]);
+                p.bin.j = calcBin(p.x[1]);
+                p.bin.k = calcBin(p.x[2]);      
+                particles.push_back(p);
+                balls ++;
+            }
+        }
     }
     
     initGridHash();
@@ -161,47 +161,47 @@ void Integrate(void)
 {
     for(auto &p : particles)
     {
-	// ileri Euler entegrasyonu
-	if (p.rho > 0.0f) p.v += DT*p.f/p.rho;
-	p.x += DT*p.v;
+        // ileri Euler entegrasyonu
+        if (p.rho > 0.0f) p.v += DT*p.f/p.rho;
+        p.x += DT*p.v;
 
-	// sinir sartlarini kontrol et
-	if(p.x(0)-EPS < 0.0f)
+        // sinir sartlarini kontrol et
+        if(p.x(0)-EPS < 0.0f)
         {
-	    p.v(0) *= BOUND_DAMPING;
-	    p.x(0) = 0.0f;
+            p.v(0) *= BOUND_DAMPING;
+            p.x(0) = 0.0f;
         }
-	if(p.x(0)+EPS > 500.0f) 
+        if(p.x(0)+EPS > 500.0f) 
         {
-	    p.v(0) *= BOUND_DAMPING;
-	    p.x(0) = 500.0f-EPS;
+            p.v(0) *= BOUND_DAMPING;
+            p.x(0) = 500.0f-EPS;
         }
-	
-	if(p.x(1)-EPS < 0.0f)
+        
+        if(p.x(1)-EPS < 0.0f)
         {
-	    p.v(1) *= BOUND_DAMPING;
-	    p.x(1) = 0.0f;
+            p.v(1) *= BOUND_DAMPING;
+            p.x(1) = 0.0f;
         }
-	if(p.x(1)+EPS > 500.0f)
+        if(p.x(1)+EPS > 500.0f)
         {
-	    p.v(1) *= BOUND_DAMPING;
-	    p.x(1) = 500.0f-EPS;
+            p.v(1) *= BOUND_DAMPING;
+            p.x(1) = 500.0f-EPS;
         }
 
-	if(p.x(2)-EPS < 0.0f)
+        if(p.x(2)-EPS < 0.0f)
         {
-	    p.v(2) *= BOUND_DAMPING;
-	    p.x(2) = 0.0f;
+            p.v(2) *= BOUND_DAMPING;
+            p.x(2) = 0.0f;
         }
-	if(p.x(2)+EPS > 500.0f)
+        if(p.x(2)+EPS > 500.0f)
         {
-	    p.v(2) *= BOUND_DAMPING;
-	    p.x(2) = 500.0f-EPS;
+            p.v(2) *= BOUND_DAMPING;
+            p.x(2) = 500.0f-EPS;
         }
-	
-	p.bin.i = calcBin(p.x[0]);
-	p.bin.j = calcBin(p.x[1]);
-	p.bin.k = calcBin(p.x[2]);			
+        
+        p.bin.i = calcBin(p.x[0]);
+        p.bin.j = calcBin(p.x[1]);
+        p.bin.k = calcBin(p.x[2]);                      
     }
 }
 
@@ -209,18 +209,18 @@ void ComputeDensityPressure(void)
 {
     for(auto &pi : particles)
     {
-	pi.rho = 0.f;
-	for(auto &pj : particles)
+        pi.rho = 0.f;
+        for(auto &pj : particles)
         {
-	    Vector3d rij = pj.x - pi.x;
-	    float r2 = rij.squaredNorm();
+            Vector3d rij = pj.x - pi.x;
+            float r2 = rij.squaredNorm();
 
-	    if(r2 < HSQ)
+            if(r2 < HSQ)
             {
-		pi.rho += MASS*POLY6*pow(HSQ-r2, 3.f);
+                pi.rho += MASS*POLY6*pow(HSQ-r2, 3.f);
             }
         }
-	pi.p = GAS_CONST*(pi.rho - REST_DENS);
+        pi.p = GAS_CONST*(pi.rho - REST_DENS);
     }
 }
 
@@ -228,25 +228,25 @@ void ComputeForces(void)
 {
     for(auto &pi : particles)
     {
-	Vector3d fpress(0.f, 0.f, 0.f);
-	Vector3d fvisc(0.f, 0.f, 0.f);
-	for(auto &pj : particles)
+        Vector3d fpress(0.f, 0.f, 0.f);
+        Vector3d fvisc(0.f, 0.f, 0.f);
+        for(auto &pj : particles)
         {
-	    if(&pi == &pj)
-		continue;
+            if(&pi == &pj)
+                continue;
 
-	    Vector3d rij = pj.x - pi.x;
-	    float r = rij.norm();
+            Vector3d rij = pj.x - pi.x;
+            float r = rij.norm();
 
-	    if(r < DIST)
+            if(r < DIST)
             {
-		fpress += -rij.normalized()*MASS*(pi.p + pj.p)/(2.f * pj.rho)
-		    * SPIKY_GRAD*pow(H-r,2.f);
-		fvisc += VISC*MASS*(pj.v - pi.v)/pj.rho * VISC_LAP*(H-r);
+                fpress += -rij.normalized()*MASS*(pi.p + pj.p)/(2.f * pj.rho)
+                    * SPIKY_GRAD*pow(H-r,2.f);
+                fvisc += VISC*MASS*(pj.v - pi.v)/pj.rho * VISC_LAP*(H-r);
             }
         }
-	Vector3d fgrav = G * pi.rho;
-	pi.f = fpress + fvisc + fgrav;
+        Vector3d fgrav = G * pi.rho;
+        pi.f = fpress + fvisc + fgrav;
     }
 }
 
@@ -259,9 +259,9 @@ void Update(void)
     
     for(auto &pi : particles)
     {
-	foutx << pi.x[0] << ";";
-	fouty << pi.x[1] << ";";
-	foutz << pi.x[2] << ";";
+        foutx << pi.x[0] << ";";
+        fouty << pi.x[1] << ";";
+        foutz << pi.x[2] << ";";
     }
     foutx << '\n';
     fouty << '\n';
@@ -274,7 +274,7 @@ int main(int argc, char** argv)
     InitSPH();
 
     for (int i=0;i<LOOP;i++) {
-	Update();	
+        Update();       
     }
     
     return 0;

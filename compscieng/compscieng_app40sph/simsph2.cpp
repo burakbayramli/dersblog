@@ -12,18 +12,19 @@ using namespace std;
 using namespace Eigen;
 
 const static Vector3d G(0.f, 0.f, 12000*-9.8f); 
-const static float REST_DENS = 100.f; // rest density
-const static float GAS_CONST = 200.f; // const for equation of state
+const static float REST_DENS = 1000.f; // rest density
+const static float GAS_CONST = 1000.f; // const for equation of state
 const static float H = 16.f; 
-const static float DIST = 10.f;
+const static float DIST = 5.f;
 const static float HSQ = H*H; 
-const static float MASS = 100.f;
-const static float VISC = 200.f; 
+const static float MASS = 65.f;
+const static float VISC = 300.f; 
 const static float DT = 0.01f; 
 static int LOOP = 40;
 static int BIN_WIDTH = 5.f;
 static int BIN_NUM = 100;
 static float MAX_COORD = 500;
+
 ofstream foutx;
 ofstream fouty;
 ofstream foutz;
@@ -209,18 +210,19 @@ void ComputeDensityPressure(void)
 {
     for(auto &pi : particles)
     {
-        pi.rho = 0.f;
-        for(auto &pj : particles)
+	pi.rho = 0.f;
+	//for(auto &pj : particles)
+	for(auto & [key, pj]: getNeighbors(pi)) 
         {
-            Vector3d rij = pj.x - pi.x;
-            float r2 = rij.squaredNorm();
+	    Vector3d rij = pj.x - pi.x;
+	    float r2 = rij.squaredNorm();
 
-            if(r2 < HSQ)
+	    if(r2 < HSQ)
             {
-                pi.rho += MASS*POLY6*pow(HSQ-r2, 3.f);
+		pi.rho += MASS*POLY6*pow(HSQ-r2, 3.f);
             }
         }
-        pi.p = GAS_CONST*(pi.rho - REST_DENS);
+	pi.p = GAS_CONST*(pi.rho - REST_DENS);
     }
 }
 
@@ -228,27 +230,29 @@ void ComputeForces(void)
 {
     for(auto &pi : particles)
     {
-        Vector3d fpress(0.f, 0.f, 0.f);
-        Vector3d fvisc(0.f, 0.f, 0.f);
-        for(auto &pj : particles)
-        {
-            if(&pi == &pj)
-                continue;
+	Vector3d fpress(0.f, 0.f, 0.f);
+	Vector3d fvisc(0.f, 0.f, 0.f);
 
-            Vector3d rij = pj.x - pi.x;
-            float r = rij.norm();
+	//std::cout <<  "neigh " << neigh.size() << std::endl;
+	//for(auto &pj : particles)	    
+	for(auto & [key, pj]: getNeighbors(pi)) 
+        {	    
+	    if(pi.i == pj.i) continue;
 
-            if(r < DIST)
+	    Vector3d rij = pj.x - pi.x;
+	    float r = rij.norm();
+
+	    if(r < DIST)
             {
-                fpress += -rij.normalized()*MASS*(pi.p + pj.p)/(2.f * pj.rho)
-                    * SPIKY_GRAD*pow(H-r,2.f);
-                fvisc += VISC*MASS*(pj.v - pi.v)/pj.rho * VISC_LAP*(H-r);
+		fpress += -rij.normalized()*MASS*(pi.p + pj.p)/(2.f * pj.rho) * SPIKY_GRAD*pow(H-r,2.f);
+		fvisc += VISC*MASS*(pj.v - pi.v)/pj.rho * VISC_LAP*(H-r);
             }
         }
-        Vector3d fgrav = G * pi.rho;
-        pi.f = fpress + fvisc + fgrav;
+	Vector3d fgrav = G * pi.rho;
+	pi.f = fpress + fvisc + fgrav;
     }
 }
+
 
 void Update(void)
 {
@@ -256,6 +260,7 @@ void Update(void)
     ComputeDensityPressure();
     ComputeForces();
     Integrate();
+    initGridHash();
     
     for(auto &pi : particles)
     {

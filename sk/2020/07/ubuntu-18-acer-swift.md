@@ -157,7 +157,6 @@ listeden Alt-F4 için başka bir program var, onu iptal ederiz, onun
 yerine program bitirme için Alt-F4 atamasını yaparız (tüslama seçimi
 üzerine tıklanır, Alt-F4 tıklanır bu kaydedilmiş olur).
 
-
 Evince
 
 PDF dosyalarını gösteren bu program her farklı dosya için sol tarafta
@@ -174,6 +173,13 @@ seçilmiş olabilir. Eğer bu servise bağlanmakta problem çıkarsa
 Software Updater programına girip ilk tab'deki servislerin hangi
 ülkeden olduğu değitirilebilir. Yakın olarak Netherlands, Germany, vs
 bazı seçenekler.
+
+Renkler
+
+Chrome tarayıcıyı siyah üzeri beyaz göstermek istiyorsak arama
+çubuğundan `chrome://flags/` adresine gidiyoruz, orada `Force Dark
+Mode for Web Contents` seçeneğine gidiyoruz ve `Enabled` konumuna
+çekiyoruz. 
 
 Kaynaklar
 

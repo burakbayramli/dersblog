@@ -142,6 +142,36 @@ tanım vs girildikten sonra masaüstünde ikon yaratılır. Dikkat masaüstü
 ikonları çift tıklama gerektirir, Unity hızlı erişim barındakiler tek
 tıklama ile başlıyor.
 
+Tıklama ile Masaüstünü Göster (Show Desktop)
+
+Bazen pencereler çok birikir, tek bir tuşa basıp hepsini minimize
+etmek isteyebiliriz. Önce
+
+```
+sudo apt install wmctrl
+```
+
+Bu program komutu satırından herşeyi `wmctrl -k on` ile minimize edebilir.
+Şimdi bir ikon yaratalım,
+
+```
+gedit ~/.local/share/applications/show-desktop.desktop
+```
+
+Dosya icine
+
+```
+[Desktop Entry]
+Type=Application
+Name=Show Desktop
+Icon=desktop
+Exec=wmctrl -k on
+```
+
+Bir uygulama yaratmış olduk, artık uygulamalar içinde "Show Desktop"
+kelimesini ararsak ikonumuzu bulabiliriz, ve sürekle-bırak ile sol
+taraftaki erişim bölgesine ekleyebileceğiz.
+
 Pencereler Arası Geçiş (Uygulamalar Değil)
 
 Bu Ubuntu sürümünde Unity masaüstü programı her nedense Alt-Tab ile

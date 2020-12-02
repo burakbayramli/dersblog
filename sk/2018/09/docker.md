@@ -22,30 +22,23 @@ Dockerfile için gereken imajlar (Ubuntu gibi) bilinen referans
 noktalardan indiriliyor. Fakat kendimiz bir docker imajı kaydedip onu
 paylaşabilirdik.
 
-Ubuntu uzerinde Docker
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
 
-https://docs.docker.com/install/linux/docker-ce/ubuntu/#install-from-a-package
+sudo apt install apt-transport-https ca-certificates curl software-properties-common
 
-Deb paket bazli kurmak icin mesela Ubuntu 16 icin,
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
-https://download.docker.com/linux/ubuntu/dists/xenial/pool/stable/amd64/
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 
-Indirilen deb uzerinde sudo dpkg -i package.deb
+sudo apt update
 
-MacOS uzerinde Docker (ve ardindan sanal Ubuntu) icin
+apt-cache policy docker-ce
 
-https://docs.docker.com/docker-for-mac/
-
-https://docs.docker.com/docker-for-mac/install/#install-and-run-docker-for-mac
-
-Siteye kayıt ol, dmg indir, tıkla, app tıkla, makine şifresi ver,
-kayıt olduğun kullanıcı / şifreyi ver.
-
-Komut satirinda artik
+sudo apt install docker-ce
 
 docker --version
 
-isliyor olmali. Basit kontrol
+isliyor olmali (basa her zaman sudo koymak gerekebilir). Basit kontrol
 
 docker run hello-world
 

@@ -25,11 +25,9 @@ tanesidir, her laptop üzerinde NVidia olmayabilir (fakat NVidia
 piyasadaki en ünlülerden birisi, bunu da ekleyelim). Şimdilik GPU
 kodlaması için NVidia kartına sahip bir bilgisayar lazım.
 
-(Derin Öğrenim) Deep Learning
-
-Bu yaklasim oyle populerlesti ki video kart ureticisi NVidia disaridan
-bilgisayara dahil edilebilen ayri bir ufak GPU unitesi bile
-yaratti. Unitenin ismi Jetson karti.
+Fakat GPU bazlı kodlama oldukca popüler hale geldi ki video kart
+üreticisi NVidia dışarıdan bilgisayara dahil edilebilen ayrı bir ufak
+GPU ünitesi bile yarattı. Ünitenin ismi Jetson kartı.
 
 https://developer.nvidia.com/buy-jetson
 
@@ -43,10 +41,12 @@ algoritmaları kullanma konusunda uzmanlardan biridir, bu iş için
 kurduğu şirketini geçende Google satın aldı. Tabii ki Jetson üzerinde
 direk CUDA kodlaması da yapılabilir.
 
-Bir diğer seçenek Google bulutu üzerinde barındırılan not defteri
-servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.md).
-Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md) teknolojisine İnternet
-üzerinden erişim sağlıyor denebilir.
+Geliştiriciler için bir diğer seçenek Google bulutu üzerinde
+barındırılan not defteri servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.md).
+Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md)
+teknolojisine İnternet üzerinden erişim sağlıyor denebilir.
+
+Bu yazida GPU kodlama ornekleri CUDA uzerinden olacak.
 
 CUDA
 
@@ -55,14 +55,20 @@ bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
 ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması ŞİMD
 yaklaşımını benimser, SIMD = Single Instruction Multiple Data, yani
-Tek Komut Pek Çok Veri yaklaşımı. SIMD ile bir işlem, ki bu çarpma,
-toplama, vs gibi temel işlemler ya da onların toplamı olan bir hesap
-ünitesi olabilir, aynı anda birden fazla veri noktası üzerinde
-uygulanır. Bu yaklaşımın grafik kartları, grafikleme için nasıl
-faydalı olacağını görmek zor değil, çünkü grafik kartları için veri
-görüntü pikselleridir, ve her piksel üzerinde, resim kare kare
-oluşturulurken tek bir işlemi pek çok piksel üzerinde aynı anda
-uygulamak faydalı bir özellik.
+Tek Komut Pek Çok Veri yaklaşımı.
+
+SIMD ile bir işlem, ki bu çarpma, toplama, vs gibi temel işlemler ya
+da onların toplamı olan bir hesap ünitesi olabilir, birden fazla veri
+noktası üzerinde aynı anda uygulanır. Bu yaklaşımın grafik kartları,
+grafikleme için nasıl faydalı olacağını görmek zor değil, çünkü grafik
+kartları için veri, görüntü pikselleri, ve her piksel üzerinde, resim
+kare kare oluşturulurken tek bir işlemi aynı anda uygulamak faydalı
+olur. Bu işlem transformasyon olabilir, ki aynı matrisi çarpmayı
+gerektirir, işin takip etme (ray traçıng) olabilir, vs.
+
+CUDA ve Collab
+
+Collab'a girip bir not defteri yaratalim, ve 
 
 
 

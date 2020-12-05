@@ -203,7 +203,7 @@ GPU: 0.079255
 ```
 
 Üstte `ElementwiseKernel` objesine üç tane parametre verdik. Bunlardan
-ilki çekirdeğe / fonksiyona verilecek parametreler, bunların ılki
+ilki çekirdeğe / fonksiyona verilecek parametreler, bunların ilki
 giriş verisi, ikincisi çıkış verisi, sözdizim C dili sözdizimine
 benziyor dikkat edilirse, C ile `*ptr` ile tanımlanan değişkene
 `ptr[0]`, `ptr[1]`, vs ile erişilebilir, göstergeç aritmetiği
@@ -304,3 +304,5 @@ Kaynaklar
 [3] https://gist.github.com/jfpuget/60e07a82dece69b011bb
 
 [4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html)
+
+

@@ -218,49 +218,6 @@ Mandelbrot Kümesi
 
 Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir, 
 
-```python
-import pandas as pd
-
-def mandelbrot_numpy(c, maxiter):
-    output = np.zeros(c.shape)
-    z = np.zeros(c.shape, np.complex64)
-    for it in range(maxiter):
-        notdone = np.less(z.real*z.real + z.imag*z.imag, 4.0)
-        output[notdone] = it
-        z[notdone] = z[notdone]**2 + c[notdone]
-    output[output == maxiter-1] = 0
-    return output
-
-def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter):
-    r1 = np.linspace(xmin, xmax, width, dtype=np.float32)
-    r2 = np.linspace(ymin, ymax, height, dtype=np.float32)
-    c = r1 + r2[:,None]*1j
-    n3 = mandelbrot_numpy(c,maxiter)
-    return n3.T
-
-xmin,xmax,ymin,ymax = -2.0,0.5,-1.25,1.25
-
-width=3;height=3;maxiter=80;cmap='hot'
-
-dpi = 72
-
-img_width = dpi * width; img_height = dpi * height
-
-z = mandelbrot_set2(xmin,xmax,ymin,ymax,img_width,img_height,maxiter)
-
-fig, ax = plt.subplots(figsize=(width, height),dpi=72)
-ticks = np.arange(0,img_width,3*dpi)
-x_ticks = xmin + (xmax-xmin)*ticks/img_width
-plt.xticks(ticks, x_ticks)
-y_ticks = ymin + (ymax-ymin)*ticks/img_width
-plt.yticks(ticks, y_ticks)
-ax.imshow(z.T,cmap=cmap,origin='lower')
-plt.savefig("cuda3.png")
-```
-
-![](cuda3.png)
-
-
 
 ```python
 import numpy as np
@@ -308,7 +265,7 @@ mandelbrot_graph = mandelbrot_graph_gpu.get()
 ```python
 from matplotlib import pyplot as plt
 fig = plt.figure(1)
-plt.imshow(mandelbrot_graph, extent=(-2, 2, -2, 2))
+plt.imshow(mandelbrot_graph, cmap='inferno')
 ```
 
 ![](cuda2.png)

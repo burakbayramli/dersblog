@@ -163,12 +163,12 @@ ek işlemler yapılacağı biliniyor.
 Yapılan işlem çarpma, ve GPU bu her çarpma işlemini aynı anda, mümkün
 olduğu kadar fazla vektör öğesi üzerinde işletti.
 
-Çekirdek (Kernel) Kullanımı
+Çekirdek (Kernel) Kod Kullanımı
 
-Daha direk bir yöntemi görelim. Aslında CUDA kodları çekirdek temelli
-işler, dışarıdan programcının verdiği bir çekirdek veri üzerinde
-(mümkün olduğu kadar paralel bir şekilde) işletilir / uygulanır. Bu Python'un
-`map`, ya da Pandas `apply` operasyonu gibi.
+Daha direk bir yöntemi görelim. Aslında CUDA kodları çekirdek kod
+temelli işler, dışarıdan programcının verdiği bir kod, veri üzerinde
+(mümkün olduğu kadar paralel bir şekilde) işletilir / uygulanır. Bu
+Python'un `map`, ya da Pandas `apply` operasyonuna benzer.
 
 ```python
 import numpy as np
@@ -203,28 +203,27 @@ GPU: 0.079255
 ```
 
 Üstte `ElementwiseKernel` objesine üç tane parametre verdik. Bunlardan
-ilki çekirdeğe / fonksiyona verilecek parametreler. İlki giriş verisi,
-ikincisi çıkış verisi, sözdizim C dili sözdizimine benziyor dikkat
-edilirse, C ile `*ptr` ile tanımlanan değişkene `ptr[0]`, `ptr[1]`, vs
-ile erişilebilir, göstergeç aritmetiği uygulanabilir.
-
-Ayrıca çıkış vektörünün verisini "içeriden" alabilmek için
-`gpuarray.empty_like` ile onu dışarıda önceden tanımlamamız
+ilki çekirdeğe / fonksiyona verilecek parametreler, bunların ılki
+giriş verisi, ikincisi çıkış verisi, sözdizim C dili sözdizimine
+benziyor dikkat edilirse, C ile `*ptr` ile tanımlanan değişkene
+`ptr[0]`, `ptr[1]`, vs ile erişilebilir, göstergeç aritmetiği
+uygulanabilir. Ayrıca çıkış vektörünün verisini "içeriden" alabilmek
+için `gpuarray.empty_like` ile onu dışarıda önceden tanımlamamız
 gerekti.. Bu vektöre bir yer açtık, o yerdeki vektörün değerleri GPU
 tarafından dolduruldu.
 
 Metodun ana kodu ikinci parametrede, burada giriş vektör öğesi
 üzerinde hangi işlem yapılıp hangi çıkış öğeye atandığı
-kodlanıyor. İndis `i` vektör öğesine erışılıyor, kod işlediğinde her
-çekirdek eşzamanlı olarak tek bir öğe üzerinde işlem yapacak, buna
+kodlanıyor. İndis `i` ile vektör öğesine erişiliyor, kod işlediğinde
+her çekirdek eşzamanlı olarak tek bir öğe üzerinde işlem yapacak, buna
 dikkat. GPU parallelliğinin temeli bu.
 
 Mandelbrot Kümesi
 
 Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir,
-[4]'te matematiğinden bahsediliyor. Orada gösterilen yaklaşımda her
-hücre üzerinde teker teker bir hesap yapıldığını görüyoruz. Bu hesabı
-eşzamanlı olarak işletmek mümkün.
+[4]'te konunun matematiğinden bahsedilildi. Orada gösterilen
+yaklaşımda her hücre üzerinde teker teker bir hesap yapıldığını
+görüyoruz. Bu hesabı GPU üzerinde eşzamanlı olarak işletmek mümkün.
 
 
 ```python
@@ -279,10 +278,14 @@ plt.imshow(mandelbrot_graph, cmap='inferno')
 ![](cuda2.png)
 
 
-Dikkat edersek x,y değerlerini bir vektör üzerinde koyduk, böylece
-birbirine eş olan x,y değerleri aynı indis üzerinden erişilir hale
+x,y değerleri düz birer tek boyutlu vektördü, onları üst üste
+istifleyip tek bir vektör ile GPU'ya gönderdik, böylece birbirine eş
+olan x,y değerleri aynı indis üzerinden GPU içinden erişilir hale
 geldi. Sonra, çekirdek içinde, özyineli döngüye girdik, bu döngü her
-öge için mümkün olduğu kadar farklı GPU çekirdeği üzerinde işletilecek. 
+öge için mümkün olduğu kadar farklı GPU çekirdeği üzerinde koşturmayı
+yapacak. Tabii `max_iters` döngüsü seri, senkron olarak işleyecek
+fakat her x,y hücresinin paralel işlenmesi çok büyük bir ilerleme ve
+hakikaten de Mandelbrot GPU kodu hızlı işliyor.
 
 
 Kaynaklar

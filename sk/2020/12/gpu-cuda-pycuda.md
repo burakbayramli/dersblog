@@ -123,26 +123,30 @@ t1 = time()
 device_data_x2 = np.float(2) * device_data
 t2 = time()
 host_data_x2 = device_data_x2.get()
-print ('GPU %0.8f seconds.' % (t2-t1))
+print ('GPU %0.8f saniye.' % (t2-t1))
   
 t1 = time()
 host_data_x2_cpu = host_data * np.float(2)
 t2 = time()
 
-print ('CPU %0.8f seconds.' % (t2-t1))
+print ('CPU %0.8f saniye.' % (t2-t1))
 ```
 
 ```
-GPU 0.00174046 seconds.
-CPU 0.00841069 seconds.
+GPU 0.00174046 saniye.
+CPU 0.00841069 saniye.
 ```
 
 GPU ile CPU arasında 8 kat civarı fark var, 10 milyon tane sayıyı
 ikiye çarpmak için.
 
-Dikkat: Jupyter ortamında pycuda kodlarının daha yavaş işlediği
+Not 1: Jupyter ortamında pycuda kodlarının daha yavaş işlediği
 tecrübelenmiştir, bu hız karşılaştırmasını nihai olarak görmemek
 lazım.
+
+Not 2: pycuda bir kodu ilk işlettiğinde onu bir derleme sürecinden
+geçirir, ama ikinci sefer aynı kodu görünce bunu yapmaz [1]. Bu
+sebeple ikinci, üçüncü, vs. işletim daha hızlı olacaktır.
 
 Kodu incelersek `gpuarray.to_gpu` ile GPU'ya veriyi gönderdik. Daha
 sonra `np.float(2) * device_data` ile çarpma işlemi GPU üzerinde
@@ -150,6 +154,60 @@ yapıldı. Tabii arka planda Python bazı tutkallama işi yaptı mesela `*`
 işlemi büyük ihtimalle belli tipler için üste tanımlı (överloaded), ve
 `gpuarray` gibi özel tipler söz konusu olunca arka planda GPU üzerinde
 ek işlemler yapılacağı biliniyor. 
+
+Çekirdek (Kernel) Kullanımı
+
+Daha direk bir yöntemi görelim. Aslında CUDA kodları çekirdek temelli
+işler, dışarıdan programcının verdiği bir çekirdek veri üzerinde
+(mümkün olduğu kadar paralel bir şekilde) işletilir / uygulanır. Bu Python'un
+`map`, ya da Pandas `apply` operasyonu gibi.
+
+```python
+import numpy as np
+import pycuda.autoinit
+from pycuda import gpuarray
+from time import time
+from pycuda.elementwise import ElementwiseKernel
+
+host_data = np.float32( np.random.random(10**7) )
+
+gpu_2x_ker = ElementwiseKernel(
+"float *in, float *out",
+"out[i] = 2*in[i];",
+"gpu_2x_ker")
+
+t1 = time()
+host_data_2x =  host_data * np.float32(2)
+t2 = time()
+print ('CPU: %f' % (t2 - t1))
+device_data = gpuarray.to_gpu(host_data)
+# allocate memory for output
+device_data_2x = gpuarray.empty_like(device_data)
+t1 = time()
+gpu_2x_ker(device_data, device_data_2x)
+t2 = time()
+from_device = device_data_2x.get()
+print ('GPU: %f' % (t2 - t1))
+```
+
+```
+CPU: 0.007268
+GPU: 0.079255
+```
+
+
+
+
+
+
+
+
+
+Kaynaklar
+
+[1] Tuomanen, *Hands-On GPU Programming with Python and CUDA*
+
+
 
 
 

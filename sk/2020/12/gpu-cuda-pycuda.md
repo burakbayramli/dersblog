@@ -44,14 +44,14 @@ kurduğu şirketini geçende Google satın aldı. Tabii ki Jetson üzerinde
 direk CUDA kodlaması da yapılabilir.
 
 Bir diğer seçenek Google bulutu üzerinde barındırılan not defteri
-servisi [Google Collab](../../2018/11/gpu-tpu-sağlayan-not-defter-ortamı.md).
+servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.md).
 Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md) teknolojisine İnternet
 üzerinden erişim sağlıyor denebilir.
 
 CUDA
 
 Pek çok türde paralelizm, eşzamanlılaştırma tekniği var. Mesela disk
-bazlı çalışan [eşle/indirge](../../2014/09/eşle-indirge-mimarisi-mapreduce-mr.md)
+bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-mr.md)
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
 ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması ŞİMD
 yaklaşımını benimser, ŞİMD = Single Instruction Multiple Data, yani
@@ -63,6 +63,3 @@ faydalı olacağını görmek zor değil, çünkü grafik kartları için veri
 görüntü pikselleridir, ve her piksel üzerinde, resim kare kare
 oluşturulurken tek bir işlemi pek çok piksel üzerinde aynı anda
 uygulamak faydalı bir özellik.
-
-
-

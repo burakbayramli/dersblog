@@ -109,11 +109,47 @@ Device 0: Tesla T4
 	 Total Memory: 15079 megabytes
 ```
 
+En basit islemle baslayalim. Bir vektor uzerindeki sayilari 2 ile carpalim.
 
+```python
+from time import time
+from pycuda import gpuarray
 
+host_data = np.array(range(10**7),dtype=np.float32)
 
+device_data = gpuarray.to_gpu(host_data)
 
+t1 = time()
+device_data_x2 = np.float(2) * device_data
+t2 = time()
+host_data_x2 = device_data_x2.get()
+print ('GPU %0.8f seconds.' % (t2-t1))
+  
+t1 = time()
+host_data_x2_cpu = host_data * np.float(2)
+t2 = time()
 
+print ('CPU %0.8f seconds.' % (t2-t1))
+```
+
+```
+GPU 0.00174046 seconds.
+CPU 0.00841069 seconds.
+```
+
+GPU ile CPU arasında 8 kat civarı fark var, 10 milyon tane sayıyı
+ikiye çarpmak için.
+
+Dikkat: Jupyter ortamında pycuda kodlarının daha yavaş işlediği
+tecrübelenmiştir, bu hız karşılaştırmasını nihai olarak görmemek
+lazım.
+
+Kodu incelersek `gpuarray.to_gpu` ile GPU'ya veriyi gönderdik. Daha
+sonra `np.float(2) * device_data` ile çarpma işlemi GPU üzerinde
+yapıldı. Tabii arka planda Python bazı tutkallama işi yaptı mesela `*`
+işlemi büyük ihtimalle belli tipler için üste tanımlı (överloaded), ve
+`gpuarray` gibi özel tipler söz konusu olunca arka planda GPU üzerinde
+ek işlemler yapılacağı biliniyor. 
 
 
 

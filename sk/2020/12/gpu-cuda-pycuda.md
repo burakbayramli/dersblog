@@ -41,13 +41,6 @@ algoritmaları kullanma konusunda uzmanlardan biridir, bu iş için
 kurduğu şirketini geçende Google satın aldı. Tabii ki Jetson üzerinde
 direk CUDA kodlaması da yapılabilir.
 
-Geliştiriciler için bir diğer seçenek Google bulutu üzerinde
-barındırılan not defteri servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.md).
-Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md)
-teknolojisine İnternet üzerinden erişim sağlıyor denebilir.
-
-Bu yazida GPU kodlama ornekleri CUDA uzerinden olacak.
-
 CUDA
 
 Pek çok türde paralelellik, eşzamanlılaştırma tekniği var. Mesela disk
@@ -71,6 +64,11 @@ arayüzdür. Python üzerinde PyCuda üzerinden erişilebilir. NVidia'nın
 kodlamasına C++ üzerinden izin verir.
 
 CUDA ve Collab
+
+Geliştiriciler için bir diğer seçenek Google bulutu üzerinde
+barındırılan not defteri servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.md).
+Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md)
+teknolojisine İnternet üzerinden erişim sağlıyor denebilir.
 
 Collab'a girip bir not defteri yaratalım, ve menüde `Edit | Notebook
 settings` seçelim, burada `Hardware accelerator` seçimi var. Bu seçimi

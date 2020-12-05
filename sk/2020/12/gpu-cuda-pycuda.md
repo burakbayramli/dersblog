@@ -85,13 +85,14 @@ Google Collab ile deneyimlemek mümkün.
 Şimdi `pycuda` kuralım. Bu işlemi aynı not defterini ilk kez
 açtığımızda her seferinde tekrar yapmamız lazım. Çünkü arka planda
 bize Google tarafından bir makina atanıyor, ve eski makinanın kurulumu
-yokolmuş, yeni bir makinada, yeni bir süreçteyiz.
+yokolmuş oluyor, her seferinde yeni bir makinada, yeni bir süreçteyiz.
 
 ```
 !pip install pycuda
 ```
 
-Acaba makinamızda ne tür bir GPU var?
+Kurulum bitince artık pycuda çağrıları yapabiliriz. Acaba makinamızda
+ne tür bir GPU var?
 
 ```python
 import pycuda.driver as drv
@@ -111,7 +112,9 @@ Device 0: Tesla T4
 	 Total Memory: 15079 megabytes
 ```
 
-En basit islemle baslayalim. Bir vektor uzerindeki sayilari 2 ile carpalim.
+Fena bir kart değil, >2500 çekirdeği var.
+
+En basit işlemle başlayalım. Bir vektör üzerindeki sayıları 2 ile çarpalım.
 
 ```python
 from time import time

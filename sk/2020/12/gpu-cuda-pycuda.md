@@ -69,7 +69,7 @@ gerektirir, işin takip etme (ray traçıng) olabilir, vs.
 CUDA ve Collab
 
 Collab'a girip bir not defteri yaratalım, ve menüde `Edit | Notebook
-settings` seçelim, burada `Hardware acceleratör` seçimi var. Bu seçimi
+settings` seçelim, burada `Hardware accelerator` seçimi var. Bu seçimi
 `GPU` haline getirelim. Bu kadar basit! Arka plandaki bir GPU
 havuzundan Google size bir GPU atamış olacaktır.
 
@@ -78,24 +78,5 @@ kullanıma oranla yavaş olablir. Ama 10/20 kat hızlandırmayı hala
 Google Collab ile deneyimlemek mümkün.
 
 ![](cuda1.jpg)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

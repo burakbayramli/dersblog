@@ -63,7 +63,7 @@ faydalı olacağını görmek zor değil, çünkü grafik kartları için veri,
 görüntü pikselleri, ve her piksel üzerinde, resim kare kare
 oluşturulurken tek bir işlemi aynı anda uygulamak faydalı olur. Bu
 işlem transformasyon olabilir, ki aynı matrisi çarpmayı gerektirir,
-işin takip etme (ray traçıng) olabilir, vs.
+işin takip etme (ray tracing) olabilir, vs.
 
 CUDA ve Collab
 
@@ -288,7 +288,3 @@ Kaynaklar
 [3] https://gist.github.com/jfpuget/60e07a82dece69b011bb
 
 [4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html)
-
-
-
-

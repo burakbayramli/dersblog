@@ -65,6 +65,11 @@ oluşturulurken tek bir işlemi aynı anda uygulamak faydalı olur. Bu
 işlem transformasyon olabilir, ki aynı matrisi çarpmayı gerektirir,
 işin takip etme (ray tracing) olabilir, vs.
 
+CUDA NVidia'nın kendi kartlarına programcı erişimi sağlayan bir
+arayüzdür. Python üzerinde PyCuda üzerinden erişilebilir. NVidia'nın
+`nvcc` adlı genişletilmiş C++ derleyicisi aynı şekilde CUDA
+kodlamasına C++ üzerinden izin verir.
+
 CUDA ve Collab
 
 Collab'a girip bir not defteri yaratalım, ve menüde `Edit | Notebook

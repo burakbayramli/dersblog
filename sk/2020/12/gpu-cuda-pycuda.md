@@ -54,8 +54,8 @@ Pek çok türde paralelellik, eşzamanlılaştırma tekniği var. Mesela disk
 bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-mr.md)
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
 ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması ŞİMD
-yaklaşımını benimser, ŞİMD = Single Instruction Multiple Data, yani
-Tek Komut Pek Çok Veri yaklaşımı. ŞİMD ile bir işlem, ki bu çarpma,
+yaklaşımını benimser, SIMD = Single Instruction Multiple Data, yani
+Tek Komut Pek Çok Veri yaklaşımı. SIMD ile bir işlem, ki bu çarpma,
 toplama, vs gibi temel işlemler ya da onların toplamı olan bir hesap
 ünitesi olabilir, aynı anda birden fazla veri noktası üzerinde
 uygulanır. Bu yaklaşımın grafik kartları, grafikleme için nasıl
@@ -63,3 +63,19 @@ faydalı olacağını görmek zor değil, çünkü grafik kartları için veri
 görüntü pikselleridir, ve her piksel üzerinde, resim kare kare
 oluşturulurken tek bir işlemi pek çok piksel üzerinde aynı anda
 uygulamak faydalı bir özellik.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -151,9 +151,12 @@ sebeple ikinci, üçüncü, vs. işletim daha hızlı olacaktır.
 Kodu incelersek `gpuarray.to_gpu` ile GPU'ya veriyi gönderdik. Daha
 sonra `np.float(2) * device_data` ile çarpma işlemi GPU üzerinde
 yapıldı. Tabii arka planda Python bazı tutkallama işi yaptı mesela `*`
-işlemi büyük ihtimalle belli tipler için üste tanımlı (överloaded), ve
+işlemi büyük ihtimalle belli tipler için üste tanımlı (overloaded), ve
 `gpuarray` gibi özel tipler söz konusu olunca arka planda GPU üzerinde
 ek işlemler yapılacağı biliniyor. 
+
+Yapılan işlem çarpma, ve GPU bu her çarpma işlemini aynı anda, mümkün
+olduğu kadar fazla vektör öğesi üzerinde işletti.
 
 Çekirdek (Kernel) Kullanımı
 
@@ -181,7 +184,6 @@ host_data_2x =  host_data * np.float32(2)
 t2 = time()
 print ('CPU: %f' % (t2 - t1))
 device_data = gpuarray.to_gpu(host_data)
-# allocate memory for output
 device_data_2x = gpuarray.empty_like(device_data)
 t1 = time()
 gpu_2x_ker(device_data, device_data_2x)
@@ -197,21 +199,27 @@ GPU: 0.079255
 
 Üstte `ElementwiseKernel` objesine üç tane parametre verdik. Bunlardan
 ilki çekirdeğe / fonksiyona verilecek parametreler. İlki giriş verisi,
-ikincisi çıkış verisi, sözdizim Ç sözdizimine benziyor dikkat
+ikincisi çıkış verisi, sözdizim C dili sözdizimine benziyor dikkat
 edilirse, C ile `*ptr` ile tanımlanan değişkene `ptr[0]`, `ptr[1]`, vs
-ile erişilebilir, göstergeç aritmetiği yapılabilir yani.
+ile erişilebilir, göstergeç aritmetiği uygulanabilir.
 
+Ayrıca çıkış vektörünün verisini "içeriden" alabilmek için
+`gpuarray.empty_like` ile onu dışarıda önceden tanımlamamız
+gerekti.. Bu vektöre bir yer açtık, o yerdeki vektörün değerleri GPU
+tarafından dolduruldu.
 
-
-
-
-
-
+Metodun ana kodu ikinci parametrede, burada giriş vektör öğesi
+üzerinde hangi işlem yapılıp hangi çıkış öğeye atandığı
+kodlanıyor. İndis `i` vektör öğesine erışılıyor, kod işlediğinde her
+çekirdek eşzamanlı olarak tek bir öğe üzerinde işlem yapacak, buna
+dikkat. GPU parallelliğinin temeli bu.
 
 
 Kaynaklar
 
 [1] Tuomanen, *Hands-On GPU Programming with Python and CUDA*
+
+[2] https://colab.research.google.com/
 
 
 

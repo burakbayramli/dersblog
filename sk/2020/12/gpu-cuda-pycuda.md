@@ -68,7 +68,7 @@ gerektirir, işin takip etme (ray traçıng) olabilir, vs.
 
 CUDA ve Collab
 
-Çollab'a girip bir not defteri yaratalım, ve menüde `Edit | Notebook
+Collab'a girip bir not defteri yaratalım, ve menüde `Edit | Notebook
 settings` seçelim, burada `Hardware acceleratör` seçimi var. Bu seçimi
 `GPU` haline getirelim. Bu kadar basit! Arka plandaki bir GPU
 havuzundan Google size bir GPU atamış olacaktır.
@@ -76,6 +76,14 @@ havuzundan Google size bir GPU atamış olacaktır.
 Dikkat: Jupyter üzerinden GPU kullanımı direk kendi kartımız üzerinden
 kullanıma oranla yavaş olablir. Ama 10/20 kat hızlandırmayı hala
 Google Collab ile deneyimlemek mümkün.
+
+![](cuda1.jpg)
+
+
+
+
+
+
 
 
 

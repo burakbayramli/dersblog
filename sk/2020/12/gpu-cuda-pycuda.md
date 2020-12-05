@@ -36,7 +36,7 @@ https://developer.nvidia.com/buy-jetson
 Kart üzerinde Ubuntu işleyebiliyor, network aktarıcısı (router) dahil
 edilip hemen ssh ile alete bağlanabiliyorsunuz. Yapay öğrenim ile
 uğraşanlar için müthiş haber GPU üzerinde mevcut 192 çekirdek aşırı
-seviyede paralelism isteyen deep learning yaklaşımı için biçilmiş
+seviyede paralellik isteyen deep learning yaklaşımı için biçilmiş
 kaftan, ki burada birisi denemiş, ve nasıl yapılabileceği
 anlatılıyor. Blog sahibi Pete Warden imaj üzerinde yapay öğrenim
 algoritmaları kullanma konusunda uzmanlardan biridir, bu iş için
@@ -50,7 +50,7 @@ Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md) teknolojisine İnte
 
 CUDA
 
-Pek çok türde paralelizm, eşzamanlılaştırma tekniği var. Mesela disk
+Pek çok türde paralelellik, eşzamanlılaştırma tekniği var. Mesela disk
 bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-mr.md)
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
 ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması ŞİMD

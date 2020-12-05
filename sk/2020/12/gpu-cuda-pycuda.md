@@ -89,9 +89,9 @@ yokolmuş, yeni bir makinada, yeni bir süreçteyiz.
 !pip install pycuda
 ```
 
-Acaba makinamizda ne tur bir GPU var?
+Acaba makinamızda ne tür bir GPU var?
 
-```
+```python
 import pycuda.driver as drv
 drv.init()
 
@@ -103,8 +103,11 @@ for i in range(drv.Device.count()):
     print ('\t Total Memory: {} megabytes'.format(gpu_device.total_memory()//(1024**2)))
 ```
 
-
-
+```
+Device 0: Tesla T4
+	 Compute Capability: 7.5
+	 Total Memory: 15079 megabytes
+```
 
 
 

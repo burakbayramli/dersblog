@@ -214,6 +214,110 @@ kodlanıyor. İndis `i` vektör öğesine erışılıyor, kod işlediğinde her
 çekirdek eşzamanlı olarak tek bir öğe üzerinde işlem yapacak, buna
 dikkat. GPU parallelliğinin temeli bu.
 
+Mandelbrot Kümesi
+
+Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir, 
+
+```python
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+
+def mandelbrot_numpy(q, maxiter):
+    output = np.resize(np.array(0,), q.shape)
+    z = np.zeros(q.shape, np.complex64)
+    for it in range(maxiter):
+        z = z*z + q
+        done = np.greater(abs(z), 2.0)
+        q = np.where(done, 0+0j, q)
+        z = np.where(done, 0+0j, z)
+        output = np.where(done, it, output)
+    return output
+
+def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter):
+    r1 = np.linspace(xmin, xmax, width)
+    r2 = np.linspace(ymin, ymax, height)
+    q = np.ravel(r1 + r2[:,None]*1j)
+    n3 = mandelbrot_numpy(q,maxiter)
+    n3 = n3.reshape((width,height))
+    return n3.T
+
+xmin,xmax,ymin,ymax = -2.0,0.5,-1.25,1.25
+
+width=3;height=3;maxiter=80;cmap='hot'
+
+dpi = 72
+
+img_width = dpi * width; img_height = dpi * height
+
+z = mandelbrot_set2(xmin,xmax,ymin,ymax,img_width,img_height,maxiter)
+
+fig, ax = plt.subplots(figsize=(width, height),dpi=72)
+ticks = np.arange(0,img_width,3*dpi)
+x_ticks = xmin + (xmax-xmin)*ticks/img_width
+plt.xticks(ticks, x_ticks)
+y_ticks = ymin + (ymax-ymin)*ticks/img_width
+plt.yticks(ticks, y_ticks)
+ax.imshow(z.T,cmap=cmap,origin='lower')
+plt.savefig("cuda3.png")
+```
+
+![](cuda3.png)
+
+
+
+```python
+import numpy as np
+import pycuda.autoinit
+from pycuda import gpuarray
+from pycuda.elementwise import ElementwiseKernel
+
+mandel_ker = ElementwiseKernel(
+"pycuda::complex<float> *lattice, float *mandelbrot_graph, int max_iters, float upper_bound",
+"""
+mandelbrot_graph[i] = 1;
+
+pycuda::complex<float> c = lattice[i]; 
+pycuda::complex<float> z(0,0);
+
+for (int j = 0; j < max_iters; j++)
+{    
+   z = z*z + c;
+     
+   if(abs(z) > upper_bound) {
+       mandelbrot_graph[i] = 0;
+       break;
+    }
+}         
+""",
+"mandel_ker")
+
+width, height, real_low, real_high, imag_low, imag_high, max_iters, upper_bound =  512,512,-2,2,-2,2,256, 2
+
+real_vals = np.matrix(np.linspace(real_low, real_high, width), dtype=np.complex64)
+
+imag_vals = np.matrix(np.linspace( imag_high, imag_low, height), dtype=np.complex64) * 1j
+
+mandelbrot_lattice = np.array(real_vals + imag_vals.transpose(), dtype=np.complex64)    
+
+mandelbrot_lattice_gpu = gpuarray.to_gpu(mandelbrot_lattice)
+
+mandelbrot_graph_gpu = gpuarray.empty(shape=mandelbrot_lattice.shape, dtype=np.float32)
+
+mandel_ker( mandelbrot_lattice_gpu, mandelbrot_graph_gpu, np.int32(max_iters), np.float32(upper_bound))
+          
+mandelbrot_graph = mandelbrot_graph_gpu.get()   
+```
+
+```python
+from matplotlib import pyplot as plt
+fig = plt.figure(1)
+plt.imshow(mandelbrot_graph, extent=(-2, 2, -2, 2))
+```
+
+![](cuda2.png)
+
 
 Kaynaklar
 
@@ -221,7 +325,7 @@ Kaynaklar
 
 [2] https://colab.research.google.com/
 
-
+[3] https://gist.github.com/jfpuget/60e07a82dece69b011bb
 
 
 

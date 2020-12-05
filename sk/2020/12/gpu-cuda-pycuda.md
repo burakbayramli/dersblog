@@ -195,6 +195,12 @@ CPU: 0.007268
 GPU: 0.079255
 ```
 
+Üstte `ElementwiseKernel` objesine üç tane parametre verdik. Bunlardan
+ilki çekirdeğe / fonksiyona verilecek parametreler. İlki giriş verisi,
+ikincisi çıkış verisi, sözdizim Ç sözdizimine benziyor dikkat
+edilirse, C ile `*ptr` ile tanımlanan değişkene `ptr[0]`, `ptr[1]`, vs
+ile erişilebilir, göstergeç aritmetiği yapılabilir yani.
+
 
 
 

@@ -287,6 +287,10 @@ yapacak. Tabii `max_iters` döngüsü seri, senkron olarak işleyecek
 fakat her x,y hücresinin paralel işlenmesi çok büyük bir ilerleme ve
 hakikaten de Mandelbrot GPU kodu hızlı işliyor.
 
+Üstteki kodda tam tekmilli program ifadeleri kullanabildiğimizi
+görüyoruz, mesela for `for` döngüsü. Sözdizim Ç temelli ve hata
+ayıklama süreci biraz uğraştırabilir çok çetrefil denemez.
+
 Turkiye'de Alım
 
 NVidia grafik kartına sahip bir makina fazla pahalı değil, özellikle

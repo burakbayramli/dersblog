@@ -287,6 +287,13 @@ yapacak. Tabii `max_iters` döngüsü seri, senkron olarak işleyecek
 fakat her x,y hücresinin paralel işlenmesi çok büyük bir ilerleme ve
 hakikaten de Mandelbrot GPU kodu hızlı işliyor.
 
+Turkiye'de Alim
+
+NVidia grafik kartına sahip bir makina fazla pahalı değil, özellikle
+yıllarca önce bir süperbilgisayar seviyesinde işletim gücüne
+eriştiğimizi düşünürsek. Bir oyun makinası PC ile beraber alınabilir,
+ya da, mesela harici Jetson kartı 70-100 dolar arasında.
+
 
 Kaynaklar
 

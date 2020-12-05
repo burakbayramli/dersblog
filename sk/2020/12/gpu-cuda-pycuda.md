@@ -55,16 +55,15 @@ bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
 ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması SIMD
 yaklaşımını benimser, SIMD = Single Instruction Multiple Data, yani
-Tek Komut Pek Çok Veri yaklaşımı.
-
-SIMD ile bir işlem, ki bu çarpma, toplama, vs gibi temel işlemler ya
-da onların toplamı olan bir hesap ünitesi olabilir, birden fazla veri
-noktası üzerinde aynı anda uygulanır. Bu yaklaşımın grafik kartları,
-grafikleme için nasıl faydalı olacağını görmek zor değil, çünkü grafik
-kartları için veri, görüntü pikselleri, ve her piksel üzerinde, resim
-kare kare oluşturulurken tek bir işlemi aynı anda uygulamak faydalı
-olur. Bu işlem transformasyon olabilir, ki aynı matrisi çarpmayı
-gerektirir, işin takip etme (ray traçıng) olabilir, vs.
+Tek Komut Pek Çok Veri yaklaşımı. SIMD ile bir işlem, ki bu çarpma,
+toplama, vs gibi temel işlemler ya da onların toplamı olan bir hesap
+ünitesi olabilir, birden fazla veri noktası üzerinde aynı anda
+uygulanır. Bu yaklaşımın grafik kartları, grafikleme için nasıl
+faydalı olacağını görmek zor değil, çünkü grafik kartları için veri,
+görüntü pikselleri, ve her piksel üzerinde, resim kare kare
+oluşturulurken tek bir işlemi aynı anda uygulamak faydalı olur. Bu
+işlem transformasyon olabilir, ki aynı matrisi çarpmayı gerektirir,
+işin takip etme (ray traçıng) olabilir, vs.
 
 CUDA ve Collab
 

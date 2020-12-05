@@ -220,27 +220,22 @@ Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir,
 
 ```python
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 
-
-def mandelbrot_numpy(q, maxiter):
-    output = np.resize(np.array(0,), q.shape)
-    z = np.zeros(q.shape, np.complex64)
+def mandelbrot_numpy(c, maxiter):
+    output = np.zeros(c.shape)
+    z = np.zeros(c.shape, np.complex64)
     for it in range(maxiter):
-        z = z*z + q
-        done = np.greater(abs(z), 2.0)
-        q = np.where(done, 0+0j, q)
-        z = np.where(done, 0+0j, z)
-        output = np.where(done, it, output)
+        notdone = np.less(z.real*z.real + z.imag*z.imag, 4.0)
+        output[notdone] = it
+        z[notdone] = z[notdone]**2 + c[notdone]
+    output[output == maxiter-1] = 0
     return output
 
 def mandelbrot_set2(xmin,xmax,ymin,ymax,width,height,maxiter):
-    r1 = np.linspace(xmin, xmax, width)
-    r2 = np.linspace(ymin, ymax, height)
-    q = np.ravel(r1 + r2[:,None]*1j)
-    n3 = mandelbrot_numpy(q,maxiter)
-    n3 = n3.reshape((width,height))
+    r1 = np.linspace(xmin, xmax, width, dtype=np.float32)
+    r2 = np.linspace(ymin, ymax, height, dtype=np.float32)
+    c = r1 + r2[:,None]*1j
+    n3 = mandelbrot_numpy(c,maxiter)
     return n3.T
 
 xmin,xmax,ymin,ymax = -2.0,0.5,-1.25,1.25

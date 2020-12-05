@@ -216,7 +216,10 @@ dikkat. GPU parallelliğinin temeli bu.
 
 Mandelbrot Kümesi
 
-Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir, 
+Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir,
+[4]'te matematiğinden bahsediliyor. Orada gösterilen yaklaşımda her
+hücre üzerinde teker teker bir hesap yapıldığını görüyoruz. Bu hesabı
+eşzamanlı olarak işletmek mümkün.
 
 
 ```python
@@ -271,6 +274,12 @@ plt.imshow(mandelbrot_graph, cmap='inferno')
 ![](cuda2.png)
 
 
+Dikkat edersek x,y değerlerini bir vektör üzerinde koyduk, böylece
+birbirine eş olan x,y değerleri aynı indis üzerinden erişilir hale
+geldi. Sonra, çekirdek içinde, özyineli döngüye girdik, bu döngü her
+öge için mümkün olduğu kadar farklı GPU çekirdeği üzerinde işletilecek. 
+
+
 Kaynaklar
 
 [1] Tuomanen, *Hands-On GPU Programming with Python and CUDA*
@@ -279,5 +288,5 @@ Kaynaklar
 
 [3] https://gist.github.com/jfpuget/60e07a82dece69b011bb
 
-
+[4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html)
 

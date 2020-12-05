@@ -287,7 +287,7 @@ yapacak. Tabii `max_iters` döngüsü seri, senkron olarak işleyecek
 fakat her x,y hücresinin paralel işlenmesi çok büyük bir ilerleme ve
 hakikaten de Mandelbrot GPU kodu hızlı işliyor.
 
-Turkiye'de Alim
+Turkiye'de Alım
 
 NVidia grafik kartına sahip bir makina fazla pahalı değil, özellikle
 yıllarca önce bir süperbilgisayar seviyesinde işletim gücüne
@@ -304,5 +304,3 @@ Kaynaklar
 [3] https://gist.github.com/jfpuget/60e07a82dece69b011bb
 
 [4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html)
-
-

@@ -53,7 +53,7 @@ CUDA
 Pek çok türde paralelellik, eşzamanlılaştırma tekniği var. Mesela disk
 bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-mr.md)
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
-ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması ŞİMD
+ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması SIMD
 yaklaşımını benimser, SIMD = Single Instruction Multiple Data, yani
 Tek Komut Pek Çok Veri yaklaşımı.
 
@@ -289,4 +289,7 @@ Kaynaklar
 [3] https://gist.github.com/jfpuget/60e07a82dece69b011bb
 
 [4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html)
+
+
+
 

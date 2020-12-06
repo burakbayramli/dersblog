@@ -63,6 +63,22 @@ arayüzdür. Python üzerinde PyCuda üzerinden erişilebilir. NVidia'nın
 `nvcc` adlı genişletilmiş C++ derleyicisi aynı şekilde CUDA
 kodlamasına C++ üzerinden izin verir.
 
+Turkiye'de Alım
+
+NVidia grafik kartına sahip bir makina fazla pahalı değil, özellikle
+yıllarca önce bir süperbilgisayar seviyesinde işletim gücüne
+eriştiğimizi düşünürsek. Bir oyun makinası PC ile beraber alınabilir,
+ya da, mesela harici Jetson kartı 70-100 dolar arasında.
+
+GPU Var mı Kontrol
+
+Dizüstü ya da masaüstü bilgisayarında acaba dışarıdan kodlanabilen GPU
+var mı? Kontrol etmenin en kolay yolu Chromium tarayıcısına
+sormak. Tarayıcı bu tür bilgilere sahip çünkü kendisi de mümkün olan
+tüm hızlandırıcıları kullanmak istiyor, neyse tarayıcıya gidip adres
+çubuğunda `chrome://gpu` yazarsak gösterilen raporda eğer varsa CUDA
+yetenekli kart gösterilecektir.
+
 CUDA ve Collab
 
 Geliştiriciler için bir diğer seçenek Google bulutu üzerinde
@@ -291,21 +307,45 @@ hakikaten de Mandelbrot GPU kodu hızlı işliyor.
 görüyoruz, mesela for `for` döngüsü. Sözdizim C temelli ve hata
 ayıklama süreci biraz uğraştırabilir çok çetrefil denemez.
 
-Turkiye'de Alım
+Bir çekirdek çağrısı işletmenin tek yolu `ElementwiseKernel` değil,
+aslında o yöntem en kolay olanı. Şimdi işleri biraz daha
+zorlaştıralım, bir çekirdek fonksiyonu yazalım.
 
-NVidia grafik kartına sahip bir makina fazla pahalı değil, özellikle
-yıllarca önce bir süperbilgisayar seviyesinde işletim gücüne
-eriştiğimizi düşünürsek. Bir oyun makinası PC ile beraber alınabilir,
-ya da, mesela harici Jetson kartı 70-100 dolar arasında.
+Ne zaman bu tür bir fonksiyon yazarsak ondan önce `__global__`
+kelimesini kullanmamız gerekir. Dönüş tipi hep `void` olur çünkü
+döndürelecek veriyi zaten çıkış parametresi olarak
+tanımlayacağız. Kodlayacağımız yine vektörü skalar ile çarpmak olacak
+ama bu sefer skaların kendisi bir parametre. 
 
-GPU Var mı Kontrol
 
-Dizüstü ya da masaüstü bilgisayarında acaba dışarıdan kodlanabilen GPU
-var mı? Kontrol etmenin en kolay yolu Chromium tarayıcısına
-sormak. Tarayıcı bu tür bilgilere sahip çünkü kendisi de mümkün olan
-tüm hızlandırıcıları kullanmak istiyor, neyse tarayıcıya gidip adres
-çubuğunda `chrome://gpu` yazarsak gösterilen raporda eğer varsa CUDA
-yetenekli kart gösterilecektir.
+```python
+import pycuda.autoinit, time
+import pycuda.driver as drv
+import numpy as np
+from pycuda import gpuarray
+from pycuda.compiler import SourceModule
+
+ker = SourceModule("""
+__global__ void scalar_multiply_kernel(float *outvec, float scalar, float *vec)
+{
+     int i = threadIdx.x;
+     outvec[i] = scalar*vec[i];
+}
+""")
+
+scalar_multiply_gpu = ker.get_function("scalar_multiply_kernel")
+
+testvec = np.random.randn(512).astype(np.float32)
+testvec_gpu = gpuarray.to_gpu(testvec)
+outvec_gpu = gpuarray.empty_like(testvec_gpu)
+
+t1 = time.time()
+scalar_multiply_gpu( outvec_gpu, np.float32(2), testvec_gpu, block=(512,1,1), grid=(1,1,1))
+t2 = time.time()
+outvec_gpu.get()
+print ('total time to compute on GPU: %f' % (t2 - t1))
+```
+
 
 
 Kaynaklar

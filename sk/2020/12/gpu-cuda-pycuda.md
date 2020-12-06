@@ -354,7 +354,7 @@ bir soru acaba her ögeye yetecek kadar iş parçacığı (ki onların özgün
 kimlik no'su) mevcut olacak mıdır, çünkü bu kimlik indeks olarak
 vektör öğelerine erişmek için kullanılıyor? Cevap evet,
 `scalar_multiply_gpu` çağrısına bakarsak orada 512 tane iş parçacığı
-tanımlandı.
+tanımlandı, vektörün büyüklüğü de aynı.
 
 Kaynaklar
 

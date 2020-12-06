@@ -340,13 +340,21 @@ testvec_gpu = gpuarray.to_gpu(testvec)
 outvec_gpu = gpuarray.empty_like(testvec_gpu)
 
 t1 = time.time()
-scalar_multiply_gpu( outvec_gpu, np.float32(2), testvec_gpu, block=(512,1,1), grid=(1,1,1))
+scalar_multiply_gpu( outvec_gpu, np.float32(2), \
+                     testvec_gpu, block=(512,1,1),
+		     grid=(1,1,1))
 t2 = time.time()
 outvec_gpu.get()
 print ('total time to compute on GPU: %f' % (t2 - t1))
 ```
 
-
+Bu kodda bir diğer fark `threadIdx.x` ile eşzamanlı iş parçacığı
+(thread) kimlik no'sunu çağrı yaparak kendimizin almış olmamız. Burada
+bir soru acaba her ögeye yetecek kadar iş parçacığı (ki onların özgün
+kimlik no'su) mevcut olacak mıdır, çünkü bu kimlik indeks olarak
+vektör öğelerine erişmek için kullanılıyor? Cevap evet,
+`scalar_multiply_gpu` çağrısına bakarsak orada 512 tane iş parçacığı
+tanımlandı.
 
 Kaynaklar
 

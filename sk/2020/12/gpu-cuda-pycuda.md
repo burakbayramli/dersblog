@@ -288,7 +288,7 @@ fakat her x,y hücresinin paralel işlenmesi çok büyük bir ilerleme ve
 hakikaten de Mandelbrot GPU kodu hızlı işliyor.
 
 Üstteki kodda tam tekmilli program ifadeleri kullanabildiğimizi
-görüyoruz, mesela for `for` döngüsü. Sözdizim Ç temelli ve hata
+görüyoruz, mesela for `for` döngüsü. Sözdizim C temelli ve hata
 ayıklama süreci biraz uğraştırabilir çok çetrefil denemez.
 
 Turkiye'de Alım
@@ -301,7 +301,7 @@ ya da, mesela harici Jetson kartı 70-100 dolar arasında.
 GPU Var mı Kontrol
 
 Dizüstü ya da masaüstü bilgisayarında acaba dışarıdan kodlanabilen GPU
-var mı? Kontrol etmenin en kolay yolu Chromium tarayıcıya
+var mı? Kontrol etmenin en kolay yolu Chromium tarayıcısına
 sormak. Tarayıcı bu tür bilgilere sahip çünkü kendisi de mümkün olan
 tüm hızlandırıcılar kullanmak istiyor, neyse tarayıcıya gidip adres
 çubuğunda `chrome://gpu` yazarsak gösterilen raporda eğer varsa CUDA

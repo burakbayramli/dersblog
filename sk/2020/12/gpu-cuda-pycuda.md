@@ -302,8 +302,10 @@ GPU Var mı Kontrol
 
 Dizüstü ya da masaüstü bilgisayarında acaba dışarıdan kodlanabilen GPU
 var mı? Kontrol etmenin en kolay yolu Chromium tarayıcıya
-sormak. Tarayıcıya gidip adres çubuğunda `chrome://gpu/` yazarsak
-gösterilen raporda eğer varsa CUDA yetenekli kart gösterilecektir.
+sormak. Tarayıcı bu tür bilgilere sahip çünkü kendisi de mümkün olan
+tüm hızlandırıcılar kullanmak istiyor, neyse tarayıcıya gidip adres
+çubuğunda `chrome://gpu` yazarsak gösterilen raporda eğer varsa CUDA
+yetenekli kart gösterilecektir.
 
 
 Kaynaklar

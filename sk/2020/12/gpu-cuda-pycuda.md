@@ -241,7 +241,7 @@ eldeki N vektör öğesi için 0 ila N arası değerler olacağına emin
 miyiz? Kodun işleyişi buna bağlı çünkü. Ayrıca N tane ayrı iş
 parçacığı oluşturulacağını biliyor muyuz?
 
-C ile iki vektoru toplayan bir kod suna benzer,
+C ile iki vektörü toplayan bir kod suna benzer,
 
 ```clike
 __global__ void VecAdd(float* A, float* B, float* C)
@@ -259,7 +259,8 @@ int main()
 
 Burada `<<<1, N>>>` tanımındaki `N` ile kaç iş bölümü olacağı önceden
 tanımlandı. Üstteki gibi basit bir Python çağrısı var ise, bu tanım
-arka planda yapılıyor olmalı.
+arka planda yapılıyor olmalı. Indis 0-N de bu şekilde hallediliyor
+olmalı.
 
 
 Mandelbrot Kümesi

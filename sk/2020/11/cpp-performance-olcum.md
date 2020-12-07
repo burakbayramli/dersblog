@@ -56,7 +56,7 @@ public:
 
 ```
 
-```clike
+```cpp
 #include "cronometer.h"
 
 long fibonacci(unsigned n)

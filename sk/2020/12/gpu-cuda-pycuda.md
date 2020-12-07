@@ -234,6 +234,34 @@ kodlanıyor. İndis `i` ile vektör öğesine erişiliyor, kod işlediğinde
 her çekirdek eşzamanlı olarak tek bir öğe üzerinde işlem yapacak, buna
 dikkat. GPU parallelliğinin temeli bu.
 
+Bu [1]'den alınan bir giriş kodu tabii, parallelliğin bazı detayları
+arka planda saklanmış, Python için en azından. Mesela kod içinde
+referans edilen `i` bir iş parçacığı (thread) indisidir, bu indislerin
+eldeki N vektör öğesi için 0 ila N arası değerler olacağına emin
+miyiz? Kodun işleyişi buna bağlı çünkü. Ayrıca N tane ayrı iş
+parçacığı oluşturulacağını biliyor muyuz?
+
+C ile iki vektoru toplayan bir kod suna benzer,
+
+```clike
+__global__ void VecAdd(float* A, float* B, float* C)
+{
+   int i = threadIdx.x;
+   C[i] = A[i] + B[i];
+}
+int main()
+{
+   ...
+   VecAdd<<<1, N>>>(A, B, C);
+   ...
+}
+```
+
+Burada `<<<1, N>>>` tanımındaki `N` ile kaç iş bölümü olacağı önceden
+tanımlandı. Üstteki gibi basit bir Python çağrısı var ise, bu tanım
+arka planda yapılıyor olmalı.
+
+
 Mandelbrot Kümesi
 
 Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir,

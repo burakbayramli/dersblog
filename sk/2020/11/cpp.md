@@ -219,7 +219,7 @@ bir dosyada toplanabiliyor. Mesela bir `.cpp` den `.o`'ya gitmenin
 yolu "vsvs komutudur" denebilir, böylece iki dosya tipi arasında bir
 bağ yaratmış oluruz, hatta bu bağ dosya değişimlerini, zamanları bile
 kontrol edebilir, mesela bir kere A.o ürettiysek, sadece ve sadece
-onun temel aldığı A.cpp değişmiş ise tekrar kuralı / derlemek.
+onun temel aldığı A.cpp değişmiş ise tekrar derlemek.
 
 Make programını işletmek için komut satırında `make` yazmak yeterli,
 olağan durumda program aynı dizinde olan `Makefile` adlı bir dosya

@@ -263,14 +263,14 @@ g++ -c -o ex2.o ex2.cpp
 g++ -o kedi.exe cat.o ex2.o -lm 
 ```
 
-görürüz, ve `kedi.exe` ortaya yaratılmış olur. Eğer tekrar işletsek,
+görürüz, ve `kedi.exe` yaratılmış olur. Eğer tekrar işletsek,
 
 ```
 make: 'kedi.exe' is up to date.
 ```
 
-mesajını görürdük. Eğer `.o`, `.exe` dosyalarini silmek istersek,
-`make clean` işletebiliriz.
+mesajını görürdük. Temizlik yapmak istersek, `.o`, `.exe` dosyalarını
+silmek için, `make clean` işletebiliriz.
 
 Bağlantılar
 

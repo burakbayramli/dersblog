@@ -210,6 +210,8 @@ ve C ile beraber "performans için gidilen dil" olarak ün yaptı, hızlı
 hesap isteyen bilimciler yıllardır ona geçiş yaptı, ve bir sürü
 kütüphane, yardımcı kod bu dil etrafında şekillendi. 
 
+<a name='make'/>
+
 Make
 
 Derleme yapmak için teker teker her dosya üzerinde `g++` işletmek

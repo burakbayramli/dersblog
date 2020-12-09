@@ -257,11 +257,10 @@ int main()
 }
 ```
 
-Burada `<<<1, N>>>` tanımındaki `N` ile kaç iş bölümü olacağı önceden
-tanımlandı. Üstteki gibi basit bir Python çağrısı var ise, bu tanım
-arka planda yapılıyor olmalı. Indis 0-N de bu şekilde hallediliyor
-olmalı.
-
+Burada `<<<1, N>>>` tanımındaki `N` ile kaç iş parçacığı olacağı
+önceden tanımlandı. Üstteki gibi basit bir Python çağrısı var ise, bu
+tanım arka planda yapılıyor olmalı. Indis 0-N de aynı şekilde
+garantileniyor muhakkak. 
 
 Mandelbrot Kümesi
 

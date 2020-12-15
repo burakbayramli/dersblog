@@ -124,6 +124,8 @@ seçebilir, o zaman monitör vs bağlantısına gerek kalmaz.
 
 PyCuda
 
+Alttaki komutları yine Nano komut satırında işletiyoruz,
+
 
 ```
 sudo apt install python3-pip

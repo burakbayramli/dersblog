@@ -3,7 +3,7 @@
 
 ## En Son
 
-15/12 - [Jetson Nano](https://burakbayramli.github.io/dersblog/sk/2020/12/jetson-nano-2GB.md.html)
+15/12 - [Jetson Nano](https://burakbayramli.github.io/dersblog/sk/2020/12/jetson-nano-2GB.html)
 
 9/12 - [Make](https://burakbayramli.github.io/dersblog/sk/2020/11/cpp.html#make)
 

@@ -67,8 +67,8 @@ sudo screen /dev/ttyACM0 115200
 
 seri bağlantı üzerinden ile sisteme girebiliriz, dediğimiz gibi bu
 bağlantı hep lazım. Oradan `ifconfig -a` ile sistemin IP adresini
-alırız, ben tüm ek işlemleri `ssh kullanıcı@IP` ile Nano'ya ssh
-üzerinden girip, ayrı bir ekranda yapıyorum.
+alırız, ben tüm ek işlemleri `ssh kullanıcı@IP` ile Nano'ya `ssh`
+üzerinden girip ayrı bir ekranda yapıyorum.
 
 Yeni sistemimizi kontrol edelim. `ssh` ile girip,
 

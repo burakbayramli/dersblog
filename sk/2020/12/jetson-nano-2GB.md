@@ -1,13 +1,12 @@
 # Jetson Nano
 
 GPU geliştirmesi için Jetson Nano ürünü var, Türkiye'de 100 dolar
-civarı fiyatla satılıyor. Altta görülen Nano 2GB Wifi ürünü.
-
-Güç kaynağı bu pakete dahil değil, 5 Volt, 3 Amperlik bir adaptor
-almak lazım. Raspberry Pi uyumlu bu tür adaptörler var.
+civarı fiyatla satılıyor. Altta görülen Nano 2GB Wifi ürünü. Güç
+kaynağı bu pakete dahil değil, 5 Volt, 3 Amperlik bir adaptor almak
+lazım. Raspberry Pi uyumlu bu tür adaptörler var.
 
 Paketten iki tane ek kablo çıkacak, bunlardan birinin ucunda bir ufak
-"döngle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor, alttaki
+"dongle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor, alttaki
 resimde devrenin sol altında. Diğer kablo bir ucu dizüstüne, diğeri
 Nano'ya takılacak, nihai resim
 
@@ -132,4 +131,8 @@ https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup
 https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write
 
 https://youtu.be/Ch1NKfER0oM
+
+
+
+
 

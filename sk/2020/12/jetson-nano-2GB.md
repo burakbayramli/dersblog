@@ -120,20 +120,57 @@ Not
 
 Kurulum işlemini tamamen seri bağlantı üzerinden text bazlı da yapmak
 mümkün, alttaki video'da anlatılıyor, macera isteyenler bunu
-seçebilir, o zaman monitör vs bağlantısına gerek kalmaz. 
+seçebilir, o zaman monitör vs bağlantısına gerek kalmaz.
+
+PyCuda
+
+
+```
+sudo apt install python3-pip
+
+pip3 install cython
+
+pip3 install pycuda
+```
+
+[Şuradaki](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.md) `ssh`
+şifresiz giriş numarasını yaptıktan sonra,
+[PyCuda](gpu-cuda-pycuda.md) yazısındaki herhangi bir örneği alırız,
+mesela GPU tipini gösteren örnek, sonra mesela tüm kodların Nano
+üzerinde `/home/burak/user/Documents` dizinine gönderilecek şekilde
+ayarlarsak,
+
+```
+scp $1  user@192.168.43.34:/home/user/Documents/
+ssh user@192.168.vs.vs "/usr/bin/python3 /home/user/Documents/$1"
+```
+
+Bu script o anda çalıştığımız dizindeki parametre olarak geçilen
+herhangi bir dosyayı Nano üzerinde `/home/user/Documents/` dizinine
+gönderiyor ve onun üzerinde uzaktan `ssh` ile `python3`
+işletiyor. Dizüstü üzerinden işletince bizde
+
+```
+Device 0: NVIDIA Tegra X1
+         Compute Capability: 5.3
+         Total Memory: 1979 megabytes
+```
+
+sonucu geldi. PyCuda isliyor demektir, ustelik kodu uzaktaki rahat
+calisabildigimiz kendi makinamiz uzerinden islettik.
+
 
 Kaynaklar
 
-https://imadelhanafi.com/posts/jetson_nano_setup/
+[1] https://imadelhanafi.com/posts/jetson_nano_setup/
 
-https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit
+[2] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit
 
-https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup
+[3] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup
 
-https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write
+[4] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write
 
-https://youtu.be/Ch1NKfER0oM
-
+[5] https://youtu.be/Ch1NKfER0oM
 
 
 

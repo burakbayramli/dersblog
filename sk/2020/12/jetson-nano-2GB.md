@@ -35,8 +35,8 @@ https://www.balena.io/etcher/
 https://phoenixnap.com/kb/etcher-ubuntu
 
 Zip indirilir, açılır, içinde bir işler program var, tıklanır, görsel
-programla yakma yapılır. Nano imajı seçilir, hedef seçilir, yak
-denilir.
+programla yakma yapılır (Nano imajı seçilir, hedef seçilir, yak
+denilir).
 
 Yakma işlemi bitince kart Nano'ya sokulur, bağlantılar yapılır, ve
 HDMİ üzerinden monitöre bağlanıp, ayrıca fare, klavye Nano'ya

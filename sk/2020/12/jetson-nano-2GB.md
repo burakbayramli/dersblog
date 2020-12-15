@@ -6,9 +6,10 @@ kaynağı bu pakete dahil değil, 5 Volt, 3 Amperlik bir adaptor almak
 lazım. Raspberry Pi uyumlu bu tür adaptörler var.
 
 Paketten iki tane ek kablo çıkacak, bunlardan birinin ucunda bir ufak
-"dongle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor, alttaki
-resimde devrenin sol altında. Diğer kablo bir ucu dizüstüne, diğeri
-Nano'ya takılacak, nihai resim
+"dongle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor (dongle
+alındıktan sonra o kabloya gerek yok), alttaki resimde devrenin sol
+altında. Diğer kablonun bir ucu dizüstüne, diğeri Nano'ya takılacak,
+nihai resim
 
 <img width="240" src="nano.jpg"/>
 

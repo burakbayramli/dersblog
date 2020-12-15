@@ -46,8 +46,8 @@ kullanıcı ismi, şifre, coğrafi yer vs sorulacak, bu bilgiler
 girilir. Wifi bağlantısı orada görülür, Wifi şifresi girilip bağlantı
 kurulur.
 
-Aradaki o mavi kablo üzerinden bir seri bağlantıya dikkat,
-dizüstündeki Ubuntu üzerinde
+Aradaki o mavi kablo üzerinden seri bağlantıya dikkat, dizüstündeki
+Ubuntu üzerinde
 
 ```
 $ dmesg | grep --color 'tty'

@@ -137,7 +137,7 @@ pip3 install pycuda
 şifresiz giriş numarasını yaptıktan sonra,
 [PyCuda](gpu-cuda-pycuda.md) yazısındaki herhangi bir örneği alırız,
 mesela GPU tipini gösteren örnek, sonra mesela tüm kodların Nano
-üzerinde `/home/burak/user/Documents` dizinine gönderilecek şekilde
+üzerinde `/home/user/Documents` dizinine gönderilecek şekilde
 ayarlarsak,
 
 ```

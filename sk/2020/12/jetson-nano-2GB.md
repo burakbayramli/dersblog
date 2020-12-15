@@ -25,8 +25,8 @@ https://developer.nvidia.com/jetson-nano-2gb-sd-card-image
 wget --continue https://developer.download.nvidia.com/assets/embedded/downloads/jetson-nano-2gb-jp441-sd-card-image/jetson-nano-2gb-jp441-sd-card-image.zip
 ```
 
-Buyuk bir dosya dikkat. Indirildikten sonra yakmak icin Etcher adli
-bir program kullanilir,
+Büyük bir dosya dikkat. İndirildikten sonra yakmak için Etcher adlı
+bir program kullanılır,
 
 Etcher
 
@@ -34,9 +34,9 @@ https://www.balena.io/etcher/
 
 https://phoenixnap.com/kb/etcher-ubuntu
 
-Bir zıp indiriliyor, zıp açıliyor içinde işler bir program var,
-tıklanır, görsel programla yakma yapılır. Nano imajı seçilir, hedef
-seçilir, yak denilir.
+Bir zip indiriliyor, açılır, içinde bir işler program var, tıklanır,
+görsel programla yakma yapılır. Nano imajı seçilir, hedef seçilir, yak
+denilir.
 
 Yakma işlemi bitince kart Nano'ya sokulur, bağlantılar yapılır, ve
 HDMİ üzerinden monitöre bağlanıp, ayrıca fare, klavye Nano'ya
@@ -131,8 +131,4 @@ https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup
 https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write
 
 https://youtu.be/Ch1NKfER0oM
-
-
-
-
 

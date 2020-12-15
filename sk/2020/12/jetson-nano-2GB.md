@@ -7,9 +7,9 @@ lazım. Raspberry Pi uyumlu bu tür adaptörler var.
 
 Paketten iki tane ek kablo çıkacak, bunlardan birinin ucunda bir ufak
 "dongle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor (dongle
-alındıktan sonra o kabloya gerek yok), alttaki resimde devrenin sol
-altında. Diğer kablonun bir ucu dizüstüne, diğeri Nano'ya takılacak,
-nihai resim
+kabloya bağlı geliyor, o çıkartıldıktan sonra kabloya gerek yok),
+alttaki resimde devrenin sol altında. Diğer kablonun bir ucu
+dizüstüne, diğeri Nano'ya takılacak, nihai resim
 
 <img width="240" src="nano.jpg"/>
 

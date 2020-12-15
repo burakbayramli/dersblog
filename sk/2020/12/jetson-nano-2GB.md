@@ -1,7 +1,7 @@
 # Jetson Nano
 
-GPU geliştirmesi için Jetson Nano ürünü alınabilir. Altta görülen Nano
-2GB Wifi ürünü.
+GPU geliştirmesi için Jetson Nano ürünü var, Türkiye'de 100 dolar
+civarı fiyatla satılıyor. Altta görülen Nano 2GB Wifi ürünü.
 
 Güç kaynağı bu pakete dahil değil, 5 Volt, 3 Amperlik bir adaptor
 almak lazım. Raspberry Pi uyumlu bu tür adaptörler var.

@@ -136,19 +136,19 @@ pip3 install pycuda
 [Şuradaki](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.md) `ssh`
 şifresiz giriş numarasını yaptıktan sonra,
 [PyCuda](gpu-cuda-pycuda.md) yazısındaki herhangi bir örneği alırız,
-mesela GPU tipini gösteren örnek, sonra mesela tüm kodların Nano
-üzerinde `/home/user/Documents` dizinine gönderilecek şekilde
-ayarlarsak,
+mesela GPU tipini gösteren örnek, onu `tst.py` diye kaydedlim, sonra
+mesela tüm kodların Nano üzerinde `/home/user/Documents` dizinine
+gönderilecek şekilde ayarlarsak, 
 
 ```
 scp $1  user@192.168.43.34:/home/user/Documents/
 ssh user@192.168.vs.vs "/usr/bin/python3 /home/user/Documents/$1"
 ```
 
-Bu script o anda çalıştığımız dizindeki parametre olarak geçilen
-herhangi bir dosyayı Nano üzerinde `/home/user/Documents/` dizinine
-gönderiyor ve onun üzerinde uzaktan `ssh` ile `python3`
-işletiyor. Dizüstü üzerinden işletince bizde
+ve script'i `run.sh` olarak kaydetsek, `sh run.sh tst.py` ile cağrınca
+bu script `tst.py` dosyasını Nano üzerinde `/home/user/Documents/`
+dizinine gönderir ve üzerinde uzaktan `ssh` ile `python3`
+işletir. İşletince bizde
 
 ```
 Device 0: NVIDIA Tegra X1
@@ -158,11 +158,11 @@ Device 0: NVIDIA Tegra X1
 
 sonucu geldi. PyCuda işliyor demektir, üstelik kodu rahat
 çalışabildiğimiz kendi makinamiz üzerinden işlettik. Bir kere arada
-`ssh` bağlantısı kurulunca daha ilginç şeyler de yapılabilir, mesela
-`ssh` üzerinden görsel X tünellemesi mesela, Nano üzerinde görsel
-program işletip sonucu kendi makinamızda görebiliriz, ya da Jupyter
-servisi işletip dizüstü tarayıcısı ile ona bağlanabiliriz, vs. Ben
-kendi açımdan Nano üzerindeki yükü az tutmaya uğraşıyorum.
+`ssh` bağlantısı kurulunca daha ilginç şeyler de yapılabilir, `ssh`
+üzerinden görsel X tünellemesi mesela, Nano üzerinde görsel program
+işletip sonucu kendi makinamızda görebiliriz, ya da Jupyter servisi
+işletip dizüstü tarayıcısı ile ona bağlanabiliriz, vs. Ben kendi
+açımdan Nano üzerindeki yükü az tutmaya uğraşıyorum.
 
 Kaynaklar
 

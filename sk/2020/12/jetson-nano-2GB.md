@@ -156,15 +156,13 @@ Device 0: NVIDIA Tegra X1
          Total Memory: 1979 megabytes
 ```
 
-sonucu geldi. PyCuda işliyor demektir, üstelik kodu uzaktaki rahat
-çalışabildiğimiz kendi makinamiz üzerinden işlettik.
-
-Bir kere arada ssh bağlantısı kurulunca daha ilginç şeyler de
-yapılabilir tabii, mesela ssh üzerinden görsel X tünellemesi mümkün,
-Nano üzerinde görsel program işletip sonucu kendi makinamızda
-görebiliriz, ya da Jupyter servisi işletip dizüstü tarayıcısı ile ona
-bağlanabiliriz, vs. Ben kendi açımdan Nano üzerindeki yükü az tutmaya
-uğraşıyorum.
+sonucu geldi. PyCuda işliyor demektir, üstelik kodu rahat
+çalışabildiğimiz kendi makinamiz üzerinden işlettik. Bir kere arada
+`ssh` bağlantısı kurulunca daha ilginç şeyler de yapılabilir, mesela
+`ssh` üzerinden görsel X tünellemesi mesela, Nano üzerinde görsel
+program işletip sonucu kendi makinamızda görebiliriz, ya da Jupyter
+servisi işletip dizüstü tarayıcısı ile ona bağlanabiliriz, vs. Ben
+kendi açımdan Nano üzerindeki yükü az tutmaya uğraşıyorum.
 
 Kaynaklar
 

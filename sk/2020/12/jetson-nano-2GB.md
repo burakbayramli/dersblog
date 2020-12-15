@@ -118,7 +118,7 @@ Not
 
 Kurulum işlemini tamamen seri bağlantı üzerinden text bazlı da yapmak
 mümkün, alttaki video'da anlatılıyor, macera isteyenler bunu
-seçebilir, o zaman monitör vs bağlantısını gerek kalmaz. 
+seçebilir, o zaman monitör vs bağlantısına gerek kalmaz. 
 
 Kaynaklar
 
@@ -131,4 +131,7 @@ https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup
 https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write
 
 https://youtu.be/Ch1NKfER0oM
+
+
+
 

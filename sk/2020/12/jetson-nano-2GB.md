@@ -144,7 +144,7 @@ kaydedelim, sonra mesela tüm kodların Nano üzerinde
 `/home/user/Documents` dizinine gönderilecek şekilde ayarlarsak,
 
 ```
-scp $1  user@192.168.43.34:/home/user/Documents/
+scp $1  user@192.168.vs.vs:/home/user/Documents/
 ssh user@192.168.vs.vs "/usr/bin/python3 /home/user/Documents/$1"
 ```
 
@@ -178,6 +178,4 @@ Kaynaklar
 [4] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write
 
 [5] https://youtu.be/Ch1NKfER0oM
-
-
 

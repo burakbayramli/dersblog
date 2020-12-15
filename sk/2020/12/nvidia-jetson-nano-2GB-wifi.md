@@ -40,11 +40,11 @@ programla yakma yapılır (Nano imajı seçilir, hedef seçilir, yak
 denilir).
 
 Yakma işlemi bitince kart Nano'ya sokulur, bağlantılar yapılır, ve
-sistem başlayınca HDMI üzerinden monitöre bağlanılır, ayrıca fare,
-klavye Nano'ya bağlanılıp oradan kuruluma devam edilir. Burada isim,
-kullanıcı ismi, şifre, coğrafi yer vs sorulacak, bu bilgiler
-girilir. Wifi bağlantısı orada görülür, Wifi şifresi girilip bağlantı
-kurulur.
+sistem başlayınca HDMI üzerinden monitöre bağlanılıp, fare, klavye
+Nano'ya bağlanılıp oradan kuruluma devam edilir. Burada isim,
+kullanıcı ismi, şifre, coğrafi yer vs sorulacak, bu bilgileri
+gireriz. Wifi bağlantısı orada görülecek, Wifi şifresi girilince
+bağlantı kurulacaktır.
 
 Aradaki o mavi kablo üzerinden seri bağlantıya dikkat, dizüstündeki
 Ubuntu üzerinde

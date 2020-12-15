@@ -16,7 +16,7 @@ dizüstüne, diğeri Nano'ya takılacak, nihai resim
 İşletim sistemi mikro SD kart üzerinden, en az 64 GB iyi olur,
 işlemler aynen [Raspberry Pi](../07/raspberrypi.md) durumunda olduğu
 gibi. Orada olduğu gibi yine işletim sistemi indirilecek, ve SD'ye
-"yakılacak".
+"yakılacak". Mikro SD de pakete dahil değil ayrıca alınması lazım.
 
 https://developer.nvidia.com/jetson-nano-2gb-sd-card-image
 

@@ -151,14 +151,23 @@ kaydedelim, sonra mesela tüm kodların Nano üzerinde
 `/home/user/Documents` dizinine gönderilecek şekilde ayarlarsak,
 
 ```
-scp $1  user@192.168.vs.vs:/home/user/Documents/
-ssh user@192.168.vs.vs "/usr/bin/python3 /home/user/Documents/$1"
+scp $1  burak@nano1:/home/user/Documents/
+ssh burak@nano1 "/bin/bash /home/user/Documents/pygpu.sh $1"
 ```
 
-ve script'i `run.sh` olarak kaydetsek, `sh run.sh tst.py` ile cağrınca
-bu script `tst.py` dosyasını Nano üzerinde `/home/user/Documents/`
-dizinine gönderir ve üzerinde uzaktan `ssh` ile `python3`
-işletir. İşletince bizde
+Nano uzerinde `/home/user/Documents/pygpu.sh` dosyasi lazim, uzaktan o
+cagriliyor, onun icerigi
+
+```
+export PATH=${PATH}:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
+/usr/bin/python3 /home/user/Documents/$1
+```
+
+Script'i `run.sh` olarak kaydetsek, `sh run.sh tst.py` ile cağrınca bu
+script `tst.py` dosyasını Nano üzerinde `/home/user/Documents/`
+dizinine gönderir ve uzaktan `ssh` ile o dosya üzerinde `python3`
+işletilmesini sağlar. İşletince bizde
 
 ```
 Device 0: NVIDIA Tegra X1

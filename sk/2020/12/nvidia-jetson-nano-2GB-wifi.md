@@ -183,6 +183,54 @@ işletip sonucu kendi makinamızda görebiliriz, ya da Jupyter servisi
 işletip dizüstü tarayıcısı ile ona bağlanabiliriz, vs. Ben kendi
 açımdan Nano üzerindeki yükü az tutmaya uğraşıyorum.
 
+Test olarak alttaki kodu islettik,
+
+```python
+import numpy as np
+import pycuda.autoinit
+from pycuda import gpuarray
+from time import time
+from pycuda.elementwise import ElementwiseKernel
+
+host_data = np.float32( np.random.random(10**7) )
+
+gpu_2x_ker = ElementwiseKernel(
+"float *in, float *out",
+"out[i] = 2*in[i];",
+"gpu_2x_ker")
+
+
+# hizlandirma icin onceden ufak veri uzerinde islet
+host_data_small = np.float32( np.random.random(10) )
+device_data_small = gpuarray.to_gpu(host_data_small)
+device_data_2x_small = gpuarray.empty_like(device_data_small)
+gpu_2x_ker(device_data_small, device_data_2x_small)
+
+t1 = time()
+host_data_2x =  host_data * np.float32(2)
+t2 = time()
+
+print ('CPU: %f' % (t2 - t1))
+device_data = gpuarray.to_gpu(host_data)
+device_data_2x = gpuarray.empty_like(device_data)
+
+t1 = time()
+gpu_2x_ker(device_data, device_data_2x)
+t2 = time()
+
+from_device = device_data_2x.get()
+print ('GPU: %f' % (t2 - t1))
+```
+
+```
+CPU: 0.031684
+GPU: 0.000274
+```
+
+GPU'nun 115 kat daha hızlı olduğunu görüyoruz. İlginç Nano üzerindeki
+çekirdek sayısı da 128 değil mi?
+
+
 Kaynaklar
 
 [1] https://imadelhanafi.com/posts/jetson_nano_setup/

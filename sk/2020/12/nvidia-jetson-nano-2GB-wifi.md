@@ -44,7 +44,8 @@ sistem başlayınca HDMI üzerinden monitöre bağlanılıp, fare, klavye
 Nano'ya bağlanılıp oradan kuruluma devam edilir. Burada isim,
 kullanıcı ismi, şifre, coğrafi yer vs sorulacak, bu bilgileri
 gireriz. Wifi bağlantısı orada görülecek, Wifi şifresi girilince
-bağlantı kurulacaktır.
+bağlantı kurulacaktır. Wifi bağlantısı Nano'nun dışarıdan program
+indirmesi için faydalı, ama Nano'ya bizim girmemiz için şart değil.
 
 Aradaki o mavi kablo üzerinden seri bağlantıya dikkat, dizüstündeki
 Ubuntu üzerinde
@@ -55,8 +56,7 @@ $ dmesg | grep --color 'tty'
 ```
 
 deyince üsttekini görebilmek lazım.  Ya da `ls /dev/tty*` ile bakarsak
-orada bir `/dev/ttyACM0` olmalı. Bu seri bağlantının sürekli olmalı
-gerekli, yoksa Wifi üzerinden bile `ssh` çalışmaz.
+orada bir `/dev/ttyACM0` olmalı. 
 
 Şimdi 
 
@@ -65,10 +65,17 @@ gerekli, yoksa Wifi üzerinden bile `ssh` çalışmaz.
 sudo screen /dev/ttyACM0 115200
 ```
 
-seri bağlantı üzerinden ile sisteme girebiliriz, dediğimiz gibi bu
-bağlantı hep lazım. Oradan `ifconfig -a` ile sistemin IP adresini
-alırız, ben tüm ek işlemleri `ssh kullanıcı@IP` ile Nano'ya `ssh`
-üzerinden girip ayrı bir ekranda yapıyorum.
+seri bağlantı üzerinden ile sisteme girebiliriz, bunu bir kere /
+gerektiğinde yapmak yeterli, IP adresini almak için. Nano sistemi o
+seri bağlantı üzerinden bir yerel Ethernet bazlı bir ağ yaratıyor,
+Ubuntu tarafında bu ağın görülmüş olması lazım. `NVidia Ethernet
+Connection` ve `Wired Connection` gibi ifadelerin ağ listesinde
+görülüyordur herhalde. Ethernet'i seçmek, aktif hale getirmek gerekir.
+
+Neyse bir kerelik seri bağlantından girince `ifconfig -a` ile sistemin
+IP adresini alırız, bende `l4tbr0` birimine bağlı olan IP'yi aldım,
+ardından ben tüm ek işlemleri `ssh kullanıcı@IP` ile Nano'ya `ssh`
+girerek ayrı bir ekranda yapıyorum.
 
 Yeni sistemimizi kontrol edelim. `ssh` ile girip,
 

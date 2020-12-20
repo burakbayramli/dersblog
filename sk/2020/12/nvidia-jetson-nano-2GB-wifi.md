@@ -278,11 +278,11 @@ mesela `/home/user` altında bir yerlere koymak en iyisi, yoksa
 `/usr/local` için izin hataları verilebilir.
 
 Bu kopyada `make` uygularız, o komut tüm örnekleri derler. `nvcc`
-ayarlarını üstte anlattık, derlemek işlemi bu şekilde yapılacaktır. Bu
-işlem biraz uzun sürecek, ama bitince her örnek işletilir halde
-olur. Mesela `samples/5_Simulations/oceanFFT` altında `./oceanFFT`
-örneğini işletebiliriz, Nano monitöründen ya da VNC üzerinden su
-simulasyonu gayet güzel görülüyor.
+ayarlarını üstte anlattık, derleme işlemi onu kullanıyor. Tüm derleme
+işlemi biraz uzun sürecek, ama bitince her örnek işletilir halde hazır
+olacaktır. Mesela `samples/5_Simulations/oceanFFT` altında
+`./oceanFFT` örneğini işletebiliriz, Nano monitöründen ya da VNC
+üzerinden görebiliriz, su simulasyonu gayet güzel görülüyor.
 
 Kaynaklar
 

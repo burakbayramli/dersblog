@@ -268,7 +268,7 @@ benim Ubuntu 18'de `remmina` programı var, bu programa İP adresini
 verip bağlanma metotu olarak VNC seçersek, artık Nano'ya görsel olarak
 bağlanabiliriz.
 
-Ornekler
+Örnek Cuda Kodları
 
 C++ üzerinden CUDA kodlamak için Nano üzerinde bolca örnek var. Bu
 örnekler SD yakma işlemi sırasında Nano'ya tranfer edilmiş oldu,

@@ -1,9 +1,17 @@
 # Haritalamak
 
 Harita grafiklemek için eski `basemap` artık kullanılmıyor, yeni paket
-`cartopy`. Kurmak,
+`cartopy`. Kurmak icin 
 
-`pip install cartopy`
+```
+sudo apt install libproj-dev proj-data proj-bin libgeos-dev
+
+pip install cartopy
+
+pip uninstall shapely
+
+pip install shapely --no-binary shapely
+```
 
 Dünya haritası üzerinde bir nokta
 
@@ -21,7 +29,26 @@ plt.savefig('har1.png')
 ```
 
 ![](har1.png)
-![](https://4.bp.blogspot.com/-ewYmsqMhLBA/XlOhT0jOQLI/AAAAAAAAB6c/eASAITC5i_YdiYXLDoBBpFC6LzuE5JOhgCLcBGAsYHQ/s320/har1.png)
+
+Eger daha yakindan gostermek istersek, ilgilendigimiz bolge uzerinden
+bir kutu yaratabiliriz,
+
+```python
+import cartopy.crs as ccrs
+import cartopy
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+ax.plot(42.0, 21.53, 'ro', transform=ccrs.PlateCarree())
+ax.set_extent([30, 50, 10, 30])
+plt.savefig('har3.png')
+```
+
+![](har3.png)
+
 
 Ülke ismi bazlı tüm ülkeyi renklendirmek,
 

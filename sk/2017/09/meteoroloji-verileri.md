@@ -59,7 +59,7 @@ for x in res: print (x)
 {'temp': 12.36, 'feels_like': 5.71, 'temp_min': 12.36, 'temp_max': 12.36, 'pressure': 1015, 'humidity': 76, 'sea_level': 1015, 'grnd_level': 1015}
 ```
 
-Tahminler için farklı bir ÜRL / APİ gerekiyor, mesela rüzgar yönü ve yağmur için
+Tahminler için farklı bir URL / API gerekiyor, mesela rüzgar yönü ve yağmur için,
 
 ```python
 base_url = 'http://api.openweathermap.org/data/2.5/forecast?'
@@ -201,5 +201,3 @@ zaman serisini tahmin icin kullanilir. Bu sekilde hava tahmininin
 ornegi alttaki kodlarda bulunabilir,
 
 https://github.com/mouradmourafiq/tensorflow-lstm-regression/blob/master/lstm_weather.ipynb
-
-

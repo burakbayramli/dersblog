@@ -20,7 +20,7 @@ Altta şu anda `lat,lon` enlem ve boylamlarındaki rüzgar hızı ve yönünü a
 import requests, json
 lat,lon = 41.969901,29.070148
 base_url = 'http://api.openweathermap.org/data/2.5/weather?'
-weatherapi = open(".owmkey").read()
+weatherapi = open(".key").read()
 
 payload = { 'lat': str(lat), 'lon': str(lon), 'units': 'metric', 'APPID': weatherapi }
 r = requests.get(base_url, params=payload) 

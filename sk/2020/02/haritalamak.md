@@ -78,7 +78,7 @@ plt.savefig('har2.png')
 
 ![](har2.png)
 
-Bir kordinate etrafında belli büyüklükte bir alan üzerinde ızgara
+Bir kordinat etrafında belli büyüklükte bir alan üzerinde ızgara
 yaratmak ve bu izgaradaki kordinat noktalarını haritada
 göstermek. Paket `geopy` kurulmuş olmalı.
 

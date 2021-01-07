@@ -93,7 +93,6 @@ def goto_from_coord(start, distance, bearing):
     reached = d.destination(point=s, bearing=bearing)
     return [reached.latitude, reached.longitude]
 
-#lat,lon=40.969901,29.070148
 lat,lon=40.84343206497589, 29.926342357515754
 
 dist = 60

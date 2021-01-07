@@ -11,9 +11,9 @@ https://openweathermap.org
 
 https://openweathermap.org/api
 
-Yazının geri kalanında bu anahtarı aldığınızı, ve anahtarın `.owmkey`
-adlı bir dosyada olduğunu farzediyoruz (dikkat, bu anahtar içinde
-key='ASDFASDF' gibi gözükecek bir şey, eğer dosya içine koyarsak son
+Yazının geri kalanında bu anahtarı aldığınızı, ve anahtarın `.key`
+adlı bir dosyada olduğunu farzediyoruz (dikkat, bu anahtar kodda olsa
+`key='ASDFASDF'` gibi gözükecek bir şey, eğer dosya içine koyarsak son
 satır -newline- olmadan dosyaya yazmak gerekir),
 
 ```python
@@ -201,3 +201,5 @@ zaman serisini tahmin icin kullanilir. Bu sekilde hava tahmininin
 ornegi alttaki kodlarda bulunabilir,
 
 https://github.com/mouradmourafiq/tensorflow-lstm-regression/blob/master/lstm_weather.ipynb
+
+

@@ -132,13 +132,13 @@ derece yönde) 60 km, ve sol alt yönde (225 derece) aynı uzaklıkta
 birer adım atıyoruz, bu dörtgenin iki ucu. Bu üç noktalardan `lingrid`
 sonra `meshgrid` ile ızgarayı oluşturuyoruz. 
 
-Cartopy haritalari uzerinde klasik matplotlib komutlarini hala
-kullanabiliriz, enlem, boylem kordinatlari y ve x eksenleri haline
-geliyor, ve gerisi bildigimiz gibi. Mesela ok cizmek icin kullanilan
-`quiver` hala gecerli, mesela o izgara noktalarindaki ruzgar yonu
-verisi elimizde olsaydi, bunu harita uzerinde
-grafikleyebilirdik. Altta bu veri `sin` ve `cos` uzerinden uyduruk
-sekilde yaratildi,
+Cartopy haritaları üzerinde klasik matplotlib komutlarını hala
+kullanabiliriz, enlem, boylam kordinatları y ve x eksenleri haline
+geliyor, ve gerisi bildiğimiz gibi. Mesela ok çizmek için kullanılan
+`quiver` hala geçerli, mesela o ızgara noktalarındaki rüzgar yönü
+verisi elimizde olsaydı, bunu harita üzerinde
+grafikleyebilirdik. Altta bu veri `sin` ve `cos` üzerinden uyduruk
+şekilde yaratıldı,
 
 ```python
 fig = plt.figure()
@@ -165,3 +165,6 @@ https://scitools.org.uk/cartopy/docs/latest/gallery/global_map.html#sphx-glr-gal
 https://github.com/SciTools/cartopy/issues/1303
 
 Renk isimleri - https://matplotlib.org/3.1.0/gallery/color/named_colors.html
+
+
+

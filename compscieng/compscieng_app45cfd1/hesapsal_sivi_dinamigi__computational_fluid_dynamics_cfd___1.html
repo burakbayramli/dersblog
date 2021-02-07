@@ -24,9 +24,10 @@
 </script>
 </head>
 
-<p>Tek boyutlu lineer taşınım akımı (convection), ya da tek boyutlu lineer yatay
-iletim (advection), CFD hakkında bir şeyler öğrenmek için güzel fırsatlar
-içeriyor. Bu ufak denklemin bize ne kadar çok şey öğreteceğini görmek bizi
+<p>Tek Boyutlu Lineer Taşınım Akımı (Convection)</p>
+<p>Tek boyutlu lineer taşınım akımı, ya da tek boyutlu lineer yatay iletim
+(advection), CFD hakkında bir şeyler öğrenmek için güzel fırsatlar içeriyor. Bu
+ufak denklemin bize ne kadar çok şey öğreteceğini görmek bizi
 şaşırtabilir. Denklem,</p>
 <p>$$
 \frac{\partial u}{\partial t} +
@@ -87,17 +88,20 @@ plt.savefig('compscieng_app45cfd1_01.png')
 <p><img alt="" src="compscieng_app45cfd1_01.png" /></p>
 <p>Üstteki bir fonksiyon türü aslında, ona görüntüsü sebebiyle "şapka fonksiyonu"
 ismi de veriliyor.</p>
-<p>Şimdi tasinim akımı denkleminin ayrıksal kodlamasına gelelim, burada sonlu
+<p>Şimdi taşınım akımı denkleminin ayrıksal kodlamasına gelelim, burada sonlu
 farklılık (finite difference) yaklaşımı kullanıyoruz, $u$ vektörü içindeki her
 öge için (1) formülünü işleteceğiz.</p>
-<pre><code class="python">un = np.ones(nx)
-for n in range(nt):
-    un = u.copy() 
-    for i in range(1, nx):
-        u[i] = un[i] - c * dt / dx * (un[i] - un[i-1])
+<pre><code class="python">def advect1d(nx,nt,u,dt,dx):
+  un = np.ones(nx)
+  for n in range(nt):
+      un = u.copy() 
+      for i in range(1, nx):
+          u[i] = un[i] - c * dt / dx * (un[i] - un[i-1])
+
+advect1d(nx,nt,u,dt,dx)
 </code></pre>
 
-<p>Ustteki islemle zamani ileri sardik ve fonksiyon belli bir noktaya geldi. Nereye
+<p>Üstteki işlemle zamanı ileri sardık ve fonksiyon belli bir noktaya geldi. Nereye
 geldi?</p>
 <pre><code class="python">plt.plot(np.linspace(0, 2, nx), u);
 plt.savefig('compscieng_app45cfd1_02.png')
@@ -108,6 +112,43 @@ plt.savefig('compscieng_app45cfd1_02.png')
 bir şapka değil. Ne oldu? Sonuç yaklaşık temsilin kalitesiyle alakalı, <code>dx</code>
 ve <code>dt</code> küçültüldükçe kalite artacaktır, ve şapkaya daha çok benzeyen
 sonuçlar görülecektir. </p>
+<p>Gayrı Lineer Taşınım Akımı (Nonlinear Convection)</p>
+<p>Şimdi biraz önceki teknikleri kullanarak gayrı lineer taşınım akımı
+kodlayacağız, tek boyutta denklem,</p>
+<p>$$
+\frac{\partial u}{\partial t} +
+u  \frac{\partial u}{\partial c}  = 0
+$$</p>
+<p>Dikkat edersek önceki denklemdeki $c$ ile çarpım yerine şimdi $u$ ile çarpım
+var, bu sebeple formülün ikinci terimi gayrı lineer hale geldi. Eğer
+ayrıksallaştırma işlemini tekrar uygularsak, alttaki sonuca erişiriz,</p>
+<p>$$
+u_i^{n+1} = u_i^n -  u_i^n \frac{\Delta t}{\Delta x} ( u_i^n - u_{i-1}^n )
+$$</p>
+<pre><code class="python">nx = 41
+dx = 2 / (nx - 1)
+nt = 20
+dt = .025 
+u = np.ones(nx)
+u[int(.5 / dx) : int(1 / dx + 1)] = 2  
+un = np.ones(nx)
+</code></pre>
+
+<pre><code class="python">def advectnl(nx,nt,u,dt,dx):
+  un = np.ones(nx)
+  for n in range(nt):
+      un = u.copy() 
+      for i in range(1, nx):
+          u[i] = un[i] - un[i] * dt / dx * (un[i] - un[i-1])
+
+advectnl(nx,nt,u,dt,dx)
+</code></pre>
+
+<pre><code class="python">plt.plot(np.linspace(0, 2, nx), u);
+plt.savefig('compscieng_app45cfd1_03.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_03.png" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Barba, <em>12 steps to Navier–Stokes, Ders 1</em>,

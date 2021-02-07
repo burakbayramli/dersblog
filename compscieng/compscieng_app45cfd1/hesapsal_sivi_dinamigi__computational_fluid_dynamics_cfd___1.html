@@ -56,7 +56,58 @@ zaman bu ayrıksal sistemde tek bilinmeyen $u_i^{n+1}$'dir. Denklemi tekrar
 düzenlersek bilinmeyen için yeni bir formül elde edebiliriz,</p>
 <p>$$
 u_i^{n+1} = u_i^n - c \frac{\Delta t}{\Delta x} ( u_i^n - u_{i-1}^n )
+\qquad (1)
 $$</p>
+<p>Yeri temsil eden $x$ eksenini Eşit aralıklı parçalara böleceğiz, bir tek boyutlu
+izgara yaratacağız, genişlik 2 birim olacak, <code>nx</code> değişkeni kaç tane ızgara
+noktası olduğunu tanımlayacak, <code>dx</code> iki nokta arasındaki uzaklık.</p>
+<pre><code class="python">import time, sys
+nx = 41
+dx = 2 / (nx-1)
+nt = 25  
+dt = .025
+c = 1    
+</code></pre>
+
+<p>Başlangıç şartlarını tanımlamak lazım, başlangıç hızı $u_0$ aralık
+$0.5 \leq x \leq 1$ içinde $u = 2$, diğer her yerde $u = 1$.</p>
+<pre><code class="python">u = np.ones(nx)
+u[int(.5 / dx):int(1 / dx + 1)] = 2  
+print(u)
+</code></pre>
+
+<pre><code>[1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 2. 1. 1. 1.
+ 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1. 1.]
+</code></pre>
+
+<pre><code class="python">plt.plot(np.linspace(0, 2, nx), u);
+plt.savefig('compscieng_app45cfd1_01.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_01.png" /></p>
+<p>Üstteki bir fonksiyon türü aslında, ona görüntüsü sebebiyle "şapka fonksiyonu"
+ismi de veriliyor.</p>
+<p>Şimdi tasinim akımı denkleminin ayrıksal kodlamasına gelelim, burada sonlu
+farklılık (finite difference) yaklaşımı kullanıyoruz, $u$ vektörü içindeki her
+öge için (1) formülünü işleteceğiz.</p>
+<pre><code class="python">un = np.ones(nx)
+for n in range(nt):
+    un = u.copy() 
+    for i in range(1, nx):
+        u[i] = un[i] - c * dt / dx * (un[i] - un[i-1])
+</code></pre>
+
+<p>Ustteki islemle zamani ileri sardik ve fonksiyon belli bir noktaya geldi. Nereye
+geldi?</p>
+<pre><code class="python">plt.plot(np.linspace(0, 2, nx), u);
+plt.savefig('compscieng_app45cfd1_02.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_02.png" /></p>
+<p>Evet, başlangıç fonksiyonu hakikaten sağa doğru taşındı. Fakat artık fonksiyon
+bir şapka değil. Ne oldu? Sonuç yaklaşık temsilin kalitesiyle alakalı, <code>dx</code>
+ve <code>dt</code> küçültüldükçe kalite artacaktır, ve şapkaya daha çok benzeyen
+sonuçlar görülecektir. </p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Barba, <em>12 steps to Navier–Stokes, Ders 1</em>,

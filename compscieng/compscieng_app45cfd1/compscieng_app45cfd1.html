@@ -91,14 +91,11 @@ ismi de veriliyor.</p>
 <p>Şimdi taşınım akımı denkleminin ayrıksal kodlamasına gelelim, burada sonlu
 farklılık (finite difference) yaklaşımı kullanıyoruz, $u$ vektörü içindeki her
 öge için (1) formülünü işleteceğiz.</p>
-<pre><code class="python">def advect1d(nx,nt,u,dt,dx):
-  un = np.ones(nx)
-  for n in range(nt):
-      un = u.copy() 
-      for i in range(1, nx):
-          u[i] = un[i] - c * dt / dx * (un[i] - un[i-1])
-
-advect1d(nx,nt,u,dt,dx)
+<pre><code class="python">un = np.ones(nx)
+for n in range(nt):
+    un = u.copy() 
+    for i in range(1, nx):
+        u[i] = un[i] - c * dt / dx * (un[i] - un[i-1])        
 </code></pre>
 
 <p>Üstteki işlemle zamanı ileri sardık ve fonksiyon belli bir noktaya geldi. Nereye
@@ -134,14 +131,11 @@ u[int(.5 / dx) : int(1 / dx + 1)] = 2
 un = np.ones(nx)
 </code></pre>
 
-<pre><code class="python">def advectnl(nx,nt,u,dt,dx):
-  un = np.ones(nx)
-  for n in range(nt):
-      un = u.copy() 
-      for i in range(1, nx):
-          u[i] = un[i] - un[i] * dt / dx * (un[i] - un[i-1])
-
-advectnl(nx,nt,u,dt,dx)
+<pre><code class="python">un = np.ones(nx)
+for n in range(nt):
+    un = u.copy() 
+    for i in range(1, nx):
+        u[i] = un[i] - un[i] * dt / dx * (un[i] - un[i-1])        
 </code></pre>
 
 <pre><code class="python">plt.plot(np.linspace(0, 2, nx), u);
@@ -149,6 +143,52 @@ plt.savefig('compscieng_app45cfd1_03.png')
 </code></pre>
 
 <p><img alt="" src="compscieng_app45cfd1_03.png" /></p>
+<p>Yakınsama (Convergence)</p>
+<p>Lineer tasinim hesabında ortaya çıkan tepe şeklinin izgara çözünülürlüğü ile
+alakalı olduğunu söylemiştik. Bunu birkaç farklı çözünürlük ile deneyerek
+görelim. İlk gördüğümüz sonuç <code>nx=41</code> kullandı. Arttıralım,</p>
+<pre><code class="python">def linearconv(nx):
+    dx = 2 / (nx - 1)
+    nt = 20    
+    dt = .025  
+    c = 1
+
+    u = np.ones(nx)
+    u[int(.5/dx):int(1 / dx + 1)] = 2  
+
+    un = np.ones(nx)
+
+    for n in range(nt):
+        un = u.copy() 
+        for i in range(1, nx):
+            u[i] = un[i] - c * dt / dx * (un[i] - un[i-1])
+
+    plt.plot(np.linspace(0, 2, nx), u);
+
+linearconv(61)
+plt.savefig('compscieng_app45cfd1_04.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_04.png" /></p>
+<pre><code class="python">linearconv(71)
+plt.savefig('compscieng_app45cfd1_05.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_05.png" /></p>
+<p>Gittikçe daha fazla şapka fonsiyonuna benzer sonuçlar alıyoruz. Şimdi dikkat,
+bir kez daha arttıralım,</p>
+<pre><code class="python">linearconv(85)
+plt.savefig('compscieng_app45cfd1_06.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_06.png" /></p>
+<p>Bu sonuc sapka fonksiyonuna benzemiyor. Ne oldu?</p>
+<p>Hesaplananları düşünürsek, yer ekseni üzerinde dalganın hareketini hesaplıyoruz,
+fakat her adımda $\Delta t = 0.025$ farzederk bu hesapları yapıyoruz. Üstteki
+yanlış sonuçta $\Delta t$ zaman aralığında öyle bir adım attık ki bu adım
+<code>dx</code>'in büyüklüğünden daha fazla. Bu durum ilk denemelerde ortaya çıkmadı
+çünkü <code>dx</code> yeterince büyük tutulmuştu. Fakat onu küçültükçe bir noktada
+hesap patladı. </p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Barba, <em>12 steps to Navier–Stokes, Ders 1</em>,

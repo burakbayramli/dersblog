@@ -1,0 +1,83 @@
+\documentclass[12pt,fleqn]{article}\usepackage{../../common}
+\begin{document}
+Hesapsal Sıvı Dinamiği (Computational Fluid Dynamics -CFD-) - 2
+
+Diffusion (Yayınım) Denklemi
+
+Tek boyuttaki yayınım denklemi,
+
+$$
+\frac{\partial u}{\partial t} = \nu \frac{\partial^2 u}{\partial x^2}
+$$
+
+Dikkat edersek bu denklemde bir ikinci kısmi türev var.
+
+Taylor serilerini hatırlarsak, genel tanım
+
+$$
+f(x+h) = f(x) + h f'(x) + \frac{h^2}{2} f''(x) + ...
+$$
+
+Biz $u_{i+1}$ ve $u_{i-1}$ açılımını Taylor serisi ile yapmak istiyoruz, daha
+önce belirttiğimiz gibi bir önceki ve sonraki $x$ değerleri $\Delta x$
+uzaklığında, yani bir önceki
+
+$$
+u(x-\Delta x) = u(x) - \Delta x f'(x) + \frac{h^2}{2} u''(x) + ...
+$$
+
+İşaretin eksi olmasına dikkat, ve sonraki 
+
+$$
+u(x+\Delta x) = u(x) + \Delta x f'(x) + \frac{h^2}{2} u''(x) + ...
+$$
+
+Şimdi indisleriyle $u$ için ve [1]'deki formuyla yazalım,
+
+$$
+u_{i+1} = u_i + \Delta x \frac{\partial u}{\partial x}\bigg|_i +
+\frac{\Delta x^2}{2} \frac{\partial ^2 u}{\partial x^2}\bigg|_i +
+\frac{\Delta x^3}{3!} \frac{\partial ^3 u}{\partial x^3}\bigg|_i +
+O(\Delta x^4)
+$$
+
+$$
+u_{i-1} = u_i - \Delta x \frac{\partial u}{\partial x}\bigg|_i +
+\frac{\Delta x^2}{2} \frac{\partial ^2 u}{\partial x^2}\bigg|_i -
+\frac{\Delta x^3}{3!} \frac{\partial ^3 u}{\partial x^3}\bigg|_i +
+O(\Delta x^4)
+$$
+
+Bir üstteki denklemin ilk hali $u_i = u_{i-1} ... $ ile ama ufak bir yer
+değişimi ile görülen biçim elde edilmiş. 
+
+Son iki formülü toplarsak bazı terimlerin ters işaretli olması sebebiyle iptal
+olacağını görebiriliz. Ayrıca yaklaşık temsil açısından $O(\Delta x^4)$ ve daha
+üstü kuvvetleri yok sayarsak, 
+
+$$
+u_{i+1} + u_{i-1} =
+2u_i+\Delta x^2 \frac{\partial ^2 u}{\partial x^2}\bigg|_i +
+O(\Delta x^4)
+$$
+
+$\frac{\partial ^2 u}{\partial x^2}\bigg|_i$ için çözersek ve tekrar düzenlersek,
+
+$$
+\frac{\partial ^2 u}{\partial x^2}=\frac{u_{i+1}-2u_{i}+u_{i-1}}{\Delta x^2} + O(\Delta x^2)
+$$
+
+$O(\Delta x^2)$ ifadesi $O(\Delta x^4)$ terimi $\Delta x^2$ ile bölününce ortaya çıktı.
+
+
+
+
+Kaynaklar
+
+[1] Barba, {\em 12 steps to Navier–Stokes, Ders 1},
+    \url{https://nbviewer.jupyter.org/github/barbagroup/CFDPython/blob/master/lessons/01_Step_1.ipynb}
+
+
+
+
+\end{document}

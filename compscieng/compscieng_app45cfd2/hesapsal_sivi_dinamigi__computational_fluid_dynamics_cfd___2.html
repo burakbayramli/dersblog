@@ -1,0 +1,77 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Hesapsal Sıvı Dinamiği (Computational Fluid Dynamics -CFD-) - 2</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hesapsal Sıvı Dinamiği (Computational Fluid Dynamics -CFD-) - 2
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Diffusion (Yayınım) Denklemi</p>
+<p>Tek boyuttaki yayınım denklemi,</p>
+<p>$$
+\frac{\partial u}{\partial t} = \nu \frac{\partial^2 u}{\partial x^2}
+$$</p>
+<p>Dikkat edersek bu denklemde bir ikinci kısmi türev var.</p>
+<p>Taylor serilerini hatırlarsak, genel tanım</p>
+<p>$$
+f(x+h) = f(x) + h f'(x) + \frac{h^2}{2} f"(x) + ...
+$$</p>
+<p>Biz $u_{i+1}$ ve $u_{i-1}$ açılımını Taylor serisi ile yapmak istiyoruz, daha
+önce belirttiğimiz gibi bir önceki ve sonraki $x$ değerleri $\Delta x$
+uzaklığında, yani bir önceki</p>
+<p>$$
+u(x-\Delta x) = u(x) - \Delta x f'(x) + \frac{h^2}{2} u"(x) + ...
+$$</p>
+<p>İşaretin eksi olmasına dikkat, ve sonraki </p>
+<p>$$
+u(x+\Delta x) = u(x) + \Delta x f'(x) + \frac{h^2}{2} u"(x) + ...
+$$</p>
+<p>Şimdi indisleriyle $u$ için ve [1]'deki formuyla yazalım,</p>
+<p>$$
+u_{i+1} = u_i + \Delta x \frac{\partial u}{\partial x}\bigg|_i +
+\frac{\Delta x^2}{2} \frac{\partial ^2 u}{\partial x^2}\bigg|_i +
+\frac{\Delta x^3}{3!} \frac{\partial ^3 u}{\partial x^3}\bigg|_i +
+O(\Delta x^4)
+$$</p>
+<p>$$
+u_{i-1} = u_i - \Delta x \frac{\partial u}{\partial x}\bigg|_i +
+\frac{\Delta x^2}{2} \frac{\partial ^2 u}{\partial x^2}\bigg|_i -
+\frac{\Delta x^3}{3!} \frac{\partial ^3 u}{\partial x^3}\bigg|_i +
+O(\Delta x^4)
+$$</p>
+<p>Bir üstteki denklemin ilk hali $u_i = u_{i-1} ... $ ile ama ufak bir yer
+değişimi ile görülen biçim elde edilmiş. </p>
+<p>Son iki formülü toplarsak bazı terimlerin ters işaretli olması sebebiyle iptal
+olacağını görebiriliz. Ayrıca yaklaşık temsil açısından $O(\Delta x^4)$ ve daha
+üstü kuvvetleri yok sayarsak, </p>
+<p>$$
+u_{i+1} + u_{i-1} =
+2u_i+\Delta x^2 \frac{\partial ^2 u}{\partial x^2}\bigg|_i +
+O(\Delta x^4)
+$$</p>
+<p>$\frac{\partial ^2 u}{\partial x^2}\bigg|_i$ için çözersek ve tekrar düzenlersek,</p>
+<p>$$
+\frac{\partial ^2 u}{\partial x^2}=\frac{u_{i+1}-2u_{i}+u_{i-1}}{\Delta x^2} + O(\Delta x^2)
+$$</p>
+<p>$O(\Delta x^2)$ ifadesi $O(\Delta x^4)$ terimi $\Delta x^2$ ile bölününce ortaya çıktı.</p>
+<p>Kaynaklar</p>
+<p>[1] Barba, <em>12 steps to Navier–Stokes, Ders 1</em>,
+    <a href="https://nbviewer.jupyter.org/github/barbagroup/CFDPython/blob/master/lessons/01_Step_1.ipynb">https://nbviewer.jupyter.org/github/barbagroup/CFDPython/blob/master/lessons/01_Step_1.ipynb</a></p>

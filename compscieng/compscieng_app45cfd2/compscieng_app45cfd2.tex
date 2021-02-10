@@ -10,9 +10,12 @@ $$
 \frac{\partial u}{\partial t} = \nu \frac{\partial^2 u}{\partial x^2}
 $$
 
-Dikkat edersek bu denklemde bir ikinci kısmi türev var.
+Dikkat edersek bu denklemde bir ikinci kısmı türev var. Denklemin o
+kısmını Merkezi Farklar yaklaşımı ile ayrıksal hale getireceğiz, bu
+yaklaşım İleri Farklar ve Geriye Farklar yaklaşımlarının birleştirilmesi ile
+elde edilir.
 
-Taylor serilerini hatırlarsak, genel tanım
+Önce Taylor serilerini hatırlarsak, genel tanım
 
 $$
 f(x+h) = f(x) + h f'(x) + \frac{h^2}{2} f''(x) + ...
@@ -69,7 +72,22 @@ $$
 
 $O(\Delta x^2)$ ifadesi $O(\Delta x^4)$ terimi $\Delta x^2$ ile bölününce ortaya çıktı.
 
+Artık 1D yayınım formülünün nihai ayrıksal halini yazabiliriz,
 
+$$
+\frac{u_{i}^{n+1}-u_{i}^{n}}{\Delta t} =
+\nu\frac{u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n}}{\Delta x^2}
+$$
+
+Daha önce olduğu gibi başlangıç koşuları tanımlı ise tek bilinmeyen
+$u_{i}^{n+1}$, bu bilinmeyen eşitliğin solunda kalacak şekilde tekrar
+düzenlersek,
+
+
+$$
+u_{i}^{n+1} =
+u_{i}^{n}+\frac{\nu\Delta t}{\Delta x^2}(u_{i+1}^{n}-2u_{i}^{n}+u_{i-1}^{n})
+$$
 
 
 Kaynaklar

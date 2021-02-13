@@ -36,7 +36,7 @@ Zamna göre sıralanmış, son bir ay içindeki 4.5 ölçeğinden büyükteki de
 ## USGS, Json
 
 Aslında USGS'in Web üzerinden JSON döndüren bir hizmeti de var. Daha fazla esneklik
-isteyenler bu paketi kullanabilir.
+isteyenler bu seçeneği kullanabilir.
 
 ```python
 import requests, time

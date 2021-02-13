@@ -35,7 +35,7 @@ Zamna göre sıralınmış, son bir ay içindeki 4.5 ölçeğinden büyükteki d
 
 ## USGS, Json
 
-Aslinda USGS'in Web uzerinden JSON donduren bir hizmeti de var. Daha fazla esneklik
+Aslında USGS'in Web üzerinden JSON döndüren bir hizmeti de var. Daha fazla esneklik
 isteyenler bu paketi kullanabilir.
 
 ```python
@@ -75,14 +75,14 @@ print (df.tail(5))
 
 ## pyearthquake
 
-Bu Python paketi ile USGS sitesine baglanarak istenen zaman
-araligindaki deprem verilerini almak, onlari bir harita uzerinde
-basmak mumkun oluyor. Daha once blog'da paylastigimiz deprem Python
-kodu statik, tek bir veri dosyasi icinde, pyearthquake ile en son
-verileri, istenen detayda almak mumkun.
+Bu Python paketi ile USGS sitesine bağlanarak istenen zaman
+aralığındaki deprem verilerini almak, onları bir harita üzerinde
+basmak mümkün oluyor. Daha önce blog'da paylaştığımız deprem Python
+kodu statik, tek bir veri dosyası içinde, pyearthquake ile en son
+verileri, istenen detayda almak mümkün.
 
-Suradaki yazida guzel bilgiler var. Kurmak icin PyPi paketini
-indirin. Basemap icin surasi. Sonra ayni komutu pyearthquake icin
+Şuradaki yazıda güzel bilgiler var. Kurmak için PyPi paketini
+indirin. Basemap için şurası. Sonra aynı komutu pyearthquake için
 yapabilirsiniz.
 
 Ornek kod:

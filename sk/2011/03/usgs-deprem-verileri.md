@@ -31,7 +31,7 @@ print (df.tail(5))
 2021-02-13 08:19:51.545        4.5
 ```
 
-Zamna göre sıralınmış, son bir ay içindeki 4.5 ölçeğinden büyükteki depremleri aldık.
+Zamna göre sıralanmış, son bir ay içindeki 4.5 ölçeğinden büyükteki depremleri aldık.
 
 ## USGS, Json
 
@@ -111,4 +111,3 @@ basacaktır. İstediğiniz noktalara zoom yapmak için zoom ikonuna
 tıklayıp istenen bölgeyi haritada bir dikdörtgen içine aldığınız zaman
 o bölgenin detayları görülecektir. Üstte paylaştığımız yazıda bunun
 Japonya için yapıldığını görüyoruz.
-

@@ -39,9 +39,8 @@ Aslında USGS'in Web üzerinden JSON döndüren bir hizmeti de var. Daha fazla e
 isteyenler bu seçeneği kullanabilir.
 
 ```python
-import requests, time
+import requests, time, datetime
 
-import datetime
 today = datetime.datetime.now()
 start = today - datetime.timedelta(days=40)
 

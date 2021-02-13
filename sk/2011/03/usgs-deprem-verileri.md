@@ -42,7 +42,8 @@ isteyenler bu seçeneği kullanabilir.
 import requests, time, datetime
 
 today = datetime.datetime.now()
-start = today - datetime.timedelta(days=40)
+days = 40 # bugunden kac gun geriye
+start = today - datetime.timedelta(days=days)
 
 usgs_request_url = 'https://earthquake.usgs.gov/fdsnws'
 usgs_request_url+='/event/1/query.geojson?starttime=%s&endtime=%s'

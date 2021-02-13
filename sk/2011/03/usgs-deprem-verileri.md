@@ -75,9 +75,10 @@ print (df.tail(5))
 ```
 
 Her iki yöntemde de `qres['features'][i]['properties']` ya da
-`feed[i]['properties']` içinde, pek çok diğer sözlük öğesinin orada
-olduğu görülecektir. Okunabilir bir yer tarifi, enlem boylam
-kordinatı, vs. gibi ek detaylar alinip farklı şekillerde kullanılabilir.
+`feed[i]['properties']` içinde mesela pek çok diğer sözlük öğesinin
+orada olduğu görülecektir. Okunabilir bir yer tarifi, enlem boylam
+kordinatı, vs. gibi ek detaylar var, bunlar alınıp farklı şekillerde
+kullanılabilir.
 
 
 ## pyearthquake

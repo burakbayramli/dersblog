@@ -3,6 +3,8 @@
 
 ## En Son
 
+13/2 - [Deprem Verileri USGS](https://burakbayramli.github.io/dersblog/sk/2011/01/usgs-deprem-verileri.html)
+
 11/2 - [Hesapsal Sıvı Dinamiği](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app45cfdintro/hesapsal_sivi_dinamigine__computational_fluid_dynamics_cfd__giris_.html)
 
 7/1 - [OpenWeatherMap](https://burakbayramli.github.io/dersblog/sk/2017/09/meteoroloji-verileri.md-ecmwf-noaa-openweathermap.html)

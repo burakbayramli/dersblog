@@ -6,8 +6,8 @@ En rahat yontem `quakefeeds` adli paketi kullanmak,
 
 ```python
 import pandas as pd, datetime
-
 from quakefeeds import QuakeFeed
+
 feed = QuakeFeed("4.5", "month")
 res = []
 for i in range(len(feed)):
@@ -90,10 +90,8 @@ kodu statik, tek bir veri dosyası içinde, pyearthquake ile en son
 verileri, istenen detayda almak mümkün.
 
 Şuradaki yazıda güzel bilgiler var. Kurmak için PyPi paketini
-indirin. Basemap için şurası. Sonra aynı komutu pyearthquake için
+indirin, `basemap` ayrı kurulmalı. Sonra aynı komutu pyearthquake için
 yapabilirsiniz.
-
-Ornek kod:
 
 ```
 from pyearthquake import *
@@ -107,13 +105,10 @@ for row in mag6_list:
 usgs.plot_events(catalog)
 ```
 
-Bu kod en son 7 gunluk, sonra Richter olceginde 6.0'dan buyuk deprem
-verileri alacaktir, ve sonuncu verileri bir haritada
-basacaktir. Istediginiz noktalara zoom yapmak icin zoom ikonuna
-tiklayip istenen bolgeyi haritada bir dikdortgen icine aldiginiz zaman
-o bolgenin detaylari gorulecektir. Ustte paylastigimiz yazida bunun
-Japonya icin yapildigini goruyoruz.
-
-
-
+Bu kod en son 7 günlük, sonra Richter ölçeğinde 6.0'dan büyük deprem
+verileri alacaktır, ve sonuncu verileri bir haritada
+basacaktır. İstediğiniz noktalara zoom yapmak için zoom ikonuna
+tıklayıp istenen bölgeyi haritada bir dikdörtgen içine aldığınız zaman
+o bölgenin detayları görülecektir. Üstte paylaştığımız yazıda bunun
+Japonya için yapıldığını görüyoruz.
 

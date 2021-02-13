@@ -80,6 +80,65 @@ orada olduğu görülecektir. Okunabilir bir yer tarifi, enlem boylam
 kordinatı, vs. gibi ek detaylar var, bunlar alınıp farklı şekillerde
 kullanılabilir.
 
+İlginç bir deprem haritalama denemesi şöyle olabilir; son 90 gündeki
+depremleri al haritada gösterelim, renkleme en eski daha açık en yakın
+daha köyü olacak şekilde, ve şiddeti çember büyüklüğü üzerinden
+gösterelim göstermek. Böylece renklerin nereye doğru koyulaştığına
+bakarak bir zamansal ilinti yakalamayı umuyoruz, aynı şekilde şiddete
+bakarak burada da yersel zamansal bir kalıp görebilmeyi umuyoruz.
+
+Önce veriyi al, kaydet, 
+
+```python
+import requests, time, datetime
+
+today = datetime.datetime.now()
+days = 90
+start = today - datetime.timedelta(days=days)
+
+usgs_request_url = 'https://earthquake.usgs.gov/fdsnws'
+usgs_request_url+='/event/1/query.geojson?starttime=%s&endtime=%s'
+usgs_request_url+='&minmagnitude=4.5&orderby=time&limit=1000'
+usgs_request_url = usgs_request_url % (start.isoformat(), today.isoformat())
+qres = requests.get(usgs_request_url).json()
+res = []
+for i in range(len(qres['features'])):
+    lat = qres['features'][i]['geometry']['coordinates'][1]
+    lon = qres['features'][i]['geometry']['coordinates'][0]
+    rad = qres['features'][i]['geometry']['coordinates'][2]
+    d = datetime.datetime.fromtimestamp(qres['features'][i]['properties']['time']/1000.0)
+    s = np.float(qres['features'][i]['properties']['mag'])
+    diff = (d-start).days
+    res.append([d,s,lat,lon,rad,diff])
+
+import pandas as pd
+df = pd.DataFrame(res).sort_values(by=0)
+df = df.set_index(0)
+df.columns = ['mag','lat','lon','rad','ago']
+df.to_csv('japanq.csv')
+```
+
+Grafikle,
+
+```python
+import pandas as pd
+df = pd.read_csv('japanq.csv',index_col=0,parse_dates=True)
+import cartopy.crs as ccrs
+import cartopy
+fig = plt.figure(figsize=(20, 20))
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+ago = np.max(df.ago)-df.ago
+s = np.power(3,df.mag)
+ax.scatter(df.lon, df.lat, c=df.ago,  cmap=plt.cm.Reds, s=s, alpha=0.7,  transform=ccrs.PlateCarree())
+ax.set_extent([94, 161, -10, 54], crs=ccrs.PlateCarree())
+plt.savefig('japanq.png')
+```
+
+![](japanq.png)
+
 
 ## pyearthquake
 

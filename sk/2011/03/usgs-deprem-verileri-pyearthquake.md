@@ -1,4 +1,79 @@
-# USGS Deprem Verileri - pyearthquake
+# USGS Deprem Verileri
+
+## quakefeeds
+
+En rahat yontem `quakefeeds` adli paketi kullanmak,
+
+```python
+import pandas as pd, datetime
+
+from quakefeeds import QuakeFeed
+feed = QuakeFeed("4.5", "month")
+res = []
+for i in range(len(feed)):
+    d = datetime.datetime.fromtimestamp(feed[i]['properties']['time']/1000.0)
+    s = feed[i]['properties']['mag']
+    res.append([d,s])
+
+df = pd.DataFrame(res).sort_values(by=0)
+df = df.set_index(0)
+df.columns = ['Magnitude']
+print (df.tail(5))
+```
+
+```text
+                         Magnitude
+0                                 
+2021-02-13 07:30:56.150        5.2
+2021-02-13 08:09:12.552        4.9
+2021-02-13 08:15:21.905        4.9
+2021-02-13 08:18:33.479        5.3
+2021-02-13 08:19:51.545        4.5
+```
+
+Zamna göre sıralınmış, son bir ay içindeki 4.5 ölçeğinden büyükteki depremleri aldık.
+
+## USGS, Json
+
+Aslinda USGS'in Web uzerinden JSON donduren bir hizmeti de var. Daha fazla esneklik
+isteyenler bu paketi kullanabilir.
+
+```python
+import requests, time
+
+import datetime
+today = datetime.datetime.now()
+start = today - datetime.timedelta(days=40)
+
+usgs_request_url = 'https://earthquake.usgs.gov/fdsnws'
+usgs_request_url+='/event/1/query.geojson?starttime=%s&endtime=%s'
+usgs_request_url+='&minmagnitude=4.5&orderby=time&limit=1000'
+usgs_request_url = usgs_request_url % (start.isoformat(), today.isoformat())
+qres = requests.get(usgs_request_url).json()
+res = []
+for i in range(len(qres['features'])):
+    d = datetime.datetime.fromtimestamp(qres['features'][i]['properties']['time']/1000.0)
+    s = qres['features'][i]['properties']['mag']
+    res.append([d,s])
+
+import pandas as pd
+df = pd.DataFrame(res).sort_values(by=0)
+df = df.set_index(0)
+df.columns = ['Magnitude']
+print (df.tail(5))
+```
+
+```text
+                         Magnitude
+0                                 
+2021-02-13 07:30:56.150        5.2
+2021-02-13 08:09:12.552        4.9
+2021-02-13 08:15:21.905        4.9
+2021-02-13 08:18:33.479        5.3
+2021-02-13 08:19:51.545        4.5
+```
+
+## pyearthquake
 
 Bu Python paketi ile USGS sitesine baglanarak istenen zaman
 araligindaki deprem verilerini almak, onlari bir harita uzerinde

@@ -1,0 +1,179 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Dalga Denklemi Hesabı</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dalga Denklemi Hesabı
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Önce ip üzerinde titreşimlerin hareketi sonucu olan dalga denklemini
+türetelim. Bu türetimin bir şeklini [1]'de görmüştük, şimdi [2,3,4] bazlı olarak
+tekrar görelim.</p>
+<p>Bir ipte dalga onun salınımı ile oluşacak, ve bu salınım sırasında bir anda, tek
+bir fotoğraf karesinde görüntü alt soldaki gibi olabilir, </p>
+<p><img alt="" src="compscieng_app17wave_01.png" /></p>
+<p>İp iki tarafından hareket etmeyen yerlere bağlanmış (duvar mesela) uzunluk $L$,
+ip materyelinin yoğunluğu $\rho$, ki bu tüm ipin kütlesi bölü uzunluğu olarak ta
+görülebilir, bu örnekte sabit, ipin gerginliği kuvvet olarak $T$, bu da sabit,
+ve yerçekimi kuvvetine göre çok daha fazla böylece yerçekim ivmelenmesi $g$'yi
+yok sayabiliyoruz. Sürtünme yok. Tek boyutta bakıyoruz, $y(x,t)$ ipin bir $x$
+noktasındaki dikey yer değişimini gösteriyor.</p>
+<p>Denklemi ortaya çıkartmak için aslında Newton'un $F=ma$'sından daha fazlasına
+ihtiyacımız yok. Üst sağdaki resimde gösterildiği gibi tek bir sonsuç ufak
+bölgeye odaklanırsak, ya da alt resimde olduğu gibi,</p>
+<p><img alt="" src="compscieng_app17wave_02.png" /></p>
+<p>$F$ için gereken net kuvveti ipin iki yanyana noktası arasındaki gerginliğin
+dikey bileşenlerinin farkı olarak görebiliriz, yani $T(x+\Delta x,t)$ ve
+$T(x,t)$ kuvvetlerinin dikey bileşen farkı. İki noktadaki acılar da
+$\theta(x,t)$ ile gösteriliyor, $x+\Delta x$'teki acı $\theta(x+\Delta x)$. Bu
+dikey bileşenlerin farkını, ya da tüm $y$ kuvvetlerinin toplanını o zaman </p>
+<p>$$
+\sum F_y = T(x+\Delta x,t) \sin\theta(x+\Delta x,t) - T(x,t) \sin\theta(x,t)
+$$</p>
+<p>ile hesaplayabiliriz. Modeldeki faraziyeler isiginda biliyoruz ki $y/L$ cok
+kucuk, o zaman $\theta$ cok kucuk. Demek ki sinus ifadelerini
+basitlestirebiliriz, [5]'ten biliyoruz ki</p>
+<p>$$
+\sin\theta \approx \tan\theta = \partial y / \partial x
+$$</p>
+<p>Demek ki</p>
+<p>$$
+\sum F_y =
+T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
+T \frac{\partial y}{\partial x} \bigg\vert_{x}
+$$</p>
+<p>Son geldiğimiz noktada birinci türevler üzerinden bir $x$ farklılığı görüyoruz,
+bu bize bir türev işlemini daha hatırlatıyor, eğer $\Delta x$ ile bölünme de
+olsaydı, o zaman ikinci türev elde ettik diyebilirdik,</p>
+<p>$$
+\frac{
+T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
+T \frac{\partial y}{\partial x} \bigg\vert_{x}
+}{\Delta x} \approx T \frac{\partial^2 y}{\partial x^2}
+$$</p>
+<p>Fakat önemli değil, biraz masajlama yaparsak, </p>
+<p>$$
+T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
+T \frac{\partial y}{\partial x} \bigg\vert_{x} \approx
+T \frac{\partial^2 y}{\partial x^2} \Delta x 
+$$</p>
+<p>İstenilen sonucu elde ederiz, </p>
+<p>$$
+\sum F_y \approx T \frac{\partial^2 y}{\partial x^2} \Delta x
+$$</p>
+<p>Diğer taraftan $F=ma$ eşitliğinin sağ tarafına bakarsak, baktığımız ufak bölge
+için kütle $\rho\Delta x$, yatay ivmelenme ise $y$ yer değişiminin zamana göre
+ikinci kısmi türevi,</p>
+<p>$$
+\sum F_y = \rho \Delta x \frac{\partial^2 y}{\partial t^2}
+$$</p>
+<p>Bu son iki denklemi birbirine eşitlersek, $\Delta x$'ler iptal olur, </p>
+<p>$$
+T \frac{\partial^2 y}{\partial x^2}  =
+\rho \frac{\partial^2 y}{\partial t^2}
+$$</p>
+<p>Sabitleri sağ tarafa taşırsak, ve $c = \sqrt{T / \rho}$ tanımı üzerinden,</p>
+<p>$$
+\frac{\partial^2 y}{\partial x^2}  =
+\frac{1}{c^2}\frac{\partial^2 y}{\partial t^2}
+$$</p>
+<p>Dalga denklemini elde etmiş olduk.</p>
+<p>Denkleme yakından bakarsak onun bir kısmı türevsel denklem (PDE) olduğunu
+görürüz. İki tane bağımsız değişken temel alınıyor, $x,t$. Ayrıca denklem
+2. derece, çünkü ikinci türevi içeriyor. Bu bilgiler denklemi çözmek için
+önemli.</p>
+<p>Çözümde bir başlangıç şartı gerekli çünkü diferansiyel denklemleri "entegre
+ederken" daha doğrusu ileri doğru geçen zamanda hesaplarken bir başlangıç
+noktası gerekiyor, bunun için bir teli kaldırıp (geçici bir süre üçgen haline
+getirip) oradan bıraktığımızı düşünebiliriz, ki bu üçgen şekli alttaki gibi
+modellenebilir,</p>
+<p>$$
+y(x,t=0)=\begin{cases}
+1.25 x/L , &amp;x\leq 0.8 L ,\\
+(5-5x/L), &amp;x&gt; 0.8 L,
+\end{cases} 
+$$</p>
+<p>İkinci bir başlangıç şartı daha lazım, 2. derece başlangıç şartı bu. Teli, ipi
+gerip üçgen yaptım ama sonra durup tekrar bıraktım, bu da bir başlangıç şartı,
+durağan durumdan başlama şartı.</p>
+<p>$$
+\frac{\partial y} {\partial t}(x,t=0) =0
+$$</p>
+<p>Çözüme bu şartlarla başlayabilirdik ama baştaki problem tanımını hatırlarsak ek
+bazı şartlar daha koymuştuk, bu şartlar, kısıtlamalar her an için geçerli,
+ipler iki ucundan (hareket etmeyen) duvarlara bağlı.</p>
+<p>$$
+y(0,t) \equiv 0, \quad y(L,t) \equiv 0
+$$</p>
+<p>[analitik çözüm atlandı]</p>
+<p>Yaklaşıksal çözümü merkezi farklılıklar üzerinden yapacağız,</p>
+<p><img alt="" src="compscieng_app17wave_03.png" /></p>
+<p>$x$ için sola/sağa, $t$ için yukarı/aşağı olacak şekilde iki Taylor açılımı
+yapıyoruz, sonra her değişkenin iki açılımıni birbiri ile topluyoruz,</p>
+<p>$$
+y(x +\Delta x, t)  = y(x,t) +
+\frac{\partial U}{\partial x}\Delta x + \frac{1}{2}
+\frac{\partial^2 U}{\partial x^2}(\Delta x)^2 + \cdots
+$$</p>
+<p>$$
+y(x -\Delta x, t)  = y(x,t) -
+\frac{\partial U}{\partial x} \Delta x + \frac{1} {2}
+\frac{\partial^2 U}{\partial x^2} (\Delta x)^2 - \cdots
+$$</p>
+<p>$$
+y(x, y +\Delta t)  = y(x,t) +
+\frac{\partial U}{\partial t}\Delta y + \frac{1}{2}
+\frac{\partial^2 U}{\partial t^2}(\Delta t)^2 + \cdots
+$$</p>
+<p>$$
+y(x, y -\Delta t) = y(x,t) -
+\frac{\partial U}{\partial t} \Delta t + \frac{1} {2}
+\frac{\partial^2 U}{\partial t^2} (\Delta t)^2 - \cdots
+$$</p>
+<p>Toplama sonrası tek sayı terimlerinin iptal olduğunu görürüz, ve kalanlar,</p>
+<p>$$
+\frac{\partial^2 y(x,t)}{\partial x^2} \simeq
+\frac{y(x+\Delta x,t)+y(x-\Delta x,t)-2 y(x,t)}{(\Delta x)^2}
+$$</p>
+<p>$$
+\frac{\partial^2 y(x,t)}{\partial t^2} \simeq
+\frac{y(x,t+\Delta t) +y(x, y-\Delta t)-2 y(x,t)}{(\Delta t)^2}
+$$</p>
+<p>olacaktır. İndişler üzerinden belirtirsek,</p>
+<p>$$
+\frac{\partial^2 y }{\partial t^2} \simeq
+\frac{y_{i,j+1}+y_{i,j-1}-2 y_{i,j}}{(\Delta t)^2}, \quad
+\frac{\partial^2 y}{\partial x^2} \simeq
+\frac{y_{i+1,j}+y_{i-1,j}-2 y_{i,j}} {(\Delta x)^2}.
+$$</p>
+<p>$$
+\frac{y_{i,j+1}+y_{i,j-1}-2 y_{i,j}} {c^2 (\Delta t)^2}  =
+\frac{y_{i+1,j}+y_{i-1,j}-2 y_{i,j}} {(\Delta x)^2}
+$$</p>
+<p>[devam edecek]</p>
+<p>Kaynaklar</p>
+<p>[1] Bayramlı, <em>PDE, Dalga Denklemini Türetmek</em></p>
+<p>[2] Landau, <em>Landau Computational Physics Course, Video Lectures</em>,
+    <a href="https://www.youtube.com/playlist?list=PLnWQ_pnPVzmJnp794rQXIcwJIjwy7Nb2U">https://www.youtube.com/playlist?list=PLnWQ_pnPVzmJnp794rQXIcwJIjwy7Nb2U</a></p>
+<p>[3] Landau, <em>Computational Physics</em></p>
+<p>[4] Feldman, <em>Math 256, Differential Equations, Lecture Notes</em>
+    <a href="http://www.math.ubc.ca/~feldman/m256/">http://www.math.ubc.ca/~feldman/m256/</a></p>
+<p>[5] Bayramlı, <em>Normal Diferansiyel Denklemler Ders Notlari, Ekler, Trigonometri</em></p>

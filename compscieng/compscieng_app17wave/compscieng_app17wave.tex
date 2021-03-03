@@ -1,6 +1,6 @@
 \documentclass[12pt,fleqn]{article}\usepackage{../../common}
 \begin{document}
-Dalga Denklemleri Hesabi
+Dalga Denklemi Hesabı
 
 Önce ip üzerinde titreşimlerin hareketi sonucu olan dalga denklemini
 türetelim. Bu türetimin bir şeklini [1]'de görmüştük, şimdi [2,3,4] bazlı olarak
@@ -97,6 +97,111 @@ $$
 \frac{1}{c^2}\frac{\partial^2 y}{\partial t^2}
 $$
 
+Dalga denklemini elde etmiş olduk.
+
+Denkleme yakından bakarsak onun bir kısmı türevsel denklem (PDE) olduğunu
+görürüz. İki tane bağımsız değişken temel alınıyor, $x,t$. Ayrıca denklem
+2. derece, çünkü ikinci türevi içeriyor. Bu bilgiler denklemi çözmek için
+önemli.
+
+Çözümde bir başlangıç şartı gerekli çünkü diferansiyel denklemleri ``entegre
+ederken'' daha doğrusu ileri doğru geçen zamanda hesaplarken bir başlangıç
+noktası gerekiyor, bunun için bir teli kaldırıp (geçici bir süre üçgen haline
+getirip) oradan bıraktığımızı düşünebiliriz, ki bu üçgen şekli alttaki gibi
+modellenebilir,
+
+$$
+y(x,t=0)=\begin{cases}
+1.25 x/L , &x\leq 0.8 L ,\\
+(5-5x/L), &x> 0.8 L,
+\end{cases} 
+$$
+
+İkinci bir başlangıç şartı daha lazım, 2. derece başlangıç şartı bu. Teli, ipi
+gerip üçgen yaptım ama sonra durup tekrar bıraktım, bu da bir başlangıç şartı,
+durağan durumdan başlama şartı.
+
+$$
+\frac{\partial y} {\partial t}(x,t=0) =0
+$$
+
+Çözüme bu şartlarla başlayabilirdik ama baştaki problem tanımını hatırlarsak ek
+bazı şartlar daha koymuştuk, bu şartlar, kısıtlamalar her an için geçerli,
+ipler iki ucundan (hareket etmeyen) duvarlara bağlı.
+
+$$
+y(0,t) \equiv 0, \quad y(L,t) \equiv 0
+$$
+
+[analitik çözüm atlandı]
+
+Yaklaşıksal çözümü merkezi farklılıklar üzerinden yapacağız,
+
+\includegraphics[width=20em]{compscieng_app17wave_03.png}
+
+$x$ için sola/sağa, $t$ için yukarı/aşağı olacak şekilde iki Taylor açılımı
+yapıyoruz, sonra her değişkenin iki açılımıni birbiri ile topluyoruz,
+
+
+$$
+y(x +\Delta x, t)  = y(x,t) +
+\frac{\partial U}{\partial x}\Delta x + \frac{1}{2}
+\frac{\partial^2 U}{\partial x^2}(\Delta x)^2 + \cdots
+$$
+
+$$
+y(x -\Delta x, t)  = y(x,t) -
+\frac{\partial U}{\partial x} \Delta x + \frac{1} {2}
+\frac{\partial^2 U}{\partial x^2} (\Delta x)^2 - \cdots
+$$
+
+$$
+y(x, y +\Delta t)  = y(x,t) +
+\frac{\partial U}{\partial t}\Delta y + \frac{1}{2}
+\frac{\partial^2 U}{\partial t^2}(\Delta t)^2 + \cdots
+$$
+
+$$
+y(x, y -\Delta t) = y(x,t) -
+\frac{\partial U}{\partial t} \Delta t + \frac{1} {2}
+\frac{\partial^2 U}{\partial t^2} (\Delta t)^2 - \cdots
+$$
+
+Toplama sonrası tek sayı terimlerinin iptal olduğunu görürüz, ve kalanlar,
+
+$$
+\frac{\partial^2 y(x,t)}{\partial x^2} \simeq
+\frac{y(x+\Delta x,t)+y(x-\Delta x,t)-2 y(x,t)}{(\Delta x)^2}
+$$
+
+$$
+\frac{\partial^2 y(x,t)}{\partial t^2} \simeq
+\frac{y(x,t+\Delta t) +y(x, y-\Delta t)-2 y(x,t)}{(\Delta t)^2}
+$$
+
+olacaktır. İndişler üzerinden belirtirsek,
+
+
+$$
+\frac{\partial^2 y }{\partial t^2} \simeq
+\frac{y_{i,j+1}+y_{i,j-1}-2 y_{i,j}}{(\Delta t)^2}, \quad
+\frac{\partial^2 y}{\partial x^2} \simeq
+\frac{y_{i+1,j}+y_{i-1,j}-2 y_{i,j}} {(\Delta x)^2}.
+$$
+
+$$
+\frac{y_{i,j+1}+y_{i,j-1}-2 y_{i,j}} {c^2 (\Delta t)^2}  =
+\frac{y_{i+1,j}+y_{i-1,j}-2 y_{i,j}} {(\Delta x)^2}
+$$
+
+
+
+
+
+
+
+
+
 
 
 
@@ -114,22 +219,8 @@ Kaynaklar
 [4] Feldman, {\em Math 256, Differential Equations, Lecture Notes}
     \url{http://www.math.ubc.ca/~feldman/m256/}
 
-[5] Bayramli, {\em Normal Diferansiyel Denklemler Ders Notlari, Ekler, Trigonometri}
+[5] Bayramlı, {\em Normal Diferansiyel Denklemler Ders Notlari, Ekler, Trigonometri}
     
 \end{document}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

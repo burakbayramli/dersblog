@@ -24,75 +24,66 @@
 </script>
 </head>
 
-<p>Isı Denklemi</p>
-<p>Bu denklemi türetmek için "enerjinini muhafazası (conservation of
-energy)" kuralını kullanacağız. Bu muhafaza kuralını bir eşitliğe
-çevireceğiz, ve bu eşitliği manipüle ederek ortaya bir kısmi türevsel
-denklem (PDE) çıkartacağız. Baz aldığımız fiziksel ortam bir metal çubuk,
-ki bu çubukta materyel yoğunluğu her noktada aynı [5].  Formül şöyle;</p>
-<p>$[x,x+\Delta x]$ içindeki net ısı değişimi = Tanımlanan bölge
-sınırlarındaki net ısı akışı + $[x,x+\Delta x]$ içinde üretilen ısı miktarı</p>
-<p><img alt="" src="heat_1.png" /></p>
-<p>$[x,x+\Delta x]$ içindeki toplam ısıyı nasıl hesaplarız? Eğer $u(x,t)$
-metal çubuğun $x$ noktasında $t$ anındaki ısıyı veriyorsa, verilen kesit
-üzerinden bir entegral alırız,</p>
+<p>Dalgalar</p>
+<p>Diğer açıdan bir dalganın ne olduğunu anlamak ta faydalı olabilir. Matematiksel
+açıdan bir dalga hareket eden herhangi bir fonksiyondur. Ve bir fonksiyonu
+mesela sağa taşımak için ona geçilen değeri $x$'den $x-x_0$'a değiştirmek
+yeterlidir, ki $x_0$ pozitif bir sayı [5]. </p>
+<p><img alt="" src="compscieng_app45cfd1_07.png" /></p>
+<p>Degil mi? Bunu kendimiz kontrol edebiliriz,</p>
+<pre><code class="python">x = np.linspace(-5,5,100)
+y = -x**2 +3
+plt.plot(x,y)
+plt.grid(True)
+plt.xlim(-4,4)
+plt.ylim(-1,3)
+plt.savefig('compscieng_app45cfd1_08.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_08.png" /></p>
+<pre><code class="python">x = np.linspace(-5,5,100)
+x0 = 3
+y = -(x-x0)**2 +3
+plt.plot(x,y)
+plt.grid(True)
+plt.xlim(-4,4)
+plt.ylim(-1,3)
+plt.savefig('compscieng_app45cfd1_09.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app45cfd1_09.png" /></p>
+<p>Fonksiyonu $x_0$ kadar sağa taşımış olduk.</p>
+<p>Bu taşımanın zaman içinde sürekli sağa olacak şekilde olmasını isteseydik, yani
+bir "dalga" yaratmak isteseydik, o zaman $x_0 = v t$ kullanabilirdik, bu
+durumda zaman geçtikçe yer değişim artardı, böylece dalganın akma görüntüsü
+ortaya çıkardı.</p>
+<p>O zaman diyebiliriz ki $f(x-vt)$ ileri, ya da sağa doğru aktarılan (propagate)
+bir dalgayı temsil eder, $v$ dalga hızı olarak görülebilir. Dışarıdan parametre
+aktarımı karışıklık yaratıyorsa, dalgayı bir fonksiyon olarak göstermek için
+$u(x,t)$ tanımlarız [6, sf. 420], ve</p>
 <p>$$
-[x,x+\Delta x] \textit{ İçindeki Toplam Isı} = 
-cpA \int _{ x}^{x+\Delta x}u(s,t) \mathrm{d} s
+u(x,t) = (x - ct)
+\qquad (3)
 $$</p>
-<p>Tanımlanan bölge içindeki net ısı değimini ise alttaki ile hesaplarız,
-üstteki formülün zamana göre türevini alırız. </p>
+<p>$t=0$ anında dalganın "profili" $f(x)$, bu sağa taşınan şekildir, "bozulmadır
+(disturbence)". Önemli bir nokta üstteki tarif edilen taşımanın çarpıtma,
+kırılma olmadan gerçekleştiği, bu bariz ama yine de üzerinde basalım, fonksiyon
+ne ise o halde taşınıyor. Tüm dalgalar böyle değil, gerçek dünyada da böyle
+değil bildiğimiz gibi, üstteki lineer dalgalar, ya da lineer kısmı diferansiyel
+denklemlerin çözümü olan dalga profilleri bu şekilde davranıyor. Giderken
+kırılan, çarpıtmaya uğrayan dalgalar gayrı-lineer süreçlerin bir sonucu.</p>
+<p>Eğer üstteki denklemi sonuç olarak veren bir model görmek istersek, $u_x$ ve
+$u_t$ hesaplayabiliriz,</p>
 <p>$$
-\frac{d}{dt} \int _{ x}^{x+\Delta x} c\rho A u(s,t) \mathrm{d} s = 
-c\rho A  \int _{ x}^{x+\Delta x} u_t(s,t) \mathrm{d} s
+u_t = -v f'(x-ct), \quad  u_x = f'(x-ct), 
 $$</p>
-<p>Türevin entegral içine nüfuz ettiğini görüyoruz, sabit olan $c\rho A$ ise
-dışarı çıkartılıyor. Bu son ifade, enerji formülünün sol tarafı. Sağ tarafı
-şöyle ifade edilebilir</p>
-<p>$$ = kA [ u_x(x+\Delta x,t) - u_x(x,t)] A \int _{x}^{x+\Delta x} f(s,t) \mathrm{d} s $$</p>
-<p>Newton'un kuralı ısı akışının ısı fonksiyonunun uzaklıksal gradyanına
-(spatial gradient) orantılı olduğunu söyler. Uzaklıksal gradyan
-$u_x$'tır. Uzaklıksal gradyan, yani $u_x$, sonsuz küçük boyutta yanyana iki
-parçacağın ısı farkını verecektir. Bu farkı, $[x,x+\Delta x]$'in iki ucunda
-alırsak, yani farkların farkını bize gereken orantıyı verecektir. Sezgizel
-olarak bunun niye olduğunu anlamak için fizik kaynaklarına başvurmak
-faydalı olabilir. Formülün tamamı şöyle</p>
+<p>Buradan hareketle</p>
 <p>$$
-c\rho A  \int _{ x}^{x+\Delta x} u_t(s,t) \mathrm{d} s =
-kA [ u_x(x+\Delta x,t) - u_x(x,t)] A \int _{x}^{x+\Delta x} f(s,t) \mathrm{d} s 
-\qquad (1)
+u_t + c u_x = 0
 $$</p>
-<p>Bu noktada üstteki formülde entegrallerden kurtulmak istiyoruz. Ne
-yaparız?  Ortalama Değer Teoremi'en ihtiyacımız var, bu teori {\em
-  Calculus'un Temel Teoremi} yazısında işlendi. Teoriye göre, eğer $f(x)$
-bir $[a,b]$ aralığında sürekli ise o zaman en az bir $\xi$ olmalı, $a &lt;
-\xi &lt; b$ olacak şekilde ve</p>
-<p>$$ \int _{ a}^{b} f(x) \mathrm{d} x = f(\xi)(b-a)  $$</p>
-<p>doğru olmalıdır. Bu teoriyi (1)'e uygularsak,</p>
-<p>$$ c\rho A u_t(\xi_1,t)\Delta x = 
-kA[u_x(x+\Delta x, t) - u_x(x,t)] + 
-Af(\xi_2,t)\Delta x
- $$</p>
-<p>$$ x &lt; \xi &lt; x+\Delta x $$</p>
-<p>elde ederiz. $\xi_1,\xi_2$ yerine sadece $\xi$ kullanılabilir, sebebini
-altta göreceğiz, sonra iki tarafı $c\rho A \Delta x$'e bölersek</p>
-<p>$$
-u_t(\xi,t) =  \frac{k}{c\rho}
-\bigg[
-\frac{u_x(x+\Delta x,t) - u_x(x,t)} {\Delta x}
-\bigg]
-+ \frac{ 1}{c\rho}f(\xi,t)
-$$</p>
-<p>Şimdi </p>
-<p>$$ \Delta x \to 0 $$</p>
-<p>olsun, bu durumda üstteki büyük parantez içindeki bölüm bir kısmi türev
-haline gelecektir, $\xi \to x$ olacaktır, çünkü aralık öyle küçülüyor ki
-arada kalan $\xi$ değeri sadece $x$ olabilir.</p>
-<p>$$ u_t(x,t) = \alpha^2u_{xx}(x,t) + F(x,t) $$</p>
-<p>Ayrıca</p>
-<p>$$ \alpha^2 = \frac{k}{c\rho} $$</p>
-<p>$$ F(x,t) = \frac{1}{c\rho}f(x,t) $$</p>
-<p>eşitliklerini kullandık. </p>
+<p>eşitliğini kurabiliriz. Üstteki bir lineer kısmi diferansiyel denklem ve en
+basit dalga denklemi. Ona yatay iletim (advection) denklemi deniyor ve genel
+çözümü (3) ki $f$ turevi alinabilen herhangi bir fonksiyon.</p>
 <p>Dalga Denklemini Türetmek</p>
 <p>Alternatif</p>
 <p>Önce ip üzerinde titreşimlerin hareketi sonucu olan dalga denklemini
@@ -460,6 +451,75 @@ yerine $k$ kullanmış)</p>
 $$</p>
 <p>Yani bir parçacığın üzerindeki kuvvet sağındaki ve solundaki kuvvetlerin
 "toplamı" olarak görülüyor, bu formül de aynı kapıya çıkıyor.</p>
+<p>Isı Denklemi</p>
+<p>Bu denklemi türetmek için "enerjinini muhafazası (conservation of
+energy)" kuralını kullanacağız. Bu muhafaza kuralını bir eşitliğe
+çevireceğiz, ve bu eşitliği manipüle ederek ortaya bir kısmi türevsel
+denklem (PDE) çıkartacağız. Baz aldığımız fiziksel ortam bir metal çubuk,
+ki bu çubukta materyel yoğunluğu her noktada aynı [5].  Formül şöyle;</p>
+<p>$[x,x+\Delta x]$ içindeki net ısı değişimi = Tanımlanan bölge
+sınırlarındaki net ısı akışı + $[x,x+\Delta x]$ içinde üretilen ısı miktarı</p>
+<p><img alt="" src="heat_1.png" /></p>
+<p>$[x,x+\Delta x]$ içindeki toplam ısıyı nasıl hesaplarız? Eğer $u(x,t)$
+metal çubuğun $x$ noktasında $t$ anındaki ısıyı veriyorsa, verilen kesit
+üzerinden bir entegral alırız,</p>
+<p>$$
+[x,x+\Delta x] \textit{ İçindeki Toplam Isı} = 
+cpA \int _{ x}^{x+\Delta x}u(s,t) \mathrm{d} s
+$$</p>
+<p>Tanımlanan bölge içindeki net ısı değimini ise alttaki ile hesaplarız,
+üstteki formülün zamana göre türevini alırız. </p>
+<p>$$
+\frac{d}{dt} \int _{ x}^{x+\Delta x} c\rho A u(s,t) \mathrm{d} s = 
+c\rho A  \int _{ x}^{x+\Delta x} u_t(s,t) \mathrm{d} s
+$$</p>
+<p>Türevin entegral içine nüfuz ettiğini görüyoruz, sabit olan $c\rho A$ ise
+dışarı çıkartılıyor. Bu son ifade, enerji formülünün sol tarafı. Sağ tarafı
+şöyle ifade edilebilir</p>
+<p>$$ = kA [ u_x(x+\Delta x,t) - u_x(x,t)] A \int _{x}^{x+\Delta x} f(s,t) \mathrm{d} s $$</p>
+<p>Newton'un kuralı ısı akışının ısı fonksiyonunun uzaklıksal gradyanına
+(spatial gradient) orantılı olduğunu söyler. Uzaklıksal gradyan
+$u_x$'tır. Uzaklıksal gradyan, yani $u_x$, sonsuz küçük boyutta yanyana iki
+parçacağın ısı farkını verecektir. Bu farkı, $[x,x+\Delta x]$'in iki ucunda
+alırsak, yani farkların farkını bize gereken orantıyı verecektir. Sezgizel
+olarak bunun niye olduğunu anlamak için fizik kaynaklarına başvurmak
+faydalı olabilir. Formülün tamamı şöyle</p>
+<p>$$
+c\rho A  \int _{ x}^{x+\Delta x} u_t(s,t) \mathrm{d} s =
+kA [ u_x(x+\Delta x,t) - u_x(x,t)] A \int _{x}^{x+\Delta x} f(s,t) \mathrm{d} s 
+\qquad (1)
+$$</p>
+<p>Bu noktada üstteki formülde entegrallerden kurtulmak istiyoruz. Ne
+yaparız?  Ortalama Değer Teoremi'en ihtiyacımız var, bu teori {\em
+  Calculus'un Temel Teoremi} yazısında işlendi. Teoriye göre, eğer $f(x)$
+bir $[a,b]$ aralığında sürekli ise o zaman en az bir $\xi$ olmalı, $a &lt;
+\xi &lt; b$ olacak şekilde ve</p>
+<p>$$ \int _{ a}^{b} f(x) \mathrm{d} x = f(\xi)(b-a)  $$</p>
+<p>doğru olmalıdır. Bu teoriyi (1)'e uygularsak,</p>
+<p>$$ c\rho A u_t(\xi_1,t)\Delta x = 
+kA[u_x(x+\Delta x, t) - u_x(x,t)] + 
+Af(\xi_2,t)\Delta x
+ $$</p>
+<p>$$ x &lt; \xi &lt; x+\Delta x $$</p>
+<p>elde ederiz. $\xi_1,\xi_2$ yerine sadece $\xi$ kullanılabilir, sebebini
+altta göreceğiz, sonra iki tarafı $c\rho A \Delta x$'e bölersek</p>
+<p>$$
+u_t(\xi,t) =  \frac{k}{c\rho}
+\bigg[
+\frac{u_x(x+\Delta x,t) - u_x(x,t)} {\Delta x}
+\bigg]
++ \frac{ 1}{c\rho}f(\xi,t)
+$$</p>
+<p>Şimdi </p>
+<p>$$ \Delta x \to 0 $$</p>
+<p>olsun, bu durumda üstteki büyük parantez içindeki bölüm bir kısmi türev
+haline gelecektir, $\xi \to x$ olacaktır, çünkü aralık öyle küçülüyor ki
+arada kalan $\xi$ değeri sadece $x$ olabilir.</p>
+<p>$$ u_t(x,t) = \alpha^2u_{xx}(x,t) + F(x,t) $$</p>
+<p>Ayrıca</p>
+<p>$$ \alpha^2 = \frac{k}{c\rho} $$</p>
+<p>$$ F(x,t) = \frac{1}{c\rho}f(x,t) $$</p>
+<p>eşitliklerini kullandık. </p>
 <p>Kaynaklar</p>
 <p>[1] Bayramli, Hesapsal Bilim, Ders 2 </p>
 <p>[2] Landau, <em>Landau Computational Physics Course, Video Lectures</em>,

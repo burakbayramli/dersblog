@@ -93,11 +93,85 @@ arada kalan $\xi$ değeri sadece $x$ olabilir.</p>
 <p>$$ \alpha^2 = \frac{k}{c\rho} $$</p>
 <p>$$ F(x,t) = \frac{1}{c\rho}f(x,t) $$</p>
 <p>eşitliklerini kullandık. </p>
-<p>Dalga Denklemini Türetmek </p>
+<p>Dalga Denklemini Türetmek</p>
+<p>Alternatif</p>
+<p>Önce ip üzerinde titreşimlerin hareketi sonucu olan dalga denklemini
+türetelim. Bu türetimin bir şeklini üstte gördük, şimdi [2,3,4] bazlı olarak
+tekrar görelim.</p>
+<p>Bir ipte dalga onun salınımı ile oluşacak, ve bu salınım sırasında bir anda, tek
+bir fotoğraf karesinde görüntü alt soldaki gibi olabilir, </p>
+<p><img alt="" src="compscieng_app17wave_01.png" /></p>
+<p>İp iki tarafından hareket etmeyen yerlere bağlanmış (duvar mesela) uzunluk $L$,
+ip materyelinin yoğunluğu $\rho$, ki bu tüm ipin kütlesi bölü uzunluğu olarak ta
+görülebilir, bu örnekte sabit, ipin gerginliği kuvvet olarak $T$, bu da sabit,
+ve yerçekimi kuvvetine göre çok daha fazla böylece yerçekim ivmelenmesi $g$'yi
+yok sayabiliyoruz. Sürtünme yok. Tek boyutta bakıyoruz, $y(x,t)$ ipin bir $x$
+noktasındaki dikey yer değişimini gösteriyor.</p>
+<p>Denklemi ortaya çıkartmak için aslında Newton'un $F=ma$'sından daha fazlasına
+ihtiyacımız yok. Üst sağdaki resimde gösterildiği gibi tek bir sonsuç ufak
+bölgeye odaklanırsak, ya da alt resimde olduğu gibi,</p>
+<p><img alt="" src="compscieng_app17wave_02.png" /></p>
+<p>$F$ için gereken net kuvveti ipin iki yanyana noktası arasındaki gerginliğin
+dikey bileşenlerinin farkı olarak görebiliriz, yani $T(x+\Delta x,t)$ ve
+$T(x,t)$ kuvvetlerinin dikey bileşen farkı. İki noktadaki acılar da
+$\theta(x,t)$ ile gösteriliyor, $x+\Delta x$'teki acı $\theta(x+\Delta x)$. Bu
+dikey bileşenlerin farkını, ya da tüm $y$ kuvvetlerinin toplanını o zaman </p>
+<p>$$
+\sum F_y = T(x+\Delta x,t) \sin\theta(x+\Delta x,t) - T(x,t) \sin\theta(x,t)
+$$</p>
+<p>ile hesaplayabiliriz. Modeldeki faraziyeler isiginda biliyoruz ki $y/L$ cok
+kucuk, o zaman $\theta$ cok kucuk. Demek ki sinus ifadelerini
+basitlestirebiliriz, [6]'dan biliyoruz ki</p>
+<p>$$
+\sin\theta \approx \tan\theta = \partial y / \partial x
+$$</p>
+<p>Demek ki</p>
+<p>$$
+\sum F_y =
+T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
+T \frac{\partial y}{\partial x} \bigg\vert_{x}
+$$</p>
+<p>Son geldiğimiz noktada birinci türevler üzerinden bir $x$ farklılığı görüyoruz,
+bu bize bir türev işlemini daha hatırlatıyor, eğer $\Delta x$ ile bölünme de
+olsaydı, o zaman ikinci türev elde ettik diyebilirdik,</p>
+<p>$$
+\frac{
+T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
+T \frac{\partial y}{\partial x} \bigg\vert_{x}
+}{\Delta x} \approx T \frac{\partial^2 y}{\partial x^2}
+$$</p>
+<p>Fakat önemli değil, biraz masajlama yaparsak, </p>
+<p>$$
+T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
+T \frac{\partial y}{\partial x} \bigg\vert_{x} \approx
+T \frac{\partial^2 y}{\partial x^2} \Delta x 
+$$</p>
+<p>İstenilen sonucu elde ederiz, </p>
+<p>$$
+\sum F_y \approx T \frac{\partial^2 y}{\partial x^2} \Delta x
+$$</p>
+<p>Diğer taraftan $F=ma$ eşitliğinin sağ tarafına bakarsak, baktığımız ufak bölge
+için kütle $\rho\Delta x$, yatay ivmelenme ise $y$ yer değişiminin zamana göre
+ikinci kısmi türevi,</p>
+<p>$$
+\sum F_y = \rho \Delta x \frac{\partial^2 y}{\partial t^2}
+$$</p>
+<p>Bu son iki denklemi birbirine eşitlersek, $\Delta x$'ler iptal olur, </p>
+<p>$$
+T \frac{\partial^2 y}{\partial x^2}  =
+\rho \frac{\partial^2 y}{\partial t^2}
+$$</p>
+<p>Sabitleri sağ tarafa taşırsak, ve $c = \sqrt{T / \rho}$ tanımı üzerinden,</p>
+<p>$$
+\frac{\partial^2 y}{\partial x^2}  =
+\frac{1}{c^2}\frac{\partial^2 y}{\partial t^2}
+$$</p>
+<p>Dalga denklemini elde etmiş olduk.</p>
+<p>Alternatif Anlatım</p>
 <p>PDE'lerin ortaya çıkabileceği durumlardan biri, ayrıksal parçacıklardan oluşan
 bir sistemin limite gittiği andır. Bu tür şartlarda ODE'lerden oluşan bir sistem
 limite giderken bir PDE ortaya çıkartabiliyor. Süreklilik Mekanığinden
-(Continuum Mechanics) bir örnek vereceğiz yani.</p>
+(Continuum Mechanics) bir örnek vereceğiz yani [7].</p>
 <p>Sistem ayrıksal başlayacak, süreklilik limitine gidecek. Mesela sıvılar
 mekaniğinde (fluid mechanics) Euler denklemi, Navier-Stokes denklemleri sıvı
 sisteminin (şu gibi mesela) süreklilik limitidir. Bu denklemler sıvı içindeki
@@ -217,8 +291,7 @@ $$</p>
 <p>$$ Y_{i-1} = Y_i - \Delta x Y_i' + \frac{\Delta x^2}{2}Y_i" + ... 
 $$</p>
 <p>Not: Eşitliğin sağındaki eksi, artı işaretlerinin nereden geldiğini merak
-ediyorsak [1] notlarında $u(x-h)$ açılımına
-bakabiliriz.</p>
+ediyorsak [1] notlarında $u(x-h)$ açılımına bakabiliriz.</p>
 <p>Son iki formülü toplarsak</p>
 <p>$$ Y_{i+1} + Y_{i-1} = 2Y_i + \Delta x^2 Y_i"  + O(\Delta x^4)$$</p>
 <p>O zaman 2. türevin $x_i$'daki yaklaşıksallaması </p>
@@ -378,8 +451,8 @@ cW = f
 <p>$$ J = \xi_x\eta_y - \cancelto{0}{\xi_y}\eta_y $$</p>
 <p>$$ J = \eta_y \ne 0 $$</p>
 <p>Bir dahaki derste $\eta$'yi nasıl hesaplayacağımızı göreceğiz. </p>
-<p>[1] Diğer bir açıdan bakarsak, mesela matematikçi David Mumford
-türetirken ($i$ yerine $k$ kullanmış)</p>
+<p>Diğer bir açıdan bakarsak, mesela matematikçi David Mumford türetirken ($i$
+yerine $k$ kullanmış)</p>
 <p><img alt="" src="1_15.png" /></p>
 <p>$$ 
 \tau \bigg( \frac{Y_{i+1}- Y_i}{\Delta x} \bigg) +
@@ -387,79 +460,6 @@ türetirken ($i$ yerine $k$ kullanmış)</p>
 $$</p>
 <p>Yani bir parçacığın üzerindeki kuvvet sağındaki ve solundaki kuvvetlerin
 "toplamı" olarak görülüyor, bu formül de aynı kapıya çıkıyor.</p>
-<p>Alternatif</p>
-<p>Önce ip üzerinde titreşimlerin hareketi sonucu olan dalga denklemini
-türetelim. Bu türetimin bir şeklini üstte gördük, şimdi [2,3,4] bazlı olarak
-tekrar görelim.</p>
-<p>Bir ipte dalga onun salınımı ile oluşacak, ve bu salınım sırasında bir anda, tek
-bir fotoğraf karesinde görüntü alt soldaki gibi olabilir, </p>
-<p><img alt="" src="compscieng_app17wave_01.png" /></p>
-<p>İp iki tarafından hareket etmeyen yerlere bağlanmış (duvar mesela) uzunluk $L$,
-ip materyelinin yoğunluğu $\rho$, ki bu tüm ipin kütlesi bölü uzunluğu olarak ta
-görülebilir, bu örnekte sabit, ipin gerginliği kuvvet olarak $T$, bu da sabit,
-ve yerçekimi kuvvetine göre çok daha fazla böylece yerçekim ivmelenmesi $g$'yi
-yok sayabiliyoruz. Sürtünme yok. Tek boyutta bakıyoruz, $y(x,t)$ ipin bir $x$
-noktasındaki dikey yer değişimini gösteriyor.</p>
-<p>Denklemi ortaya çıkartmak için aslında Newton'un $F=ma$'sından daha fazlasına
-ihtiyacımız yok. Üst sağdaki resimde gösterildiği gibi tek bir sonsuç ufak
-bölgeye odaklanırsak, ya da alt resimde olduğu gibi,</p>
-<p><img alt="" src="compscieng_app17wave_02.png" /></p>
-<p>$F$ için gereken net kuvveti ipin iki yanyana noktası arasındaki gerginliğin
-dikey bileşenlerinin farkı olarak görebiliriz, yani $T(x+\Delta x,t)$ ve
-$T(x,t)$ kuvvetlerinin dikey bileşen farkı. İki noktadaki acılar da
-$\theta(x,t)$ ile gösteriliyor, $x+\Delta x$'teki acı $\theta(x+\Delta x)$. Bu
-dikey bileşenlerin farkını, ya da tüm $y$ kuvvetlerinin toplanını o zaman </p>
-<p>$$
-\sum F_y = T(x+\Delta x,t) \sin\theta(x+\Delta x,t) - T(x,t) \sin\theta(x,t)
-$$</p>
-<p>ile hesaplayabiliriz. Modeldeki faraziyeler isiginda biliyoruz ki $y/L$ cok
-kucuk, o zaman $\theta$ cok kucuk. Demek ki sinus ifadelerini
-basitlestirebiliriz, [6]'dan biliyoruz ki</p>
-<p>$$
-\sin\theta \approx \tan\theta = \partial y / \partial x
-$$</p>
-<p>Demek ki</p>
-<p>$$
-\sum F_y =
-T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
-T \frac{\partial y}{\partial x} \bigg\vert_{x}
-$$</p>
-<p>Son geldiğimiz noktada birinci türevler üzerinden bir $x$ farklılığı görüyoruz,
-bu bize bir türev işlemini daha hatırlatıyor, eğer $\Delta x$ ile bölünme de
-olsaydı, o zaman ikinci türev elde ettik diyebilirdik,</p>
-<p>$$
-\frac{
-T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
-T \frac{\partial y}{\partial x} \bigg\vert_{x}
-}{\Delta x} \approx T \frac{\partial^2 y}{\partial x^2}
-$$</p>
-<p>Fakat önemli değil, biraz masajlama yaparsak, </p>
-<p>$$
-T \frac{\partial y}{\partial x} \bigg\vert_{x+\Delta x} -
-T \frac{\partial y}{\partial x} \bigg\vert_{x} \approx
-T \frac{\partial^2 y}{\partial x^2} \Delta x 
-$$</p>
-<p>İstenilen sonucu elde ederiz, </p>
-<p>$$
-\sum F_y \approx T \frac{\partial^2 y}{\partial x^2} \Delta x
-$$</p>
-<p>Diğer taraftan $F=ma$ eşitliğinin sağ tarafına bakarsak, baktığımız ufak bölge
-için kütle $\rho\Delta x$, yatay ivmelenme ise $y$ yer değişiminin zamana göre
-ikinci kısmi türevi,</p>
-<p>$$
-\sum F_y = \rho \Delta x \frac{\partial^2 y}{\partial t^2}
-$$</p>
-<p>Bu son iki denklemi birbirine eşitlersek, $\Delta x$'ler iptal olur, </p>
-<p>$$
-T \frac{\partial^2 y}{\partial x^2}  =
-\rho \frac{\partial^2 y}{\partial t^2}
-$$</p>
-<p>Sabitleri sağ tarafa taşırsak, ve $c = \sqrt{T / \rho}$ tanımı üzerinden,</p>
-<p>$$
-\frac{\partial^2 y}{\partial x^2}  =
-\frac{1}{c^2}\frac{\partial^2 y}{\partial t^2}
-$$</p>
-<p>Dalga denklemini elde etmiş olduk.</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramli, Hesapsal Bilim, Ders 2 </p>
 <p>[2] Landau, <em>Landau Computational Physics Course, Video Lectures</em>,
@@ -469,3 +469,5 @@ $$</p>
     <a href="http://www.math.ubc.ca/~feldman/m256/">http://www.math.ubc.ca/~feldman/m256/</a></p>
 <p>[5] Murlow, <em>Partial Differential Equations for Scientists and Engineers</em>, sf. 27</p>
 <p>[6] Bayramlı, <em>Normal Diferansiyel Denklemler Ders Notlari, Ekler, Trigonometri</em></p>
+<p>[7] Mumford, <em>Chapter Ten: The Vibrating String and PDE's</em>,
+    <a href="https://www.dam.brown.edu/people/mumford/beyond/coursenotes/2006PartIIIa.pdf">https://www.dam.brown.edu/people/mumford/beyond/coursenotes/2006PartIIIa.pdf</a></p>

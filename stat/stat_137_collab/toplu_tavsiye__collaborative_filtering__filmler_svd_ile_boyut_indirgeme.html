@@ -287,7 +287,7 @@ print (ratings.userId.nunique(), ratings.movieId.nunique())
 
 <p>Büyük bir veri dosyası bu. Şimdi beğenilerden kullanıcı-film şeklinde olacak
 şekilde bir matris yaratacağız. Çoğu kişi çoğu filmi seyretmediği için matris
-seyrek olacak, bu sebeple seyrek matris kodu <code>csr_matris</code> kullanacağız, </p>
+seyrek olacak, bu sebeple seyrek matris kodu <code>csr_matrix</code> kullanılacak, </p>
 <pre><code class="python">from scipy.sparse import csr_matrix
 sps = csr_matrix((ratings.rating, (ratings.userId , ratings.movieId)))
 </code></pre>
@@ -351,7 +351,13 @@ print (movi[145])
 <p>Bu iyi bir tavsiye; ben beğeni listeme koymamıştım ama filmi biliyorum,
 ve aksiyon filmi olarak güzeldi.</p>
 <p>Nihai listeyi oluşturma, tekrarlananları, zaten seyredilmiş olanları filtreleme
-kodlarını ödev olarak okuyucuya bırakıyorum.</p>
+kodlarını ödev olarak okuyucuya bırakıyorum. Bazı tiyolar seyrek matris, ya da
+vektör üzerinde <code>nonzero</code> çağrısı içi dolu öğelerin indisini ve değerini
+döndürür, bunları kullanarak bir nihai tavsiye sonucu oluşturabiliriz.</p>
+<p>Not: Üstte hazır <code>cosine_similarity</code> çağrısı kullanıldı, bu kod bazı ek
+servisler sunuyor bize, mesela normalize etmek, seyrek matrislerle iş yapabilmek
+gibi. Fakat o fonksiyonun kodlamasının detayına baksak daha önce gösterdiğimiz
+<code>cos_sim</code> çağrısı ile benzer olduğunu görürdük.</p>
 <p>SVD</p>
 <p>Eğer boyut azaltma tekniği kullanmak istiyorsak SVD yöntemi burada da işimize
 yarar.</p>

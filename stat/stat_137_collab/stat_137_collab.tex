@@ -327,7 +327,7 @@ sps = csr_matrix((ratings.rating, (ratings.userId , ratings.movieId)))
 \end{minted}
 
 Artık \verb!sps! içinde kullanıcı-film kordinatlarından oluşan bilgiler
-var. Mesela 1'inci kullanıcının 307 film beğenisi için
+var. Mesela 1'inci kullanıcının 307'üncü film beğenisi için
 
 \begin{minted}[fontsize=\footnotesize]{python}
 print (sps[1,307])
@@ -337,10 +337,10 @@ print (sps[1,307])
 3.5
 \end{verbatim}
 
-Şimdi kendi beğenilerimi bir vektör üzerine kodlamanın zamanı geldi, böylece
-bu vektör ile tüm kullanıcı-film matrisi üzerinde bir kosinüs benzerliği
-hesaplayınca benim beğenilere en yakın olan diğer kullanıcıların mesafesini
-bir diğer vektör içinde elde edebileceğim.
+Şimdi kendi beğenilerimi bir vektör üzerine kodlamanın zamanı geldi, böylece bu
+vektör ile tüm kullanıcı-film matrisi üzerinde bir kosinüs benzerliği
+hesaplayınca bizim beğenilere en yakın olan diğer kullanıcıların mesafesini bir
+diğer vektör içinde edebiliriz.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 mov = pd.read_csv(base_dir + "/movies.csv",index_col="title")['movieId'].to_dict()
@@ -367,9 +367,9 @@ Bu vektörün büyüklüğü verideki kullanıcı sayısı kadar, bu mantıklı.
 Artık tavsiye vermek için bu kullanıcılara olan uzaklığa göre yakından uzağa
 göre vektörü sıralayacağız, \verb!argsort! ile sıralama yapınca bize sonuçlar
 indis vektörü olarak verilecek (yani en yakın öğenin indisi, indis vektöründe en
-sonda) böylece ben bu vektörü gezip en yakın kullanıcıları bulabiliriz, ve eğer
+sonda) böylece bu vektörü gezip en yakın kullanıcıları bulabiliriz, ve eğer
 istersek, onların en çok beğendiği filmleri toplayıp bir tavsiye listesi
-oluşturabileceğiz.
+oluşturabiliriz.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 m = np.argsort(similarities[:,0])

@@ -293,17 +293,17 @@ sps = csr_matrix((ratings.rating, (ratings.userId , ratings.movieId)))
 </code></pre>
 
 <p>Artık <code>sps</code> içinde kullanıcı-film kordinatlarından oluşan bilgiler
-var. Mesela 1'inci kullanıcının 307 film beğenisi için</p>
+var. Mesela 1'inci kullanıcının 307'üncü film beğenisi için</p>
 <pre><code class="python">print (sps[1,307])
 </code></pre>
 
 <pre><code>3.5
 </code></pre>
 
-<p>Şimdi kendi beğenilerimi bir vektör üzerine kodlamanın zamanı geldi, böylece
-bu vektör ile tüm kullanıcı-film matrisi üzerinde bir kosinüs benzerliği
-hesaplayınca benim beğenilere en yakın olan diğer kullanıcıların mesafesini
-bir diğer vektör içinde elde edebileceğim.</p>
+<p>Şimdi kendi beğenilerimi bir vektör üzerine kodlamanın zamanı geldi, böylece bu
+vektör ile tüm kullanıcı-film matrisi üzerinde bir kosinüs benzerliği
+hesaplayınca bizim beğenilere en yakın olan diğer kullanıcıların mesafesini bir
+diğer vektör içinde edebiliriz.</p>
 <pre><code class="python">mov = pd.read_csv(base_dir + &quot;/movies.csv&quot;,index_col=&quot;title&quot;)['movieId'].to_dict()
 picks = {&quot;Swordfish (2001)&quot;: 5.0, &quot;Every Which Way But Loose (1978)&quot;: 5.0,
          &quot;Sideways (2004)&quot;: 5.0}
@@ -324,9 +324,9 @@ print (similarities.shape)
 <p>Artık tavsiye vermek için bu kullanıcılara olan uzaklığa göre yakından uzağa
 göre vektörü sıralayacağız, <code>argsort</code> ile sıralama yapınca bize sonuçlar
 indis vektörü olarak verilecek (yani en yakın öğenin indisi, indis vektöründe en
-sonda) böylece ben bu vektörü gezip en yakın kullanıcıları bulabiliriz, ve eğer
+sonda) böylece bu vektörü gezip en yakın kullanıcıları bulabiliriz, ve eğer
 istersek, onların en çok beğendiği filmleri toplayıp bir tavsiye listesi
-oluşturabileceğiz.</p>
+oluşturabiliriz.</p>
 <pre><code class="python">m = np.argsort(similarities[:,0])
 print (sps[m[-10],:])
 </code></pre>

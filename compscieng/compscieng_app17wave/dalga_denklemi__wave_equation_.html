@@ -323,6 +323,8 @@ ten = 40.;
 c = np.sqrt(ten/rho)               
 c1 = c;
 ratio =  c*c/(c1*c1)  # CFL kriteri = 1
+# dongunun her adiminda sadece uc zaman dilimi yeterli, o sebeple
+# xi [_,3] boyutunda. 
 xi = np.zeros((101,3), float)                            
 k = range(0,101)
 
@@ -345,6 +347,7 @@ for j in range(100):
       plt.plot(k,xi[k,2])
       plt.savefig('/tmp/string-%02d.png' % j)
       plt.clf()
+   # bitti, 1,2 indisi yeni 0,1 olacak
    for m in range (0,101):
       xi[m, 0] = xi[m, 1]
       xi[m, 1] = xi[m, 2]

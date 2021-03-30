@@ -1,0 +1,223 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Ders 1.3</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ders 1.3
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Konumuz $Au = b$ sistemini çözmek. Bu çözüm için Python'da
+<code>linalg.solve</code> çağrısı var. Mesela</p>
+<pre><code class="python">import scipy.linalg
+A = [[2,3,4],[5,5,6],[7,7,7]]
+b = [1,2,3]
+u = scipy.linalg.solve(A, b)
+print u
+</code></pre>
+
+<pre><code>[ 0.14285714  0.42857143 -0.14285714]
+</code></pre>
+
+<p><code>linalg.solve</code> çağrısı Matlab'de <code>çağrısının karşılığı,
+oradaki kullanım u = A</code> b şeklinde. </p>
+<p>Eğer elimizde ikinci bir <code>c</code> vektörü var ise, ve eşitliğin sağ
+tarafında <code>b</code> sonrası onu kullanmak istiyorsak ayrı ayrı <code>solve</code>
+komutlarına gerek yoktur. Her iki vektörü birbirine ekleyerek,
+<code>solve</code>'u toplu halde çağırabiliriz, bu performans açısından daha iyi
+olur. </p>
+<pre><code class="python">c = [2,3,8]
+bc = np.vstack((b,c)).T
+u = scipy.linalg.solve(A,  bc)
+print u
+</code></pre>
+
+<pre><code>[[ 0.14285714 -1.28571429]
+ [ 0.42857143  5.14285714]
+ [-0.14285714 -2.71428571]]
+</code></pre>
+
+<p>Python <code>vstack</code> komutu iki matrisi üst üste koymak için kullanılır.</p>
+<p>Her iki çözüm beraber olarak geri gelecektir. Bu niye daha hızlı? Çünkü
+Python'un çözücüsü daha eşitliğin sağ tarafına bile gelmeden sadece
+<code>A</code>'ya bakarak bir sürü işlem gerçekleştiriyor, eliminasyon yaparak
+<code>A</code>'yı üçgensel hale getirmek gibi. Bu tür işlemleri gereksiz kere iki
+kere yapmak pahalı olurdu.</p>
+<p>Eğer $A$ karesel değilse, ama biz her iki durumda da işleyen bir komut
+istiyorsak, <code>np.linalg.lstsq(A,b)</code> kullanabiliriz. </p>
+<p>Soru: matematiksel olarak $u$'yu bulmak </p>
+<p>$$ Au = b $$</p>
+<p>$$ u = A^{-1}b $$</p>
+<p>demektir. Peki Python bu hesap için gerçekten $A^{-1}$'i hesaplar mı?</p>
+<p>Hayır. Çünkü büyük problemler için matris tersini hesaplamak oldukça
+pahalıdır. Ayrıca $A$ matrisi zaten üçlü köşegen (tridiagonal) bir halde
+olabilir, ve cevap zaten hazır haldedir, bu noktada ters alma işlemi
+gereksiz olurdu. </p>
+<p>Biraz zihin egzersizi yapalım. Eğer şöyle bir komut kullansam ne elde
+ederim (ki <code>I</code> matrisi birim matrisi) ?</p>
+<pre><code class="python">solve(A, I)
+</code></pre>
+
+<p>Cevap, tabii ki $A$'nin tersini elde ederim, yani $A^{-1}$ çünkü $AA^{-1} =I$,
+sağ tarafta birim matrisi var ise çözüm sadece $A^{-1}$ olabilir.</p>
+<p>$$ 
+A 
+\left[\begin{array}{rrr}
+u_1 &amp; u_2 &amp; u_3
+\end{array}\right]
+=
+\left[\begin{array}{rrr}
+1 &amp; 0 &amp; 0\\
+0 &amp; 1 &amp; 0\\
+0 &amp; 0 &amp; 1
+\end{array}\right]
+ $$</p>
+<p>Bu probleme bakmanın değişik bir yolu: sağ taraftaki birim matrisi içindeki
+[1 0 0] gibi değerler içindeki 1 değerlerini birer zıplama (impulse) anı
+gibi görmek, sanki elimizde bir düz [0 0 .. 0] bir veri var, içinde tek
+zıplama olan yer orası, ve bu [1 0 0], [0 1 0], .. içinde tek zıplama olan
+veriler "işlenerek" bize $u_1$, $u_2$, .. gibi sonuçları veriyorlar. </p>
+<p>Elle $A$'nin tersini bulmak için ne yapardık? Bir blok matrisi yaratırdık,
+<code>[A İ]</code>, yani 3x3 ve 3x3 iki matrisi yanyana koyup 3x6 boyutunda yeni
+bir matris elde ederdik, ve bu matriste $A$ üzerinde eliminasyon, pivotları
+sıfırlama gibi numaraları kullanarak onu birim matrise çevirirdik, bu arada
+aynı operasyonları tabii ki $I$ üzerinde uygulardık. En sonunda $A$ birim
+olunca $I$ $A^{-1}$'e dönüşmüş olurdu!</p>
+<p>Şimdi biraz büyük resme bakalım. </p>
+<p>Lineer cebirin 4 büyük problemi Python komutları ile beraber şunlardır:</p>
+<p>1) Eliminasyon, 
+<code>scipy.linalg.lu(A)</code> $A = LU$</p>
+<p>2) Dikgenleştirme (orthogonalization), 
+<code>scipy.linalg.qr(A)</code>, $A = QR$</p>
+<p>3) Özdeğerler (eigenvalues), 
+<code>scipy.linalg.eig(A)</code> $A = SAS^{-1}$</p>
+<p>4) Eşsiz değerler (singular values), 
+<code>scipy.linalg.svd(A)</code> $A = U \Sigma V^{T}$</p>
+<p>Eliminasyon ne yapar? Dikkat edersek aslında bu işlemin bir alt üçgensel
+(lower triangular) matris ($L$) ve bir tane de üst üçgensel matris ($U$)
+ortaya çıkardığını görürüz. Şimdi alttaki matris üzerinde eliminasyon
+yapalım ve bu arada tersini de bulmuş olalım. </p>
+<p>$$
+\left[\begin{array}{rrr}
+1 &amp; -1 &amp; 0 \\
+-1 &amp; 2 &amp; -1 \\
+0 &amp; -1 &amp; 2 
+\end{array}\right]
+$$</p>
+<p>Eliminasyon işlemlerini yapalım (pivotlar öğeleri parantez içinde)</p>
+<p>$$
+\left[\begin{array}{rrr}
+(1) &amp; -1 &amp; 0 \\
+-1 &amp; 2 &amp; -1 \\
+0 &amp; -1 &amp; 2
+\end{array}\right]
+\to
+\left[\begin{array}{rrr}
+(1) &amp; -1 &amp; 0 \\
+0 &amp; (1) &amp; -1 \\
+0 &amp; 0 &amp; (1)
+\end{array}\right] = U
+$$</p>
+<p>$$ l_{21} = -1 \quad l_{31} = 0 \quad l_{32} = -1 $$</p>
+<p>$$
+L = \left[\begin{array}{rrr}
+1 &amp; 0 &amp; 0 \\ -1 &amp; 1 &amp; 0 \\ 0 &amp; -1 &amp; 1
+\end{array}\right]
+$$</p>
+<p>$l_{21} = -1$ yapılan ilk işlemi kodluyor, 1. satırı -1 ile çarp ve
+2. satırdan çıkart anlamına geliyor. Diğerlerini de sırasıyla görüyoruz ve
+bu işlemlerin sonucunda üst üçgensel matris $U$'yu elde ediyoruz. Tüm $l$
+değerlerini bir araya koyup $L$'yi elde edebiliriz. Bir tane daha yapalım:</p>
+<p>$$
+\left[\begin{array}{rrr}
+2 &amp; -1 &amp; \\ -1 &amp; 2 &amp; -1 \\ &amp; -1 &amp; 2
+\end{array}\right]
+\to
+\left[\begin{array}{rrr}
+2 &amp; -1 &amp; 0 \\ 0 &amp; 3/2 &amp; -1 \\ 0 &amp; 0 &amp; 4/3
+\end{array}\right] = U
+$$</p>
+<p>$$ l_{21}=-\frac{1}{2}, \quad
+l_{31} = 0, \quad
+l_{32} = -\frac{2}{3}
+$$</p>
+<p>$$ L =
+\left[\begin{array}{ccc}
+1 &amp;  &amp;  \\ -1/2 &amp; 1 &amp;  \\ 0 &amp; -2/3 &amp; 1
+\end{array}\right] 
+$$</p>
+<p>Eğer eşsiz (singular) bir matris üzerinde eliminasyon yapsak, bu işlemi
+nasıl etkilerdi? </p>
+<p>$$
+\left[\begin{array}{rrr}
+(1) &amp; -1 &amp; 0 \\ -1 &amp; 2 &amp; -1 \\ 0 &amp; -1 &amp; 1
+\end{array}\right]
+\to
+\left[\begin{array}{rrr}
+(1) &amp; -1 &amp; 0 \\ 0 &amp; (1) &amp; -1 \\ 0 &amp; 0 &amp; (0)
+\end{array}\right] 
+$$</p>
+<p>Yani bu durumda 3 tane pivot elde edemezdik, sağ alt köşedeki değer
+eliminasyon sırasında 0 olurdu, ve sağ matris, aynen sol matris gibi, eşsiz
+olurdu. Bu işimize yaramazdı. </p>
+<p>İki üstteki probleme dönelim: Burada ilk matris simetrik idi, ama $L$ ve $U$
+matrisi artık simetrik değil. Simetriyi geri getirebilir miyiz? $U$ içinden
+sadece çaprazları çekip çıkartalım</p>
+<p>$$
+\left[\begin{array}{rrr}
+(2) &amp; -1 &amp; 0 \\
+0 &amp; (3/2) &amp; -1 \\
+0 &amp; 0 &amp; (4/3)
+\end{array}\right] = U =
+\left[\begin{array}{rrr}
+2 &amp; &amp; \\ &amp; 3/2 &amp; \\ &amp; &amp; 4/3
+\end{array}\right] 
+\left[\begin{array}{rrr}
+1 &amp; -1/2 &amp; 0 \\ 0 &amp; 1 &amp; -2/3 \\ 0 &amp; 0 &amp; 1
+\end{array}\right]
+$$</p>
+<p>Böylece çaprazında
+$\left[\begin{array}{ccc} 2 &amp; 3/2 &amp; 4/3 \end{array}\right]$ olan bir matris
+elde ettik. Peki bu matrisin çarptığı (onun hemen sağında) içinden
+çaprazları çekip çıkardığımız matristen geri kalanlar tanıdık geliyor mu?
+Evet, bu matris te $L^T$'e eşit. Demek ki $LU = LDL^T$ gibi bir ifade
+mümkün.</p>
+<p>Biliyoruz ki </p>
+<p>$K = LDL^T$</p>
+<p>ifadesinde $K$ her zaman simetriktir. Ters yönden söylersek, herhangi bir
+simetrik $K$ matrisini alıp eliminasyon yaparsam ve $L$ ve $D$ elde edince,
+$L^T$ ile çarpabilirim. </p>
+<p>Peki şunu ispat edebilir miyiz? Herhangi bir $L$ ve çapraz $D$ var ise,
+$LDL^T$ her zaman simetrik midir? Bir matrisin simetrik olması demek
+kendi devriğine (transpose) eşit olması demektir. Yani </p>
+<p>$$ K = LDL^T $$</p>
+<p>$$ K^T = (LDL^T)^T $$</p>
+<p>Devriği alınca parantez içindeki çarpımların sırası değişir.</p>
+<p>$$ = (L^T)^TD^TL^T $$</p>
+<p>$D^T = D$ çünkü $D$ zaten köşegen bir matris, önemli tüm değerleri
+çaprazında ve devrik işlemi bu durumu değiştirmiyor. O zaman</p>
+<p>$$ = LDL^T $$ </p>
+<p>Tekrar başladığımız noktaya döndük. Demek ki başladığımız matris
+simetriktir. İspat tamamlandı. </p>
+<p>Genele dönelim: $A^TA$'nin mesela karesel olduğunu biliyorduk ($n \times m$ ile
+$m \times n$ çarpılınca $n \times n$ boyutu elde edilir). Şimdi bunun üzerine
+simetrik olduğunu da artık biliyoruz, üstte ispatladık.</p>
+<p>Kural: Simetrik matrislerin tersi (inverse) de simetriktir. O zaman
+$K^{-1}$ de simetriktir. </p>

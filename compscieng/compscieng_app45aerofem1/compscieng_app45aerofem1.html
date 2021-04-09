@@ -1,0 +1,58 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Sıvı Dinamiğinde Sonlu Hacim Metotu - 1</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sıvı Dinamiğinde Sonlu Hacim Metotu - 1
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Ağırlıklı Artıklar Metotu (Weighted Residual Method)</p>
+<p>Önceki derste iyi koşullu bir sistemi elde etmeyi gördük, bu kötü koşullu (ill
+conditioned) olmanın tersi tabii. Bu derste AAM'yi kurmayı göreceğiz, ki bu
+metot aslında kapsayıcı bir tarif, altında farklı hesap yöntemleri de
+olabiliyor, AAM'nin kendisi hata kontrolünü nasıl yapacağımızı tarif ediyor.</p>
+<p>Basit bir problemle başlayalım. Laplace formülü mesela, iki boyutu baz alalım,
+ama birazdan göreceğimiz fikirler 1D ya da 3D için de geçerli. Problem bölgesi
+(domain) $\Omega$ olsun onun sınırları $\Gamma$, </p>
+<p><img alt="" src="compscieng_app45aerofem1_01.png" /></p>
+<p>İlgilendiğimiz alan (field) $T(x,y)$, bu reel değerli bir fonksiyon, ve
+kurduğumuz sistem için bu fonksiyonun şu şartlara tabi olmasını istiyoruz,</p>
+<p>$$
+\nabla^2 T = 0 \quad \Omega \textrm{ üzerinde } 
+$$</p>
+<p>$$
+\Gamma \textrm{ için } T = T_0
+$$</p>
+<p>Bu tur problemlere Drichlet problemleri deniyor.</p>
+<p>Üstteki şartları yerine getiren bir $T(x,y)$ çözümü bulmak istiyoruz. O zaman
+ilk akla gelen nedir? Diferansiyel denklemi alıyorum ve $\Omega$ içindeki tüm
+noktalar için çözmeye uğraşıyorum. Fakat bu kolay değil. Ayrıca $\Omega$'daki
+eşitlik $\Gamma$ sınırında geçerli değil, ikinci şart sebebiyle. Bu arada
+matematiksel olarak çözüm nedir? $\Omega$'daki sonsuz tane nokta için geçerli
+olan şeydir. Buna kesin çözüm (exact solution) deniyor. </p>
+<p>Fakat bu çözümü bulmak mümkün değilse, ya da yaklaşık bir çözüm de yeterli
+oluyorsa o zaman yaklaşık yöntemler kullanabilirim.. $\nabla^2 T = 0 $ eşitliği
+$\Omega$'daki her nokta için değil belli noktalar için, her $\Gamma$ noktasında
+değil, belli noktalarda sınır şartı tatmin edilebilir diyebilirim.</p>
+<p>"Belli noktalarda" deyince iş bitmiyor, o seçilmiş noktalarda kesin çözüm mü
+yapsam, yoksa o noktalarda da yaklaşık çözüm yapsam? Ya da tüm noktalarda
+yaklaşık çözüm üzerinden bir hata hesaplayalım, tüm seçilmiş noktalarla 
+hesaplanan ortalama bir hatanın azaltılması için mu uğraşsam?</p>

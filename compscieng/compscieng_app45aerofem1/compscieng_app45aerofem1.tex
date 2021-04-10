@@ -2,12 +2,12 @@
 \begin{document}
 Sıvı Dinamiğinde Sonlu Hacim Metotu - 1
 
-Ağırlıklı Artıklar Metotu (Weighted Residual Method)
+Ağırlıklı Artıklar Metotu (Weighted Residual Method -WRM-)
 
 Önceki derste iyi koşullu bir sistemi elde etmeyi gördük, bu kötü koşullu (ill
-conditioned) olmanın tersi tabii. Bu derste [1] AAM'yi kurmayı göreceğiz, ki bu
+conditioned) olmanın tersi tabii. Bu derste [1] WRM'yi kurmayı göreceğiz, ki bu
 metot aslında kapsayıcı bir tarif, altında farklı hesap yöntemleri de
-olabiliyor, AAM'nin kendisi hata kontrolünü nasıl yapacağımızı tarif ediyor.
+olabiliyor, WRM'nin kendisi hata kontrolünü nasıl yapacağımızı tarif ediyor.
 
 Basit bir problemle başlayalım. Laplace formülü mesela, iki boyutu baz alalım,
 ama birazdan göreceğimiz fikirler 1D ya da 3D için de geçerli. Problem bölgesi
@@ -90,14 +90,61 @@ verir. Sınır koşulunu denklem doğal olarak karşıladığı için orada zate
 yok. Yani tanım itibariyle sınırda hata sıfır, ve sınırlar içinde muhtemel
 olarak sıfır olmayan bir değerde.
 
+Şimdi $c_i$'lerin bulunmasına gelelim, yaklaşık temsil onlar üzerinden mümkün
+olacak. $N$ tane $c_i$ bilinmiyor o zaman bir şekilde $N$ tane denklem üretmem
+lazım, ki onları çözerek bilinmeyenleri elde edeyim. WRM burada devreye giriyor.
 
+Agirlikli artiklar dedik, agirliklardan da (dikkat $c_i$ katsayilarindan, ve
+test fonksiyonlarindan farkli bu) da $N$ tane var, $N$ tane fonksiyon. Onlari
+$j$ ile indisleyebiliriz, $w_j$, $j=1,...,N$. Artiklari soyle agirlikliyoruz,
 
+$$
+\int_\Omega w_j R \ud \Omega
+$$
 
+Biraz önce söylediğimiz artığın sıfır olma hedefini biraz genişletip
+ağırlıklanmış artığın sıfır olması haline getiriyoruz. O zaman $N$ tane denklemi
+şöyle üretiriz,
 
+$$
+j=1,\quad
+\int_\Omega w_1 (x,y) \left[
+  \nabla^2 T_0 + \sum _{i=1}^{N} c_i \nabla^2 T_i(x,y) 
+  \right] \ud \Omega
+$$
 
+$$
+j=2,\quad
+\int_\Omega w_2 (x,y) \left[
+  \nabla^2 T_0 + \sum _{i=1}^{N} c_i \nabla^2 T_i(x,y) 
+  \right] \ud \Omega
+$$
 
+$$
+\vdots
+$$
 
+$$
+j=N,\quad
+\int_\Omega w_N (x,y) \left[
+  \nabla^2 T_0 + \sum _{i=1}^{N} c_i \nabla^2 T_i(x,y) 
+  \right] \ud \Omega
+$$
 
+Böylece $N$ tane bilinmeyen için $N$ tane formül elde ettim, ve bu şekilde
+çözümü yapabilirim.
+
+$w_j$'ler ne yapıyor? Başta hataların ortalamasından bahsetmiştik hatırlarsak,
+her $w_j$ bir nevi ortalamadır, ama her $j$ icin farkli bir ortalama sekli
+secebiliriz, mesela alttaki resimde
+
+\includegraphics[width=10em]{compscieng_app45aerofem1_02.png}
+
+karalanmış kısma daha fazla ağırlık ver diyebiliriz, vs. Genel anlamda
+hatırlarsak mesela üç sayı A,B,C ortalaması demek aslında her sayının 1/3
+``ağırlığı'' ile çarpılıp, toplanması ve sonucun 3'e bölünmesi demektir. Bu
+ağırlıkları değiştirebiliriz, o zaman farklı bir ortalama elde ederiz, mesela
+1/2, 1/4, 1/4 kullansam A'ya daha fazla ağırlık vermiş olurdum.
 
 
 

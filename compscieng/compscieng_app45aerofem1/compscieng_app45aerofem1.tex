@@ -37,28 +37,28 @@ olan şeydir. Buna kesin çözüm (exact solution) deniyor.
 
 Fakat bu çözümü bulmak mümkün değilse, ya da yaklaşık bir çözüm de yeterli
 oluyorsa o zaman yaklaşık yöntemler kullanabilirim.. $\nabla^2 T = 0 $ eşitliği
-$\Omega$'daki her nokta için değil belli noktalar için, her $\Gamma$ noktasında
-değil, belli noktalarda sınır şartı tatmin edilebilir diyebilirim.
+$\Omega$'daki her nokta için, her $\Gamma$ sınır şartında değil belli seçilmiş
+noktalarda olsun diyebilirim.
 
-``Belli noktalarda'' deyince iş bitmiyor, o seçilmiş noktalarda kesin çözüm mü
-yapsam, yoksa o noktalarda da yaklaşık çözüm yapsam? Ya da tüm noktalarda
-yaklaşık çözüm üzerinden bir hata hesaplayalım, tüm seçilmiş noktalarla 
+Ama ``belli noktalarda'' deyince de iş bitmiyor, o seçilmiş noktalarda kesin
+çözüm mü yapsam, yoksa o noktalarda da yaklaşık çözüm yapsam? Ya da tüm
+noktalarda yaklaşık çözüm üzerinden bir hata hesaplayıp, tüm seçilmiş noktalarla
 hesaplanan ortalama bir hatanın sıfır olması için mi uğraşsam?
 
 Şöyle bir yöntem deneyelim; elimizde / verili belli bir baz fonksiyon ``sınıfı''
 olsun, bu fonksiyonlar Fourier bazı $\sin$, $\cos$ olabilir, ya da Chebisev
-polinomları olabilir, bu ``test'' fonksiyonları $T_i(x,y)$ içinde olsun, ki
+polinomları olabilir. Bu ``test'', baz fonksiyonları $T_i(x,y)$ içinde,
 $i=1,2,...,N$, ve nihai $T$'yi
 
 $$
 T = T_0 + \sum _{i=1}^{N} c_i T_i(x,y)
 $$
 
-ile hesaplayabilirim, $c_i$'ler başta bilmediğim katsayı değerleri. Bilinen /
+ile hesaplayayım, $c_i$'ler başta bilmediğim katsayı değerleri olsun. Bilinen /
 verili test fonksiyonları üzerinden doğru $c_i$'leri bulursam bu beni gerçek
-fonksiyon $T$'ye yaklaştırır. Üstteki toplamda $T_0$ terimi özellikle o
-şekilde formüle dahil edildi, $T_i$'lerin sınırda sıfır olmasını
-ayarlayabilirsem, $T=T_0$ şartını o şekilde tatmin etmiş olurum.
+fonksiyon $T$'ye yaklaştırır. Üstteki toplamda $T_0$ terimi özellikle o şekilde
+formüle dahil edildi, $T_i$ toplamının sınırda sıfır olmasını ayarlayabilirsem,
+$T=T_0$ şartını otomatik olarak tatmin etmiş olurum.
 
 $N$ sayısına dikkat, gerçek fonksiyonu aşağı yukarı temsil etmek istesem $N$'yi
 az tutardım, birkaç tane temel fonksiyon birleşimi.. Ama $N$'i arttırarak, hatta
@@ -68,8 +68,8 @@ kontrol edecektir. $N$ arttıkça hata azalır, yaklaşıklama gerçeğe yaklaş
 Bir ödünleşim (trade-off) durumu var muhakkak, çok büyük $N$ hesaplaması zor
 olan bir sistem ortaya çıkartabilir, vs.
 
-Bu bizi hata tanimina getiriyor. Onu artik (residual) uzerinden tanimlayacagiz,
-artik $R$,
+Bu bizi hata tanımına getiriyor. Onu gerçek ve yaklaşık değerler arasındaki
+fark, ``artık'' (residual) üzerinden tanımlayacağız, artık $R$,
 
 $$
 R(c_i,x,y) = \nabla^2 T
@@ -78,11 +78,17 @@ $$
 Bu kadar basit. Niye artığı direk $\nabla^2 T$'e eşitlemek yeterli? Çünkü ana
 formüle bakarsak $\nabla^2 T$ ideal durumda sıfır olmalı değil mi?  Ama
 yaklaşıklama mükemmel olmadığı için sıfırdan farklı (fakat umuyoruz ki ona
-yakın) değerler döndürecektir, o zaman bu değeri alıp direk hata, artık olarak
-kullanabiliriz.
+yakın) değerler döndürecektir, o zaman bu değeri alıp direk hata / artık değeri
+olarak kullanabiliriz. O zaman
 
+$$
+R(c_i,x,y) = T_0 + \sum _{i=1}^{N} c_i T_i(x,y)
+$$
 
-
+diyelim. Üstteki denklem bana her veri noktası, belli bir $x,y$ için olan hatayı
+verir. Sınır koşulunu denklem doğal olarak karşıladığı için orada zaten hata
+yok. Yani tanım itibariyle sınırda hata sıfır, ve sınırlar içinde muhtemel
+olarak sıfır olmayan bir değerde.
 
 
 

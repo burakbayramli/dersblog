@@ -1,0 +1,168 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Sıvı Dinamiğinde Sonlu Öğeler (Finite Elements) Metotu - 1</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sıvı Dinamiğinde Sonlu Öğeler (Finite Elements) Metotu - 1
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Fonksiyonların İç Çarpımı (Inner Product)</p>
+<p>Vektörlerden bildiğimiz çoğu tekniği fonksiyonlara uygulamak mümkündür [3].
+Elimizde $f(x), g(x), ...$ reel değerli, $\alpha \le x \le \beta$ aralığında
+tanımlı fonksiyonları olduğunu düşünelim, bu fonksiyonlar bir reel vektör uzayı
+oluştururlar. Şimdi $(f,g)$ iç çarpımını düşünelim, ki bu çarpım tanımı</p>
+<p>$$
+(f,g) = \int _{\alpha}^{\beta} f(x) g(x) \mathrm{d} x
+$$</p>
+<p>olsun. Üstteki bizim tanımımız tabii, başkaları ekler yapabilirler, mesela
+bazıları iç çarpıma bir ağırlıklama fonksiyonu $w$ ekliyorlar, yani üstteki
+entegralde $f,g$ ve $w$ capriliyor. Bizim dersimizin amaçları için biz
+gördüğümüz tanımla yetineceğiz.</p>
+<p>Ustteki entegral lineer. Simetrik oldugu bariz. Ayrica kesin arti (positive
+definite) ozelligi de var.</p>
+<p>Ağırlıklı Artıklar Metotu (Weighted Residual Method -WRM-)</p>
+<p>Önceki derste iyi koşullu bir sistemi elde etmeyi gördük, bu kötü koşullu (ill
+conditioned) olmanın tersi tabii. Bu derste [1] WRM'yi kurmayı göreceğiz, ki bu
+metot aslında kapsayıcı bir tarif, altında farklı hesap yöntemleri de
+olabiliyor, WRM'nin kendisi hata kontrolünü nasıl yapacağımızı tarif ediyor.</p>
+<p>Basit bir problemle başlayalım. Laplace formülü mesela, iki boyutu baz alalım,
+ama birazdan göreceğimiz fikirler 1D ya da 3D için de geçerli. Problem bölgesi
+(domain) $\Omega$ olsun onun sınırları $\Gamma$, </p>
+<p><img alt="" src="compscieng_app45aerofem1_01.png" /></p>
+<p>İlgilendiğimiz alan (field) $T(x,y)$, bu reel değerli bir fonksiyon, ve
+kurduğumuz sistem için bu fonksiyonun şu şartlara tabi olmasını istiyoruz,</p>
+<p>$$
+\nabla^2 T = 0 \quad \Omega \textrm{ üzerinde } 
+$$</p>
+<p>$$
+\Gamma \textrm{ için } T = T_0
+$$</p>
+<p>Bu tur problemlere Drichlet problemleri deniyor.</p>
+<p>Üstteki şartları yerine getiren bir $T(x,y)$ çözümü bulmak istiyoruz. O zaman
+ilk akla gelen nedir? Diferansiyel denklemi alıyorum ve $\Omega$ içindeki tüm
+noktalar için çözmeye uğraşıyorum. Fakat bu kolay değil. Ayrıca $\Omega$'daki
+eşitlik $\Gamma$ sınırında geçerli değil, ikinci şart sebebiyle. Bu arada
+matematiksel olarak çözüm nedir? $\Omega$'daki sonsuz tane nokta için geçerli
+olan şeydir. Buna kesin çözüm (exact solution) deniyor. </p>
+<p>Fakat bu çözümü bulmak mümkün değilse, ya da yaklaşık bir çözüm de yeterli
+oluyorsa o zaman yaklaşık yöntemler kullanabilirim.. $\nabla^2 T = 0 $ eşitliği
+$\Omega$'daki her nokta için, her $\Gamma$ sınır şartında değil belli seçilmiş
+noktalarda olsun diyebilirim.</p>
+<p>Ama "belli noktalarda" deyince de iş bitmiyor, o seçilmiş noktalarda kesin
+çözüm mü yapsam, yoksa o noktalarda da yaklaşık çözüm yapsam? Ya da tüm
+noktalarda yaklaşık çözüm üzerinden bir hata hesaplayıp, tüm seçilmiş noktalarla
+hesaplanan ortalama bir hatanın sıfır olması için mi uğraşsam?</p>
+<p>Şöyle bir yöntem deneyelim; elimizde / verili belli bir baz fonksiyon "sınıfı"
+olsun, bu fonksiyonlar Fourier bazı $\sin$, $\cos$ olabilir, ya da Chebisev
+polinomları olabilir. Bu "test", baz fonksiyonları $T_i(x,y)$ içinde,
+$i=1,2,...,N$, ve nihai $T$'yi</p>
+<p>$$
+T = T_0 + \sum _{i=1}^{N} c_i T_i(x,y)
+$$</p>
+<p>ile hesaplayayım, $c_i$'ler başta bilmediğim katsayı değerleri olsun. Bilinen /
+verili test fonksiyonları üzerinden doğru $c_i$'leri bulursam bu beni gerçek
+fonksiyon $T$'ye yaklaştırır. Üstteki toplamda $T_0$ terimi özellikle o şekilde
+formüle dahil edildi, $T_i$ toplamının sınırda sıfır olmasını ayarlayabilirsem,
+$T=T_0$ şartını otomatik olarak tatmin etmiş olurum.</p>
+<p>$N$ sayısına dikkat, gerçek fonksiyonu aşağı yukarı temsil etmek istesem $N$'yi
+az tutardım, birkaç tane temel fonksiyon birleşimi.. Ama $N$'i arttırarak, hatta
+sonsuza yaklaştığımızda gerçek fonksiyona tıpatıp eşit olacağımızı
+bekleyebilirdik, o zaman $N$ sayısı bir anlamda yaklaşıklamanın kalitesini
+kontrol edecektir. $N$ arttıkça hata azalır, yaklaşıklama gerçeğe yaklaşır.
+Bir ödünleşim (trade-off) durumu var muhakkak, çok büyük $N$ hesaplaması zor
+olan bir sistem ortaya çıkartabilir, vs.</p>
+<p>Bu bizi hata tanımına getiriyor. Onu gerçek ve yaklaşık değerler arasındaki
+fark, "artık" (residual) üzerinden tanımlayacağız, artık $R$,</p>
+<p>$$
+R(c_i,x,y) = \nabla^2 T
+$$</p>
+<p>Bu kadar basit. Niye artığı direk $\nabla^2 T$'e eşitlemek yeterli? Çünkü ana
+formüle bakarsak $\nabla^2 T$ ideal durumda sıfır olmalı değil mi?  Ama
+yaklaşıklama mükemmel olmadığı için sıfırdan farklı (fakat umuyoruz ki ona
+yakın) değerler döndürecektir, o zaman bu değeri alıp direk hata / artık değeri
+olarak kullanabiliriz. O zaman</p>
+<p>$$
+R(c_i,x,y) = T_0 + \sum _{i=1}^{N} c_i T_i(x,y)
+$$</p>
+<p>diyelim. Üstteki denklem bana her veri noktası, belli bir $x,y$ için olan hatayı
+verir. Sınır koşulunu denklem doğal olarak karşıladığı için orada zaten hata
+yok. Yani tanım itibariyle sınırda hata sıfır, ve sınırlar içinde muhtemel
+olarak sıfır olmayan bir değerde.</p>
+<p>Şimdi $c_i$'lerin bulunmasına gelelim, yaklaşık temsil onlar üzerinden mümkün
+olacak. $N$ tane $c_i$ bilinmiyor o zaman bir şekilde $N$ tane denklem üretmem
+lazım, ki onları çözerek bilinmeyenleri elde edeyim. WRM burada devreye giriyor.</p>
+<p>Agirlikli artiklar dedik, agirliklardan da (dikkat $c_i$ katsayilarindan, ve
+test fonksiyonlarindan farkli bu) da $N$ tane var, $N$ tane fonksiyon. Onlari
+$j$ ile indisleyebiliriz, $w_j$, $j=1,...,N$. Artiklari soyle agirlikliyoruz,</p>
+<p>$$
+\int_\Omega w_j R \mathrm{d} \Omega
+$$</p>
+<p>Biraz önce söylediğimiz artığın sıfır olma hedefini biraz genişletip
+ağırlıklanmış artığın sıfır olması haline getiriyoruz. O zaman $N$ tane denklemi
+şöyle üretiriz,</p>
+<p>$$
+j=1,\quad
+\int_\Omega w_1 (x,y) \left[
+  \nabla^2 T_0 + \sum _{i=1}^{N} c_i \nabla^2 T_i(x,y) 
+  \right] \mathrm{d} \Omega
+$$</p>
+<p>$$
+j=2,\quad
+\int_\Omega w_2 (x,y) \left[
+  \nabla^2 T_0 + \sum _{i=1}^{N} c_i \nabla^2 T_i(x,y) 
+  \right] \mathrm{d} \Omega
+$$</p>
+<p>$$
+\vdots
+$$</p>
+<p>$$
+j=N,\quad
+\int_\Omega w_N (x,y) \left[
+  \nabla^2 T_0 + \sum _{i=1}^{N} c_i \nabla^2 T_i(x,y) 
+  \right] \mathrm{d} \Omega
+$$</p>
+<p>Böylece $N$ tane bilinmeyen için $N$ tane formül elde ettim, ve bu şekilde
+çözümü yapabilirim.</p>
+<p>$w_j$'ler ne yapıyor? Başta hataların ortalamasından bahsetmiştik hatırlarsak,
+her $w_j$ bir nevi ortalamadır, ama her $j$ için farklı bir ortalama şekli
+seçebiliriz, mesela alttaki resimde</p>
+<p><img alt="" src="compscieng_app45aerofem1_02.png" /></p>
+<p>karalanmış kısma daha fazla ağırlık ver diyebiliriz, vs. Genel anlamda
+hatırlarsak üç sayı A,B,C ortalaması demek aslında her sayının 1/3 "ağırlığı"
+ile çarpılıp, toplanması ve sonucun 3'e bölünmesi demektir. Bu ağırlıkları
+değiştirebiliriz, o zaman farklı bir ortalama elde ederiz, mesela 1/2, 1/4, 1/4
+kullansam A'ya daha fazla ağırlık vermiş olurdum.</p>
+<p>Bu açıdan bakınca üstte üretilen her denklem belli bir artık formülünün
+farklı şekillerde ağırlıklanması sonucu elde edilen denklemlerdir.</p>
+<p>Galerkin Metotu</p>
+<p>Bu metot sonlu ogeler metotunun temelini olusturur [2], 1915, 1913'te Galerkin,
+Bubnov tarafindan ayri ayri kesfedilmistir. Galerkin metotunun ozu su basit
+onermeden ibaret, daha once gordugumuz agirlikli artiklar metotunda Galerkin
+metotu der ki $w_j = T_j$, yani agirlik fonksiyonu test fonksiyonu ile ayni
+olsun. </p>
+<p>[devam edecek]</p>
+<p>Kaynaklar</p>
+<p>[1] Mittal, <em>FEM for Fluid Dynamics, Lecture 07 Part A, Method of Weighted Residuals, IIT Kanpur</em>,
+    <a href="https://www.youtube.com/channel/UCWheqBdP45xBVp_Eqi1eltQ/videos">https://www.youtube.com/channel/UCWheqBdP45xBVp_Eqi1eltQ/videos</a></p>
+<p>[2] Mittal, <em>FEM for Fluid Dynamics, Lecture 07 Part B, IIT Kanpur</em>,
+    <a href="https://www.youtube.com/channel/UCWheqBdP45xBVp_Eqi1eltQ/videos">https://www.youtube.com/channel/UCWheqBdP45xBVp_Eqi1eltQ/videos</a></p>
+<p>[3] Mittal, <em>FEM for Fluid Dynamics, Lecture 05 Part C, Inner Product for functions,Orthogonality,Completeness, IIT Kanpur</em>,
+    <a href="https://www.youtube.com/channel/UCWheqBdP45xBVp_Eqi1eltQ/videos">https://www.youtube.com/channel/UCWheqBdP45xBVp_Eqi1eltQ/videos</a></p>

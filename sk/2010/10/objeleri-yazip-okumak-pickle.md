@@ -2,7 +2,8 @@
 
 Pickle
 
-Python pickle servisi herhangi bir nesneyi alip dosyaya yazabilmek yetenegine sahip. Bir dictionary objemiz oldugunu dusunelim:
+Python pickle servisi herhangi bir nesneyi alip dosyaya yazabilmek
+yetenegine sahip. Bir dictionary objemiz oldugunu dusunelim:
 
 ```python
 dict = {}
@@ -20,7 +21,7 @@ pickle.dump(dict, open('dict.pkl', 'wb'))
 Geri okumak icin
 
 ```python
-dict= pickle.load(open("dict.pkl"))
+dict= pickle.load(open("dict.pkl","rb"))
 f.close()
 ```
 

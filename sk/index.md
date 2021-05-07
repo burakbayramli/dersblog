@@ -5,7 +5,7 @@
 
 7/5 - [Ekler - Numpy-STL](2020/08/numpy-stl.md)
 
-20/4 - [Sonlu Öğeler Metotu (Finite Elements Method -FEM-) - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app45fem1/sivi_dinamiginde_sonlu_ogeler_metotu__finite_elements_method_fem___1.html)
+20/4 - [Sonlu Öğeler Metotu (Finite Elements Method -FEM-)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app45fem1/sivi_dinamiginde_sonlu_ogeler_metotu__finite_elements_method_fem___1.html)
 
 1/4 - [Dalgasal Denklem Çözümü (Wave Equation)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app17wave/dalga_denklemi__wave_equation_.html)
 

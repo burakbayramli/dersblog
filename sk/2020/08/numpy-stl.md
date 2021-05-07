@@ -71,7 +71,7 @@ print (your_mesh.vectors[0])
 Görüldüğü gibi 7668 tane üçgen ve normal vektör var. Üçgenlerden sıfırıncı
 olana baktık ve üstteki 3x3 matris geldi, bu matrislerden ilk satır üçgenin
 bir köşesi, böyle gidiyor. Aynı üçgene tekabül eden normal vektör yine aynı
-indiste, onu `your_mesh.get_ünit_normals()[0]` ile alabilirdik.
+indiste, onu `your_mesh.get_unit_normals()[0]` ile alabilirdik.
 
 Üçgenler hakkında bir fikir olması için iki tanesini, normalleriyle beraber
 grafikleyelim,
@@ -159,6 +159,8 @@ COG noktasinda atalet matrisi
 
 Kaynaklar
 
-[1] https://www.tinkercad.com/things/h3gtFbihOx3-helice-2-pales-arrondies-propeller-2-rounded-blades
+[1] [Tinkercad](https://www.tinkercad.com/things/h3gtFbihOx3-helice-2-pales-arrondies-propeller-2-rounded-blades)
 
-[2] https://pythonhosted.org/numpy-stl/
+[2] [Numpy STL](https://pythonhosted.org/numpy-stl/)
+
+

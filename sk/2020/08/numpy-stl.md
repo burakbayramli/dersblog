@@ -128,12 +128,12 @@ plt.savefig('prop2.png')
 noktasının ortalamasını aldık, böylece kabaca bir orta noktadan çıkan
 `SCALE` ile ölçeklediğimiz normal yönde bir ok çizebilmiş olduk.
 
-Hacim
+Özet Verileri
 
-Elimizde etrafı çevrili bir obje var, küre, kare gibi basit objelerin
+Elimizde etrafı çevrili bir obje, küre, kare gibi basit objelerin
 analitik hacim formülü bilinir. Fakat elimizde çetrefil bir şekilde ve
 ayrıksal olarak yüzeyi tanımlanmış bir nesne var, onun hacmi için
-ayrıksal, hesapsal bazı teknikler gerekebilirdi, neyse ki `numpy-ştl`
+ayrıksal, hesapsal bazı teknikler gerekebilirdi, neyse ki `numpy-stl`
 içinde bu fonksiyonlar var,
 
 ```python

@@ -5,10 +5,9 @@ yardım eden STL formatı var. Bir objeyi mesela Tinkercad ile
 tasarlayıp objeyi STL formatında kaydedebiliriz, bu dosya 3 boyutlu
 baskıya hazırdır.
 
-Örnek bir objeye bakalım [1], bir pervane bu, `propeller1.stl`
-olarak kaydedelim,
-
-Bu objeye Python'dan erişmek istersek, `numpy-stl` kullanılabilir.
+Örnek bir objeye bakalım [1], bir pervane bu, `propeller1.stl` olarak
+kaydedelim. Obje tasarımına, verisine Python'dan erişmek istersek,
+`numpy-stl` kullanılabilir.
 
 ```
 pip install numpy-stl

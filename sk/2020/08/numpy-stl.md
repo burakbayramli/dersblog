@@ -39,14 +39,12 @@ plt.savefig('prop.png')
 
 Daha detaylı işlemler için dokümana [2] bakılabilir,
 
-STL Veri Yapisi
+STL Veri Yapısı
 
-Şekil dosyaları bir objeyi kapsayan ve birbirini tamamlayan üçgenler
-üzerinden tanımlanıyor. Bu yassı iki boyutlu üçgenleri temsil etmek için
-üç tane 3D nokta bir de yüzeyin hangi yöne işaret ettiği (bir normal vektör
-üzerinden) yeterli oluyor.
-
-Mesela biraz önceki şekilde üzerinden
+Şekil dosyaları bir objenin yüzeyini kapsayan ve birbirini tamamlayan
+üçgenler üzerinden tanımlanıyor. Bu yassı iki boyutlu üçgenleri temsil
+etmek için üç tane 3D nokta bir de yüzeyin hangi yöne işaret ettiği
+(bir normal vektör üzerinden). Mesela biraz önceki şekil için,
 
 ```python
 from stl import mesh

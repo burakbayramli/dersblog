@@ -44,7 +44,7 @@ STL Veri Yapısı
 Şekil dosyaları bir objenin yüzeyini kapsayan ve birbirini tamamlayan
 üçgenler üzerinden tanımlanıyor. Bu yassı iki boyutlu üçgenleri temsil
 etmek için üç tane 3D nokta bir de yüzeyin hangi yöne işaret ettiği
-(bir normal vektör üzerinden). Mesela biraz önceki şekil için,
+(bir normal vektör üzerinden) yeterli. Mesela biraz önceki şekil için,
 
 ```python
 from stl import mesh

@@ -110,6 +110,58 @@ gayet sade</p>
 L = I \omega
 $$</p>
 <p>ifadesine geri gelmiş olduk.</p>
+<p>$I$, atalet matrisidir, ve her katı kütle şekline göre farklı olacak bir
+matristir. O zaman bir objenin açısal momentumunun nasıl olacağını hesaplamak
+için önce o objenin atalet matrisine hesaplamak gerekir.</p>
+<p>Ataletin Ana Eksenleri (Principal Axes of Inertia) </p>
+<p>Bir konu daha var tabii; dikkat edersek $I$ matrisini çekip çıkardığımız hesap
+bir $O$ referansını merkez alıyordu. "Genel bir $O$ olsun" dedik ve oradan
+türetmeye devam ettik. Fakat bazı referansların, yani dönüşün neyin etrafında
+olduğunun, her seçime göre farklı $I$'lara sebebiyet verebileceğini görmek
+gerekir. Lineer cebirsel olarak $L$ ile $\omega$'nin aynı yönü göstermesi için
+$I$'nin köşegen matris olması gerekir. Fakat elde köşegen matris olmasa da
+$\omega$'yi bizim değiştirerek, aynı refarans $O$'dan geçen ama farklı öyle bir
+yönü göstermektir ki, bu eksen etrafında bir köşegen $I$ elde edilsin ve hareket
+simetrik hale gelsin.</p>
+<p>Bu hesap icin ozdeger, ozvektor hesabini yapmak lazim, ya da atalet matrisinin
+kosegenlestirilmesini [2] (diagonalization) gerceklestirmek lazim. Eger $I$
+kosegen degil ise, oyle bir $\omega$ bulalim ki $L = I \omega$ hesabindaki
+$L$, $I \omega$ ile ayni yonu gostersin, yani</p>
+<p>$$
+I\omega = \lambda \omega
+$$</p>
+<p>haline gelsin. Bu bir özdeğer problemi değil midir? Evet. </p>
+<p>Örnek olarak [1, sf. 382]'deki $O$ etrafında dönen küp orneğini kullanalım,</p>
+<p><img alt="" src="phy_005_basics_04_01.png" /></p>
+<p>Bu referansa gore atalet matrisi</p>
+<p>$$
+I = \left[\begin{array}{rrr}
+8 &amp; -3 &amp; -3 \\
+-3 &amp; 8 &amp; -3 \\
+-3 &amp; -3 &amp; 8
+\end{array}\right]
+$$</p>
+<p>olarak bulunmuş. Görüldüğü gibi $I$ köşegen değil. </p>
+<pre><code class="python">import numpy.linalg as lin
+I = np.array([[8, -3, -3],
+              [-3, 8, -3],
+              [-3, -3, 8]])
+pe,lam = lin.eig(I)
+print (e)
+print (lam)
+print (np.dot(I,lam))
+</code></pre>
+
+<pre><code>[11.  2. 11.]
+[[ 0.81649658 -0.57735027  0.        ]
+ [-0.40824829 -0.57735027 -0.70710678]
+ [-0.40824829 -0.57735027  0.70710678]]
+[[ 8.98146239e+00 -1.15470054e+00 -4.44089210e-16]
+ [-4.49073120e+00 -1.15470054e+00 -7.77817459e+00]
+ [-4.49073120e+00 -1.15470054e+00  7.77817459e+00]]
+</code></pre>
+
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Taylor, <em>Classical Mechanics</em></p>
+<p>[2] Bayramli, <em>Lineer Cebir, Ders 22</em></p>

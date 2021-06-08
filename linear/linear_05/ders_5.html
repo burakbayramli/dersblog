@@ -364,8 +364,57 @@ Q = S
 $$</p>
 <p>$Q$ ile $S$ de eşitmiş. O zaman bir kare $A$ matrisini ayrıştırmanın tek bir
 yolu var, bu ayrıştırma özgün.</p>
-<p>[devam edecek]</p>
+<p>Çapraz Çarpım ve Eksi Bakışımlı Matrisler</p>
+<p>Çapraz çarpım [3]'den bildiğimiz gibi iki vektörün tanımladığı düzleme dik bir
+üçüncü vektör verir, ve üç boyutta hesaplaması alttaki gibidir,</p>
+<p>$$ 
+u \times v = 
+\left[\begin{array}{r}
+u_2v_3 - u_3v_2 \\
+u_3v_1 - u_1v_3 \\
+u_1v_2 - u_2v_1 
+\end{array}\right]
+$$</p>
+<p>Fakat üstteki çarpıma başka bir yoldan da erisebiliriz, bu çarpımı eksi
+bakışımlı bir matris üzerinden noktasal çarpıma çevirmek mümkündür. Bu
+dönüştürme, mesela $u = [u_1, u_2, u_3]$ için</p>
+<p>$$
+\tilde u =
+\left[\begin{array}{ccc}
+0 &amp; -u_3 &amp; a_2 \\
+u_3 &amp; 0 &amp; -u_1 \\
+-u_2 &amp; u_1 &amp; 0
+\end{array}\right]
+$$</p>
+<p>Böylece $u \times b$ yerine $\tilde u v$ ifadesi yeterli oluyor.</p>
+<p>Bir örnek üzerinde görelim, bir vektörden üstteki eksi bakışımlı versiyonu
+oluşturmak için <code>skew</code> diye bir kod yazalım,</p>
+<pre><code class="python">import numpy.linalg as lin
+
+def skew(a):
+   return np.array([[0,-a[2],a[1]],[a[2],0,-a[0]],[-a[1],a[0],0]])
+
+u = np.array([1,2,3])
+v = np.array([3,4,5])
+
+print (skew(u))
+print ('\n')
+print ('carpim 1', np.cross(u,v))
+print ('carpim 2', np.dot(skew(u), v))
+</code></pre>
+
+<pre><code>[[ 0 -3  2]
+ [ 3  0 -1]
+ [-2  1  0]]
+
+
+carpim 1 [-2  4 -2]
+carpim 2 [-2  4 -2]
+</code></pre>
+
+<p>İki çarpım aynı.</p>
 <p>Kaynaklar</p>
 <p>[1] Hecker, <em>Elementary Linear Algebra</em></p>
 <p>[2] Quora, <em>Show that every square matrix can be expressed as the sum of hermitian and skew hermitian?</em>
     <a href="https://www.quora.com/Show-that-every-square-matrix-can-be-expressed-as-the-sum-of-hermitian-and-skew-hermitian">https://www.quora.com/Show-that-every-square-matrix-can-be-expressed-as-the-sum-of-hermitian-and-skew-hermitian</a></p>
+<p>[3] Bayramli, <em>Cok Boyutlu Calculus</em></p>

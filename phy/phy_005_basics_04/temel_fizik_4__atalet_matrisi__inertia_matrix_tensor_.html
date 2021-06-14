@@ -247,17 +247,17 @@ m_i (y_i^2 + z_i^2) &amp; -m_i x_i y_i &amp; m_i x_i z_i \\
 -m_i z_i x_i &amp; -m_i z_i y_i &amp; m_i (x_i^2 + y_i^2)
 \end{array}\right]
 $$</p>
-<p>Burada $x,y,z$ değerleri gövde uzayında, her nokta $r_i$ için $x,y,z$ değerleri
-$r_i - a(t)$ öğeleriyle hesaplanıyor. Ayrıca bir obje dönerse, onun belli
-noktalarının eksenden olan uzaklıkları değişir ve farklı bir $I$ elde
+<p>Burada $x,y,z$ değerleri gövde uzayında, her nokta $r_i'$ için $x_i,y_i,z_i$
+değerleri $r_i - a(t)$ içeriğiyle hesaplanıyor. Ayrıca bir obje dönerse, onun
+belli noktalarının eksenden olan uzaklıkları değişir ve farklı bir $I$ elde
 ederiz... fakat üstteki hesabı obje hareket ederken sürekli yapmak oldukca
-külfetli. Acaba $I$'nin bir baz kısmını hesaplasak, sonra dönüşe göre onu
+külfetlidir. Acaba $I$'nin bir baz kısmını hesaplasak, sonra dönüşe göre onu
 güncellesek olmaz mı?</p>
-<p>Bunun bir yolu var [5, sf. 14]. $r_i^T r_i = x_i^2 + y_i^2 + z_i^2$ olduğundan
+<p>Bunun bir yolu var [5, sf. 14]. $r_i'^T r_i' = x_i^2 + y_i^2 + z_i^2$ olduğundan
 hareketle, önceki $I$ denklemini şu şekilde yazabiliriz,</p>
 <p>$$
 I(t) = \sum
-m_i r_i^T r_i \left[\begin{array}{ccc}
+m_i r_i'^T r_i' \left[\begin{array}{ccc}
 1 &amp; 0 &amp; 0 \\ 
 0 &amp; 1 &amp; 0 \\ 
 0 &amp; 0 &amp; 1 
@@ -271,7 +271,7 @@ $$</p>
 <p>Simdi en sağdaki matrise dikkat edelim, onu bir dış çarpım (outer product)
 olarak temsil edebiliriz, alttaki gibi,</p>
 <p>$$
-r_i r_i^T = \left[\begin{array}{c}
+r_i' r_i'^T = \left[\begin{array}{c}
 x_i \\ y_i \\ z_i
 \end{array}\right]
 \left[\begin{array}{ccc}
@@ -283,9 +283,21 @@ y_i x_i &amp; y_i^2 &amp; y_i z_i \\
 z_i x_i &amp; z_i y_i &amp; z_i^2
 \end{array}\right]
 $$</p>
-<p>Bunu kullanarak ve 3 x 3 boyutlu birim matrisi $\vec{1}$ ile göstererek,</p>
+<p>Bunu kullanarak ve 3 x 3 boyutlu birim matrisini $\vec{1}$ ile göstererek
+(normalde bu matris için $I$ notasyonu kullanılır ama o hard bu yazıda
+kapılmış durumda),</p>
 <p>$$
-I(t) = \sum m_i ((r_i^T r_i) \vec{1} - r_i r_i^T)
+I(t) = \sum m_i ((r_i'^T r_i') \vec{1} - r_i' r_i'^T)
+$$</p>
+<p>Bu nasıl faydalı? Çünkü $r_i(t) = R(t) r_{0i} + a(t)$ ki $r_{0i}$ başlangıçtaki
+kütlede $i$ parçacığınin yeri, ve sabit, o zaman</p>
+<p>$$
+r_i(t) - a(t) = R(t) r_{0i} = r_i'(t)
+$$</p>
+<p>Şimdi $r_i'(t) = R(t) r_{0i}$ eşitliğini iki üstteki formülde kullanırsak,</p>
+<p>$$
+I(t) = \sum
+m_i ((r_i'^T r_i') \vec{1} - r_i'r_i'^T)
 $$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>

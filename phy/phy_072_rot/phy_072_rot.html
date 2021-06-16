@@ -85,18 +85,68 @@ peşpeşe, her eksen etrafında uygulanabilecek üç tane ardı ardına yapılan
 döndürme  ile temsil edilebileceğinden hareketle bulunmuştur. Mesela altta
 ardı ardına YXZ eksenleri üzerinde yapılan döndürme gösteriliyor.</p>
 <p><img alt="" src="phy_072_rot_06.png" /></p>
-<p>Genelde kullanım kalıbı ZYX ya da ZXY üzerinden yapılır.</p>
-<p>Her eksen etrafındaki dönüş tek bir dönüş matrisi ile gösterilebilir, mesela
-Z etrafındaki $\phi$ kadar bir dönüş $D$ matrisinde,</p>
+<p>Genelde kullanım kalıbı ZYX ya da ZXZ üzerinden yapılır. Altta ZXZ ornegini
+gorecegiz. Herhangi bir eksen etrafındaki dönüş tek bir dönüş matrisi ile
+gösterilebilir, mesela Z etrafındaki $\phi$ kadar bir dönüş $D$ matrisinde olsun
+[1, sf 153],</p>
 <p>$$
 D = \left[\begin{array}{rrr}
 \cos \phi &amp; \sin\phi &amp; 0 \\
-\sin \phi &amp; \cos\phi &amp; 0 \\
+-\sin \phi &amp; \cos\phi &amp; 0 \\
 0 &amp; 0 &amp; 1
 \end{array}\right]
 $$</p>
+<p>O zaman $z$ ekseni etrafındaki bir dönüş</p>
+<p>$$
+\bar{x}' = D \bar{x}
+$$</p>
+<p>yani $\bar{x} = [x, y, z]$ döndürülerek $\bar{x}' = [x', y', z']$ elde edildi.</p>
+<p>Şimdi $x'$ ekseni etrafında $\theta$ kadar döndürüyoruz, bunu $C$ ile yapalım,</p>
+<p>$$
+C = \left[\begin{array}{rrr}
+1 &amp; 0 &amp; 0 \\
+0 &amp; \cos\theta &amp; \sin\theta \\
+0 &amp; -\sin\theta &amp; \cos\theta
+\end{array}\right]
+$$</p>
+<p>$$
+\bar{x}" = C \bar{x}'
+$$</p>
+<p>Ve son olarak $\bar{x}" = [x",y",z"]$ içindeki $z"$ etrafında $\psi$ kadar
+döndürüyoruz, bunu $B$ ile yapalım,</p>
+<p>$$
+B = \left[\begin{array}{rrr}
+\cos \psi &amp; \sin\psi &amp; 0 \\
+-\sin \psi &amp; \cos\psi &amp; 0 \\
+0 &amp; 0 &amp; 1
+\end{array}\right]
+$$</p>
+<p>$$
+\bar{x}_f = B \bar{x}"
+$$</p>
+<p>Tüm bu matris çarpımlarını tek bir $A = BCD$ ile de yapabilirdik, bu matris
+neye benzerdi? Cebirsel olarak çarpımı gerçekleştirince,</p>
+<p>$$
+A = \left[\begin{array}{ccc}
+\cos\psi\cos\phi-\cos\theta\sin\phi\sin\psi &amp;
+\cos\psi\sin\phi + \cos\theta\cos\phi\sin\psi &amp;
+\sin\psi\sin\theta \\
+-\sin\psi\cos\phi-\cos\theta\sin\phi\cos\psi &amp;
+-\sin\psi\sin\phi + \cos\theta\cos\phi\cos\psi &amp;
+\cos\psi\sin\theta \\
+\sin\theta \sin\phi &amp;
+-\sin\theta\cos\phi &amp;
+\cos\theta
+\end{array}\right]
+$$</p>
+<p>Not: dikkat edelim, eksenlerde ardı ardına yapılan rotasyonların birleşimi
+sırabağımsız değil, mesela alttaki iki döndürme, aynı temel döndürmeleri
+yapıyor olsalar da farklı sıralarda yaptıkları için farklı sonuçları veriyorlar,</p>
 <p><img alt="" src="phy_072_rot_01.png" /></p>
 <p><img alt="" src="phy_072_rot_02.png" /></p>
+<p>Tabii üstteki durum lineer cebirin içeriğiyle uyumlu, çünkü matris çarpımı da
+sırabağımsız değildir.</p>
 <p>Kaynaklar</p>
 <p>[1] Safko, <em>Classical Mechanics</em></p>
 <p>[2] Bayramli, <em>Lineer Cebir, Giris</em></p>
+<p>[3] Widnall, <em>16.07 Dynamics</em></p>

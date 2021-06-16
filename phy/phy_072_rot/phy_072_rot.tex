@@ -37,8 +37,51 @@ plt.savefig('phy_072_rot_04.png')
 
 Doksan derece dönüş görülüyor.
 
+Peki doksan derece değil $\theta$ kadar bir saat yönü tersi donduruşu
+nasıl temsil edilebilirdi? Yine bazın nereye gittiğine bakıyoruz,
 
 \includegraphics[width=20em]{phy_072_rot_03.png}
+
+Eğer $i$'yi kaldırıp $i'$ haline getirirsek bu yeni vektörün
+$[\cos\theta,\sin\theta]$ durumuna gelmesi, $j$'yi dondurup $j'$ yapınca
+$[-\sin\theta,\cos\theta]$ haline gelmesi demektir. Donus matrisi,
+
+$$
+R = \left[\begin{array}{rr}
+\cos\theta & -\sin\theta \\
+\sin\theta & \cos\theta
+\end{array}\right]
+$$
+
+\begin{minted}[fontsize=\footnotesize]{python}
+theta = np.deg2rad(20)
+v = np.array([1,1])
+plt.quiver(0,0,v[0],v[1],scale=5)
+R = np.array([[np.cos(theta), -np.sin(theta)],[np.sin(theta),np.cos(theta)]])
+vnew = np.dot(R, v)
+plt.quiver(0,0,vnew[0],vnew[1],scale=5,color='red')
+plt.xlim(-2,2)
+plt.ylim(-2,2)
+plt.grid(True)
+plt.savefig('phy_072_rot_05.png')
+\end{minted}
+
+\includegraphics[width=20em]{phy_072_rot_05.png}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -153,13 +153,15 @@ COG noktasinda atalet matrisi
  [-2.31301332e-02  6.33494132e+01  1.02767050e+05]]
 ```
 
-Dondurme
+Döndürme
 
 Bir objeyi döndürmek için gereken matematiği [6]'da görmüştük. Eğer bir simit
 şeklindeki bir objeyi bir eksen, mesela x, etrafında döndürmek istiyorsak,
 gerekli döndürme matris şekli [6]'da işlendi. Bu matris yaratıldıktan sonra
 mesh üzerinde `rotate_using_matrix` çağrısı yapılabilir. Matrisi yaratmanın
-farklı yolları var tabii, bunlar detaylı olarak yazıda işlendi. Ornek gorelim,
+farklı yolları var tabii, bunlar detaylı olarak yazıda işlendi. Örnek olarak
+yatay şekilde başlayan bir simit (torus) şeklini x ekseni etrafında 90 derece
+döndürelim,
 
 ```python
 from mpl_toolkits import mplot3d

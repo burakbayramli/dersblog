@@ -162,10 +162,29 @@ mesh üzerinde `rotate_using_matrix` çağrısı yapılabilir. Matrisi yaratman�
 farklı yolları var tabii, bunlar detaylı olarak yazıda işlendi. Ornek gorelim,
 
 ```python
-import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
-import pandas as pd, numpy as np
+import numpy as np
 from stl import mesh
+fig = plt.figure()
+axes = mplot3d.Axes3D(fig)
+your_mesh = mesh.Mesh.from_file('../../../phy/phy_005_basics_04/torus.stl')
+axes.add_collection3d(mplot3d.art3d.Poly3DCollection(your_mesh.vectors,alpha=0.3))
+scale = your_mesh.points.flatten()
+axes.auto_scale_xyz(scale, scale, scale)
+AS = 3
+axes.plot([0,AS],[0,0],[0,0],color = 'r')
+axes.plot([0,0],[0,AS],[0,0],color = 'g')
+axes.plot([0,0],[0,0],[0,AS],color = 'b')
+LIM = 5
+axes.set_xlim(-LIM,LIM);axes.set_ylim(-LIM,LIM);axes.set_zlim(-LIM,LIM)
+axes.view_init(azim=40,elev=30)
+plt.savefig('torus-begin.png')
+```
+
+![](torus-begin.png)
+
+
+```python
 your_mesh = mesh.Mesh.from_file('../../../phy/phy_005_basics_04/torus.stl')
 theta = np.deg2rad(90) # 90 derece x ekseni etrafinda dondur
 R = np.array(
@@ -185,8 +204,8 @@ axes.plot([0,0],[0,0],[0,AS],color = 'b')
 axes.auto_scale_xyz(scale, scale, scale)
 LIM = 5
 axes.set_xlim(-LIM,LIM);axes.set_ylim(-LIM,LIM);axes.set_zlim(-LIM,LIM)
-axes.view_init(azim=40,elev=10)
-plt.savefig('rotated.png')
+axes.view_init(azim=40,elev=20)
+plt.savefig('torus-rotated.png')
 ```
 
 ```text
@@ -195,7 +214,7 @@ plt.savefig('rotated.png')
  [ 0.000000e+00 -1.000000e+00  6.123234e-17]]
 ```
 
-![](rotated.png)
+![](torus-rotated.png)
 
 Kaynaklar
 

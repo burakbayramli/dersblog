@@ -2,9 +2,108 @@
 \begin{document}
 Katı-Gövde Simülasyonu
 
+Dönüş Animasyonu
+
 Bir örnek gövde üzerinde simülasyon yapmaya uğraşalım. Elimizde bir simit, ya da
 geometride torus denen bir şekil var. Bu dosya STL denen bir format içinde,
-detaylar için [1]. Torus STL şekli içiçe geçmiş üçgenler ile tanımlı, bu
+detaylar için [1]. Kuvvet uygulama sonrası lineer ve açısal momentum içeren
+simülasyon için pek çok değişkeni diferansiyel tanımları üzerinden entegre
+etmemiz gerekiyor, daha basit bir örnek ile, özellikle sabit bir açışal hız
+üzerinden salt döndürme ile başlamak uygun olabilir. Hesapsal baglamda döndürme
+işleminin temsili ilk başta biraz karmaşık olabiliyor zaten, önce onu tek başına
+bir örnek üzerinde görelim. [4]'te tarif edilen döndürme matrisi türevini
+hatırlarsak,
+
+$$
+\frac{\ud R}{\ud t} = \tilde \omega \cdot R
+$$
+
+Döndürmeyi bir $\omega$ etrafında düşünüyorduk, $\omega$'nin büyüklüğü
+açısal dönme hızına tekabül ediyordu, ve $\tilde \omega$ eksi-bakışımlı
+matris idi.
+
+\includegraphics[width=25em]{phy_005_basics_04_01.png}
+
+Tüm bunları entegre edici \verb!odeint! çağrısının kabul edeceği bir formda
+nasıl kullanırız? Bu çağrı düzleştirilmiş bir liste içinde diferansiyel
+sonuçların, ve ana değişkenlerin olmasını bekliyor. O zaman $R$'yi kolon bazlı
+olmak üzere düzleştiririz, ve gerektiği o listeden matris formuna geçeriz, vs.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+from scipy.integrate import odeint
+from stl import mesh
+
+def skew(a):
+   return np.array([[0,-a[2],a[1]],[a[2],0,-a[0]],[-a[1],a[0],0]])
+
+your_mesh = mesh.Mesh.from_file('torus.stl')
+prop = your_mesh.get_mass_properties()
+R0 = np.eye(3,3)
+omega = np.array([1.0,1.0,1.0])
+#omega = np.array([0.0,1.0,0.0])
+skew_omega = skew(omega)
+   
+def rhs(u,t):   
+   R1x,R1y,R1z,R2x,R2y,R2z,R3x,R3y,R3z = u
+   R = np.array([R1x,R1y,R1z,R2x,R2y,R2z,R3x,R3y,R3z])
+   R = R.reshape((3,3)).T
+   res = np.dot(skew_omega, R)
+   return list(res.T.flatten())
+
+LIM = 5
+STEPS = 20
+t=np.linspace(0.0, 3.0, STEPS)
+R0 = np.eye(3,3)
+u0 = R0.flatten()
+u1=odeint(rhs,list(u0),t)
+\end{minted}
+
+Üstte görülen mesela \verb!R1x! $R$ matrisinin 1'inci kolonunun $x$ değişkeni
+anlamında.
+
+Simülasyonu hesapladık, tüm sonuç \verb!ü1! içinde, şimdi grafikleyelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import matplotlib.pyplot as plt
+from mpl_toolkits import mplot3d
+
+def plot_vector(fig, orig, v, color='blue'):
+   ax = fig.gca(projection='3d')
+   orig = np.array(orig); v=np.array(v)
+   ax.quiver(orig[0], orig[1], orig[2], v[0], v[1], v[2],color=color)
+   ax = fig.gca(projection='3d')  
+   return fig
+
+for i in range(STEPS):
+    fig = plt.figure()
+    axes = mplot3d.Axes3D(fig)
+    your_mesh = mesh.Mesh.from_file('torus.stl')
+    R = u1[i].reshape((3,3)).T
+    your_mesh.rotate_using_matrix(R)
+    scale = your_mesh.points.flatten()
+    axes.add_collection3d(mplot3d.art3d.Poly3DCollection(your_mesh.vectors,alpha=0.3))
+    plot_vector(fig, [0,0,0], omega, color='red')
+    axes.auto_scale_xyz(scale, scale, scale)
+    axes.set_xlim(-LIM,LIM);axes.set_ylim(-LIM,LIM);axes.set_zlim(-LIM,LIM)
+    axes.view_init(azim=20,elev=0)
+    plt.savefig('/tmp/rotate_%02d.png' % i)  
+\end{minted}
+
+\includegraphics[width=20em]{sim1/rotate_00.png}
+
+\includegraphics[width=20em]{sim1/rotate_08.png}
+
+\includegraphics[width=20em]{sim1/rotate_14.png}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+! convert -delay 20 -loop 0 /tmp/rotate*.png /tmp/rotate1.gif
+\end{minted}
+
+Animasyon sonucu [4]'te bulunabilir.
+
+İttirme Animasyonu
+
+Torus STL şekli içiçe geçmiş üçgenler ile tanımlı, bu
 üçgenlerin herbirine dik olan normal vektörü biliyoruz. O üçgenlerden birinin
 orta noktasından çıkan vektörlerden birini ters çevirirsek, o noktaya o yönde
 bir kuvvet uyguladığımızı hayal edelim, ve simülasyonun geri kalanını bu
@@ -71,8 +170,7 @@ plt.savefig('phy_005_basics_04_05.png')
 
 \includegraphics[width=20em]{phy_005_basics_04_05.png}
 
-
-
+\includegraphics[width=25em]{phy_008_sim_rigbod_01.png}
 
 
 [devam edecek]
@@ -84,6 +182,11 @@ Kaynaklar
 
 [2] Witkin, {\em Physically Based Modeling}
 
+[3] Bayramli, {\em Animasyon 1},
+    \url{https://drive.google.com/uc?export=view&id=17qlJvaucB6_l0eLUfcevu84qNXQocGHO}
+
+[4] Bayramli, {\em Fizik, Temel Fizik 4, Katı Gövde}
+    
 \end{document}
 
 

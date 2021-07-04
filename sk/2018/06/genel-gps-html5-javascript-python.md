@@ -73,8 +73,7 @@ def to_bearing(lat,lon,brng,d):
     return lat2,lon2
 ```
 
-Bir GPS kordinat listesinin orta noktasını bulmak için noktaları
-toplayıp, bölmek yerine, özel paket kullanmak daha iyi;
+Bir GPS kordinat listesinin orta noktasını bulmak için,
 
 ```python
 from shapely.geometry import Polygon
@@ -84,7 +83,7 @@ print (p.centroid.x)
 print (p.centroid.y)
 ```
 
-Üstteki shapely kullanımı yerine (bu paketin geos C bazlı
+Üstteki `shapely` kullanımı yerine (bu paketin geos C bazlı
 kütüphanesine bağlantısı var, ki bu paket her ortamda
 derlenemeyebilir) pür Python bazlı kod gerekirse alttaki kullanışlı.
 
@@ -132,9 +131,9 @@ def get_centroid(poly):
     return centroid_total
 ```
 
-Bir alternatif daha su [baglantidan](https://www.navlab.net/nvector/#example_7),
-enlem, boylam bir uc boyutlu vektor haline getiriliyor, ve Kartezyen bazli bu
-vektorlerin ortalamasi dogru ortalamayi veriyor. Kodun temel aldigi makale [1].
+Bir alternatif daha su [bağlantıdan](https://www.navlab.net/nvector/#example_7),
+enlem, boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
+vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makale [1].
 
 ```python
 import numpy as np

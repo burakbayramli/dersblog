@@ -139,9 +139,7 @@ vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makal
 import numpy as np
 import numpy.linalg as lin
 
-E = np.array([[0, 0, 1],
-              [0, 1, 0],
-              [-1, 0, 0]])
+E = np.array([[0, 0, 1],[0, 1, 0],[-1, 0, 0]])
 
 def lat_long2n_E(latitude,longitude):
     res = [np.sin(np.deg2rad(latitude)),

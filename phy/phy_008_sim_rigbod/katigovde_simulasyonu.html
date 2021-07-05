@@ -58,7 +58,7 @@ omega = np.array([1.0,1.0,1.0])
 #omega = np.array([0.0,1.0,0.0])
 skew_omega = skew(omega)
 
-def rhs(u,t):   
+def dRdt(u,t):   
    R1x,R1y,R1z,R2x,R2y,R2z,R3x,R3y,R3z = u
    R = np.array([R1x,R1y,R1z,R2x,R2y,R2z,R3x,R3y,R3z])
    R = R.reshape((3,3)).T
@@ -70,7 +70,7 @@ STEPS = 20
 t=np.linspace(0.0, 3.0, STEPS)
 R0 = np.eye(3,3)
 u0 = R0.flatten()
-u1=odeint(rhs,list(u0),t)
+u1=odeint(dRdt,list(u0),t)
 </code></pre>
 
 <p>Üstte görülen mesela <code>R1x</code> $R$ matrisinin 1'inci kolonunun $x$ değişkeni
@@ -112,26 +112,26 @@ for i in range(STEPS):
 
 <p>Animasyon sonucu [4]'te bulunabilir.</p>
 <p>İttirme Animasyonu</p>
-<p>Torus STL şekli içiçe geçmiş üçgenler ile tanımlı, bu
-üçgenlerin herbirine dik olan normal vektörü biliyoruz. O üçgenlerden birinin
-orta noktasından çıkan vektörlerden birini ters çevirirsek, o noktaya o yönde
-bir kuvvet uyguladığımızı hayal edelim, ve simülasyonun geri kalanını bu
-noktadan devam ettirelim.</p>
+<p>Bu animasyon için katı gövdeye bir noktada bir kuvvet uyguluyacağız. O noktayı
+seçmek için STL formatında olan üçgenlerden birini kullanabiliriz, çünkü bu
+üçgenlerin gövdenin yüzeyinde bir yerlerde olduğunu biliyoruz, Torus STL şekli
+bu üçgenlerin herbirine dik olan normal vektörü STL formatında zaten, o
+üçgenlerden birinin normal vektörünü ters çevirirsek, o noktaya o yönde bir
+kuvvet uyguladığımızı hayal edebililriz, ve simülasyonun geri kalanını bu
+noktadan devam ettiririz.</p>
 <pre><code class="python">from stl import mesh
 
 your_mesh = mesh.Mesh.from_file('torus.stl')
 
 prop = your_mesh.get_mass_properties()
 print ('hacim',np.round(prop[0],3))
-print ('\nyercekim merkezi (COG)',np.round(prop[1],3))
-print ('\nCOG noktasinda atalet matrisi')
+print ('yercekim merkezi (COG)',np.round(prop[1],3))
+print ('COG noktasinda atalet matrisi')
 print (np.round(prop[2],3))
 </code></pre>
 
 <pre><code>hacim 4.918
-
 yercekim merkezi (COG) [-0.  0. -0.]
-
 COG noktasinda atalet matrisi
 [[ 3.223 -0.     0.   ]
  [-0.     3.223  0.   ]

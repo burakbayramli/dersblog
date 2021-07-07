@@ -3,7 +3,7 @@
 
 ## En Son
 
-5/7 - [Tüm Simulasyon](https://burakbayramli.github.io/dersblog/phy/phy_008_sim_rigbod/katigovde_simulasyonu.html#full)
+7/7 - [Tüm Simulasyon](https://burakbayramli.github.io/dersblog/phy/phy_008_sim_rigbod/katigovde_simulasyonu.html#full)
 
 5/7 - [Simulasyon, odeint, Dönüşler](https://burakbayramli.github.io/dersblog/phy/phy_008_sim_rigbod/katigovde_simulasyonu.html)
 
@@ -46,9 +46,4 @@
 [Sene](year.md)
 
 [Ara](ara.html)
-
-
-
-
-
 

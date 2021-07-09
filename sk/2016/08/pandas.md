@@ -374,6 +374,8 @@ B     2   5
 C     3   6
 ```
 
+<a name='read'/>
+
 Dosyalardan Okumak
 
 Üstteki örneklerde `StringİO` kullandık, ama en basit Pandas kullanımı

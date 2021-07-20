@@ -8,21 +8,11 @@ Ubuntu seviyesinde sunlari yapmak lazim,
 
 ```
 sudo apt-get install libboost-all-dev petsc-dev
-```
 
-```
 sudo apt-get install --no-install-recommends software-properties-common
 sudo add-apt-repository ppa:fenics-packages/fenics
 sudo apt-get update
 sudo apt-get install --no-install-recommends fenics
-```
-
-Python ortaminiz icin sunlar,
-
-```
-pip install pkgconfig
-
-pip install mpi4py
 ```
 
 Simdi, kurulum bittikten sonra, hala bir problem var, Ubuntu
@@ -32,7 +22,15 @@ bakarsak mesela orada `fenics`, `ffc` gibi paketler var, bunlar izole
 ortamımızda yok.
 
 Sembolik bağlantı ile bunları halledebiliriz. Benim
-`$HOME/Documents/env3` ortamım için
+`$HOME/Documents/env3` ortamı için, ve önce bazı ek hareketler,
+
+```
+pip install pkgconfig
+
+pip install mpi4py
+```
+
+Şimdi sembolik bağlantılar yapılır,
 
 ```
 ln -s /usr/lib/python3/dist-packages/fenics .
@@ -46,7 +44,7 @@ ln -s /usr/lib/python3/dist-packages/fenics_ufl-2019.2.0.dev0.egg-info .
 ln -s /usr/lib/python3/dist-packages/ffc .
 ```
 
-yapinca is haloldu.
+Bu işleyecektir. Alttaki kodun çalışması lazım,
 
 
 ```python

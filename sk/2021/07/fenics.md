@@ -1,8 +1,8 @@
-# Fenics
+# Fenics Kurulum, Sonlu Öğeler Metodu (Finite Elements Method)
 
-Kurulum surada tarif ediliyor,
+Fenics FEM [1] yaklaşımının hesabı için sunulan bir kütüphanedir. 
 
-https://fenics.readthedocs.io/en/latest/installation.html
+Kurulum surada [2] tarif ediliyor,
 
 Ubuntu seviyesinde sunlari yapmak lazim,
 
@@ -126,3 +126,8 @@ if __name__ == '__main__':
 
 ![](approx_fenics_by_P2.png)
 
+Kaynaklar
+
+[1] https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_17/ders_1.17.html
+
+[2] https://fenics.readthedocs.io/en/latest/installation.html

@@ -51,7 +51,7 @@ ln -s /usr/lib/python3/dist-packages/ffc .
 
 Bu işleyecektir. Alttaki kodlarin çalışması lazım,
 
-Hizli bir izgara (mesh) yaratmak,
+Hızlı bir izgara (mesh) yaratmak,
 
 
 ```
@@ -150,3 +150,4 @@ Kaynaklar
 [1] https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_17/ders_1.17.html
 
 [2] https://fenics.readthedocs.io/en/latest/installation.html
+

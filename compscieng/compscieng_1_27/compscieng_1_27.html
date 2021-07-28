@@ -25,22 +25,23 @@
 </head>
 
 <p>Bu derse vereceğim ödevi tarif ederek başlayayım, ödevde Poisson denkleminin
-çözümü, ama sınırları kare değil çember olan bir ızgarada çözmenizi
+çözümünü, ama sınırları kare değil çember olan bir ızgarada çözmenizi
 isteyeceğim. Çözülecek denklem</p>
 <p>$$
 -u_{xx} - u_{yy} = 4
 $$</p>
-<p>Eşitliğin sağ tarafında sabit olduğu için $f$ çarpı $v$ sonrası alınacak
-entegraller daha basit oluyor tabii, sabit çarpı deneme fonksiyonu, kolay hesap.
-Sınırda, çember üzerinde, $u = 0$ şartını koyuyoruz. Bu sistemi çözeceğiz.</p>
-<p>Analitik çözümün ne olduğunu görmek zore değil, $u = 1 - x^2 - y^2$ çözüm.
-Yerine koyarsak doğrulaması kolay, iki kere $x$ türevi 2, $y$ türevi 2, toplam
-4.</p>
+<p>Eşitliğin sağ tarafı $f$, ve bu $f$ sabit olduğu için $v$ ile çarpım sonrası
+alınacak entegraller daha basit oluyor tabii, sabit çarpı deneme fonksiyonu,
+kolay hesap.  Sınırda, çember üzerinde, $u = 0$ şartını koyuyoruz. Bu sistemi
+çözeceğiz. Analitik çözümün ne olduğunu görmek zor değil, $u = 1 - x^2 - y^2$
+çözüm.  Yerine koyarsak doğrulaması kolay, iki kere $x$ türevi 2, $y$ türevi 2,
+toplam 4.</p>
 <p>Çember içindeki ızgaraya önce bir poligonla başlıyorum. Bu arada araştırma
-sorusu bağlamında aklımdaki sorulardan biri ızgara şekline göre hesabın ortaya
-çıkaracağı hata miktarı. Bazı ızgaralar diğerlerinden daha iyi olabilir.</p>
+sorusu bağlamında aklımdaki sorulardan biri hesabın ortaya çıkaracağı hata
+miktarı. Bazı ızgaralar diğerlerinden daha iyi olabilir.</p>
 <p><img alt="" src="compscieng_1_27_01.png" /></p>
-<p>Sınır şartımızı hatırlarsak düz cizgilerin çembere değdiği noktalarda $u = 0$.</p>
+<p>Neyese, sınır şartımızı hatırlarsak düz cizgilerin çembere değdiği noktalarda
+$u = 0$.</p>
 <p>$M$ tane köşe olsun, ve orta noktadan köşelere çizgiler çekerek üçgenler
 oluşturalım, altta üçgenlerden biri görülüyor,</p>
 <p><img alt="" src="compscieng_1_27_02.png" /></p>
@@ -123,17 +124,56 @@ $$</p>
 <p>Bizim örneklerimizde, bu derste deneme, test fonksiyonları sürekli, kesintili
 süreksiz değil. O durumda matematikte bambaşka bir aleme giriyoruz, "süreksiz
 (discontinuous) Galerkin" denen alan bu, kendi uzmanları var, vs. Biz sürekli
-(continuous) Galerin, ÇG yapıyoruz. </p>
+(continuous) Galerkin, CG yapıyoruz.</p>
 <p>Ve FEM'in özüne geliyoruz artık, iyi huylu, güzel polinomlardan oluşan
 $\phi$'ler ile,</p>
 <p>$$
 U = U_1 \phi_1 (x,y) + ... + U_N \phi_N (x,y) 
 $$</p>
-<p>Resimde görülen izgaradaki her düğüm için bir $\phi$ yani, 13 tane olacak yani,
+<p>Resimde görülen ızgaradaki her düğüm için bir $\phi$ yani, 13 tane olacak yani,
 sonra $v$ ile $\phi$'yi aynı seçeceğim, ve böylece sonsuz boyut yerine 13
 boyutta çalışıyor olacağım. Sonra üstteki az boyuttaki alt uzayı, FEM uzayını,
 yani formülünü alıyorum ve zayıf forma sokuyorum, ve onu 13 tane $v$ ile ayrı
-ayrı ilintilendirip 'test ediyorum'. </p>
+ayrı ilintilendirip 'test ediyorum'. Sokma işlemini yapalım,</p>
+<p>$$
+\int \int
+(
+\frac{\mathrm{d} U}{\mathrm{d} x} \frac{\mathrm{d} V}{\mathrm{d} x} +
+\frac{\mathrm{d} U}{\mathrm{d} y} \frac{\mathrm{d} V}{\mathrm{d} y} 
+) =
+\int \int f V  \mathrm{d} x \mathrm{d} y
+$$</p>
+<p>Bu entegral tüm alan üzerinden. Kullandığım $U$ bilinen fonksiyonların bir
+kombinasyonu, ve $V$'ler kombine edilen aynı fonksiyonlardan seçilecek (Galerkin
+yöntemi olduğu için). </p>
+<p>Tek boyut örneğine kıyasla hala yeni bir fikir eklemiş olmadık. Tek boyutta
+yanyana düşen iki şapka fonksiyon türevlerinin entegralini almaktan bahsettik,
+bir alternatif ise bir bölge seçip ona dokunan deneme fonksiyonlarından bir 2 x
+2 öğe matrisi yaratmaktı. İki boyutta bu yöntem doğru yöntem. Seçilen alan üçgen
+tabii ki, yani kod her üçgene teker teker bakacak ve onlardan ayrı matrisler
+oluşturacak. Yani üstteki entegral her üçgen için oluşturulacak .</p>
+<p>Başta P1 öğeleri kullanacağız demiştik, yani tek derece polinom. Her üçgen
+için P1 öğesi nasıl oluştururuz? </p>
+<p><img alt="" src="compscieng_1_27_04.png" /></p>
+<p>Üstteki üçgende tepe noktada $U_1$ yüksekliği, alt solda $U_2$ alt sağda $U_3$
+yüksekliği var. Düğümlerdeki değerler bunlar. Üçgenin ortasında, yani o düz
+yüzeyde (düz çünkü 1'inci derece polinom bunu verir) $U$ değeri $U = a+bx+cy$.
+O zaman $U_1,U_2,U_3$ değerlerini biliyorsam $a,b,c$ katsayılarını da biliyorum
+demektir (düzlem formülünde köşe noktaları düzlem formülünü belirler), diğer
+yönde doğru muhakkak. Bu geçişi yapan bir 3 x 3 boyutunda bir matris var yani (3
+x 1 vektör alan ve 3 x 1 vektör döndüren bir hesap doğal olarak o boyutta).</p>
+<p>Düğüm değerleri ile katsayılar arasında bir tercüme yapıyoruz, bu gerekli çünkü
+bilinmeyenler düğüm değerleri.. bilinmeyenler piramit fonksiyonunu çarpan
+değerler, mesela üst köşede 1 yüksekliğindeki piramit fonksiyonunu başta $U_1$
+ile çarpıyoruz, piramit o noktada 1'den başlayıp diğer köşelerde 0'a inen bir
+şey hatırlarsak, aynı şekilde $U_2$ kendi köşesinde 1'den başlayıp diğerlerinde
+0'a inen piramiti çarpıyor, $U_3$ de öyle. Ortadaki o düzlük te verilen $a + bx
++ cy$ formülünde.</p>
+<p>$U_1$,$U_2$,$U_3$ noktalarinin nerede oldugunu biliyoruz, degil mi, onlari
+izgarayi olustururken biz sectik. Bu noktalardan bir 3 x 3 matrisi
+olusturacagiz, ki boylece $a,b,c$ katsayilarina gecis yapabilelim.</p>
+<p>Katsayılar niye lazım? Çünkü entegrasyon işlemini yaparken o katsayılar bize
+lazım, $\mathrm{d} U / \mathrm{d} x$, $\mathrm{d} U / \mathrm{d} y$ türevleri için. </p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] <em>18.085 SUMMER 2012 Site</em>,

@@ -1,0 +1,85 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Ders 1.22</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ders 1.22
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Basit bir $u$ ile başlayalım, $u = x^2 + y^2 = c$. Bu bize iki boyutta bir
+çember veriyor. Bu formülün gradyanini alarak ne öğreniyorum? Bu çembere her
+noktadan dışarı dik giden vektörü. $v = [2x, 2y]$.</p>
+<p>[atlandi]</p>
+<p>Bize iki $v_1$ ve $v_2$ fonksiyonları verilmiş, öyle ki</p>
+<p>$$
+v_1 = \frac{\partial u}{\partial x}
+$$</p>
+<p>$$
+v_2 = \frac{\partial u}{\partial y}
+$$</p>
+<p>Buradan türevin tersine giderek bir $u$ nasıl elde ederim? Yani $x$ türevi $v_1$
+olarak verilmiş, $y$ türevi $v_2$ olarak verilmiş bir $u$'yu bulabilir miyim?
+Şansımız pek fazla değil, çünkü iki tane bilinen denklemim, ama bir tane
+bilinmeyen değişkenim var. Çoğunlukla bu tür sistemlerde çözüm olmaz, ama bazen
+olur. O zaman sonucu bulduğumuza dair tutarlılık testimiz ne olabilir?
+Bu bizi kısmı türev bazlı bir eşitliğe götürüyor.</p>
+<p>Düşünelim. Üstteki iki denklemi birbiriyle nasıl ilintilendirebilirim? Ki,
+matris dilini kullanırsak, "$v_1,v_2$'nin gradyanin kolon uzayında olduğunu
+anlayabileyim". </p>
+<p>Ana fikir şu, $v_1$'in $y$ bazlı $v_2$'nin $x$ bazlı türevini al.</p>
+<p>$$
+\frac{\partial v_1}{\partial y} = \frac{\partial^2 u}{\partial y \partial x}
+$$</p>
+<p>$$
+\frac{\partial v_2}{\partial x} = \frac{\partial^2 u}{\partial x \partial y}
+$$</p>
+<p>Fakat türevlerde sırabağımsızlık sebebiyle üstteki iki denklemin sağ tarafları
+aynı şeyi söylemiyor mu? Evet. O zaman formüllerin sol tarafları da birbirine
+eşit demektir,</p>
+<p>$$
+\frac{\partial v_1}{\partial y} = \frac{\partial v_2}{\partial x} 
+$$</p>
+<p>Ya da</p>
+<p>$$
+\frac{\partial v_1}{\partial y} - \frac{\partial v_2}{\partial x} = 0
+\qquad (1)
+$$</p>
+<p>Bu formül önemli çünkü Vektör Calculus'ün temel eşitliği.</p>
+<p>[atlandi]</p>
+<p>Testi bulduk. Şimdi "dolam (curl)" kelimesini kullanmak istiyorum, üsttekine,
+$\mathrm{curl} v = 0$ şartı diyebilirim. İtiraz edenleriniz olabilir, "ama dolam üç
+boyuttadır" vs. Daha önce hakikaten üç boyutta gördük bu kavramı, ve sonucun da
+üç bileşeni oluyordu. Fakat üsttekine "düzlemde dolam" diyebiliriz.  Ya da
+sanki üç boyuttayız ama $v = [v_1(x,y), v_2(x,y) 0]$ durumu var, $z$ hep sıfır,
+ve dolam hesabı bu şartta yapılınca dolamın tüm bileşenlerinden geri kalan
+sadece üstte görülen formül olacaktır. Mesela $v_3$'un türevini kullanan kısım
+yokolur, çünkü $v_3$ yok.</p>
+<p>[atlandi]</p>
+<p>(1) formulu bir nokta icin gecerli. Bu formulu bir cember, dongu etrafinda
+nasil uygularim? Kapali bir devre etrafinda uygulamak istiyorum,</p>
+<p>$$
+\oint v_1 \mathrm{d} x + v_2 \mathrm{d} y = 0
+\qquad (2)
+$$</p>
+<p>Mesela bir hız alanında bir kapalı devre içinde gidiyorum, böyle bir alanda tüm,
+toplam sirkülasyon, dönüş sıfır olmalı. (2) de aslında Vektör Calculus'ta bir
+eşitlik, (1) ile (2) bağlantılı aslında, biri diğeri sıfır olunca sıfır..
+Stokes Teorisi mesela (2) entegrali (1)'in cift entegral alınmış hali der, vs.</p>

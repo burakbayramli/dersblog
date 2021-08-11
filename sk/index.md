@@ -3,7 +3,7 @@
 
 ## En Son
 
-7/8 - [Çok Değişkenli Calculus - Ders 29](https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_29/ders_29.html)
+11/8 - [Çok Değişkenli Calculus - Ders 29](https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_29/ders_29.html)
 
 7/8 - [Çok Değişkenli Calculus - Ders 28](https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_28/ders_28.html)
 
@@ -44,4 +44,6 @@
 [Sene](year.md)
 
 [Ara](ara.html)
+
+
 

@@ -114,13 +114,63 @@ plt.savefig('compscieng_1_21_03.png')
 
 Uyum fena değil! Not: eğri kesikli çıktı çünkü çok az sayıda veri var. 
 
-Lagrange Aradegerlemesi (Lagrange Interpolation)
+Lagrange Aradeğerlemesi (Lagrange Interpolation)
+
+En ekşi ve en yaygın uygulaması olan aradeğerleme fonksiyonlarından biri JL
+Lagrange tarafından yayınlanmış olandır. Pratik faydalarının yaninda bu tekniğin
+önemli bazı teorik sonuçları var, bu sebeple yaklaşık ya da olmayan entegrasyon
+ve türev alma tekniklerini bir fonksiyonu Lagrange aradeğerlemesi ile temsil
+etmeyi baz alıyor [1, sf. 268].
+
+Lagrange tekniğinin önemli bir özelliği yaklaşık temsil edilecek fonksiyon için
+seçilen değerler üzerinde aynen verinin söylediği değerleri tekrar
+üretebilmesi. Yani eğer $f(x)$'i bir $f_h(x)$ ile yaklaşık temsil etmişsek, ve
+eğer $f(1) = 3$ ise, aradeğerleme sonrası $f_h(1) = 3$ olacaktır, ve bu
+üzerinden aradeğerleme yapılmış tüm veri noktaları için doğru olacaktır.
+Ayrıca bu tekniğin önemli bir özelliği üzerinden aradeğerleme yapılan $x$
+değerlerinin gelişigüzel seçilebilmesi, eşit aralıkta alınma gibi bir
+zorunluluk yok.
+
+Şimdi diyelim ki elde modellenen $f(x)$ için elde $n$ tane $x_1,x_2,...,x_n$
+değeri var, ki
+
+$$
+f(x_i) = y_i, \qquad i=1,2,..,n
+$$
+
+Çözmek istediğimiz problem mümkün olan az derecede olan bir polinom $P_m(x)$
+yaratmak öyle ki bu polinom eldeki $(x_i,y_i)$ veri noktalarını temsil
+edebilsin, yani
+
+$$
+P_m(x_i) = y_i, \qquad i=1,2,..,n
+$$
+
+Daha önce söylediğimiz gibi veri noktalarında aradeğerleme ve veri aynı sonuçta
+olmalı.
+
+Bu amacla $n$ tane ayri ayri polinom $p_i(x)$ yaratacagiz, ve bu polinomlar
+oyle tasarlanacak ki $x_i$ noktasinda biri aktif olacak, digerleri yokolacak.
+Bu bize bir delta fonksiyonunu hatirlatabilir, bu dogru, su sonucu istiyoruz,
+
+$$
+p_i(x_j) = \delta_{ij} =
+\left\{ \begin{array}{ll}
+1 & \textrm{eğer } j = i \textrm{ ise} \\
+0 & \textrm{eğer } j\ne i \textrm{ ise}
+\end{array} \right.
+$$
+
+
+
+
+
+
+
+
 
 
 \begin{minted}[fontsize=\footnotesize]{python}
-import numpy as np
-import matplotlib.pyplot as plt
-
 def Lagrange(x, y, n, xi):
    yi = 0e0
    for i in range(1,n+1):
@@ -132,12 +182,12 @@ def Lagrange(x, y, n, xi):
    return yi
 
 n  = 8                                                # kac veri noktasi
-ni = 100                                     # number of interpolation points
+ni = 100                                     # kac aradegerleme noktasi
 
 x = [0]*(n+1)                                                   
 y = [0]*(n+1)
 
-# f(x) = 1/x, x degerleri gelisiguzel secilmis 
+# f(x) = sin(5*x), x degerleri gelisiguzel secilmis 
 x[1] = 0.15; x[2] = 0.2; x[3] = 0.3; x[4] = 0.5;
 x[5] = 0.8 ; x[6] = 1.1; x[7] = 1.4; x[8] = 1.7
 for i in range(1,n+1): y[i] = np.sin(5*x[i])
@@ -145,8 +195,8 @@ for i in range(1,n+1): y[i] = np.sin(5*x[i])
 h = (x[n]-x[1])/(ni-1)
 xx = []; yy = []
 for i in range(1,ni+1):
-   xi = x[1] + (i-1)*h                               # interpolation argument
-   yi = Lagrange(x,y,n,xi)                                # interpolant value
+   xi = x[1] + (i-1)*h                          
+   yi = Lagrange(x,y,n,xi) 
    xx.append(xi)
    yy.append(yi)
 
@@ -163,7 +213,5 @@ plt.savefig('compscieng_app20cfit1_01.png')
 Kaynaklar
 
 [1] Beu, {\em Introduction to Numerical Programming A Practical Guide for Scientists and Engineers Using Python and C/C++}
-
-
 
 \end{document}

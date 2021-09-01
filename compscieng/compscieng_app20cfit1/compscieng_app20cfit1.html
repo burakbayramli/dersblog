@@ -138,11 +138,12 @@ edebilsin, yani</p>
 <p>$$
 P_m(x_i) = y_i, \qquad i=1,2,..,n
 $$</p>
+<p>Burada $m$ altsembolü dereceyi göstermek için kullanılıyor.</p>
 <p>Daha önce söylediğimiz gibi veri noktalarında aradeğerleme ve veri aynı sonuçta
 olmalı.</p>
-<p>Bu amacla $n$ tane ayri ayri polinom $p_i(x)$ yaratacagiz, ve bu polinomlar
-oyle tasarlanacak ki $x_i$ noktasinda biri aktif olacak, digerleri yokolacak.
-Bu bize bir delta fonksiyonunu hatirlatabilir, bu dogru, su sonucu istiyoruz,</p>
+<p>Bu amaçla $n$ tane ayrı ayrı polinom $p_i(x)$ yaratacağız, ve bu polinomlar
+öyle tasarlanacak ki $x_i$ noktasında biri aktif olacak, diğerleri yokolacak.
+Bu bize bir delta fonksiyonunu hatırlatabilir, bu doğru, şu sonucu istiyoruz,</p>
 <p>$$
 p_i(x_j) = \delta_{ij} =
 \left\{ \begin{array}{ll}
@@ -150,6 +151,55 @@ p_i(x_j) = \delta_{ij} =
 0 &amp; \textrm{eğer } j\ne i \textrm{ ise}
 \end{array} \right.
 $$</p>
+<p>ki $\delta_{ij}$ Kronecker delta fonksiyonu. Eger $p_i(x)$'lerin $j \ne i$
+olacak sekilde $x_j$ noktalarinda yokolmasini istiyorsak, onu $(x-x_j)$
+faktorlerinin bir carpimi olarak yazabiliriz,</p>
+<p>$$
+p_i(x) = C_i \prod_{j \ne i} (x-x_j)
+$$</p>
+<p>Sabit $C_i$ normalize edici bir değer. Üstteki çarpımda $(x-x_i)$ yok,
+onu dışarıda bırakarak $p_i$ elde ettik. Bir faktör hep dışarıda olacağı
+için $p_i(x)$ polinomunun derecesi hep $(n-1)$ olacaktır. Normalizasyon
+sabiti $C_i$ hesaplamak için $p_i(x_i)=1$ olduğunu hatırlayalım ve
+bu değeri elde etmek için $C_i = 1 / \prod_{j \ne i} (x_i - x_j)$
+sabiti gerekecektir, o zaman</p>
+<p>$$
+p_i(x) = \frac
+{\bprod_{j \ne i} (x - x_j)}
+{\bprod_{j \ne i} (x_i - x_j)},
+\quad i=1,2,..,n
+$$</p>
+<p>Her $p_i(x)$ polinomu $x_i$ haricinde diğer her noktada yokolacağı için $P_m$
+polinomu $p_i(x)$'lerin bir lineer kombinasyonu, toplamı olarak temsil
+edilebilir,</p>
+<p>$$
+P_m(x) =  \sum_{i=1}^{n} p_i (x) y_i
+$$</p>
+<p>Bir $x_j$ için ne elde ediyoruz?</p>
+<p>$$
+P_m(x_j) = \sum _{i=1}^{n} p_i(x_j) y_i =  \sum _{i=1}^{n} \delta_{ij} y_i = y_j
+$$</p>
+<p>Doğru gözüküyor. Genel formda şunu yazabiliriz,</p>
+<p>$$
+P_m (x) = \sum_{i=1}^{n}
+\frac{\bprod_{j \ne i} (x - x_j)}{\bprod_{j \ne i} (x_i - x_j)}
+$$</p>
+<p>Eğer $n=2$ olsaydı, eldeki iki tane $(x_1,y_1)$ ve $(x_2,y_2)$ için</p>
+<p>$$
+P_1(x) =
+\frac{(x-x_2)}{(x_1-x_2)} y_1 +
+\frac{(x-x_1)}{(x_2-x_1)} y_2 
+$$</p>
+<p>Bu tabii ki iki noktadan geçen düz bir çizgiyi temsil ediyor.</p>
+<p>Eger $n=3$ olsaydi, uc noktadan gecen bir parabol elde edilirdi,</p>
+<p>$$
+P_2(x) =
+\frac{(x-x_2)(x-x_3)}{(x_1-x_2)(x_1-x_3)} y_1 +
+\frac{(x-x_1)(x-x_3)}{(x_2-x_1)(x_2-x_3)} y_2 +
+\frac{(x-x_1)(x-x_2)}{(x_3-x_1)(x_3-x_2)} y_3
+$$</p>
+<p>Altta örnek olarak $\sin(5x)$'ten alınmış 8 veri noktası ile
+aradeğerleme yapan bir örnek görüyoruz,</p>
 <pre><code class="python">def Lagrange(x, y, n, xi):
    yi = 0e0
    for i in range(1,n+1):

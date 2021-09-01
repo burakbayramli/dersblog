@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Egri Uydurma, Aradegerleme (Interpolation) - 1</h1>
+<h1>Eğri Uydurma, Aradeğerleme (Interpolation) - 1</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Egri Uydurma, Aradegerleme (Interpolation) - 1
+    <title>Eğri Uydurma, Aradeğerleme (Interpolation) - 1
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -113,3 +113,47 @@ plt.savefig('compscieng_1_21_03.png')
 
 <p><img alt="" src="compscieng_1_21_03.png" /></p>
 <p>Uyum fena değil! Not: eğri kesikli çıktı çünkü çok az sayıda veri var. </p>
+<p>Lagrange Aradegerlemesi (Lagrange Interpolation)</p>
+<pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+
+def Lagrange(x, y, n, xi):
+   yi = 0e0
+   for i in range(1,n+1):
+      p = 1e0
+      for j in range(1,n+1):
+          if (j != i): p *= (xi - x[j])/(x[i] - x[j])
+      yi += p * y[i]
+
+   return yi
+
+n  = 8                                                # kac veri noktasi
+ni = 100                                     # number of interpolation points
+
+x = [0]*(n+1)                                                   
+y = [0]*(n+1)
+
+# f(x) = 1/x, x degerleri gelisiguzel secilmis 
+x[1] = 0.15; x[2] = 0.2; x[3] = 0.3; x[4] = 0.5;
+x[5] = 0.8 ; x[6] = 1.1; x[7] = 1.4; x[8] = 1.7
+for i in range(1,n+1): y[i] = np.sin(5*x[i])
+
+h = (x[n]-x[1])/(ni-1)
+xx = []; yy = []
+for i in range(1,ni+1):
+   xi = x[1] + (i-1)*h                               # interpolation argument
+   yi = Lagrange(x,y,n,xi)                                # interpolant value
+   xx.append(xi)
+   yy.append(yi)
+
+xx = np.array(xx)
+yy = np.array(yy)
+
+plt.plot(xx,yy)
+plt.plot(x,y)
+plt.savefig('compscieng_app20cfit1_01.png')
+</code></pre>
+
+<p><img alt="" src="compscieng_app20cfit1_01.png" /></p>
+<p>Kaynaklar</p>
+<p>[1] Beu, <em>Introduction to Numerical Programming A Practical Guide for Scientists and Engineers Using Python and C/C++</em></p>

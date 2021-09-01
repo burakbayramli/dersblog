@@ -221,13 +221,16 @@ x[1] = 0.15; x[2] = 0.2; x[3] = 0.3; x[4] = 0.5;
 x[5] = 0.8 ; x[6] = 1.1; x[7] = 1.4; x[8] = 1.7
 for i in range(1,n+1): y[i] = np.sin(5*x[i])
 
-h = (x[n]-x[1])/(ni-1)
 xx = []; yy = []
+# x[1] ile x[8] arasinda esit aralikli x'ler yarat
+# daha fazla nokta olsun
+xis = np.linspace(x[1],x[-1],ni)
 for i in range(1,ni+1):
-   xi = x[1] + (i-1)*h                          
+   xi = xis[i-1]
    yi = Lagrange(x,y,n,xi) 
    xx.append(xi)
    yy.append(yi)
+
 
 xx = np.array(xx)
 yy = np.array(yy)

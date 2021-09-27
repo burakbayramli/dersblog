@@ -2,6 +2,179 @@
 \begin{document}
 Sıvılar - 1
 
+Euler ve Lagrange, Materyel Türev
+
+Euler ve Lagrange bakış açısı arasındaki farklarla başlayalım. Bu iki bakış
+açısı bir sıvının dinamiğini nasıl incelediğimiz ile alakalı. Eğer bir nehirdeki
+kirlilik yoğunluğunu ölçüyorsak mesela, bunu herhangi bir $x,y,z$ noktasında
+yapabiliriz, ve diyelim ki kirlilik belli bir yerde hiç değişmiyor, ertesi gün
+gelsek aynı yerde aynı ölçümü alıyoruz [2, sf 78]. Bu yere bağımlı Euler açısı.
+
+Fakat farklı yerlerde farklı ölçümler olabilir, mesela nehir boyunca bir kayık
+içinde sabit hızda gidersek yoğunluk lineer oranda artıyor. Bu durumda pir paket
+sıvıyı takip ettiğimizi düşünebiliriz, o paketin açısından elde edilen ölçümler
+Lagrange bakış açısıdır. 
+
+İki bakış açısı arasında gidip gelmenin yolu materyel türev. Böylece Euler
+bazındaki değişim kullanılarak Lagrange tarifi yapılabiliyor. Bu önemli çünkü
+ölçümler çoğunlukla Euler formatında düşünülür (bir yerde duran ölçüm aleti
+idare etmesi ve temsili daha rahat bir kavramdır), ayrıca matematik Euler
+ortamında biraz daha kolay manipüle edilebilir hale geliyor [3].
+
+Lagrange ile bir parçacık hayal ediyoruz, onu tanımlamanın bir yolu $t=0$ anında
+nerede olduğu. Daha sonra bu başlangıç noktasındaki sıvı paketinin hangi yolu
+takip ettiğini $\bar{r}(t)$ ile tarif ediyoruz, ki $\bar{r}(t)$ parametrik bir
+eğri olarak alabiliriz, $r = ( x(t), y(t), z(t) )$. Eğer bir başlangıç
+noktasını $a$ olarak tanımlarsak bu başlangıcın ve yol denkleminin bir parçacığı
+tarif ettiğini düşünebiliriz,
+
+\includegraphics[width=20em]{phy_050_cons_02.png}
+
+Herhangi bir ölçümü alalım [4], biraz önce kirlilik örneği verdik, bu
+sıcaklık ta olabilirdi, ölçüm $F(t,x,y,z)$ olsun, $t$ anında ve $x,y,z$
+noktasında yapılan ölçüm, bu ölçüme Calculus'un Zincirleme Kuralını uygularsak,
+değişim oranını materyel türev $D F / Dt$'yi nasıl elde edebileceğimizi
+görebiliriz,
+
+$$
+\frac{D F}{D t} =
+\frac{\partial F}{\partial t} +
+\frac{\partial F}{\partial x} \frac{\partial x}{\partial t} + 
+\frac{\partial F}{\partial y} \frac{\partial y}{\partial t} + 
+\frac{\partial F}{\partial z} \frac{\partial z}{\partial t} 
+$$
+
+$(\frac{\partial x}{\partial t}, \frac{\partial y}{\partial t},\frac{\partial
+z}{\partial t})$ hız olarak görülebilir, ona $\bar{u} = (u,v,w)$ vektörü diyelim,
+
+$$
+\frac{D F}{D t} =
+\frac{\partial F}{\partial t} +
+\frac{\partial F}{\partial x} u + 
+\frac{\partial F}{\partial y} v + 
+\frac{\partial F}{\partial z} w 
+$$
+
+Ayrica $(\frac{\partial F}{\partial x},\frac{\partial F}{\partial y},\frac{\partial F}{\partial z})$
+gradyan vektoru $\nabla F$,
+
+$$
+\frac{\partial F}{\partial t} + \bar{u} \cdot \nabla F
+$$
+
+Burada $\frac{\partial F}{\partial t}$ ölçülen $F$'nin tek, sabit bir yerde
+zamana göre değişimidir. Bu terime yapılan ekler hareket halindeki parçanın ek
+olarak göreceği ölçüm değişim oranı olacaktır.
+
+Alınan türev bir operatör olarak görülebilir, 
+
+$$
+\frac{D ()}{D t} = \frac{\partial () }{\partial t} + \bar{u} \cdot \nabla ()
+$$
+
+Üzerinde operatör uygulanan $()$ içine gider, $F$ için
+
+$$
+\frac{D F}{D t} = \frac{\partial F}{\partial t} + \bar{u} \cdot \nabla F
+$$
+
+ile önceki formüle eriştik.
+
+Şimdi ilginç bir noktaya geldik, süreklilik denklemi (1)'i, $\rho$ ölçümü
+üzerinde materyel türev uygulanmış formu olarak görmek mümkün,
+
+$$
+\frac{D \rho}{D t} + \rho \nabla \cdot \bar{u} = 0
+$$
+
+İlginç bir diğer bakış açısı Anderson kitabından [7, sf. 43]. Hız $x,y,z$
+noktasında $t$ anındaki $u,v,w$ hız vektörü
+
+$$
+u = u(x,y,z,t)
+$$
+
+$$
+v = u(x,y,z,t)
+$$
+
+$$
+w = u(x,y,z,t)
+$$
+
+ile gösteriliyor olsun, ve bu nokta ve zamandaki yoğunluk $\rho$ ise
+
+$$
+\rho = \rho(x,y,z,t)
+$$
+
+
+Ufak sıvı hacimlerine bakıyoruz, ve $t_1$ anında 1 noktasındaki öğenin
+yoğunluğu
+
+$$
+\rho_1 = \rho(x_1,y_1,z_1,t_1)
+$$
+
+\includegraphics[width=20em]{phy_050_cons_04.png}
+
+Daha sonraki bir $t_2$ anında aynı sıvı öğesi 2 noktasına gitti diyelim, bu
+noktada yoğunluk
+
+$$
+\rho_2 = \rho(x_2,y_2,z_2,t_2)
+$$
+
+Şimdi 1 noktası etrafında 2 noktasına doğru bir Taylor açılımı yapabiliriz,
+yüksek dereceli diğer terimler (high-order terms) HOT ile belirterek,
+
+$$
+\rho_2 =
+\rho_1 + \left( \frac{\partial \rho}{\partial x}  \right)_1 (x_2-x_1) +
+\left( \frac{\partial \rho}{\partial y}  \right)_1 (y_2-y_1) +
+\left( \frac{\partial \rho}{\partial z}  \right)_1 (z_2-z_1) +
+\left( \frac{\partial \rho}{\partial t}  \right)_1 (t_2-t_1) +
+HOT
+$$
+
+$\rho_1$ terimini sol tarafa geçirip her sey $t_2-t_1$ ile bolersek ve
+HOT'yi yoksayarsak,
+
+$$
+\frac{\rho_2-\rho_1}{t_2-t_1} =
+\left( \frac{\partial \rho}{\partial x}  \right)_1 \frac{(x_2-x_1)}{t_2-t_1} +
+\left( \frac{\partial \rho}{\partial y}  \right)_1 \frac{(y_2-y_1)}{t_2-t_1} +
+\left( \frac{\partial \rho}{\partial z}  \right)_1 \frac{(z_2-z_1)}{t_2-t_1} +
+\left( \frac{\partial \rho}{\partial t}  \right)_1 
+$$
+
+Eşitliğin sol tarafına dikkat edersek bu sıvının 1 noktasından 2 noktasına
+giderken deneyimlediği zamanda ortalama değişim değil midir? Limite giderken
+yani $t_2$ zamanı $t_1$'e sonsuz yaklaştırılırken,
+
+$$
+\lim_{t_2 \to t_1} \frac{\rho_2-\rho_1}{t_2-t_1} = \frac{D\rho}{D t}
+$$
+
+ki burada $D\rho/D t$ sembolü yoğunluğun 1 noktasından geçerken yaşadığı
+{\em anlık} değişimdir.
+
+Yaygın adlandırma kuralları bu sembole maddi, materyel türev (substantial
+derivatıve) $D/Dt$ adını verir. Dikkat edelim $D\rho/Dt$ yoğunluğun sıvı öğesi
+hareket ederken zamana göre değişim oranıdır. Gözlerimiz o sıvı paketine
+kitlenmiş durumdadır, onu izlemekteyiz, ve 1 noktasında geçerken onun
+yoğunluğunun değişimini raporlamak istiyoruz. Bu rapor
+$(\partial \rho / \partial t)_1$'den farklı, burada sabit 1 noktasındaki
+yoğunluğun zamana göre değişim oranını raporluyoruz. Bu durumda gözler 1
+noktasına kitlenmiş durumda, sadece orada olup bitenlerle ilgileniyoruz. 
+
+
+
+
+
+
+
+
 Kütle Muhafazası, Süreklilik Formülü (Continuity Equation)
 
 Ufak bir kutu ya da hacim ögesi hayal edelim [4, 7 sf. 50, 8 sf. 10, 10 sf. 404, 12
@@ -108,92 +281,7 @@ durumlarda sanki orada bir su / sıvı kaynağı varmış gibi) o zaman sürekli
 formülünün fiziksel olarak şunu söylüyor denebilir; bir sıvının bir bölgedeki
 yoğunluk değişimi o bölgeye giren ve çıkan akımların sonucudur.
 
-Euler ve Lagrange
-
-Euler ve Lagrange bakış açısı arasındaki farklarla başlayalım. Bu iki bakış
-açısı bir sıvının dinamiğini nasıl incelediğimiz ile alakalı. Eğer bir nehirdeki
-kirlilik yoğunluğunu ölçüyorsak mesela, bunu herhangi bir $x,y,z$ noktasında
-yapabiliriz, ve diyelim ki kirlilik belli bir yerde hiç değişmiyor, ertesi gün
-gelsek aynı yerde aynı ölçümü alıyoruz [2, sf 78]. Bu yere bağımlı Euler açısı.
-
-Fakat farklı yerlerde farklı ölçümler olabilir, mesela nehir boyunca bir kayık
-içinde sabit hızda gidersek yoğunluk lineer oranda artıyor. Bu durumda pir paket
-sıvıyı takip ettiğimizi düşünebiliriz, o paketin açısından elde edilen ölçümler
-Lagrange bakış açısıdır. 
-
-İki bakış açısı arasında gidip gelmenin yolu materyel türev. Böylece Euler
-bazındaki değişim kullanılarak Lagrange tarifi yapılabiliyor. Bu önemli çünkü
-ölçümler çoğunlukla Euler formatında düşünülür (bir yerde duran ölçüm aleti
-idare etmesi ve temsili daha rahat bir kavramdır), ayrıca matematik Euler
-ortamında biraz daha kolay manipüle edilebilir hale geliyor [3].
-
-Lagrange ile bir parçacık hayal ediyoruz, onu tanımlamanın bir yolu $t=0$ anında
-nerede olduğu. Daha sonra bu başlangıç noktasındaki sıvı paketinin hangi yolu
-takip ettiğini $\bar{r}(t)$ ile tarif ediyoruz, ki $\bar{r}(t)$ parametrik bir
-eğri olarak alabiliriz, $r = ( x(t), y(t), z(t) )$. Eğer bir başlangıç
-noktasını $a$ olarak tanımlarsak bu başlangıcın ve yol denkleminin bir parçacığı
-tarif ettiğini düşünebiliriz,
-
-\includegraphics[width=20em]{phy_050_cons_02.png}
-
-Herhangi bir ölçümü alalım [4], biraz önce kirlilik örneği verdik, bu
-sıcaklık ta olabilirdi, ölçüm $F(t,x,y,z)$ olsun, $t$ anında ve $x,y,z$
-noktasında yapılan ölçüm, bu ölçüme Calculus'un Zincirleme Kuralını uygularsak,
-değişim oranını materyel türev $D F / Dt$'yi nasıl elde edebileceğimizi
-görebiliriz,
-
-$$
-\frac{D F}{D t} =
-\frac{\partial F}{\partial t} +
-\frac{\partial F}{\partial x} \frac{\partial x}{\partial t} + 
-\frac{\partial F}{\partial y} \frac{\partial y}{\partial t} + 
-\frac{\partial F}{\partial z} \frac{\partial z}{\partial t} 
-$$
-
-$(\frac{\partial x}{\partial t}, \frac{\partial y}{\partial t},\frac{\partial
-z}{\partial t})$ hız olarak görülebilir, ona $\bar{u} = (u,v,w)$ vektörü diyelim,
-
-$$
-\frac{D F}{D t} =
-\frac{\partial F}{\partial t} +
-\frac{\partial F}{\partial x} u + 
-\frac{\partial F}{\partial y} v + 
-\frac{\partial F}{\partial z} w 
-$$
-
-Ayrica $(\frac{\partial F}{\partial x},\frac{\partial F}{\partial y},\frac{\partial F}{\partial z})$
-gradyan vektoru $\nabla F$,
-
-$$
-\frac{\partial F}{\partial t} + \bar{u} \cdot \nabla F
-$$
-
-Burada $\frac{\partial F}{\partial t}$ ölçülen $F$'nin tek, sabit bir yerde
-zamana göre değişimidir. Bu terime yapılan ekler hareket halindeki parçanın ek
-olarak göreceği ölçüm değişim oranı olacaktır.
-
-Alınan türev bir operatör olarak görülebilir, 
-
-$$
-\frac{D ()}{D t} = \frac{\partial () }{\partial t} + \bar{u} \cdot \nabla ()
-$$
-
-Üzerinde operatör uygulanan $()$ içine gider, $F$ için
-
-$$
-\frac{D F}{D t} = \frac{\partial F}{\partial t} + \bar{u} \cdot \nabla F
-$$
-
-ile önceki formüle eriştik.
-
-Şimdi ilginç bir noktaya geldik, süreklilik denklemi (1)'i, $\rho$ ölçümü
-üzerinde materyel türev uygulanmış formu olarak görmek mümkün,
-
-$$
-\frac{D \rho}{D t} + \rho \nabla \cdot \bar{u} = 0
-$$
-
-Uzaklaşım Teorisi İle
+Uzaklaşım Teorisi İle Muhafaza Kanunları
 
 Kütle muhafaza kanununa değişik bir yönden erişmek mümkün. $\rho(r, t)$
 yoğunluğuna sahip bir sıvı olsun, ve bu sıvının akışını $u(r, t)$ ile temsil

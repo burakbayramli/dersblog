@@ -27,17 +27,17 @@ export PYTHONPATH=$PYTHONPATH:$SU2_RUN
 gibi olabilir. Bunları `.bashrc` içine koyalım, komut satırı kapatıp
 tekrar açalım.
 
-Örnek olarak alttaki ufak dersi takip edebiliriz. Derste gösterilen
-ayar dosyası (configuration file) ve hesapsal izgarayı tanımlayan
-dosya (mesh file) indirilir, 
+Örnek olarak alttaki dersi takip edebiliriz. 
 
 https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/
 
-Bu ders türbülanslı bir ortamda bir uçak kanadı kesidinin (airfoil)
-hava akışına nasıl tepki vereceğini simüle ediyor. Hava kesidin
-üzerinden soldan sağa doğru 52 m/s hızı civarında akıyor. Kesitlerin
-tasarımı öyledir ki tasarıma göre bu akış alttan itiş (lift) ve hava
-direnci (drag) oluşturur, eğer itiş yeterince büyükse uçak uçar.
+Derste gösterilen ayar dosyası (configuration file) ve hesapsal
+izgarayı tanımlayan dosya (mesh file) indirilir. Bu ders türbülanslı
+bir ortamda bir uçak kanadı kesidinin (airfoil) hava akışına nasıl
+tepki vereceğini simüle ediyor. Hava kesidin üzerinden soldan sağa
+doğru 52 m/s hızı civarında akıyor. Kesitlerin tasarımı öyledir ki
+tasarıma göre bu akış alttan itiş (lift) ve hava direnci (drag)
+oluşturur, eğer itiş yeterince büyükse uçak uçar.
 
 Artık
 
@@ -68,9 +68,4 @@ Sonra `flow.vtk` açarız, tekrar `Apply`. Bu alttaki görüntüyü çıkartmal�
 Bu basınç haritasını gösteriyor, maviye yakın renkler alçak basınç, kırmızıya
 yakın olanlar yüksek basınç. Basınç tabii ki bir itiş kuvvetidir, eğer altta
 daha fazla yüksek basınç varsa kanat kesidi uçmaya daha elverişlidir.
-
-
-
-
-
 

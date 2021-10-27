@@ -70,3 +70,13 @@ Bu basınç haritasını gösteriyor, maviye yakın renkler alçak basınç, kı
 yakın olanlar yüksek basınç. Basınç tabii ki bir itiş kuvvetidir, eğer altta
 daha fazla yüksek basınç varsa kanat kesidi uçmaya daha elverişlidir.
 
+Simulasyonda kullanilan NACA 0012 kanat kesidi standart bir sekildir,
+testlerde surekli kullanilir.
+
+Üstte görülen simülasyon iki boyutta, istikrarlı (steady) ve
+türbülansı ortalamayla basitleştirmeye uğraşan RANS yaklaşımını
+kullanmıştır (spesifik olarak Spalart-Allmaras türbülans modeli).
+Diğer teknik parametreler orijinal ders sayfasında bulunabilir.
+
+
+

@@ -1,6 +1,6 @@
 # SU2
 
-ŞU2 aerodinamik simülasyonları için açık kaynak bir programdır.
+SU2 aerodinamik simülasyonları için açık kaynak bir programdır.
 
 [[Kaynak]](https://github.com/su2code/SU2/releases/tag/v7.0.2)
 
@@ -67,10 +67,9 @@ Sonra `flow.vtk` açarız, tekrar `Apply`. Bu alttaki görüntüyü çıkartmal�
 
 ![](su2_01.png)
 
-Bu basinc haritasini gosteriyor, maviye yakin renkler alcak basinc, kirmiziya
-yakin olanlar yuksek basinc.
-
-
+Bu basınç haritasını gösteriyor, maviye yakın renkler alçak basınç, kırmızıya
+yakın olanlar yüksek basınç. Basınç tabii ki bir itiş kuvvetidir, eğer altta
+daha fazla yüksek basınç varsa kanat kesidi uçmaya daha elverişlidir.
 
 
 

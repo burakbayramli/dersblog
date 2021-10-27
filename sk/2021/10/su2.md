@@ -31,11 +31,12 @@ tekrar açalım.
 
 https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/
 
-Derste gösterilen ayar dosyası (configuration file) ve hesapsal
+Derste gösterilen ayar dosyası (configüration file) ve hesapsal
 izgarayı tanımlayan dosya (mesh file) indirilir. Bu ders türbülanslı
 bir ortamda bir uçak kanadı kesidinin (airfoil) hava akışına nasıl
 tepki vereceğini simüle ediyor. Hava kesidin üzerinden soldan sağa
-doğru 52 m/s hızı civarında akıyor. Kesitlerin tasarımı öyledir ki
+doğru 52 m/s hızı civarında akıyor, kesit yere göre 10 derece açıyla
+duruyor (angle of attack -AOA-). Kesitlerin tasarımı öyledir ki
 tasarıma göre bu akış alttan itiş (lift) ve hava direnci (drag)
 oluşturur, eğer itiş yeterince büyükse uçak uçar.
 

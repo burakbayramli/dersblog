@@ -1,8 +1,10 @@
 # SU2
 
-https://github.com/su2code/SU2/releases/tag/v7.0.2
+ŞU2 aerodinamik simülasyonları için açık kaynak bir programdır.
 
-Kaynak kodu indirin, açın. İşler program `/usr/local/bin` altına
+[[Kaynak]](https://github.com/su2code/SU2/releases/tag/v7.0.2)
+
+Kaynak kodu indirelim, açalım. İşler program `/usr/local/bin` altına
 gidece şekilde kurmak için, dizine girip
 
 ```
@@ -22,10 +24,11 @@ export PATH=$PATH:$SU2_RUN
 export PYTHONPATH=$PYTHONPATH:$SU2_RUN
 ```
 
-gibi olabilir. Bunları `.bachrc` içine koyalım, console kapatıp tekrar açalım.
+gibi olabilir. Bunları `.bachrç` içine koyalım, komut satırı kapatıp
+tekrar açalım.
 
-Ornek olarak alttaki ufak dersi takip edebiliriz. Derste gosterilen
-ayar dosyasi (configuration file) ve hesapsal izgarayi tanimlayan
+Örnek olarak alttaki ufak dersi takip edebiliriz. Derste gösterilen
+ayar dosyası (configüration file) ve hesapsal izgarayı tanımlayan
 dosya (mesh file) indirilir, 
 
 https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/

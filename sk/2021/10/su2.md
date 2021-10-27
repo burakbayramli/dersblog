@@ -61,10 +61,9 @@ apt-get install paraview
 sudo apt install libcanberra-gtk-module libcanberra-gtk3-module
 ```
 
-Simdi
-
-`paraview` ile işletiriz, önce `surface_flow.vtk` açarız, `Apply` düğmesine tıklarız.
-Sonra `flow.vtk` açarız, tekrar `Apply`. Bu alttaki görüntüyü çıkartmalı,
+Simdi `paraview` ile işletiriz, önce `surface_flow.vtk` açarız,
+`Apply` düğmesine tıklarız.  Sonra `flow.vtk` açarız, tekrar
+`Apply`. Bu alttaki görüntüyü çıkartmalı,
 
 ![](su2_01.png)
 
@@ -72,13 +71,12 @@ Bu basınç haritasını gösteriyor, maviye yakın renkler alçak basınç, kı
 yakın olanlar yüksek basınç. Basınç tabii ki bir itiş kuvvetidir, eğer altta
 daha fazla yüksek basınç varsa kanat kesidi uçmaya daha elverişlidir.
 
-Simulasyonda kullanilan NACA 0012 kanat kesidi standart bir sekildir,
-testlerde surekli kullanilir.
-
-Üstte görülen simülasyon iki boyutta, istikrarlı (steady) ve
-türbülansı ortalamayla basitleştirmeye uğraşan RANS yaklaşımını
-kullanmıştır (spesifik olarak Spalart-Allmaras türbülans modeli).
-Diğer teknik parametreler orijinal ders sayfasında bulunabilir.
+Simülasyonda kullanılan NACA 0012 kanat kesidi standart bir şekli,
+testlerde sürekli kullanılır. Üstte görülen simülasyon iki boyutta,
+istikrarlı (steady) ve türbülansı ortalamayla basitleştirmeye uğraşan
+RANS yaklaşımını kullanmıştır (spesifik olarak Spalart-Allmaras
+türbülans modeli).  Diğer teknik parametreler orijinal ders sayfasında
+bulunabilir.
 
 
 

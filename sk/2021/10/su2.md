@@ -45,12 +45,10 @@ Artık
 SU2_CFD turb_naca0012.cfg
 ```
 
-ile hesabi isletebiliriz. Dongu sayisi biraz fazla tanimlanmis olabilir,
-onu mesela `ITER= 100` daha az hale getirebiliriz.
-
-İşlem bitince `surface_flow.vtk`, `flow.vtk`, dosyaları üretilmiş olacak.
-Bu dosyalar sonuç verilerini içeriyor, onlara görsel şekilde bakmak mümkün,
-`paraview` programı bunun için.
+ile hesabı işletiriz. Döngü sayısı fazlaysa, onu mesela `İTER=100`
+daha azaltırız. İşlem bitince `surface_flow.vtk`, `flow.vtk`,
+dosyaları üretilmiş olacak.  Bu dosyalar sonuç verilerini içeriyor,
+onlara görsel şekilde bakmak mümkün, `paraview` programı bunun için.
 
 ```
 apt-get update

@@ -28,11 +28,12 @@ export PYTHONPATH=$PYTHONPATH:$SU2_RUN
 gibi olabilir. Bunları `.bashrc` içine koyalım, komut satırı kapatıp
 tekrar açalım.
 
-Örnek olarak alttaki dersi takip edebiliriz. 
+Programı kullanmak için bir örnek takip edelim, mesela alttaki dersi
+takip edebiliriz.
 
 https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/
 
-Derste gösterilen ayar dosyası (configüration file) ve hesapsal
+Derste gösterilen ayar dosyası (configuration file) ve hesapsal
 izgarayı tanımlayan dosya (mesh file) indirilir. Bu ders türbülanslı
 bir ortamda bir uçak kanadı kesidinin (airfoil) hava akışına nasıl
 tepki vereceğini simüle ediyor. Hava kesidin üzerinden soldan sağa

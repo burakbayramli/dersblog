@@ -1,6 +1,7 @@
 # SU2
 
-SU2 aerodinamik simülasyonları için açık kaynak bir programdır.
+SU2 aerodinamik simülasyonları için açık kaynak bir programdır. Sıfırdan
+derleyip kullanmak için alttaki tarifi takip edebiliriz.
 
 [Kaynak](https://github.com/su2code/SU2/releases/tag/v7.0.2)
 

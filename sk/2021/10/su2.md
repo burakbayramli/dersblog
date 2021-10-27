@@ -28,10 +28,8 @@ export PYTHONPATH=$PYTHONPATH:$SU2_RUN
 gibi olabilir. Bunları `.bashrc` içine koyalım, komut satırı kapatıp
 tekrar açalım.
 
-Programı kullanmak için bir örnek takip edelim, mesela alttaki dersi
-takip edebiliriz.
-
-https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/
+Programı kullanmak için bir örnek takip edelim, mesela alttaki [1]
+dersi takip edebiliriz.
 
 Derste gösterilen ayar dosyası (configuration file) ve hesapsal
 izgarayı tanımlayan dosya (mesh file) indirilir. Bu ders türbülanslı
@@ -48,7 +46,7 @@ Artık
 SU2_CFD turb_naca0012.cfg
 ```
 
-ile hesabı işletiriz. Döngü sayısı fazlaysa, onu mesela `ITER=100`
+ile hesabı işletiriz. Döngü sayısı fazlaysa, onu mesela `ITER=500`
 azaltırız. İşlem bitince `surface_flow.vtk`, `flow.vtk`, dosyaları
 üretilmiş olacak.  Bu dosyalar sonuç verilerini içeriyor, onlara
 görsel şekilde bakmak mümkün, `paraview` programı bunun için.
@@ -78,5 +76,33 @@ RANS yaklaşımını kullanmıştır (spesifik olarak Spalart-Allmaras
 türbülans modeli).  Diğer teknik parametreler orijinal ders sayfasında
 bulunabilir.
 
+Basınç Katsayısı (Pressure Coefficient)
 
+Ders [1]'de gösterilen 10 derece AOA için ŞU2'ye bazı veri dosyaları
+ürettirmek lazım, ayar dosyasında
+
+```
+OUTPUT_FILES= (RESTART, TECPLOT_ASCII, SURFACE_TECPLOT_ASCII)
+```
+
+tanımı bize içinde metinsel çıktı olan `surface_flow.dat` dosyasını
+verecek. Bu veride 7'inci kolon basınç katsayısı Cp'yi içeriyor, x
+ekseninde 0'inci kolondaki `x` verisi. Grafiği alttaki şekilde
+grafikleyebiliriz.
+
+```python
+import pandas as pd
+
+df = pd.read_csv('surface_flow.dat',skiprows=3,sep='\t',header=None)
+plt.gca().invert_yaxis()
+plt.plot(df[0], df[6])
+plt.savefig('su2_02.png')
+```
+
+![](su2_02.png)
+
+
+Kaynaklar
+
+[1] https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/
 

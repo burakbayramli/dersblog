@@ -2,7 +2,7 @@
 
 SU2 aerodinamik simülasyonları için açık kaynak bir programdır.
 
-[[Kaynak]](https://github.com/su2code/SU2/releases/tag/v7.0.2)
+[Kaynak](https://github.com/su2code/SU2/releases/tag/v7.0.2)
 
 Kaynak kodu indirelim, açalım. İşler program `/usr/local/bin` altına
 gidece şekilde kurmak için, dizine girip
@@ -14,7 +14,7 @@ gidece şekilde kurmak için, dizine girip
 ```
 
 Meson ve ninja yeni bir derleme sistemi (daha önce `make` ile yapılan işleri
-yapıyor), hızlı işliyor. Derleme sonunda `.başhrç` içine koymanız tavsiye
+yapıyor), hızlı işliyor. Derleme sonunda `.bashrc` içine koymanız tavsiye
 edilen bazı ayarlar var,
 
 ```
@@ -68,6 +68,9 @@ Sonra `flow.vtk` açarız, tekrar `Apply`. Bu alttaki görüntüyü çıkartmal�
 Bu basınç haritasını gösteriyor, maviye yakın renkler alçak basınç, kırmızıya
 yakın olanlar yüksek basınç. Basınç tabii ki bir itiş kuvvetidir, eğer altta
 daha fazla yüksek basınç varsa kanat kesidi uçmaya daha elverişlidir.
+
+
+
 
 
 

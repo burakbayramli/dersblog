@@ -78,8 +78,8 @@ bulunabilir.
 
 Basınç Katsayısı (Pressure Coefficient)
 
-Ders [1]'de gösterilen 10 derece AOA için ŞU2'ye bazı veri dosyaları
-ürettirmek lazım, ayar dosyasında
+Ders [1]'de gösterilen 10 derece AOA için SU2'ye bazı ek veri
+dosyaları ürettirmek lazım, ayar dosyasında,
 
 ```
 OUTPUT_FILES= (RESTART, TECPLOT_ASCII, SURFACE_TECPLOT_ASCII)
@@ -87,8 +87,7 @@ OUTPUT_FILES= (RESTART, TECPLOT_ASCII, SURFACE_TECPLOT_ASCII)
 
 tanımı bize içinde metinsel çıktı olan `surface_flow.dat` dosyasını
 verecek. Bu veride 7'inci kolon basınç katsayısı Cp'yi içeriyor, x
-ekseninde 0'inci kolondaki `x` verisi. Grafiği alttaki şekilde
-grafikleyebiliriz.
+ekseninde 0'inci kolondaki `x` verisi. Alttaki kodla grafikleyebiliriz.
 
 ```python
 import pandas as pd

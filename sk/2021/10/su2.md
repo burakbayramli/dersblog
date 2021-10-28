@@ -6,7 +6,7 @@ derleyip kullanmak için alttaki tarifi takip edebiliriz.
 [Kaynak](https://github.com/su2code/SU2/releases/tag/v7.0.2)
 
 Kaynak kodu indirelim, açalım. İşler program `/usr/local/bin` altına
-gidece şekilde kurmak için, dizine girip
+gidecek şekilde kurmak için, dizine girip
 
 ```
 ./meson.py build --prefix=/usr/local

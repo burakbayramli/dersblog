@@ -78,8 +78,8 @@ bulunabilir.
 
 Basınç Katsayısı (Pressure Coefficient)
 
-Ders [1]'de gösterilen 10 derece AOA için SU2'ye bazı ek veri
-dosyaları ürettirmek lazım, ayar dosyasında,
+Ders [1]'de gösterilen grafik için (10 derece AOA için olan) SU2'ye
+bazı ek veri dosyaları ürettirmek lazım, ayar dosyasında,
 
 ```
 OUTPUT_FILES= (RESTART, TECPLOT_ASCII, SURFACE_TECPLOT_ASCII)
@@ -100,6 +100,12 @@ plt.savefig('su2_02.png')
 
 ![](su2_02.png)
 
+
+Paralel isletmek icin
+
+```
+parallel_computation.py -f turb_naca0012.cfg -n 4
+```
 
 Kaynaklar
 

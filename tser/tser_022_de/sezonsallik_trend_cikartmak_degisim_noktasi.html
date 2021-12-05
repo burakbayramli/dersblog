@@ -1,0 +1,62 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Sezonsallık, Trend Çıkartmak, Değişim Noktası</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sezonsallık, Trend Çıkartmak, Değişim Noktası
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<pre><code class="python">from pandas import datetime
+def parser(x):
+    return datetime.strptime( '190'+x, '%Y-%m' )
+
+def model_compute(X, coef):
+   degree = len(coef)-1
+   curve = [np.sum([coef[-1]] + [x**(degree-d)*c for d,c \
+            in enumerate(coef[:-1])]) for x in X]
+   return curve
+
+df = pd.read_csv('shampoo-sales.csv', header=0, index_col=0, \
+     parse_dates=True, date_parser=parser)
+
+X = np.array(range(len(df))).reshape(-1)
+y = df.values.reshape(-1)
+degree = 1
+coef = np.polyfit(X, y, degree)
+df['line']  = model_compute(X, coef)
+df.plot()
+plt.savefig('tser_022_de_01.png')
+</code></pre>
+
+<p><img alt="" src="tser_022_de_01.png" /></p>
+<pre><code class="python">import pandas as pd
+df = pd.read_csv('daily-min-temperatures.csv', header=0,\
+                 index_col=0, parse_dates=True)
+X = [i%365 for i in range(0, len(df))]
+y = df.values
+degree = 4
+coef = np.polyfit(X, y, degree)
+df['curve']  = model_compute(X, coef)
+df.plot()
+plt.savefig('tser_022_de_02.png')
+</code></pre>
+
+<p><img alt="" src="tser_022_de_02.png" /></p>

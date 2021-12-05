@@ -24,15 +24,16 @@
 </script>
 </head>
 
-<pre><code class="python">from pandas import datetime
-def parser(x):
-    return datetime.strptime( '190'+x, '%Y-%m' )
-
-def model_compute(X, coef):
+<pre><code class="python">def model_compute(X, coef):
    degree = len(coef)-1
    curve = [np.sum([coef[-1]] + [x**(degree-d)*c for d,c \
             in enumerate(coef[:-1])]) for x in X]
    return curve
+</code></pre>
+
+<pre><code class="python">from pandas import datetime
+def parser(x):
+    return datetime.strptime( '190'+x, '%Y-%m' )
 
 df = pd.read_csv('shampoo-sales.csv', header=0, index_col=0, \
      parse_dates=True, date_parser=parser)
@@ -41,7 +42,7 @@ X = np.array(range(len(df))).reshape(-1)
 y = df.values.reshape(-1)
 degree = 1
 coef = np.polyfit(X, y, degree)
-df['line']  = model_compute(X, coef)
+df['Model']  = model_compute(X, coef)
 df.plot()
 plt.savefig('tser_022_de_01.png')
 </code></pre>
@@ -54,7 +55,7 @@ X = [i%365 for i in range(0, len(df))]
 y = df.values
 degree = 4
 coef = np.polyfit(X, y, degree)
-df['curve']  = model_compute(X, coef)
+df['Model']  = model_compute(X, coef)
 df.plot()
 plt.savefig('tser_022_de_02.png')
 </code></pre>

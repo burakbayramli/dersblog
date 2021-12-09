@@ -93,6 +93,24 @@ print ('p degeri =', pval)
 demektir. Üstteki normal olmadığın reddedemedik, demek ki büyük ihtimalle
 elimizde bir Normal dağılım var.</p>
 <p>Sezonsallık</p>
+<p>Benzer bir sekilde sezonsalligi da modelleyebiliriz. Sezonsallik bir
+periyotsalligi ima eder, o zaman en genel sekilde bir sinus fonksiyonunu veriye
+uydurabiliriz. Fakat bu sinus fonksiyonunun benligini, baslangic noktasini
+bilmiyoruz, bu durumlarda [6]'da sinussel regresyon teknigini gorduk. Fakat
+belki de daha rahati veriye bir 4'uncu derece polinom uydurmaktir.</p>
+<p>Bu garip gelebilir, polinom uydurmayı çoğunlukla ikinci, üçüncü derecede
+eğrileri modelleyen çerçevede görmüş olabiliriz, bu yaklaşım fakat periyotsal
+fonksiyonları da çok rahat temsil edebiliyor. Sebebi herhalde sinüs fonsiyonunun
+Taylor açılımında [3] gizli, Taylor açılımında sonsuza kadar giden türevler
+polinom açılımda kullanılır, sinüsün 1'den 4'e kadar olan türevlerine bakarsak,</p>
+<p>$\sin^{\prime}(x)=\cos(x),\quad$
+$\sin^{\prime\prime}(x)=-\sin(x),\quad$,
+$\sin^{\prime\prime\prime}(x)=-\cos(x),\quad$,
+$\sin^{(4)}(x)=\sin(x)$.</p>
+<p>Dördüncü türevin tekrar $\sin(x)$'a dönüş yaptığını görüyoruz. Demek ki 4'üncü
+derece polinom açılımı periyotsal fonksiyonları temsil etmek için yeterlidir.</p>
+<p>Altta bir bölgeden alınmmış günlük, o günün minimum hava sıcaklığı ölçümlerini
+görüyoruz. Ona modeli uyduralım,</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('daily-min-temperatures.csv', header=0,\
                  index_col=0, parse_dates=True)
@@ -106,12 +124,30 @@ plt.savefig('tser_022_de_02.png')
 </code></pre>
 
 <p><img alt="" src="tser_022_de_02.png" /></p>
+<p>Periyotsallık yakalanmış gibi duruyor. Sezonsallığı veriden çıkartalım,</p>
 <pre><code class="python">deseasoned = df.Temp-df.Model
 deseasoned.plot()
 plt.savefig('tser_022_de_04.png')
 </code></pre>
 
 <p><img alt="" src="tser_022_de_04.png" /></p>
+<p>Artıklar üzerinde normallik testi,</p>
+<pre><code class="python">from scipy import stats
+val,pval = stats.shapiro(deseasoned)
+print ('p degeri =', pval)
+</code></pre>
+
+<pre><code>p degeri = 4.155807920014354e-10
+</code></pre>
+
+<p>Normal değil. Bunun sebebi veri içinde birden fazla sezonsallık, ya da başka bir
+örüntünün hala mevcut olması olabilir. Bu senaryoları test etmeyi okuyucuya
+bırakıyoruz, üstteki son hale tekrar model uydurup onu da çıkartmak, ve sonuca
+bakmak gibi.</p>
+<p>Yapısal Kopuş (Structural Break) Uygulaması</p>
+<p>Üstteki teknikleri zaman serisinde "ciddi" bir değişim olup olmadığı, varsa
+nerede olduğunun bulunması için kullanmak mümkündür. Yapısal kopuş için Chow
+testini [7]'de ve Poisson bazlı [8]'de görmüştük. Mesela test edilecek bir nokta</p>
 <p>Cusum</p>
 <pre><code class="python">import numpy as np
 
@@ -200,3 +236,6 @@ Baslangic = 95 Bitis = 197
          <a href="https://ocw.mit.edu/courses/mathematics/18-01sc-single-variable-calculus-fall-2010/index.htm">https://ocw.mit.edu/courses/mathematics/18-01sc-single-variable-calculus-fall-2010/index.htm</a></p>
 <p>[4] Bayramli, <em>Hesapsal Bilim, Ders 1-15</em></p>
 <p>[5] Brown, et al, <em>Techniques for Testing the Constancy of Regression Relationships over Time</em></p>
+<p>[6] Bayramli, <em>Zaman Serileri, Sinüssel Regresyon (Sinusoidal Regression)</em></p>
+<p>[7] Bayramli, <em>Istatistik, Testlere devam</em></p>
+<p>[8] Bayramli, <em>Istatistik, Değişim Noktası Analizi</em></p>

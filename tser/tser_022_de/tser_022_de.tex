@@ -89,6 +89,29 @@ elimizde bir Normal dağılım var.
 
 Sezonsallık
 
+Benzer bir sekilde sezonsalligi da modelleyebiliriz. Sezonsallik bir
+periyotsalligi ima eder, o zaman en genel sekilde bir sinus fonksiyonunu veriye
+uydurabiliriz. Fakat bu sinus fonksiyonunun benligini, baslangic noktasini
+bilmiyoruz, bu durumlarda [6]'da sinussel regresyon teknigini gorduk. Fakat
+belki de daha rahati veriye bir 4'uncu derece polinom uydurmaktir.
+
+Bu garip gelebilir, polinom uydurmayı çoğunlukla ikinci, üçüncü derecede
+eğrileri modelleyen çerçevede görmüş olabiliriz, bu yaklaşım fakat periyotsal
+fonksiyonları da çok rahat temsil edebiliyor. Sebebi herhalde sinüs fonsiyonunun
+Taylor açılımında [3] gizli, Taylor açılımında sonsuza kadar giden türevler
+polinom açılımda kullanılır, sinüsün 1'den 4'e kadar olan türevlerine bakarsak,
+
+$\sin^{\prime}(x)=\cos(x),\quad$
+$\sin^{\prime\prime}(x)=-\sin(x),\quad$,
+$\sin^{\prime\prime\prime}(x)=-\cos(x),\quad$,
+$\sin^{(4)}(x)=\sin(x)$.
+
+Dördüncü türevin tekrar $\sin(x)$'a dönüş yaptığını görüyoruz. Demek ki 4'üncü
+derece polinom açılımı periyotsal fonksiyonları temsil etmek için yeterlidir.
+
+Altta bir bölgeden alınmmış günlük, o günün minimum hava sıcaklığı ölçümlerini
+görüyoruz. Ona modeli uyduralım,
+
 \begin{minted}[fontsize=\footnotesize]{python}
 import pandas as pd
 df = pd.read_csv('daily-min-temperatures.csv', header=0,\
@@ -104,6 +127,8 @@ plt.savefig('tser_022_de_02.png')
 
 \includegraphics[height=6cm]{tser_022_de_02.png}
 
+Periyotsallık yakalanmış gibi duruyor. Sezonsallığı veriden çıkartalım,
+
 \begin{minted}[fontsize=\footnotesize]{python}
 deseasoned = df.Temp-df.Model
 deseasoned.plot()
@@ -112,7 +137,28 @@ plt.savefig('tser_022_de_04.png')
 
 \includegraphics[height=6cm]{tser_022_de_04.png}
 
+Artıklar üzerinde normallik testi,
 
+\begin{minted}[fontsize=\footnotesize]{python}
+from scipy import stats
+val,pval = stats.shapiro(deseasoned)
+print ('p degeri =', pval)
+\end{minted}
+
+\begin{verbatim}
+p degeri = 4.155807920014354e-10
+\end{verbatim}
+
+Normal değil. Bunun sebebi veri içinde birden fazla sezonsallık, ya da başka bir
+örüntünün hala mevcut olması olabilir. Bu senaryoları test etmeyi okuyucuya
+bırakıyoruz, üstteki son hale tekrar model uydurup onu da çıkartmak, ve sonuca
+bakmak gibi.
+
+Yapısal Kopuş (Structural Break) Uygulaması
+
+Üstteki teknikleri zaman serisinde ``ciddi'' bir değişim olup olmadığı, varsa
+nerede olduğunun bulunması için kullanmak mümkündür. Yapısal kopuş için Chow
+testini [7]'de ve Poisson bazlı [8]'de görmüştük. Mesela test edilecek bir nokta
 
 
 Cusum
@@ -190,4 +236,10 @@ Kaynaklar
          
 [5] Brown, et al, {\em Techniques for Testing the Constancy of Regression Relationships over Time}
 
-\end{document}
+[6] Bayramli, {\em Zaman Serileri, Sinüssel Regresyon (Sinusoidal Regression)}
+
+[7] Bayramli, {\em Istatistik, Testlere devam}
+
+[8] Bayramli, {\em Istatistik, Değişim Noktası Analizi}
+
+pp\end{document}

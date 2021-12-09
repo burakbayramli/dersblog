@@ -3,7 +3,6 @@
 Sezonsallık, Trend Çıkartmak, Değişim Noktası
 
 
-
 \begin{minted}[fontsize=\footnotesize]{python}
 def model_compute(X, coef):
    degree = len(coef)-1
@@ -70,6 +69,53 @@ plt.savefig('tser_022_de_04.png')
 
 
 
+Cusum
+
+\inputminted[fontsize=\footnotesize]{python}{cusum.py}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+  
+y = np.random.randn(300)/5
+y[100:200] += np.arange(0, 4, 4/100)
+x = range(len(y))
+df = pd.DataFrame(y,columns=['y'])
+df['x'] = x
+df = df.set_index('x')
+df.y.plot()
+plt.savefig('tser_022_de_05.png')
+\end{minted}
+
+\includegraphics[height=6cm]{tser_022_de_05.png}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import cusum
+ta, tai, taf, amp = cusum.detect_cusum(df.y, 2, .02, True, True)
+
+fig, ax = plt.subplots(1, 1)
+t = range(df.y.size)
+ax.plot(t, df.y, 'b-', lw=2)
+if len(ta):
+    ax.plot(tai, df.y[tai], '>', mfc='g', mec='g', ms=10, label='Start')
+    ax.plot(taf, df.y[taf], '<', mfc='g', mec='g', ms=10, label='Ending')
+    ax.plot(ta, df.y[ta], 'o', mfc='r', mec='r', mew=1, ms=5, label='Alarm')
+    
+plt.savefig('tser_022_de_06.png')
+\end{minted}
+
+\includegraphics[height=6cm]{tser_022_de_06.png}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print (len(ta))
+print ('Baslangic =', tai[0], 'Bitis =', taf[0])
+\end{minted}
+
+\begin{verbatim}
+2
+Baslangic = 95 Bitis = 197
+\end{verbatim}
+
+
 
 
  
@@ -88,5 +134,7 @@ plt.savefig('tser_022_de_04.png')
 Kaynaklar
 
 [1] Brownlee, {\em Introduction to Time Series Modeling with Python}
+
+[2] Github, \url{https://raw.githubusercontent.com/BMClab/BMC/master/functions/detect_cusum.py}
 
 \end{document}

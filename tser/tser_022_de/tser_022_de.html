@@ -24,6 +24,28 @@
 </script>
 </head>
 
+<p>Zaman serilerini trendini, sezonşallığını nasıl inceleriz, ve trendde
+değişim varsa bunu nasıl yakalarız? </p>
+<p>Bir örnek üzerinde görelim, bir şirketin şampuan satış kazancı, veri [1]'den,</p>
+<pre><code class="python">import pandas as pd
+def parser(x):
+    return pd.datetime.strptime( '190'+x, '%Y-%m' )
+
+df = pd.read_csv('shampoo-sales.csv', header=0, index_col=0, \
+     parse_dates=True, date_parser=parser)
+df.Satis.plot()
+plt.savefig('tser_022_de_07.png')
+</code></pre>
+
+<p><img alt="" src="tser_022_de_07.png" /></p>
+<p>Yukarı doğru bir trend var. Bu trendi veriye bir düz çizgi uydurarak (fit), yani
+tek değişkenli, ikinci derece lineer regresyon yaparak yakalayabiliriz. Bunu
+yapmayı pek çok diğer derste gösterdik, <code>statsmodels.regression</code>
+paketinden, <code>linear_model.OLS</code> ile, <code>statsmodels.formula.api</code> ile,
+ya da direk Lineer Cebir kullanarak.. Altta <code>polyfit</code>  çağrısı
+kullanılacak.</p>
+<p>Modelden gelen katsayıları (coefficients) kullanıp tahmini $y$ değerleri üretmek
+için alttaki fonksiyon var,</p>
 <pre><code class="python">def model_compute(X, coef):
    degree = len(coef)-1
    curve = [np.sum([coef[-1]] + [x**(degree-d)*c for d,c \
@@ -31,14 +53,8 @@
    return curve
 </code></pre>
 
-<pre><code class="python">from pandas import datetime
-def parser(x):
-    return datetime.strptime( '190'+x, '%Y-%m' )
-
-df = pd.read_csv('shampoo-sales.csv', header=0, index_col=0, \
-     parse_dates=True, date_parser=parser)
-
-X = np.array(range(len(df))).reshape(-1)
+<p>Uydurmayı yapıp modeli veri üzerinde gösterelim,</p>
+<pre><code class="python">X = np.array(range(len(df))).reshape(-1)
 y = df.values.reshape(-1)
 degree = 1
 coef = np.polyfit(X, y, degree)
@@ -48,12 +64,35 @@ plt.savefig('tser_022_de_01.png')
 </code></pre>
 
 <p><img alt="" src="tser_022_de_01.png" /></p>
+<p>Veriden "trendi çıkartmabiliriz". Bunu basit bir şekilde veriden modeli
+çıkartarak, yani eksilterek yapabiliriz. Bu durumda geriye kalan sadece "trend
+haricinde olan şeyler" olacaktır. Trend çıkartmanın pek çok sebebi olabilir,
+belki trend haricinde olan kalıpları, eğer varsa, görmek istiyoruz, ya da
+modelin artığına (residual) bakarak onun gürültü olup olmadığını anlamak
+istiyoruz. Bilindiği gibi lineer regresyonun faraziyesi verinin model artı
+gürültü olduğudür, o zaman model veriden çıkartılınca geriye kalan artık,
+"tortu" sadece gürültü olmalıdır. Gürültünün matematiksel tanımı Gaussian, ya
+da Normal dağılımıdır, demek ki artıklar üzerinde normallik testi bir anlamda
+modelin uyma başaarısını da ölçer. </p>
 <pre><code class="python">detrended = df.Satis-df.Model
 detrended.plot()
 plt.savefig('tser_022_de_03.png')
 </code></pre>
 
 <p><img alt="" src="tser_022_de_03.png" /></p>
+<p>Normallik testini uygulayalım,</p>
+<pre><code class="python">from scipy import stats
+val,pval = stats.shapiro(detrended)
+print ('p degeri =', pval)
+</code></pre>
+
+<pre><code>p degeri = 0.09782794862985611
+</code></pre>
+
+<p>Shapiro-Wilk testinde p-değerinin 0.05'ten küçük olması normalliğin reddedilmesi
+demektir. Üstteki normal olmadığın reddedemedik, demek ki büyük ihtimalle
+elimizde bir Normal dağılım var.</p>
+<p>Sezonsallık</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('daily-min-temperatures.csv', header=0,\
                  index_col=0, parse_dates=True)
@@ -67,8 +106,8 @@ plt.savefig('tser_022_de_02.png')
 </code></pre>
 
 <p><img alt="" src="tser_022_de_02.png" /></p>
-<pre><code class="python">detrended = df.Temp-df.Model
-detrended.plot()
+<pre><code class="python">deseasoned = df.Temp-df.Model
+deseasoned.plot()
 plt.savefig('tser_022_de_04.png')
 </code></pre>
 
@@ -159,3 +198,5 @@ Baslangic = 95 Bitis = 197
 <p>[2] Github, <a href="https://raw.githubusercontent.com/BMClab/BMC/master/functions/detect_cusum.py">https://raw.githubusercontent.com/BMClab/BMC/master/functions/detect_cusum.py</a></p>
 <p>[3] MIT, <em>OCW Single Variable Calculus, unit 5, Session 99</em>,
          <a href="https://ocw.mit.edu/courses/mathematics/18-01sc-single-variable-calculus-fall-2010/index.htm">https://ocw.mit.edu/courses/mathematics/18-01sc-single-variable-calculus-fall-2010/index.htm</a></p>
+<p>[4] Bayramli, <em>Hesapsal Bilim, Ders 1-15</em></p>
+<p>[5] Brown, et al, <em>Techniques for Testing the Constancy of Regression Relationships over Time</em></p>

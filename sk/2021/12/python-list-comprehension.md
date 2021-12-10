@@ -46,7 +46,7 @@ Kavrama operasyonları çok daha kapsamlı olabiliyor, `if`, `else`,
 kullanmak mümkün mesela, hatta içiçe (nested) döngüler bile
 kullanılabiliyor.
 
-Sadece çift sayıların karesini alalım mesela, diğerlerinin küpünü alalım,
+Sadece çift sayıların karesini alalım, diğerlerinin küpünü alalım,
 
 ```python
 kareler2 = [x**2 if x%2==0 else x for x in range(1,11)]
@@ -127,4 +127,6 @@ print (isimler_indis_dict)
 
 Aslında bu kullanıma sözlük kavraması (dictionary comprehension) deniyor
 her neyse, benzer kullanım alanı.
+
+
 

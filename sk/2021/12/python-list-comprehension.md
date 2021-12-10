@@ -129,3 +129,60 @@ print (isimler_indis_dict)
 
 Aslında bu kullanıma sözlük kavraması (dictionary comprehension)
 deniyor, her neyse, benzer kullanım alanı.
+
+Uygulama
+
+Bu konuya nereden girdik? Veri bilimiyle alakalı bir kitap okuyordum,
+*İntroduction to Time Series Modeling with Python* adında, yazar
+lineer regresyon yapıyor, veriye düz çizgi uyduruyor, ve katsayılar
+elde ediyor. Temel x kordinat değerleri `X` içinde, katsayılar `coef`
+içinde, sonra modeli tekrar oluşturmak için
+
+```python
+X = [1,2,3,4]
+coef = [10,5,-3,6]
+degree = 3
+curve = list()
+for i in range(len(X)):
+   value = coef[-1]
+   for d in range(degree):
+      value += X[i]**(degree-d) * coef[d]
+   curve.append(value)
+print (curve)   
+```
+
+```text
+[18, 100, 312, 714]
+```
+
+kullanıyor. Fakat bu kod çok karışık... Yapılmaya uğraşılan basit bir
+şey aslında, `X` içindeki her `x` değeri için diyelim, `coef` içindeki
+katsayılar alınıp ona tekabül eden polinom dereceleri `x` ile
+çapılacak ve sonuçlar toplanacak, yani her `x` için 10 + 5*x -3*x**2 +
+6*x**3 hesabı yapılacak. Bir dış döngü var, `X` için, bir de iç döngü
+var `coef` için.
+
+Arkadaş `coef` gezmek için `range` ile indis yaratıyor, 1'inci ofsayt
+(çünkü o indise `degree-d` yapmak için ihtiyacı var). Diğer yandan
+`range(len(X))` ile bir diğer indis yaratıyor, ona hiç gerek yok,
+ikinci ofsayt. Tabii gereksiz boş liste yaratmayı bir tarafa
+bırakalım, o herşeyi uzatmış.
+
+Tüm bunlar çok kısa bir kodla yapılabilirdi,
+
+```python
+curve = [np.sum([coef[-1]] + [x**(degree-d)*c for d,c \
+        in enumerate(coef[:-1])]) for x in X]
+
+print (curve)
+```
+
+```text
+[18, 100, 312, 714]
+```
+
+Toplamı nasıl yaptığımıza dikkat, liste içinde liste var, ama içeride
+listeyi dışarı vermeden önce `numpy.sum(..)` ile topluyoruz. 
+
+
+

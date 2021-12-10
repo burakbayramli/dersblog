@@ -76,7 +76,7 @@ print (toplamlar)
 [101, 102, 103, 102, 103, 104, 103, 104, 105, 104, 105, 106, 105, 106, 107, 106, 107, 108]
 ```
 
-Ölme esseğim ölme.. Bu işi tek satırda yapabilirdik,
+diye yapardık. Uzun iş.. Her şeyi tek satırda yapabilirdik,
 
 ```python
 toplamlar = [x+y for x in range(100,106) for y in range(1,4)]

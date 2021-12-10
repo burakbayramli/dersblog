@@ -133,7 +133,7 @@ deniyor, her neyse, benzer kullanım alanı.
 Uygulama
 
 Bu konuya nereden girdik? Veri bilimiyle alakalı bir kitap okuyordum,
-*İntroduction to Time Series Modeling with Python* adında, yazar
+*Introduction to Time Series Modeling with Python* adında, yazar
 lineer regresyon yapıyor, veriye düz çizgi uyduruyor, ve katsayılar
 elde ediyor. Temel x kordinat değerleri `X` içinde, katsayılar `coef`
 içinde, sonra modeli tekrar oluşturmak için
@@ -184,6 +184,3 @@ print (curve)
 
 Toplamı nasıl yaptığımıza dikkat, liste içinde liste var, ama içeride
 listeyi dışarı vermeden önce `numpy.sum(..)` ile topluyoruz. 
-
-
-

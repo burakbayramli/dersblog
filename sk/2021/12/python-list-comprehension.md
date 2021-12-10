@@ -134,8 +134,8 @@ Uygulama
 
 Bu konuya nereden girdik? Veri bilimiyle alakalı bir kitap okuyordum,
 *Introduction to Time Series Modeling with Python* adında, yazar
-lineer regresyon yapıyor, veriye düz çizgi uyduruyor, ve katsayılar
-elde ediyor. Temel x kordinat değerleri `X` içinde, katsayılar `coef`
+regresyon yapıyor, veriye eğri uyduruyor, ve katsayılar elde
+ediyor. Temel x kordinat değerleri `X` içinde, katsayılar `coef`
 içinde, sonra modeli tekrar oluşturmak için
 
 ```python

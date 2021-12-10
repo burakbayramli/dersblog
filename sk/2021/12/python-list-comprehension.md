@@ -165,8 +165,9 @@ var `coef` için.
 Arkadaş `coef` gezmek için `range` ile indis yaratıyor, 1'inci ofsayt
 (çünkü o indise `degree-d` yapmak için ihtiyacı var). Diğer yandan
 `range(len(X))` ile bir diğer indis yaratıyor, ona hiç gerek yok,
-ikinci ofsayt. Tabii gereksiz boş liste yaratmayı bir tarafa
-bırakalım, o herşeyi uzatmış.
+ikinci ofsayt. İndis gerektiginde `enumerate` ile erişilebilirdi, geri
+kalan durumlarda `for` ile öğeleri gezmek yeterlidir. Tabii gereksiz
+boş liste yaratmayı bir tarafa bırakalım, o herşeyi daha da uzatmış.
 
 Tüm bunlar çok kısa bir kodla yapılabilirdi,
 

@@ -58,7 +58,7 @@ print (kareler2)
 ```
 
 Liste kavrama ifadeleri biraz dil sözdizimini tersine çeviriyor sanki,
-mesela `for` döngü içine gidecek olan `if` ifadesi en başta.
+mesela `for` döngü içine gidecek olan `if` ifadesi şimdi en başta.
 
 İçiçe döngü örneği; 100 ila 105 arasındaki sayılar dış döngü, 1 ile 3
 arasındakiler iç döngü olsun, ve içteki listeyi gezerken dıştakine

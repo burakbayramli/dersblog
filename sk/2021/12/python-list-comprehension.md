@@ -1,8 +1,8 @@
 # Python Liste Kavraması (List Comprehension)
 
 Python'un en geç anlaşılan, öğrenilen özelliklerinden biri belki de
-budur. Kitap yazarlarının bile hala eski usul liste oluşturmayı
-kullanması bunun işareti. Eski usul nasıldır? Mesela 1 ila 10
+budur. Kitap yazarlarının bile hala eski usül liste oluşturmayı
+kullanması bunun işareti. Eski usül nasıldır? Mesela 1 ila 10
 arasındaki sayıların karesini alacağım, ve bununla yeni bir liste
 oluşturacağım. Ana liste,
 
@@ -129,6 +129,3 @@ print (isimler_indis_dict)
 
 Aslında bu kullanıma sözlük kavraması (dictionary comprehension)
 deniyor, her neyse, benzer kullanım alanı.
-
-
-

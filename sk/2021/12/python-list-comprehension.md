@@ -79,12 +79,12 @@ print (toplamlar)
 Ölme esseğim ölme.. Bu işi tek satırda yapabilirdik,
 
 ```python
-toplamlar = [x+y for y in range(1,4) for x in range(100,106)]
+toplamlar = [x+y for x in range(100,106) for y in range(1,4)]
 print (toplamlar)
 ```
 
 ```text
-[101, 102, 103, 104, 105, 106, 102, 103, 104, 105, 106, 107, 103, 104, 105, 106, 107, 108]
+[101, 102, 103, 102, 103, 104, 103, 104, 105, 104, 105, 106, 105, 106, 107, 106, 107, 108]
 ```
 
 Bu temel ile pek çok yöne gidilebilir. Unutmayalım, `enumerate` ile herhangi
@@ -127,4 +127,8 @@ print (isimler_indis_dict)
 
 Aslında bu kullanıma sözlük kavraması (dictionary comprehension) deniyor
 her neyse, benzer kullanım alanı.
+
+
+
+
 

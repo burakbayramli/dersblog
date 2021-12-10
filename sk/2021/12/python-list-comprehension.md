@@ -127,5 +127,8 @@ print (isimler_indis_dict)
 {0: 'ali', 1: 'veli', 2: 'ahmet'}
 ```
 
-Aslında bu kullanıma sözlük kavraması (dictionary comprehension) deniyor
-her neyse, benzer kullanım alanı.
+Aslında bu kullanıma sözlük kavraması (dictionary comprehension)
+deniyor, her neyse, benzer kullanım alanı.
+
+
+

@@ -115,8 +115,8 @@ print (isimler_indisler)
 Böylece bir değişken grubu (tuple) listesi oluşturduk, ve tüm bunları
 tek bir satırda yaptık.
 
-Şimdi sıkı durun, değişken grubu listesini Python sözlüğü (dictionary)
-haline getirmek mümkündür, bunu da tek satırda yapabilirdik,
+Şimdi sıkı durun, benzer bir sözdizim ile Python sözlüğü de
+(dictionary) yaratmak mümkün, 
 
 ```python
 isimler_indis_dict = { i:x for i,x in enumerate(['ali','veli','ahmet']) }

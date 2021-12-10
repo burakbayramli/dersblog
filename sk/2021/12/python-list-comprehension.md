@@ -1,4 +1,4 @@
-# Python Liste Kavrama (List Comprehension)
+# Python Liste Kavraması (List Comprehension)
 
 Python'un en geç anlaşılan, öğrenilen özelliklerinden biri belki de
 budur. Kitap yazarlarının bile hala eski usul liste oluşturmayı
@@ -62,7 +62,21 @@ mesela `for` döngü içine gidecek olan `if` ifadesi en başta.
 
 İçiçe döngü örneği; 100 ila 105 arasındaki sayılar dış döngü, 1 ile 3
 arasındakiler iç döngü olsun, ve içteki listeyi gezerken dıştakine
-ekleyelim.
+ekleyelim. Eski usulle bunu
+
+```python
+toplamlar = []
+for x in range(100,106):
+   for y in range(1,4):
+      toplamlar.append(x+y)
+print (toplamlar)      
+```
+
+```text
+[101, 102, 103, 102, 103, 104, 103, 104, 105, 104, 105, 106, 105, 106, 107, 106, 107, 108]
+```
+
+Ölme esseğim ölme.. Bu işi tek satırda yapabilirdik,
 
 ```python
 toplamlar = [x+y for y in range(1,4) for x in range(100,106)]

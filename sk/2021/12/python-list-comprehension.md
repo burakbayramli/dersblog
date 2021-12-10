@@ -42,8 +42,8 @@ print (kareler)
 Yani liste içeriğinin nasıl oluşturulacağını bir nevi liste tanımının
 parçası haline getirmiş oluyoruz. 
 
-Kavrama operasyonları çok daha kapsamlı olabiliyor, `ıf`, `else`,
-kullanmak mümkün mesela, hatta içiçe (neşted) döngüler bile
+Kavrama operasyonları çok daha kapsamlı olabiliyor, `if`, `else`,
+kullanmak mümkün mesela, hatta içiçe (nested) döngüler bile
 kullanılabiliyor.
 
 Sadece çift sayıların karesini alalım mesela, diğerlerinin küpünü alalım,
@@ -127,8 +127,4 @@ print (isimler_indis_dict)
 
 Aslında bu kullanıma sözlük kavraması (dictionary comprehension) deniyor
 her neyse, benzer kullanım alanı.
-
-
-
-
 

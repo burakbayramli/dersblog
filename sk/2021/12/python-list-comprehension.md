@@ -112,9 +112,11 @@ print (isimler_indisler)
 [(0, 'ali'), (1, 'veli'), (2, 'ahmet')]
 ```
 
-Böylece bir değişken grubu (tüple) listesi oluşturduk. Şimdi sıkı durun,
-değişken grubu listesini Python sözlüğü (dictionary) haline getirmek
-mümkündür, bunu da tek satırda yapabilirdik,
+Böylece bir değişken grubu (tuple) listesi oluşturduk, ve tüm bunları
+tek bir satırda yaptık.
+
+Şimdi sıkı durun, değişken grubu listesini Python sözlüğü (dictionary)
+haline getirmek mümkündür, bunu da tek satırda yapabilirdik,
 
 ```python
 isimler_indis_dict = { i:x for i,x in enumerate(['ali','veli','ahmet']) }

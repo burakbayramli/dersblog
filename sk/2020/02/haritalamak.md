@@ -326,12 +326,11 @@ print (country.parts)
 ```
 
 Ülke sınır noktaları `points` ile alınıyor, bir enlem/boylam
-listesidir, kabaca bir polygonun köşe noktalarıdır.
-
-Fakat ülkeler bazen tek kesintisiz bir parça olmayabiliyor, adalar, ya
-da diğer ülkelerin içinde ufak parçalar vs var ise, bunları farklı
-poligon öbekleri olarak temsil etmek lazım. Üstteki `points` içinde
-tüm parçalar için noktalar var, hangi öbeğin nerede başlayıp bittiğini
+listesidir, kabaca bir polygonun köşe noktalarıdır. Fakat ülkeler
+bazen tek kesintisiz bir parça olmayabiliyor, adalar, ya da diğer
+ülkelerin içinde ufak parçalar vs var ise, bunları farklı poligon
+öbekleri olarak temsil etmek lazım. Üstteki `points` içinde tüm
+parçalar için noktalar var, hangi öbeğin nerede başlayıp bittiğini
 bilmek gerekiyor sadece, `parts` içinde bu bilgi var [9]. Mesela
 1'inci parça 0'dan başlayıp 107 indisine (dahil olmak üzere) uzanıyor,
 108 nokta var. Sonraki 108'den başlayıp 117'ye gidiyor, vs.
@@ -340,11 +339,6 @@ Bu mantığı bir fonksiyon içine koyalım,
 
 
 ```python
-import shapefile
-sf = shapefile.Reader("TM_WORLD_BORDERS-0.3.shp", encoding = "ISO8859-1")
-r = sf.records()
-countries = sf.shapes()
-
 def plot_country(idx,color='r'):
    country = countries[idx]
    name = r[idx]

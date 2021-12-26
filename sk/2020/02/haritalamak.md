@@ -267,17 +267,17 @@ plt.savefig('har6.png')
 
 ### SHP ile Kendimiz Sinir Cizelim
 
-Bazen Cartopy ve hatta Folium bile uygulamamiza biraz yuk
-getirebiliyor, mesela Cartopy kurulumu icin arka planda GDAL
-gerekebilir, bu kutuphane arka planda isletim sistemi ek kurulumu
-gerektirir, ve bulut ortaminda uygun olmayabilir. Folium hafif olsa da
-arka planda baglanti gerektiriyor, cunku zoom yapinca ek bilgiler
-servisten aliniyor.
+Bazen Cartopy ve hatta Folium bile uygulamamıza biraz yük
+getirebiliyor, mesela Cartopy kurulumu için arka planda GDAL
+gerekebilir, bu kütüphane arka planda işletim sistemi ek kurulumu
+gerektirir, ve bulut ortamında uygun olmayabilir. Folium hafif olsa da
+arka planda bağlantı gerektiriyor, çünkü zoom yapınca ek bilgiler
+servisten alınıyor.
 
 Eğer bize gayet basit ülke sınırları mesela gerekiyorsa bu tür bilgileri
 taşıyan ufak dosya bazlı veri tabanları kullanabiliriz. PyShp ile SHP bazlı
 bu tabanlara ulaşmak mümkündür. Mesela ülke sınırları [8]'de var,
-`TM_WORLD_BORDERS-0.3.zıp` indirilir, açılir, `/tmp` altında `.shp` ve `.dbf`
+`TM_WORLD_BORDERS-0.3.zıp` indirilir, açılır, `/tmp` altında `.shp` ve `.dbf`
 dosyaları olsun (ikisi de lazım),
 
 ```python
@@ -403,5 +403,8 @@ Kaynaklar
 [8] https://thematicmapping.org/downloads/world_borders.php
 
 [9] Sileika, Pro Python System Administration
+
+
+
 
 

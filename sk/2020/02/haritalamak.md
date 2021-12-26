@@ -278,7 +278,7 @@ Eğer bize gayet basit, ülke sınırlarını bir kerede ağ bağlantısı
 olmadan pat diye çizebilecek bir kod gerekiyorsa, bu bilgileri taşıyan
 dosya bazlı veri tabanları kullanabiliriz. PyShp ile SHP bazlı bu
 tabanlara ulaşmak mümkündür. Mesela ülke sınırları [8]'de var,
-`TM_WORLD_BORDERS-0.3.zıp` indirilir, açılır, `/tmp` altında `.shp` ve
+`TM_WORLD_BORDERS-0.3.zip` indirilir, açılır, `/tmp` altında `.shp` ve
 `.dbf` dosyaları olsun (ikisi de lazım),
 
 ```python
@@ -404,5 +404,3 @@ Kaynaklar
 [8] https://thematicmapping.org/downloads/world_borders.php
 
 [9] Sileika, Pro Python System Administration
-
-

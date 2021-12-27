@@ -172,7 +172,7 @@ DEM, GeoTiff formatı bunu yapıyor. Dünya verisi [2]'de, Zıpped DEM
 GeoTiff indirilir, okumak için [3]. Örnek (İtalya'da bir yer)
 
 ```python
-from geotiff import GeoTiff # type: ignore
+from geotiff import GeoTiff 
 import matplotlib.pyplot as plt
 
 tiff_file = "/tmp/alwdgg.tif"

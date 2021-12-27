@@ -161,6 +161,8 @@ plt.savefig('elev1.png')
 
 ![](elev1.png)
 
+<a name='geotiff'/>
+
 ### DEM, GeoTiff
 
 Yüksekliği gösteren işi / renk haritaları görmüşüzdür, daha yüksek

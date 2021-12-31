@@ -165,10 +165,11 @@ plt.savefig('elev1.png')
 
 ### DEM, GeoTiff
 
-Yüksekliği gösteren işi / renk haritaları görmüşüzdür, daha yüksek
-yerler daha kırmızımsı, daha alçaklar daha köyü gibi. Eh piksel
-yükseklik gösteriyorsa ve pikselleri depolayana teknolojimiz de oldukca
-ileriyse, aynı işi yükseklik verisi kodlamak için de kullanabiliriz.
+Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
+yerler daha kırmızımsı, daha alçaklar daha koyu gibi. Eh piksel
+yükseklik gösteriyorsa ve pikselleri depolayana teknolojimiz de
+oldukca ileriyse, aynı işi yükseklik verisi kodlamak için de
+kullanabiliriz.
 
 DEM, GeoTiff formatı bunu yapıyor. Dünya verisi [2]'de, Zıpped DEM
 GeoTiff indirilir, okumak için [3]. Örnek (İtalya'da bir yer)
@@ -220,4 +221,7 @@ Kaynaklar
 [2] World digital elevation model (ETOPO5), https://www.eea.europa.eu/data-and-maps/data/world-digital-elevation-model-etopo5
 
 [3] https://github.com/KipCrossing/geotiff
+
+
+
 

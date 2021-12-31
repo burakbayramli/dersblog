@@ -374,14 +374,14 @@ Azerbeycan ve Ermenistan'ı grafiklemiş olduk.
 
 Not: Üstte `plot` çağrısının çizgisel kullanımına çağrı yapıldı,
 bazılarımızın bildiği gibi `plot(10,20,'.')` x=10,y=20 kordinatlarına
-bir nokta koyar, ama eğer bir x kordinat ve y kordinat listesi `plot`
-çağrısına geçersek, bu tür çağrı verili noktalar arasına düz çizgiler
+bir nokta koyar, ama bir x kordinat ve y kordinat *listesi* `plot`
+çağrısına geçilirse, bu tür çağrı verili noktalar arasına düz çizgiler
 çek demektir.
 
-Not: eğer o çizgilerle çevirdiğimiz bölgelerin içini bir renkle
-doldurmak isteseydik, mesela elimizde bir göl için poligon noktaları
-varsa, onu `plt.plot` yerine `plt.fill` ile çizebilirdik, bu çağrıya
-geçilen üçüncü parametre renk ile objenin içi doldurulurdu.
+Bir diğer ek, eğer o çizgilerle çevirdiğimiz bölgelerin içini bir
+renkle doldurmak isteseydik, mesela elimizde bir göl için poligon
+noktaları varsa, `plt.plot` yerine `plt.fill` kullanırdık, bu
+çağrıya geçilen üçüncü parametre renk ile objenin içi doldurulur.
 
 Kaynaklar
 

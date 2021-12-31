@@ -337,7 +337,8 @@ bilmek gerekiyor sadece, `parts` içinde bu bilgi var [9]. Mesela
 1'inci parça 0'dan başlayıp 107 indisine (dahil olmak üzere) uzanıyor,
 108 nokta var. Sonraki 108'den başlayıp 117'ye gidiyor, vs.
 
-Bu mantığı bir fonksiyon içine koyalım,
+Bu mantığı bir fonksiyon içine koyalım, ve indis 2 ve indis 4'teki
+ülkeleri grafikleyelim,
 
 
 ```python

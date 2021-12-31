@@ -167,9 +167,8 @@ plt.savefig('elev1.png')
 
 Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
 yerler daha kırmızımsı, daha alçaklar daha koyu gibi. Eh piksel
-yükseklik gösteriyorsa ve pikselleri depolayana teknolojimiz de
-oldukca ileriyse, aynı işi yükseklik verisi kodlamak için de
-kullanabiliriz.
+yükseklik gösteriyorsa ve pikselleri depolayan teknolojimiz de oldukca
+ileriyse, aynı işi yükseklik verisi kodlamak için de kullanabiliriz.
 
 DEM, GeoTiff formatı bunu yapıyor. Dünya verisi [2]'de, Zıpped DEM
 GeoTiff indirilir, okumak için [3]. Örnek (İtalya'da bir yer)

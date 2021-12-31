@@ -1,4 +1,4 @@
-# Haritalamak
+f# Haritalamak
 
 ### Folium
 
@@ -353,7 +353,7 @@ def plot_country(idx,color='r'):
        geo = np.array(geo)
        if geo.shape[0] > 0:
            plt.plot(geo[:,0],geo[:,1],color)
-n
+
 plot_country(2,'r')
 plot_country(4,'b')
 
@@ -401,3 +401,6 @@ Kaynaklar
 [8] https://thematicmapping.org/downloads/world_borders.php
 
 [9] Sileika, Pro Python System Administration
+
+
+

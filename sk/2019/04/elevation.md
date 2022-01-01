@@ -166,12 +166,11 @@ plt.savefig('elev1.png')
 ### DEM, GeoTiff
 
 Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
-yerler daha kırmızımsı, daha alçaklar daha koyu gibi. Eh piksel
-yükseklik gösteriyorsa ve pikselleri depolayan teknolojimiz de oldukca
-ileriyse, aynı işi yükseklik verisi kodlamak için de
-kullanabiliriz. DEM, GeoTiff formatı bunu yapar. Dünya verisi [2]'de,
-Zıpped DEM GeoTiff indirilir, okumak için [3]. Örnek (İtalya'da bir
-yer)
+yerler daha kırmızımsı, daha alçaklar daha koyu gibi.. O zaman piksel
+yükseklik gösteriyorsa ve pikselleri depolayan teknoloji iyi durumdaysa,
+aynı işi yükseklik verisi kodlamak için de kullanabiliriz. DEM,
+GeoTiff formatı bunu yapar. Dünya verisi [2]'de, Zipped DEM GeoTiff
+indirilir, okumak için [3]. Örnek (İtalya'da bir yer)
 
 ```python
 from geotiff import GeoTiff 

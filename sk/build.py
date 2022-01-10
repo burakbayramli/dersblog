@@ -5,7 +5,9 @@ TARGET_DIR = "/home/burak/Documents/dersblog/sk"
 
 if __name__ == "__main__": 
  
-    if len(sys.argv) == 1: exit()
+    if len(sys.argv) < 2:
+        print ("options: html | years ")
+    exit()  
 
     if sys.argv[1] == 'html':
 
@@ -19,7 +21,7 @@ if __name__ == "__main__":
         os.system(cmd)
 
     if sys.argv[1] == 'years':
-        for year in range(2000,2022):
+        for year in range(2000,2023):
             if year == 2007: continue
             os.system("echo '# %d\n' > %d/index.md" % (year,year))
             os.system("python -u gen.py %d >> %d/index.md" % (year,year))

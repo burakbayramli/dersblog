@@ -99,7 +99,7 @@ print (anom[tidx, region])
 Bu iki değer toplanınca nihai sıcaklık elde edilir. Yani baz sıcaklk
 bir ay | bölge matrisi içindeydi, sapma bir zaman | bölge matrisi
 içinde. Nihai sıcaklık için belli bir zamanın ayına ve bölgeye göre
-baz, zaman indisı ve yine bölgeye göre sapmaya almak gerekti.
+baz, zaman indisi ve yine bölgeye göre sapmaya almak gerekti.
 
 ### NOAA NCEI
 
@@ -258,5 +258,3 @@ Kaynaklar
 [2] THREDDS Data Server, https://psl.noaa.gov/thredds/catalog/Datasets/NARR/Dailies/monolevel/catalog.html?dataset=Datasets/NARR/Dailies/monolevel/uwnd.10m.2021.nc
 
 [3] http://berkeleyearth.org/data/
-
-

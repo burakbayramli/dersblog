@@ -2,7 +2,7 @@
 
 İklim, mesela Berkeley veri tabanından gelen sıcaklıklar, ya da
 NOAA'dan gelen günlük, saatlik rüzgar verileri çoğunlukla netCDF adlı
-bir formatla paylaşılıyor. Bu formatları işlemenin yöntemlerini, veri
+bir formatla paylaşılıyor. Bu formatları işlemenin yöntemlerine, veri
 içeriğine bakalım..
 
 ## Berkeley
@@ -255,3 +255,5 @@ Kaynaklar
 [2] THREDDS Data Server, https://psl.noaa.gov/thredds/catalog/Datasets/NARR/Dailies/monolevel/catalog.html?dataset=Datasets/NARR/Dailies/monolevel/uwnd.10m.2021.nc
 
 [3] http://berkeleyearth.org/data/
+
+

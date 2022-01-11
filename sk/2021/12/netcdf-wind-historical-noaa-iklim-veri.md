@@ -38,7 +38,7 @@ root group (NETCDF4 data model, file format HDF5):
 ```
 
 NetCDF değişik bir format, Pandas ya da numpy stiline benzemiyor. Mesela
-`climatology`, `temperature` ve `time` öğelerine bakalım,
+`climatology`, `temperature` ve `time` öğeleri,
 
 ```python
 clim = nc['climatology'][:,:]
@@ -96,7 +96,10 @@ print (anom[tidx, region])
 0.026923507
 ```
 
-Bu iki değer toplanınca nihai sıcaklık elde edilir.
+Bu iki değer toplanınca nihai sıcaklık elde edilir. Yani baz sıcaklk
+bir ay | bölge matrisi içindeydi, sapma bir zaman | bölge matrisi
+içinde. Nihai sıcaklık için belli bir zamanın ayına ve bölgeye göre
+baz, zaman indisı ve yine bölgeye göre sapmaya almak gerekti.
 
 ### NOAA NCEI
 

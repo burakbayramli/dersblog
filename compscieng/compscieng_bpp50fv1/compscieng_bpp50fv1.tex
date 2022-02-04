@@ -5,9 +5,9 @@ Sınırlı Hacim (Finite Volume) Yöntemi - 1
 Üç boyutlu kütle muhafazası üzerinden süreklilik formül [2]'de işlendi.  Şimdi
 tek boyutlu ortamda muhafaza kanunlarını işleyeceğiz, gaz dinamiği, genel
 aerodinamik konularında bu yaklaşım faydalı olacak. Sayısal çözmeye çalışılacak
-problemler, ki sınırlı hacim yöntemi burada lazım, muhafaza kanunları içeren
-hiperbolik sistemler (hyperbolic systems of conservation laws) olarak anılır. Bu
-tür sistemler zamana bağlı çoğunlukla gayrı lineer kısmi türevsel denklemlerdir
+problemler, ki FV yöntemi burada lazım, muhafaza kanunları içeren hiperbolik
+sistemler (hyperbolic systems of conservation laws) olarak anılır. Bu tür
+sistemler zamana bağlı çoğunlukla gayrı lineer kısmi türevsel denklemlerdir
 (nonlinear PDE), ve aslında basit yapıları vardır. Tek yersel boyutta bu
 denklemler şuna benzer [3, sf. 1],
 
@@ -34,6 +34,15 @@ lazım. Birincisi Riemann problemleri; bu yaklaşımla hiperbolik PDE'nin başla
 koşulu kesintili (discontinuous) bir fonksiyonla belirtiliyor ve bu çözümleri
 çoğu durumda daha rahatlaştırılıyor, diğeri hiperbolik muhafaza kanunlarının
 entegral formu.
+
+Kesintili başlangıç içeren denklemler çözebilmek önemli çünkü FV ile sayısal
+çözüm yaparken uzayı parçalara bölüyoruz, ve her iki parçayı bir kesintili
+başlangıç içeren Riemann problemi olarak temsil ediyoruz, bu pek çok parça
+ortaya çıkartır tabii, bu sebeple tipik bir FV yaklaşımı her adımda pek çok
+Riemann problemini çözecektir. Entegral form da lazım, çünkü sınırlı
+farklılıklarda (finite difference) olduğu gibi ayrıksal olan fonksiyonun eşit
+aralıklarda tanımlı bir izgaranın seçilmiş belli noktaları değil, her bölge /
+parçanın ortalaması, yani entegrali.
 
 Entegral form ile başlayalım. Aslında diferansiyel form entegral formden
 türetilmiş ve bu türetim pürüzsüzlük faraziyesi üzerinden yapılmış. Özellikle

@@ -251,8 +251,52 @@ u_r &amp; x &gt; st
 \end{array} \right.
 $$</p>
 <p>ki $s$ şok hızıdır. Kesinti noktası $s$ hızında sağa ilerler, $t$ anında olacağı
-yer $st$'dir.</p>
+yer $st$'dir. </p>
 <p><img alt="" src="compscieng_bpp50fv1_01.png" /></p>
+<p>Daha önce tek boyutlu lineer tasinim akımı (convection) ile gördüğümüz durum
+burada da var, orada çözüm $u(x,y) = u_0(x-ct)$ idi, dalga hızı $c$. Şimdi hız
+$u$ bu $s$ şok hızınını verir, Burgers için hesabı $s = (u_l + u_r) / 2$.  Şok
+hızının hesabı için kesinti bölgesinin yeterine uzağında $M$ ve $-M$ noktalarını
+seçelim, bu iki nokta arasındaki toplam kütlenin / dalganın değişiminin hızı
+şok hızı $s$ olacaktır.</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d} t} \int_{-M}^{M} u(x,t) \mathrm{d} x = f(u_l) - f(u_r)
+\qquad (8)
+$$</p>
+<p>Salt entegralin nasıl hesaplanacağına bakarsak [3, sf. 31],</p>
+<p>$$
+\int_{-M}^{M} u(x,t) \mathrm{d} x =
+\int_{-M}^{st} u_l \mathrm{d} x + 
+\int_{st}^{M} u_l \mathrm{d} x
+$$</p>
+<p>$$
+= (M+st)u_l + (M-st)u_r
+$$</p>
+<p>Şimdi zaman türevini geri koyalım, bu sağ tarafta $s(u_l-u_r)$ verir, hepsi
+bir arada,</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d} t} \int_{-M}^{M} u(x,t) \mathrm{d} x = s(u_l-u_r)
+$$</p>
+<p>(8)'in sağ tarafını üstteki formüle koyunca,</p>
+<p>$$
+f(u_l) - f(u_r) = s(u_l-u_r)
+$$</p>
+<p>$$
+s = \frac{f(u_l) - f(u_r)}{u_l-u_r}
+$$</p>
+<p>Böylece genel bir ifade elde ettik. Burgers denklemi için şok hızı nedir?
+$f(u) = u^2 / 2$ olduğuna göre,</p>
+<p>$$
+f(u_l) - f(u_r) = \frac{1}{2} u_l^2 -  \frac{1}{2} u_r^2
+$$</p>
+<p>O zaman</p>
+<p>$$
+\frac{1}{2} (u_l + u_r)(u_l - u_r) = s(u_l-u_r)
+$$</p>
+<p>diyebiliriz [5, sf. 46], basitleştirince,</p>
+<p>$$
+s = \frac{1}{2} (u_l + u_r)
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Hesapsal Bilim, Hesapsal Sıvı Dinamiğine Giriş</em></p>
@@ -260,3 +304,4 @@ yer $st$'dir.</p>
 <p>[3] Leveque, <em>Numerical Methods for Conservation Laws</em></p>
 <p>[4] Dong, <em>Numerical Methods for Conservation Laws (Part 1)</em>
     <a href="https://jdongg.github.io/post/conservation-laws-1/">https://jdongg.github.io/post/conservation-laws-1/</a></p>
+<p>[5] Cooper, <em>Introduction to PDEs with Matlab</em></p>

@@ -416,7 +416,7 @@ $$
 \end{array}\right]
  $$
 
-Alternatif Anlatım
+Alternatif Anlatım 1
 
 $y(0)$ başlangıç şartına uygun $y' = Ay$ diferansiyel denklemini çözmek için
 $A$'nin özvektör/değerleri kullanılabilir. Çözümler $y = e^{\lambda t} x$ ile
@@ -592,6 +592,170 @@ y(t) =
 \end{array}\right]
 $$
 
+Alternatif Anlatım 2
+
+Eğer elimizde bir sabit katsayılı lineer bayağı / normal (ordinary) diferansiyel
+denklem (ODE) sistemi var ise, ama bu sistem içinde denklemler birbiri ile bağlı
+(coupled) ise, sistemi ufak bir lineer cebir numarası ile bağımsız hale
+getirebiliriz, böylece her denklem üzerinde basit $e^x$ bazlı üstel çözümleri
+kullanabiliriz [4, sf. 421].
+
+Eğer elimizde sabit katsayılı $n$ tane ODE var ise bu sistemi bir vektör
+olarak yazabiliriz,
+
+$$
+y' = A y, \quad y(t_0) = y_0
+$$
+
+ki $y$ içinde bilinmeyenleri içeren bir vektördür, $A$ ise sabit sayılar
+içeren $n \times n$ matrisidir.
+
+Eğer $A$ matrisini köşegenleştirici matris bir $S$ elde edebilseydik, bir
+değişken değişimi üzerinden, $y = Su$ deyip sonra $(Su)' = A(Su)$ elde
+ederdik ardından her iki tarafı $S^{-1}$ ile çarpıp
+
+$$
+u' = S^{-1} A S u
+$$
+
+ya erişirdik. Tabii ki $\Lambda = S^{-1} A S$ formülü biliniyor ve $\Lambda$
+köşegenleşmiş bir matris. Nihai denklem $u' = \Lambda u$ denklemi ve
+$\Lambda$'nin köşegeni hariç tüm diğer hücreleri sıfır, bu bize her $u_1,u_2,..$
+için basit, diğer değişkenlerden bağımsız denklemler veriyor, ve onların
+çözümünü diferansiyel denklem cebirinden biliyoruz. Bu şekilde $u$ çözümünü
+elde ettikten sonra $y = S u$ ile başlangıç problemine geçiş yapabiliyoruz. 
+
+Örnek
+
+Elimizde alttaki gibi bir sistem olsun,
+
+$$
+\frac{\ud y_1}{\ud t} = 9 y_1 + 2 y_2
+$$
+
+$$
+\frac{\ud y_2}{\ud t} = y_1 + 8 y_2
+$$
+
+Bu sistemde her iki denklem birbiri ile bağlantılı, $\dot{y}_1$ içinde 
+$y_2$ ifadesi $\dot{y}_2$ içinde  $y_1$ ifadesi var. Matris kullanarak
+yazarsak,
+
+$$
+\frac{\ud}{\ud t} \left[\begin{array}{c}
+y_1 \\ y_2 
+\end{array}\right] =
+\left[\begin{array}{cc}
+9 & 2 \\ 1 & 8
+\end{array}\right]
+\left[\begin{array}{c}
+y_1 \\ y_2
+\end{array}\right]
+$$
+
+Ya da $y' = Ay$ diyebiliriz ki $y = [\begin{array}{cc} y_1 & y_2 \end{array}]^T$
+ve $A = \left[\begin{array}{cc} 9 & 2 \\ 1 & 8 \end{array}\right]$.
+
+$A$'nin özdeğerleri $\lambda = 7$ ve $\lambda = 10$ ona tekabül eden
+özvektörler $[\begin{array}{cc}1 & -1\end{array}]^T$, $[\begin{array}{cc}2&1\end{array}]^T$.
+Köşegenleştirici matrisi artık kurabiliriz, bulduğumuz özvektörleri $S$
+kolonlarına koyuyoruz, ve $S^{-1}$'e de ihtiyacımız var, hepsi bir arada,
+
+$$
+S = \left[\begin{array}{rr}
+1 & 2 \\ -1 & 1
+\end{array}\right], \quad
+S^{-1} = \left[\begin{array}{rr}
+1/3 & -2/3 \\ 1/3 & 1/3
+\end{array}\right]
+$$
+
+Şimdi $S^{-1} A S$ üzerinden köşegenleştirme yapılabilir, hepsini yeni formüle
+koyarsak,
+
+$$
+\frac{\ud}{\ud t} \left[\begin{array}{c}
+u_1 \\ u_2 
+\end{array}\right] =
+\left[\begin{array}{rr}
+1/3 & -2/3 \\ 1/3 & 1/3
+\end{array}\right]
+\left[\begin{array}{cc}
+9 & 2 \\ 1 & 8
+\end{array}\right]
+\left[\begin{array}{rr}
+1 & 2 \\ -1 & 1
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ u_2 
+\end{array}\right]
+$$
+
+$$
+=
+\left[\begin{array}{rr}
+7 & 0 \\ 0 & 10
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ u_2 
+\end{array}\right]
+$$
+
+Görüldüğü gibi çarpım sonucu elde edilen matriste köşegen harici her yer
+sıfır. Böylece nihai, transform edilmiş sistemde değişkenleri bağımsız
+hale getirmiş olduk, çünkü üstteki sistem şudur aslında,
+
+$$
+\frac{\ud u_1}{\ud t} = 7 u_1, \quad
+\frac{\ud u_2}{\ud t} = 10 u_2, 
+$$
+
+Şimdi $S$'i kullanarak ana probleme dönüş te yapabiliriz, 
+
+$$
+\left[\begin{array}{c} y_1 \\ y_2  \end{array}\right] =
+\left[\begin{array}{rr}
+1 & 2 \\ -1 & 1
+\end{array}\right]
+\left[\begin{array}{c} u_1 \\ u_2  \end{array}\right] =
+\left[\begin{array}{rr}
+1 & 2 \\ -1 & 1
+\end{array}\right]
+\left[\begin{array}{c} B e^{7t} \\ C e^{10t}  \end{array}\right] 
+$$
+
+O zaman
+
+$$
+y_1 = B e^{7t} + 2C e^{10t}
+$$
+
+$$
+y_2 = -B e^{7t} + C e^{10t} 
+$$
+
+Bilinmeyen sabitler $B,C$ problem tanımındaki başlangıç şartı kullanılarak
+bulunabilir. Bu şart $t = t_0$'da tanımlanmıştı, o zaman
+
+$$
+y_0 =
+B \left[\begin{array}{c} 1 \\ -1  \end{array}\right] e^{7 t_0} +
+C \left[\begin{array}{c} 2 \\ 1 \end{array}\right] e^{10 t_0}
+$$
+
+$$
+= \left[\begin{array}{cc}
+e^{7 t_0} & 2 e^{10 t_0} \\
+-e^{7 t_0} & e^{10 t_0} 
+\end{array}\right]
+\left[\begin{array}{c}
+B \\ C
+\end{array}\right]
+$$
+
+Mesela $t_0 = 1$ olsa $y_0$ verili bir reel vektör olsa, tek bilinmeyen $B,C$
+kalıyor, üstteki matrisin tersi ile basit bir şekilde $B,C$ bulunabilir.
+
 Kaynaklar
 
 [1] Bayramlı, Hesapsal Bilim, {\em Ders 6}
@@ -599,6 +763,8 @@ Kaynaklar
 [2] Strang, {\em Differential Equations and Linear Algebra}
 
 [3] Boelkins, {\em Differential Equations with Linear Algebra}
+
+[4] Zwillinger, {\em Handbook of Differential Equations, 3rd Edition}
 
 \end{document}
 

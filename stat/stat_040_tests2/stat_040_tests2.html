@@ -668,36 +668,58 @@ rakamı bazında gruplayalıp gösterelim,</p>
 kt = pd.DataFrame([kt[1],kt[0]]).T
 kt = kt[:-1] # sonuncu satiri at
 kt.columns = ['kac araba','kac kere']
-print kt
+print (kt)
 </code></pre>
 
 <pre><code>    kac araba  kac kere
-0           0         0
-1           1         0
-2           2         1
-3           3         3
-4           4         5
-5           5         7
-6           6        13
-7           7        12
-8           8         8
-9           9         9
-10         10        13
-11         11        10
-12         12         5
-13         13         6
-14         14         4
-15         15         5
-16         16         4
-17         17         0
-18         18         1
+0         0.0       0.0
+1         1.0       0.0
+2         2.0       1.0
+3         3.0       3.0
+4         4.0       5.0
+5         5.0       7.0
+6         6.0      13.0
+7         7.0      12.0
+8         8.0       8.0
+9         9.0       9.0
+10       10.0      13.0
+11       11.0      10.0
+12       12.0       5.0
+13       13.0       6.0
+14       14.0       4.0
+15       15.0       5.0
+16       16.0       4.0
+17       17.0       0.0
+18       18.0       1.0
 </code></pre>
 
 <p>Yani bir dakikada 6 araba sayımı 13 kere yapılmış (13 değişik dakikada).</p>
-<p>Bazı kutucukların boş olduğunu görüyoruz, bu durum özellikle tek tepeli
-(unimodel) dağılımlı verilerde etekleri temsil eden uçlardaki kutucukların
-boş olması sonucunu verebilir. Bu durumda o kutucukların verisi daha dolu
-olanlara aktarabilmek için kutucuk noktalarını tekrar tanımlıyoruz,</p>
+<p>Eğer üstteki verinin bir Poisson dağılımdan geldiğini kabul ediyorsak,
+Poisson'un parametresi $\lambda$'yi veriden hesaplamak için ortalama
+almak yeterlidir,</p>
+<pre><code class="python">lam = np.mean(kt['kac kere'])
+print ('lambda %0.2f' % lam)
+</code></pre>
+
+<pre><code>lambda 5.58
+</code></pre>
+
+<p>Bu Poisson'u kullanarak bazı olasılık hesapları hemen yapabilirdik, mesela
+3'ten fazla, 9'dan fazla araba sayılma ihtimali nedir?</p>
+<pre><code class="python">from scipy.stats import poisson
+print (1-poisson.cdf(3, lam))
+print (1-poisson.cdf(9, lam))
+</code></pre>
+
+<pre><code>0.807087823822676
+0.057975438622207665
+</code></pre>
+
+<p>Devam edelim. Veride bazı kutucukların boş olduğunu görüyoruz, bu durum
+özellikle tek tepeli (unimodel) dağılımlı verilerde etekleri temsil eden
+uçlardaki kutucukların boş olması sonucunu verebilir. Bu durumda o kutucukların
+verisi daha dolu olanlara aktarabilmek için kutucuk noktalarını tekrar
+tanımlıyoruz,</p>
 <pre><code class="python">bins = [0] + range(5,15) + [100]
 kt2 = plt.hist(np.array(df),bins=bins)
 kt2 = pd.DataFrame([kt2[1],kt2[0]]).T

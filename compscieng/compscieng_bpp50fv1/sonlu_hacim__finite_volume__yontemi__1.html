@@ -1,0 +1,313 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Sonlu Hacim (Finite Volume) Yöntemi - 1</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sonlu Hacim (Finite Volume) Yöntemi - 1
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Üç boyutlu kütle muhafazası üzerinden süreklilik formül [2]'de işlendi.  Şimdi
+tek boyutlu ortamda muhafaza kanunlarını işleyeceğiz, gaz dinamiği, genel
+aerodinamik konularında bu yaklaşım faydalı olacak. Sayısal çözmeye çalışılacak
+problemler, ki FV yöntemi burada lazım, muhafaza kanunları içeren hiperbolik
+sistemler (hyperbolic systems of conservation laws) olarak anılır. Bu tür
+sistemler zamana bağlı çoğunlukla gayrı lineer kısmi türevsel denklemlerdir
+(nonlinear PDE), ve aslında basit yapıları vardır. Tek yersel boyutta bu
+denklemler şuna benzer [3, sf. 1],</p>
+<p>$$
+\frac{\partial }{\partial t} u(x,t) + 
+\frac{\partial }{\partial x} f(u(x,t)) = 0
+\qquad (1)
+$$</p>
+<p>Daha önce [1]'de Burgers'in denklemini görmüştük, bir PDE,</p>
+<p>$$
+u_t + uu_x = 0
+\qquad (2)
+$$</p>
+<p>Bu denklem (1) ışığında düşünülebilir, eğer $f(u) = \frac{1}{2}u^2$ tanımlarsak,
+(1) formülü, yani $u_t + f(u)_x = 0$, formül (2) ile aynıdır. (2) türü
+denklemleri tek boyutta çözmeyi işleyeceğiz öncelikle, çünkü çok boyutta çözüm
+tek boyuta indirgenerek yapılabiliyor.</p>
+<p>Hiperbolik denklemleri çözmek için birkaç konuyu yakından anlamak
+lazım. Birincisi Riemann problemleri; bu yaklaşımla hiperbolik PDE'nin başlangıç
+koşulu kesintili (discontinuous) bir fonksiyonla belirtiliyor ve bu çözümleri
+çoğu durumda daha rahatlaştırılıyor, diğeri hiperbolik muhafaza kanunlarının
+entegral formu.</p>
+<p>Kesintili başlangıç içeren denklemler çözebilmek önemli çünkü FV ile sayısal
+çözüm yaparken uzayı parçalara bölüyoruz, ve her iki parçayı bir kesintili
+başlangıç içeren Riemann problemi olarak temsil ediyoruz, bu pek çok parça
+ortaya çıkartır tabii, bu sebeple tipik bir FV yaklaşımı her adımda pek çok
+Riemann problemini çözecektir. Entegral form da lazım, çünkü sınırlı
+farklılıklarda (finite difference) olduğu gibi ayrıksal olan fonksiyonun eşit
+aralıklarda tanımlı bir izgaranın seçilmiş belli noktaları değil, her bölge /
+parçanın ortalaması, yani entegrali.</p>
+<p>Entegral form ile başlayalım. Aslında diferansiyel form entegral formden
+türetilmiş ve bu türetim pürüzsüzlük faraziyesi üzerinden yapılmış. Özellikle
+kesintili başlangıç şartları var ise diferansiyel formun her yerde düzgün
+işlemesi mümkün değil, çünkü kesintilerde türev alınamıyor. Ayrıca pür
+kesintisiz olsa bile şok oluşumu denen sebeplerle türevsel fonksiyonlar
+çözülemiyor. Bu problemlerle başedebilmek için entegral formu kullanmak
+gerekecek.</p>
+<p>Bu formu yaratalım. İçinde gaz olan sadece tek boyutuna baktığımız bir tüp
+düşünelim, $x$ tüpün üzerindeki bir noktayı temsil edecek, $\rho(x,t)$ ise tüpün
+$x$ noktasında ve $t$ anındaki yoğunluğunu verecek diyelim. Yoğunluğu kullanarak
+$x_1$ ve $x_2$ noktaları arasındaki $t$ anındaki kütle</p>
+<p>$$
+\int _{x_1}^{x_2} \rho(x,t) \mathrm{d} x
+$$</p>
+<p>ile hesaplanabilir. Tüpün duvarları tam izole ise ve kütle yoktan varedilip
+yokedilemeyeceğine göre tüpe gaz giriş ya da çıkış sadece $x_1,x_2$
+noktalarından olabilir [3, sf. 14]. Şimdi bir gaz hareket hızı düşünelim,
+$v(x,t)$ ile, o zaman gaz akma oranı, ya da akış (flux)</p>
+<p>$$
+flux = \rho(x,t) v(x,t)
+$$</p>
+<p>olur. Üstteki fiziksel kurallardan hareketle $[x_1,x_2]$ deki kütlenin
+değişim oranı $x_1$ ve $x_2$ noktalarındaki akışın farkına eşit olmalıdır,</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d} t} \int _{x_1}^{x_2} \rho(x,t) \mathrm{d} x =
+\rho(x_1,t) v(x_1,t) - \rho(x_2,t) v(x_2,t)
+$$</p>
+<p>İşte bu muhafaza kanununun entegral formudur. </p>
+<p>Üstteki formülü $t_1,t_2$ zaman aralığı için entegre edersek, ki böylece
+bu zaman içindeki tüm toplam akışı hesaplayabilelim, o zaman</p>
+<p>$$
+\int_{t_1}^{t_2} \left( \frac{\mathrm{d}}{\mathrm{d} t} \int _{x_1}^{x_2} \rho(x,t) \mathrm{d} x  \right)  =
+\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) - \int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) 
+$$</p>
+<p>Soldaki kısım zaman üzerinden türevin yine zaman üzerinden entegrali, o zaman
+yokolabilir, Calculus'un Temel Teorisi üzerinden basitleştirirsek,</p>
+<p>$$
+\int _{x_1}^{x_2} \rho(x,t_2) \mathrm{d} x - \int _{x_1}^{x_2} \rho(x,t_1) \mathrm{d} x  = 
+\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) - \int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) 
+$$</p>
+<p>Ufak bir yer değiştirme sonrası</p>
+<p>$$
+\int _{x_1}^{x_2} \rho(x,t_2) \mathrm{d} x =
+\int _{x_1}^{x_2} \rho(x,t_1) \mathrm{d} x  +
+\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) -
+\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) 
+$$</p>
+<p>Üstteki form ileride tekrar lazım olacak, zaman adımı atmaya uğraştığımız
+hesapsal yöntemlerde $t_1$ ve $t_2$ üzerinden bir entegral, hesabı bir sonraki
+zamana geçirmeye uğraştığımızda, adım attığımızda yardımcı oluyor.</p>
+<p>Neyse şimdi diferansiyel forma geçise dönelim. Bu noktada $\rho(x,t)$ ve
+$v(x,t)$'nin türevi alınabilir fonksiyonlar olduğunu farz ediyoruz. Şimdi
+üstekini yine ufak bir değişim sonrası</p>
+<p>$$
+\int _{x_1}^{x_2} \rho(x,t_1) \mathrm{d} x  +
+\int _{x_1}^{x_2} \rho(x,t_2) \mathrm{d} x -
+\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) -
+\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) = 0
+\qquad (3)
+$$</p>
+<p>olarak görelim. Eğer Calculus'un Temel Teorisi ile ilk iki terime
+$\int_{t_1}^{t_2} .. \mathrm{d} / \mathrm{d} t$ son iki terime $\int_{x_1}^{x_2} .. \mathrm{d} / \mathrm{d} x$
+ekleyebilirsek, tüm terimlerde aynı entegraller olacağı için, 
+$\int_{t_1}^{t_2} \int_{x_1}^{x_2} $ altında tüm terimleri gruplayıp
+basitleştirmek mümkün, ve bunlar sıfıra eşit olur. Bu bizi diferansiyel
+forma götürebilir. Yani</p>
+<p>$$
+\rho(x,t_2) - \rho(x,t_1) = \int_{t_1}^{t_2}
+\frac{\partial }{\partial t} \rho(x,t) \mathrm{d} t
+$$</p>
+<p>ve</p>
+<p>$$
+\rho(x_2,t)v(x_2,t) - \rho(x_1,t)v(x_1,t) =
+\int _{x_1}^{x_2} \frac{\partial }{\partial x} (\rho(x,t)v(x,t)) \mathrm{d} x
+$$</p>
+<p>eşitliklerinden hareketle, bunları (3)'e uygulayıp</p>
+<p>$$
+\int _{t_1}^{t_2} \int _{x_1}^{x_2}  \left\{
+\frac{\partial }{\partial t} \rho(x,t)  +
+\frac{\partial }{\partial x} (\rho(x,t)v(x,t))
+\right\} \mathrm{d} x \mathrm{d} t = 0
+\qquad (4)
+$$</p>
+<p>elde ediyoruz. Bu ifadenin $[x_1,x_2]$ ve $[t_1,t_2]$ arasındaki tüm değerlerde
+doğru olması gerektiği için entegre edilenin sıfır olması gerekiyor ([2]'dekine
+benzer bir mantık yürütüldü), yani</p>
+<p>$$
+\rho_t + (\rho v)_x = 0
+$$</p>
+<p>olmalı. Böylece kütlenin muhafaza kuralını diferansiyel formda elde etmiş olduk.</p>
+<p>Bu formu izole halde çözmenin tek yolu $v$'nin önceden bilindiği durumdadır, ya
+da $v$ fonksiyon $\rho(x,t)$'ye bağlı bir fonksiyon olmalıdır, yani
+$f(\rho) = \rho v$ gibi. Bu durumda üstteki ifade $\rho$ için tek sayısal
+muhafaza kanunu haline gelir,</p>
+<p>$$
+\rho_t + f(\rho)_x = 0
+$$</p>
+<p>Zayıf Form</p>
+<p>Daha önce diferansiyel formun her durumda çözülemediğinden bahsettik. Fakat
+(4)'teki entegral form da çalışılması zor bir halde. Daha rahat çalışılabilen
+bir entegral forma erisemez miyiz? Bu forma erişmek için diferansiyel
+denklemlerde bazen kullanılan bir tekniği kullanacağız, bu teknikle çözümü
+tanımlamak için daha az pürüzsüzlük istediğimiz durumlarda diferansiyel denklemi
+tekrar yazıyoruz. Tekrar yazmak için denklemi alıp onu bir pürüzsüz "test
+fonksiyonu" ile çarpıyoruz, bu çarpımı birkaç kere bir tanım kümesi üzerinden
+entegre ediyoruz, ve Parçalı Entegral tekniğini kullanarak türevi $u$'dan alıp
+pürüzsüz olan test fonksiyonuna aktarıyoruz. Böylece $u$ üzerinde daha az
+türev olan bir formül elde ediyoruz, ve $u$'nun pürüzsüz olma şartı gevşemiş
+oluyor [3, sf. 27].</p>
+<p>Test fonksiyonu hem zamanda hem uzayda pürüzsüz bir fonksiyon $\phi$ olsun,
+ayrıca derlitoplu desteğe sahip (compactly supported), yani belli bir kısıtlı
+alan dışında sıfır, bu örnekte sonsuzluğun kendisi alanın dışında kabul edilir
+ve o noktada $\phi$ sıfır olur [4]. Bu ileride bazı iptalleri yaparken işimize
+yarayacak.</p>
+<p>(1) formülünden başlayalım,</p>
+<p>$$
+u_t + f(u)_x = 0
+$$</p>
+<p>Bu fonksiyonu $\phi$ ile çarpıp uzay ve zaman üzerinden entegre edersek,</p>
+<p>$$
+\int _{0}^{\infty} \int _{-\infty}^{\infty} u_t \phi + f(u)_x \phi \mathrm{d} x \mathrm{d} t = 0
+\qquad (5)
+$$</p>
+<p>elde ederiz. Bu denklemdeki ilk terime zaman üzerinden, ikinci terime de uzay
+üzerinden Parçalı Entegral tekniğini uygulayacağız. PE tekniğini hatırlarsak,</p>
+<p>$$
+\int y \mathrm{d} z = y z - \int z \mathrm{d} y
+$$</p>
+<p>eşitliği idi, ya da belirli entegraller (definite integrals) için,</p>
+<p>$$
+\int_{a}^{b} y \mathrm{d} z = [y z]_{a}^{b} - \int_{a}^{b} z \mathrm{d} y
+\qquad (6)
+$$</p>
+<p>Kısım olarak $y = \phi \mathrm{d} x$, $\mathrm{d} z = u_t$ atayalım, şimdi zaman üzerinden PE
+alıyoruz, dikkat bu entegral dışarıdan içeri doğru yani zaman için entegral
+(5)'in tüm iç kısmı</p>
+<p>$$
+\int _{0}^{\infty}
+\underbrace{\int _{-\infty}^{\infty} u_t \phi}_{dx dt\textrm{ ile beraber iç kısım}} + f(u)_x \phi \mathrm{d} x
+\mathrm{d} t = 0
+$$</p>
+<p>üzerinde alınmış olacak. Dedigimiz gibi once $y,\mathrm{d} z$ tanımladık, o zaman $z=u$,
+$\mathrm{d} y = \phi_t \mathrm{d} x \mathrm{d} t$ olur. (6) ile yerine koyarsak,</p>
+<p>$$
+\int_{-\infty}^{\infty} [ u \phi ]_{0}^{\infty} -
+\int _{0}^{\infty} \int_{-\infty}^{\infty} u \phi_t \mathrm{d} x \mathrm{d} t
+\qquad (7)
+$$</p>
+<p>Test fonksiyonu tanımından $\phi(\pm \infty, t) = \phi(x, \pm \infty) = 0$
+olduğunu biliyoruz, yani</p>
+<p>$$
+[ u \phi ]_{0}^{\infty} = \cancel{u(x,\infty)\phi(x,\infty)} - u(x,0)\phi(x,0) 
+$$</p>
+<p>$$
+= u(x,0)\phi(x,0) 
+$$</p>
+<p>Bu sayede (7) basitleştirilir,</p>
+<p>$$
+- \int _{0}^{\infty} \int_{-\infty}^{\infty} u \phi_t \mathrm{d} x \mathrm{d} t +
+\int_{-\infty}^{\infty} u(x,0)\phi(x,0) 
+$$</p>
+<p>Benzer bir yaklaşımla zaman üzerinden PE alınır [4], ve</p>
+<p>$$
+\int_{0}^{\infty} \int_{-\infty}^{\infty}
+f(u)_x \phi \mathrm{d} x \mathrm{d} t =
+- \int_{0}^{\infty} \int_{-\infty}^{\infty} f(u) \phi_x \mathrm{d} x \mathrm{d} t
+$$</p>
+<p>Son iki formül birleştirilince,</p>
+<p>$$
+\int_{0}^{\infty} \int_{-\infty}^{\infty}
+u \phi_t + f(u) \phi_x \mathrm{d} x \mathrm{d} t = -
+\int_{-\infty}^{\infty} u(x,0) \phi(x,0) \mathrm{d} x 
+$$</p>
+<p>Riemann Problemi</p>
+<p>Kesintili ve iki parça içeren bir fonksiyon ile Burgers denkleminin çözümü
+mümkün; bu aslında basit, $u_t + u u_x = 0$ denklemi için başlangıç şartları</p>
+<p>$$
+u(x,0) = 
+\left\{ \begin{array}{ll}
+u_l &amp; x &lt; 0 \\
+u_r &amp; x &gt; 0 
+\end{array} \right.
+\qquad (9)
+$$</p>
+<p>olduğu durumda çözüm özgün bir zayıf çözümdür, eğer $u_l &gt; u_r$ ise (bu mümkün
+seçeneklerden birincisi)</p>
+<p>$$
+u(x,t) = 
+\left\{ \begin{array}{ll}
+u_l &amp; x &lt; st \\
+u_r &amp; x &gt; st 
+\end{array} \right.
+$$</p>
+<p>ki $s$ şok hızıdır. Kesinti noktası $s$ hızında sağa ilerler, $t$ anında olacağı
+yer $st$'dir. </p>
+<p><img alt="" src="compscieng_bpp50fv1_01.png" /></p>
+<p>Daha önce tek boyutlu lineer taşınım akımı (convection) ile gördüğümüz durum
+burada da var, orada çözüm $u(x,y) = u_0(x-ct)$ idi, dalga hızı $c$. Şimdi hız
+$u$ bu $s$ şok hızınını verir, Burgers için hesabı $s = (u_l + u_r) / 2$.  Şok
+hızının hesabı için kesinti bölgesinin yeterince uzağında $M$ ve $-M$ noktalarını
+seçelim, bu iki nokta arasındaki toplam kütlenin / dalganın değişiminin hızı şok
+hızı $s$ olacaktır.</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d} t} \int_{-M}^{M} u(x,t) \mathrm{d} x = f(u_l) - f(u_r)
+\qquad (8)
+$$</p>
+<p>Salt entegralin nasıl hesaplanacağına bakarsak [3, sf. 31],</p>
+<p>$$
+\int_{-M}^{M} u(x,t) \mathrm{d} x =
+\int_{-M}^{st} u_l \mathrm{d} x + 
+\int_{st}^{M} u_r \mathrm{d} x
+$$</p>
+<p>$$
+= (M+st)u_l + (M-st)u_r
+$$</p>
+<p>Şimdi zaman türevini geri koyalım, bu sağ tarafta $s(u_l-u_r)$ verir, hepsi
+bir arada,</p>
+<p>$$
+\frac{\mathrm{d}}{\mathrm{d} t} \int_{-M}^{M} u(x,t) \mathrm{d} x = s(u_l-u_r)
+$$</p>
+<p>(8)'in sağ tarafını üstteki formüle koyunca,</p>
+<p>$$
+f(u_l) - f(u_r) = s(u_l-u_r)
+$$</p>
+<p>$$
+s = \frac{f(u_l) - f(u_r)}{u_l-u_r}
+$$</p>
+<p>Böylece genel bir ifade elde ettik. Burgers denklemi özelinde,
+$f(u) = u^2 / 2$ olduğuna göre,</p>
+<p>$$
+f(u_l) - f(u_r) = \frac{1}{2} u_l^2 -  \frac{1}{2} u_r^2
+$$</p>
+<p>O zaman</p>
+<p>$$
+\frac{1}{2} (u_l + u_r)(u_l - u_r) = s(u_l-u_r)
+$$</p>
+<p>diyebiliriz [5, sf. 46], basitleştirince,</p>
+<p>$$
+s = \frac{1}{2} (u_l + u_r)
+$$</p>
+<p>Burgers denklemi çözümü (9)'un aynı zamanda bir zayıf çözüm olduğunun ispatı
+[6, sf. 8]'de bulunabilir. Not: ispat sadece 1. seçenek $u_l &gt; u_r$ için
+geçerli, diğer seçenekler de var.</p>
+<p>Kaynaklar</p>
+<p>[1] Bayramlı, <em>Hesapsal Bilim, Hesapsal Sıvı Dinamiğine Giriş</em></p>
+<p>[2] Bayramlı, <em>Fizik, Sıvılar, 1</em></p>
+<p>[3] Leveque, <em>Numerical Methods for Conservation Laws</em></p>
+<p>[4] Dong, <em>Numerical Methods for Conservation Laws (Part 1)</em>
+    <a href="https://jdongg.github.io/post/conservation-laws-1/">https://jdongg.github.io/post/conservation-laws-1/</a></p>
+<p>[5] Cooper, <em>Introduction to PDEs with Matlab</em></p>
+<p>[6] Cameron, <em>Notes on Burgers' Equation</em>,
+    <a href="https://www.math.umd.edu/~mariakc/burgers.pdf">https://www.math.umd.edu/~mariakc/burgers.pdf</a></p>

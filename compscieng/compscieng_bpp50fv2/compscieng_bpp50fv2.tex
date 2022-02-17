@@ -40,6 +40,7 @@ için $u$ diyelim [2], $\Delta x$ için $h_x$,
 
 $$
 \overline{u}_i = 1/h_x \int_{x_{i-1/2}}^{x_{i+1/2}} u(x) \ud x
+\mlabel{1}
 $$
 
 [3] yazısında muhafaza kanununun entegral formunu görmüştük,
@@ -62,16 +63,38 @@ $$
 \int_{t_1}^{t_2} f(x_1,t) \ud t = 0
 $$
 
-Şimdi $u(x_1,t_1)$ mesela $x_{j-1/2}$ ve $t_l$ için (zaman $l$ indisi)
-$u_{j-1}^l$ diyebiliriz, $x_2$ yerine $x_{j+1/2}$, sonuncuda zamanın hala
-değişken olduğu durum $u_{j+1}$ olabilir. Eğer $x$ değişken ise, zaman indisi
-$t_2 = t_{l+1}$ için $u^{l}$. 
+Bu formülü her sonlu hacim hücresi için kullanacağız. Zaman indisleri $t,t+1$
+olacak, üstte $t_1,t_2$ yerine. Yer için $x_1,x_2$ yerine bir $j$ indisi
+merkezli $x_{j-1/2}$ ve $x_{j+1/2}$. Devam edelim, $u(x_1,t_1)$ içinde
+$x_{j-1/2}$ ve $t_l$ oluyor, (zaman $l$ indisi) ona da $u_{j-1}^l$
+diyelim. $x_2$ yerine $x_{j+1/2}$, sonuncuda zamanın hala değişken olduğu durum
+$u_{j+1}$ olsun. Eğer $x$ değişken ise, zaman indisi $t_2 = t_{l+1}$ için
+$u^{l}$. Üstteki formülü bu notasyonla değiştirip istenen zaman ve yer
+aralıklarına uygularsak,
 
 $$
 \int_{x_{j-1/2}}^{x_{j+1/2}} u^{l+1} \ud x -
 \int_{x_{j-1/2}}^{x_{j+1/2}} u^{l} \ud x  +
-\int_{t_l}^{t_{l+1}} f(u_{j+1/2},t) \ud t  -
-\int_{t_l}^{t_{l+1}} f(u_{j-1/2},t) \ud t = 0
+\int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \ud t  -
+\int_{t_l}^{t_{l+1}} f(u_{j-1/2}) \ud t = 0
+$$
+
+Her şeyi $h_x$ ile bölelim,
+
+$$
+\frac{1}{h_x} \int_{x_{j-1/2}}^{x_{j+1/2}} u^{l+1} \ud x -
+\frac{1}{h_x} \int_{x_{j-1/2}}^{x_{j+1/2}} u^{l} \ud x  +
+\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \ud t  -
+\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j-1/2}) \ud t = 0
+$$
+
+Bu formülde (1)'de tanımlanan ortalama formuu görüyoruz, kısaltma amaçlı
+$\overline{u}_{j,l}$ notasyonu oralarda kullanabiliriz,
+
+$$
+\overline{u}_{j,l+1} - \overline{u}_{j,l} + 
+\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \ud t  -
+\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j-1/2}) \ud t = 0
 $$
 
 

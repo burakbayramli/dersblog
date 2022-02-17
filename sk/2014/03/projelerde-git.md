@@ -48,15 +48,19 @@ kod biter bitmez hemen almışız, ve onun üzerinde bizimkini yazmışız
 gibi... Bu durumda da çakışmalar görülebilir muhakkak, onlar varsa
 çözülür; Sonra `git push` daha önce yapıldığı gibi yapılır.
 
-Mevcut Olmayan Aşırı Büyük Dosya
+Dosyayı Tamamen Silmek
 
-Belki geliştirme dizini içinde geçici pkl dosyaları üretiliyor, ve
-bunlardan bazılarını yanlışlıkla git add ve commit ile kendi deponuza
-koydunuz. Sonra git push sırasında hatayı farkettiniz, `git rm` ile
-dosyayı sildiniz. Fakat push hala "bu dosya çok büyük" diye
-yakınıyor. Problem Git tüm değişiklikleri teker teker yollamaya
-uğraşıyor - dosya eklemesi, sonra onu silmesi. Tabii eklerken yine
-yakınıyor. Çözüm, şurada.
+Belki geliştirme dizini içinde geçici dosyalar üretiliyor, ya da şifre
+dosyaları yanlışlıkla commit edilmiş, ya da aşırı büyük dosyalar
+depoya bir şekilde girdi.. Sonra `git push` sırasında hatayı
+farkettik, `git rm` ile dosyayı sildik. Fakat `push` hala çok zaman
+alıyor. Problem şurada, Git tüm değişiklikleri teker teker yollamaya
+uğraşıyor - dosya eklemesi, sonra onu silme. Şifre durumunda zaten
+silsek bile bir şifre dosyasının tarihte kalması durumu var, birisi
+`checkout` ile eski hale giderek şifreleri görebilir. Çözüm tamamen
+silmek.
+
+Metot 1
 
 ```
 git filter-branch --force --index-filter 'git rm --cached \
@@ -64,7 +68,7 @@ git filter-branch --force --index-filter 'git rm --cached \
    --prune-empty --tag-name-filter cat -- --all
 ```
 
-Ya da en basit kullanim
+Ya da en basit kullanım
 
 ```
 git filter-branch --tree-filter 'rm -rf [dizin]' HEAD
@@ -75,6 +79,52 @@ Bu islemler uzun zaman alabilir bu arada. Değişikliği göndermek için
 ```
 git push origin --force --all 
 ```
+
+Metot 2
+
+Artik Git tarafindan tavsiye edilen yeni yaklasim `git-filter-repo`
+kullanimi. Bu ayri bir yardimci kod, indirmek icin
+
+https://github.com/newren/git-filter-repo
+
+Yuksek Git versiyonuna ihtiyaci var, yoksa guncelleme yapalim,
+
+```
+sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt-get update
+sudo apt-get install git -y
+git --version
+```
+
+Şimdi silme işlemini yapacağımız depo en üst dizinine `cd` ile gidelim,
+ve `git-filter-repo` [DİZİN] altında kurulduğunu varsayarak,
+
+```
+[DIZIN]/git-filter-repo/git-filter-repo--invert-paths --path dir1/dir2/dosya3.txt
+```
+
+ile `dir1/dir2/dosya3.txt` dosyasını tarihten silelim. Tabii önceden
+`git-filter-repo` üzerinde `chmod u+x` yapmak gerekebilir.
+
+Üstteki komut işlem yapmak için illa sıfırdan `git clone` edilmiş depo
+istiyorum diye yakınabilir, eğer bu mümkünse yapın, değilse üstteki
+komuta `--force` eklenebilir.
+
+Komut işledikten sonra uzaktaki depoya ittirmek gerekli, herhangi bir
+sebeple uzak (remote) deponun ne olduğu silinmiş ise, `git remote -v`
+o listeye bakılır, eklemek için
+
+```
+git remote add origin git@github.com:[user]/[repo.git]
+```
+
+Artık
+
+```
+git push origin --force --all
+```
+
+ile kod gönderilebilir.
 
 Dal Yapısı (Branch Structure)
 

@@ -26,11 +26,42 @@
 
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('rainfall.csv',index_col=0,parse_dates=['dt'])
-x = df[df.index.month == 3]['Daily Rainfall Total (mm)']
+df.columns = ['rain']
+</code></pre>
+
+<p>Markov Zinciri hazirligi, onceki gun yagis olup olmadigi D2, iki gun once D1,
+bugun D3.</p>
+<pre><code class="python">df['r1ago'] = df.rain.shift(1)
+df['r2ago'] = df.rain.shift(2)
+df['D1'] = df.apply(lambda x: (x.r2ago &gt; 0.0).astype(float), axis=1)
+df['D2'] = df.apply(lambda x: (x.r1ago &gt; 0.0).astype(float), axis=1)
+df['D3'] = df.apply(lambda x: (x.rain &gt; 0.0).astype(float), axis=1)
+pd.set_option('display.max_columns', None)
+print (df)
+</code></pre>
+
+<pre><code>            rain  r1ago  r2ago   D1   D2   D3
+dt                                           
+2015-01-01   0.6    NaN    NaN  0.0  0.0  1.0
+2015-01-02   0.0    0.6    NaN  0.0  1.0  0.0
+2015-01-03   0.0    0.0    0.6  1.0  0.0  0.0
+2015-01-04   0.0    0.0    0.0  0.0  0.0  0.0
+2015-01-05   0.0    0.0    0.0  0.0  0.0  0.0
+...          ...    ...    ...  ...  ...  ...
+2022-01-27   0.0    0.0    0.0  0.0  0.0  0.0
+2022-01-28   0.0    0.0    0.0  0.0  0.0  0.0
+2022-01-29   0.0    0.0    0.0  0.0  0.0  0.0
+2022-01-30   3.8    0.0    0.0  0.0  0.0  1.0
+2022-01-31   0.0    3.8    0.0  0.0  1.0  0.0
+
+[2588 rows x 6 columns]
+</code></pre>
+
+<pre><code class="python">x = df[df.index.month == 3]['rain']
 </code></pre>
 
 <pre><code class="python">from scipy.stats import gamma
-res = gamma.fit(df['Daily Rainfall Total (mm)'])
+res = gamma.fit(df['rain'])
 a,loc,scale = res  
 x.hist(density=True)
 plt.ylim(0,0.4)
@@ -40,7 +71,7 @@ plt.savefig('stat_176_app1_01.png')
 
 <p><img alt="" src="stat_176_app1_01.png" /></p>
 <pre><code class="python">from scipy.stats import weibull_min
-res = weibull_min.fit(df['Daily Rainfall Total (mm)'])
+res = weibull_min.fit(df['rain'])
 a,loc,scale = res  
 x.hist(density=True)
 plt.ylim(0,0.4)

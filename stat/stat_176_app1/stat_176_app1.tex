@@ -56,6 +56,28 @@ plt.savefig('stat_176_app1_01.png')
 
 \includegraphics[width=20em]{stat_176_app1_01.png}
 
+Olasilik dagilimlari arasindaki yakinlik icin Kullback-Leibler mesafesi [2]
+kullanalim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+def kl(p, q):
+    return np.sum(p * np.log(p / q))    
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+b = range(0,30)
+eps = 1e-5
+s = 4000
+r1 = gamma.rvs(a,loc,scale,size=s)
+dh = np.histogram(df.rain, bins=b, density=True)[0]+eps
+h1 = np.histogram(r1, bins=b, density=True)[0]+eps
+print ('Gamma', kl(h1, dh))
+\end{minted}
+
+\begin{verbatim}
+Gamma 0.24452726135693229
+\end{verbatim}
+
 \begin{minted}[fontsize=\footnotesize]{python}
 from scipy.stats import weibull_min
 res = weibull_min.fit(df['rain'])
@@ -68,18 +90,25 @@ plt.savefig('stat_176_app1_02.png')
 
 \includegraphics[width=20em]{stat_176_app1_02.png}
 
+\begin{minted}[fontsize=\footnotesize]{python}
+r2 = weibull_min.rvs(a,loc,scale,size=s)
+h2 = np.histogram(r2, bins=b, density=True)[0]+eps
+print ('Weibull Min', kl(h2, dh))
+\end{minted}
+
+\begin{verbatim}
+Weibull Min 0.05373455463716215
+\end{verbatim}
+
+Weibull Min daha yakin gozukuyor.
 
 
 
+Kaynaklar
 
+[1] {\em Meteorological Service Singapore},
+    \url{http://www.weather.gov.sg/climate-historical-daily/}
 
-
-
-
-
-
-
-
-
-
+[2] Bayramli, {\em Kullback-Leibler (KL) Mesafesi}
+    
 \end{document}

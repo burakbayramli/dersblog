@@ -652,7 +652,14 @@ süresince yapılmış (elde 106 satırlı bir veri var yani). Bu veri için
 Poisson dağılımının uygun olup olmadığını yüzde 5 önemlilik seviyesinde
 ispatlamamız isteniyor.</p>
 <pre><code class="python">import pandas as pd
-df = pd.read_csv('vehicles.csv',header=None)
+vehicle = [2, 3, 3, 3, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 6,\
+6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 6, 7, 7, 7, 7, 7, 7, 7,\
+7, 7, 7, 7, 7, 8, 8, 8, 8, 8, 8, 8, 8, 9, 9, 9, 9, 9, 9, 9,
+9, 9, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, \
+11, 11, 11, 11, 11, 11, 11, 11, 11, 11, 12, 12, 12, 12, \
+12, 13, 13, 13, 13, 13, 13, 14, 14, 14, 14, 15, 15, 15, 15,\
+15, 16, 16, 16, 16, 18]
+df = pd.DataFrame(vehicle)
 </code></pre>
 
 <p>Verinin histogramına bakalım,</p>
@@ -693,7 +700,9 @@ print (kt)
 18       18.0       1.0
 </code></pre>
 
-<p>Yani bir dakikada 6 araba sayımı 13 kere yapılmış (13 değişik dakikada).</p>
+<p>Yani bir dakikada 6 araba sayımı 13 kere yapılmış (13 değişik dakikada).
+Not: Üstte bir kütüphane çağrısı <code>hist</code> kullandık (grafikleme kısmını
+kullanmadan), ama Poisson frekans hesabı elle çok kolay yapılabilir.</p>
 <p>Eğer üstteki verinin bir Poisson dağılımdan geldiğini kabul ediyorsak,
 Poisson'un parametresi $\lambda$'yi veriden hesaplamak için ortalama
 almak yeterlidir,</p>

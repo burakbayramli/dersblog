@@ -1,3 +1,4 @@
+# zip dosyasindaki veriyi isle, birlestirilmis tek bir csv uret
 import zipfile, pandas as pd, collections
 dfs = []
 with zipfile.ZipFile('rainfall.zip', 'r') as z:

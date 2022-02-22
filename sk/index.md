@@ -3,7 +3,7 @@
 
 ## En Son
 
-11/1 - [Diferansiyel Denklem Sistemi, Köşegenleştirme (Diagonalization)](https://burakbayramli.github.io/dersblog/linear/linear_23/ders_23.html#ode2)
+22/2 - [Diferansiyel Denklem Sistemi, Köşegenleştirme (Diagonalization)](https://burakbayramli.github.io/dersblog/linear/linear_23/ders_23.html#ode2)
 
 11/1 - [NetCDF, İklim Verisi, NOAA](https://burakbayramli.github.io/dersblog/sk/2021/12/netcdf-wind-historical-noaa-iklim-veri.html)
 
@@ -44,5 +44,8 @@
 [Sene](year.md)
 
 [Ara](ara.html)
+
+
+
 
 

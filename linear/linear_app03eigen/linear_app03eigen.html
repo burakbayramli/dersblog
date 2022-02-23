@@ -47,84 +47,7 @@ seri halindeki $X_n, n=0,1,2,..$ rasgele değişkenini modeller ve bu
 değişkenler belli sayıdaki konumların birinde olabilirler. Mesela konumları
 bir doğal sayı ile ilintilendirirsek $X_n = i$ olabilir ki $i={0,1,..}$
 diye kabul edelim.</p>
-<p>Markov Zincirlerinde (MZ) $i$ konumundan $j$ konumuna geçiş olasılığını,
-$P_{ij}$, biliriz ve bu $P(X_{n+1} = j | X_{n} = i)$ olarak açılabilir. Açılımdan<br />
-görüleceği üzere bir MZ sonraki adıma geçiş olasılığı için sadece
-bir önceki adıma bakar. Bu tür önce/sonra yapısındaki iki boyutlu hal, 
-çok rahat bir şekilde matrisine çevirilebilir / gösterilebilir. Önceki konum 
-satırlar, sonraki konum kolonlar olarak betimlenir mesela. </p>
-<p>Örnek</p>
-<p>Bir sonraki günde yağmur yağmayacağını bir MZ olarak tasarlayalım. Bir
-sonraki günde yağmur yağmayacağını sadece bugün etkiliyor olsun. Eğer bugün
-yağmur yağıyorsa yarın yağmur yağması 0.7, eğer bugün yağmıyor ise yarın
-yağması 0.4. MZ şöyle</p>
-<p>$$ 
-P =
-\left[\begin{array}{cc}
-0.7 &amp; 0.3 \\
-0.4 &amp; 0.6
-\end{array}\right]
- $$</p>
-<p>Geçiş olasılıklarından bahsettiğimize göre ve elimizde sınırlı / belli
-sayıda konum var ise, bir MZ'nin her satırındaki olasılıkların toplamı
-tabii ki 1'e eşit olmalıdır. </p>
-<p>MZ'lerin ilginç bir özelliği $n$ adım sonra $i,j$ geçişinin $P^n$ hesabıyla
-yapılabilmesidir. Yani $P$'yi $n$ defa kendisiyle çarpıp $i,j$ kordinatına 
-bakarsak $n$ adım sonrasını rahatça görebiliriz. Bunun ispatını burada
-vermeyeceğiz. </p>
-<p>Mesela üstteki örnekte, eğer bugün yağmur yağıyorsa 4 gün sonra yağmur
-yağma olasılığı nedir? </p>
-<pre><code class="python">import numpy.linalg as lin
-P = np.array([[0.7,0.3],[0.4,0.6]])
-P4 = lin.matrix_power(P,4)
-print P4
-</code></pre>
-
-<pre><code>[[ 0.5749  0.4251]
- [ 0.5668  0.4332]]
-</code></pre>
-
-<p>Aradığımız geçiş için kordinat 0,0'a bakıyoruz ve sonuç 0.5749. Numpy
-<code>matrix_power</code> bir matrisi istediğimiz kadar kendisiyle çarpmamızı
-sağlıyor. </p>
-<p>Durağan Dağılım (Stationary Distribution)</p>
-<p>Eğer yağmur örneğindeki matrisi çarpmaya devam edersek, mesela 8 kere
-kendisiyle çarpsak sonuç ne olurdu? </p>
-<pre><code class="python">import numpy.linalg as lin
-P = np.array([[0.7,0.3],[0.4,0.6]])
-P8 = lin.matrix_power(P,8)
-print P8
-</code></pre>
-
-<pre><code>[[ 0.57145669  0.42854331]
- [ 0.57139108  0.42860892]]
-</code></pre>
-
-<p>Dikkat edilirse, her satır bir değere yaklaşmaya başladı. Bu değer MZ'nin
-durağan dağılımıdır, belli koşullara uyan her MZ'nin böyle bir durağan
-dağılımı vardır. Bu koşullar MZ'nin periyodik olmayan (aperiodic) ve tekrar
-eden (recurrent) olmasıdır. Bu şartlar çok "özel" şartlar değildir
-aslında, daha çok "normal" bir MZ'yi tarif ediyor diyebiliriz. Tüm
-konumları tekrar eden yapmak kolaydır, MZ tek bağlı (singly connected) hale
-getirilir, yani her konumdan her diğer konuma bir geçiş olur, ve periyodik
-olmaması için ise MZ'ye olmadığı zamanlarda bir konumdan kendisine geçiş
-sağlanır (az bir gürültü üzerinden). </p>
-<p>Nihayet durağanlık şu denklemi ortaya çıkartır,</p>
-<p>$$ \pi = \pi P $$</p>
-<p>Burada durağan dağılım $\pi$'dir. Bu denklem tanıdık geliyor mu?  Devriğini
-alarak şöyle gösterelim, belki daha iyi tanınır, </p>
-<p>$$ P^T\pi^T = \pi^T $$</p>
-<p>Bir şey daha ekleyelim, </p>
-<p>$$ P^T\pi^T = 1 \cdot \pi^T $$</p>
-<p>Bu özdeğer/vektör formuna benzemiyor mu? Evet! Bu form </p>
-<p>$$ Ax = \lambda x $$</p>
-<p>MZ denklemi şunu söylüyor, 1 değerindeki özdeğere ait özvektör bir MZ'nin
-durağan dağılımıdır! Bu arada, MZ geçiş matrisi $P$'nin en büyük
-özdeğerinin her zaman 1 olduğunu biliyoruz (çünkü üstteki tarif ettiğimiz
-özel şartlara sahip olan türden matrisler böyle özdeğerlere sahip
-olmalı). Bu durumda en büyük özdeğere ait özvektörü hesaplamak yeterli
-olacaktır. Bunu yapmayı zaten [6]'da öğrenmiştik, üst metot (power method)
-sayesinde bu hesap kolayca yapılabiliyor.</p>
+<p>Ilerlemeden once Markov Zincirleri konusunu anlamak [1] lazim.</p>
 <p>Şimdi en baştaki Web sayfalarına ait geçişleri yazalım,</p>
 <pre><code class="python">P = [[1./4, 2./4, 0, 0, 1./4],
      [1./6, 0, 2./6, 1./6, 2./6],
@@ -473,4 +396,5 @@ ağlarının belli yerlerde olmasının bir sebebi de bu.</p>
 <p>[3] Bayramli, <em>Urun Verisi</em>, <a href="https://www.dropbox.com/s/wdg2x524h7ysldu/hidalgo.zip?dl=0">https://www.dropbox.com/s/wdg2x524h7ysldu/hidalgo.zip?dl=0</a></p>
 <p>[4] Hidalgo, <em>The Atlas of Economic Complexity</em>, <a href="http://atlas.cid.harvard.edu">http://atlas.cid.harvard.edu</a></p>
 <p>[5] Inoua, <em>A Simple Measure of Economic Complexity</em>, <a href="https://arxiv.org/abs/1601.05012">https://arxiv.org/abs/1601.05012</a></p>
-<p>[6] Bayramli, Lineer Cebir, <em>Ders 21</em></p>
+<p>[6] Bayramli, <em>Lineer Cebir, Ders 21</em></p>
+<p>[7] Bayramli, <em>Lineer Cebir, Markov Zincirleri</em></p>

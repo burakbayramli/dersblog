@@ -30,107 +30,7 @@ değişkenler belli sayıdaki konumların birinde olabilirler. Mesela konumları
 bir doğal sayı ile ilintilendirirsek $X_n = i$ olabilir ki $i=\{0,1,..\}$
 diye kabul edelim.
 
-Markov Zincirlerinde (MZ) $i$ konumundan $j$ konumuna geçiş olasılığını,
-$P_{ij}$, biliriz ve bu $P(X_{n+1} = j | X_{n} = i)$ olarak açılabilir. Açılımdan  
-görüleceği üzere bir MZ sonraki adıma geçiş olasılığı için sadece
-bir önceki adıma bakar. Bu tür önce/sonra yapısındaki iki boyutlu hal, 
-çok rahat bir şekilde matrisine çevirilebilir / gösterilebilir. Önceki konum 
-satırlar, sonraki konum kolonlar olarak betimlenir mesela. 
-
-Örnek
-
-Bir sonraki günde yağmur yağmayacağını bir MZ olarak tasarlayalım. Bir
-sonraki günde yağmur yağmayacağını sadece bugün etkiliyor olsun. Eğer bugün
-yağmur yağıyorsa yarın yağmur yağması 0.7, eğer bugün yağmıyor ise yarın
-yağması 0.4. MZ şöyle
-
-$$ 
-P =
-\left[\begin{array}{cc}
-0.7 & 0.3 \\
-0.4 & 0.6
-\end{array}\right]
- $$
-
-Geçiş olasılıklarından bahsettiğimize göre ve elimizde sınırlı / belli
-sayıda konum var ise, bir MZ'nin her satırındaki olasılıkların toplamı
-tabii ki 1'e eşit olmalıdır. 
-
-MZ'lerin ilginç bir özelliği $n$ adım sonra $i,j$ geçişinin $P^n$ hesabıyla
-yapılabilmesidir. Yani $P$'yi $n$ defa kendisiyle çarpıp $i,j$ kordinatına 
-bakarsak $n$ adım sonrasını rahatça görebiliriz. Bunun ispatını burada
-vermeyeceğiz. 
-
-Mesela üstteki örnekte, eğer bugün yağmur yağıyorsa 4 gün sonra yağmur
-yağma olasılığı nedir? 
-
-\begin{minted}[fontsize=\footnotesize]{python}
-import numpy.linalg as lin
-P = np.array([[0.7,0.3],[0.4,0.6]])
-P4 = lin.matrix_power(P,4)
-print P4
-\end{minted}
-
-\begin{verbatim}
-[[ 0.5749  0.4251]
- [ 0.5668  0.4332]]
-\end{verbatim}
-
-Aradığımız geçiş için kordinat 0,0'a bakıyoruz ve sonuç 0.5749. Numpy
-\verb!matrix_power! bir matrisi istediğimiz kadar kendisiyle çarpmamızı
-sağlıyor. 
-
-Durağan Dağılım (Stationary Distribution)
-
-Eğer yağmur örneğindeki matrisi çarpmaya devam edersek, mesela 8 kere
-kendisiyle çarpsak sonuç ne olurdu? 
-
-\begin{minted}[fontsize=\footnotesize]{python}
-import numpy.linalg as lin
-P = np.array([[0.7,0.3],[0.4,0.6]])
-P8 = lin.matrix_power(P,8)
-print P8
-\end{minted}
-
-\begin{verbatim}
-[[ 0.57145669  0.42854331]
- [ 0.57139108  0.42860892]]
-\end{verbatim}
-
-Dikkat edilirse, her satır bir değere yaklaşmaya başladı. Bu değer MZ'nin
-durağan dağılımıdır, belli koşullara uyan her MZ'nin böyle bir durağan
-dağılımı vardır. Bu koşullar MZ'nin periyodik olmayan (aperiodic) ve tekrar
-eden (recurrent) olmasıdır. Bu şartlar çok ``özel'' şartlar değildir
-aslında, daha çok ``normal'' bir MZ'yi tarif ediyor diyebiliriz. Tüm
-konumları tekrar eden yapmak kolaydır, MZ tek bağlı (singly connected) hale
-getirilir, yani her konumdan her diğer konuma bir geçiş olur, ve periyodik
-olmaması için ise MZ'ye olmadığı zamanlarda bir konumdan kendisine geçiş
-sağlanır (az bir gürültü üzerinden). 
-
-Nihayet durağanlık şu denklemi ortaya çıkartır,
-
-$$ \pi = \pi P $$
-
-Burada durağan dağılım $\pi$'dir. Bu denklem tanıdık geliyor mu?  Devriğini
-alarak şöyle gösterelim, belki daha iyi tanınır, 
-
-$$ P^T\pi^T = \pi^T $$
-
-Bir şey daha ekleyelim, 
-
-$$ P^T\pi^T = 1 \cdot \pi^T $$
-
-Bu özdeğer/vektör formuna benzemiyor mu? Evet! Bu form 
-
-$$ Ax = \lambda x $$
-
-MZ denklemi şunu söylüyor, 1 değerindeki özdeğere ait özvektör bir MZ'nin
-durağan dağılımıdır! Bu arada, MZ geçiş matrisi $P$'nin en büyük
-özdeğerinin her zaman 1 olduğunu biliyoruz (çünkü üstteki tarif ettiğimiz
-özel şartlara sahip olan türden matrisler böyle özdeğerlere sahip
-olmalı). Bu durumda en büyük özdeğere ait özvektörü hesaplamak yeterli
-olacaktır. Bunu yapmayı zaten [6]'da öğrenmiştik, üst metot (power method)
-sayesinde bu hesap kolayca yapılabiliyor.
+Ilerlemeden once Markov Zincirleri konusunu anlamak [1] lazim.
 
 Şimdi en baştaki Web sayfalarına ait geçişleri yazalım,
 
@@ -555,6 +455,8 @@ Kaynaklar
 
 [5] Inoua, {\em A Simple Measure of Economic Complexity}, \url{https://arxiv.org/abs/1601.05012}
 
-[6] Bayramli, Lineer Cebir, {\em Ders 21}
+[6] Bayramli, {\em Lineer Cebir, Ders 21}
+
+[7] Bayramli, {\em Lineer Cebir, Markov Zincirleri}
 
 \end{document}

@@ -8,38 +8,6 @@ df = pd.read_csv('rainfall.csv',index_col=0,parse_dates=['dt'])
 df.columns = ['rain']
 \end{minted}
 
-Markov Zinciri hazirligi, onceki gun yagis olup olmadigi D2, iki gun once D1,
-bugun D3.
-
-\begin{minted}[fontsize=\footnotesize]{python}
-df['r1ago'] = df.rain.shift(1)
-df['r2ago'] = df.rain.shift(2)
-df['D1'] = df.apply(lambda x: (x.r2ago > 0.0).astype(float), axis=1)
-df['D2'] = df.apply(lambda x: (x.r1ago > 0.0).astype(float), axis=1)
-df['D3'] = df.apply(lambda x: (x.rain > 0.0).astype(float), axis=1)
-pd.set_option('display.max_columns', None)
-print (df)
-\end{minted}
-
-\begin{verbatim}
-            rain  r1ago  r2ago   D1   D2   D3
-dt                                           
-2015-01-01   0.6    NaN    NaN  0.0  0.0  1.0
-2015-01-02   0.0    0.6    NaN  0.0  1.0  0.0
-2015-01-03   0.0    0.0    0.6  1.0  0.0  0.0
-2015-01-04   0.0    0.0    0.0  0.0  0.0  0.0
-2015-01-05   0.0    0.0    0.0  0.0  0.0  0.0
-...          ...    ...    ...  ...  ...  ...
-2022-01-27   0.0    0.0    0.0  0.0  0.0  0.0
-2022-01-28   0.0    0.0    0.0  0.0  0.0  0.0
-2022-01-29   0.0    0.0    0.0  0.0  0.0  0.0
-2022-01-30   3.8    0.0    0.0  0.0  0.0  1.0
-2022-01-31   0.0    3.8    0.0  0.0  1.0  0.0
-
-[2588 rows x 6 columns]
-\end{verbatim}
-
-
 \begin{minted}[fontsize=\footnotesize]{python}
 x = df[df.index.month == 3]['rain']
 \end{minted}
@@ -105,6 +73,47 @@ Weibull Min 0.06420630403960519
 
 Weibull Min daha yakin gozukuyor.
 
+Yagmur Gunleri, Kuraklik Gunleri
+
+Bazı araştırmalar ne kadar yağdını ayrı bir şekilde tahmin edip, yagıp
+yağmadığını ayrı bir şekilde tahnin ediyor. Bu alanda Markov Zincirleri
+kullanımı var. [4]'te gösterilen tek gün öncesine dayanarak yapılan
+sonraki gün tahminidir (bkz ilk örnek te yağmur hakkında). Fakat önceki
+iki gün tüm kombinasyonları kuru (D), yağışlı (W) üzerinden 4 konum ile
+temsil edilirse, mesela DD, DW, WW, WD olarak, o zaman iki gün öncesi de
+hesaba dahil edilebilir.
+
+Markov Zinciri hazirligi, onceki gun yagis olup olmadigi D2, iki gun once D1,
+bugun D3.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+df['r1ago'] = df.rain.shift(1)
+df['r2ago'] = df.rain.shift(2)
+df['D1'] = df.apply(lambda x: (x.r2ago > 0.0).astype(float), axis=1)
+df['D2'] = df.apply(lambda x: (x.r1ago > 0.0).astype(float), axis=1)
+df['D3'] = df.apply(lambda x: (x.rain > 0.0).astype(float), axis=1)
+pd.set_option('display.max_columns', None)
+print (df)
+\end{minted}
+
+\begin{verbatim}
+            rain  r1ago  r2ago   D1   D2   D3
+dt                                           
+2015-01-01   0.6    NaN    NaN  0.0  0.0  1.0
+2015-01-02   0.0    0.6    NaN  0.0  1.0  0.0
+2015-01-03   0.0    0.0    0.6  1.0  0.0  0.0
+2015-01-04   0.0    0.0    0.0  0.0  0.0  0.0
+2015-01-05   0.0    0.0    0.0  0.0  0.0  0.0
+...          ...    ...    ...  ...  ...  ...
+2022-01-27   0.0    0.0    0.0  0.0  0.0  0.0
+2022-01-28   0.0    0.0    0.0  0.0  0.0  0.0
+2022-01-29   0.0    0.0    0.0  0.0  0.0  0.0
+2022-01-30   3.8    0.0    0.0  0.0  0.0  1.0
+2022-01-31   0.0    3.8    0.0  0.0  1.0  0.0
+
+[2588 rows x 6 columns]
+\end{verbatim}
+
 
 
 Kaynaklar
@@ -113,7 +122,11 @@ Kaynaklar
     \url{http://www.weather.gov.sg/climate-historical-daily/}
 
 [2] Bayramli, {\em Kullback-Leibler (KL) Mesafesi}
-    
+
+[3] Ross, {\em Introduction to Probability Models, 10th Ed}
+
+[4] Bayramli, {\em Lineer Cebir, Markov Zincirleri}
+
 \end{document}
 
 

@@ -170,12 +170,12 @@ MC = np.array(pivot).astype(float)
 probs = MC[:,[2,3]] / MC.sum(axis=1).reshape(4,1)
 MC[:,[2,3]] = probs
 MC = pd.DataFrame(MC)
-MC.columns = ['D1','D3','norain','rain']
+MC.columns = ['D1','D2','norain','rain']
 print (MC)
 \end{minted}
 
 \begin{verbatim}
-    D1   D3    norain      rain
+    D1   D2    norain      rain
 0  0.0  0.0  0.701774  0.298226
 1  0.0  1.0  0.489960  0.508032
 2  1.0  0.0  0.539235  0.458753
@@ -187,14 +187,21 @@ Ufak bir matris olduğu için bu olasılıkları elle gerekli yerlere kodlayabil
 \begin{minted}[fontsize=\footnotesize]{python}
 MCfinal = np.zeros((4,4))
 MCfinal[0,0] = MC.loc[0]['norain']
+MCfinal[0,2] = MC.loc[0]['rain']
+MCfinal[1,0] = MC.loc[1]['norain']
+MCfinal[1,1] = MC.loc[1]['rain']
+MCfinal[2,1] = MC.loc[2]['norain']
+MCfinal[2,3] = MC.loc[2]['rain']
+MCfinal[3,1] = MC.loc[3]['norain']
+MCfinal[3,3] = MC.loc[3]['rain']
 print (MCfinal)
 \end{minted}
 
 \begin{verbatim}
-[[0.70177384 0.29822616 0.         0.        ]
+[[0.70177384 0.         0.29822616 0.        ]
  [0.48995984 0.50803213 0.         0.        ]
- [0.         0.         0.         0.        ]
- [0.         0.         0.         0.        ]]
+ [0.         0.53923541 0.         0.45875252]
+ [0.         0.36402878 0.         0.63309353]]
 \end{verbatim}
 
 [devam edecek]

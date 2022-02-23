@@ -195,7 +195,50 @@ print (MCfinal)
  [0.         0.36402878 0.         0.63309353]]
 </code></pre>
 
-<p>[devam edecek]</p>
+<p>Artık bu matris üzerinde ek işlemler yapabiliriz. Eğer dün ve iki gün önce
+yağmur yağdıysa (etiket 3), acaba önümüzdeki iki gün, üç gün içinde yağmur yağma
+olasılığı nedir (aynı etiket)?</p>
+<pre><code class="python">import numpy.linalg as lin
+P2 = lin.matrix_power(MCfinal,2)
+print (P2)
+print (&quot;)
+P3 = lin.matrix_power(MCfinal,3)
+print (P3)
+</code></pre>
+
+<pre><code>[[0.49248652 0.16081411 0.20928732 0.136812  ]
+ [0.59275634 0.25809664 0.14611884 0.        ]
+ [0.2642037  0.44094803 0.         0.29043325]
+ [0.17835948 0.41540258 0.         0.40080741]]
+
+[[0.42440661 0.24435737 0.14687236 0.18262588]
+ [0.54243788 0.20991384 0.17677545 0.06703239]
+ [0.40145807 0.32974183 0.07879245 0.18387141]
+ [0.3286986  0.35694329 0.05319146 0.25374858]]
+</code></pre>
+
+<pre><code class="python">print (MCfinal[3,3])
+print (P2[3,3])
+print (P3[3,3])
+</code></pre>
+
+<pre><code>0.6330935251798561
+0.40080741162465705
+0.2537485771436678
+</code></pre>
+
+<p>Önümüzdeki üç günün <em>herhangi birinde</em> yağma olasılığı nasıl hesaplanır?
+Her üç matris içinde yağdı-yağdı konumundan yağmadı-yağdı konumuna (etiket 1)
+geçiş olasıklarına bakarız, bu olasılıkları birbiri ile çarparız, böylece
+sırasıyla üç gün hiç yağmama olasılığı elde edilir. 1 değerinden bu değeri
+çıkartınca herhangi bir gün yağma olasılığı çıkar. </p>
+<pre><code class="python">norain = MCfinal[3,1]*P2[3,1]*P3[3,1]
+print (1-norain)
+</code></pre>
+
+<pre><code>0.9460235745403694
+</code></pre>
+
 <p>Kaynaklar</p>
 <p>[1] <em>Meteorological Service Singapore</em>,
     <a href="http://www.weather.gov.sg/climate-historical-daily/">http://www.weather.gov.sg/climate-historical-daily/</a></p>

@@ -51,7 +51,7 @@ dt
 
 <p>Yağış verisi milimetre yağış miktarı olarak gösterilmiş. Bazı günlerde hiç yağış
 yok, sıfır milimetre su.</p>
-<p>Bu verinin dağılımı görmek ilginç olabilir. Tabii her ayın yağış dağılımı
+<p>Bu verinin dağılımını görmek ilginç olabilir. Tabii her ayın yağış dağılımı
 farklı olabilir, mesela altta Mart ayına bakalım,</p>
 <pre><code class="python">x = df[df.index.month == 3]['rain']
 </code></pre>
@@ -113,29 +113,28 @@ print ('Weibull Min', kl(h2, dh))
 <p>Weibull Min daha yakın gözüküyor.</p>
 <p>Yağmur Günleri, Kuraklık Günleri</p>
 <p>Bazı araştırmalar ne kadar yağdığını ayrı bir şekilde temsil edip, yagıp
-yağmadığı aksiyonunu ayrı bir şekilde tahmin ediyor. Bu durumda herhalde
-miktar dağılımlarını sadece sıfırdan büyük değerler için kullanmak yeterli
-olur.</p>
-<p>Aksiyon derken ne kadar yağarsa yağsın o gün 'yağdı' olarak alınıyor, tersi ise
-'yağmadı'. Bu ayrıksal konumlar arasındaki geçişler, olasılıksal şekilde Markov
-Zincirleri ile temsil edilebilir, bkz [4]'te gösterilen tek gün öncesine
-dayanarak yapılan tahmin (ilk örnek). Örnek tek gün öncesini kullanmış. Fakat
-önceki iki günün tüm kombinasyonları yağma/yağmama üzerinden 4 konum ile temsil
-edilirse, o zaman iki gün öncesi de hesaba dahil edilebilir.</p>
-<p>Markov Zinciri hazırlığı, önceki gün yağış olup olmadığı D2, iki gün önce D1,
-bugün D3.</p>
+yağmadığı aksiyonunu ayrı bir şekilde tahmin ediyor (bu durumda herhalde miktar
+dağılımlarını sadece sıfırdan büyük değerler için kullanmak yeterli
+olur). Aksiyon derken ne kadar yağarsa yağsın o gün 'yağdı' olarak alınıyor,
+tersi ise 'yağmadı'. Bu ayrıksal konumlar arasındaki geçişler, olasılıksal
+şekilde Markov Zincirleri ile temsil edilebilir, bkz [4]'te gösterilen tek gün
+öncesine dayanarak yapılan tahmin (ilk örnek). Örnek tek gün öncesini
+kullanmış. Fakat önceki iki günün tüm kombinasyonları yağma/yağmama üzerinden 4
+konum ile temsil edilirse, o zaman iki gün öncesi de hesaba dahil edilebilir.</p>
+<p>Markov Zinciri hazırlığı, önceki gün yağış olup olmadığı D1, iki gün öncesi D2,
+bugün D0.</p>
 <pre><code class="python">df = pd.read_csv('rainfall.csv',index_col=0,parse_dates=['dt'])
 df.columns = ['rain']
 df['r1ago'] = df.rain.shift(1)
 df['r2ago'] = df.rain.shift(2)
 df['D1'] = df.apply(lambda row: (row.r1ago &gt; 0.0).astype(int), axis=1)
 df['D2'] = df.apply(lambda row: (row.r2ago &gt; 0.0).astype(int), axis=1)
-df['D3'] = df.apply(lambda row: (row.rain &gt; 0.0).astype(int), axis=1)
+df['D0'] = df.apply(lambda row: (row.rain &gt; 0.0).astype(int), axis=1)
 pd.set_option('display.max_columns', None)
 print (df)
 </code></pre>
 
-<pre><code>            rain  r1ago  r2ago  D1  D2  D3
+<pre><code>            rain  r1ago  r2ago  D1  D2  D0
 dt                                        
 2015-01-01   0.6    NaN    NaN   0   0   1
 2015-01-02   0.0    0.6    NaN   1   0   0
@@ -152,11 +151,11 @@ dt
 [2588 rows x 6 columns]
 </code></pre>
 
-<pre><code class="python">g = df.groupby(['D1','D2','D3']).size().reset_index()
+<pre><code class="python">g = df.groupby(['D1','D2','D0']).size().reset_index()
 print (g)
 </code></pre>
 
-<pre><code>   D1  D2  D3    0
+<pre><code>   D1  D2  D0    0
 0   0   0   0  633
 1   0   0   1  269
 2   0   1   0  268
@@ -169,13 +168,13 @@ print (g)
 
 <p>Bu sayıları nasıl Markov matrisine çevireceğimizi anlamak için [1, sf. 193].</p>
 <p>Konumları etiketlemek için alttakini yapalım,</p>
-<pre><code class="python">pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
+<pre><code class="python">pivot = g.pivot_table(index=['D1','D2'], columns='D0', aggfunc='mean')
 pivot = pivot.reset_index()
 print (pivot)
 </code></pre>
 
 <pre><code>   D1 D2    0     
-D3          0    1
+D0          0    1
 0   0  0  633  269
 1   0  1  268  228
 2   1  0  244  253

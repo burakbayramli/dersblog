@@ -33,7 +33,7 @@ dt
 Yağış verisi milimetre yağış miktarı olarak gösterilmiş. Bazı günlerde hiç yağış
 yok, sıfır milimetre su.
 
-Bu verinin dağılımı görmek ilginç olabilir. Tabii her ayın yağış dağılımı
+Bu verinin dağılımını görmek ilginç olabilir. Tabii her ayın yağış dağılımı
 farklı olabilir, mesela altta Mart ayına bakalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
@@ -112,19 +112,17 @@ Weibull Min daha yakın gözüküyor.
 Yağmur Günleri, Kuraklık Günleri
 
 Bazı araştırmalar ne kadar yağdığını ayrı bir şekilde temsil edip, yagıp
-yağmadığı aksiyonunu ayrı bir şekilde tahmin ediyor. Bu durumda herhalde
-miktar dağılımlarını sadece sıfırdan büyük değerler için kullanmak yeterli
-olur.
+yağmadığı aksiyonunu ayrı bir şekilde tahmin ediyor (bu durumda herhalde miktar
+dağılımlarını sadece sıfırdan büyük değerler için kullanmak yeterli
+olur). Aksiyon derken ne kadar yağarsa yağsın o gün 'yağdı' olarak alınıyor,
+tersi ise 'yağmadı'. Bu ayrıksal konumlar arasındaki geçişler, olasılıksal
+şekilde Markov Zincirleri ile temsil edilebilir, bkz [4]'te gösterilen tek gün
+öncesine dayanarak yapılan tahmin (ilk örnek). Örnek tek gün öncesini
+kullanmış. Fakat önceki iki günün tüm kombinasyonları yağma/yağmama üzerinden 4
+konum ile temsil edilirse, o zaman iki gün öncesi de hesaba dahil edilebilir.
 
-Aksiyon derken ne kadar yağarsa yağsın o gün 'yağdı' olarak alınıyor, tersi ise
-'yağmadı'. Bu ayrıksal konumlar arasındaki geçişler, olasılıksal şekilde Markov
-Zincirleri ile temsil edilebilir, bkz [4]'te gösterilen tek gün öncesine
-dayanarak yapılan tahmin (ilk örnek). Örnek tek gün öncesini kullanmış. Fakat
-önceki iki günün tüm kombinasyonları yağma/yağmama üzerinden 4 konum ile temsil
-edilirse, o zaman iki gün öncesi de hesaba dahil edilebilir.
-
-Markov Zinciri hazırlığı, önceki gün yağış olup olmadığı D2, iki gün önce D1,
-bugün D3.
+Markov Zinciri hazırlığı, önceki gün yağış olup olmadığı D1, iki gün öncesi D2,
+bugün D0.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 df = pd.read_csv('rainfall.csv',index_col=0,parse_dates=['dt'])
@@ -133,13 +131,13 @@ df['r1ago'] = df.rain.shift(1)
 df['r2ago'] = df.rain.shift(2)
 df['D1'] = df.apply(lambda row: (row.r1ago > 0.0).astype(int), axis=1)
 df['D2'] = df.apply(lambda row: (row.r2ago > 0.0).astype(int), axis=1)
-df['D3'] = df.apply(lambda row: (row.rain > 0.0).astype(int), axis=1)
+df['D0'] = df.apply(lambda row: (row.rain > 0.0).astype(int), axis=1)
 pd.set_option('display.max_columns', None)
 print (df)
 \end{minted}
 
 \begin{verbatim}
-            rain  r1ago  r2ago  D1  D2  D3
+            rain  r1ago  r2ago  D1  D2  D0
 dt                                        
 2015-01-01   0.6    NaN    NaN   0   0   1
 2015-01-02   0.0    0.6    NaN   1   0   0
@@ -157,12 +155,12 @@ dt
 \end{verbatim}
 
 \begin{minted}[fontsize=\footnotesize]{python}
-g = df.groupby(['D1','D2','D3']).size().reset_index()
+g = df.groupby(['D1','D2','D0']).size().reset_index()
 print (g)
 \end{minted}
 
 \begin{verbatim}
-   D1  D2  D3    0
+   D1  D2  D0    0
 0   0   0   0  633
 1   0   0   1  269
 2   0   1   0  268
@@ -178,14 +176,14 @@ Bu sayıları nasıl Markov matrisine çevireceğimizi anlamak için [1, sf. 193
 Konumları etiketlemek için alttakini yapalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
-pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
+pivot = g.pivot_table(index=['D1','D2'], columns='D0', aggfunc='mean')
 pivot = pivot.reset_index()
 print (pivot)
 \end{minted}
 
 \begin{verbatim}
    D1 D2    0     
-D3          0    1
+D0          0    1
 0   0  0  633  269
 1   0  1  268  228
 2   1  0  244  253

@@ -107,18 +107,17 @@ Weibull Min 0.06455219814752436
 
 Weibull Min daha yakin gozukuyor.
 
-Yagmur Gunleri, Kuraklik Gunleri
+Yağmur Günleri, Kuraklık Günleri
 
-Bazı araştırmalar ne kadar yağdını ayrı bir şekilde tahmin edip, yagıp
-yağmadığını ayrı bir şekilde tahnin ediyor. Bu alanda Markov Zincirleri
-kullanımı var. [4]'te gösterilen tek gün öncesine dayanarak yapılan
-sonraki gün tahminidir (bkz ilk örnek te yağmur hakkında). Fakat önceki
-iki gün tüm kombinasyonları kuru (D), yağışlı (W) üzerinden 4 konum ile
-temsil edilirse, mesela DD, DW, WW, WD olarak, o zaman iki gün öncesi de
-hesaba dahil edilebilir.
+Bazı araştırmalar ne kadar yağdığını ayrı bir şekilde tahmin edip, yagıp
+yağmadığını ayrı bir şekilde tahmin ediyor. Yağma/yağmama aksiyonu tahmini için
+Markov Zincirleri kullanımı var. [4]'te gösterilen tek gün öncesine dayanarak
+yapılan tahmin (bkz ilk örnek te yağmur hakkında). Fakat önceki iki gün tüm
+kombinasyonları yağma/yağmama üzerinden 4 konum ile temsil edilirse, o zaman iki
+gün öncesi de hesaba dahil edilebilir.
 
-Markov Zinciri hazirligi, onceki gun yagis olup olmadigi D2, iki gun once D1,
-bugun D3.
+Markov Zinciri hazırlığı, önceki gün yağış olup olmadığı D2, iki gün önce D1,
+bugün D3.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 df = pd.read_csv('rainfall.csv',index_col=0,parse_dates=['dt'])
@@ -167,9 +166,9 @@ print (g)
 7   1   1   1  440
 \end{verbatim}
 
-Bu sayilari nasil Markov matrisine cevirecegimizi anlamak icin [1, sf. 193],
+Bu sayıları nasıl Markov matrisine çevireceğimizi anlamak için [1, sf. 193].
 
-Konumlari etiketlemek icin alttakini yapalim,
+Konumları etiketlemek için alttakini yapalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
@@ -189,15 +188,16 @@ D3          0    1
 Böylece konum 0,1,2,3 elde ettik. İki gün önce ve bir gün önce yağmadı konumu 0,
 iki gün önce yağmadı bir gün önce yağdı konum 1, böyle gidiyor. Şimdi dikkat,
 buradan bir Markov matrisi çıkartmak için geçiş hedefinde iki kolonlu bir matris
-(yağdı,yağmadı) kullanamayız. O durumda matris 4x2 boyutunda olurdu, bu bir
+(yağdı,yağmadı) kullanamayız. O durumda matris 4 x 2 boyutunda olurdu, bu bir
 Markov matrisi olmaz. Boyutlar 4 x 4 olmalı. Peki o zaman mesela yağdı, yağmadı
 konumundan bugün yağdı konumuna nasıl geçeceğiz? Ufak bir numara kullanarak;
-yağdı-yağmadı (2 etiketi) konumundan yağmadi-yağdı konumuna (1 etiketi) geçişi
+yağdı-yağmadı (2 etiketi) konumundan yağmadı-yağdı konumuna (1 etiketi) geçişi
 yapacağız. Öyle ya, yağdı, yağmadı geçişi sonrası artık yeni bir gündeyiz, artık
-bir gün öncesi iki gun oncesi oldu, bugün de 'yağdı' durumu var, hedef yağmadi-yağdı.
+bir gün öncesi iki gun oncesi oldu, bugün de 'yağdı' durumu var, gelinen yer
+yağmadı-yağdı.
 
-Olasilik verisini olusturalim. Ustteki matristeki toplamlari her satırin nihai
-toplami ile bolelim,
+Olasılık verisini oluşturalım. Üstteki matristeki toplamları her satırın nihai
+toplamı ile bölelim,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 MC = np.array(pivot).astype(float)
@@ -238,9 +238,11 @@ print (MCfinal)
  [0.         0.36402878 0.         0.63309353]]
 \end{verbatim}
 
-Artık bu matris üzerinde ek işlemler yapabiliriz. Eğer dün ve iki gün önce
-yağmur yağdıysa (etiket 3), acaba önümüzdeki iki gün, üç gün içinde yağmur yağma
-olasılığı nedir (aynı etiket)?
+Markov matrisini elde ettik. Artık bu matris üzerinde ek işlemler
+yapabiliriz. Daha önce [4]'te bir, iki, hatta daha fazla adım sonrasını MZ ile
+tahmin edebilme kabiliyeti işlendi, basit matris çarpımı ile bu
+yapılabiliyor. Eğer dün ve iki gün önce yağmur yağdıysa (etiket 3), acaba
+önümüzdeki iki gün, üç gün içinde yağmur yağma olasılığı nedir (aynı etiket)?
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import numpy.linalg as lin
@@ -275,11 +277,11 @@ print (P3[3,3])
 0.33858949401527094
 \end{verbatim}
 
-Önümüzdeki üç günün {\em herhangi birinde} yağma olasılığı nasıl hesaplanır?
-Her üç matris içinde yağdı-yağdı konumundan yağmadı-yağdı konumuna (etiket 1)
-geçiş olasıklarına bakarız, bu olasılıkları birbiri ile çarparız, böylece
-sırasıyla üç gün hiç yağmama olasılığı elde edilir. 1 değerinden bu değeri
-çıkartınca herhangi bir gün yağma olasılığı çıkar. 
+Peki önümüzdeki üç günün {\em herhangi birinde} yağma olasılığı nasıl
+hesaplanır?  Her üç matris içinde yağdı-yağdı konumundan bu sefer yağmadı-yağdı
+konumuna (etiket 1) geçiş olasıklarına bakarız, bu olasılıkları birbiri ile
+çarparız, böylece sırasıyla üç gün hiç yağmama olasılığı elde edilir. 1
+değerinden bu değeri çıkartınca herhangi bir gün yağma olasılığı çıkar.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 norain = MCfinal[3,1]*P2[3,1]*P3[3,1]
@@ -289,6 +291,8 @@ print (1-norain)
 \begin{verbatim}
 0.9808945929621133
 \end{verbatim}
+
+Singapur'da çok yağmur yağıyor herhalde!
 
 Kaynaklar
 

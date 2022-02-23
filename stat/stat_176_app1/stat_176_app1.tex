@@ -2,15 +2,46 @@
 \begin{document}
 Uygulama - Yağmur Yağış Verisi
 
+Yağış verisini nasıl analiz ederiz? Bir örnek üzerinde görelim, [1]'den alınan
+Singapur yağış verisi,
+
 \begin{minted}[fontsize=\footnotesize]{python}
 import pandas as pd
 df = pd.read_csv('rainfall.csv',index_col=0,parse_dates=['dt'])
 df.columns = ['rain']
+print (df)
 \end{minted}
+
+\begin{verbatim}
+            rain
+dt              
+2015-01-01   0.6
+2015-01-02   0.0
+2015-01-03   0.0
+2015-01-04   0.0
+2015-01-05   0.0
+...          ...
+2022-01-27   0.0
+2022-01-28   0.0
+2022-01-29   0.0
+2022-01-30   3.8
+2022-01-31   0.0
+
+[2588 rows x 1 columns]
+\end{verbatim}
+
+Yağış verisi milimetre yağış miktarı olarak gösterilmiş. Bazı günlerde hiç yağış
+yok, sıfır milimetre su.
+
+Bu verinin dağılımı görmek ilginç olabilir. Tabii her ayın yağış dağılımı
+farklı olabilir, mesela altta Mart ayına bakalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 x = df[df.index.month == 3]['rain']
 \end{minted}
+
+Bu veriye ne tür dağılım uygun olur? Literatürde pek çok kullanım var.  Bazıları
+Gamma, bazıları Weibull diyor. Biz altta ikisini de test edeceğiz.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 from scipy.stats import gamma
@@ -24,10 +55,13 @@ plt.savefig('stat_176_app1_01.png')
 
 \includegraphics[width=20em]{stat_176_app1_01.png}
 
-Veriye olan uygunluğu kontrol için olasılık dağılımları arasında bir yakınlık
-ölçüsü olan Kullback-Leibler mesafesini [2] kullanalım. Veri histogramı ve
-tahmin edilen dağılım üzerinden üretilen verinin histogramı arasında mesafeyi
-alttaki fonksiyon ile ölçebiliriz,
+Hem veriden gelen histogramı hem de olasılık yoğunluk fonksiyonunu aynı
+grafikte gösterdik, kabaca ilk kontrol bu şekilde yapiabilir.
+
+Daha detayli veriye olan uygunluğu kontrol için olasılık dağılımları arasında
+bir yakınlık ölçüsü olan Kullback-Leibler mesafesini [2] kullanalım. Veri
+histogramı ve tahmin edilen dağılım üzerinden üretilenlerin histogramı arasında
+mesafeyi alttaki fonksiyon ile ölçebiliriz,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 def kl(p, q):

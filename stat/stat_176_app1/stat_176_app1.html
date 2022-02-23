@@ -122,8 +122,6 @@ dt
 
 <pre><code class="python">g = df.groupby(['D1','D2','D3']).size().reset_index()
 print (g)
-#pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
-#print (pivot)
 </code></pre>
 
 <pre><code>   D1  D2  D3    0
@@ -138,6 +136,33 @@ print (g)
 </code></pre>
 
 <p>Bu sayilari nasil Markov matrisine cevirecegimizi anlamak icin [1, sf. 193],</p>
+<p>Konumlari etiketlemek icin alttakini yapalim,</p>
+<pre><code class="python">pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
+pivot = pivot.reset_index()
+print (pivot)
+</code></pre>
+
+<pre><code>   D1 D2    0     
+D3          0    1
+0   0  0  633  269
+1   0  1  244  253
+2   1  0  268  228
+3   1  1  253  440
+</code></pre>
+
+<p>Böylece konum 0,1,2,3 elde ettik. İki gün önce ve bir gün önce yağmadı konumu 0,
+iki gün önce yağmadı bir gün önce yağdı konum 1, böyle gidiyor. Şimdi dikkat,
+buradan bir Markov matrisi çıkartmak için geçiş hedefinde iki kolonlu bir matris
+(yağdı,yağmadı) kullanamayız. Bu durumda matris 4x2 boyutunda olurdu, bu bir
+Markov matrisi olmaz. Boyutlar 4 x 4 olmalı. Peki o zaman mesela yağdı, yağmadı
+konumundan bugün yağdı konumuna nasıl geçeceğiz? Ufak bir numara kullanarak;
+yağdı-yağmadı (2 etiketi) konumundan yağdı-yağdı konumuna (3 etiketi) geçişi
+yapacağız. Öyle ya, yağdı, yağmadı geçişi sonrası artık yeni bir gündeyiz, artık
+iki gün bir gün öncesi oldu, bugün de 'yağdı' durumu var, hedef yağdı-yağdı.</p>
+<p>Ufak bir matris olduğu için bu olasılıkları elle gerekli yerlere kodlayabiliriz,</p>
+<pre><code class="python">
+</code></pre>
+
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] <em>Meteorological Service Singapore</em>,

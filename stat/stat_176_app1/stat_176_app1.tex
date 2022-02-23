@@ -117,21 +117,19 @@ dt
 \end{verbatim}
 
 \begin{minted}[fontsize=\footnotesize]{python}
-g = df.groupby(['D1','D2','D3']).size()
-print (g)
+g = df.groupby(['D1','D2','D3']).size().reset_index()
+pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
+print (pivot)
 \end{minted}
 
 \begin{verbatim}
-D1  D2  D3
-0   0   0     633
-        1     269
-    1   0     244
-        1     253
-1   0   0     268
-        1     228
-    1   0     253
-        1     440
-dtype: int64
+         0     
+D3       0    1
+D1 D2          
+0  0   633  269
+   1   244  253
+1  0   268  228
+   1   253  440
 \end{verbatim}
 
 

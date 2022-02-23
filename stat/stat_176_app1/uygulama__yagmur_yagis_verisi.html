@@ -120,20 +120,18 @@ dt
 [2588 rows x 6 columns]
 </code></pre>
 
-<pre><code class="python">g = df.groupby(['D1','D2','D3']).size()
-print (g)
+<pre><code class="python">g = df.groupby(['D1','D2','D3']).size().reset_index()
+pivot = g.pivot_table(index=['D1','D2'], columns='D3', aggfunc='mean')
+print (pivot)
 </code></pre>
 
-<pre><code>D1  D2  D3
-0   0   0     633
-        1     269
-    1   0     244
-        1     253
-1   0   0     268
-        1     228
-    1   0     253
-        1     440
-dtype: int64
+<pre><code>         0     
+D3       0    1
+D1 D2          
+0  0   633  269
+   1   244  253
+1  0   268  228
+   1   253  440
 </code></pre>
 
 <p>Kaynaklar</p>

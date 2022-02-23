@@ -156,9 +156,9 @@ buradan bir Markov matrisi çıkartmak için geçiş hedefinde iki kolonlu bir m
 (yağdı,yağmadı) kullanamayız. O durumda matris 4x2 boyutunda olurdu, bu bir
 Markov matrisi olmaz. Boyutlar 4 x 4 olmalı. Peki o zaman mesela yağdı, yağmadı
 konumundan bugün yağdı konumuna nasıl geçeceğiz? Ufak bir numara kullanarak;
-yağdı-yağmadı (2 etiketi) konumundan yağdı-yağdı konumuna (3 etiketi) geçişi
+yağdı-yağmadı (2 etiketi) konumundan yağmadi-yağdı konumuna (1 etiketi) geçişi
 yapacağız. Öyle ya, yağdı, yağmadı geçişi sonrası artık yeni bir gündeyiz, artık
-iki gün bir gün öncesi oldu, bugün de 'yağdı' durumu var, hedef yağdı-yağdı.</p>
+bir gün öncesi iki gun oncesi oldu, bugün de 'yağdı' durumu var, hedef yağmadi-yağdı.</p>
 <p>Olasilik verisini olusturalim. Ustteki matristeki toplamlari her satırin nihai
 toplami ile bolelim,</p>
 <pre><code class="python">MC = np.array(pivot).astype(float)
@@ -177,11 +177,15 @@ print (MC)
 </code></pre>
 
 <p>Ufak bir matris olduğu için bu olasılıkları elle gerekli yerlere kodlayabiliriz,</p>
-<pre><code class="python">print (MC.loc[0]['norain'])
-MCfinal = np.zeros((4,4))
+<pre><code class="python">MCfinal = np.zeros((4,4))
+MCfinal[0,0] = MC.loc[0]['norain']
+print (MCfinal)
 </code></pre>
 
-<pre><code>0.7017738359201774
+<pre><code>[[0.70177384 0.29822616 0.         0.        ]
+ [0.48995984 0.50803213 0.         0.        ]
+ [0.         0.         0.         0.        ]
+ [0.         0.         0.         0.        ]]
 </code></pre>
 
 <p>[devam edecek]</p>

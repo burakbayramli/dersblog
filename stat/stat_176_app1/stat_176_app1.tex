@@ -155,23 +155,43 @@ D3          0    1
 Böylece konum 0,1,2,3 elde ettik. İki gün önce ve bir gün önce yağmadı konumu 0,
 iki gün önce yağmadı bir gün önce yağdı konum 1, böyle gidiyor. Şimdi dikkat,
 buradan bir Markov matrisi çıkartmak için geçiş hedefinde iki kolonlu bir matris
-(yağdı,yağmadı) kullanamayız. Bu durumda matris 4x2 boyutunda olurdu, bu bir
+(yağdı,yağmadı) kullanamayız. O durumda matris 4x2 boyutunda olurdu, bu bir
 Markov matrisi olmaz. Boyutlar 4 x 4 olmalı. Peki o zaman mesela yağdı, yağmadı
 konumundan bugün yağdı konumuna nasıl geçeceğiz? Ufak bir numara kullanarak;
 yağdı-yağmadı (2 etiketi) konumundan yağdı-yağdı konumuna (3 etiketi) geçişi
 yapacağız. Öyle ya, yağdı, yağmadı geçişi sonrası artık yeni bir gündeyiz, artık
 iki gün bir gün öncesi oldu, bugün de 'yağdı' durumu var, hedef yağdı-yağdı.
 
+Olasilik verisini olusturalim. Ustteki matristeki toplamlari her satırin nihai
+toplami ile bolelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+MC = np.array(pivot).astype(float)
+probs = MC[:,[2,3]] / MC.sum(axis=1).reshape(4,1)
+MC[:,[2,3]] = probs
+MC = pd.DataFrame(MC)
+MC.columns = ['D1','D3','norain','rain']
+print (MC)
+\end{minted}
+
+\begin{verbatim}
+    D1   D3    norain      rain
+0  0.0  0.0  0.701774  0.298226
+1  0.0  1.0  0.489960  0.508032
+2  1.0  0.0  0.539235  0.458753
+3  1.0  1.0  0.364029  0.633094
+\end{verbatim}
+
 Ufak bir matris olduğu için bu olasılıkları elle gerekli yerlere kodlayabiliriz,
 
 \begin{minted}[fontsize=\footnotesize]{python}
-
+print (MC.loc[0]['norain'])
+MCfinal = np.zeros((4,4))
 \end{minted}
 
-
-
-
-
+\begin{verbatim}
+0.7017738359201774
+\end{verbatim}
 
 [devam edecek]
 

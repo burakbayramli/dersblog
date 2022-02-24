@@ -47,10 +47,35 @@ sayıda konum var ise, bir MZ'nin her satırındaki olasılıkların toplamı
 tabii ki 1'e eşit olmalıdır. </p>
 <p>MZ'lerin ilginç bir özelliği $n$ adım sonra $i,j$ geçişinin $P_{i,j}^n$
 hesabıyla yapılabilmesidir. Yani $P$'yi $n$ defa kendisiyle çarpıp $i,j$
-kordinatına bakarsak $n$ adım sonrasını rahatça görebiliriz. İspat için
-[1, sf. 195].</p>
-<p>Mesela üstteki örnekte, eğer bugün yağmur yağıyorsa 4 gün sonra yağmur
-yağma olasılığı nedir? </p>
+indislerindeki öğeye bakarsak $n$ adım sonrasını görüyoruz. İspat altta [1, sf. 195].</p>
+<p>Bulmak istediğimiz $n$ adım sonrası geçiş olasılıkları, yani $i$ adımında olan
+sürecin $n$ adım sonra $j$ adımında olma olasılığı. Yani aradığımız,</p>
+<p>$$
+P_{ij}^n = P { X_{n+k} = j | X_k = i }, \quad n \ge 0, i,j \ge 0
+$$</p>
+<p>Tabii ki $P_{ij}^1 = P_{ij}$. Chapman-Kolmogorov denklemleri bu n-adım
+geçişlerini hesaplamak için bize bir yöntem sağlıyoar. Bu denklemler,</p>
+<p>$$
+P_{ij}^{n+m} = \sum _{k=0}^{\infty} P_{ik}^n P_{kj}^m,
+\quad \forall n,m \ge 0, \quad \forall i,j
+$$</p>
+<p>$P_{ij}^{n+m}$ formülü şunu söylüyor, $i$'de başlayan süreç $n+m$ geçiş sonrası
+$j$'e varacak, ve geçtiği yol onu $n$ anında $k$'den geçirecek. O zaman tüm bu
+geçiş noktaları $k$'ler üzerinden bir toplam alırsak sürecin $n+m$ adım sonrası
+$j$'de olma olasılığını elde etmiş oluyoruz.</p>
+<p>Formel olarak şunu söylemiş oluyoruz,</p>
+<p>$$
+P_{ij}^{n+m} = P{X_{n+m} = j | X_0 = i }
+$$</p>
+<p>$$
+= \sum_{k=0}^{\infty} P{X_{n+m} = j, X_n = k | X_0 = i }
+$$</p>
+<p>$$
+= \sum_{k=0}^{\infty} P{X_{n+m} = j, X_n = k, X_0 = i }
+P{X_n=k|X_0=i}
+$$</p>
+<p>İlk örneğe dönersek, eğer bugün yağmur yağıyorsa 4 gün sonra yağmur yağma
+olasılığı nedir?</p>
 <pre><code class="python">import numpy.linalg as lin
 P = np.array([[0.7,0.3],[0.4,0.6]])
 P4 = lin.matrix_power(P,4)

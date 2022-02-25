@@ -5,30 +5,30 @@ Isı Denklemi (Heat Equation)
 Bir gövdede, cisimde ne zaman bir sıcaklık (temperatüre) gradyani var ise, yani
 çoktan aza doğru bir farklılık, fark vektörü mevcut ise, orada bir enerji
 transferi olur, bu tranfer yüksek sıcaklıktan alçak sıcaklık yönüne doğru
-olur. Bu alandaki Fourier kanunu der ki birim alan bazlı işi iletimi (işi akisi
+olur. Bu alandaki Fourier kanunu der ki birim alan bazlı ısı iletimi (ısı akisi
 -heat flux-) bu bahsedilen sıcaklık gradyanı ile direk orantılıdır. Formül
 olarak
 
 $$
-\frac{Q}{A} \propto \frac{\ud T}{\ud x}
+\frac{\dot{Q}}{A} \propto \frac{\ud T}{\ud x}
 $$
 
-$Q$ ısı transfer hızı (Watt olarak), $A$ ısı transferinin üzerinden olduğu $m^2$
-alan, ki bu alan ısı akışına dik olan alandır, $\frac{\ud T}{\ud x}$ sıcaklık
-gradyanı birimi $C / m$ ki tek boyutta $T-x$ diyagramındaki sıcaklık eğrisinin
-eğimi olarak görülebilir (eğim tabii ki yukarı doğru giden bir eğride yükselişin
-yönünü gösterir, yani gradyan).
+$\dot{Q}$, yani $\ud Q / \ud t$ ısı transfer hızı (Watt olarak), $A$ ısı
+transferinin üzerinden olduğu $m^2$ alan, ki bu alan ısı akışına dik olan
+alandır, $\frac{\ud T}{\ud x}$ sıcaklık gradyanı birimi $C / m$ ki tek boyutta
+$T-x$ diyagramındaki sıcaklık eğrisinin eğimi olarak görülebilir (eğim tabii ki
+yukarı doğru giden bir eğride yükselişin yönünü gösterir, yani gradyan).
 
 Orantılı olma ilişkisini bir sabit dahil ederek eşitliğe çevirebiliriz,
 
 $$
-\frac{Q}{A} = -k \frac{\ud T}{\ud x}
+\frac{\dot{Q}}{A} = -k \frac{\ud T}{\ud x}
 $$
 
 ya da
 
 $$
-Q = -k A \frac{\ud T}{\ud x}
+\dot{Q} = -k A \frac{\ud T}{\ud x}
 $$
 
 $k$ birimi $W/m \cdot C$ içerir. Eksi işaretinin formüle dahil edilmesinin sebebi
@@ -37,6 +37,46 @@ alçalan bir eğride eğim (gradyan) bildiğimiz gibi eksi işaretli olur, o zam
 artan $x$ yönünde ters yönde bir ısı akışı olurdu, bunu pozitif yapmak için eksi
 ile çarpıyoruz.
 
+Üstteki denklem eğer materyelin katsayısı tüm materyel boyunca sabit ise, 
+
+$$
+P = \frac{\ud Q}{\ud t} = \frac{k A (T_h - T_c)}{d}
+$$
+
+olarak basitleştirilebilir.
+
+\includegraphics[width=20em]{heat_2.png}
+
+Soru
+
+Duvar kalınlığı 13 cm olan bir ev düşünelim, ve bu duvarın ortalama ısı iletim
+katsayısı cam pamuğunun (glass wool) iki katı [3]. Farz edelim ki hiç pencere ve
+kapı yok. Tüm duvarların toplam alanı 120 $m^2$ ve içeride sıcaklığın 18 derece
+Celcius olmasını istiyoruz, dışarıda sıcaklık 5 derece. İçeriye kaç tane 1
+kilowatt'lik ısıtıcı koymamız gerekir ki bu sıcaklığı elde edelim?
+
+Cevap
+
+Fourier ısı tranfer formülü
+
+$$
+\frac{\ud Q}{\ud t} = \frac{k A (T_2 - T_1)}{d}
+$$
+
+Cam pamuğu iletkenliği 0.042 $W / m \cdot C$. Alan $A = 120 m^2$. Dışarısı $T_2
+= 18$, içerisi $T_1 = 5$. Duvar kalınlığı $d = 13 cm = 0.13 m$.
+
+$$
+= \frac{2 (0.042) (120) (18-5)}{0.13} = 1008 \textrm{ Watt}
+$$
+
+Demek ki 1 kilowatt'lik ısıtıcı yeterli olacak.
+
+Çözümün ima ettiği şeye dikkat edelim; içeride bir ideal sıcaklık dışarıda
+bilinen bir sıcaklık üzerinden bir ısı transferi hesaplıyoruz. Elde edilen sonuç
+kaybedilen birim zamanda kaybedilen enerjidir, güçtür. O zaman içerisinin
+istenilen sıcaklıkta olmasını istersek bu kaybı telafi edecek ısıyı içeriye
+eklememiz gerekir, işte 1 kilowatt'lik ısıtıcı burada devreye giriyor.
 
 
 [devam edecek]
@@ -146,6 +186,7 @@ Kaynaklar
 
 [2] Murlow, {\em Partial Differential Equations for Scientists and Engineers}, sf. 27
 
+[3] OpenStax, {\em University Physics II, Thermodynamics, Electricity and Magnetism}
 
 \end{document}
 

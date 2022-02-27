@@ -109,28 +109,34 @@ Giriş konularını teker teker işlemeden önce derinleme bir dalış yapıp t�
 kavramlara değinelim. İstatistiğin temel öğelerinden biri yoğunluk fonksiyonudur
 (probability density function), mesela
 
-$$ f(x) = e^{-\pi x^2} $$
+$$
+f(x)=N \cdot e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+$$
 
-Pek çok farklı yoğunluk fonksiyonu vardır, hangisinin hangi tür veriye uyacağını
-bulmak istatistikçinin önemli işlerinden. Her tür dağılımın kendine has bir
-yoğunluğu var, yoğunluk çok boyutlu da olabilir. Bir yoğunluk fonksiyonun
-x-ekseni üzerindeki alanı her zaman 1'e eşit olmalıdır (yani yoğunluğun
-$-\infty,\infty$ üzerinden entegrali her zaman 1 sonucunu vermeli). Olasılık
-teorisinin işlemesi için bu gerekli.
+ki $N$ normalize edici bir faktör, $\frac{1}{\sqrt{2\pi\sigma^2}}$. Pek çok
+farklı yoğunluk fonksiyonu vardır, hangisinin hangi tür veriye uyacağını bulmak
+istatistikçinin önemli işlerinden. Her tür dağılımın kendine has bir yoğunluğu
+var, yoğunluk çok boyutlu da olabilir. Bir yoğunluk fonksiyonun x-ekseni
+üzerindeki alanı her zaman 1'e eşit olmalıdır (yani yoğunluğun $-\infty,\infty$
+üzerinden entegrali her zaman 1 sonucunu vermeli). Olasılık teorisinin işlemesi
+için bu gerekli.
 
 Yoğunluk fonksiyonları doğadan gelen bir tek ölçümü alırlar, boy, kilo gibi, ve
 onun 'olasılık yoğunluğunu' hesaplarlar. Üstteki örnek için mesela 3 ve 1
 değerlerinin olasılığını hesaplayalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
-def f(x): return np.exp(-np.pi * x**2)
-print '3 icin', f(3)
-print '1 icin', f(1)
+mu = 0
+sigma = 1  
+def f(x): return (1 / (np.sqrt(2 * np.pi * np.power(sigma, 2)))) * \
+    (np.power(np.e, -(np.power((x - mu), 2) / (2 * np.power(sigma, 2)))))
+print ('3 icin', f(3))
+print ('1 icin', f(1))
 \end{minted}
 
 \begin{verbatim}
-3 icin 5.25548517601e-13
-1 icin 0.0432139182638
+3 icin 0.004431848411938008
+1 icin 0.24197072451914337
 \end{verbatim}
 
 1 değeri 3'ten daha düşük -- çünkü bu 0 merkezli bir yoğunluk fonksiyonu, sıfıra
@@ -141,9 +147,7 @@ böyle. Eğer tüm olası değerleri $x$'e verip grafiklesek,
 x = np.array(np.linspace(-3,3,num=50))
 y = f(x)
 plt.plot(x,y)
-plt.hold(False)
 plt.savefig('stat_intro_03.png')
-plt.hold(False)
 \end{minted}
 
 \includegraphics[height=6cm]{stat_intro_03.png}
@@ -151,7 +155,30 @@ plt.hold(False)
 Dikkat: yoğunluk fonksiyonu olasılık değildir; bazı yoğunluk değerleri 1'den
 fazla değerler verebilir. Sürekli yoğunluk fonksiyonları için olasılık bir
 entegral olarak hesaplanmalıdır, ki daha önce söylediğimiz gibi tüm fonksiyon
-alanı 1'dır.
+alanı 1'dır. Altta bir normal dağılım yoğunluk fonksiyonu solda, onun entegrali
+kumulatif dağılım fonksiyonu (CDF) sağda. 
+
+\includegraphics[width=30em]{stat_intro_11.png}
+
+CDF bize mesela üstteki grafikte değerin 0 ila 1.5 arasında olma {\em olasılığını}
+veriyor. Bu hesabı direk CDF fonksiyonu üzerinde yapabilirdik, bunun için
+yazılım paketlerinde muhakkak bir çağri olur, mesela
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import scipy.stats
+print (scipy.stats.norm.cdf(1.5,0,1))
+\end{minted}
+
+\begin{verbatim}
+0.9331927987311419
+\end{verbatim}
+
+1'ye yakın oldukca büyük bir sayı, grafiğe uygun. CDF her zaman 0'dan sorulan
+değere kadar olan alanı verir, tüm alanın 1 olması bilgisinden hareketle bu
+öğeler biraraya koyulup ek sonuçlara varılabilir, mesela değerin 1.5'tan büyük
+olma olasılığı için 1-CDF(1.5). -2 ile 2 arası olma olasılı için CDF(2)-CDF(-2).
+
+Veriden Fonksiyon
 
 Şimdi mesela elimizde bir grup kişinin 68 kiloya ne kadar yakın / uzak
 olduğunun verisi var (68'ten az olanlar eksi değerli olacak tabii). Veriyi

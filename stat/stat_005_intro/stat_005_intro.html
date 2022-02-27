@@ -108,23 +108,29 @@ plt.savefig('stat_intro_09.png')
 <p>Giriş konularını teker teker işlemeden önce derinleme bir dalış yapıp tüm
 kavramlara değinelim. İstatistiğin temel öğelerinden biri yoğunluk fonksiyonudur
 (probability density function), mesela</p>
-<p>$$ f(x) = e^{-\pi x^2} $$</p>
-<p>Pek çok farklı yoğunluk fonksiyonu vardır, hangisinin hangi tür veriye uyacağını
-bulmak istatistikçinin önemli işlerinden. Her tür dağılımın kendine has bir
-yoğunluğu var, yoğunluk çok boyutlu da olabilir. Bir yoğunluk fonksiyonun
-x-ekseni üzerindeki alanı her zaman 1'e eşit olmalıdır (yani yoğunluğun
-$-\infty,\infty$ üzerinden entegrali her zaman 1 sonucunu vermeli). Olasılık
-teorisinin işlemesi için bu gerekli.</p>
+<p>$$
+f(x)=N \cdot e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+$$</p>
+<p>ki $N$ normalize edici bir faktör, $\frac{1}{\sqrt{2\pi\sigma^2}}$. Pek çok
+farklı yoğunluk fonksiyonu vardır, hangisinin hangi tür veriye uyacağını bulmak
+istatistikçinin önemli işlerinden. Her tür dağılımın kendine has bir yoğunluğu
+var, yoğunluk çok boyutlu da olabilir. Bir yoğunluk fonksiyonun x-ekseni
+üzerindeki alanı her zaman 1'e eşit olmalıdır (yani yoğunluğun $-\infty,\infty$
+üzerinden entegrali her zaman 1 sonucunu vermeli). Olasılık teorisinin işlemesi
+için bu gerekli.</p>
 <p>Yoğunluk fonksiyonları doğadan gelen bir tek ölçümü alırlar, boy, kilo gibi, ve
 onun 'olasılık yoğunluğunu' hesaplarlar. Üstteki örnek için mesela 3 ve 1
 değerlerinin olasılığını hesaplayalım,</p>
-<pre><code class="python">def f(x): return np.exp(-np.pi * x**2)
-print '3 icin', f(3)
-print '1 icin', f(1)
+<pre><code class="python">mu = 0
+sigma = 1  
+def f(x): return (1 / (np.sqrt(2 * np.pi * np.power(sigma, 2)))) * \
+    (np.power(np.e, -(np.power((x - mu), 2) / (2 * np.power(sigma, 2)))))
+print ('3 icin', f(3))
+print ('1 icin', f(1))
 </code></pre>
 
-<pre><code>3 icin 5.25548517601e-13
-1 icin 0.0432139182638
+<pre><code>3 icin 0.004431848411938008
+1 icin 0.24197072451914337
 </code></pre>
 
 <p>1 değeri 3'ten daha düşük -- çünkü bu 0 merkezli bir yoğunluk fonksiyonu, sıfıra
@@ -133,16 +139,31 @@ böyle. Eğer tüm olası değerleri $x$'e verip grafiklesek,</p>
 <pre><code class="python">x = np.array(np.linspace(-3,3,num=50))
 y = f(x)
 plt.plot(x,y)
-plt.hold(False)
 plt.savefig('stat_intro_03.png')
-plt.hold(False)
 </code></pre>
 
 <p><img alt="" src="stat_intro_03.png" /></p>
 <p>Dikkat: yoğunluk fonksiyonu olasılık değildir; bazı yoğunluk değerleri 1'den
 fazla değerler verebilir. Sürekli yoğunluk fonksiyonları için olasılık bir
 entegral olarak hesaplanmalıdır, ki daha önce söylediğimiz gibi tüm fonksiyon
-alanı 1'dır.</p>
+alanı 1'dır. Altta bir normal dağılım yoğunluk fonksiyonu solda, onun entegrali
+kumulatif dağılım fonksiyonu (CDF) sağda. </p>
+<p><img alt="" src="stat_intro_11.png" /></p>
+<p>CDF bize mesela üstteki grafikte değerin 0 ila 1.5 arasında olma <em>olasılığını</em>
+veriyor. Bu hesabı direk CDF fonksiyonu üzerinde yapabilirdik, bunun için
+yazılım paketlerinde muhakkak bir çağri olur, mesela</p>
+<pre><code class="python">import scipy.stats
+print (scipy.stats.norm.cdf(1.5,0,1))
+</code></pre>
+
+<pre><code>0.9331927987311419
+</code></pre>
+
+<p>1'ye yakın oldukca büyük bir sayı, grafiğe uygun. CDF her zaman 0'dan sorulan
+değere kadar olan alanı verir, tüm alanın 1 olması bilgisinden hareketle bu
+öğeler biraraya koyulup ek sonuçlara varılabilir, mesela değerin 1.5'tan büyük
+olma olasılığı için 1-CDF(1.5). -2 ile 2 arası olma olasılı için CDF(2)-CDF(-2).</p>
+<p>Veriden Fonksiyon</p>
 <p>Şimdi mesela elimizde bir grup kişinin 68 kiloya ne kadar yakın / uzak
 olduğunun verisi var (68'ten az olanlar eksi değerli olacak tabii). Veriyi
 grafikleyelim,</p>

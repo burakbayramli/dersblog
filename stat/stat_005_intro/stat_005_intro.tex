@@ -119,23 +119,23 @@ $-\infty,\infty$ üzerinden entegrali her zaman 1 sonucunu vermeli). Olasılık
 teorisinin işlemesi için bu gerekli.
 
 Yoğunluk fonksiyonları doğadan gelen bir tek ölçümü alırlar, boy, kilo gibi, ve
-onun olasılık değerini hesaplarlar. Üstteki örnek için mesela 3 ve 1
+onun 'olasılık yoğunluğunu' hesaplarlar. Üstteki örnek için mesela 3 ve 1
 değerlerinin olasılığını hesaplayalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 def f(x): return np.exp(-np.pi * x**2)
-print '3 olasiligi', f(3)
-print '1 olasiligi', f(1)
+print '3 icin', f(3)
+print '1 icin', f(1)
 \end{minted}
 
 \begin{verbatim}
-3 olasiligi 5.25548517601e-13
-1 olasiligi 0.0432139182638
+3 icin 5.25548517601e-13
+1 icin 0.0432139182638
 \end{verbatim}
 
-1 olasılığı 3'ten daha düşük -- çünkü bu 0 merkezli bir yoğunluk
-fonksiyonu, sıfıra ne kadar yakınsa olasılık o kadar fazla. Bu yoğunluğun
-tasarlanış şekli böyle. Eğer tüm olası değerleri $x$'e verip grafiklesek,
+1 değeri 3'ten daha düşük -- çünkü bu 0 merkezli bir yoğunluk fonksiyonu, sıfıra
+ne kadar yakınsa yoğunluk o kadar fazla. Bu fonksiyonun tasarlanış şekli
+böyle. Eğer tüm olası değerleri $x$'e verip grafiklesek,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 x = np.array(np.linspace(-3,3,num=50))
@@ -147,6 +147,11 @@ plt.hold(False)
 \end{minted}
 
 \includegraphics[height=6cm]{stat_intro_03.png}
+
+Dikkat: yoğunluk fonksiyonu olasılık değildir; bazı yoğunluk değerleri 1'den
+fazla değerler verebilir. Sürekli yoğunluk fonksiyonları için olasılık bir
+entegral olarak hesaplanmalıdır, ki daha önce söylediğimiz gibi tüm fonksiyon
+alanı 1'dır.
 
 Şimdi mesela elimizde bir grup kişinin 68 kiloya ne kadar yakın / uzak
 olduğunun verisi var (68'ten az olanlar eksi değerli olacak tabii). Veriyi

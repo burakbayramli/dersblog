@@ -111,16 +111,19 @@ kavramlara değinelim. İstatistiğin temel öğelerinden biri yoğunluk fonksiy
 <p>$$
 f(x)=N \cdot e^{-\frac{(x-\mu)^2}{2\sigma^2}}
 $$</p>
-<p>ki $N$ normalize edici bir faktör, $\frac{1}{\sqrt{2\pi\sigma^2}}$. Pek çok
-farklı yoğunluk fonksiyonu vardır, hangisinin hangi tür veriye uyacağını bulmak
-istatistikçinin önemli işlerinden. Her tür dağılımın kendine has bir yoğunluğu
-var, yoğunluk çok boyutlu da olabilir. Bir yoğunluk fonksiyonun x-ekseni
-üzerindeki alanı her zaman 1'e eşit olmalıdır (yani yoğunluğun $-\infty,\infty$
-üzerinden entegrali her zaman 1 sonucunu vermeli). Olasılık teorisinin işlemesi
-için bu gerekli.</p>
+<p>ki $N$ normalize edici bir faktör, $\frac{1}{\sqrt{2\pi\sigma^2}}$, $\sigma$,
+$\mu$ dışarıdan bizim tanımladığımız parametreler. $N$ kısmı çarpılan bölümün
+biri bölen entegrali aslında, ki böylece entegral (yani tüm olasılık) 1
+olabilsin. Bu şekilde pek çok fonksiyon olasılık yoğunluğu haline
+getirebilir.</p>
+<p>Farklı yoğunluk fonksiyonları var, hangisinin hangi tür veriye uyacağını bulmak
+istatistikçinin önemli işlerinden. Yoğunluk çok boyutlu da olabilir. Bir
+yoğunluk fonksiyonun x-ekseni üzerindeki alanı her zaman 1'e eşit olmalıdır
+(yani yoğunluğun $-\infty,\infty$ üzerinden entegrali her zaman 1 sonucunu
+vermeli). Olasılık teorisinin işlemesi için bu gerekli.</p>
 <p>Yoğunluk fonksiyonları doğadan gelen bir tek ölçümü alırlar, boy, kilo gibi, ve
 onun 'olasılık yoğunluğunu' hesaplarlar. Üstteki örnek için mesela 3 ve 1
-değerlerinin olasılığını hesaplayalım,</p>
+değerlerinin yoğunluğunu hesaplayalım,</p>
 <pre><code class="python">mu = 0
 sigma = 1  
 def f(x): return (1 / (np.sqrt(2 * np.pi * np.power(sigma, 2)))) * \
@@ -143,11 +146,11 @@ plt.savefig('stat_intro_03.png')
 </code></pre>
 
 <p><img alt="" src="stat_intro_03.png" /></p>
-<p>Dikkat: yoğunluk fonksiyonu olasılık değildir; bazı yoğunluk değerleri 1'den
-fazla değerler verebilir. Sürekli yoğunluk fonksiyonları için olasılık bir
-entegral olarak hesaplanmalıdır, ki daha önce söylediğimiz gibi tüm fonksiyon
-alanı 1'dır. Altta bir normal dağılım yoğunluk fonksiyonu solda, onun entegrali
-kumulatif dağılım fonksiyonu (CDF) sağda. </p>
+<p>Dikkat: yoğunluk fonksiyonu olasılık değildir; bazı yoğunluk değerleri bazı
+sürekli fonksiyonlarda 1'den fazla çıkabilir! Sürekli ortamda olasılık bir
+entegraldir, daha önce söylediğimiz gibi tüm fonksiyon alanı 1. Altta bir normal
+dağılım yoğunluk fonksiyonu solda, onun entegrali kumulatif dağılım fonksiyonu
+(CDF) sağda.</p>
 <p><img alt="" src="stat_intro_11.png" /></p>
 <p>CDF bize mesela üstteki grafikte değerin 0 ila 1.5 arasında olma <em>olasılığını</em>
 veriyor. Bu hesabı direk CDF fonksiyonu üzerinde yapabilirdik, bunun için

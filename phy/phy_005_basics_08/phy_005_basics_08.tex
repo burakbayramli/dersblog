@@ -78,8 +78,51 @@ birim zamanda dışarı akan, ``kaybedilen'' enerjidir, güçtür. O zaman içer
 istenilen sıcaklıkta olmasını istersek bu kaybı telafi edecek ısıyı içeriye
 eklememiz gerekir, işte 1 kilowatt'lik ısıtıcı burada devreye giriyor.
 
+Genelleştirilmiş Tek Boyutlu Isı İletim Denklemi
 
-[devam edecek]
+Bu alanda genel olarak gorulen kismi turevsel denklem (PDE) su formdadir,
+
+$$
+\frac{\partial T^2}{\partial x^2} = \frac{1}{\alpha} \frac{\partial T}{\partial t}
+$$
+
+Fourier kanunundan üsttekine nasıl erişiriz? Bu aslında basit. $\delta x$
+genişliğinde $A$ alanında bir kesit düşünelim, bu kesite sol tarafından akan
+ısının formülü $Q = -kA \frac{\partial T}{\partial x}$ olacaktır, sağda ise yine
+aynı formül fakat $x + \delta x$ noktasında. Eğer $\delta x$ bazlı değişimi
+istiyorsak aradaki farkı $\delta x$ ile böleriz, fakat bu bizi türev tanımına
+götürmez mi? Tabii başlangıçtaki formülde zaten bir türev vardı o zaman ikinci
+derece türeve geçiş yapmamız gerekiyor,
+
+\includegraphics[width=20em]{heat_3.png}
+
+Böylece net elde edilen $Q_{net} = -k A \frac{\partial T^2}{\partial x^2} \delta x$
+oluyor [4, sf. 18].
+
+Biz $Q$'den kurtulmak istiyoruz, onu farklı bir şekilde belirtmenin yolu şöyle,
+$c$ sabiti $J / kg \cdot C$ biriminde, onu bir kütle ile çarparsak, ve sıcaklık
+değişimi üzerinden bir işi değimine erisebiliriz, $\rho$ yoğunluk, $kg/m^3$
+biriminde, $A$ alan, $T$ birimi Celcius C üzerinden,
+$c \rho A \delta x \frac{\partial T}{\partial t}$ ile $-Q_{net}$ elde edilir,
+iki tarafı birbirine eşitlersek,
+
+$$
+\frac{\partial T^2}{\partial x^2} = \frac{\rho c}{k} \frac{\partial T}{\partial t}
+$$
+
+Kısaltmak için,
+
+$$
+ \frac{\rho c}{k} = \frac{1}{\alpha}
+$$
+
+diyelim, o zaman
+
+$$
+\frac{\partial T^2}{\partial x^2} = \frac{1}{\alpha} \frac{\partial T}{\partial t}
+$$
+
+sonucuna erişiyoruz.
 
 Alternatif Anlatım
 
@@ -187,6 +230,8 @@ Kaynaklar
 [2] Murlow, {\em Partial Differential Equations for Scientists and Engineers}, sf. 27
 
 [3] OpenStax, {\em University Physics II, Thermodynamics, Electricity and Magnetism}
+
+[4] Lienhard, {\em A Heat Transfer Textbook}
 
 \end{document}
 

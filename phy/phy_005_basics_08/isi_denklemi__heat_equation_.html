@@ -79,7 +79,39 @@ bilinen bir sıcaklık üzerinden bir ısı transferi hesaplıyoruz. Elde edilen
 birim zamanda dışarı akan, "kaybedilen" enerjidir, güçtür. O zaman içerisinin
 istenilen sıcaklıkta olmasını istersek bu kaybı telafi edecek ısıyı içeriye
 eklememiz gerekir, işte 1 kilowatt'lik ısıtıcı burada devreye giriyor.</p>
-<p>[devam edecek]</p>
+<p>Genelleştirilmiş Tek Boyutlu Isı İletim Denklemi</p>
+<p>Bu alanda genel olarak gorulen kismi turevsel denklem (PDE) su formdadir,</p>
+<p>$$
+\frac{\partial T^2}{\partial x^2} = \frac{1}{\alpha} \frac{\partial T}{\partial t}
+$$</p>
+<p>Fourier kanunundan üsttekine nasıl erişiriz? Bu aslında basit. $\delta x$
+genişliğinde $A$ alanında bir kesit düşünelim, bu kesite sol tarafından akan
+ısının formülü $Q = -kA \frac{\partial T}{\partial x}$ olacaktır, sağda ise yine
+aynı formül fakat $x + \delta x$ noktasında. Eğer $\delta x$ bazlı değişimi
+istiyorsak aradaki farkı $\delta x$ ile böleriz, fakat bu bizi türev tanımına
+götürmez mi? Tabii başlangıçtaki formülde zaten bir türev vardı o zaman ikinci
+derece türeve geçiş yapmamız gerekiyor,</p>
+<p><img alt="" src="heat_3.png" /></p>
+<p>Böylece net elde edilen $Q_{net} = -k A \frac{\partial T^2}{\partial x^2} \delta x$
+oluyor [4, sf. 18].</p>
+<p>Biz $Q$'den kurtulmak istiyoruz, onu farklı bir şekilde belirtmenin yolu şöyle,
+$c$ sabiti $J / kg \cdot C$ biriminde, onu bir kütle ile çarparsak, ve sıcaklık
+değişimi üzerinden bir işi değimine erisebiliriz, $\rho$ yoğunluk, $kg/m^3$
+biriminde, $A$ alan, $T$ birimi Celcius C üzerinden,
+$c \rho A \delta x \frac{\partial T}{\partial t}$ ile $-Q_{net}$ elde edilir,
+iki tarafı birbirine eşitlersek,</p>
+<p>$$
+\frac{\partial T^2}{\partial x^2} = \frac{\rho c}{k} \frac{\partial T}{\partial t}
+$$</p>
+<p>Kısaltmak için,</p>
+<p>$$
+ \frac{\rho c}{k} = \frac{1}{\alpha}
+$$</p>
+<p>diyelim, o zaman</p>
+<p>$$
+\frac{\partial T^2}{\partial x^2} = \frac{1}{\alpha} \frac{\partial T}{\partial t}
+$$</p>
+<p>sonucuna erişiyoruz.</p>
 <p>Alternatif Anlatım</p>
 <p>Bu denklemi türetmek için "enerjinini muhafazası (conservation of
 energy)" kuralını kullanacağız. Bu muhafaza kuralını bir eşitliğe
@@ -153,3 +185,4 @@ arada kalan $\xi$ değeri sadece $x$ olabilir.</p>
 <p>[1] Rathore, <em>Engineering Heat and Mass Transfer, 3rd Edition</em></p>
 <p>[2] Murlow, <em>Partial Differential Equations for Scientists and Engineers</em>, sf. 27</p>
 <p>[3] OpenStax, <em>University Physics II, Thermodynamics, Electricity and Magnetism</em></p>
+<p>[4] Lienhard, <em>A Heat Transfer Textbook</em></p>

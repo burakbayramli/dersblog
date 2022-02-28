@@ -195,13 +195,40 @@ bulacağız. Bazen yoğunlukların sabitleri olacak (mesela merkez 0 yerine
 başka bir yerde olsun diyebilmek), ve bu sabitleri, hiperparametreleri
 veriden hesaplamanın yolları var.. Veriden teoriksel yoğunluğa, oradan
 başka teorilere, oradan tekrar veriye atlayabilmek İstatistiğin özüdür.</p>
-<p>Önemli bir diğer kavram rasgele değişkenler (RD). RD'ler çoğunlukla büyük harfle
-gösterilirler, mesela $X$ ya da $Y$ gibi ve bir dağılıma / onun yoğunluk
-fonksiyonuna göbekten bağlantılıdırlar. RD'leri formül içinde görünce sanki her
-bakışınızda içlerinin başka bir rasgele sayı ile doldurulduğunu düşünebiliriz,
-ama tabii ki bu "rasgelelik" o RD'nin bağlı olduğu dağılıma göre. Eğer $X$
-üstteki $f(x)$ ile dağılmış dersek, o zaman sıfıra yakın daha çok, 5'e yakın
-daha az değerler üretilir.</p>
+<p>Diyelim ki bir şekilde verinin Normal olduğuna karar verdik (bunun testleri,
+metotu var tabii) o zaman veriye uygun $\mu,\sigma$ parametrelerini nasıl
+bulacağız? Veriyi kullanıp bir hesap yaparak! Tahmin ediciler burada devreye
+giriyor, mesela Normal dağılım için $\mu$ tahmin edici / kestirme hesaplayıcısı
+$\hat{\mu} = \sum x_i / n$, yani verinin ortalaması [5]!</p>
+<p>Ayrıksal Dağılımlar</p>
+<p>Normal dağılım, üstel dağılım birer sürekli fonksiyondurlar, tek boyutta $x$
+bir reel sayıdır. Fakat ayrıksal olan dağılımlar da var, mesela Poisson,</p>
+<p>$$ f(x) = e^{-\lambda}\lambda^{x} / x! $$</p>
+<p>ki dışarıdan tanımlı parametre $\lambda$. Burada geçilen $x$ tam sayı değerler,
+1,2,3 gibi.. Ayrıksal olasılık kütle fonksiyonu (süreklideki olasılık yoğunluk
+yerine) sonuçları birer olasılık olarak kabul edilebilir, çünkü tam sayılar bir
+nevi kutucuk, geniş alan oluştururlar.</p>
+<pre><code class="python">from scipy.special import factorial
+
+def poisson_distribution(k, lam):
+    return (lam ** k * np.exp(-lam)) / factorial(k)
+
+x = np.array(range(20))
+y = poisson_distribution(x,lam=5)
+plt.plot(x,y)
+plt.savefig('stat_intro_12.png')
+</code></pre>
+
+<p><img alt="" src="stat_intro_12.png" /></p>
+<p>Poisson dağılımın sola doğru meyilli olabileceğini görüyoruz üstte, demek ki
+veride bu tür bir şekil görürsek onu temsil için Poisson seçebiliriz.</p>
+<p>Rasgele Degiskenler</p>
+<p>RD'ler çoğunlukla büyük harfle gösterilirler, mesela $X$ ya da $Y$ gibi ve bir
+dağılıma / onun yoğunluk fonksiyonuna göbekten bağlantılıdırlar. RD'leri formül
+içinde görünce sanki her bakışınızda içlerinin başka bir rasgele sayı ile
+doldurulduğunu düşünebiliriz, ama tabii ki bu "rasgelelik" o RD'nin bağlı
+olduğu dağılıma göre. Eğer $X$ üstteki $f(x)$ ile dağılmış dersek, o zaman
+sıfıra yakın daha çok, 5'e yakın daha az değerler üretilir.</p>
 <p>RD'leri formül içinde bile kullanabilirsiniz, mesela </p>
 <p>$$ 3X + \log X $$ </p>
 <p>diyebilirdim. Başka değişkenler $Y,Z$ vs formüle ekleyebilirdim. RD'lerin
@@ -413,8 +440,7 @@ sonucu olacak (1/0. başarı/başarısızlık, vs). Bu deneylerin $p$'sı aynı
 olacak. O zaman $n$ deney içinden toplam kaç tanesinin başarılı olduğunu
 gösteren $X$ rasgele değişkeni Binom Dağılımına sahiptir denir. </p>
 <p>Bu dağılımın yoğunluğu </p>
-<p>$$ f(x;p,n) = {n \choose{x}} p^x(1-p)^{n-x} 
-$$</p>
+<p>$$ f(x;p,n) = {n \choose{x}} p^x(1-p)^{n-x} $$</p>
 <p>$$ = \frac{n!}{x!(n-x)!} p^x(1-p)^{n-x}  $$</p>
 <p>Bu fonksiyonun parametreleri $p,n$ değerleridir. Beklenti ve varyans</p>
 <p>$$ \mu = E(X) = np $$</p>
@@ -964,3 +990,4 @@ yapmak mümkün olur.</p>
 <p>[2] Janert, <em>Data Analysis with Open Source Tools</em></p>
 <p>[3] Bayramli, <em>Çok Değişkenli Calculus Ders 18</em></p>
 <p>[4] Duda, Hart, <em>Pattern Clasification</em></p>
+<p>[5] Bayramli, <em>Büyük Sayılar, Veri, Parametre Tahmin Ediciler (Estimators)</em></p>

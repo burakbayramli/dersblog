@@ -3,9 +3,9 @@
 
 ## En Son
 
-1/3 - [Uygulama - Yağmur Yağış Verisi, Analiz](https://burakbayramli.github.io/dersblog/stat/stat_176_app1/uygulama__yagmur_yagis_verisi.html)
-
 1/3 - [Markov Zincirleri](https://burakbayramli.github.io/dersblog/stat/stat_093_mc/markov_zincirleri__markov_chains_.html)
+
+1/3 - [Uygulama - Yağmur Yağış Verisi, Analiz](https://burakbayramli.github.io/dersblog/stat/stat_176_app1/uygulama__yagmur_yagis_verisi.html)
 
 22/2 - [Diferansiyel Denklem Sistemi, Köşegenleştirme (Diagonalization)](https://burakbayramli.github.io/dersblog/linear/linear_23/ders_23.html#ode2)
 
@@ -44,3 +44,7 @@
 [Sene](year.md)
 
 [Ara](ara.html)
+
+
+
+

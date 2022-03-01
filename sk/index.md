@@ -3,15 +3,15 @@
 
 ## En Son
 
+1/3 - [Uygulama - Yağmur Yağış Verisi, Analiz](https://burakbayramli.github.io/dersblog/stat/stat_176_app1/uygulama__yagmur_yagis_verisi.html)
+
+1/3 - [Markov Zincirleri](https://burakbayramli.github.io/dersblog/stat/stat_093_mc/markov_zincirleri__markov_chains_.html_
+
 22/2 - [Diferansiyel Denklem Sistemi, Köşegenleştirme (Diagonalization)](https://burakbayramli.github.io/dersblog/linear/linear_23/ders_23.html#ode2)
 
 11/1 - [NetCDF, İklim Verisi, NOAA](https://burakbayramli.github.io/dersblog/sk/2021/12/netcdf-wind-historical-noaa-iklim-veri.html)
 
 1/1 - [DEM, GeoTiff, Yükseklik Verileri](https://burakbayramli.github.io/dersblog/sk/2019/04/elevation.html#geotiff)
-
-31/12 - [SHP, PySHP, Ülke Sınıları](https://burakbayramli.github.io/dersblog/sk/2020/02/haritalamak.html#shp)
-
-10/12 - [Python Liste Kavraması (List Comprehension)](https://burakbayramli.github.io/dersblog/sk/2021/12/python-list-comprehension.html)
 
 ## Konular, Referans
 

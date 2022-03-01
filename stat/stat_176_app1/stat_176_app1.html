@@ -50,7 +50,7 @@ dt
 </code></pre>
 
 <p>Yağış verisi milimetre yağış miktarı olarak gösterilmiş. Bazı günlerde hiç yağış
-yok, sıfır milimetre su.</p>
+yok, o günlerde su sıfır milimetre.</p>
 <p>Bu verinin dağılımını görmek ilginç olabilir. Tabii her ayın yağış dağılımı
 farklı olabilir, mesela altta Mart ayına bakalım,</p>
 <pre><code class="python">x = df[df.index.month == 3]['rain']
@@ -73,7 +73,7 @@ grafikte gösterdik, kabaca ilk kontrol bu şekilde yapılabilir.</p>
 <p>Daha detayli veriye olan uygunluğu kontrol için olasılık dağılımları arasında
 bir yakınlık ölçüsü olan Kullback-Leibler mesafesini [2] kullanalım. Veri
 histogramı ve tahmin edilen dağılım üzerinden üretilenlerin histogramı arasında
-mesafeyi alttaki fonksiyon ile ölçebiliriz,</p>
+mesafeyi alttaki fonksiyon <code>kl</code> ile ölçebiliriz,</p>
 <pre><code class="python">def kl(p, q):
     return np.sum(p * np.log(p / q))    
 </code></pre>
@@ -273,7 +273,6 @@ print (1-norain)
 <pre><code>0.9808945929621133
 </code></pre>
 
-<p>Singapur'da çok yağmur yağıyor herhalde!</p>
 <p>Kaynaklar</p>
 <p>[1] <em>Meteorological Service Singapore</em>,
     <a href="http://www.weather.gov.sg/climate-historical-daily/">http://www.weather.gov.sg/climate-historical-daily/</a></p>

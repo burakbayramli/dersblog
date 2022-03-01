@@ -12,8 +12,6 @@
 
 [R ve iPython Baglantisi](01/r-ve-ipython-baglantisi.md)
 
-[Not Defteri Icinde Animasyon](02/not-defteri-icinde-animasyon.md)
-
 [Starcluster](03/starcluster.md)
 
 [Ubuntu, Nautilus, Dosya / Dizin Uzerinde Islem Yapmak](03/ubuntu-nautilus-dosya-dizin-uzerinde.md)

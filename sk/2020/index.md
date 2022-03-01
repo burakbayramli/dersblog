@@ -50,11 +50,13 @@
 
 [Dosya İşlemleri, Unix, Python](10/python-unix-dosya-islemleri.md)
 
+[Animasyon, Matplotlib, Mayavi](11/animasyon-matplotlib-mayavi-2d-3d.md)
+
 [C++ Programlarının Performansını Ölçmek](11/cpp-performance-olcum.md)
 
 [C++ Dili, Derleme, Kodlama](11/cpp.md)
 
-[Üç Boyutlu Grafikler İçin Mayavi](11/mayavi-3d.md)
+[](11/mayavi-3d.md)
 
 [GPU, CUDA, PyCuda](12/gpu-cuda-pycuda.md)
 

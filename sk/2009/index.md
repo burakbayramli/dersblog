@@ -82,8 +82,6 @@
 
 [Icon](12/icon.md)
 
-[Matplotlib, Pylab ve hareketli plot, animasyonlar](12/matplotlib-pylab-ve-hareketli-plot.md)
-
 [Piksel Takibi, OpenCV, cvCalcOpticalFlowPyrLK, optflow](12/nokta-takibi-cvcalcopticalflowpyrlk.md)
 
 [OpenCV 2.0](12/opencv-20.md)

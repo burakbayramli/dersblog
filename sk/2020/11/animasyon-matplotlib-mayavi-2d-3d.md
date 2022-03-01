@@ -185,20 +185,20 @@ while True: # bir dongu
     ax.cla()
 ```
 
-Biz `ax.imshow`, `ax.contour` kullandik, fakat `ax` uzerinde pek cok
-grafiksel islem yapilabilir tabii ki.
+Biz `ax.imshow`, `ax.contour` kullandık, fakat `ax` üzerinde pek çok
+grafiksel işlem yapılabilir tabii ki.
 
-Not: iPython not defterinin indirilip yerel, ya da kod isletilmesine
-izin veren bir defter servisi uzerinde isletilmesi lazim.
+Not: iPython not defterinin indirilip yerel, ya da kod işletilmesine
+izin veren bir defter servisi üzerinde işletilmesi lazım.
 
 ![](Screenshotfrom2013-02-01105757.png)
 
 Matplotlib, Pylab ve hareketli plot, animasyonlar
 
-Bir kordinat sistemi uzerinde canli olarak bir hesabin sonucunu
-seyretmek istersek, Pylab icin faydali bir ornek kod altta. Kod arka
-arkaya 10 tane x,y degeri uretiyor, sayilar 0..1 arasi, ve eksenlerin
-sabit kalmasi icin set_xlim, set_ylim cagrilarini yapmak lazim.
+Bir kordinat sistemı üzerinde canlı olarak bir hesabın sonucunu
+seyretmek istersek, Pylab için faydalı bir örnek kod altta. Kod arka
+arkaya 10 tane x,y değeri üretiyor, sayılar 0..1 arası, ve eksenlerin
+sabit kalması için set_xlim, set_ylim çağrılarını yapmak lazım.
 
 ```python
 from pylab import *
@@ -221,7 +221,3 @@ Kaynaklar
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
-
-
-
-

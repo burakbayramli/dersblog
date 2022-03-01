@@ -2,7 +2,7 @@
 
 Şu andaki favori yaklaşımımız bir dinamik sistem içinden "fotoğraf
 kareleri" almak, mesela en basit ortamda Matplotlib ile
-`plt.savefiğ('')` kullanarak, ve bu dosyaları ardından İmageMagick
+`plt.savefig('')` kullanarak, ve bu dosyaları ardından İmageMagick
 `convert` ile birleştirip bir anımasyonlu .gif yaratmak. Bu sayede
 genel grafiklemede zaten kullandığımız, bildiğimiz `plt.plot`
 çağrılarını kullanmış oluyoruz, ve alttaki yöntemlerle gerekli bazı
@@ -159,7 +159,7 @@ mlab.savefig(filename='mayavi5.png')
 Problemler
 
 Eğer ardı ardına grafik basıyorsak, döngü dışında `fig = mlab.figure`
-komutu kullanıp, her döngü sonunda `mlab.savefiğ` ardından
+komutu kullanıp, her döngü sonunda `mlab.savefig` ardından
 `mlab.clf()` uygulamak hafıza problemlerini çözecektir. 
 
 Daha once yazdigimiz kesit seviyeleri yazisini not defteri ortamina
@@ -221,3 +221,7 @@ Kaynaklar
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
+
+
+
+

@@ -3,7 +3,7 @@
 Şu andaki favori yaklaşımımız bir dinamik sistem içinden "fotoğraf
 kareleri" almak, mesela en basit ortamda Matplotlib ile
 `plt.savefig('')` kullanarak, ve bu dosyaları ardından İmageMagick
-`convert` ile birleştirip bir anımasyonlu .gif yaratmak. Bu sayede
+`convert` ile birleştirip bir animasyonlu .gif yaratmak. Bu sayede
 genel grafiklemede zaten kullandığımız, bildiğimiz `plt.plot`
 çağrılarını kullanmış oluyoruz, ve alttaki yöntemlerle gerekli bazı
 fotoğraf karelerini birleştirince bir anımasyon da elde etmiş
@@ -221,3 +221,7 @@ Kaynaklar
 [1] https://docs.enthought.com/mayavi/mayavi/mlab.html
 
 [2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk
+
+
+
+

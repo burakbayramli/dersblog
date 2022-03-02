@@ -37,8 +37,9 @@ convert -delay 20 -loop 0 /tmp/out*.png out.gif
 ```
 
 ile birleştirebiliriz. Üstte `%02d` kullanmış olmamız dosya
-isimlerinde sayı eklenmesini sağladı, böylece basit yıldız kullanımı
-onları sıralı bir şekilde getirecektir. 
+isimlerinde iki basamaklı sayı eklenmesini sağladı, 01, 02 gibi,
+böylece basit yıldız kullanımı dosyaları sıralı bir şekilde
+getirecektir.
 
 Üç Boyutlu Grafikler İçin Mayavi
 

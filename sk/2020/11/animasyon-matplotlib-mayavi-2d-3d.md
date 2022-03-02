@@ -1,12 +1,13 @@
 # Animasyon, Matplotlib, Mayavi
 
-Şu andaki tercih edilen yaklaşım bir dinamik sistem içinden "fotoğraf
-kareleri" almak, mesela en basit ortamda Matplotlib ile
-`plt.savefig('')` kullanarak, ve bu dosyaları ardından İmageMagick
-`convert` ile birleştirip bir animasyonlu .gif yaratmak. Bu sayede
-genel grafiklemede zaten kullandığımız, bildiğimiz `plt.plot`
-çağrılarını kullanmış oluyoruz, ve alttaki yöntemlerle gerekli bazı
-fotoğraf karelerini birleştirince bir anımasyon da elde etmiş
+Hareketli bilimsel grafikler (hareketli dalga, cisim) için şu an
+tercih edilen yaklaşım bir dinamik sistem içinden "fotoğraf kareleri"
+almak, mesela en basit ortamda Matplotlib ile `plt.savefig('')`
+kullanarak, ve bu dosyaları ardından İmageMagick `convert` ile
+birleştirip bir animasyonlu .gif yaratmak. Bu sayede genel
+grafiklemede zaten kullandığımız, bildiğimiz `plt.plot` çağrılarını
+kullanmış oluyoruz, ve alttaki yöntemlerle gerekli bazı fotoğraf
+karelerini birleştirince bir anımasyon da elde etmiş
 oluyoruz. Animasyon için farklı şekilde çağrılar yapmak, farklı
 kütüphaneler kullanmak gerekmiyor.
 

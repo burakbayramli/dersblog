@@ -1,6 +1,6 @@
 # Animasyon, Matplotlib, Mayavi
 
-Şu andaki favori yaklaşımımız bir dinamik sistem içinden "fotoğraf
+Şu andaki tercih edilen yaklaşım bir dinamik sistem içinden "fotoğraf
 kareleri" almak, mesela en basit ortamda Matplotlib ile
 `plt.savefig('')` kullanarak, ve bu dosyaları ardından İmageMagick
 `convert` ile birleştirip bir animasyonlu .gif yaratmak. Bu sayede

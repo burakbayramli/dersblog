@@ -34,7 +34,7 @@ Bu program işleyince elimizde `out-01.png`, `out-02.png`, gibi dosyalar
 olacak. Bu dosyaları basit bir şekilde
 
 ```
-convert -delay 20 -loop 0 /tmp/out*.png out.gif
+convert -delay 20 -loop 0 out*.png out.gif
 ```
 
 ile birleştirebiliriz. Üstte `%02d` kullanmış olmamız dosya

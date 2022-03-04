@@ -366,6 +366,93 @@ Burgers denklemi çözümü (9)'un aynı zamanda bir zayıf çözüm olduğunun 
 [6, sf. 8]'de bulunabilir. Not: ispat sadece 1. seçenek $u_l > u_r$ için
 geçerli, diğer seçenekler de var.
 
+
+
+
+
+
+
+
+
+
+\begin{minted}[fontsize=\footnotesize]{python}
+def exact_riemann_solution(xi,q_l,q_r):
+    def qf(q): return 0.5*q*q
+    # Shock wave
+    if q_l > q_r: 
+        shock_speed = (qf(q_l)-qf(q_r))/(q_l-q_r)
+        q = (xi < shock_speed)*q_l \
+          + (xi >=shock_speed)*q_r
+        return q
+    # Rarefaction wave
+    else:  
+        c_l  = q_l
+        c_r = q_r
+        q = (xi<=c_l)*q_l \
+          + (xi>=c_r)*q_r \
+          + (c_l<xi)*(xi<c_r)*xi
+        return q
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+def shock():
+    q_l, q_r = 5.0, 1.0
+
+    for t in np.linspace(0,1,6):
+        outfile = 'rieout/shock-%d.png' % (t*10)
+        fig, ax = plt.subplots(figsize=(5, 3))
+                    
+        x = np.linspace(-4, 4, 1000)
+        
+        q = np.array([exact_riemann_solution(xi/(t+1e-10),q_l,q_r) for xi in x])
+
+        ax.set_xlim(-4,4)
+
+        ax.plot(x,q,'-k',lw=2)
+
+        ax.set_title('t=%f' % t)
+    
+        plt.savefig(outfile)
+
+shock() 
+\end{minted}
+
+
+\includegraphics[width=20em]{rieout/shock-0.png}
+
+\includegraphics[width=20em]{rieout/shock-4.png}
+
+
+\begin{minted}[fontsize=\footnotesize]{python}        
+def rarefaction():
+    q_l, q_r = 2.0, 4.0
+    
+    for t in np.linspace(0,1,6):
+        outfile = 'rieout/rarefaction-%d.png' % (t*10)
+
+        fig, ax = plt.subplots(figsize=(5, 3))
+                    
+        x = np.linspace(-4, 4, 1000)
+        
+        q = np.array([exact_riemann_solution(xi/(t+1e-10),q_l,q_r) for xi in x])
+
+        ax.set_xlim(-4,4)
+
+        ax.plot(x,q,'-k',lw=2)
+    
+        ax.set_title('t=%f' % t)
+
+        plt.savefig(outfile)
+
+rarefaction()
+\end{minted}
+
+
+\includegraphics[width=20em]{rieout/rarefaction-0.png}
+
+\includegraphics[width=20em]{rieout/rarefaction-4.png}
+
+
 Kaynaklar
 
 [1] Bayramlı, {\em Hesapsal Bilim, Hesapsal Sıvı Dinamiğine Giriş}

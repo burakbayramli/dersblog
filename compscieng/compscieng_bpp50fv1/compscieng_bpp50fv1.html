@@ -306,26 +306,24 @@ $$</p>
 <p>Burgers denklemi çözümü (9)'un aynı zamanda bir zayıf çözüm olduğunun ispatı
 [6, sf. 8]'de bulunabilir. Not: ispat sadece 1. seçenek $u_l &gt; u_r$ için
 geçerli, diğer seçenekler de var.</p>
-<pre><code class="python">def exact_riemann_solution(xi,q_l,q_r):
+<pre><code class="python">def exact_riemann_solution(xi,u_l,u_r):
     def qf(q): return 0.5*q*q
     # Shock wave
-    if q_l &gt; q_r: 
-        shock_speed = (qf(q_l)-qf(q_r))/(q_l-q_r)
-        q = (xi &lt; shock_speed)*q_l \
-          + (xi &gt;=shock_speed)*q_r
+    if u_l &gt; u_r: 
+        shock_speed = (qf(u_l)-qf(u_r))/(u_l-u_r)
+        q = (xi &lt; shock_speed)*u_l \
+          + (xi &gt;=shock_speed)*u_r
         return q
     # Rarefaction wave
     else:  
-        c_l  = q_l
-        c_r = q_r
-        q = (xi&lt;=c_l)*q_l \
-          + (xi&gt;=c_r)*q_r \
-          + (c_l&lt;xi)*(xi&lt;c_r)*xi
+        q = (xi&lt;=u_l)*u_l \
+          + (xi&gt;=u_r)*u_r \
+          + (u_l&lt;xi)*(xi&lt;u_r)*xi
         return q
 </code></pre>
 
 <pre><code class="python">def shock():
-    q_l, q_r = 5.0, 1.0
+    u_l, u_r = 5.0, 1.0
 
     for t in np.linspace(0,1,6):
         outfile = 'rieout/shock-%d.png' % (t*10)
@@ -333,7 +331,7 @@ geçerli, diğer seçenekler de var.</p>
 
         x = np.linspace(-4, 4, 1000)
 
-        q = np.array([exact_riemann_solution(xi/(t+1e-10),q_l,q_r) for xi in x])
+        q = np.array([exact_riemann_solution(xi/(t+1e-10),u_l,u_r) for xi in x])
 
         ax.set_xlim(-4,4)
 
@@ -349,7 +347,7 @@ shock()
 <p><img alt="" src="rieout/shock-0.png" /></p>
 <p><img alt="" src="rieout/shock-4.png" /></p>
 <pre><code class="python">def rarefaction():
-    q_l, q_r = 2.0, 4.0
+    u_l, u_r = 2.0, 4.0
 
     for t in np.linspace(0,1,6):
         outfile = 'rieout/rarefaction-%d.png' % (t*10)
@@ -358,7 +356,7 @@ shock()
 
         x = np.linspace(-4, 4, 1000)
 
-        q = np.array([exact_riemann_solution(xi/(t+1e-10),q_l,q_r) for xi in x])
+        q = np.array([exact_riemann_solution(xi/(t+1e-10),u_l,u_r) for xi in x])
 
         ax.set_xlim(-4,4)
 
@@ -374,12 +372,13 @@ rarefaction()
 <p><img alt="" src="rieout/rarefaction-2.png" /></p>
 <p><img alt="" src="rieout/rarefaction-6.png" /></p>
 <p>Animasyon olarak</p>
-<pre><code class="python">! convert -delay 20 -loop 0 rieout/shock*.png /tmp/shock.gif
+<pre><code class="python">! convert -delay 20 -loop 0 rieout/shock*.png shock.gif
 </code></pre>
 
-<pre><code class="python">! convert -delay 20 -loop 0 rieout/rare*.png /tmp/rarefaction.gif
+<pre><code class="python">! convert -delay 20 -loop 0 rieout/rare*.png rarefaction.gif
 </code></pre>
 
+<p>Animasyon dosyalari [7] ve [8]'de bulunabilir.</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Hesapsal Bilim, Hesapsal Sıvı Dinamiğine Giriş</em></p>
 <p>[2] Bayramlı, <em>Fizik, Sıvılar, 1</em></p>
@@ -389,3 +388,7 @@ rarefaction()
 <p>[5] Cooper, <em>Introduction to PDEs with Matlab</em></p>
 <p>[6] Cameron, <em>Notes on Burgers' Equation</em>,
     <a href="https://www.math.umd.edu/~mariakc/burgers.pdf">https://www.math.umd.edu/~mariakc/burgers.pdf</a></p>
+<p>[7] Animasyon, Şok Dalgası
+    <a href="https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif">https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif</a></p>
+<p>[8] Animasyon, Seyrelen (Rarefaction) Dalga
+    <a href="https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/rarefaction.gif">https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/rarefaction.gif</a></p>

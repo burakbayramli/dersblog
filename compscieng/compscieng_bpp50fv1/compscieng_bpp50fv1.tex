@@ -21,13 +21,19 @@ Daha önce [1]'de Burgers'in denklemini görmüştük, bir PDE,
 
 $$
 u_t + uu_x = 0
-\mlabel{2}
+\mlabel{2a}
 $$
 
-Bu denklem (1) ışığında düşünülebilir, eğer $f(u) = \frac{1}{2}u^2$ tanımlarsak,
-(1) formülü, yani $u_t + f(u)_x = 0$, formül (2) ile aynıdır. (2) türü
-denklemleri tek boyutta çözmeyi işleyeceğiz öncelikle, çünkü çok boyutta çözüm
-tek boyuta indirgenerek yapılabiliyor.
+Bu denklem (1) ışığında düşünülebilir, eğer $f(u) = u^2/2$ tanımlarsak,
+(1) formülü, yani $u_t + f(u)_x = 0$, formül (2a) ile aynıdır. O zaman,
+
+$$
+u_t + f(u)_x = 0, \qquad f(u) = \frac{1}{2}u^2
+\mlabel{2b}
+$$
+
+Üstteki türden denklemleri tek boyutta çözmeyi işleyeceğiz öncelikle, çünkü çok
+boyutta çözüm tek boyuta indirgenerek yapılabiliyor.
 
 Hiperbolik denklemleri analitik, kesin (exact) çözmek için birkaç konuyu
 yakından anlamak lazım. Birincisi Riemann problemleri; bu yaklaşımla hiperbolik
@@ -299,8 +305,17 @@ u_r & x > st
 \end{array} \right.
 $$
 
-ki $s$ şok hızıdır. Kesinti noktası $s$ hızında sağa ilerler, $t$ anında olacağı
-yer $st$'dir. 
+ki $s$ şok hızıdır. Ya da
+
+$$
+u(x,t) = 
+\left\{ \begin{array}{ll}
+u_l & x/t < s \\
+u_r & x/t > s 
+\end{array} \right.
+$$
+
+Kesinti noktası $s$ hızında sağa ilerler, $t$ anında olacağı yer $st$'dir.
 
 \includegraphics[width=20em]{compscieng_bpp50fv1_01.png}
 
@@ -368,12 +383,44 @@ Burgers denklemi çözümü (9)'un aynı zamanda bir zayıf çözüm olduğunun 
 [6, sf. 8]'de bulunabilir. Not: ispat sadece 1. seçenek $u_l > u_r$ için
 geçerli, diğer seçenekler de var.
 
+İkinci seçenek, seyreltilmiş dalga sonucu, bu zayıf çözüm başlangıçta
+$u_l < u_r$ olduğu zaman ortaya çıkıyor. Bu çözüm
 
+$$
+u(x,t) =
+\left\{ \begin{array}{ll}
+u_l & x < u_l t  \\
+x/t & u_l t \le x \le u_r t \\
+u_r & x > u_r t
+\end{array} \right.
+$$
 
+Sağ taraf yine daha önce olduğu gibi şu hale çevirilebilir (ki birazdan
+görülecek kodu anlamak için de bu form faydalı)
 
+$$
+u(x,t) =
+\left\{ \begin{array}{ll}
+u_l & x/t < u_l \\
+x/t & u_l \le x/t \le u_r  \\
+u_r & x/t > u_r 
+\end{array} \right. 
+$$
 
+\includegraphics[width=20em]{compscieng_bpp50fv1_02.png}
 
+Çözümün Burgers denklemi için doğru olduğunu doğrulamak zor değil, mesela orta
+şart $u_l \le x/t \le u_r $ kısmına bakalım, bu çözümü (2a)'ya sokarsak,
 
+$$
+\frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} =
+\frac{\partial }{\partial t} \left( \frac{x}{t}  \right) +
+\frac{x}{t} \frac{\partial }{\partial x} \left( \frac{x}{t}  \right) =
+-\frac{x}{t^2} + \frac{x}{t} \frac{1}{t} = 0
+$$
+
+İlk ve üçüncü şartın çözüm olduğu bariz çünkü sabit sayılar, ve türevleri
+alınırken sıfırlanacaklar.
 
 
 
@@ -462,7 +509,7 @@ Animasyon olarak
 ! convert -delay 20 -loop 0 rieout/rare*.png rarefaction.gif
 \end{minted}
 
-Animasyon dosyalari [7] ve [8]'de bulunabilir.
+Animasyon sonuç dosyaları [7] ve [8]'de bulunabilir.
 
 Kaynaklar
 
@@ -480,17 +527,10 @@ Kaynaklar
 [6] Cameron, {\em Notes on Burgers' Equation},
     \url{https://www.math.umd.edu/~mariakc/burgers.pdf}
 
-[7] Bayramli, {\em Animasyon, Şok Dalgası},
+[7] Bayramlı, {\em Animasyon, Şok Dalgası},
     \url{https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif}
 
-[8] Bayramli, {\em Animasyon, Seyrelen (Rarefaction) Dalga}
+[8] Bayramlı, {\em Animasyon, Seyrelen (Rarefaction) Dalga}
     \url{https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/rarefaction.gif}
 
 \end{document}
-
-
-
-
-
-
-

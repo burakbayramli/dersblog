@@ -103,6 +103,7 @@ Python
 Once,
 
 apt-get install binutils libproj-dev gdal-bin python-gdal
+
 sudo pip install geopandas polyline Fiona 
 
 Su alttaki GH adresindeki Python kodlari fena degil, fakat tek script icinden pat diye isletebilmek icin biraz basitlestirme gerekti. Bu kod direk localhost:5000 uzerinde isleyen servise baglanir ve bilgiyi alir.

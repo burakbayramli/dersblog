@@ -48,6 +48,8 @@ olsaydı onlar $3,2,..$ diye gidebilirdi. Ayrıca FD yönteminin aksine, indis
 değerlerine tekabül eden $x_i,x_{i+1}$ değerleri herhangi bir yerde olabilir,
 böylece eşit aralıklı olmayan ızgaralarla çalışmamız mümkün olur, bu FV
 yönteminin kuvvetlerinden biri.</p>
+<p><img alt="" src="12-20-00.png" />
+<img alt="" src="12-19-02.png" /></p>
 <p>Notasyonda $f$ daha çok akış (flux) için kullanılır, karışıklık olmaması
 için $u$ diyelim [2], $\Delta x$ için $h_x$,</p>
 <p>$$
@@ -98,8 +100,21 @@ $\overline{u}_{j,l}$ notasyonu oralarda kullanabiliriz,</p>
 \frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \mathrm{d} t  -
 \frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j-1/2}) \mathrm{d} t = 0
 $$</p>
-<p><img alt="" src="12-20-00.png" />
-<img alt="" src="12-19-02.png" /></p>
+<p>Şimdi son iki terime dikkat edelim, bu iki entegral zaman üzerinden alınıyor,
+fakat Riemann problemini hatırlarsak çözüm $u(x,t)$ sadece $x/t$ değişkeni
+üzerinden düşünülebilir, ve eğer $x$ değişmiyorsa (ki öyle çünkü üstteki iki
+entegral $t$ üzerinden, $x$ aynı) o zaman $\mathrm{d} t$ üzerinden entegral yerine,
+sabit $u$ ile bir ayrıksal $h_t$ çarpımı yeterlidir, mesela ilk entegral</p>
+<p>$$
+\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \mathrm{d} t =
+\frac{h_t}{h_x} f(u_{j+1/2})
+$$</p>
+<p>olarak hesaplanabilir, $u$ değeri $x = x_{j \pm 1/2}$ üzerinde değişmeyecektir.
+Aynı durum ikinci entegral için de geçerli, o zaman iki üstteki formül</p>
+<p>$$
+\overline{u}_{j,l+1} = \overline{u}_{j,l} -
+\frac{h_t}{h_x} ( f(u_{j+1/2}) + f(u_{j-1/2}) )
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Zingale, <em>PHY 604: Computational Methods in Physics and Astrophysics II</em></p>

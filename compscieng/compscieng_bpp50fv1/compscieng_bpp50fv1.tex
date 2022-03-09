@@ -409,8 +409,9 @@ $$
 
 \includegraphics[width=20em]{compscieng_bpp50fv1_02.png}
 
-Çözümün Burgers denklemi için doğru olduğunu doğrulamak zor değil, mesela orta
-şart $u_l \le x/t \le u_r $ kısmına bakalım, bu çözümü (2a)'ya sokarsak,
+Çözümün Burgers denklemi için doğru olduğunu doğrulamak zor değil [9, sf. 34],
+mesela orta şart $u_l \le x/t \le u_r $ kısmına bakalım, bu çözümü (2a)'ya
+sokarsak,
 
 $$
 \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} =
@@ -422,11 +423,10 @@ $$
 İlk ve üçüncü şartın çözüm olduğu bariz çünkü sabit sayılar, ve türevleri
 alınırken sıfırlanacaklar.
 
-
-
 \begin{minted}[fontsize=\footnotesize]{python}
+def qf(q): return 0.5*q*q
+    
 def exact_riemann_solution(xi,u_l,u_r):
-    def qf(q): return 0.5*q*q
     # Shock wave
     if u_l > u_r: 
         shock_speed = (qf(u_l)-qf(u_r))/(u_l-u_r)
@@ -532,5 +532,8 @@ Kaynaklar
 
 [8] Bayramlı, {\em Animasyon, Seyrelen (Rarefaction) Dalga}
     \url{https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/rarefaction.gif}
+
+[9] Lee, {\em AM 260, Computational Fluid Dynamics},
+    \url{https://users.soe.ucsc.edu/~dongwook/wp-content/uploads/2021/am260/html/}
 
 \end{document}

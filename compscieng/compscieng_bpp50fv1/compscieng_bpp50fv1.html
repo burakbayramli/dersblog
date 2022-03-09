@@ -338,8 +338,9 @@ u_r &amp; x/t &gt; u_r
 \end{array} \right. 
 $$</p>
 <p><img alt="" src="compscieng_bpp50fv1_02.png" /></p>
-<p>Çözümün Burgers denklemi için doğru olduğunu doğrulamak zor değil, mesela orta
-şart $u_l \le x/t \le u_r $ kısmına bakalım, bu çözümü (2a)'ya sokarsak,</p>
+<p>Çözümün Burgers denklemi için doğru olduğunu doğrulamak zor değil [9, sf. 34],
+mesela orta şart $u_l \le x/t \le u_r $ kısmına bakalım, bu çözümü (2a)'ya
+sokarsak,</p>
 <p>$$
 \frac{\partial u}{\partial t} + u \frac{\partial u}{\partial x} =
 \frac{\partial }{\partial t} \left( \frac{x}{t}  \right) +
@@ -348,8 +349,9 @@ $$</p>
 $$</p>
 <p>İlk ve üçüncü şartın çözüm olduğu bariz çünkü sabit sayılar, ve türevleri
 alınırken sıfırlanacaklar.</p>
-<pre><code class="python">def exact_riemann_solution(xi,u_l,u_r):
-    def qf(q): return 0.5*q*q
+<pre><code class="python">def qf(q): return 0.5*q*q
+
+def exact_riemann_solution(xi,u_l,u_r):
     # Shock wave
     if u_l &gt; u_r: 
         shock_speed = (qf(u_l)-qf(u_r))/(u_l-u_r)
@@ -434,3 +436,5 @@ rarefaction()
     <a href="https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif">https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif</a></p>
 <p>[8] Bayramlı, <em>Animasyon, Seyrelen (Rarefaction) Dalga</em>
     <a href="https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/rarefaction.gif">https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/rarefaction.gif</a></p>
+<p>[9] Lee, <em>AM 260, Computational Fluid Dynamics</em>,
+    <a href="https://users.soe.ucsc.edu/~dongwook/wp-content/uploads/2021/am260/html/">https://users.soe.ucsc.edu/~dongwook/wp-content/uploads/2021/am260/html/</a></p>

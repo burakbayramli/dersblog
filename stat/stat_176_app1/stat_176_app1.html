@@ -88,7 +88,7 @@ h1 = np.histogram(r1, bins=b, density=True)[0]+eps
 print ('Gamma', kl(h1, dh))
 </code></pre>
 
-<pre><code>Gamma 0.28355078534621225
+<pre><code>Gamma 0.288253598547884
 </code></pre>
 
 <p>Weibull Min adlı dağılım için de kontrol yapalım.</p>
@@ -107,10 +107,23 @@ h2 = np.histogram(r2, bins=b, density=True)[0]+eps
 print ('Weibull Min', kl(h2, dh))
 </code></pre>
 
-<pre><code>Weibull Min 0.06455219814752436
+<pre><code>Weibull Min 0.06795850872796806
 </code></pre>
 
 <p>Weibull Min daha yakın gözüküyor.</p>
+<p>Olasılıklar</p>
+<p>Veriye en uygun dağılımı bulduktan sonra dağılıma bazı sorular sorabiliriz,
+mesela Mart ayında 10 mm'den daha fazla yağmur yağma olasılığı nedir? Bunun için
+kumulatif dağılım fonksiyonu CDF lazım, 'daha büyük' sorusu belli bir noktadan
+sonraki, onun sağındaki alanı ima ediyor, o zaman cdf çağrısını 1'den
+çıkartırız,</p>
+<pre><code class="python">print ('%0.3f' % (1-weibull_min.cdf(10, a,loc,scale)))
+</code></pre>
+
+<pre><code>0.140
+</code></pre>
+
+<p>Az (ama sıfır olmayan) bir olasılık var.</p>
 <p>Yağmur Günleri, Kuraklık Günleri</p>
 <p>Bazı araştırmalar ne kadar yağdığını ayrı bir şekilde temsil edip, yagıp
 yağmadığı aksiyonunu ayrı bir şekilde tahmin ediyor (bu durumda herhalde miktar

@@ -80,7 +80,7 @@ print ('Gamma', kl(h1, dh))
 \end{minted}
 
 \begin{verbatim}
-Gamma 0.28355078534621225
+Gamma 0.288253598547884
 \end{verbatim}
 
 Weibull Min adlı dağılım için de kontrol yapalım.
@@ -104,10 +104,28 @@ print ('Weibull Min', kl(h2, dh))
 \end{minted}
 
 \begin{verbatim}
-Weibull Min 0.06455219814752436
+Weibull Min 0.06795850872796806
 \end{verbatim}
 
 Weibull Min daha yakın gözüküyor.
+
+Olasılıklar
+
+Veriye en uygun dağılımı bulduktan sonra dağılıma bazı sorular sorabiliriz,
+mesela Mart ayında 10 mm'den daha fazla yağmur yağma olasılığı nedir? Bunun için
+kumulatif dağılım fonksiyonu CDF lazım, 'daha büyük' sorusu belli bir noktadan
+sonraki, onun sağındaki alanı ima ediyor, o zaman cdf çağrısını 1'den
+çıkartırız,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print ('%0.3f' % (1-weibull_min.cdf(10, a,loc,scale)))
+\end{minted}
+
+\begin{verbatim}
+0.140
+\end{verbatim}
+
+Az (ama sıfır olmayan) bir olasılık var.
 
 Yağmur Günleri, Kuraklık Günleri
 

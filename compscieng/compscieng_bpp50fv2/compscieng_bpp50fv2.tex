@@ -128,7 +128,7 @@ olacak.
 import scipy.integrate as integrate
 import numpy as np
 
-def initial_condition(z, alpha, beta):
+def init(z, alpha, beta):
     return alpha + beta*np.sin(z)
 
 # akis fonksiyonu 
@@ -167,23 +167,18 @@ dx = (b-a)/(N-1);
 u = np.zeros((len(x)-1,1)); 
 
 for i in range(0,N-1):
-    u[i] = (1.0/dx)*integrate.quad(initial_condition, x[i], x[i+1], args=(alpha,beta))[0]
+    u[i] = (1.0/dx)*integrate.quad(init, x[i], x[i+1], args=(alpha,beta))[0]
 
 dt = dx/(2*np.amax(np.amax(u)))
 
 t = 0.0
 i = 0
 while t < T:
-    # compute numerical fluxes fhat_{j+1/2}
     um = u
     up = np.roll(u,-1)
     fR = godunov_flux(um, up) 
-    # compute numerical fluxes fhat_{j-1/2} (assuming periodic BCs)
     fL = np.roll(fR,1)
-    # first order explicit time-stepping
     u -= dt/dx*(fR - fL)
-
-    # increment time step
     t = t+dt
     i += 1
 
@@ -195,9 +190,10 @@ while t < T:
         plt.close('all')
 \end{minted}
 
-\includegraphics[width=20em]{out-05.png}
-\includegraphics[width=20em]{out-10.png}
-\includegraphics[width=20em]{out-20.png}
+\includegraphics[width=20em]{out-005.png}
+\includegraphics[width=20em]{out-010.png}
+\includegraphics[width=20em]{out-020.png}
+\includegraphics[width=20em]{out-030.png}
 
 \begin{minted}[fontsize=\footnotesize]{python}
 ! convert -delay 20 -loop 0 /tmp/out-*.png wave.gif

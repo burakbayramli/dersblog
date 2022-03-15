@@ -1,7 +1,6 @@
-import numpy as np
 import scipy.integrate as integrate
-from scipy.optimize import fsolve
 import matplotlib.pyplot as plt
+import numpy as np
 
 # returns the initial condition of the PDE
 def initial_condition(z, alpha, beta):
@@ -41,7 +40,7 @@ beta  = 1.0
 N  = 80
 
 # stopping time
-T = 1.5
+T = 2.0
 
 # setup grid points
 x = np.linspace(a,b,N)     
@@ -61,24 +60,22 @@ dt = dx/(2*np.amax(np.amax(u)))
 t = 0.0
 i = 0
 while t < T:
-    # alpha for the Lax-Friedrichs flux
-        A  = np.amax(np.amax(u));
+    # compute numerical fluxes fhat_{j+1/2}
+    um = u
+    up = np.roll(u,-1)
+    fR = godunov_flux(um, up) 
+    # compute numerical fluxes fhat_{j-1/2} (assuming periodic BCs)
+    fL = np.roll(fR,1)
+    # first order explicit time-stepping
+    u -= dt/dx*(fR - fL)
 
-        # compute numerical fluxes fhat_{j+1/2}
-        um = u
-        up = np.roll(u,-1)
-        fR = godunov_flux(um, up) 
-        # compute numerical fluxes fhat_{j-1/2} (assuming periodic BCs)
-        fL = np.roll(fR,1)
-        # first order explicit time-stepping
-        u -= dt/dx*(fR - fL)
+    # increment time step
+    t = t+dt
+    i += 1
 
-        # increment time step
-        t = t+dt
-        i += 1
-
-        if i % 5 == 0:
-            plt.figure()
-            plt.plot(u)
-            plt.savefig('/tmp/out-%02d.png' % i)
-
+    if i % 5 == 0:
+        plt.figure()
+        plt.plot(u)
+        plt.ylim(-1,1)
+        plt.savefig('/tmp/out-%02d.png' % i)
+        plt.close('all')

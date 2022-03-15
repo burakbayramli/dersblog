@@ -119,6 +119,79 @@ Aynı durum ikinci entegral için de geçerli, o zaman iki üstteki formül</p>
 \frac{h_t}{h_x} ( f(u_{j+1/2}) + f(u_{j-1/2}) )
 $$</p>
 <p>olacak.</p>
+<pre><code class="python">import scipy.integrate as integrate
+import numpy as np
+
+def initial_condition(z, alpha, beta):
+    return alpha + beta*np.sin(z)
+
+# akis fonksiyonu 
+#   u_t + f(u)_x = 0
+#
+def flux(u):
+    return 0.5*u**2
+
+def godunov_flux(um, up):
+    fhat = np.zeros((len(um),1))
+
+    for i in range(0,len(um)):
+        if (um[i]*up[i]&lt;0.0 and um[i]&lt;=up[i]):
+            fhat[i] = 0.0
+        elif (um[i]*up[i]&lt;0.0 and um[i]&gt;up[i]):
+            fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
+        elif (um[i]*up[i]&gt;=0.0 and um[i]&lt;=up[i]):
+            fhat[i] = np.fmin(flux(um[i]), flux(up[i]))
+        elif (um[i]*up[i]&gt;=0.0 and um[i]&gt;up[i]):
+            fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
+    return fhat
+
+
+a = 0
+b = 2*np.pi
+
+alpha = 0.0
+beta  = 1.0
+
+N  = 80
+T = 2.0
+
+x = np.linspace(a,b,N)     
+dx = (b-a)/(N-1);  
+
+u = np.zeros((len(x)-1,1)); 
+
+for i in range(0,N-1):
+    u[i] = (1.0/dx)*integrate.quad(initial_condition, x[i], x[i+1], args=(alpha,beta))[0]
+
+dt = dx/(2*np.amax(np.amax(u)))
+
+t = 0.0
+i = 0
+while t &lt; T:
+    # compute numerical fluxes fhat_{j+1/2}
+    um = u
+    up = np.roll(u,-1)
+    fR = godunov_flux(um, up) 
+    # compute numerical fluxes fhat_{j-1/2} (assuming periodic BCs)
+    fL = np.roll(fR,1)
+    # first order explicit time-stepping
+    u -= dt/dx*(fR - fL)
+
+    # increment time step
+    t = t+dt
+    i += 1
+
+    if i % 5 == 0:
+        plt.figure()
+        plt.plot(u)
+        plt.ylim(-1,1)
+        plt.savefig('/tmp/out-%02d.png' % i)
+        plt.close('all')
+</code></pre>
+
+<p><img alt="" src="out-05.png" />
+<img alt="" src="out-10.png" />
+<img alt="" src="out-20.png" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Zingale, <em>PHY 604: Computational Methods in Physics and Astrophysics II</em></p>

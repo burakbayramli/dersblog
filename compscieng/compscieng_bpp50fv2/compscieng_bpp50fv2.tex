@@ -42,7 +42,7 @@ Notasyonda $f$ daha çok akış (flux) için kullanılır, karışıklık olmama
 için $u$ diyelim [2], $\Delta x$ için $h_x$,
 
 $$
-\overline{u}_i = 1/h_x \int_{x_{i-1/2}}^{x_{i+1/2}} u(x) \ud x
+\overline{u}_i =  \frac{1}{h_x} \int_{x_{i-1/2}}^{x_{i+1/2}} u(x) \ud x
 \mlabel{1}
 $$
 
@@ -119,10 +119,29 @@ Aynı durum ikinci entegral için de geçerli, o zaman iki üstteki formül
 
 $$
 \overline{u}_{j,l+1} = \overline{u}_{j,l} -
-\frac{h_t}{h_x} ( f(u_{j+1/2}) + f(u_{j-1/2}) )
+\frac{h_t}{h_x} ( f(u_{j+1/2}) - f(u_{j-1/2}) )
+\mlabel{2}
 $$
 
-olacak.
+olacak. Böylece $l$ anındaki $j$ hücresinin ortalamasını bir sonraki zaman adımı
+$l+1$'e nasıl aktaracağımızı, oraya geçiş yapacağımızın formülünü bulmuş olduk.
+
+Eğer $\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \ud t$ entegralini
+entegral içindekiler çarpı $h_t$ ile gösterebiliyorsak, tüm
+entegrali $h_t$ ile bölmek bize yaklaşık, ``sayısal'' bir $f(u_{j+1/2})$
+verecektir, ona büyük harf ile $F_{j+1/2}^l$ diyelim, formülü [4, sf. 103]
+
+$$
+F_{j+1/2}^l = \frac{1}{h_t} \int_{t_l}^{t_{l+1}} f(u_{j+1/2,l}) \ud t
+$$
+
+$F$'ye sayısal akış (numerical flux) ismi de veriliyor. O zaman (2) formülü
+``akış diferansiyel formunda'' da yazılabilir,
+
+$$
+\overline{u}_{j,l+1} = \overline{u}_{j,l} -
+\frac{h_t}{h_x} ( F_{j+1/2,l} - F_{j-1/2} )
+$$
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import scipy.integrate as integrate
@@ -208,7 +227,9 @@ Kaynaklar
 [2] Kloeckner, {\em Numerical Methods for Partial Differential Equations CS555 / MATH555 / CSE510}
     \url{https://relate.cs.illinois.edu/course/cs555-s20/}
 
-[3] Bayramlı, {\em Sonlu Hacim (Finite Volume) Yöntemi - 1}    
+[3] Bayramlı, {\em Sonlu Hacim (Finite Volume) Yöntemi - 1}
+
+[4] Lee, Computational Fluid Dynamics
 
 \end{document}
 

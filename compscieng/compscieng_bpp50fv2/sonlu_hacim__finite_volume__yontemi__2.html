@@ -53,7 +53,7 @@ yönteminin kuvvetlerinden biri.</p>
 <p>Notasyonda $f$ daha çok akış (flux) için kullanılır, karışıklık olmaması
 için $u$ diyelim [2], $\Delta x$ için $h_x$,</p>
 <p>$$
-\overline{u}_i = 1/h_x \int_{x_{i-1/2}}^{x_{i+1/2}} u(x) \mathrm{d} x
+\overline{u}_i =  \frac{1}{h_x} \int_{x_{i-1/2}}^{x_{i+1/2}} u(x) \mathrm{d} x
 \qquad (1)
 $$</p>
 <p>[3] yazısında muhafaza kanununun entegral formunu görmüştük,</p>
@@ -116,9 +116,24 @@ $$</p>
 Aynı durum ikinci entegral için de geçerli, o zaman iki üstteki formül</p>
 <p>$$
 \overline{u}_{j,l+1} = \overline{u}_{j,l} -
-\frac{h_t}{h_x} ( f(u_{j+1/2}) + f(u_{j-1/2}) )
+\frac{h_t}{h_x} ( f(u_{j+1/2}) - f(u_{j-1/2}) )
+\qquad (2)
 $$</p>
-<p>olacak.</p>
+<p>olacak. Böylece $l$ anındaki $j$ hücresinin ortalamasını bir sonraki zaman adımı
+$l+1$'e nasıl aktaracağımızı, oraya geçiş yapacağımızın formülünü bulmuş olduk.</p>
+<p>Eğer $\frac{1}{h_x} \int_{t_l}^{t_{l+1}} f(u_{j+1/2}) \mathrm{d} t$ entegralini
+entegral içindekiler çarpı $h_t$ ile gösterebiliyorsak, tüm
+entegrali $h_t$ ile bölmek bize yaklaşık, "sayısal" bir $f(u_{j+1/2})$
+verecektir, ona büyük harf ile $F_{j+1/2}^l$ diyelim, formülü [4, sf. 103]</p>
+<p>$$
+F_{j+1/2}^l = \frac{1}{h_t} \int_{t_l}^{t_{l+1}} f(u_{j+1/2,l}) \mathrm{d} t
+$$</p>
+<p>$F$'ye sayısal akış (numerical flux) ismi de veriliyor. O zaman (2) formülü
+"akış diferansiyel formunda" da yazılabilir,</p>
+<p>$$
+\overline{u}_{j,l+1} = \overline{u}_{j,l} -
+\frac{h_t}{h_x} ( F_{j+1/2,l} - F_{j-1/2} )
+$$</p>
 <pre><code class="python">import scipy.integrate as integrate
 import numpy as np
 
@@ -196,4 +211,5 @@ while t &lt; T:
 <p>[1] Zingale, <em>PHY 604: Computational Methods in Physics and Astrophysics II</em></p>
 <p>[2] Kloeckner, <em>Numerical Methods for Partial Differential Equations CS555 / MATH555 / CSE510</em>
     <a href="https://relate.cs.illinois.edu/course/cs555-s20/">https://relate.cs.illinois.edu/course/cs555-s20/</a></p>
-<p>[3] Bayramlı, <em>Sonlu Hacim (Finite Volume) Yöntemi - 1</em>    </p>
+<p>[3] Bayramlı, <em>Sonlu Hacim (Finite Volume) Yöntemi - 1</em></p>
+<p>[4] Lee, Computational Fluid Dynamics</p>

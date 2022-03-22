@@ -3,6 +3,8 @@
 
 ## En Son
 
+22/3 - [Sonlu Hacim (Finite Volume) Yöntemi - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_bpp50fv1/sonlu_hacim__finite_volume__yontemi__1.html)
+
 8/3 - [Isı Denklemi (Heat Equation) - Ekler](https://burakbayramli.github.io/dersblog/phy/phy_005_basics_08/isi_denklemi__heat_equation_.html)
 
 2/3 - [Animasyon, Matplotlib, Mayavi](https://burakbayramli.github.io/dersblog/sk/2020/11/animasyon-matplotlib-mayavi-2d-3d.html)
@@ -10,8 +12,6 @@
 1/3 - [Markov Zincirleri](https://burakbayramli.github.io/dersblog/stat/stat_093_mc/markov_zincirleri__markov_chains_.html)
 
 1/3 - [Uygulama - Yağmur Yağış Verisi, Analiz](https://burakbayramli.github.io/dersblog/stat/stat_176_app1/uygulama__yagmur_yagis_verisi.html)
-
-22/2 - [Diferansiyel Denklem Sistemi, Köşegenleştirme (Diagonalization)](https://burakbayramli.github.io/dersblog/linear/linear_23/ders_23.html#ode2)
 
 ## Konular, Referans
 

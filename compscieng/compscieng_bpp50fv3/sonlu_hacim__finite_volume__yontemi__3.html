@@ -1,0 +1,110 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Sonlu Hacim (Finite Volume) Yöntemi - 3</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sonlu Hacim (Finite Volume) Yöntemi - 3
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Zayıf Form</p>
+<p>Daha önce diferansiyel formun her durumda çözülemediğinden bahsettik. Fakat
+(4)'teki entegral form da çalışılması zor bir halde. Daha rahat çalışılabilen
+bir entegral forma erisemez miyiz? Bu forma erişmek için diferansiyel
+denklemlerde bazen kullanılan bir tekniği kullanacağız, bu teknikle çözümü
+tanımlamak için daha az pürüzsüzlük istediğimiz durumlarda diferansiyel denklemi
+tekrar yazıyoruz. Tekrar yazmak için denklemi alıp onu bir pürüzsüz "test
+fonksiyonu" ile çarpıyoruz, bu çarpımı birkaç kere bir tanım kümesi üzerinden
+entegre ediyoruz, ve Parçalı Entegral tekniğini kullanarak türevi $u$'dan alıp
+pürüzsüz olan test fonksiyonuna aktarıyoruz. Böylece $u$ üzerinde daha az
+türev olan bir formül elde ediyoruz, ve $u$'nun pürüzsüz olma şartı gevşemiş
+oluyor [3, sf. 27].</p>
+<p>Test fonksiyonu hem zamanda hem uzayda pürüzsüz bir fonksiyon $\phi$ olsun,
+ayrıca derlitoplu desteğe sahip (compactly supported), yani belli bir kısıtlı
+alan dışında sıfır, bu örnekte sonsuzluğun kendisi alanın dışında kabul edilir
+ve o noktada $\phi$ sıfır olur [4]. Bu ileride bazı iptalleri yaparken işimize
+yarayacak.</p>
+<p>(1) formülünden başlayalım,</p>
+<p>$$
+u_t + f(u)_x = 0
+$$</p>
+<p>Bu fonksiyonu $\phi$ ile çarpıp uzay ve zaman üzerinden entegre edersek,</p>
+<p>$$
+\int _{0}^{\infty} \int _{-\infty}^{\infty} u_t \phi + f(u)_x \phi \mathrm{d} x \mathrm{d} t = 0
+\qquad (5)
+$$</p>
+<p>elde ederiz. Bu denklemdeki ilk terime zaman üzerinden, ikinci terime de uzay
+üzerinden Parçalı Entegral tekniğini uygulayacağız. PE tekniğini hatırlarsak,</p>
+<p>$$
+\int y \mathrm{d} z = y z - \int z \mathrm{d} y
+$$</p>
+<p>eşitliği idi, ya da belirli entegraller (definite integrals) için,</p>
+<p>$$
+\int_{a}^{b} y \mathrm{d} z = [y z]_{a}^{b} - \int_{a}^{b} z \mathrm{d} y
+\qquad (6)
+$$</p>
+<p>Kısım olarak $y = \phi \mathrm{d} x$, $\mathrm{d} z = u_t$ atayalım, şimdi zaman üzerinden PE
+alıyoruz, dikkat bu entegral dışarıdan içeri doğru yani zaman için entegral
+(5)'in tüm iç kısmı</p>
+<p>$$
+\int _{0}^{\infty}
+\underbrace{\int _{-\infty}^{\infty} u_t \phi}_{dx dt\textrm{ ile beraber iç kısım}} + f(u)_x \phi \mathrm{d} x
+\mathrm{d} t = 0
+$$</p>
+<p>üzerinde alınmış olacak. Dedigimiz gibi once $y,\mathrm{d} z$ tanımladık, o zaman $z=u$,
+$\mathrm{d} y = \phi_t \mathrm{d} x \mathrm{d} t$ olur. (6) ile yerine koyarsak,</p>
+<p>$$
+\int_{-\infty}^{\infty} [ u \phi ]_{0}^{\infty} -
+\int _{0}^{\infty} \int_{-\infty}^{\infty} u \phi_t \mathrm{d} x \mathrm{d} t
+\qquad (7)
+$$</p>
+<p>Test fonksiyonu tanımından $\phi(\pm \infty, t) = \phi(x, \pm \infty) = 0$
+olduğunu biliyoruz, yani</p>
+<p>$$
+[ u \phi ]_{0}^{\infty} = \cancel{u(x,\infty)\phi(x,\infty)} - u(x,0)\phi(x,0) 
+$$</p>
+<p>$$
+= u(x,0)\phi(x,0) 
+$$</p>
+<p>Bu sayede (7) basitleştirilir,</p>
+<p>$$
+- \int _{0}^{\infty} \int_{-\infty}^{\infty} u \phi_t \mathrm{d} x \mathrm{d} t +
+\int_{-\infty}^{\infty} u(x,0)\phi(x,0) 
+$$</p>
+<p>Benzer bir yaklaşımla zaman üzerinden PE alınır [4], ve</p>
+<p>$$
+\int_{0}^{\infty} \int_{-\infty}^{\infty}
+f(u)_x \phi \mathrm{d} x \mathrm{d} t =
+- \int_{0}^{\infty} \int_{-\infty}^{\infty} f(u) \phi_x \mathrm{d} x \mathrm{d} t
+$$</p>
+<p>Son iki formül birleştirilince,</p>
+<p>$$
+\int_{0}^{\infty} \int_{-\infty}^{\infty}
+u \phi_t + f(u) \phi_x \mathrm{d} x \mathrm{d} t = -
+\int_{-\infty}^{\infty} u(x,0) \phi(x,0) \mathrm{d} x 
+$$</p>
+<p>Burgers denklemi çözümü (9)'un aynı zamanda bir zayıf çözüm olduğunun ispatı
+[6, sf. 8]'de bulunabilir. Not: ispat sadece 1. seçenek $u_l &gt; u_r$ için
+geçerli, diğer seçenekler de var.</p>
+<p>[devam edecek]</p>
+<p>Kaynaklar</p>
+<p>[3] Leveque, <em>Numerical Methods for Conservation Laws</em></p>
+<p>[4] Dong, <em>Numerical Methods for Conservation Laws (Part 1)</em>
+    <a href="https://jdongg.github.io/post/conservation-laws-1/">https://jdongg.github.io/post/conservation-laws-1/</a></p>

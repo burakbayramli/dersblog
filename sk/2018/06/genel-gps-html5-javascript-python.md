@@ -13,17 +13,15 @@ print (dist.km)
 
 İkinci ifade float tıpınde mesafeyi verir, kilometre bazlıdır.
 
-Daha az dış kütüphanelere bağımlı bir kod istersek, alttaki kod faydalı,
+Ya da
 
 ```python
-from scipy import sin, cos, tan, arctan, arctan2, arccos, pi
+from pygeodesy.sphericalNvector import LatLon
 
-def spherical_distance(lat1, long1, lat2, long2):
-    phi1 = 0.5*pi - lat1
-    phi2 = 0.5*pi - lat2
-    r = 0.5*(6378137 + 6356752) # mean radius in meters
-    t = sin(phi1)*sin(phi2)*cos(long1-long2) + cos(phi1)*cos(phi2)
-    return r * arccos(t) / 1000.
+p1 = LatLon(lat1, lon1)
+p2 = LatLon(lat2, lon2)
+
+p1.distanceTo(p2)
 ```
 
 İki nokta arasında birinciden ikinciye olan açısal yön (bearing),

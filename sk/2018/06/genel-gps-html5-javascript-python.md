@@ -73,65 +73,10 @@ def to_bearing(lat,lon,brng,d):
 
 Bir GPS kordinat listesinin orta noktasını bulmak için,
 
-```python
-from shapely.geometry import Polygon
-pts = [[51.238689, 4.406747],[51.232246, 4.444266],[51.251485,4.472641],[51.265894, 4.452429]]
-p = Polygon(pts)
-print (p.centroid.x)
-print (p.centroid.y)
-```
-
-Üstteki `shapely` kullanımı yerine (bu paketin geos C bazlı
-kütüphanesine bağlantısı var, ki bu paket her ortamda
-derlenemeyebilir) pür Python bazlı kod gerekirse alttaki kullanışlı.
-
-```python
-def get_centroid(poly):
-    """Calculates the centroid of a non-intersecting polygon.
-    Args:
-        poly: a list of points, each of which is a list of the form [x, y].
-    Returns:
-        the centroid of the polygon in the form [x, y].
-    Raises:
-        ValueError: if poly has less than 3 points or the points are not
-                    formatted correctly.
-    """
-    # Make sure poly is formatted correctly
-    if len(poly) < 3:
-        raise ValueError('polygon has less than 3 points')
-    for point in poly:
-        if type(point) is not list or 2 != len(point):
-            raise ValueError('point is not a list of length 2')
-    # Calculate the centroid from the weighted average of the polygon's
-    # constituent triangles
-    area_total = 0
-    centroid_total = [float(poly[0][0]), float(poly[0][1])]
-    for i in range(0, len(poly) - 2):
-        # Get points for triangle ABC
-        a, b, c = poly[0], poly[i+1], poly[i+2]
-        # Calculate the signed area of triangle ABC
-        area = ((a[0] * (b[1] - c[1])) +
-                (b[0] * (c[1] - a[1])) +
-                (c[0] * (a[1] - b[1]))) / 2.0;
-        # If the area is zero, the triangle's line segments are
-        # colinear so we should skip it
-        if 0 == area:
-            continue
-        # The centroid of the triangle ABC is the average of its three
-        # vertices
-        centroid = [(a[0] + b[0] + c[0]) / 3.0, (a[1] + b[1] + c[1]) / 3.0]
-        # Add triangle ABC's area and centroid to the weighted average
-        centroid_total[0] = ((area_total * centroid_total[0]) +
-                             (area * centroid[0])) / (area_total + area)
-        centroid_total[1] = ((area_total * centroid_total[1]) +
-                             (area * centroid[1])) / (area_total + area)
-        area_total += area
-    return centroid_total
-```
-
-Bir alternatif daha su [bağlantıdan](https://www.navlab.net/nvector/#example_7),
-enlem, boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
-vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makale [1].
+Su [bağlantıdan](https://www.navlab.net/nvector/#example_7), enlem,
+boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
+vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı
+makale [1].
 
 ```python
 import numpy as np
@@ -170,6 +115,25 @@ print (n_E2lat_long(np.array(n)))
 coords = [[30,20],[47,3]]
 m = average(coords)
 print (m)
+```
+
+Tabii paket kullanarak daha kolay olabilir,
+
+```python
+from pygeodesy.sphericalNvector import LatLon
+b = LatLon(45, 1), LatLon(45, 2), LatLon(46, 2), LatLon(46, 1)
+nvecs = np.array([a.toNvector() for a in b])
+print (nvecs)
+mid = nvecs.mean().toLatLon()
+print (mid.lat, mid.lon)
+```
+
+```text
+[Nvector(0.707, 0.01234, 0.70711) Nvector(0.70668, 0.02468, 0.70711)
+ Nvector(0.69424, 0.02424, 0.71934) Nvector(0.69455, 0.01212, 0.71934)]
+45.50109067812444 1.5
+<class 'pygeodesy.sphericalNvector.LatLon'>
+(0.700656, 0.018347, 0.713264)
 ```
 
 Bir Coğrafi Nokta Bir Alan İçinde mi

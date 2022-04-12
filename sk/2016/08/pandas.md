@@ -23,14 +23,14 @@ two;3;6;1
 
 df1 = pd.read_csv(StringIO.StringIO(s1),sep=';')
 print df1
-     c  d  a  b
-0  one  0  0  7
-1  one  1  1  6
-2  one  2  2  5
-3  two  0  3  4
-4  two  1  4  3
-5  two  2  5  2
-6  two  3  6  1
+     c  d  a  b
+0  one  0  0  7
+1  one  1  1  6
+2  one  2  2  5
+3  two  0  3  4
+4  two  1  4  3
+5  two  2  5  2
+6  two  3  6  1
 ```
 
 Not: CSV'yi yazıda gösterebilmek için StringIO uzerinden okuduk, fakat
@@ -59,13 +59,13 @@ print df1['b']
 ```
 
 ```
-0    7
-1    6
-2    5
-3    4
-4    3
-5    2
-6    1
+0    7
+1    6
+2    5
+3    4
+4    3
+5    2
+6    1
 Name: b, dtype: int64
 ```
 
@@ -94,14 +94,14 @@ print df2
 
 ```
 
-              c  d  a  b
-2016-01-02  one  0  0  7
-2016-01-03  one  1  1  6
-2016-01-04  one  2  2  5
-2016-01-05  two  0  3  4
-2016-01-06  two  1  4  3
-2016-01-07  two  2  5  2
-2016-01-08  two  3  6  1
+              c  d  a  b
+2016-01-02  one  0  0  7
+2016-01-03  one  1  1  6
+2016-01-04  one  2  2  5
+2016-01-05  two  0  3  4
+2016-01-06  two  1  4  3
+2016-01-07  two  2  5  2
+2016-01-08  two  3  6  1
 ```
 
 Sıfırıncı, ilk kolonu indis olarak tanımladık, Pandas'a ayrıca
@@ -116,9 +116,9 @@ print df2[df2.index > '2016-01-06']
 
 ```
 
-              c  d  a  b
-2016-01-07  two  2  5  2
-2016-01-08  two  3  6  1
+              c  d  a  b
+2016-01-07  two  2  5  2
+2016-01-08  two  3  6  1
 ```
 
 İndisi sonradan değiştirmek mümkün. Mesela b kolonunu indisi yapalım,
@@ -128,23 +128,23 @@ print df2.reset_index().set_index('b')
 ```
 
 ```
-       index    c  d  a
+       index    c  d  a
 
-b                      
+b                      
 
-7 2016-01-02  one  0  0
+7 2016-01-02  one  0  0
 
-6 2016-01-03  one  1  1
+6 2016-01-03  one  1  1
 
-5 2016-01-04  one  2  2
+5 2016-01-04  one  2  2
 
-4 2016-01-05  two  0  3
+4 2016-01-05  two  0  3
 
-3 2016-01-06  two  1  4
+3 2016-01-06  two  1  4
 
-2 2016-01-07  two  2  5
+2 2016-01-07  two  2  5
 
-1 2016-01-08  two  3  6
+1 2016-01-08  two  3  6
 
 ```
 
@@ -163,14 +163,14 @@ print s1
 ```
 
 ```
-1    x
-2    y
-3    z
+1    x
+2    y
+3    z
 dtype: object
 ```
 
 Bu seriyi tamamen kendimiz, yan bir tarafta apayrı bir şekilde
-yarattık. Şimdi bu seriyi bir kolon olarak df1'e ekleyelim. Ne olacak
+yarattık. Şimdi bu seriyi bir kolon olarak df1'e ekleyelim. Ne olacak
 acaba?
 
 ```python
@@ -179,14 +179,14 @@ print df1
 ```
 
 ```
-     c  d  a  b   s1
-0  one  0  0  7  NaN
-1  one  1  1  6    x
-2  one  2  2  5    y
-3  two  0  3  4    z
-4  two  1  4  3  NaN
-5  two  2  5  2  NaN
-6  two  3  6  1  NaN
+     c  d  a  b   s1
+0  one  0  0  7  NaN
+1  one  1  1  6    x
+2  one  2  2  5    y
+3  two  0  3  4    z
+4  two  1  4  3  NaN
+5  two  2  5  2  NaN
+6  two  3  6  1  NaN
 ```
 
 Pandas seriyi aldı, indisine baktı, ve o indisi df1 ile eşledi, uyan
@@ -202,14 +202,14 @@ print df1
 ```
 
 ```
-     c  d  a  b   s1   x
-0  one  0  0  7  NaN   7
-1  one  1  1  6    x   8
-2  one  2  2  5    y   9
-3  two  0  3  4    z   7
-4  two  1  4  3  NaN   8
-5  two  2  5  2  NaN   9
-6  two  3  6  1  NaN  10
+     c  d  a  b   s1   x
+0  one  0  0  7  NaN   7
+1  one  1  1  6    x   8
+2  one  2  2  5    y   9
+3  two  0  3  4    z   7
+4  two  1  4  3  NaN   8
+5  two  2  5  2  NaN   9
+6  two  3  6  1  NaN  10
 ```
 
 Bu ifadenin çok rahat bir şekilde işleyebilmesinin arkasında yatan sır
@@ -232,16 +232,16 @@ print df3
 ```
 
 ```
-  bir iki  uc
+  bir iki  uc
 
-1   x   a  aa
+1   x   a  aa
 
-2   y   b  bb
+2   y   b  bb
 
-3   z   c  cc
+3   z   c  cc
 ```
 
-Aynı şekilde DataFrame'ler de yanyana yapıştırılabilir. 
+Aynı şekilde DataFrame'ler de yanyana yapıştırılabilir. 
 
 Bu arada Pandas aynen SQL tabanları gibi birleştirme operasyonu
 yapabiliyor, yani iki DataFrame'i alıyorum, indis uyumu üzerinden, ya
@@ -259,14 +259,14 @@ print df2
 ```
 
 ```
-              c     d  a  b
-2016-01-02  one     0  0  7
-2016-01-03  one     1  1  6
-2016-01-04  one     2  2  5
-2016-01-05  two  1000  3  4
-2016-01-06  two     1  4  3
-2016-01-07  two     2  5  2
-2016-01-08  two     3  6  1
+              c     d  a  b
+2016-01-02  one     0  0  7
+2016-01-03  one     1  1  6
+2016-01-04  one     2  2  5
+2016-01-05  two  1000  3  4
+2016-01-06  two     1  4  3
+2016-01-07  two     2  5  2
+2016-01-08  two     3  6  1
 ```
 
 Sadece tek bir hücre değiştirdik.
@@ -291,19 +291,19 @@ print df1.d.map(f)
 ```
 
 ```
-0    0XX
+0    0XX
 
-1    1XX
+1    1XX
 
-2    2XX
+2    2XX
 
-3    0XX
+3    0XX
 
-4    1XX
+4    1XX
 
-5    2XX
+5    2XX
 
-6    3XX
+6    3XX
 
 Name: d, dtype: object
 ```
@@ -317,7 +317,7 @@ print df1.d.map(lambda x: str(x)+"XX")
 Aynı sonucu verir. Elde edilen sonucun bir Series olduğuna dikkat, bir
 indisi var, ve alıp bu Series'i bir DataFrame içine yazabilirdik.
 
-Eğer fonksiyon içinde tüm DataFrame satırına  erişim gerekiyorsa,
+Eğer fonksiyon içinde tüm DataFrame satırına  erişim gerekiyorsa,
 apply kullanımı var, apply ona geçilen fonksiyona satır geçer; yani
 apply satırları teker teker gezer ve satırlar sırasıyla bizim
 verdiğimiz fonksiyonun ilk parametresine "düşer".
@@ -327,19 +327,19 @@ print df1.apply(lambda x: str(x.c) + ":" + str(x.d), axis=1)
 ```
 
 ```
-0    one:0
+0    one:0
 
-1    one:1
+1    one:1
 
-2    one:2
+2    one:2
 
-3    two:0
+3    two:0
 
-4    two:1
+4    two:1
 
-5    two:2
+5    two:2
 
-6    two:3
+6    two:3
 ```
 
 Pivot
@@ -363,7 +363,6 @@ pv = df.pivot('bar', 'foo')
 print pv.to_string()
 ```
 
-
 Sonuc
 
 ```
@@ -374,7 +373,71 @@ B     2   5
 C     3   6
 ```
 
-<a name='read'/>
+Kolonda Liste
+
+DataFrame pek cok Python tipini kabul edebilir, liste de bunlardan biri,
+
+```python
+import numpy as np
+from pandas import DataFrame
+df=DataFrame({
+       'foo': ['one',  'one',  'one',  'two',  'two',  'two'],
+       'bar':  [ '[2,3]',   '[4,5]', '[6,7]', '[8,9]', '[10,11]', '[12,13]'],
+       'baz':  [ [2,3],   [4,5],   [6,7],   [8,9],   [10,11],   [12,13]]
+       })
+print (df)
+```
+
+```text
+   foo      bar       baz
+0  one    [2,3]    [2, 3]
+1  one    [4,5]    [4, 5]
+2  one    [6,7]    [6, 7]
+3  two    [8,9]    [8, 9]
+4  two  [10,11]  [10, 11]
+5  two  [12,13]  [12, 13]
+```
+
+Artık `bar` ve `baz` kolonları içinde liste var, biri metin bazli
+digeri duz Python objesi halinde. Listeleri nasıl geri okuruz?
+
+```python
+print (df.iloc[0].baz)
+print (type(df.iloc[0].baz))
+print (df.iloc[0].bar)
+print (type(df.iloc[0].bar))
+```
+
+```text
+[2, 3]
+<class 'list'>
+[2,3]
+<class 'str'>
+```
+
+İlk durum kolay, liste doğru Python tipinde direk erişip
+kullanırız. Eğer liste bir string olarak geliyorsa, onu Python tipine çevirmek
+lazım. Burada `eval` kullanımı önerenler olabilir fakat bu kullanım yavaştır,
+ayrıca verilen parametreyi bir Python kodu kabul edip işlettiği için tehlikeli
+olabilir. Bu durumda en hızlı ve güvenli çözüm `json` kullanmak.
+
+```python
+import json
+res = json.loads(df.iloc[0].bar)
+print (res)
+print (type(res))
+print (res[0])
+```
+
+```text
+[2, 3]
+<class 'list'>
+2
+```
+
+Bu yaklaşı işledi çünkü görülen liste kabaca zaten bir JSON formatına sahip,
+sözlük (dictionary) yok ama liste var. Bu sebeple `loads` işledi.
+
 
 Dosyalardan Okumak
 
@@ -443,6 +506,23 @@ file = ZipFile(BytesIO(r))
 csv = file.open("test.csv")
 df = pd.read_csv(csv,sep='\t',header=None)
 ```
+
+Bazi Ayarlar
+
+Ekranda `print` ile dataframe basınca bazen tüm kolonlar gözükmeyebilir,
+
+```python
+import pandas as pd
+pd.set_option('display.max_columns', None)
+```
+
+Kolonun kendisini en büyük halde görmek için
+
+```python
+pd.set_option('display.max_colwidth',-1)
+```
+
+
 
 Kaynaklar
 

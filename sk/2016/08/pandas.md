@@ -435,8 +435,9 @@ print (res[0])
 2
 ```
 
-Bu yaklaşı işledi çünkü görülen liste kabaca zaten bir JSON formatına sahip,
-sözlük (dictionary) yok ama liste var. Bu sebeple `loads` işledi.
+Bu yaklaşım işledi çünkü liste kabaca zaten bir JSON formatına
+sahiptir, sözlük (dictionary) yok ama liste var. Bu sebeple `loads`
+listeye çevrimi yapabildi.
 
 
 Dosyalardan Okumak

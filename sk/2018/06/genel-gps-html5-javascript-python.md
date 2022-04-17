@@ -55,21 +55,27 @@ print (reached.latitude)
 print (reached.longitude)
 ```
 
-Daha duz ve API'siz isleyen bir kod
+Ya da
 
 ```python
-def to_bearing(lat,lon,brng,d):
-    R = 6378.1 #Radius of the Earth
-    lat1 = math.radians(lat)
-    lon1 = math.radians(lon)
-    lat2 = math.asin( math.sin(lat1)*math.cos(d/R) +
-         math.cos(lat1)*math.sin(d/R)*math.cos(brng))
-    lon2 = lon1 + math.atan2(math.sin(brng)*math.sin(d/R)*math.cos(lat1),
-                 math.cos(d/R)-math.sin(lat1)*math.sin(lat2))
-    lat2 = math.degrees(lat2)
-    lon2 = math.degrees(lon2)
-    return lat2,lon2
+from pygeodesy.sphericalNvector import LatLon
+clat,clon=39.06084392603182, 34.274201977299
+DIST = 1000
+p1 = LatLon(clat,clon)
+EARTH_RAD = 6371
+upright = p1.destination (DIST, bearing=45, radius=EARTH_RAD)
+lowleft = p1.destination (DIST, bearing=225, radius=EARTH_RAD)
+print ( upright )
+print ( lowleft )
 ```
+
+```text
+45.090707°N, 043.281808°E
+32.450607°N, 026.747624°E
+```
+
+Örnekte Anadolu ortasından başlayıp 45 derece kuzeydoğuya ve 225
+derece güneybatıya 1000 km adım atınca nereye geldiğimizi görüyoruz.
 
 Bir GPS kordinat listesinin orta noktasını bulmak için,
 

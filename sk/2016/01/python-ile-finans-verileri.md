@@ -75,9 +75,9 @@ df1 = quandl.get("CURRFX/GBPUSD",
                  authtoken=auth)
 ```
 
-Şirket verileri için `yahoo_fin` paketi faydalıdır, mesela Amazon
-şirketinin brüt karı (gross profit) ve toplam hasılat (total revenue)
-için,
+Bilanco, kar, zarar gibi şirket temel verileri için `yahoo_fin` paketi
+faydalıdır, mesela Amazon şirketinin brüt karı (gross profit) ve
+toplam hasılat (total revenue) verisi için,
 
 ```python
 from yahoo_fin.stock_info import get_income_statement

@@ -10,7 +10,7 @@ bile eklemiş - açık yazılımın faydaları.
 
 Bazi ornekler altta,
 
-İndeks verisi, mesela Nasdaq için `^İXİÇ`, biraz paketsiz, kendi işimizi
+İndeks verisi, mesela Nasdaq için `^IXIC`, ama paketsiz, kendi işimizi
 kendimiz yapmamız gerekiyor,
 
 ```
@@ -28,7 +28,30 @@ file = BytesIO(r)
 df = pd.read_csv(file,index_col='Date')3
 ```
 
-Aynı şekilde 'fred' ABD merkez bankası tabanından veri indirebiliyor.
+Aynı şekilde 'FRED' ABD merkez bankası tabanından veri indirilebiliyor.
+ABD gayrı safi milli hasıla verisi için mesela,
+
+```python
+import pandas as pd, datetime
+from pandas_datareader import data
+import quandl
+
+today = datetime.datetime.now()
+start=datetime.datetime(1992, 1, 1)
+end=datetime.datetime(today.year, today.month, today.day)
+cols = ['GDPC1']
+df = data.DataReader(cols, 'fred', start, end)
+print (df.tail(4))
+```
+
+```text
+                GDPC1
+DATE                 
+2021-01-01  19055.655
+2021-04-01  19368.310
+2021-07-01  19478.893
+2021-10-01  19806.290
+```
 
 Opsiyon
 
@@ -50,8 +73,30 @@ df1 = quandl.get("CURRFX/GBPUSD",
                  start_date='2010-01-01',
                  end_date='2018-01-01',
                  authtoken=auth)
-
 ```
+
+Şirket verileri için `yahoo_fin` paketi faydalıdır, mesela Amazon
+şirketinin brüt karı (gross profit) ve toplam hasılat (total revenue)
+için,
+
+```python
+from yahoo_fin.stock_info import get_income_statement
+ticker = 'AMZN'
+res = get_income_statement(ticker,yearly=False).T
+df = res.sort_index()
+print (df[['grossProfit','totalRevenue']])
+```
+
+```text
+Breakdown   grossProfit  totalRevenue
+endDate                              
+2021-03-31  46115000000  108518000000
+2021-06-30  48904000000  113080000000
+2021-09-30  47882000000  110812000000
+2021-12-31  54577000000  137412000000
+```
+
+
 
 
 

@@ -85,6 +85,9 @@ ticker = 'AMZN'
 res = get_income_statement(ticker,yearly=False).T
 df = res.sort_index()
 print (df[['grossProfit','totalRevenue']])
+res = get_income_statement(ticker,yearly=True).T
+df = res.sort_index()
+print (df[['grossProfit','totalRevenue']])
 ```
 
 ```text
@@ -94,9 +97,13 @@ endDate
 2021-06-30  48904000000  113080000000
 2021-09-30  47882000000  110812000000
 2021-12-31  54577000000  137412000000
+Breakdown    grossProfit  totalRevenue
+endDate                               
+2018-12-31   93731000000  232887000000
+2019-12-31  114986000000  280522000000
+2020-12-31  152757000000  386064000000
+2021-12-31  197478000000  469822000000
 ```
-
-
 
 
 

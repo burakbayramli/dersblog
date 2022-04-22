@@ -43,8 +43,8 @@ açıyor. Böylece mesela `modul1/modul1` altında `source.py` diye bir
 dosya varsa, onun içinde de `def callme()` gibi bir fonksiyon varsa,
 üstteki tanım sayesinde `modul1.callme()` çağrısı artık yapılabilir.
 
-Artık en üst dizinde iken `python setup.py install` ile
-kurulum yapabiliriz.
+Şimdi en üst dizinde iken `python setup.py install` ile kurulum
+gerçekleştirebiliriz.
 
 `install_requires` seçeneğine verilen liste install sırasında `pip` ile
 otomatik kurulacak ek programların listesidir. Üstteki örnekte

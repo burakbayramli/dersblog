@@ -97,8 +97,8 @@ erişimini ona göre ayarlıyoruz.
 
 Pip Hazırlığı
 
-Bildigimiz gibi Python dosyalarinin `pip` komutu ile kurulabilmesini
-saglayan bir altyapi var. Bu yapi
+Bildiğimiz gibi Python dosyalarının `pip` komutu ile kurulabilmesini
+sağlayan bir altyapı var. Bu yapı
 
 https://pypi.org/
 
@@ -123,3 +123,8 @@ Kaynaklar
 [2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
 
 [3] http://guide.python-distribute.org/creation.html
+
+
+
+
+

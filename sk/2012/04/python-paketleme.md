@@ -1,10 +1,10 @@
 # Python Paketleme
 
 Python paketleme sistemiyle kaynak kodumuzu paketleyerek ona `pip
-install` ya da `setup.py install` sonrasi herhangi bir dis dizin ya da
-yeni bilgisayardan `import` ile erisebilmemiz saglanir. Paketler
-global kurulabilir ama cogunlukla `virtualenv` benzeri sanal
-gelistirme ortami içinde benzer kurulurlar.
+ınstall` ya da `setup.py ınstall` şonrası herhangi bir dış dizin ya da
+yeni bilgisayardan `import` ile erisebilmemiz sağlanır. Paketler
+global kurulabilir ama çoğunlukla `virtualenv` benzeri sanal
+geliştirme ortamı içinde kurulurlar.
 
 Kurulum için bir `setup.py` gerekir. Mesela modul1 adında paylaşmak
 istediğimiz bir kod var, kodlar /vs/vs/dizin/modul1 altında, bu
@@ -119,5 +119,9 @@ ile kurabiliriz.
 Kaynaklar
 
 [1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication
+
+
+
+
 
 

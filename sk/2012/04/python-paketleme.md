@@ -1,7 +1,7 @@
 # Python Paketleme
 
 Python paketleme sistemiyle kaynak kodumuzu paketleyerek ona `pip
-ınstall` ya da `setup.py ınstall` şonrası herhangi bir dış dizin ya da
+ınstall` ya da `setup.py install` sonrası herhangi bir dış dizin ya da
 yeni bilgisayardan `import` ile erisebilmemiz sağlanır. Paketler
 global kurulabilir ama çoğunlukla `virtualenv` benzeri sanal
 geliştirme ortamı içinde kurulurlar.
@@ -54,16 +54,14 @@ otomatik kurulacak ek programların listesidir. Üstteki örnekte
 
 Eğer `setup.py develop` dersek belli bazı sembolik bağlantılar
 sayesinde `modul1` geliştirme dizininde yaptığımız değişiklikler direk
-kurulu kütüphane üzerinde etki yaratır. Bu, adı üzerinde, geliştirme
-(develop) için çok faydalı.
+kurulu kütüphane üzerinde etki yaratır. Bu geliştirme (develop) için
+çok faydalı.
 
-Eğer global ortamda isek install çağrısı global, sanal ortamda isek
-install çağrısı sanal ortama kurulum yapar. Sanal ortam
-hakkındaki virtualenv yaziları [2, 3].
+Eğer global ortamdaysak `install`` çağrısı global, sanal ortamda isek
+sanal ortama kurulum yapar. Sanal ortam hakkındaki virtualenv yaziları
+[2, 3].
 
-http://guide.python-distribute.org/creation.html
-
-Eger paket icinde veri dosyalari da eklemek istiyorsak, `setup.py` icinde
+Eğer paket içine veri dosyaları da eklemek istiyorsak, `setup.py` içinde
 
 ```
     include_package_data=True,
@@ -75,7 +73,7 @@ Eger paket icinde veri dosyalari da eklemek istiyorsak, `setup.py` icinde
 eki yapabiliriz. Bu durumda `modul1/modul1` altındaki tüm belirtilen
 sonekli dosyalar toparlanıp pakete dahil edilecektir. `setup.py install`
 sonrası, mesela benim `/home/burak/Documents/env3` sanal geliştirme
-ortamı için kurulum
+ortamım için kurulum
 
 ```
 /home/burak/Documents/env3/lib/python3.6/site-packages/modul1-0.1--py3.6.egg
@@ -84,16 +82,16 @@ ortamı için kurulum
 dizini altına gitti, oraya baktım, veri dosyaları oraya koyulmuştu. 
 
 Tabii dikkat, bir sorun daha var, paketlenen veriye kod nasıl
-erisecek? Bir çözüm işleyen kod dosyasının adresinin kod içinde,
+erişecek? Bir çözüm işleyen kod dosyasının adresinin kod içinde,
 
 ```
 data_dir = os.path.dirname(__file__)
 ```
 
-ile alınması, ve kod içinde tüm veri erişimlerini `data_dir + "/veri.zip"`
-olarak değiştirmek. Kod `__file__` bildiğimiz gibi o anda içinde
-olunan dosyanin tüm adresidir, onun baz dizinini alıp veri dosya
-erişimini ona göre ayarlıyoruz. 
+ile alınması, ve kod içinde tüm veri erişimlerini `data_dir +
+"/veri.zip"` olarak değiştirmek. Kod `__file__` anda içinde olunan
+dosyanın tüm adresidir, onun baz dizinini alıp veri dosya erişimini
+ona göre ayarlıyoruz.
 
 Pip Hazırlığı
 
@@ -105,7 +103,7 @@ https://pypi.org/
 adresinde, kodumuzu herkesin kullanımına açmak için oraya da gönderebiliriz.
 [1] adresinde daha fazla detay var, fakat eğer `setup.py` kurulumu tam yapılmışsa,
 `python setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
-mümkün, bu dosyalar `dist` dizini altında yaratılmış olmalı. 
+mümkün, bu dosyalar `dist` dizini altında konuluyor.
 
 Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  `twine` adlı
 araç gerekli, onu
@@ -123,6 +121,12 @@ Kaynaklar
 [2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
 
 [3] http://guide.python-distribute.org/creation.html
+
+
+
+
+
+
 
 
 

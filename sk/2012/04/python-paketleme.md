@@ -6,7 +6,7 @@ yeni bilgisayardan `import` ile erisebilmemiz sağlanır. Paketler
 global kurulabilir ama çoğunlukla `virtualenv` benzeri sanal
 geliştirme ortamı içinde kurulurlar.
 
-Kurulum için bir `setup.py` gerekir. Mesela modul1 adında paylaşmak
+Kurulum için bir `setup.py` gerekir. Mesela `modul1` adında paylaşmak
 istediğimiz bir kod var, kodlar /vs/vs/dizin/modul1 altında, bu
 dizinde en üst seviyede bir `setup.py` koyarız, 
 

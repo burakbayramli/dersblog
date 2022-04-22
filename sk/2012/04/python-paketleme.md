@@ -74,7 +74,7 @@ Eger paket icinde veri dosyalari da eklemek istiyorsak, `setup.py` icinde
 
 eki yapabiliriz. Bu durumda `modul1/modul1` altındaki tüm belirtilen
 sonekli dosyalar toparlanıp pakete dahil edilecektir. `setup.py install`
-şonrası, mesela benim `/home/burak/Documents/env3` sanal geliştirme
+sonrası, mesela benim `/home/burak/Documents/env3` sanal geliştirme
 ortamı için kurulum
 
 ```
@@ -123,3 +123,6 @@ Kaynaklar
 [2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
 
 [3] http://guide.python-distribute.org/creation.html
+
+
+

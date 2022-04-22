@@ -32,7 +32,7 @@ olabilir.
 Not: Paketleme servisinin isimleme yöntemi sebebiyle kodlarımızın
 `modul1` altında bir `modul1` alt dizini içinde olması lazım.
 
-Bu altdızın içinde mutlaka bir `__init__.py` dosyası olmalı, içinde
+Bu altdizin içinde mutlaka bir `__init__.py` dosyası gerekli, içinde
 en basit kullanım için
 
 ```python
@@ -48,7 +48,7 @@ dosya varsa, onun içinde de `def callme()` gibi bir fonksiyon varsa,
 Artık en üst dizinde iken `python setup.py install` ile
 kurulum yapabiliriz.
 
-`ınstall_requires` seçeneğine verilen liste ınstall sırasında `pip` ile
+`install_requires` seçeneğine verilen liste install sırasında `pip` ile
 otomatik kurulacak ek programların listesidir. Üstteki örnekte
 `dateutil` adlı dış Python paketi kurulacaktır.
 
@@ -119,9 +119,4 @@ ile kurabiliriz.
 Kaynaklar
 
 [1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication
-
-
-
-
-
 

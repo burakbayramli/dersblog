@@ -59,7 +59,7 @@ kurulu kütüphane üzerinde etki yaratır. Bu, adı üzerinde, geliştirme
 
 Eğer global ortamda isek install çağrısı global, sanal ortamda isek
 install çağrısı sanal ortama kurulum yapar. Sanal ortam
-hakkındaki virtualenv yazisi.
+hakkındaki virtualenv yaziları [2, 3].
 
 http://guide.python-distribute.org/creation.html
 
@@ -120,3 +120,6 @@ Kaynaklar
 
 [1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication
 
+[2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
+
+[3] http://guide.python-distribute.org/creation.html

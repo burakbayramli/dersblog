@@ -86,10 +86,10 @@ erişecek? Bir çözüm işleyen kod dosyasının adresinin kod içinde,
 data_dir = os.path.dirname(__file__)
 ```
 
-ile alınması, ve kod içinde tüm veri erişimlerini `data_dir +
-"/veri.zip"` olarak değiştirmek. Kod `__file__` anda içinde olunan
-dosyanın tüm adresidir, onun baz dizinini alıp veri dosya erişimini
-ona göre ayarlıyoruz.
+ile alınması, ve kod içinde tüm veri erişimlerini mesela `veri.zip`
+için `data_dir + "/veri.zip"` olarak değiştirmek. Kod `__file__` anda
+içinde olunan dosyanın tüm adresidir, onun baz dizinini alıp veri
+dosya erişimini ona göre ayarlıyoruz.
 
 Pip Hazırlığı
 

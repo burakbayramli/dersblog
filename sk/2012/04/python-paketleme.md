@@ -6,9 +6,9 @@ yeni bilgisayardan `import` ile erisebilmemiz saglanir. Paketler
 global kurulabilir ama cogunlukla `virtualenv` benzeri sanal
 gelistirme ortami içinde benzer kurulurlar.
 
-Kurulum icin bir `setup.py` gerekir. Mesela modul1 adinda paylasmak
-istedigimiz bir kod var, kodlar /vs/vs/dizin/modul1 altinda, bu
-dizinde en ust seviyede bir `setup.py` koyariz, 
+Kurulum için bir `setup.py` gerekir. Mesela modul1 adında paylaşmak
+istediğimiz bir kod var, kodlar /vs/vs/dizin/modul1 altında, bu
+dizinde en üst seviyede bir `setup.py` koyarız, 
 
 ```
 from setuptools import setup
@@ -113,17 +113,5 @@ ile kurabiliriz.
 Kaynaklar
 
 [1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication
-
-
-
-
-
-
-
-
-
-
-
-
 
 

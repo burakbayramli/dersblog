@@ -1,7 +1,7 @@
 # Python Paketleme
 
 Python paketleme sistemiyle kaynak kodumuzu paketleyerek ona `pip
-ınstall` ya da `setup.py install` sonrası herhangi bir dış dizin ya da
+install` ya da `setup.py install` sonrası herhangi bir dış dizin ya da
 yeni bilgisayardan `import` ile erisebilmemiz sağlanır. Paketler
 global kurulabilir ama çoğunlukla `virtualenv` benzeri sanal
 geliştirme ortamı içinde kurulurlar.
@@ -21,9 +21,7 @@ setup(name='modul1',
       author_email='dd@post.com',
       license='MIT',
       packages=['modul1'],
-      install_requires=[
-          'dateutil',
-      ],
+      install_requires=['dateutil'],
       zip_safe=False)
 ```
 
@@ -121,14 +119,5 @@ Kaynaklar
 [2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
 
 [3] http://guide.python-distribute.org/creation.html
-
-
-
-
-
-
-
-
-
 
 

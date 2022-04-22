@@ -68,14 +68,14 @@ Eger paket icinde veri dosyalari da eklemek istiyorsak, `setup.py` icinde
 ```
     include_package_data=True,
     package_data={
-        "": ["*.dbf", "*.shp","*.zip","*.tif"]
+        "": ["*.zip","*.csv"]
     },
 ```
 
-eki yapabiliriz. Bu durumda `modül1/modül1` altındaki tüm belirtilen
-sonekler toparlanıp pakete dahil edilecektir. `setup.py install`
+eki yapabiliriz. Bu durumda `modul1/modul1` altındaki tüm belirtilen
+sonekli dosyalar toparlanıp pakete dahil edilecektir. `setup.py install`
 şonrası, mesela benim `/home/burak/Documents/env3` sanal geliştirme
-ortamım için kurulum
+ortamı için kurulum
 
 ```
 /home/burak/Documents/env3/lib/python3.6/site-packages/modul1-0.1--py3.6.egg

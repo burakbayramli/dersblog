@@ -204,6 +204,18 @@ Software Updater programına girip ilk tab'deki servislerin hangi
 ülkeden olduğu değitirilebilir. Yakın olarak Netherlands, Germany, vs
 bazı seçenekler.
 
+Uyarı Sesleri
+
+Komut satırından gelen sesleri iptal için Terminal açıp Edit | Preferences ile
+ses ayarlara gidilip Sound seçeneği iptal edilabilir. Eğer diğer programlardan
+ses geliyorsa
+
+```
+dconf write /org/gnome/desktop/sound/event-sounds false
+```
+
+onlari kapatir.
+
 Renkler
 
 Chrome tarayıcıyı siyah üzeri beyaz göstermek istiyorsak arama

@@ -1,57 +1,128 @@
 # Python Paketleme
 
-Eger herhangi bir dizinden import paket şeklinde bir diğer koda erişim
-yapabilmek istiyorsak, Python paketleme sisteminin öğrenmemiz
-gerekiyor. Paketler nereden kurulduklarına göre global ya da sanal
-ortam içinde benzer şekillerde kurulurlar.
+Python paketleme sistemiyle kaynak kodumuzu paketleyerek ona `pip
+install` ya da `setup.py install` sonrasi herhangi bir dis dizin ya da
+yeni bilgisayardan `import` ile erisebilmemiz saglanir. Paketler
+global kurulabilir ama cogunlukla `virtualenv` benzeri sanal
+gelistirme ortami içinde benzer kurulurlar.
 
-Kurulum icin en basit durumda bir setup.py gerekir. Mesela
-modul1 adinda paylasmak istedigimiz bir kod parcamiz var, kodlari
-/vs/vs/dizin/modul1 altinda olsun, bu dizine bir setup.py koyariz,
-icinde
+Kurulum icin bir `setup.py` gerekir. Mesela modul1 adinda paylasmak
+istedigimiz bir kod var, kodlar /vs/vs/dizin/modul1 altinda, bu
+dizinde en ust seviyede bir `setup.py` koyariz, 
 
 ```
 from setuptools import setup
 
 setup(name='modul1',
-      version='0.1',
-      description='Modul 1 cok onemli seyler yapar',
-      url='https://github.com/isim/modul1',
-      author='Burak Bayramli',
-      author_email='dd@post.com',
-      license='MIT',
-      packages=['modul1'],
-      install_requires=[
-          'dateutil',
-      ],
-      zip_safe=False)
+      version='0.1',
+      description='Modul 1 cok onemli seyler yapar',
+      url='https://github.com/isim/modul1',
+      author='Burak Bayramli',
+      author_email='dd@post.com',
+      license='MIT',
+      packages=['modul1'],
+      install_requires=[
+          'dateutil',
+      ],
+      zip_safe=False)
 ```
 
-olabilir. 
+olabilir. 
 
-Not: Herhangi bir sebepten dolayı modul1 dizini altında bir modul1 alt
-dizini daha lazım.
+Not: Paketleme servisinin isimleme yöntemi sebebiyle kodlarımızın
+`modul1` altında bir `modul1` alt dizini içinde olması lazım.
 
-Ayrıca bu altdızın içinde mutlaka bir __init__.py dosyası olmalı, boş
-olabilir önemli değil.
+Bu altdızın içinde mutlaka bir `__init__.py` dosyası olmalı, içinde
+en basit kullanım için
 
-Simdi ayni dizinde iken python setup.py install ile kurulumu
-yapabiliriz.
+```python
+from .modul1 import *
+```
 
-install_requires secenegine verilen liste install sirasinda pip ile
+olmalı. Şimdi en üst dizinde iken `python setup.py install` ile
+kurulum yapabiliriz.
+
+`ınstall_requires` seçeneğine verilen liste ınstall sırasında `pip` ile
 otomatik kurulacak ek programların listesidir. Üstteki örnekte
-dateutil adlı dış Python paketi kurulacaktır.
+`dateutil` adlı dış Python paketi kurulacaktır.
 
-Eğer setup.py develop dersek belli bazı sembolik bağlantılar sayesinde
-modul1 geliştirme dizininde yaptığımız değişiklikler direk kurulu
-kütüphane üzerinde etki yaratır. Bu, adi uzerinde, gelistirme
-(develop) icin cok faydali.
+Eğer `setup.py develop` dersek belli bazı sembolik bağlantılar
+sayesinde `modul1` geliştirme dizininde yaptığımız değişiklikler direk
+kurulu kütüphane üzerinde etki yaratır. Bu, adı üzerinde, geliştirme
+(develop) için çok faydalı.
 
 Eğer global ortamda isek install çağrısı global, sanal ortamda isek
-install çağrısı sanal ortama kurulum yapar. Sanal ortam
-hakkındaki virtualenv yazisi.
+install çağrısı sanal ortama kurulum yapar. Sanal ortam
+hakkındaki virtualenv yazisi.
 
 http://guide.python-distribute.org/creation.html
+
+Eger paket icinde veri dosyalari da eklemek istiyorsak, `setup.py` icinde
+
+```
+    include_package_data=True,
+    package_data={
+        "": ["*.dbf", "*.shp","*.zip","*.tif"]
+    },
+```
+
+eki yapabiliriz. Bu durumda `modül1/modül1` altındaki tüm belirtilen
+sonekler toparlanıp pakete dahil edilecektir. `setup.py install`
+şonrası, mesela benim `/home/burak/Documents/env3` sanal geliştirme
+ortamım için kurulum
+
+```
+/home/burak/Documents/env3/lib/python3.6/site-packages/modul1-0.1--py3.6.egg
+```
+
+dizini altına gitti, oraya baktım, veri dosyaları oraya koyulmuştu. 
+
+Tabii dikkat, bir sorun daha var, paketlenen veriye kod nasıl
+erisecek? Bir çözümk işleyen kodun erisim adresini kod içinde,
+
+```
+data_dir = os.path.dirname(__file__)
+```
+
+ile alabiliriz, ve kod içinde tüm veri erişimlerini `data_dir + "/veri.zip"`
+olarak değiştiririz. Kod `__file__` bildiğimiz gibi o anda içinde
+olunan dosyanin tüm adresidir, onun baz dizinini alıp veri dosya
+erişimini ona göre ayarlıyoruz. 
+
+Pip Hazirligi
+
+Bildigimiz gibi Python dosyalarinin `pip` komutu ile kurulabilmesini
+saglayan bir altyapi var. Bu yapi
+
+https://pypi.org/
+
+adresinde, kodumuzu herkesin kullanımına açmak için oraya da gönderebiliriz.
+[1] adresinde daha fazla detay var, fakat eğer `setup.py` kurulumu tam yapılmışsa,
+`python setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
+mümkün, bu dosyalar `dist` dizini altında yaratılmış olmalı. 
+
+Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  `twine` adlı
+araç gerekli, onu
+
+```
+sudo apt install twine
+```
+
+ile kurabiliriz.
+
+Kaynaklar
+
+[1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication
+
+
+
+
+
+
+
+
+
+
 
 
 

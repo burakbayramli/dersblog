@@ -84,14 +84,14 @@ ortamı için kurulum
 dizini altına gitti, oraya baktım, veri dosyaları oraya koyulmuştu. 
 
 Tabii dikkat, bir sorun daha var, paketlenen veriye kod nasıl
-erisecek? Bir çözümk işleyen kodun erisim adresini kod içinde,
+erisecek? Bir çözüm işleyen kod dosyasının adresinin kod içinde,
 
 ```
 data_dir = os.path.dirname(__file__)
 ```
 
-ile alabiliriz, ve kod içinde tüm veri erişimlerini `data_dir + "/veri.zip"`
-olarak değiştiririz. Kod `__file__` bildiğimiz gibi o anda içinde
+ile alınması, ve kod içinde tüm veri erişimlerini `data_dir + "/veri.zip"`
+olarak değiştirmek. Kod `__file__` bildiğimiz gibi o anda içinde
 olunan dosyanin tüm adresidir, onun baz dizinini alıp veri dosya
 erişimini ona göre ayarlıyoruz. 
 

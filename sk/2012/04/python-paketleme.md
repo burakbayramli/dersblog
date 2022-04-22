@@ -7,7 +7,7 @@ global kurulabilir ama çoğunlukla `virtualenv` benzeri sanal
 geliştirme ortamı içinde kurulurlar.
 
 Kurulum için bir `setup.py` gerekir. Mesela `modul1` adında paylaşmak
-istediğimiz bir kod var, kodlar /vs/vs/dizin/modul1 altında, bu
+istediğimiz bir kod var, kodlar `/home/vs/dizin/modul1` altında, bu
 dizinde en üst seviyede bir `setup.py` koyarız, 
 
 ```
@@ -16,7 +16,7 @@ from setuptools import setup
 setup(name='modul1',
       version='0.1',
       description='Modul 1 cok onemli seyler yapar',
-      url='https://github.com/isim/modul1',
+      url='https://github.com/user/modul1',
       author='Burak Bayramli',
       author_email='dd@post.com',
       license='MIT',

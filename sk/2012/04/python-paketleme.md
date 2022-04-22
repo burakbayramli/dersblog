@@ -39,7 +39,13 @@ en basit kullanım için
 from .modul1 import *
 ```
 
-olmalı. Şimdi en üst dizinde iken `python setup.py install` ile
+olmalı. Bu sayede `import modul1` deyince `__init__.py` yükleniyor,
+yüklenen bu dosya da diğer kod dosyalarımızı yükleyip kullanıma
+açıyor. Böylece mesela `modul1/modul1` altında `source.py` diye bir
+dosya varsa, onun içinde de `def callme()` gibi bir fonksiyon varsa,
+üstteki tanım sayesinde `modul1.callme()` çağrısı artık yapılabilir.
+
+Artık en üst dizinde iken `python setup.py install` ile
 kurulum yapabiliriz.
 
 `ınstall_requires` seçeneğine verilen liste ınstall sırasında `pip` ile

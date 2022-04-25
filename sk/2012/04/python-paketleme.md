@@ -146,7 +146,7 @@ setuptools.setup(
 )
 ```
 
-tanımlarak, bu paketi gönderince `README.md` içinde olan belgeleme direk
+tanımlarsak, bu paketi gönderince `README.md` içinde olan belgeleme direk
 PyPİ sayfası olarak gözükecektir.
 
 Kaynaklar

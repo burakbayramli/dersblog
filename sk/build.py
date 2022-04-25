@@ -44,7 +44,6 @@ if __name__ == "__main__":
         dirs, files = ls(os.getcwd())
         for (f,size) in files:
             if ".md" in f:
-                print (f)
                 path = os.path.dirname(f)
                 fmd = os.path.basename(f)
                 fhtml = os.path.basename(f).replace(".md",".html")
@@ -52,7 +51,7 @@ if __name__ == "__main__":
                 if os.path.isfile(path + "/" + fhtml):
                     mdtime = os.path.getmtime(path + "/" + fmd)
                     htmltime = os.path.getmtime(path + "/" + fhtml)
-                    if htmltime < mdtime: update = False
+                    if htmltime > mdtime: update = False
                 if update:
                     print ('Generating html for', f)
                     content = open(path + "/" + fmd).read()

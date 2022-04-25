@@ -15,21 +15,21 @@
 
 ## Konular, Referans
 
-[Python](2016/01/python-dil-ogrenimi.md)
+[Python](2016/01/python-dil-ogrenimi.html)
 
-[Unix](2020/07/unix.md)
+[Unix](2020/07/unix.html)
 
-[SQL](2012/03/sql.md)
+[SQL](2012/03/sql.html)
 
-[Proje İdaresi](2020/07/proje-idaresi.md)
+[Proje İdaresi](2020/07/proje-idaresi.html)
 
-[Network, TCP/IP, Internet](2000/10/network.md)
+[Network, TCP/IP, Internet](2000/10/network.html)
 
 [Animasyonlu Matematik](https://www.youtube.com/channel/UCx64ou5qw0Q9LLkwE8xSNEg)
 
-[Elektrik, Elektronik](2020/08/elektronik.md)
+[Elektrik, Elektronik](2020/08/elektronik.html)
 
-[Nereden Başlarım](2019/01/nereden.md)
+[Nereden Başlarım](2019/01/nereden.html)
 
 [Youtube Kanalım](https://www.youtube.com/channel/UCMAUsgUq5ODy8kMnJlUBUdQ)
 
@@ -41,7 +41,7 @@
 
 ## Arşiv
 
-[Sene](year.md)
+[Sene](year.html)
 
 [Ara](ara.html)
 

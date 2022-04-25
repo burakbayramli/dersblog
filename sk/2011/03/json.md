@@ -1,10 +1,35 @@
 # JSON
 
+Ayar (config) ya da veriyi hem insan hem makine tarafından okunabilir
+bir formatta paylaşmak istersek JSON kullanabiliriz. JSON bir bakıma
+Python sözlük (dictionary) kavramının dosyaya çevrilmiş hali. Python ile
+sözlük yaratmak hatırlarsak,
+
+```python
+mydict = {}
+mydict['anahtar1'] = 'deger1'
+print (mydict)
+```
+
+```text
+{'anahtar1': 'deger1'}
+```
+
+Bu kavramı metin dosyasından başlayarak yaratmak için JSON iyidir. 90'li yıllarda
+XML kullanılan yerlerde artık hep JSON görüyoruz.
+
+JSON içindeki yapı hiyerarşik olabilir, direk anahtar bazlı tekil
+değerler, ya da listeler, listeler içinde daha fazla listeler hep
+mümkündür. Altta mesela bir coğrafi kodda bizim kullandığımız bir
+örnek,
+
+
 ```python
 print (open("test.json").read())
 ```
 
-```text{
+```text
+{
     "center": [41, 29],
     "points": {
 	"city 1": [41.1, 29.2],
@@ -23,6 +48,8 @@ print (open("test.json").read())
 
 ```
 
+Harita merkezi `center`, nokta listeleri `points` ve onun altında yine anahtar
+bazlı `city `, `city 2` diye gidiyor. Erişmek için,
 
 ```python
 import json
@@ -35,30 +62,49 @@ print (jf.keys())
 dict_keys(['center', 'points', 'plist', 'url1', 'maps'])
 ```
 
+Sozluk demistik; iste en ust seviyede `dict_keys` ibaresi var. Simdi
+`points` noktalarindan `city 1` erisimi yapalim,
 
 
+```python
+print (jf['points']['city 1'])
+```
 
+```text
+[41.1, 29.2]
+```
 
+Bu hiyerarsik yapi istedigimiz kadar derine gidebilir. Isin guzel tarafi
+tiplemenin otomatik algilanip dogru Python objesi yaratilmasi, mesela 
 
+```python
+print (type(jf['points']['city 1']))
+```
 
+```text
+<class 'list'>
+```
 
+Yani koseli parantez gorunce `json` paketi bunun liste objesi oldugunu
+anladi. Bu ozelligi farkli yerlerde de kullanabiliriz, cunku bazen bir
+veri dosyasinda ayri bir yerde metin bazli bir liste depolamis
+olabiliriz,
 
+```python
+str_liste1 = '["1","2","3"]'
+```
 
+Bu liste belki bir CSV'den Pandas objesi içinde geldi, pür metin halde. Eğer
+tipten eminsek, onu `json`'a çevirttirebiliriz, ki bu yaklaşım `eval` çağrısından
+çok daha hızlı ve güvenli işler, 
 
+```python
+liste1 = json.loads(str_liste1)
+print (liste1)
+print (type(liste1))
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+```text
+['1', '2', '3']
+<class 'list'>
+```

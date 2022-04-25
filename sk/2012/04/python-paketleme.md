@@ -101,9 +101,9 @@ https://pypi.org/
 adresinde, kodumuzu herkesin kullanımına açmak için oraya da
 gönderebiliriz [1]. Eğer `setup.py` kurulumu tam yapılmışsa, `python
 setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
-mümkün, bu dosyalar `dist` dizini altında konuluyor. Dikkat, once
-`python install` komutu isletin, sonra usttekini, `dist` altinda uc
-tane dosya lazim, `.egg`, `.zip` ve `.whl`.
+mümkün, bu dosyalar `dist` dizini altında konuluyor. Dikkat, önce
+`python ınstall` komutu işletin, sonra üsttekini, `dist` altında üç
+tane dosya lazım, `.egg`, `.zıp` ve `.whl`.
 
 Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  `twine` adlı
 araç gerekli, onu
@@ -128,7 +128,7 @@ kadar yayınladığımız tüm versiyonlar görülür. Bu versiyon numaraları `
 içinde tanımladığımız `version` tanımını baz alıyor tabii. Versiyon konusundan
 devam edersek, eğer `setup.py` içindeki versiyonu değiştirip sistemi derleyip
 PyPi'a `twine` ile tekrar gönderirsek, yeni versiyon 'Release history' altında
-gözükecektir, kullanıcılar PyPi sayfasından ya da `pip ınstall modül1==[versiyon]`
+gözükecektir, kullanıcılar PyPi sayfasından ya da `pip install modul1==[versiyon]`
 ile o versiyonlardan herhangi birini kurabilirler.
 
 PyPi dokümantasyonu ile kolay entegre için güzel bir numara şu; nasıl olsa
@@ -156,5 +156,8 @@ Kaynaklar
 [2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
 
 [3] http://guide.python-distribute.org/creation.html
+
+
+
 
 

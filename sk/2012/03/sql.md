@@ -701,9 +701,9 @@ Referans
 
 [1] Veri Tabanları, Kurumsal Java 2005 Kitabından, [PDF](https://github.com/burakbayramli/classnotes/raw/master/sk/2012/03/db-kj.pdf)
 
-[2] [sqlite](../../2018/03/sqlite-basit-sekilde-hzl-diske-deger-yazma.md)
+[2] [sqlite](../../2018/03/sqlite-basit-sekilde-hzl-diske-deger-yazma.html)
 
-[3] [psycopg2](../../2012/06/psycopg2.md)
+[3] [psycopg2](../../2012/06/psycopg2.html)
 
 [4] https://github.com/Olamiotan/PythonStarter
 
@@ -726,17 +726,17 @@ Referans
 
 [10] https://github.com/douglasnavarro/chinook-analysis
 
-[11] [Postgresql](../../2012/03/postgresql.md)
+[11] [Postgresql](../../2012/03/postgresql.html)
 
 [12] https://www.guru99.com/er-diagram-tutorial-dbms.html
 
 [13] https://www.c-sharpcorner.com/article/diving-into-basics-of-sql-server/
 
-[14] [MongoDB](../../2014/05/mongodb.md)
+[14] [MongoDB](../../2014/05/mongodb.html)
 
-[15] [SQL Nasıl Kullanılmalı](../../2001/10/sql-nasl-kullanlmal.md)
+[15] [SQL Nasıl Kullanılmalı](../../2001/10/sql-nasl-kullanlmal.html)
 
-[16] [SQL veri analizi nasıl hızlandırılır](../../2001/10/sql-veri-analizi-nasl-hzlandrlr.md)
+[16] [SQL veri analizi nasıl hızlandırılır](../../2001/10/sql-veri-analizi-nasl-hzlandrlr.html)
 
 
 

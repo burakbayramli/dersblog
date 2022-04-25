@@ -45,5 +45,3 @@
 
 [Ara](ara.html)
 
-Test
-

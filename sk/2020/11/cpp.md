@@ -185,7 +185,7 @@ ile kurulunca header dosyalarını ve kütüphane dosyalarını yaygın /
 bilinen ana dizinler altına koyduğudur. Bu durumda o yerleri ayrıca
 derleyiciye belirtmeye gerek yoktur çünkü `g++` bu iyi bilinen yerler
 altında arama yapmayı bilir. Fakat kütüphane ismini hala belirtmek
-gerekir, mesela OpenGL kullanıyorsak, [şu yazıda](../08/pyopengl.md)
+gerekir, mesela OpenGL kullanıyorsak, [şu yazıda](../08/pyopengl.html)
 gördük, `apt-get install libgl1-mesa-dev ..` vs ardından `-lGL -lGLU
 -lglut` gibi o kurulmuş kütüphaneleri bağlantılamak istediğimizi
 özellikle belirtmek lazım.

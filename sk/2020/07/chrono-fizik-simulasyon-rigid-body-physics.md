@@ -1,6 +1,6 @@
 # 3D Fizik Simulasyonu, Chrono
 
-Daha önce 2 boyut için [gördüğümüz](kati-govde-fizik-simulasyon-rigid-body-physics-pymunk.md)
+Daha önce 2 boyut için [gördüğümüz](kati-govde-fizik-simulasyon-rigid-body-physics-pymunk.html)
 simülasyon yazılımının 3 boyutta karşılığı Chrono. Ubuntu üzerinde derlemek
 için bazı bilgiler,
 

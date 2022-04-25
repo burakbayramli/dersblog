@@ -236,7 +236,7 @@ Kaynaklar
 
 [2] [Numpy STL](https://pythonhosted.org/numpy-stl/)
 
-[3] [C++ ile STL Dosyasi Okumak](http://www.sgh1.net/posts/read-stl-file.md)
+[3] [C++ ile STL Dosyasi Okumak](http://www.sgh1.net/posts/read-stl-file.html)
 
 [4] [Cornell, Triangle meshes I, PDF](http://www.cs.cornell.edu/courses/cs4620/2014fa/lectures/02trimesh1.pdf)
 

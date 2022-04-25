@@ -20,8 +20,8 @@ eklersek Github Pages bizim için bir `sitemap.xml` üretir.
 GP'ın güzel tarafı markdown ıcinde sanki HTML'den haberimiz yokmuş
 gibi davranabiliriz, mesela ben alt dizin `şub1/şub2` içindeyim, ve
 `şub3/şub4` içindeki bir `yazı.md` dosyasına bağlantı vermek
-istiyorum, bunun için `[buraya tıkla](../../şub3/şub4/yazı.md)` yazmam
-yeterli, bu bağlantı GP tarafından `https://github.iö/../repo1/şub3/şub4/yazı.html` 
+istiyorum, bunun için `[buraya tıkla](../../sub3/sub4/yazi.md)` yazmam
+yeterli, bu bağlantı GP tarafından `https://github.io/../repo1/sub3/sub4/yazi.html` 
 şeklindeki bir bağlantıya çevirilecektir .
 
 Matematik Formülleri

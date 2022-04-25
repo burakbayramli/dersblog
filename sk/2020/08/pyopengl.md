@@ -2,7 +2,7 @@
 
 3 boyutlu simülasyonlar için OpenGL ünlü bir paket. Çeşitli objeler,
 satıhlar, onları gösteren bir kamera gibi kavramların kodlaması
-basit. Birkaç örnek C++ kodunu [SPH](sph.md) yazısında gördük. Ek bazı
+basit. Birkaç örnek C++ kodunu [SPH](sph.html) yazısında gördük. Ek bazı
 kodlar [2]'den alınmıştır,
 
 [bouncingballs.cpp](glcode/bouncingballs.cpp),

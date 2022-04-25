@@ -1,6 +1,6 @@
 # Elektronik
 
-[Elektronik, Ölçüm, Temel Parçalar](elektronik-temel-parcalar-aletler.md)
+[Elektronik, Ölçüm, Temel Parçalar](elektronik-temel-parcalar-aletler.html)
 
-[Piller](elektronik-piller.md)
+[Piller](elektronik-piller.html)
 

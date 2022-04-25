@@ -570,9 +570,9 @@ www.nber.org/patents/
 
 Referans, Kaynaklar
 
-[Hadoop - Ilk Ornek (Python), Esleme-Indirgeme](../../2013/01/hadoop-ilk-ornek-python-esleme-indirgeme.md)
+[Hadoop - Ilk Ornek (Python), Esleme-Indirgeme](../../2013/01/hadoop-ilk-ornek-python-esleme-indirgeme.html)
 
-[MrJob](../../2013/08/mrjob.md)
+[MrJob](../../2013/08/mrjob.html)
 
 [Paralel KMeans, Hadoop](https://burakbayramli.github.io/dersblog/algs/algs_085_kmeans_mr/paralel_kmeans_hadoop.html)
 

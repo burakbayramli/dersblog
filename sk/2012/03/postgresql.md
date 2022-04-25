@@ -202,17 +202,17 @@ işletmek için faydalı bir GUİ,
 
 Diğer Postgres Yazıları
 
-[Tabanlar Arasi Buyuk Veri Transferi, pg_dump](../../2012/08/tabanlar-arasi-buyuk-veri-transferi.md)
+[Tabanlar Arasi Buyuk Veri Transferi, pg_dump](../../2012/08/tabanlar-arasi-buyuk-veri-transferi.html)
 
-[Postgresql ve Levenhstein](../../2012/08/kolon-degerleri-arasinda-harfleme.md)
+[Postgresql ve Levenhstein](../../2012/08/kolon-degerleri-arasinda-harfleme.html)
 
-[Postgres First_Value, Sum, Partition](../../2012/05/postgres-firstvalue-sum-partition.md)
+[Postgres First_Value, Sum, Partition](../../2012/05/postgres-firstvalue-sum-partition.html)
 
-[Postgresql ile Yuzdelik (Percentile) Hesabi](../../2012/09/postgresql-ile-yuzdelik-percentile.md)
+[Postgresql ile Yuzdelik (Percentile) Hesabi](../../2012/09/postgresql-ile-yuzdelik-percentile.html)
 
-[Postgresql DB Baglantisi (dblink)](../../2012/04/postgresql-db-baglantisi-dblink.md)
+[Postgresql DB Baglantisi (dblink)](../../2012/04/postgresql-db-baglantisi-dblink.html)
 
-[Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython](../../2012/04/plpython.md)
+[Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython](../../2012/04/plpython.html)
 
-[Enlemler, Boylamlar ve PostgreSql PostGis](../../2012/06/enlemler-boylamlar-ve-postgresql.md)
+[Enlemler, Boylamlar ve PostgreSql PostGis](../../2012/06/enlemler-boylamlar-ve-postgresql.html)
 

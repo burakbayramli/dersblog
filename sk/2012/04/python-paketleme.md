@@ -153,7 +153,7 @@ Kaynaklar
 
 [1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication
 
-[2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.md)
+[2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.html)
 
 [3] http://guide.python-distribute.org/creation.html
 

@@ -318,14 +318,14 @@ durumlarda slice() çağrısı tercih edilmekte.
 
 Ekler
 
-[meshgrid](../../2011/02/meshgrid.md)
+[meshgrid](../../2011/02/meshgrid.html)
 
-[Histogram Numaraları](../../2015/10/histogram-numaralari.md)
+[Histogram Numaraları](../../2015/10/histogram-numaralari.html)
 
-[Sembolik Matematik - Sympy](../../2011/04/sympy.md)
+[Sembolik Matematik - Sympy](../../2011/04/sympy.html)
 
-[Ubuntu Server ve Matplotlib](../../2010/11/ubuntu-server-ve-matplotlib.md)
+[Ubuntu Server ve Matplotlib](../../2010/11/ubuntu-server-ve-matplotlib.html)
 
-[Grafiklemek, Matplotlib, Pandas](../../2020/02/grafiklemek.md)
+[Grafiklemek, Matplotlib, Pandas](../../2020/02/grafiklemek.html)
 
 

@@ -1,6 +1,6 @@
 # chmod
 
-Bir dosyanın izinlerini Unix [yazısında](unix.md) işledik. Bu
+Bir dosyanın izinlerini Unix [yazısında](unix.html) işledik. Bu
 değerleri nasıl değiştiririz?
 
 En basit yol `+` ve `-` isaretleri kullanmak, mesela

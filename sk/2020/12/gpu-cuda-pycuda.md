@@ -44,7 +44,7 @@ direk CUDA kodlaması da yapılabilir.
 CUDA
 
 Pek çok türde paralelellik, eşzamanlılaştırma tekniği var. Mesela disk
-bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-mr.md)
+bazlı çalışan [eşle/indirge](../../2014/09/esle-indirge-mimarisi-mapreduce-mr.html)
 bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
 ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması SIMD
 yaklaşımını benimser, SIMD = Single Instruction Multiple Data, yani
@@ -82,8 +82,8 @@ yetenekli kart gösterilecektir.
 CUDA ve Collab
 
 Geliştiriciler için bir diğer seçenek Google bulutu üzerinde
-barındırılan not defteri servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.md).
-Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.md)
+barındırılan not defteri servisi [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.html).
+Bu servis [Jupyter](../../2018/09/jupyter-not-defterleri.html)
 teknolojisine İnternet üzerinden erişim sağlıyor denebilir.
 
 Collab'a girip bir not defteri yaratalım, ve menüde `Edit | Notebook
@@ -434,7 +434,7 @@ Bu derlemek işlemini `nvcc` ile de yapabilirdik.
 
 Ilgili
 
-[Jetson Nano](jetson-nano-2GB.md)
+[Jetson Nano](jetson-nano-2GB.html)
 
 Kaynaklar
 

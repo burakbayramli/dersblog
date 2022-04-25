@@ -102,7 +102,7 @@ ssh pi@192.168....
 ```
 
 diyelim. Giriş yapılmış olmalı. Eğer işimizi ilerisi için daha da
-kolaylaştırmak istersek, [şifresiz giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.md)
+kolaylaştırmak istersek, [şifresiz giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)
 ayarlarını yapabiliriz.
 
 Wifi üzerinden bu bağlantı işliyor çünkü aynı hotspot'a bağlandıysak

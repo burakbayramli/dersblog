@@ -14,7 +14,7 @@ dizüstüne, diğeri Nano'ya takılacak, nihai resim
 <img width="240" src="nano.jpg"/>
 
 İşletim sistemi mikro SD kart üzerinden, en az 64 GB iyi olur,
-işlemler aynen [Raspberry Pi](../07/raspberrypi.md) durumunda olduğu
+işlemler aynen [Raspberry Pi](../07/raspberrypi.html) durumunda olduğu
 gibi. Orada olduğu gibi yine işletim sistemi indirilecek, ve SD'ye
 "yakılacak". Mikro SD de pakete dahil değil ayrıca alınması lazım.
 
@@ -144,8 +144,8 @@ pip3 install pycuda
 
 Acaba dizüstünde geliştirip Nano'ya işletmek için sürekli gönderme
 yapabilir miyiz? Evet. Hatta uzaktaki bir dizini `sshfs` ile
-monteleyebiliriz, bkz [şuradaki](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.md) `ssh`
-yazı. Sonra [PyCuda](gpu-cuda-pycuda.md) yazısındaki herhangi bir örneği alırız,
+monteleyebiliriz, bkz [şuradaki](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html) `ssh`
+yazı. Sonra [PyCuda](gpu-cuda-pycuda.html) yazısındaki herhangi bir örneği alırız,
 GPU tipini gösteren örnek mesela, onu `tst.py` diye dizüstünde
 kaydedelim, sonra mesela tüm kodların Nano üzerinde
 `/home/user/Documents` dizininde olacak şekilde

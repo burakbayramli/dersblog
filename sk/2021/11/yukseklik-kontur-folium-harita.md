@@ -145,7 +145,7 @@ Kaynaklar
 
 [2] [Stackoverflow](https://stackoverflow.com/questions/19418901/get-coordinates-from-the-contour-in-matplotlib)
 
-[3] [Haritalamak](../../2020/02/haritalamak.md)
+[3] [Haritalamak](../../2020/02/haritalamak.html)
 
-[4] [Yükseklik (Elevation) Verileri](../../2019/04/elevation.md)
+[4] [Yükseklik (Elevation) Verileri](../../2019/04/elevation.html)
 

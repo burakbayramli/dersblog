@@ -168,7 +168,7 @@ tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
 Dosya sahibi (admin) hariç başka kimsenin dosyaya yazma hakkı
 olmadığını görüyoruz.
 
-Izinleri değiştirmek icin [chmod](chmod.md) kullanılır.
+Izinleri değiştirmek icin [chmod](chmod.html) kullanılır.
 
 Pek çok şey kabuk etrafında döner dedik, program başlatmak bunlardan
 en önemlisi. Bir program ismini yazarak onu komut satırından
@@ -194,35 +194,35 @@ lazım, yani `emacs & disown`. O zaman aradaki bağlantı kopar, başlatan
 
 Referans
 
-[Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.md)
+[Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.html)
 
-[Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.md)
+[Ubuntu 18, Acer Swift](ubuntu-18-acer-swift.html)
 
-[htop](../../2012/12/htop.md)
+[htop](../../2012/12/htop.html)
 
-[chmod](chmod.md)
+[chmod](chmod.html)
 
 [Unix, Kurumsal Java 2005 Kitabından, PDF](https://github.com/burakbayramli/classnotes/raw/master/sk/2020/07/unix-kj.pdf)
 
-[Unix, Servisleri Nasıl Başlatıyor?](../..//2002/10/unix-servisleri-nasl-baslatyor.md)
+[Unix, Servisleri Nasıl Başlatıyor?](../..//2002/10/unix-servisleri-nasl-baslatyor.html)
 
-[Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.md)
+[Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)
 
-[Lokal Dosya Arama - recoll](../../2011/08/lokal-dosya-arama-recoll.md)
+[Lokal Dosya Arama - recoll](../../2011/08/lokal-dosya-arama-recoll.html)
 
-[Serviste İşleyen Komut Satırı - tmux](../../2017/11/serviste-isleyen-komut-satr-tmux.md)
+[Serviste İşleyen Komut Satırı - tmux](../../2017/11/serviste-isleyen-komut-satr-tmux.html)
 
-[Bellek Dosyalari - /dev/shm](../../2016/01/bellek-dosyalari-devshm.md)
+[Bellek Dosyalari - /dev/shm](../../2016/01/bellek-dosyalari-devshm.html)
 
-[Ubuntu SWAP Alanı Nasıl Arttırılır?](../../2013/03/ubuntu-swap-alani-nasil-arttirilir.md)
+[Ubuntu SWAP Alanı Nasıl Arttırılır?](../../2013/03/ubuntu-swap-alani-nasil-arttirilir.html)
 
-[Unix Rsync - Makineler Arası Dosya Kopyalamanın Hızlı Yolu](../../2003/10/unix-rsync-makineleraras-dosya.md)
+[Unix Rsync - Makineler Arası Dosya Kopyalamanın Hızlı Yolu](../../2003/10/unix-rsync-makineleraras-dosya.html)
 
-[supervisord](../../2012/07/supervisord.md)
+[supervisord](../../2012/07/supervisord.html)
 
-[Dosya Kodlamasi (File Encoding)](../../2020/10/dosya-kodlamasi-encoding.md)
+[Dosya Kodlamasi (File Encoding)](../../2020/10/dosya-kodlamasi-encoding.html)
 
-[Dosya İşlemleri, Unix, Python](../../2020/10/python-unix-dosya-islemleri.md)
+[Dosya İşlemleri, Unix, Python](../../2020/10/python-unix-dosya-islemleri.html)
 
 
 

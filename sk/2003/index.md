@@ -1,34 +1,34 @@
 # 2003
 
-[Açık Anahtar Şifreleme](10/ack-anahtar-sifreleme.md)
+[Açık Anahtar Şifreleme](10/ack-anahtar-sifreleme.html)
 
-[Davranış Bazlı Robotlar (Behavior-Based Robots)](10/davrans-kavram.md)
+[Davranış Bazlı Robotlar (Behavior-Based Robots)](10/davrans-kavram.html)
 
-[Döngüler ve Ziyaretler (Iterators)](10/donguler-ve-ziyaretler-iterators.md)
+[Döngüler ve Ziyaretler (Iterators)](10/donguler-ve-ziyaretler-iterators.html)
 
-[Emacs Dış Programları Nasıl İşletir?](10/emacs-ds-programlar-nasl-isletir.md)
+[Emacs Dış Programları Nasıl İşletir?](10/emacs-ds-programlar-nasl-isletir.html)
 
-[Geliştirme, Deneme, Sonuç](10/gelistirme-deneme-sonuc.md)
+[Geliştirme, Deneme, Sonuç](10/gelistirme-deneme-sonuc.html)
 
-[JStamp - Elde Taşınan Java](10/jstamp-elde-tasnan-java.md)
+[JStamp - Elde Taşınan Java](10/jstamp-elde-tasnan-java.html)
 
-[JSTL Yaratıcısı İle Mülakat](10/jstl-yaratcs-ile-mulakat.md)
+[JSTL Yaratıcısı İle Mülakat](10/jstl-yaratcs-ile-mulakat.html)
 
-[Matlab Yerine Octave](10/matlab-yerine-oktav-octave.md)
+[Matlab Yerine Octave](10/matlab-yerine-oktav-octave.html)
 
-[MySql ve Performans](10/mysql-ve-performans.md)
+[MySql ve Performans](10/mysql-ve-performans.html)
 
-[Oracle Kavramları](10/oracle-kavramlar.md)
+[Oracle Kavramları](10/oracle-kavramlar.html)
 
-[Oracle ve Autoincrement Kolonlar](10/oracle-ve-autoincrement-kolonlar.md)
+[Oracle ve Autoincrement Kolonlar](10/oracle-ve-autoincrement-kolonlar.html)
 
-[Oracle ve İşlem İdaresi](10/oracle-ve-islem-idaresi.md)
+[Oracle ve İşlem İdaresi](10/oracle-ve-islem-idaresi.html)
 
-[Unix Rsync - Makineler Arası Dosya Kopyalamanın Hızlı Yolu](10/unix-rsync-makineleraras-dosya.md)
+[Unix Rsync - Makineler Arası Dosya Kopyalamanın Hızlı Yolu](10/unix-rsync-makineleraras-dosya.html)
 
-[Yazılım Patentleri Hakkında - Donald Knuth](10/yazlm-patentleri-hakknda-donald-knuth.md)
+[Yazılım Patentleri Hakkında - Donald Knuth](10/yazlm-patentleri-hakknda-donald-knuth.html)
 
-[JDOM yardımı ile daha kolay XML işlemek](11/jdom-yardm-ile-daha-kolay-xml-islemek.md)
+[JDOM yardımı ile daha kolay XML işlemek](11/jdom-yardm-ile-daha-kolay-xml-islemek.html)
 
-[Tomcat ve Güvenlik](11/tomcat-ve-guvenlik.md)
+[Tomcat ve Güvenlik](11/tomcat-ve-guvenlik.html)
 

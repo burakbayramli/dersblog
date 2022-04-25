@@ -1,74 +1,74 @@
 # 2013
 
-[Hadoop - Ilk Ornek (Python), Esleme-Indirgeme](01/hadoop-ilk-ornek-python-esleme-indirgeme.md)
+[Hadoop - Ilk Ornek (Python), Esleme-Indirgeme](01/hadoop-ilk-ornek-python-esleme-indirgeme.html)
 
-[Hadoop (Tek Makina Kurulusu)](01/hadoop-tek-makina-kurulusu.md)
+[Hadoop (Tek Makina Kurulusu)](01/hadoop-tek-makina-kurulusu.html)
 
-[ipython](01/ipython.md)
+[ipython](01/ipython.html)
 
-[NbViewer, Github ve Not Defteri](01/nbviewer-github-ve-not-defteri.md)
+[NbViewer, Github ve Not Defteri](01/nbviewer-github-ve-not-defteri.html)
 
-[Python with komutu, ContextManager](01/python-with-komutu-contextmanager.md)
+[Python with komutu, ContextManager](01/python-with-komutu-contextmanager.html)
 
-[R ve iPython Baglantisi](01/r-ve-ipython-baglantisi.md)
+[R ve iPython Baglantisi](01/r-ve-ipython-baglantisi.html)
 
-[Starcluster](03/starcluster.md)
+[Starcluster](03/starcluster.html)
 
-[Ubuntu, Nautilus, Dosya / Dizin Uzerinde Islem Yapmak](03/ubuntu-nautilus-dosya-dizin-uzerinde.md)
+[Ubuntu, Nautilus, Dosya / Dizin Uzerinde Islem Yapmak](03/ubuntu-nautilus-dosya-dizin-uzerinde.html)
 
-[Ubuntu SWAP Alanı Nasıl Arttırılır?](03/ubuntu-swap-alani-nasil-arttirilir.md)
+[Ubuntu SWAP Alanı Nasıl Arttırılır?](03/ubuntu-swap-alani-nasil-arttirilir.html)
 
-[IP ve Bolge Eslemesi, Python](04/ip-ve-bolge-eslemesi-python.md)
+[IP ve Bolge Eslemesi, Python](04/ip-ve-bolge-eslemesi-python.html)
 
-[Sqlplus ile CSV Uretmek](04/sqlplus-ile-csv-uretmek.md)
+[Sqlplus ile CSV Uretmek](04/sqlplus-ile-csv-uretmek.html)
 
-[Ubuntu'dan Oracle'a Baglanmak](04/ubuntudan-oraclea-baglanmak.md)
+[Ubuntu'dan Oracle'a Baglanmak](04/ubuntudan-oraclea-baglanmak.html)
 
-[MySQL ve CSV](05/mysql-ve-csv.md)
+[MySQL ve CSV](05/mysql-ve-csv.html)
 
-[Bash, Surec Idaresi](06/bash-surec-idaresi.md)
+[Bash, Surec Idaresi](06/bash-surec-idaresi.html)
 
-[Not Defteri Icinde R](06/not-defteri-icinde-r.md)
+[Not Defteri Icinde R](06/not-defteri-icinde-r.html)
 
-[Oracle SQL ile Orneklemek (Sampling)](06/oracle-sql-ile-orneklemek-sampling.md)
+[Oracle SQL ile Orneklemek (Sampling)](06/oracle-sql-ile-orneklemek-sampling.html)
 
-[Dekoratörler, Onbellek Kodlaması, Fonksiyon Değiştirmek](07/onbelleklemeyi-dekorator-ile-yapmak.md)
+[Dekoratörler, Onbellek Kodlaması, Fonksiyon Değiştirmek](07/onbelleklemeyi-dekorator-ile-yapmak.html)
 
-[Oracle, Pandas, HDF5](07/oracle-pandas-hdf5.md)
+[Oracle, Pandas, HDF5](07/oracle-pandas-hdf5.html)
 
-[MrJob](08/mrjob.md)
+[MrJob](08/mrjob.html)
 
-[Bir Veri Akış Dili: Pig](09/bir-veri-aks-dili-pig.md)
+[Bir Veri Akış Dili: Pig](09/bir-veri-aks-dili-pig.html)
 
-[MySQL Kurulus](09/mysql-kurulus.md)
+[MySQL Kurulus](09/mysql-kurulus.html)
 
-[MySQLdb, Pandas](09/mysqldb.md)
+[MySQLdb, Pandas](09/mysqldb.html)
 
-[Python ile SQL Tabandan CSV Uretmek](09/python-ile-sql-tabandan-csv-uretmek.md)
+[Python ile SQL Tabandan CSV Uretmek](09/python-ile-sql-tabandan-csv-uretmek.html)
 
-[Yerel Ağ (Network) Kurmak - Ubuntu](09/yerel-ag-kurmak-ubuntu.md)
+[Yerel Ağ (Network) Kurmak - Ubuntu](09/yerel-ag-kurmak-ubuntu.html)
 
-[Buyuk Matrisler Uzerinde SVD Ayristirmasi (SVD Factorization for Tall-and-Fat Matrices on Map/Reduce Architectures)](10/buyuk-matrisler-uzerinde-svd.md)
+[Buyuk Matrisler Uzerinde SVD Ayristirmasi (SVD Factorization for Tall-and-Fat Matrices on Map/Reduce Architectures)](10/buyuk-matrisler-uzerinde-svd.html)
 
-[Buyuk Veri, Akim Analizi](10/buyuk-veri-akim-analizi.md)
+[Buyuk Veri, Akim Analizi](10/buyuk-veri-akim-analizi.html)
 
-[LAN Icindeki Diger Makinalari Bulmak](10/lan-icindeki-diger-makinalari-bulmak.md)
+[LAN Icindeki Diger Makinalari Bulmak](10/lan-icindeki-diger-makinalari-bulmak.html)
 
-[Meteor](10/meteor.md)
+[Meteor](10/meteor.html)
 
-[ØMQ](10/mq.md)
+[ØMQ](10/mq.html)
 
-[Anlik Veri Ambari](11/anlik-veri-ambari.md)
+[Anlik Veri Ambari](11/anlik-veri-ambari.html)
 
-[SASHA: Esle/Indirge Altyapisi](11/hizli-esleindirge-altyapisi-sasha.md)
+[SASHA: Esle/Indirge Altyapisi](11/hizli-esleindirge-altyapisi-sasha.html)
 
-[Log Lineer Modeller ve Kosulsal Rasgele Alanlar (Log Linear Models and Conditional Random Fields -CRF-)](11/log-lineer-modeller-ve-kosulsal-rasgele.md)
+[Log Lineer Modeller ve Kosulsal Rasgele Alanlar (Log Linear Models and Conditional Random Fields -CRF-)](11/log-lineer-modeller-ve-kosulsal-rasgele.html)
 
-[Sayfadan Video Indirme, videolectures.net, rtmpdump](11/sayfadan-video-indirme-videolecturesnet.md)
+[Sayfadan Video Indirme, videolectures.net, rtmpdump](11/sayfadan-video-indirme-videolecturesnet.html)
 
-[Veri Bilimi, Ceviklik, Anlik Veri Ambari](11/veri-bilimi-ceviklik-anlik-veri-ambari.md)
+[Veri Bilimi, Ceviklik, Anlik Veri Ambari](11/veri-bilimi-ceviklik-anlik-veri-ambari.html)
 
-[PDF Icinde Animasyon, Ubuntu Uzerinde Acrobat Reader - acroread](12/pdf-icinde-animasyon-ubuntu-uzerinde.md)
+[PDF Icinde Animasyon, Ubuntu Uzerinde Acrobat Reader - acroread](12/pdf-icinde-animasyon-ubuntu-uzerinde.html)
 
-[Tex Paketleri Eklemek](12/tex-paketleri-eklemek.md)
+[Tex Paketleri Eklemek](12/tex-paketleri-eklemek.html)
 

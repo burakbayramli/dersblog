@@ -1,12 +1,12 @@
 # 2005
 
-[Ant](10/ant-16.md)
+[Ant](10/ant-16.html)
 
-[Bir Makinaya SSH ile Şifresiz Giriş](10/bir-makinaya-ssh-ile-sifresiz-giris.md)
+[Bir Makinaya SSH ile Şifresiz Giriş](10/bir-makinaya-ssh-ile-sifresiz-giris.html)
 
-[Bir Matematikçi'nin Savunması Hakkında](10/bir-matematikci-savunmas-hakknda.md)
+[Bir Matematikçi'nin Savunması Hakkında](10/bir-matematikci-savunmas-hakknda.html)
 
-[Cebirde Çift Yanlış Yöntemi - Ali Kuşçu](10/cebirde-cift-yanls-yontemi-ali-kuscu.md)
+[Cebirde Çift Yanlış Yöntemi - Ali Kuşçu](10/cebirde-cift-yanls-yontemi-ali-kuscu.html)
 
-[Gavin King İle Mülâkat](10/gavin-king-ile-mulakat.md)
+[Gavin King İle Mülâkat](10/gavin-king-ile-mulakat.html)
 

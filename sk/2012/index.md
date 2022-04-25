@@ -1,132 +1,132 @@
 # 2012
 
-[Soru & Cevap Siteleri](01/soru-cevap-siteleri.md)
+[Soru & Cevap Siteleri](01/soru-cevap-siteleri.html)
 
-[Enerji Hatalari - ebugs](02/enerji-hatalari-ebugs.md)
+[Enerji Hatalari - ebugs](02/enerji-hatalari-ebugs.html)
 
-[LaTeX ile Sozde Program (Pseudocode) ve Matematik Sembolleri](02/latex-ile-sozde-program-pseudocode-ve.md)
+[LaTeX ile Sozde Program (Pseudocode) ve Matematik Sembolleri](02/latex-ile-sozde-program-pseudocode-ve.html)
 
-[LaTeX Komut Listesi](02/latex-komut-listesi.md)
+[LaTeX Komut Listesi](02/latex-komut-listesi.html)
 
-[Ingilizce-Turkce Teknik Terimler Sozlugu](02/teknik-terimler-sozlugu.md)
+[Ingilizce-Turkce Teknik Terimler Sozlugu](02/teknik-terimler-sozlugu.html)
 
-[TunesViewer, iTunesU](02/tunesviewer-itunesu.md)
+[TunesViewer, iTunesU](02/tunesviewer-itunesu.html)
 
-[Bulut](03/bulut.md)
+[Bulut](03/bulut.html)
 
-[Iklim Verisi](03/iklim-verisi.md)
+[Iklim Verisi](03/iklim-verisi.html)
 
-[Milyonluk Satirlari Birlestirmek](03/milyonluk-satirlari-birlestirmek.md)
+[Milyonluk Satirlari Birlestirmek](03/milyonluk-satirlari-birlestirmek.html)
 
-[PostgreSql](03/postgresql.md)
+[PostgreSql](03/postgresql.html)
 
-[Regex ve Postgresql](03/regex-ve-postgresql.md)
+[Regex ve Postgresql](03/regex-ve-postgresql.html)
 
-[SQL](03/sql.md)
+[SQL](03/sql.html)
 
-[Acik Kaynakli Araclarla Veri Analizi - P. Janert](04/acik-kaynakli-araclarla-veri-analizi-p.md)
+[Acik Kaynakli Araclarla Veri Analizi - P. Janert](04/acik-kaynakli-araclarla-veri-analizi-p.html)
 
-[Boyutlar (Dimensions)](04/boyutlar-dimensions.md)
+[Boyutlar (Dimensions)](04/boyutlar-dimensions.html)
 
-[Clicktale](04/clicktale.md)
+[Clicktale](04/clicktale.html)
 
-[Faydalı Unix Komutları](04/faydali-unix-komutlari.md)
+[Faydalı Unix Komutları](04/faydali-unix-komutlari.html)
 
-[Meta, Sema ve Postgresql](04/meta-sema-ve-postgresql.md)
+[Meta, Sema ve Postgresql](04/meta-sema-ve-postgresql.html)
 
-[Musteri Sadakati ve Pivot Tablo Kullanimi](04/musteri-sadakati-ve-pivot-tablo.md)
+[Musteri Sadakati ve Pivot Tablo Kullanimi](04/musteri-sadakati-ve-pivot-tablo.html)
 
-[Ne Zaman Ambar, Ne Zaman Gelisiguzel Sorgu](04/ne-zaman-ambar-ne-zaman-gelisiguzel.md)
+[Ne Zaman Ambar, Ne Zaman Gelisiguzel Sorgu](04/ne-zaman-ambar-ne-zaman-gelisiguzel.html)
 
-[OpenCV Ubuntu](04/opencv-ubuntu.md)
+[OpenCV Ubuntu](04/opencv-ubuntu.html)
 
-[Pandas ile Birlesim (Join)](04/pandas-ile-birlesim-join.md)
+[Pandas ile Birlesim (Join)](04/pandas-ile-birlesim-join.html)
 
-[Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython](04/plpython.md)
+[Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython](04/plpython.html)
 
-[Postgres Min, Partition](04/postgres-min-partition.md)
+[Postgres Min, Partition](04/postgres-min-partition.html)
 
-[Postgresql DB Baglantisi (dblink)](04/postgresql-db-baglantisi-dblink.md)
+[Postgresql DB Baglantisi (dblink)](04/postgresql-db-baglantisi-dblink.html)
 
-[Python Paketleme](04/python-paketleme.md)
+[Python Paketleme](04/python-paketleme.html)
 
-[Python Profiler](04/python-profiler.md)
+[Python Profiler](04/python-profiler.html)
 
-[Box ve Whisker Grafikleri](05/box-ve-whisker-grafikleri.md)
+[Box ve Whisker Grafikleri](05/box-ve-whisker-grafikleri.html)
 
-[Dropdown Secimi Ile Ayri DIV Gostermek](05/dropdown-secimi-ile-ayri-div-gostermek.md)
+[Dropdown Secimi Ile Ayri DIV Gostermek](05/dropdown-secimi-ile-ayri-div-gostermek.html)
 
-[Gaussian Kontrolu](05/gaussian-kontrolu.md)
+[Gaussian Kontrolu](05/gaussian-kontrolu.html)
 
-[Postgres First_Value, Sum, Partition](05/postgres-firstvalue-sum-partition.md)
+[Postgres First_Value, Sum, Partition](05/postgres-firstvalue-sum-partition.html)
 
-[Python ile Dinamik Excel Dosyasi Yaratmak](05/python-ile-dinamik-excel-dosyasi.md)
+[Python ile Dinamik Excel Dosyasi Yaratmak](05/python-ile-dinamik-excel-dosyasi.html)
 
-[Veri Zenginlestirmek](05/veri-zenginlestirmek.md)
+[Veri Zenginlestirmek](05/veri-zenginlestirmek.html)
 
-[Birikmeli (Cumulatif) Toplamlar ve SQL](06/birikmeli-cumulatif-toplamlar-ve-sql.md)
+[Birikmeli (Cumulatif) Toplamlar ve SQL](06/birikmeli-cumulatif-toplamlar-ve-sql.html)
 
-[Enlemler, Boylamlar ve PostgreSql PostGis](06/enlemler-boylamlar-ve-postgresql.md)
+[Enlemler, Boylamlar ve PostgreSql PostGis](06/enlemler-boylamlar-ve-postgresql.html)
 
-[Google Analytics'den Script ile Veri Almak](06/google-analyticsden-script-ile-veri.md)
+[Google Analytics'den Script ile Veri Almak](06/google-analyticsden-script-ile-veri.html)
 
-[Harf Kaydirarak Sifreleme](06/harf-kaydirarak-sifreleme.md)
+[Harf Kaydirarak Sifreleme](06/harf-kaydirarak-sifreleme.html)
 
-[Kategorik Veriyi Tamsayi (Indis) Bazina Cevirmek](06/kategorik-veriyi-tamsayi-indis-bazina.md)
+[Kategorik Veriyi Tamsayi (Indis) Bazina Cevirmek](06/kategorik-veriyi-tamsayi-indis-bazina.html)
 
-[Numpy Temelli 2 Kolon Icin Basit Gruplama (Group By)](06/numpy-temelli-2-kolon-icin-basit.md)
+[Numpy Temelli 2 Kolon Icin Basit Gruplama (Group By)](06/numpy-temelli-2-kolon-icin-basit.html)
 
-[pyscopg2](06/psycopg2.md)
+[pyscopg2](06/psycopg2.html)
 
-[PyMC](06/pymc.md)
+[PyMC](06/pymc.html)
 
-[Python ile Mail Göndermek, SMTP, GMail](06/python-ile-mail-gondermek-smtp-gmail.md)
+[Python ile Mail Göndermek, SMTP, GMail](06/python-ile-mail-gondermek-smtp-gmail.html)
 
-[Python Ile Mail - Metin Eklentileri (Text Attachment)](06/python-ile-mail-metin-eklentileri-text.md)
+[Python Ile Mail - Metin Eklentileri (Text Attachment)](06/python-ile-mail-metin-eklentileri-text.html)
 
-[Tablo Alanlari ve Postgresql](06/tablo-alanlari-ve-postgresql.md)
+[Tablo Alanlari ve Postgresql](06/tablo-alanlari-ve-postgresql.html)
 
-[Zamansal Veriyi Puruzsuzlestirmek (Smoothing)](06/zamansal-veriyi-puruzsuzlestirmek.md)
+[Zamansal Veriyi Puruzsuzlestirmek (Smoothing)](06/zamansal-veriyi-puruzsuzlestirmek.html)
 
-[Dongu Yazmamak, Fonksiyonel Diller, Python](07/dongu-yazmamak-fonksiyonel-diller-python.md)
+[Dongu Yazmamak, Fonksiyonel Diller, Python](07/dongu-yazmamak-fonksiyonel-diller-python.html)
 
-[Kelime Benzerligi - Levenshtein Mesafesi](07/kelime-benzerligi-levenshtein-mesafesi.md)
+[Kelime Benzerligi - Levenshtein Mesafesi](07/kelime-benzerligi-levenshtein-mesafesi.html)
 
-[supervisord](07/supervisord.md)
+[supervisord](07/supervisord.html)
 
-[Klavye Tusunu Mouse Tiklamasi Haline Getirmek](08/klavye-tusunu-mouse-tiklamasi-haline.md)
+[Klavye Tusunu Mouse Tiklamasi Haline Getirmek](08/klavye-tusunu-mouse-tiklamasi-haline.html)
 
-[Postgresql ve Levenhstein](08/kolon-degerleri-arasinda-harfleme.md)
+[Postgresql ve Levenhstein](08/kolon-degerleri-arasinda-harfleme.html)
 
-[Matriste Bos Degerleri Yakin Degerle Doldurmak (Interpolation)](08/matriste-bos-degerleri-yakin-degerle.md)
+[Matriste Bos Degerleri Yakin Degerle Doldurmak (Interpolation)](08/matriste-bos-degerleri-yakin-degerle.html)
 
-[Tabanlar Arasi Buyuk Veri Transferi, pg_dump](08/tabanlar-arasi-buyuk-veri-transferi.md)
+[Tabanlar Arasi Buyuk Veri Transferi, pg_dump](08/tabanlar-arasi-buyuk-veri-transferi.html)
 
-[Ubuntu 12.04 LTS ve Acer Aspire S3](08/ubuntu-1204-lts.md)
+[Ubuntu 12.04 LTS ve Acer Aspire S3](08/ubuntu-1204-lts.html)
 
-[Yeni Bir Sanal Makina Kodu ve Derleyicisi - LLVM](08/yeni-bir-sanal-makina-kodu-ve.md)
+[Yeni Bir Sanal Makina Kodu ve Derleyicisi - LLVM](08/yeni-bir-sanal-makina-kodu-ve.html)
 
-[Zaman Serisi Tahmini (Forecasting), R, VAR, rpy2](08/zaman-serisi-tahmini-forecasting-r-var.md)
+[Zaman Serisi Tahmini (Forecasting), R, VAR, rpy2](08/zaman-serisi-tahmini-forecasting-r-var.html)
 
-[Basit Web Sunucusu - SimpleHTTPServer](09/basit-web-sunucusu-simplehttpserver.md)
+[Basit Web Sunucusu - SimpleHTTPServer](09/basit-web-sunucusu-simplehttpserver.html)
 
-[Postgis ve Mesafe Hesabi](09/postgis-ve-mesafe-hesabi.md)
+[Postgis ve Mesafe Hesabi](09/postgis-ve-mesafe-hesabi.html)
 
-[Postgresql ile Yuzdelik (Percentile) Hesabi](09/postgresql-ile-yuzdelik-percentile.md)
+[Postgresql ile Yuzdelik (Percentile) Hesabi](09/postgresql-ile-yuzdelik-percentile.html)
 
-[Bir Vektorun Kismi Toplamini Almak](10/bir-vektorun-kismi-toplamini-almak.md)
+[Bir Vektorun Kismi Toplamini Almak](10/bir-vektorun-kismi-toplamini-almak.html)
 
-[Zaman Kolonlari Arasindaki Farki Gun Olarak Gostermek](10/zaman-kolonlari-arasindaki-farki-gun.md)
+[Zaman Kolonlari Arasindaki Farki Gun Olarak Gostermek](10/zaman-kolonlari-arasindaki-farki-gun.html)
 
-[Hinton Geri Geldi](11/hinton-geri-geldi.md)
+[Hinton Geri Geldi](11/hinton-geri-geldi.html)
 
-[Siparisler Uzerinde Veri Madenciligi, Regresyon](11/siparisler-uzerinde-veri-madenciligine.md)
+[Siparisler Uzerinde Veri Madenciligi, Regresyon](11/siparisler-uzerinde-veri-madenciligine.html)
 
-[Git Commit ve Unite Halinde Degisimler](12/git-commit-ve-unite-halinde-degisimler.md)
+[Git Commit ve Unite Halinde Degisimler](12/git-commit-ve-unite-halinde-degisimler.html)
 
-[htop](12/htop.md)
+[htop](12/htop.html)
 
-[Kategorik Veri, 1-in-n, Faktorler, R ve Patsy](12/kategorik-veri-1-in-n-faktorler-ve-r.md)
+[Kategorik Veri, 1-in-n, Faktorler, R ve Patsy](12/kategorik-veri-1-in-n-faktorler-ve-r.html)
 
-[Mahout, Jython ve Yapay Ogrenim](12/mahout-jython-ve-yapay-ogrenim.md)
+[Mahout, Jython ve Yapay Ogrenim](12/mahout-jython-ve-yapay-ogrenim.html)
 

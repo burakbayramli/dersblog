@@ -1,38 +1,38 @@
 # 2014
 
-[Projelerde Git](03/projelerde-git.md)
+[Projelerde Git](03/projelerde-git.html)
 
-[Web ve JSON ile Servis Arayuzu, UWSGI](03/web-ve-json-ile-yazilim-servisi-saglamak.md)
+[Web ve JSON ile Servis Arayuzu, UWSGI](03/web-ve-json-ile-yazilim-servisi-saglamak.html)
 
-[Bir Bilgisayarin Klavye ve Mouse'unu Digeri Icin Kullanmak](04/bir-bilgisayarin-klavye-ve-mouseunu.md)
+[Bir Bilgisayarin Klavye ve Mouse'unu Digeri Icin Kullanmak](04/bir-bilgisayarin-klavye-ve-mouseunu.html)
 
-[GraphChi](04/graphchi.md)
+[GraphChi](04/graphchi.html)
 
-[Proje Planlamasi ve Trello](04/proje-planlamasi-ve-trello.md)
+[Proje Planlamasi ve Trello](04/proje-planlamasi-ve-trello.html)
 
-[Kisitli Unix Hesabi - rbash](05/kisitli-unix-hesabi-rbash.md)
+[Kisitli Unix Hesabi - rbash](05/kisitli-unix-hesabi-rbash.html)
 
-[MongoDB](05/mongodb.md)
+[MongoDB](05/mongodb.html)
 
-[Java Öğrenelim, Ant, Derlemek, Kurmak](06/java-ogrenelim-ant-derlemek-kurmak.md)
+[Java Öğrenelim, Ant, Derlemek, Kurmak](06/java-ogrenelim-ant-derlemek-kurmak.html)
 
-[ggplot](07/ggplot.md)
+[ggplot](07/ggplot.html)
 
-[Eşle-İndirge Mimarisi (Map/Reduce -MR- Architecture)](09/esle-indirge-mimarisi-mapreduce-mr.md)
+[Eşle-İndirge Mimarisi (Map/Reduce -MR- Architecture)](09/esle-indirge-mimarisi-mapreduce-mr.html)
 
-[Gradyan Destekli Regresyon Agaclari (Gradient Boosted Regression Trees -GBRT-)](09/gradient-boosted-regression-trees-gbrt.md)
+[Gradyan Destekli Regresyon Agaclari (Gradient Boosted Regression Trees -GBRT-)](09/gradient-boosted-regression-trees-gbrt.html)
 
-[Numba, LLVM, ve SVD](09/numba-llvm-ve-svd.md)
+[Numba, LLVM, ve SVD](09/numba-llvm-ve-svd.html)
 
-[Pig ve Spark](09/pig-ve-spark.md)
+[Pig ve Spark](09/pig-ve-spark.html)
 
-[Python Profilleme (Profiling)](09/python-profilleme-profiling.md)
+[Python Profilleme (Profiling)](09/python-profilleme-profiling.html)
 
-[emacs-ipython](10/emacs-ipython.md)
+[emacs-ipython](10/emacs-ipython.html)
 
-[Felzenswalb Gruplama (Clustering) Algoritmasi](10/felzenswalb-gruplama-clustering.md)
+[Felzenswalb Gruplama (Clustering) Algoritmasi](10/felzenswalb-gruplama-clustering.html)
 
-[Agaclar Ile Oge Kodlamasi (Categorical Embedding)](11/agaclar-ile-oge-kodlamasi-categorical.md)
+[Agaclar Ile Oge Kodlamasi (Categorical Embedding)](11/agaclar-ile-oge-kodlamasi-categorical.html)
 
-[Python ve Komut Satırına Erişmek, Popen](12/popen-python-ve-komut-satirina-erismek.md)
+[Python ve Komut Satırına Erişmek, Popen](12/popen-python-ve-komut-satirina-erismek.html)
 

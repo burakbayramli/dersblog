@@ -1,64 +1,66 @@
 # 2011
 
-[Matplotlib ile Hareketli Grafikler](01/matplotlib-ile-hareketli-grafikler.md)
+[Matplotlib ile Hareketli Grafikler](01/matplotlib-ile-hareketli-grafikler.html)
 
-[Esnek Parametre Listesi](02/esnek-parametre-listesi.md)
+[Esnek Parametre Listesi](02/esnek-parametre-listesi.html)
 
-[Fonksiyon Gezmek ve Yield](02/fonksiyon-gezmek-ve-yield.md)
+[Fonksiyon Gezmek ve Yield](02/fonksiyon-gezmek-ve-yield.html)
 
-[imap](02/imap.md)
+[imap](02/imap.html)
 
-[meshgrid](02/meshgrid.md)
+[meshgrid](02/meshgrid.html)
 
-[Operatorler](02/operatorler.md)
+[Operatorler](02/operatorler.html)
 
-[Liste Gezerken Eleman Silmek](03/liste-gezerken-eleman-silmek.md)
+[JSON](03/json.html)
 
-[String Birlestirmek](03/string-birlestirmek.md)
+[Liste Gezerken Eleman Silmek](03/liste-gezerken-eleman-silmek.html)
 
-[USGS Deprem Verileri](03/usgs-deprem-verileri.md)
+[String Birlestirmek](03/string-birlestirmek.html)
 
-[$.getJSON Hata Durumlari](04/getjson-hata-durumlari.md)
+[USGS Deprem Verileri](03/usgs-deprem-verileri.html)
 
-[jQuery ve Radyo Dugme Gruplari](04/jquery-ve-radyo-dugme-gruplari.md)
+[$.getJSON Hata Durumlari](04/getjson-hata-durumlari.html)
 
-[Sosyal Kodlama = Github](04/sosyal-kodlama-github.md)
+[jQuery ve Radyo Dugme Gruplari](04/jquery-ve-radyo-dugme-gruplari.html)
 
-[Sembolik Matematik - Sympy](04/sympy.md)
+[Sosyal Kodlama = Github](04/sosyal-kodlama-github.html)
 
-[Ses Kayit, audiolab](06/ses-kayit-audiolab.md)
+[Sembolik Matematik - Sympy](04/sympy.html)
 
-[Ubuntu 11](06/ubuntu-11.md)
+[Ses Kayit, audiolab](06/ses-kayit-audiolab.html)
 
-[Web Sayfalarından Görünen Metni Kazımak (Scraping)](06/web-sayfalarindan-gorunen-metni-kazimak.md)
+[Ubuntu 11](06/ubuntu-11.html)
 
-[KineticsKit](08/kineticskit.md)
+[Web Sayfalarından Görünen Metni Kazımak (Scraping)](06/web-sayfalarindan-gorunen-metni-kazimak.html)
 
-[Lokal Dosya Arama - recoll](08/lokal-dosya-arama-recoll.md)
+[KineticsKit](08/kineticskit.html)
 
-[Ubuntu ve Masaustu Goruntu, Video Kaydi](08/ubuntu-ve-masaustu-video-kaydi.md)
+[Lokal Dosya Arama - recoll](08/lokal-dosya-arama-recoll.html)
 
-[vpython](08/vpython.md)
+[Ubuntu ve Masaustu Goruntu, Video Kaydi](08/ubuntu-ve-masaustu-video-kaydi.html)
 
-[PDF Formlarin Uzerine Yazi Yazmak](09/pdf-formlari-otomatik-olarak-doldurmak.md)
+[vpython](08/vpython.html)
 
-[LD_PRELOAD ile Fonksiyon Yakalamak](10/ldpreload-ile-fonksiyon-yakalamak.md)
+[PDF Formlarin Uzerine Yazi Yazmak](09/pdf-formlari-otomatik-olarak-doldurmak.html)
 
-[OpenCV Imajlarinin Boyutunu Degistirmek (Resize)](10/opencv-imajlarinin-boyutunu-degistirmek.md)
+[LD_PRELOAD ile Fonksiyon Yakalamak](10/ldpreload-ile-fonksiyon-yakalamak.html)
 
-[Otonom Arabalar](10/otonom-arabalar.md)
+[OpenCV Imajlarinin Boyutunu Degistirmek (Resize)](10/opencv-imajlarinin-boyutunu-degistirmek.html)
 
-[Oyun Programini Oynayan Program - FPS Play](10/oyun-programini-oynayan-program-fps.md)
+[Otonom Arabalar](10/otonom-arabalar.html)
 
-[Python Radyo](10/python-radyo.md)
+[Oyun Programini Oynayan Program - FPS Play](10/oyun-programini-oynayan-program-fps.html)
 
-[Excel, CSV, Python](12/excel-csv-python.md)
+[Python Radyo](10/python-radyo.html)
 
-[Imaj Gosterip Tiklama Almak, ImageTk](12/imaj-gosterip-tiklama-almak-imagetk.md)
+[Excel, CSV, Python](12/excel-csv-python.html)
 
-[PDF Formlari Otomatik Olarak Doldurmak](12/pdf-formlari-otomatik-olarak-doldurmak.md)
+[Imaj Gosterip Tiklama Almak, ImageTk](12/imaj-gosterip-tiklama-almak-imagetk.html)
 
-[PDF Numaralari, pdftk, pdfjam, gs, mutool](12/pdftk.md)
+[PDF Formlari Otomatik Olarak Doldurmak](12/pdf-formlari-otomatik-olarak-doldurmak.html)
 
-[YouTube Video'larini Kaydetmek](12/youtube-videolarini-kaydetmek.md)
+[PDF Numaralari, pdftk, pdfjam, gs, mutool](12/pdftk.html)
+
+[YouTube Video'larini Kaydetmek](12/youtube-videolarini-kaydetmek.html)
 

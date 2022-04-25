@@ -91,26 +91,63 @@ için `data_dir + "/veri.zip"` olarak değiştirmek. Kod `__file__` anda
 içinde olunan dosyanın tüm adresidir, onun baz dizinini alıp veri
 dosya erişimini ona göre ayarlıyoruz.
 
-Pip Hazırlığı
+PyPi'da Paket Yayinlama, Pip Hazırlığı
 
 Bildiğimiz gibi Python dosyalarının `pip` komutu ile kurulabilmesini
 sağlayan bir altyapı var. Bu yapı
 
 https://pypi.org/
 
-adresinde, kodumuzu herkesin kullanımına açmak için oraya da gönderebiliriz.
-[1] adresinde daha fazla detay var, fakat eğer `setup.py` kurulumu tam yapılmışsa,
-`python setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
-mümkün, bu dosyalar `dist` dizini altında konuluyor.
+adresinde, kodumuzu herkesin kullanımına açmak için oraya da
+gönderebiliriz [1]. Eğer `setup.py` kurulumu tam yapılmışsa, `python
+setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
+mümkün, bu dosyalar `dist` dizini altında konuluyor. Dikkat, once
+`python install` komutu isletin, sonra usttekini, `dist` altinda uc
+tane dosya lazim, `.egg`, `.zip` ve `.whl`.
 
 Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  `twine` adlı
 araç gerekli, onu
 
 ```
-sudo apt install twine
+pip install twine
 ```
 
-ile kurabiliriz.
+ile kurabiliriz. Kurduktan sonra proje en üst dizininde
+
+```
+twine upload dist/*
+```
+
+işletiriz, sorulunca kullanıcı ve şifre girilir, ve kod PyPi sistemine transfer
+edilir. Artık
+
+https://pypi.org/project/modul1/
+
+adresinde projemizi görebiliriz. 'Release history' seçilince orada şimdiye
+kadar yayınladığımız tüm versiyonlar görülür. Bu versiyon numaraları `setup.py`
+içinde tanımladığımız `version` tanımını baz alıyor tabii. Versiyon konusundan
+devam edersek, eğer `setup.py` içindeki versiyonu değiştirip sistemi derleyip
+PyPi'a `twine` ile tekrar gönderirsek, yeni versiyon 'Release history' altında
+gözükecektir, kullanıcılar PyPi sayfasından ya da `pip ınstall modül1==[versiyon]`
+ile o versiyonlardan herhangi birini kurabilirler.
+
+PyPi dokümantasyonu ile kolay entegre için güzel bir numara şu; nasıl olsa
+Github için bir `README.md` yazıyoruz, bir tane daha ayrı dosyayı PyPi için
+yaratmaya gerek yok, eğer `setup.py` içinde
+
+```python
+readme=open("README.md").read()
+
+setuptools.setup(
+  ...
+  long_description=readme,
+  long_description_content_type="text/markdown",    
+  ..
+)
+```
+
+tanımlarak, bu paketi gönderince `README.md` içinde olan belgeleme direk
+PyPİ sayfası olarak gözükecektir.
 
 Kaynaklar
 

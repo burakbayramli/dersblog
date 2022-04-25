@@ -15,12 +15,13 @@ print (mydict)
 {'anahtar1': 'deger1'}
 ```
 
-Bu kavramı metin dosyasından başlayarak yaratmak için JSON iyidir. 90'li yıllarda
-XML kullanılan yerlerde artık hep JSON görüyoruz.
+ile yapılabiliyor. Bu çetrefil sözlükleri metin dosyasından başlayarak
+yaratmak için JSON kullanırız. 90'li yıllarda XML kullanılan yerlerde
+artık hep JSON görüyoruz.
 
-JSON içindeki yapı hiyerarşik olabilir, direk anahtar bazlı tekil
-değerler, ya da listeler, listeler içinde daha fazla listeler hep
-mümkündür. Altta mesela bir coğrafi kodda bizim kullandığımız bir
+JSON içindeki yapı hiyerarşik olabilir, dosyada direk anahtar bazlı
+tekil değerler, ya da listeler, listeler içinde daha fazla listeler
+olabilir. Altta mesela bir coğrafi veri işleminde kullanılabilecek bir
 örnek,
 
 
@@ -62,8 +63,8 @@ print (jf.keys())
 dict_keys(['center', 'points', 'plist', 'url1', 'maps'])
 ```
 
-Sozluk demistik; iste en ust seviyede `dict_keys` ibaresi var. Simdi
-`points` noktalarindan `city 1` erisimi yapalim,
+Sözlük demiştik; işte en üst seviyede hakikaten `dict_keys` ibaresi
+var. Şimdi `points` noktalarından `city 1` erişimi yapalım,
 
 
 ```python
@@ -74,8 +75,8 @@ print (jf['points']['city 1'])
 [41.1, 29.2]
 ```
 
-Bu hiyerarsik yapi istedigimiz kadar derine gidebilir. Isin guzel tarafi
-tiplemenin otomatik algilanip dogru Python objesi yaratilmasi, mesela 
+Bu hiyerarşik yapı istediğimiz kadar derine gidebilir. İşin güzel tarafı
+tiplemenin otomatik algılanıp doğru Python objesi yaratılması, mesela 
 
 ```python
 print (type(jf['points']['city 1']))
@@ -85,18 +86,17 @@ print (type(jf['points']['city 1']))
 <class 'list'>
 ```
 
-Yani koseli parantez gorunce `json` paketi bunun liste objesi oldugunu
-anladi. Bu ozelligi farkli yerlerde de kullanabiliriz, cunku bazen bir
-veri dosyasinda ayri bir yerde metin bazli bir liste depolamis
-olabiliriz,
+Yani köşeli parantez görünce `json` paketi bunun liste objesi olduğunu
+anladı. Bu özelliği farklı yerlerde de kullanabiliriz, bazen bir veri
+dosyasında bir metin bazlı bir liste depolanmış olabilir,
 
 ```python
 str_liste1 = '["1","2","3"]'
 ```
 
-Bu liste belki bir CSV'den Pandas objesi içinde geldi, pür metin halde. Eğer
-tipten eminsek, onu `json`'a çevirttirebiliriz, ki bu yaklaşım `eval` çağrısından
-çok daha hızlı ve güvenli işler, 
+Bu veri belki bir CSV'den Pandas objesi içinde geldi, ya da başka bir
+yerden, pür metin halde.. Bu metni `json`'a çevirttirebiliriz, ki bu
+yaklaşım `eval` çağrısından çok daha hızlı ve güvenli işler,
 
 ```python
 liste1 = json.loads(str_liste1)

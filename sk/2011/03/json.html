@@ -11,11 +11,12 @@ print (mydict)
 <pre><code class="text">{'anahtar1': 'deger1'}
 </code></pre>
 
-<p>Bu kavramı metin dosyasından başlayarak yaratmak için JSON iyidir. 90'li yıllarda
-XML kullanılan yerlerde artık hep JSON görüyoruz.</p>
-<p>JSON içindeki yapı hiyerarşik olabilir, direk anahtar bazlı tekil
-değerler, ya da listeler, listeler içinde daha fazla listeler hep
-mümkündür. Altta mesela bir coğrafi kodda bizim kullandığımız bir
+<p>ile yapılabiliyor. Bu çetrefil sözlükleri metin dosyasından başlayarak
+yaratmak için JSON kullanırız. 90'li yıllarda XML kullanılan yerlerde
+artık hep JSON görüyoruz.</p>
+<p>JSON içindeki yapı hiyerarşik olabilir, dosyada direk anahtar bazlı
+tekil değerler, ya da listeler, listeler içinde daha fazla listeler
+olabilir. Altta mesela bir coğrafi veri işleminde kullanılabilecek bir
 örnek,</p>
 <pre><code class="python">print (open(&quot;test.json&quot;).read())
 </code></pre>
@@ -50,32 +51,31 @@ print (jf.keys())
 <pre><code class="text">dict_keys(['center', 'points', 'plist', 'url1', 'maps'])
 </code></pre>
 
-<p>Sozluk demistik; iste en ust seviyede <code>dict_keys</code> ibaresi var. Simdi
-<code>points</code> noktalarindan <code>city 1</code> erisimi yapalim,</p>
+<p>Sözlük demiştik; işte en üst seviyede hakikaten <code>dict_keys</code> ibaresi
+var. Şimdi <code>points</code> noktalarından <code>city 1</code> erişimi yapalım,</p>
 <pre><code class="python">print (jf['points']['city 1'])
 </code></pre>
 
 <pre><code class="text">[41.1, 29.2]
 </code></pre>
 
-<p>Bu hiyerarsik yapi istedigimiz kadar derine gidebilir. Isin guzel tarafi
-tiplemenin otomatik algilanip dogru Python objesi yaratilmasi, mesela </p>
+<p>Bu hiyerarşik yapı istediğimiz kadar derine gidebilir. İşin güzel tarafı
+tiplemenin otomatik algılanıp doğru Python objesi yaratılması, mesela </p>
 <pre><code class="python">print (type(jf['points']['city 1']))
 </code></pre>
 
 <pre><code class="text">&lt;class 'list'&gt;
 </code></pre>
 
-<p>Yani koseli parantez gorunce <code>json</code> paketi bunun liste objesi oldugunu
-anladi. Bu ozelligi farkli yerlerde de kullanabiliriz, cunku bazen bir
-veri dosyasinda ayri bir yerde metin bazli bir liste depolamis
-olabiliriz,</p>
+<p>Yani köşeli parantez görünce <code>json</code> paketi bunun liste objesi olduğunu
+anladı. Bu özelliği farklı yerlerde de kullanabiliriz, bazen bir veri
+dosyasında bir metin bazlı bir liste depolanmış olabilir,</p>
 <pre><code class="python">str_liste1 = '[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;]'
 </code></pre>
 
-<p>Bu liste belki bir CSV'den Pandas objesi içinde geldi, pür metin halde. Eğer
-tipten eminsek, onu <code>json</code>'a çevirttirebiliriz, ki bu yaklaşım <code>eval</code> çağrısından
-çok daha hızlı ve güvenli işler, </p>
+<p>Bu veri belki bir CSV'den Pandas objesi içinde geldi, ya da başka bir
+yerden, pür metin halde.. Bu metni <code>json</code>'a çevirttirebiliriz, ki bu
+yaklaşım <code>eval</code> çağrısından çok daha hızlı ve güvenli işler,</p>
 <pre><code class="python">liste1 = json.loads(str_liste1)
 print (liste1)
 print (type(liste1))

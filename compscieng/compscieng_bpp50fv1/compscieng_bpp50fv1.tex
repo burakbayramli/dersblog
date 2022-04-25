@@ -32,6 +32,16 @@ u_t + f(u)_x = 0, \qquad f(u) = \frac{1}{2}u^2
 \mlabel{2b}
 $$
 
+İleride lazım olur, (1)'i açarsak [6, sf. 29],
+
+$$
+\frac{\partial u}{\partial t} + 
+f'(u) \frac{\partial u}{\partial x} = 0
+\mlabel{5}
+$$
+
+denklemi de doğrudur, ki $f'(u) = \frac{\ud f}{\ud u}$.
+
 (2) türünden denklemleri tek boyutta çözmeyi işleyeceğiz öncelikle, çünkü çok
 boyutta çözüm tek boyuta indirgenerek yapılabiliyor.
 
@@ -236,12 +246,12 @@ $$
 olur daha çetrefil dalgalarda farklı. $\ud x / \ud t$ elde etmek için $t$ ve $x$
 değişkenleri olduğunu ve $x = x(t)$ olduğunu hatırlayalım, yani $u = u(x,t) =
 u(x(t),t)$ olur. İki değişkenli fonksionlar üzerinde genel zincirleme kanununu
-[10]'da gördük, mesela $f(x(t),y(t))$ için $\ud f / \ud t$
+[10]'da gördük, mesela $g(x(t),y(t))$ için $\ud g / \ud t$
 
 $$
-\frac{\ud f}{\ud t} =
-\frac{\partial f}{\partial x} \cdot \frac{\ud x}{\ud t} +
-\frac{\partial f}{\partial y} \cdot \frac{\ud y}{\ud t} 
+\frac{\ud g}{\ud t} =
+\frac{\partial g}{\partial x} \cdot \frac{\ud x}{\ud t} +
+\frac{\partial g}{\partial y} \cdot \frac{\ud y}{\ud t} 
 $$
 
 İki değişkenli $u$'nun zamana göre türevi o zaman [9, sf. 17],
@@ -270,6 +280,14 @@ $x'(t) = u$ elde ederdik. Karakteristik diferansiyel denklemi,
 $$
 x'(t) = u(x(t),t), \qquad x(0) = x_0
 $$
+
+Not: İki üsttekini (5) ile eşleyerek
+
+$$
+f'(u) = \frac{\ud x(t)}{\ud t}
+$$
+
+karakteristik diferansiyeli de doğru.
 
 Bu denklemi grafiklemek için $t,x$ yerine $x,t$ bazlı düşünmek daha iyi (bir
 önceki grafikle alakayı görmek için, her iki grafikte $x$ değişkeni yatay
@@ -411,7 +429,7 @@ u_r & x/t > u_r
 \end{array} \right. 
 $$
 
-Çözümün Burgers denklemi için doğru olduğunun sağlamasını yapmak zor değil
+Çözümün Burgers denklemi için doğru olduğunun sağlamasını yapabiliriz, 
 [9, sf. 34], mesela orta şart $u_l \le x/t \le u_r $ kısmına bakalım,
 bu çözümü (2a)'ya sokarsak,
 
@@ -425,10 +443,60 @@ $$
 İlk ve üçüncü şartın çözüm olduğu bariz çünkü sabit sayılar, ve türevleri
 alınırken sıfırlanacaklar.
 
+Entropi
 
+Aslında üstteki seyreltilmiş dalga çözümü tek mümkün çözüm değil. Bu çözüm bir
+zayıf çözüm (ileride göreceğiz) bu sebeple özgün değiller. Mesela $u_L = 0$,
+$u_R = 1$ örnekleri üzerinden alttakiler de birer çözüm olabilirdi [4, sf. 27],
 
+\includegraphics[width=25em]{compscieng_bpp50fv1_07.png}
 
+Çözümler soldan sağa doğru,
 
+$$
+u(x,t) =
+\left\{ \begin{array}{ll}
+0 & x < \frac{1}{2} t  \\
+1 & x > \frac{1}{2} t  \\
+\end{array} \right.
+$$
+
+Hız $s$ tabii ki daha önceki formülden hesaplandı, 
+
+$$
+s = \frac{u_R^2 / 2 - u_L^2 / 2 }{u_R - u_L} = 1/2
+$$
+
+Ve
+
+$$
+u(x,t) =
+\left\{ \begin{array}{ll}
+0 & x < \frac{1}{3} t  \\
+\frac{2}{3} & \frac{1}{3} t < x < \frac{5}{6} t  \\
+1 & x > \frac{5}{6} t  
+\end{array} \right.
+$$
+
+Fakat bu çözümler fiziksel değildir. Niye? Çünkü grafiklere dikkat edersek
+her iki durumda da bazı karakteristik çizgiler {\em şoktan} dışarı çıkıyorlar,
+kıyasla en başta ilk karakteristik grafiğinde karakteristikler şoka doğru
+gidiyorlar. Karakteristikler bir anlamda bilgi akışının temsil ediyorlar,
+deterministik bir denklemi baz alan bir evrimsel, dinamik denklem her zaman
+başlangıç verisinden başlayarak ileri gitmelidir. Fakat hemen üstteki iki
+çözümde şok noktasında yeni bilgi yaratılıyor. Bir diğer açıdan [6, sf. 35]
+belirtmek gerekirse, istediğimiz, bir karakteristiği zamanı geriye sararak
+başlangıç şartına bağlayabilmektir. Üstteki iki çözümde bunu yapmak mümkün değil. 
+
+Bu kabaca tarif ettiğimiz önşartı, bilginin şoktan değil, başlangıçta
+yaratılması gerekliliğini matematiksel olarak kurgulayabiliriz; eğer
+karakteristiklerin şoka doğru gitmesini istiyorsak, şoktan önceki
+karakteristikler ondan daha hızlı olamazlar, aynı şekilde şok sonrası için de bu
+geçerli.
+
+Hız $s$'yi süreksiz bölgenin sol ve sağ tarafını baz alarak hesaplamıştık, o
+zaman $u_L$'in hemen sol tarafındaki bir $u$ noktası ve sağda $u_L$'i üzerinden
+bir hız hesaplarsak, bu hızın 
 
 
 [devam edecek]
@@ -529,7 +597,11 @@ Kaynaklar
 
 [3] Leveque, {\em Numerical Methods for Conservation Laws}
 
+[4] Mishra, {\em Numerical methods for conservation laws and related equations}
+
 [5] Cooper, {\em Introduction to PDEs with Matlab}
+
+[6] Hesthaven, {\em Numerical Methods for Conservation Laws}
 
 [7] Bayramlı, {\em Animasyon, Şok Dalgası},
     \url{https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif}

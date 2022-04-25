@@ -48,6 +48,13 @@ $$</p>
 u_t + f(u)_x = 0, \qquad f(u) = \frac{1}{2}u^2
 \qquad (2b)
 $$</p>
+<p>İleride lazım olur, (1)'i açarsak [6, sf. 29],</p>
+<p>$$
+\frac{\partial u}{\partial t} + 
+f'(u) \frac{\partial u}{\partial x} = 0
+\qquad (5)
+$$</p>
+<p>denklemi de doğrudur, ki $f'(u) = \frac{\mathrm{d} f}{\mathrm{d} u}$.</p>
 <p>(2) türünden denklemleri tek boyutta çözmeyi işleyeceğiz öncelikle, çünkü çok
 boyutta çözüm tek boyuta indirgenerek yapılabiliyor.</p>
 <p>Hiperbolik denklemleri analitik, kesin (exact) çözmek için birkaç konuyu
@@ -207,11 +214,11 @@ $$</p>
 <p>olur daha çetrefil dalgalarda farklı. $\mathrm{d} x / \mathrm{d} t$ elde etmek için $t$ ve $x$
 değişkenleri olduğunu ve $x = x(t)$ olduğunu hatırlayalım, yani $u = u(x,t) =
 u(x(t),t)$ olur. İki değişkenli fonksionlar üzerinde genel zincirleme kanununu
-[10]'da gördük, mesela $f(x(t),y(t))$ için $\mathrm{d} f / \mathrm{d} t$</p>
+[10]'da gördük, mesela $g(x(t),y(t))$ için $\mathrm{d} g / \mathrm{d} t$</p>
 <p>$$
-\frac{\mathrm{d} f}{\mathrm{d} t} =
-\frac{\partial f}{\partial x} \cdot \frac{\mathrm{d} x}{\mathrm{d} t} +
-\frac{\partial f}{\partial y} \cdot \frac{\mathrm{d} y}{\mathrm{d} t} 
+\frac{\mathrm{d} g}{\mathrm{d} t} =
+\frac{\partial g}{\partial x} \cdot \frac{\mathrm{d} x}{\mathrm{d} t} +
+\frac{\partial g}{\partial y} \cdot \frac{\mathrm{d} y}{\mathrm{d} t} 
 $$</p>
 <p>İki değişkenli $u$'nun zamana göre türevi o zaman [9, sf. 17],</p>
 <p>$$
@@ -233,6 +240,11 @@ $x'(t) = u$ elde ederdik. Karakteristik diferansiyel denklemi,</p>
 <p>$$
 x'(t) = u(x(t),t), \qquad x(0) = x_0
 $$</p>
+<p>Not: İki üsttekini (5) ile eşleyerek</p>
+<p>$$
+f'(u) = \frac{\mathrm{d} x(t)}{\mathrm{d} t}
+$$</p>
+<p>karakteristik diferansiyeli de doğru.</p>
 <p>Bu denklemi grafiklemek için $t,x$ yerine $x,t$ bazlı düşünmek daha iyi (bir
 önceki grafikle alakayı görmek için, her iki grafikte $x$ değişkeni yatay
 kordinatta oluyor) altta bir başlangıç $x_0$ seçiyoruz, ve buradan yukarı doğru
@@ -337,7 +349,7 @@ x/t &amp; u_l \le x/t \le u_r  \\
 u_r &amp; x/t &gt; u_r 
 \end{array} \right. 
 $$</p>
-<p>Çözümün Burgers denklemi için doğru olduğunun sağlamasını yapmak zor değil
+<p>Çözümün Burgers denklemi için doğru olduğunun sağlamasını yapabiliriz, 
 [9, sf. 34], mesela orta şart $u_l \le x/t \le u_r $ kısmına bakalım,
 bu çözümü (2a)'ya sokarsak,</p>
 <p>$$
@@ -348,6 +360,49 @@ bu çözümü (2a)'ya sokarsak,</p>
 $$</p>
 <p>İlk ve üçüncü şartın çözüm olduğu bariz çünkü sabit sayılar, ve türevleri
 alınırken sıfırlanacaklar.</p>
+<p>Entropi</p>
+<p>Aslında üstteki seyreltilmiş dalga çözümü tek mümkün çözüm değil. Bu çözüm bir
+zayıf çözüm (ileride göreceğiz) bu sebeple özgün değiller. Mesela $u_L = 0$,
+$u_R = 1$ örnekleri üzerinden alttakiler de birer çözüm olabilirdi [4, sf. 27],</p>
+<p><img alt="" src="compscieng_bpp50fv1_07.png" /></p>
+<p>Çözümler soldan sağa doğru,</p>
+<p>$$
+u(x,t) =
+\left\{ \begin{array}{ll}
+0 &amp; x &lt; \frac{1}{2} t  \\
+1 &amp; x &gt; \frac{1}{2} t  \\
+\end{array} \right.
+$$</p>
+<p>Hız $s$ tabii ki daha önceki formülden hesaplandı, </p>
+<p>$$
+s = \frac{u_R^2 / 2 - u_L^2 / 2 }{u_R - u_L} = 1/2
+$$</p>
+<p>Ve</p>
+<p>$$
+u(x,t) =
+\left\{ \begin{array}{ll}
+0 &amp; x &lt; \frac{1}{3} t  \\
+\frac{2}{3} &amp; \frac{1}{3} t &lt; x &lt; \frac{5}{6} t  \\
+1 &amp; x &gt; \frac{5}{6} t<br />
+\end{array} \right.
+$$</p>
+<p>Fakat bu çözümler fiziksel değildir. Niye? Çünkü grafiklere dikkat edersek
+her iki durumda da bazı karakteristik çizgiler <em>şoktan</em> dışarı çıkıyorlar,
+kıyasla en başta ilk karakteristik grafiğinde karakteristikler şoka doğru
+gidiyorlar. Karakteristikler bir anlamda bilgi akışının temsil ediyorlar,
+deterministik bir denklemi baz alan bir evrimsel, dinamik denklem her zaman
+başlangıç verisinden başlayarak ileri gitmelidir. Fakat hemen üstteki iki
+çözümde şok noktasında yeni bilgi yaratılıyor. Bir diğer açıdan [6, sf. 35]
+belirtmek gerekirse, istediğimiz, bir karakteristiği zamanı geriye sararak
+başlangıç şartına bağlayabilmektir. Üstteki iki çözümde bunu yapmak mümkün değil. </p>
+<p>Bu kabaca tarif ettiğimiz önşartı, bilginin şoktan değil, başlangıçta
+yaratılması gerekliliğini matematiksel olarak kurgulayabiliriz; eğer
+karakteristiklerin şoka doğru gitmesini istiyorsak, şoktan önceki
+karakteristikler ondan daha hızlı olamazlar, aynı şekilde şok sonrası için de bu
+geçerli.</p>
+<p>Hız $s$'yi süreksiz bölgenin sol ve sağ tarafını baz alarak hesaplamıştık, o
+zaman $u_L$'in hemen sol tarafındaki bir $u$ noktası ve sağda $u_L$'i üzerinden
+bir hız hesaplarsak, bu hızın </p>
 <p>[devam edecek]</p>
 <pre><code class="python">def qf(q): return 0.5*q*q
 
@@ -427,7 +482,9 @@ rarefaction()
 <p>[1] Bayramlı, <em>Hesapsal Bilim, Hesapsal Sıvı Dinamiğine Giriş</em></p>
 <p>[2] Bayramlı, <em>Fizik, Sıvılar, 1</em></p>
 <p>[3] Leveque, <em>Numerical Methods for Conservation Laws</em></p>
+<p>[4] Mishra, <em>Numerical methods for conservation laws and related equations</em></p>
 <p>[5] Cooper, <em>Introduction to PDEs with Matlab</em></p>
+<p>[6] Hesthaven, <em>Numerical Methods for Conservation Laws</em></p>
 <p>[7] Bayramlı, <em>Animasyon, Şok Dalgası</em>,
     <a href="https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif">https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv1/shock.gif</a></p>
 <p>[8] Bayramlı, <em>Animasyon, Seyrelen (Rarefaction) Dalga</em>

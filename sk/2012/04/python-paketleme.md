@@ -102,8 +102,8 @@ adresinde, kodumuzu herkesin kullanımına açmak için oraya da
 gönderebiliriz [1]. Eğer `setup.py` kurulumu tam yapılmışsa, `python
 setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
 mümkün, bu dosyalar `dist` dizini altında konuluyor. Dikkat, önce
-`python ınstall` komutu işletin, sonra üsttekini, `dist` altında üç
-tane dosya lazım, `.egg`, `.zıp` ve `.whl`.
+`python install` komutu işletin, sonra üsttekini, `dist` altında üç
+tane dosya lazım, `.egg`, `.zip` ve `.whl`.
 
 Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  `twine` adlı
 araç gerekli, onu
@@ -156,8 +156,3 @@ Kaynaklar
 [2] [Yazi](../../2018/08/virtualenv-python-izole-sanal-calsma.html)
 
 [3] http://guide.python-distribute.org/creation.html
-
-
-
-
-

@@ -44,8 +44,3 @@
 [Sene](year.md)
 
 [Ara](ara.html)
-
-
-
-
-

@@ -1,0 +1,236 @@
+<h1>Flask, Kullanıcı Giriş (Login), Şifre, Oturum İdaresi, Flask-User</h1>
+<p>Kullanıcının şifresini almak, unuttuysa hatırlatmak, email üzerinden
+kaydetmek, oturum açıp oturumu hatırlamak, hangi sayfaya izin var
+hangisine yok kontrol etmek, vs. gibi işlerlerle gayet "Pythonic"
+şekilde başedebilmemizi sağlayan bir paket Flask-User. Kodları,</p>
+<p>https://github.com/lingthio/Flask-User/</p>
+<p>dan indirebiliriz. Gerekli paketleri </p>
+<pre><code>pip install -r requirements.txt
+</code></pre>
+
+<p>ile kurarız. Örnek bir kod ([1] baz alınmıştır), <code>basic_app.py</code> diyelim,</p>
+<pre><code class="python">import datetime, os, util
+from flask import Flask, request, render_template
+from flask_babelex import Babel
+from flask_sqlalchemy import SQLAlchemy
+from flask_user import current_user, login_required
+from flask_user import roles_required, UserManager, UserMixin
+
+class ConfigClass(object):
+    &quot;&quot;&quot; Flask application config &quot;&quot;&quot;
+
+    SECRET_KEY = 'This is an INSECURE secret!! DO NOT use this in production!!'
+
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///basic_app.sqlite' 
+    SQLALCHEMY_TRACK_MODIFICATIONS = False   
+
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 587
+    MAIL_USE_SSL = False
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = '[kaynak email@gmail.com]'
+    MAIL_PASSWORD = '[sifre]'
+    MAIL_DEFAULT_SENDER = '&quot;MyApp&quot; &lt;noreply@example.com&gt;'
+
+    USER_APP_NAME = &quot;Flask-User Basic App&quot;
+    USER_ENABLE_EMAIL = True       
+    USER_ENABLE_USERNAME = False  
+    USER_EMAIL_SENDER_NAME = USER_APP_NAME
+    USER_EMAIL_SENDER_EMAIL = &quot;noreply@example.com&quot;
+
+
+def create_app():
+    &quot;&quot;&quot; Flask application factory &quot;&quot;&quot;
+
+    app = Flask(__name__)
+    app.config.from_object(__name__+'.ConfigClass')
+
+    babel = Babel(app)
+
+    db = SQLAlchemy(app)
+
+    class User(db.Model, UserMixin):
+        __tablename__ = 'users'
+        id = db.Column(db.Integer, primary_key=True)
+        active = db.Column('is_active', db.Boolean(),
+                       nullable=False, server_default='1')
+
+        email = db.Column(db.String(255, collation='NOCASE'),
+                      nullable=False, unique=True)
+        email_confirmed_at = db.Column(db.DateTime())
+        password = db.Column(db.String(255), nullable=False, server_default='')
+
+        first_name = db.Column(db.String(100, collation='NOCASE'),
+                           nullable=False, server_default='')
+        last_name = db.Column(db.String(100, collation='NOCASE'),
+                          nullable=False, server_default='')
+
+        roles = db.relationship('Role', secondary='user_roles')
+
+    class Role(db.Model):
+        __tablename__ = 'roles'
+        id = db.Column(db.Integer(), primary_key=True)
+        name = db.Column(db.String(50), unique=True)
+
+    class UserRoles(db.Model):
+        __tablename__ = 'user_roles'
+        id = db.Column(db.Integer(), primary_key=True)
+        user_id = db.Column(db.Integer(),
+                        db.ForeignKey('users.id', ondelete='CASCADE'))
+        role_id = db.Column(db.Integer(),
+                        db.ForeignKey('roles.id', ondelete='CASCADE'))
+
+    user_manager = UserManager(app, db, User)
+
+    db.create_all()
+
+    if not User.query.filter(User.email == 'member@example.com').first():
+        user = User(
+            email='member@example.com',
+            email_confirmed_at=datetime.datetime.utcnow(),
+            password=user_manager.hash_password('Password1'),
+        )
+        db.session.add(user)
+        db.session.commit()
+
+    if not User.query.filter(User.email == 'admin@example.com').first():
+        user = User(
+            email='admin@example.com',
+            email_confirmed_at=datetime.datetime.utcnow(),
+            password=user_manager.hash_password('Password1'),
+        )
+        user.roles.append(Role(name='Admin'))
+        user.roles.append(Role(name='Agent'))
+        db.session.add(user)
+        db.session.commit()
+
+    @app.route('/')
+    def home_page():
+        return render_template(&quot;home.html&quot;)
+
+    @app.route('/members')
+    @login_required    # Use of @login_required decorator
+    def member_page():
+        return render_template(&quot;/member_page.html&quot;)
+
+    @app.route('/admin')
+    @roles_required('Admin')    # Use of @roles_required decorator
+    def admin_page():
+        return render_template(&quot;/admin.html&quot;)
+
+    return app
+
+if __name__ == '__main__':
+    app = create_app()
+    app.run(host='0.0.0.0', port=5000, debug=True)
+
+</code></pre>
+
+<p>Sayfalar <code>templates</code> alt dizininde,</p>
+<p>admin.html</p>
+<p><a href="t1.txt">Link</a></p>
+<p>home.html</p>
+<p><a href="t2.txt">Link</a></p>
+<p>member_page.html</p>
+<p><a href="t3.txt">Link</a></p>
+<p>Bu kod basit bir şekilde <code>python basic_app.py</code> diye başlatılır. Email,
+sifre girilir, ve konfirmasyon için email gelir, ona tıklanır,
+kullanıcı doğrulanmış olur.</p>
+<p>Sayfaları daha kendimize göre tasarlamak istersek, mesela <code>extends</code>
+ibaresini çıkartıp daha pür HTML kodları kullanmak istersek, sistem
+mesajlarını görmeyebiliriz, bu mesajlar 'kullanıcıya konfirme için
+email gönderildi', vs. gibi mesajlardır, o mesajları görmek için</p>
+<p><a href="t4.txt">Link</a></p>
+<p>kodunu sayfalarımıza ekleyebiliriz. Bu durumda</p>
+<pre><code class="python">from flask import flash
+...
+flash('Invitation has been sent.', 'success')
+</code></pre>
+
+<p>ile gönderilen mesajlar üstteki kodun olduğu sayfalarda bir kereliğine
+gösterilecektir. Aynı sayfaya bir daha gidersek mesaj görülmez.</p>
+<p>Eğer bir sayfayı (onun metoduna daha doğrusu) site giriş yapmış
+olanlar için kısıtlamak istersek o metotu <code>@login_required</code> ile
+işaretleriz.</p>
+<p>Kullanıcılar çok basit bir sqlite veri tabanında tek bir dosya içinde
+kaydedilirler, dosya ismi <code>SQLALCHEMY_DATABASE_URI</code> ile tanımlı.</p>
+<p>SQLAlchemy aslında pek çok farklı taban ile çalışabilir. Ben
+Postgresql'e geçmek istediğimde bu rahat bir şekilde oldu,
+<code>SQLALCHEMY_DATABASE_URI</code> icin <code>sqlite:///basic_app.sqlite</code> yerine</p>
+<pre><code>postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user=&quot;[kullanici]&quot;,pw=&quot;[sifre]&quot;,url=&quot;[makina]&quot;,db=&quot;[taban]&quot;)
+</code></pre>
+
+<p>kullanınca taban yaratma, ona erişme, vs her şey işledi.</p>
+<p>Giriş yapmak, oturum kapatmak, şifre ile ilgili envai türden işlem
+üstteki örnek ile yapılabiliyor.</p>
+<p>SQL</p>
+<p>Flask-User içinde SQLAlchemy kullanılıyor, bu bir tür ORM
+(ilişkisel-obje eşlemesi), Java dünyasındaki Hibernate gibi. Fakat siz
+direk SQL ile iş yapmak isterseniz,</p>
+<pre><code class="python">res = db.engine.execute('select * from users')
+for x in res: print (x)
+</code></pre>
+
+<p>kullanımı olur. <code>db</code> referansı <code>db = SQLAlchemy(app)</code> ifadesinden geliyor. </p>
+<p>Eğer <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> gibi sorgular işletmek istersek,</p>
+<pre><code class="python">connection = db.engine.connect()
+trans = connection.begin()
+db.engine.execute(&quot; ...
+...
+trans.commit()
+</code></pre>
+
+<p>Roller</p>
+<p>Bazı kullanıcılara bakıcı, "Admin" rolü atamak isteyebiliriz. Bu rolü
+ben spesifik bir email adresine atamak için Flask üzerinden bir metot içinde </p>
+<pre><code>insert into roles (id,name) values (1,'Admin')
+insert into user_roles select 1, id, 1 from users where email = '[BENIM EMAIL]'
+</code></pre>
+
+<p>sorgularını işlettim. Bende üstteki kodun başında görülen kullanıcı ve
+rolleri tabana ekleyen bölüm yok. Onları direk SQL içinden kendimiz yapıyoruz.</p>
+<p>Bir kullanıcı Admin olduktan sonra (ya da herhangi bir başka rol), bu
+rolü metot girişinde kontrol edebiliriz.</p>
+<pre><code class="python">@app.route('/onemli_admin_komutu')
+@roles_required('Admin')
+def onemli_admin_komutu():
+...
+</code></pre>
+
+<p>Kullanıcı Durumuna Göre Sayfa</p>
+<p>Eğer kullanıcı sisteme şifre ile girmiş ise farklı, girmemiş ise
+farklı içerik göstermek istersek sayfa içinde
+<code>current_user.is_authenticated</code> kullanabiliriz. Mesela</p>
+<p><a href="t5.txt">Link</a></p>
+<p>Kullanıcı <code>user</code> objesine çağrıldığı anda hesaplanan yeni öğeler
+(property) ekleyebiliriz, <code>@property</code> ile bu mümkün. Diyelim ki o
+günün tarihini, kullanıcının tabandaki son erisebileceği tarih ile
+karşılaştırıp doğru ve yanlış cevabı verebilen <code>is_member</code> (üye mi)
+adlı bir öğe istiyoruz,</p>
+<pre><code class="python">@property
+def is_member(self):
+    nd = ... # gunun tarihi
+    ld = ..  # son kullanim
+    return ld &lt; nd
+</code></pre>
+
+<p>Artık bu öğeyi aynen üstteki gibi <code>current_user.is_member</code> ile çağırıp
+sayfa mantığı içinde kullanabiliriz.</p>
+<p>Temel Sayfaları Değiştirmek</p>
+<p>Dikkat edersek sisteme giriş, kayıt sayfaları Flask-User projesinin
+içinden geliyor. Bu sayfalar için kendi istediğimiz sayfaları
+kullanmak istersek, <code>Flask-User / flask_user / templates / flask_user</code>
+dizinini olduğu gibi alıp kendi projemizin <code>templates</code> dizinine
+kopyalayabiliriz, ve ilgili sayfaları artık kendi yerel projemizde
+değiştirebiliriz. Flask-User artık otomatik olarak kurulan paket
+içindeki değil bu yerel proje altındaki sayfalara gidecektir.</p>
+<p>Email, SMTP</p>
+<p>Email, Gmail SMTP ile ilgili problem olursa bir <a href="/2012/06/python-ile-mail-göndermek-smtp-gmail.html">diğer
+yazı</a>. Ya da başka
+bir email servisi için
+<a href="/2019/05/sendgrid-smtp-email-servisi.html">şurası</a>.  <code>MAIL_USE_SSL</code>
+kullanımı ile <code>MAIL_USE_TLS</code> kullanımı arasında ya o ya bu türünden
+bir durum var, SSL ya da TLS seçimi SMTP servisinde hangi port'u
+kullandığımızı etkiler.</p>
+<p>Kaynaklar</p>
+<p>[1] https://github.com/lingthio/Flask-User/blob/master/example_apps/basic_app.py</p>

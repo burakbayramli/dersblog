@@ -1,0 +1,41 @@
+<h1>Markdown Bazli Web Yayinciligi, Github Pages</h1>
+<p>Artık Github'ta içinde markdown dosyaları içeren bir depo direk Github
+üzerinden blog tarzı Internet'te yayınlanır hale getirilebilir. Github
+Pages teknolojisi arka planda Jekyll yazılımı üzerinen markdown
+dosyalarını otomatik olarak HTML'e çeviriyor. </p>
+<p>Bu özelliğin aktif edilmesi için repoya gidip Settings'e tıklanır, ve
+en altta <code>Github Pages</code> bölümü aktif edilir. Farklı temalar da buradan
+seçilebilir. Bunlar yapılınca dizinde otomatik bir <code>_config.yml</code>
+yaratılacak, bunun içine mesela</p>
+<pre><code>plugins:
+  - jekyll-sitemap
+</code></pre>
+
+<p>eklersek Github Pages bizim için bir <code>sitemap.xml</code> üretir.</p>
+<p>GP'ın güzel tarafı markdown ıcinde sanki HTML'den haberimiz yokmuş
+gibi davranabiliriz, mesela ben alt dizin <code>şub1/şub2</code> içindeyim, ve
+<code>şub3/şub4</code> içindeki bir <code>yazı.md</code> dosyasına bağlantı vermek
+istiyorum, bunun için <code>[buraya tıkla](../../şub3/şub4/yazı.md)</code> yazmam
+yeterli, bu bağlantı GP tarafından <code>https://github.iö/../repo1/şub3/şub4/yazı.html</code> 
+şeklindeki bir bağlantıya çevirilecektir .</p>
+<p>Matematik Formülleri</p>
+<p>Eğer Github Pages kendi şablonu üzerinen, mesela Slate şablonu
+üzerinden matematik formülleri servis etmek istersek, şurada anlatılıyor,</p>
+<p>https://github.com/cjerdonek/gh-pages-theme-slate</p>
+<p>ana dizinde <code>/_layouts/default.html</code> dosyasi yaratiriz, ve bu dosyaya</p>
+<p>https://github.com/pages-themes/slate/blob/master/_layouts/default.html</p>
+<p>görülen kodu koyarız. Bu kod mevcut Slate şablonu ile aynı kod, bu kodu
+olduğu gibi kullanınca öncesi sonrası hiçbir değişiklik görmemeniz lazım. 
+Sonra bu kod içine istediğimiz ekleri yaparız, mesela MathJax için</p>
+<pre><code>&lt;script type=&quot;text/x-mathjax-config&quot;&gt;
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [[&quot;$&quot;,&quot;$&quot;],[&quot;\\(&quot;,&quot;\\)&quot;]]}
+  });
+&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;
+   src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full&quot;&gt;
+&lt;/script&gt;
+</code></pre>
+
+<p><code>&lt;head&gt;</code> içine eklenir, bundan sonra Markdown dosyamızda iki <code>$$</code> arası formüller
+gösterilecektir. </p>

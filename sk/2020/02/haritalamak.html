@@ -1,0 +1,327 @@
+<p>f# Haritalamak</p>
+<h3>Folium</h3>
+<p>Bu haritalama sistemi ile dünyanın herhangi bir yerini alıp, istenen
+odaklama seviyesinde göstermek, üzerini işaretlemek mümkün, ayrıca
+haritanın üzerinde isteğe göre çizgiler, çemberler vs çizilmesine izin
+veren çağrılar var. Folium arka planda bir Javascript kütüphanesi
+Leaflet kullanır, bu sebeple haritaları HTML olarak kaydediyorsunuz,
+bu HTML içine bakıldığında Leaflet çağrıları orada görülüyor.  Leaflet
+son derece basit, hızlı işleyecek şekilde yazılmış, verisini arka
+planda direk OpenStreetMap dosyalarını okuyarak alıyor, onların
+gerekli yerlerini, hangisini alacağını arka planda
+hallediyor. Programcıya tek kalan harita merkezini, ek bazı görsel
+ayarları yapmak.</p>
+<p>Not: Elde edilen HTML haritası etkileşimli (interactive) çalışıyor.
+Büyütme, küçültme, haritayı sağa sola kaydırma bu HTML sayfasında
+kullanıcı tarafından yapılabilir hala. Yani tek ölü bir görüntü dosyası
+almıyorsunuz.</p>
+<p>Kurmak icin <code>pip install folium</code></p>
+<pre><code class="python">import folium
+
+lat1,lon1 = 43.4521793912598, 25.597125946810632
+lat2,lon2 = 44.572754823623114, 27.250000972553345
+m = folium.Map(location=[lat1,lon1], tiles='Stamen Terrain', zoom_start=7)
+coordinates=[(lat1,lon1),(lat2,lon2)]
+folium.PolyLine(locations=coordinates,weight=2,color = 'blue').add_to(m)
+folium.CircleMarker(location=(lat2,lon2),
+                            fill_color='blue', radius=10, rotation=1.5).add_to(m)
+
+title_html = &quot;&lt;h3&gt;Title&lt;/h3&gt;&quot;
+m.get_root().html.add_child(folium.Element(title_html))
+m.save(&quot;index.html&quot;)
+
+</code></pre>
+
+<p><img alt="" src="har7.jpg" /></p>
+<p><code>lat1,lon1</code> merkezli bir harita çizdik, odak seviyesi 7, ve <code>lat1,lon1</code> den
+başlayıp <code>lat2,lon2</code> de biten bir çizgi çektik, ve çizgi sonuna ufak bir daire
+koyduk.</p>
+<p>İşaretler</p>
+<p>Harita üzerine konan işaretler içine tıklanabilir URL bağlantıları konabilir.
+Ayrıca bu işaretler fare ile üzerinde durunca bir araç ipucu (tooltip)
+gösterebilir.</p>
+<pre><code class="python">m = folium.Map(location=[45.372, -121.6972], zoom_start=12, tiles=&quot;Stamen Terrain&quot;)
+tooltip = &quot;Click me!&quot;
+folium.Marker(
+    [45.3288, -121.6625], popup=&quot;&lt;i&gt;Mt. Hood Meadows&lt;/i&gt;&quot;, tooltip=tooltip
+).add_to(m)
+</code></pre>
+
+<p>Üstteki kodda görülen <code>popup</code> içine <code>a href</code> ifadesi de konulabilir,
+böylece fare üstünde olunca önce ipucu, ona tıklanınca çıkan bölgede
+tıklanabilir bir URL bağlantısı olacaktır. Biz ayrıca bu bağlantıyı
+<code>target='_blank' rel='noopener noreferrer'</code> ile yarattık, böylece
+tıklama bizi tarayıcıda ayrı bir tab'e götürüyor.</p>
+<p>Ek bilgiler [5],[6],[7] de bulunabilir,</p>
+<h3>Cartopy</h3>
+<p>Kullanisli bir paket; fakat isletim sistemi seviyesinde GEOS paketinin
+kurulmasi gerekli, bu bazi barindirilan, idareli bulut sistemlerinde
+problem cikartabilir, cunku bu tur servislerde direk isletim sistemine
+erisim her zaman mumkun olmayabiliyor.</p>
+<pre><code>sudo apt install libproj-dev proj-data proj-bin libgeos-dev
+
+pip install cartopy
+
+pip uninstall shapely
+
+pip install shapely --no-binary shapely
+</code></pre>
+
+<p>Dünya haritası üzerinde bir nokta</p>
+<pre><code class="python">import cartopy.crs as ccrs
+import cartopy
+fig = plt.figure(figsize=(5, 2))
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+ax.plot(42.0, 21.53, 'ro', transform=ccrs.PlateCarree())
+
+plt.savefig('har1.png')
+</code></pre>
+
+<p><img alt="" src="har1.png" /></p>
+<p>Eger daha yakindan gostermek istersek, ilgilendigimiz bolge uzerinden
+bir kutu yaratabiliriz,</p>
+<pre><code class="python">import cartopy.crs as ccrs
+import cartopy
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+ax.plot(42.0, 21.53, 'ro', transform=ccrs.PlateCarree())
+ax.set_extent([30, 50, 10, 30])
+plt.savefig('har3.png')
+</code></pre>
+
+<p><img alt="" src="har3.png" /></p>
+<p>Ülke ismi bazlı tüm ülkeyi renklendirmek,</p>
+<pre><code class="python">import matplotlib.pyplot as plt
+import cartopy.io.shapereader as shpreader
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
+
+def area(ax, iso, clr) :
+    shp = shpreader.natural_earth(resolution='10m',category='cultural',
+                                  name='admin_0_countries')
+    reader = shpreader.Reader(shp)
+    for n in reader.records() :
+        if n.attributes['ADM0_A3'] == iso: 
+            ax.add_geometries(n.geometry, ccrs.PlateCarree(), facecolor=clr) 
+    return ax
+
+fig = plt.figure(figsize=(5, 2))
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax = plt.axes(projection=ccrs.PlateCarree())
+ax.stock_img()
+ax.coastlines()
+area(ax, &quot;USA&quot;, &quot;red&quot;)
+plt.savefig('har2.png')
+</code></pre>
+
+<p><img alt="" src="har2.png" /></p>
+<h3>Izgara Yaratmak</h3>
+<p>Bir kordinat etrafında belli büyüklükte bir alan üzerinde ızgara
+yaratmak ve bu izgaradaki kordinat noktalarını haritada göstermek için
+ne yaparız? Paket <code>geopy</code> kurulmuş olmalı,</p>
+<pre><code>import geopy.distance
+import numpy as np
+
+def goto_from_coord(start, distance, bearing):
+    s = geopy.Point(start[0],start[1])
+    d = geopy.distance.geodesic(kilometers = distance)
+    reached = d.destination(point=s, bearing=bearing)
+    return [reached.latitude, reached.longitude]
+
+lat,lon=40.84343206497589, 29.926342357515754
+
+dist = 60
+res1 = goto_from_coord((lat,lon),dist,45)
+print (res1)
+res2 = goto_from_coord((lat,lon),dist,225)
+print (res2)
+
+lowlat = np.min([res1[0],res2[0]])
+lowlon = np.min([res1[1],res2[1]])
+hilat = np.max([res1[0],res2[0]])
+hilon = np.max([res1[1],res2[1]])
+
+x = np.linspace(lowlon,hilon,7)
+y = np.linspace(lowlat,hilat,7)
+
+xx,yy = np.meshgrid(x,y)
+print (xx.flatten())
+
+import cartopy.crs as ccrs
+import cartopy
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+ax.plot(xx.flatten(), yy.flatten(), 'r.', transform=ccrs.PlateCarree())
+ax.set_extent([28, 31, 40, 42])
+plt.savefig('har4.png')
+</code></pre>
+
+<p><img alt="" src="har4.png" /></p>
+<p>Nasıl kodladığımızı açıklayalım, önce merkez noktadan sağ üste (45
+derece yönde) 60 km, ve sol alt yönde (225 derece) aynı uzaklıkta
+birer adım atıyoruz, bu dörtgenin iki ucu. Bu uç noktalardan <code>lingrid</code>
+sonra <code>meshgrid</code> ile ızgarayı oluşturuyoruz. </p>
+<p>Oklar, Quiver</p>
+<p>Cartopy haritaları üzerinde klasik matplotlib komutlarını hala
+kullanabiliriz, enlem, boylam kordinatları y ve x eksenleri haline
+geliyor, ve gerisi bildiğimiz gibi. Mesela ok çizmek için kullanılan
+<code>quiver</code> hala geçerli, mesela o ızgara noktalarındaki rüzgar yönü
+verisi elimizde olsaydı, bunu harita üzerinde
+grafikleyebilirdik. Altta bu veri <code>sin</code> ve <code>cos</code> üzerinden uyduruk
+şekilde yaratıldı,</p>
+<pre><code class="python">fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+u = np.sin(xx.flatten()*2)
+v = np.cos(yy.flatten()*3)
+ax.quiver(xx.flatten(), yy.flatten(), u, v)
+ax.set_extent([28, 31, 40, 42])
+plt.savefig('har5.png')
+</code></pre>
+
+<p><img alt="" src="har5.png" /></p>
+<p>Eğer ana enlem, boylamları kordinate eksenleri üzerinde görmek
+istersek, basmadan önce</p>
+<pre><code>gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=0)
+</code></pre>
+
+<p>uygulayabiliriz.</p>
+<p>Katmanlar</p>
+<p>Üstteki karayı ve denizleri gösteren renklendirme sonradan uygulanan
+bir katmandır. Cartopy bu şekilde pek çok farklı bilgiyi katman olarak
+haritalara uygulayabilir. Mesela yol, sehir bilgileri de birer katman
+olarak alttaki gibi alınabilir,</p>
+<pre><code class="python">import cartopy.crs as ccrs
+import cartopy
+import cartopy.io.img_tiles
+lat,lon=40.84343206497589, 29.926342357515754
+fig = plt.figure()
+imagery = cartopy.io.img_tiles.OSM()
+ax = fig.add_subplot(projection=imagery.crs)
+zoom = 10
+ax.add_image(imagery, zoom)
+ax.plot(lon, lat, 'ro', transform=ccrs.PlateCarree())
+EXT = 0.1
+ax.set_extent([lon-EXT, lon+EXT, lat-EXT, lat+EXT])
+gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=0)
+plt.savefig('har6.png')
+</code></pre>
+
+<p><img alt="" src="har6.png" /></p>
+<p><a name='shp'/></p>
+<h3>SHP ile Kendimiz Sınır Çizelim</h3>
+<p>Bazen Cartopy ve hatta Folium bile uygulamamıza biraz yük
+getirebiliyor, mesela Cartopy kurulumu için arka planda GDAL
+gerekebilir, bu kütüphane arka planda işletim sistemi ek kurulumu
+gerektirir, ve bulut ortamında uygun olmayabilir. Folium hafif olsa da
+arka planda bağlantı gerektiriyor, çünkü zoom yapınca ek bilgiler
+servisten alınıyor.</p>
+<p>Eğer bize gayet basit, ülke sınırlarını bir kerede ağ bağlantısı
+olmadan pat diye çizebilecek bir kod gerekiyorsa, bu bilgileri taşıyan
+dosya bazlı veri tabanları kullanabiliriz. PyShp ile SHP bazlı bu
+tabanlara ulaşmak mümkündür. Mesela ülke sınırları [8]'de var,
+<code>TM_WORLD_BORDERS-0.3.zip</code> indirilir, açılır, <code>/tmp</code> altında <code>.shp</code> ve
+<code>.dbf</code> dosyaları olsun (ikisi de lazım),</p>
+<pre><code class="python">import shapefile
+sf = shapefile.Reader(&quot;/tmp/TM_WORLD_BORDERS-0.3.shp&quot;, encoding = &quot;ISO8859-1&quot;)
+</code></pre>
+
+<p>Kaç ülke var burada,</p>
+<pre><code class="python">r = sf.records()
+countries = sf.shapes()
+print (len(countries))
+</code></pre>
+
+<pre><code class="text">246
+</code></pre>
+
+<p>Bu ülkelerden indis 2'de olana bakalım,</p>
+<pre><code class="python">idx = 2
+country = countries[idx]
+name = r[idx]
+print (name)
+</code></pre>
+
+<pre><code class="text">Record #2: ['AJ', 'AZ', 'AZE', 31, 'Azerbaijan', 8260, 8352021, 142, 145, 47.395, 40.43]
+</code></pre>
+
+<p>Azerbeycan burada.</p>
+<p>Peki ülkenin sınırları nerede? </p>
+<pre><code class="python">print (len(country.points))
+print (country.parts)
+</code></pre>
+
+<pre><code class="text">871
+[0, 108, 118, 131, 859]
+</code></pre>
+
+<p>Ülke sınır noktaları <code>points</code> ile alınıyor, bir enlem/boylam
+listesidir, kabaca bir polygonun köşe noktalarıdır. Fakat ülkeler
+bazen tek kesintisiz bir parça olmayabiliyor, adalar, ya da diğer
+ülkelerin içinde ufak parçalar vs var ise, bunları farklı poligon
+öbekleri olarak temsil etmek lazım. Üstteki <code>points</code> içinde tüm
+parçalar için noktalar var, hangi öbeğin nerede başlayıp bittiğini
+bilmek gerekiyor sadece, <code>parts</code> içinde bu bilgi var [9]. Mesela
+1'inci parça 0'dan başlayıp 107 indisine (dahil olmak üzere) uzanıyor,
+108 nokta var. Sonraki 108'den başlayıp 117'ye gidiyor, vs.</p>
+<p>Bu mantığı bir fonksiyon içine koyalım, ve indis 2 ve indis 4'teki
+ülkeleri grafikleyelim,</p>
+<pre><code class="python">def plot_country(idx,color='r'):
+   country = countries[idx]
+   name = r[idx]
+   print (name)
+   bounds = list(country.parts) + [len(country.points)]
+   print (bounds)
+   for previous, current in zip(bounds, bounds[1:]):    
+       geo = [[x[0],x[1]] for x in country.points[previous:current]]
+       if len(geo) &lt; 1: continue
+       geo = np.array(geo)
+       if geo.shape[0] &gt; 0:
+           plt.plot(geo[:,0],geo[:,1],color)
+
+plot_country(2,'r')
+plot_country(4,'b')
+
+plt.savefig('harita-az-arm.png')
+</code></pre>
+
+<pre><code class="text">Record #2: ['AJ', 'AZ', 'AZE', 31, 'Azerbaijan', 8260, 8352021, 142, 145, 47.395, 40.43]
+[0, 108, 118, 131, 859, 871]
+Record #4: ['AM', 'AM', 'ARM', 51, 'Armenia', 2820, 3017661, 142, 145, 44.563, 40.534]
+[0, 12, 395, 408, 418]
+</code></pre>
+
+<p><img alt="" src="harita-az-arm.png" /></p>
+<p>Azerbeycan ve Ermenistan'ı grafiklemiş olduk.</p>
+<p>Not: Üstte <code>plot</code> çağrısının çizgisel kullanımına çağrı yapıldı,
+bazılarımızın bildiği gibi <code>plot(10,20,'.')</code> x=10,y=20 kordinatlarına
+bir nokta koyar, ama bir x kordinat ve y kordinat <em>listesi</em> <code>plot</code>
+çağrısına geçilirse, bu tür çağrı verili noktalar arasına düz çizgiler
+çek demektir.</p>
+<p>Bir diğer ek, eğer o çizgilerle çevirdiğimiz bölgelerin içini bir
+renkle doldurmak isteseydik, mesela elimizde bir göl için poligon
+noktaları varsa, <code>plt.plot</code> yerine <code>plt.fill</code> kullanırdık, bu
+çağrıya geçilen üçüncü parametre renk ile objenin içi doldurulur.</p>
+<p>Kaynaklar</p>
+<p>[1] https://rabernat.github.io/research_computing_2018/maps-with-cartopy.html</p>
+<p>[2] https://scitools.org.uk/cartopy/docs/latest/gallery/global_map.html#sphx-glr-gallery-global-map-py</p>
+<p>[3] https://github.com/SciTools/cartopy/issues/1303</p>
+<p>[4] Renk isimleri - https://matplotlib.org/3.1.0/gallery/color/named_colors.html</p>
+<p>[5] https://python-visualization.github.io/folium/quickstart.html</p>
+<p>[6] https://stackoverflow.com/questions/39093250/is-it-possible-to-draw-lines-with-arrowheads-in-a-folium-map</p>
+<p>[7] https://www.geeksforgeeks.org/stamen-toner-stamen-terrain-and-mapbox-bright-maps-in-python-folium/</p>
+<p>[8] https://thematicmapping.org/downloads/world_borders.php</p>
+<p>[9] Sileika, Pro Python System Administration</p>

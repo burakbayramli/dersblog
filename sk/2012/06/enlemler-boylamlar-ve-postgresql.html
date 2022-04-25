@@ -1,0 +1,36 @@
+<h1>Enlemler, Boylamlar ve PostgreSql PostGis</h1>
+<p>Lokasyon bazli veri isleyebilmek icin Postgresql'in Postgis eklentisi
+gerekli. Bu eklenti ile enlem (latitude), boylam (longitude) kordinat
+verileri tabanda depolanabilir, dunya uzerinde "geometrik alanlar"
+tanimlanarak mesela belli kordinatlarin o alanlarin icine dusup
+dusmedigi sorgulanabilir. Ya da bir veya daha fazzla geometrik sekilin
+kesisim noktasinin nasil, ne buyuklukte, nerede bir baska bicim
+olacagini hesaplatirabilirsiniz. Suradaki</p>
+<p>http://trac.osgeo.org/postgis/wiki/UsersWikiPostGIS20Ubuntu1110src </p>
+<p>tarifler takip edilebilir. GDAL ve GEOS'u biz kaynaklardan kurduk. </p>
+<pre><code>sudo apt-get install gdal-bin
+</code></pre>
+
+<p>http://trac.osgeo.org/geos/</p>
+<p>Sonra</p>
+<pre><code>sudo -u postgres psql
+</code></pre>
+
+<p>ile girip</p>
+<pre><code>\c [taban]
+</code></pre>
+
+<p>ile istediginiz tabana baglanin. Unutmayalim, eklentiler (extensions) taban bazli yaratilir. Sonra</p>
+<pre><code>CREATE EXTENSION postgis;
+</code></pre>
+
+<p>ile gerekli tipi yaratiriz.</p>
+<pre><code>\dT geography
+</code></pre>
+
+<p>ve</p>
+<pre><code>\dT geometry
+</code></pre>
+
+<p>ile tiplerin yaratildigini kontrol edin. Bu konu hakkinda ornek kodlar
+bu yaziya eklenecek.</p>

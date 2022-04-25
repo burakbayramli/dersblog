@@ -1,0 +1,37 @@
+<h1>Yerel Ağ (Network) Kurmak - Ubuntu</h1>
+<p>Ubuntu temelli bir yerel ag (network) nasil kurulur? Ubuntu uzerinden
+bunu yapmak aslinda cok basit (dis Internet baglantisinin paylastirma
+konularina daha girmiyoruz), dinamik IP adres kullanmadan, tum
+makinalara bir statik (ve yerel) IP adresi atayarak bu ag
+kurulabilir. Belki evde bir Hadoop kumesi kurmak istiyorsunuz, vs.</p>
+<p>Once tum makinalarda sshd kurulursa iyi olur:</p>
+<pre><code>apt-get install openssh-server
+</code></pre>
+
+<p>Ag kurmak icin su resimdeki hareketler</p>
+<p><img alt="" src="550px-1-169.jpg" /></p>
+<p><img alt="" src="2-100.jpg" /></p>
+<p><img alt="" src="4-51.jpg" /></p>
+<p>Adres olarak 192.168.0.1 sayisi kullanildi, bu adres dis baglantilar
+icin anlamsiz bir sayidir, sadece yerel ic ag icinde gecerlidir. Bu
+tur disaridan bagimsiz IP adresleri vardir. Eger ikinci, ucuncu
+makinayi eklerseniz, 0.2, 0.3, vs. gibi bu makinalar adreslenebilir.</p>
+<p>Fiziki baglanti icin en azindan switch denen bir donanim gerekli. Bu
+donanim uzerinde Ethernet kablo baglantilari olur, eger laptop
+baglanacaksa, ve son zamanlarda artik laptop'lar uzerinde Ethernet
+girisi olmadigi icin, bir USB / Ethernet donusturucusu lazim.</p>
+<p>Neyse, switch baglantisi ve IP atamasi yapildigi anda o bilgisayarin
+komut satirindan</p>
+<pre><code>sudo ifconfig
+</code></pre>
+
+<p>isletince yeni IP'nin gorulmesi lazim. Diger makinalar baglaninca,
+onlardan bu makinaya</p>
+<pre><code>ssh 192.168.0.1 -l [kullanici]
+</code></pre>
+
+<p>diye erisebilirsiniz. Eger tum makinalara sifresiz (ama guvenli)
+baglanmak icin daha once pek cok kez bahsettigimiz ssh-keygen -t rsa,
+ile anahtar uretmek, sonra id_rsa.pub'in alinip oteki makinaya
+kopyalanip .ssh/authorized_keys'e eklenmesi, ardindan ustteki ssh (ve
+scp) komutu sifresiz olarak giris yapma numarasi kullanilabilir.</p>

@@ -1,0 +1,41 @@
+<h1>Bash, Surec Idaresi</h1>
+<p>Komut satirindan surec kontrolu, idaresi gibi isler icin Unix bash'in
+guzel ozellikleri var. Bash icin bir script'i sh script.sh ile degil
+bash script.sh olarak isletmek gerekli. Mesela</p>
+<pre><code>set -m # Enable Job Controlfor (( i = 0; i &lt; $2; i++ ))do
+    cmd=&quot;baz komut &quot;
+    cmd+=&quot; &quot;;cmd+=$2;cmd+=&quot; &quot;;cmd+=$i
+    if [ $1 == &quot;secim1&quot; ]; then
+        xterm -hold -e $cmd &amp;
+    fi
+    if [ $1 == &quot;secim2&quot; ]; then
+        $cmd &amp;
+    fidonewaitecho &quot;hepsi tamam&quot;
+...
+</code></pre>
+
+<p>Ustteki script icinde surec kontrolu (job control) icin -m en basta
+tanimlanmali.</p>
+<p>Diyelim ki bu script'e verilen birinci secenek (yani $1) ile bir
+string veriyoruz, ve string uzerinde if..else irdelemesi yapilarak
+script farkli seyler yapabiliyor. Ayrica baz bir komuta ek string'leri
+dinamik olarak ekleyerek dinamik bir komut olusturabiliyoruz. Isletmek
+icin mesela</p>
+<p>bash test.sh secim1 2</p>
+<p>Ikinci secenek ile (yani $2) ile bir sayi veriyoruz diyelim, bu sayi
+kadar bir dongu baslatabiliriz, ve dongude her indis icin baska "alt
+komutlari" arka planda isletebiliriz. Birinci secenek her komut icin
+xterm baslatmak, ya da pur arka planda "sessiz olarak" isletmeyi
+kontrol ediyor olabilir.</p>
+<p>Bash surec kontrolunun guzel tarafi, mesela wait komutu ile bu arka
+plana atilmis tum surecler bitene kadar ana script'in bekleyebilme
+ozelligidir. Belki tum alt komutlar bitince bazi ek birlestirme,
+vs. islemleri yapilacaktir. Onlari yapmanin en uygun yeri burasi, yani
+hemen wait sonrasi. Bunu test etmek icin su script'e bakalim</p>
+<pre><code>set -m # Enable Job Controlecho &quot;1 saniye bekle...&quot;sleep 1 &amp;echo &quot;3 saniye bekle...&quot;sleep 3 &amp;waitecho &quot;hepsi tamam&quot;
+</code></pre>
+
+<p>Bu script isletilence 3 saniye bekleme olacaktir, 1 saniyelik "uyku
+(sleep)" komutu bitmis olsa bile 3 saniyelik olanin bitmesi
+beklenecektir. Ve (and), yani &amp; isareti bilindigi gibi Unix'te bir
+komutu arka plana atmaya / isletmeye yarar (background process).</p>

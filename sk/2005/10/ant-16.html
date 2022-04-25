@@ -1,0 +1,148 @@
+<h1>Ant</h1>
+<p>Ant, bizi Makefile kavramından kurtardığı için sevdiğimiz
+teknolojilerden biridir. Makefile'lar ile uğraşan programcılar bilir:
+Eğer Makefile içinde bir TAB karakteri unuttuysanız, birden hiçbir şey
+çalışmaz. O TAB'i bulana kadar da saatler geçer. Geliştirme ortamını
+make ile kurmak zorunda olan her teknik liderin bu başına gelmiştir.
+Java dünyası temiz bir sayfa ile başlayarak Ant sistemini kurdu. Tabii
+Ant'inde eksikleri vardı. Uzun yıllar bu eksikleri antmerge ile
+kapatmaya çalıştık. Ve nihayet artık Ant sürüm 1.6 ile beklediğimiz
+özelliklere kavuştuk.  Bu özelliklerden biri bir build.xml'in bir
+diğerini referans edebilmesidir, bir nevi #include, ya da import
+denilebilir. Bu yeni etiket olarak biliniyor. Böylece her projenin
+ortak hedefleri (target) tek bir yerde toplanabiliyor. Meselâ,
+build_ortak.xml adlı aşağıdaki Ant programı olabilir.</p>
+<pre><code>&lt;project basedir=&quot;.&quot; name=&quot;build_ortak&quot;&gt;
+
+&lt;!-- ========== Isletilebilir Hedefler ======================================== --&gt;
+
+&lt;target description=&quot;Ortami sifirla&quot; name=&quot;init&quot; depends=&quot;project_init&quot;&gt;
+
+&lt;!-- build.properties'den degiskenleri oku (eger varsa) --&gt;
+
+&lt;property name=&quot;build.home&quot; value=&quot;build&quot;/&gt;
+&lt;property name=&quot;build.compiler&quot; value=&quot;javac1.4&quot; /&gt;
+&lt;property name=&quot;test.build.home&quot; value=&quot;build/test&quot;/&gt;
+&lt;property name=&quot;dist.home&quot; value=&quot;dist&quot;/&gt;
+&lt;property name=&quot;source.home&quot; value=&quot;src/main&quot;/&gt;
+&lt;property name=&quot;source.test&quot; value=&quot;src/test&quot;/&gt;
+&lt;property name=&quot;compile.debug&quot; value=&quot;true&quot;/&gt;
+&lt;property name=&quot;compile.deprecation&quot; value=&quot;true&quot;/&gt;
+&lt;property name=&quot;compile.optimize&quot; value=&quot;true&quot;/&gt;
+
+&lt;property file=&quot;${basedir}/build.properties&quot;/&gt;
+
+&lt;path id=&quot;compile.classpath&quot;&gt;
+&lt;pathelement location=&quot;${build.home}/classes&quot;/&gt;
+&lt;fileset dir=&quot;./lib&quot;&gt;
+&lt;include name=&quot;*.jar&quot;/&gt;
+&lt;/fileset&gt;
+
+&lt;/path&gt;
+
+&lt;path id=&quot;javadoc.path&quot;&gt;
+&lt;pathelement path=&quot;${source.home}&quot;/&gt;
+&lt;/path&gt;
+&lt;/target&gt;
+
+&lt;target description=&quot;Proje seviyesinde hazirlanma evresi&quot; name=&quot;project_prepare&quot; /&gt;
+
+&lt;target depends=&quot;init,project_prepare&quot; description=&quot;Prepare build directory&quot; name=&quot;prepare&quot;&gt;
+&lt;mkdir dir=&quot;${build.home}&quot;/&gt;
+&lt;mkdir dir=&quot;${build.home}/classes&quot;/&gt;
+&lt;mkdir dir=&quot;${test.build.home}/classes&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target depends=&quot;prepare&quot; description=&quot;Compile source&quot; name=&quot;compile&quot;&gt;
+&lt;javac debug=&quot;${compile.debug}&quot; deprecation=&quot;${compile.deprecation}&quot;
+destdir=&quot;${build.home}/classes&quot; target=&quot;1.4&quot; source=&quot;1.4&quot;
+optimize=&quot;${compile.optimize}&quot; srcdir=&quot;${source.home}&quot;&gt;
+&lt;classpath refid=&quot;compile.classpath&quot;/&gt;
+&lt;/javac&gt;
+&lt;/target&gt;
+
+&lt;target description=&quot;proje seviyesindeki hazirlanma evresi&quot; name=&quot;project_clean&quot; /&gt;
+
+&lt;target depends=&quot;init,project_clean&quot; description=&quot;Wipeout all generated files&quot;
+name=&quot;clean&quot;&gt;
+&lt;delete dir=&quot;${build.home}&quot;/&gt;
+&lt;delete dir=&quot;${dist.home}&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target depends=&quot;clean,compile&quot; description=&quot;Bilesenleri temizle ve tekrar derle&quot;
+name=&quot;all&quot;/&gt;
+
+&lt;target depends=&quot;compile&quot; description=&quot;Javadoclari uret&quot;
+name=&quot;javadoc&quot;&gt;
+&lt;mkdir dir=&quot;docs/api&quot;/&gt;
+&lt;javadoc author=&quot;true&quot;
+bottom=&quot;Pyrasun Java Libraries - Pyrasun Logging&quot;
+destdir=&quot;docs&quot;
+source=&quot;1.4&quot;
+doctitle=&quot;${component.title}&quot;
+packagenames=&quot;pyrasun.*&quot;
+access=&quot;public&quot;
+sourcepathref=&quot;javadoc.path&quot; version=&quot;true&quot;
+windowtitle=&quot;${component.title} (Version ${component.version})&quot;/&gt;
+&lt;/target&gt;
+
+&lt;target depends=&quot;compile&quot; name=&quot;build-test&quot;&gt;
+&lt;javac debug=&quot;${compile.debug}&quot; deprecation=&quot;${compile.deprecation}&quot;
+destdir=&quot;${test.build.home}/classes&quot; target=&quot;1.4&quot; source=&quot;1.4&quot;
+optimize=&quot;${compile.optimize}&quot; srcdir=&quot;${source.test}&quot;&gt;
+&lt;classpath refid=&quot;compile.classpath&quot;/&gt;
+&lt;/javac&gt;
+&lt;/target&gt;
+
+&lt;target depends=&quot;compile&quot; description=&quot;Islerkod uret&quot; name=&quot;jar&quot;&gt;
+&lt;mkdir dir=&quot;${dist.home}&quot;/&gt;
+&lt;mkdir dir=&quot;${build.home}/src&quot;/&gt;
+
+&lt;copy file=&quot;LICENSE&quot; todir=&quot;${build.home}/classes&quot;/&gt;
+
+&lt;jar basedir=&quot;${build.home}/classes&quot;
+jarfile=&quot;${dist.home}/${component.name}-${component.version}.jar&quot; &gt;
+&lt;include name=&quot;**/*&quot;/&gt;
+&lt;/jar&gt;
+&lt;/target&gt;
+
+&lt;/project&gt;
+</code></pre>
+
+<p>Bu build dosyası oldukça basit. Birkaç olağan değer tanımlıyor, ondan
+sonra da prepare, init, clean, compile, jar, ve javadoc hedeflerini
+tanımlıyor. Nükleer fizik değil yâni. Bu ortak build.xml'in yararı
+şurada ortaya çıkıyor. Aşağıdaki projeye özel bir build.xml:</p>
+<pre><code>&lt;project basedir=&quot;.&quot; default=&quot;compile&quot; name=&quot;EmberIO&quot;&gt;
+
+&lt;!-- ========== Executable Targets ======================================== --&gt;
+
+&lt;target description=&quot;Ortami sifirla&quot; name=&quot;project_init&quot;&gt;
+&lt;property name=&quot;component.name&quot; value=&quot;XYZKutuphanesi&quot;/&gt;
+&lt;property name=&quot;component.package&quot; value=&quot;xyzlib&quot;/&gt;
+&lt;property name=&quot;component.title&quot; value=&quot;XYZ Kutuphanesi&quot;/&gt;
+&lt;property name=&quot;component.version&quot; value=&quot;0.1_Beta&quot;/&gt;
+&lt;/target&gt;
+&lt;import file=&quot;../build_ortak.xml&quot; /&gt;
+&lt;/project&gt;
+</code></pre>
+
+<p>Üstteki, proje bazlı bir build.xml dosyası. Ne kadar boş olduğunu görüyoruz. Çünkü çoğu ortak hedefleri build_ortak.xml'den alıyor!
+Dikkat edilmesi gereken bazı noktalar şunlar:</p>
+<ul>
+<li>
+<p>Build_ortak.xml içinde project_init, project_prepare gibi proejeye
+  özel hedefler boş olarak tanımlanmış. Aynı xml içindeki prepare,
+  project_prepare'a bağımlı (depends ilişkisi). Init hedefi,
+  project_init'e bağımlı. Böylece proje bazındaki project_prepare ve
+  project_init bu hedefleri doldurduğu anda, zâten tanımlı prepare ve
+  init tarafından otomatik olarak çağırılacaklardır.</p>
+</li>
+<li>
+<p>Build_ortak.xml, build.properties dosyasını mevcut ise okur. Bu ince
+  bir noktaya parmak basıyor. etiketi, tüm referansları import edene
+  göre tekrar anlamlandırıyor, yani build.properties'in yüklemek için
+  diskte aranması build_ortak.xml'in dizininde değil, build.xml'in
+  (import eden) dizinine göre yapılacaktır.</p>
+</li>
+</ul>

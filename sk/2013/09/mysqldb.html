@@ -1,0 +1,39 @@
+<h1>MySQLdb, Pandas</h1>
+<p>Ubuntu uzerinde kurmak icin </p>
+<pre><code>sudo pip install pip --upgrade
+
+sudo easy_install -U distribute
+
+sudo apt-get build-dep python-mysqldb
+
+sudo pip install MySQL-python
+</code></pre>
+
+<p>Ornek kod </p>
+<pre><code>import MySQLdb, os, sys
+
+conn= MySQLdb.connect(host='makina',
+                      port=3306,user='user', passwd='sifre',
+                      db='test')
+</code></pre>
+
+<p>Bir Pandas dataframe'i alarak veri tabanina yazmak muthis kolay:</p>
+<pre><code>pd.io.sql.write_frame(df, &quot;tablo1&quot;, conn, flavor='mysql')
+</code></pre>
+
+<p>Ustteki ifade df icindeki dataframe'i alip veri tiplerini ayarlayip
+Mysql'de tablo yaratacak ve veriyi tabloya ekleyecektir. Eger tablo
+mevcut ise ikinci isletim hata verebilir, tablo yokedilip tekrar
+bastan yaratilsin istersek,</p>
+<pre><code>pd.io.sql.write_frame(df, &quot;tablo1&quot;, conn, flavor='mysql', if_exists='replace')
+</code></pre>
+
+<p>Eger dataframe verisi mevcut tabloya "eklensin" istiyorsak,</p>
+<pre><code>pd.io.sql.write_frame(df, &quot;tablo1&quot;, conn, flavor='mysql', if_exists='append')
+</code></pre>
+
+<p>Basit bir SQL (DDL usulu, mesela bir DELETE komutu)</p>
+<pre><code>sql = &quot;delete from tablo where kolon1 = %d and kolon2 = %d&quot; % (arg1,arg2)
+conn.cursor().execute(sql)
+conn.commit()
+</code></pre>

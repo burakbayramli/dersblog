@@ -1,0 +1,191 @@
+<h1>Meteoroloji Verileri - ECMWF, NOAA, OpenWeatherMap</h1>
+<p>OpenWeatherMap</p>
+<p>Bu Web servisi kayıt olanlara bir APİ anahtarı verir ve belli sayıda
+APİ çağrısı için kullanım bedavadır. Servisten o andaki sıcaklık,
+rüzgar, nem vs gibi verileri alabiliriz, ayrıca bu veriler için
+tahminler de aynı API üzerinden paylaşılıyor [2,3].</p>
+<p>Kullanım şartlarına [1] baktığımızda bedava seçenek için,</p>
+<pre><code>60 calls/minute
+1,000,000 calls/month
+Current Weather
+Minute Forecast 1 hour*
+Hourly Forecast 2 days*
+Daily Forecast 7 days*
+National Weather Alerts*
+Historical weather 5 days*
+Climatic Forecast 30 days
+</code></pre>
+
+<p>servislerini görüyoruz, bir dakikada 60 çağrı, her ay 1 milyon çağrı
+yapabiliyoruz bu durumda, bu çoğu geliştirici için yeterli
+olmalı. Tabii OWM üzerinden başkalarına servis sağlamak isteyenler
+daha fazla erişime ihtiyaç duyabilir, onlar için farklı planlar var.</p>
+<p>Yazının geri kalanında bu anahtarı aldığınızı, ve anahtarın <code>.key</code>
+adlı bir dosyada olduğunu farzediyoruz (dikkat, bu anahtar kodda olsa
+<code>key='ASDFASDF'</code> gibi gözükecek bir şey, eğer dosya içine koyarsak son
+satır -newline- olmadan dosyaya yazmak gerekir),</p>
+<pre><code class="python">import requests, json
+lat,lon = 41.969901,29.070148
+base_url = 'http://api.openweathermap.org/data/2.5/weather?'
+weatherapi = open(&quot;.key&quot;).read()
+
+payload = { 'lat': str(lat), 'lon': str(lon), 'units': 'metric', 'APPID': weatherapi }
+r = requests.get(base_url, params=payload) 
+res = []
+for x in r.iter_lines():
+    x = json.loads(x.decode())
+    res.append (x['wind'])
+
+print ('json',res)
+print ('hiz', res[0]['speed'])
+print ('yon', res[0]['deg'])
+</code></pre>
+
+<pre><code class="text">json [{'speed': 8.92, 'deg': 214}]
+hiz 8.92
+yon 214
+</code></pre>
+
+<p>Üstte <code>lat,lon</code> enlem ve boylamlarındaki o andaki rüzgar hızı ve
+yönünü aldık.</p>
+<p>Not: Rüzgar acısı meterolojik, ya da coğrafik acı denen şekilde,
+meteroloji dünyasında kuzeye göre rüzgarın nereden geldiği
+raporlanıyor, acılar ona göre ayarlanıyor, kuzeyden güneye doğru esen,
+yani tam güneyi gösteren açı sıfır, saat yönüne doğru
+artıyor. Aritmetik acılar farklı tabii, orada saat yönü tersinde artış
+ve tam sağ / doğu yönde sıfır. Aradaki değişim için,</p>
+<pre><code class="python">def geo2arit(geo):
+    if geo==360: geo=0
+    if (geo&gt;=0.0) &amp; (geo &lt;90.0): return 270.0-geo
+    elif (geo&gt;=90.0) &amp; (geo&lt;180.0): return 180.0-(geo-90)
+    elif (geo&gt;=180.0) &amp; (geo&lt;270.0): return 90.0-(geo-180)
+    elif (geo&gt;=270.0) &amp; (geo&lt;360.0): return 360.0-(geo-270)
+</code></pre>
+
+<p>şeklinde bir çevirici kod yazılabilir.</p>
+<pre><code class="python">print (geo2arit(90))
+print (geo2arit(0))
+print (geo2arit(80))
+</code></pre>
+
+<pre><code class="text">180.0
+270.0
+190.0
+</code></pre>
+
+<p>Daha fazla meteorolojik bilgi <code>'main'</code> anahtarı içinde,</p>
+<pre><code class="python">r = requests.get(base_url, params=payload) 
+res = []
+for x in r.iter_lines():
+    x = json.loads(x.decode())
+    res.append (x['main'])
+
+for x in res: print (x)
+</code></pre>
+
+<pre><code class="text">{'temp': 12.36, 'feels_like': 5.71, 'temp_min': 12.36, 'temp_max': 12.36, 'pressure': 1015, 'humidity': 76, 'sea_level': 1015, 'grnd_level': 1015}
+</code></pre>
+
+<p>Tahminler için farklı bir URL / API gerekiyor, mesela rüzgar yönü ve yağmur için,</p>
+<pre><code class="python">base_url = 'http://api.openweathermap.org/data/2.5/forecast?'
+payload = { 'lat': str(lat), 'lon': str(lon), 'units': 'metric', 'APPID': weatherapi }
+r = requests.get(base_url, params=payload)
+wind = []
+rain = []
+for x in r.iter_lines():
+    x = json.loads(x.decode())
+    for i,xx in enumerate(x['list']):
+        wind.append((xx['dt_txt'], xx.get('wind') ))
+        rain.append((xx['dt_txt'], xx.get('rain') ))
+
+print ('ruzgar')
+for i in range(5):  
+    print (wind[i])
+
+print ('yagmur')
+for i in range(5):  
+    print (rain[i])
+</code></pre>
+
+<pre><code class="text">ruzgar
+('2021-01-07 12:00:00', {'speed': 10.21, 'deg': 211})
+('2021-01-07 15:00:00', {'speed': 9.37, 'deg': 213})
+('2021-01-07 18:00:00', {'speed': 5.15, 'deg': 250})
+('2021-01-07 21:00:00', {'speed': 2.69, 'deg': 25})
+('2021-01-08 00:00:00', {'speed': 4.66, 'deg': 55})
+yagmur
+('2021-01-07 12:00:00', None)
+('2021-01-07 15:00:00', None)
+('2021-01-07 18:00:00', None)
+('2021-01-07 21:00:00', {'3h': 0.17})
+('2021-01-08 00:00:00', {'3h': 1.08})
+</code></pre>
+
+<p>ECMWF</p>
+<p>Hava verisi uzerinde yapay ogrenim ile tahminler yapmak isteyenler ham
+veriyi almak icin alttaki siteye basvurabilir.</p>
+<p>https://www.ecmwf.int/</p>
+<p>Bu bir Avrupa bilim organizasyonu, ayrica hava tahmini modellerini
+isletip tahmin de uretiyorlar (Harvey kasirgasinin nereye vuracagini
+ABD NOAA'dan daha iyi tahmin ettiler). Python ile veri indirmek
+mumkun,</p>
+<pre><code>sudo pip install ecmwf-api-client
+</code></pre>
+
+<p>Burada "Register" ile kullanici bilgileri, email, vs. verilip
+kaydolunur. Bir aktivasyon email'i sonra bir tane daha email geliyor,
+ve kayit bitiyor.  Login yapilir. Simdi API'ye erismek icin anahtar
+lazim,</p>
+<p>https://api.ecmwf.int/v1/key/</p>
+<p>Burada gosterilen </p>
+<pre><code>{
+    &quot;url&quot;   : &quot;https://api.ecmwf.int/v1&quot;,
+    &quot;key&quot;   : &quot;[ANAHTAR]&quot;,
+    &quot;email&quot; : &quot;[email]&quot;
+}
+</code></pre>
+
+<p>formundaki anahtar $HOME/.ecmwfapirc dosyasina yazilir. </p>
+<p>Verilere erismeden once veri turune gore bazi lisans sayfalarinda bir
+lisans kabuluna "evet" demek gerekiyor, mesela alttaki tur bir script
+icin</p>
+<pre><code>from ecmwfapi import ECMWFDataServer
+
+server = ECMWFDataServer()
+
+server.retrieve({
+
+    'dataset' : &quot;tigge&quot;,
+    'step'    : &quot;24/to/120/by/24&quot;,
+    'number'  : &quot;all&quot;,
+    'levtype' : &quot;sl&quot;,
+    'date'    : &quot;20071001/to/20071003&quot;,
+    'time'    : &quot;00/12&quot;,
+    'origin'  : &quot;all&quot;,
+    'type'    : &quot;pf&quot;,
+    'param'   : &quot;tp&quot;,
+    'area'    : &quot;70/-130/30/-60&quot;,
+    'grid'    : &quot;2/2&quot;,
+    'target'  : &quot;data.grib&quot;
+    })
+</code></pre>
+
+<p>[5] lisansına evet demiş olmak lazım. Bir tane daha [6].</p>
+<p>Eger lisans kabul edilmemisse hata mesaji hangi sayfaya gidilecegini soyler.</p>
+<p>NOAA</p>
+<p>[4] adresinde gunluk dosyalar var.</p>
+<p>Yapay Ogrenim</p>
+<p>Hava tahmini icin gunluk (saatlik, vs) hava verisi cok boyutlu bir
+zaman serisi olarak gorulebilir, mesela her t aninda sicaklik, nem,
+ruzgar hizi cok boyutlu bir zaman serisi olarak geliyor, egitim icin N
+tane gorulen veri kullanilir, bu veri N+1, N+2, . anlarindaki gelecek
+zaman serisini tahmin icin kullanilir. Bu sekilde hava tahmininin
+ornegi alttaki kodlarda bulunabilir,</p>
+<p>https://github.com/mouradmourafiq/tensorflow-lstm-regression/blob/master/lstm_weather.ipynb</p>
+<p>Kaynaklar</p>
+<p>[1] https://openweathermap.org/price</p>
+<p>[2] https://openweathermap.org</p>
+<p>[3] https://openweathermap.org/api</p>
+<p>[4] https://www.ncdc.noaa.gov/orders/qclcd/</p>
+<p>[5] http://apps.ecmwf.int/datasets/licences/tigge/</p>
+<p>[6] http://apps.ecmwf.int/datasets/licences/general</p>

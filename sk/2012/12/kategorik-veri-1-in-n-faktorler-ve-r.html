@@ -1,0 +1,46 @@
+<h1>Kategorik Veri, 1-in-n, Faktorler, R ve Patsy</h1>
+<p>R dilini kullanarak kategorik veri iceren kolonlarin 1-in-n seklinde
+yana dogru "genisletilerek" 1/0 iceren hale cevirilebildiginden
+bahsetmistik. Fakat R bu degismis hali disa yansitmaz, lm(), nnet()
+gibi komutlar ic isleyisleri sirasinda bu degisimi kullanirlar, lm()
+sonuc raporunde bu yeni kolonlari gorebilirsiniz mesela, ama veri
+disari cikmaz.</p>
+<p>Eger bu veriyi mesela matris formatinda istiyorsaniz, su komut
+dizisini kullanabilirsiniz (dellstore2 ornegindeki season ve
+categoryname kolonlari icin)</p>
+<pre><code>orders &lt;- read.csv (&quot;data.csv&quot;,header=TRUE,sep=&quot;|&quot;)orders &lt;- cbind(orders, model.matrix( ~ 0 + season + categoryname, orders))orders &lt;- orders[, setdiff(names(orders), c(&quot;season&quot;, &quot;categoryname&quot;))]write.csv (orders,&quot;out.csv&quot;)
+</code></pre>
+
+<p>Sondan ikinci satir lazim cunku genisletilmis kolonlar eklense bile
+orijinal kolon hala orders icinde tutuluyor. Bu kolona artik ihtiyac
+yok ve cikartilmasinda bir zarar olmayacak.</p>
+<p>Eger ayni islemi Python ile yapmak istersek Patsy adli paket yardimci
+olabilir. En son versiyon</p>
+<p>http://pypi.python.org/pypi/patsy/</p>
+<p>Ayrica Pandas kurmak ta gerekiyor, bunun icin "sudo pip install
+pandas" yeterli.</p>
+<p>Kullanmak icin mesela</p>
+<pre><code>from patsy import dmatrix
+from pandas import *
+orders = read_csv(&quot;dell.csv&quot;,sep=&quot;,&quot;)
+matrix = dmatrix(&quot;0 + month + netamount + gender + season + cat_freq + creditcardtype&quot;,orders)
+print matrix.design_info
+print matrix[0,:]
+</code></pre>
+
+<p>Ust son iki satirda matrisin ic yapisini (yeni kolon isimlerini gormek
+icin) ekrana bastirdik, ayrica matrisin ilk satirini ornek olarak
+gosterttik.</p>
+<p>Sonuc</p>
+<pre><code>DesignInfo(['gender[F]', 'gender[M]', 'season[T.SPRING]', 'season[T.SUMMER]', 'season[T.WINTER]', 'creditcardtype[T.c2]', 'creditcardtype[T.c3]', 'creditcardtype[T.c4]', 'creditcardtype[T.c5]', 'month', 'netamount', 'cat_freq'],  ....
+
+[  0.     1.     0.     0.     0.     0.     0.     0.     0.    11.     5.08   1.  ]
+</code></pre>
+
+<p>gibi bir cikti goreceksiniz, yani faktor kolonlari 1-in-n formatina
+cevirilerek 1/0 degeri tasiyacak sekilde "yana dogru"
+genisletilmistir. Yeni kolon isimleri mesela season[T.SPRING] gibi,
+yaz mevsimi icin apayri bir kolon vardir,ve ona tekabul eden 0/1
+degeri olacaktir.</p>
+<p>Bu yeni matrisle istediginiz yapay ogrenim rutinini
+cagirabilirsiniz. Matris Numpy formatiyla uyumludur. </p>

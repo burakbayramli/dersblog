@@ -1,0 +1,29 @@
+<h1>Elisp</h1>
+<p>Tüm buffer'ı bir değişken içine almak için</p>
+<pre><code>(setq cmd (buffer-substring 1 (buffer-size)))
+</code></pre>
+
+<p>Bir buffer'a olan referansı o buffer'ın ismini kullanarak alabilmek
+için;</p>
+<pre><code>(get-buffer &quot;*Isim Filan Falan*&quot;)
+</code></pre>
+
+<p>Bu buffer'ı öldürmek için</p>
+<pre><code>(kill-buffer (get-buffer &quot;*Isim Filan Falan*&quot;))
+</code></pre>
+
+<p>Buffer'ın canlı olup olmadığını kontrol için (ve eğer canlı değilse
+birşeyler yapmak için)</p>
+<pre><code>(if (not (buffer-live-p (get-buffer &quot;Isim Filan Falan&quot;))) (progn;; bir
+seyler yap))
+</code></pre>
+
+<p>Buffer içinde olan dosyanın soneksiz hâlini almak için (meselâ
+c:/temp/filan/TT.java üzerinden TT kelimesini çıkartabilmek için)</p>
+<pre><code>(setq soneksizDosyaIsmi (file-name-sans-extension
+(file-name-nondirectory buffer-file-name)))
+</code></pre>
+
+<p>Komut satırına elisp içinden bir program işlettirebilmek için</p>
+<pre><code>(shell-command &quot;perl c:/dizin/ismi/script.pl&quot;)
+</code></pre>

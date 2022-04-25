@@ -1,0 +1,83 @@
+<h1>Dosya İşlemleri, Unix, Python</h1>
+<p>Genel ihtiyaca dönük Python'da yapılabilecek dosya işlemleri;</p>
+<p>Bir dosya, dizin mevcut mu?</p>
+<pre><code class="python">import os
+
+print (os.path.exists(&quot;/tmp/filan1&quot;))
+</code></pre>
+
+<pre><code class="text">False
+</code></pre>
+
+<p>Bir dizini yaratmak için</p>
+<pre><code class="python">os.mkdir(&quot;/tmp/filan1&quot;)
+print (os.path.exists(&quot;/tmp/filan1&quot;))
+</code></pre>
+
+<pre><code class="text">True
+</code></pre>
+
+<p>Dizini altındaki tüm dosyalarla beraber silmek</p>
+<pre><code class="python">import shutil
+shutil.rmtree(&quot;/tmp/filan1&quot;)
+</code></pre>
+
+<p>Bir dizin altındaki dosyaları, dizinleri belli bir kalıba uyacak şekilde listelemek. </p>
+<pre><code class="python">import glob
+
+glob.glob(&quot;/usr/*&quot;)
+</code></pre>
+
+<pre><code class="text">Out[1]: 
+['/usr/local',
+ '/usr/games',
+ '/usr/lib',
+ '/usr/share',
+ '/usr/src',
+ '/usr/libexec',
+ '/usr/include',
+ '/usr/sbin',
+ '/usr/bin']
+</code></pre>
+
+<pre><code class="python">glob.glob(&quot;/usr/*bin*&quot;)
+</code></pre>
+
+<pre><code class="text">Out[1]: ['/usr/sbin', '/usr/bin']
+</code></pre>
+
+<p>Eğer daha alt seviye dizinleri göstermek istersek, mesela iki seviye
+aşağısı için, <code>/*/*</code> diyebilirdik.</p>
+<p>Fakat üstteki ifade özyineli bir şekilde en üst seviye dizinden tüm
+altdızinleri göstermez. Bunun için bir kod yazdık,</p>
+<pre><code class="python">def ls(d,ignore_list=[]):
+    print ('ls ignore lst', ignore_list)
+    dirs = []; files = []
+    for root, directories, filenames in os.walk(d):
+        for directory in directories:
+            path = os.path.join(root, directory)
+            do_add = True
+            for ignore in ignore_list:
+                if ignore in path:
+                    print ('ignoring', path); do_add = False
+            if do_add: dirs.append(path)
+        for filename in filenames: 
+            path = os.path.join(root,filename)
+            do_add = True
+            for ignore in ignore_list:
+                if ignore in path: do_add = False
+            if do_add: files.append((path, os.path.getsize(path)))
+    return dirs, files
+</code></pre>
+
+<pre><code class="python">os.mkdir(&quot;/tmp/filan1&quot;)
+os.mkdir(&quot;/tmp/filan1/filan12&quot;)
+os.mkdir(&quot;/tmp/filan1/filan13&quot;)
+os.mkdir(&quot;/tmp/filan1/filan12/filan121&quot;)
+
+print (ls(&quot;/tmp/filan1&quot;))
+</code></pre>
+
+<pre><code class="text">ls ignore lst []
+(['/tmp/filan1/filan12', '/tmp/filan1/filan13', '/tmp/filan1/filan12/filan121'], [])
+</code></pre>

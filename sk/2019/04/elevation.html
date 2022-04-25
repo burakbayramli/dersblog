@@ -1,0 +1,183 @@
+<h1>Yükseklik (Elevation) Verileri</h1>
+<p>Hangi servis ile yükseklik verisi alınır? Google Elevation servisi
+var, belli miktarda kullanım için bedava, sonrası için fiyatlı. Google
+Console'dan proje yaratıp projede elevation servisini aktif hale
+getirmek lazım, bundan sonra proje API kodunu kullanıp ES çağrılabilir.</p>
+<h3>Google</h3>
+<pre><code class="python">from urllib.request import urlopen
+import polyline, json
+
+elev_query = &quot;https://maps.googleapis.com/maps/api/elevation/json?&quot; + \
+          &quot;locations=enc:%s&amp;key=%s&quot;
+#key = &quot;[ANAHTAR DEGERI]&quot;
+locs = [[40.994252, 29.037847],[40.991771, 29.061873]]
+locs = polyline.encode(locs)
+url = elev_query % (locs, key)
+html = urlopen(url)
+json_res = json.loads(html.read().decode('utf-8'))
+print (json_res)
+</code></pre>
+
+<pre><code class="text">{'status': 'OK', 'results': [{'resolution': 610.8129272460938,
+'location': {'lng': 29.03785, 'lat': 40.99425}, 'elevation':
+9.726478576660156}, {'resolution': 610.8129272460938, 'location':
+{'lng': 29.06187, 'lat': 40.99177}, 'elevation': 58.94558334350586}]}
+</code></pre>
+
+<h3>Velroutes (Bedava)</h3>
+<p>Bir diğer seçenek veloroutes.org adresi; burada arkadaş bedava servis
+veriyor; onun sayfalarından "kazıyarak" istenen veriyi alabiliriz,</p>
+<pre><code class="python">import re
+
+url = &quot;http://veloroutes.org/elevation/?&quot; + \
+      &quot;location=41.40000%2C28.15000&amp;units=m&quot;
+html = urlopen(url)
+res = html.read().decode('utf-8')
+p = &quot;Elevation for .*? &lt;span style=\&quot;font-size\:20px\&quot;&gt;(\d*)&lt;/span&gt; meters&quot;
+rres = re.findall(p,res)
+print (float(rres[0]))    
+</code></pre>
+
+<pre><code class="text">215.0
+</code></pre>
+
+<p>Bir diğeri elevation.racemap.com adresinden; bu arkadaşlar da bedava
+servis veriyorlar, Curl kullanıp</p>
+<pre><code class="python">! curl -d '[[51.3, 13.4], [51.4, 13.3]]' -XPOST \
+  -H 'Content-Type: application/json' \
+  https://elevation.racemap.com/api
+</code></pre>
+
+<pre><code class="text">  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    37  100     9  100    28      8     27  0:00:01  0:00:01 --:--:--    27100    37  100     9  100    28      8     27  0:00:01  0:00:01 --:--:--    27
+[101,100]
+</code></pre>
+
+<p>Bu komutu tabii ki sarmalayıp sonucu bir yere yazdırıp Python ile
+güzel liste döndürmesi için ayarlayabiliriz. Ya da <code>requests</code>
+kullanarak aynı çağrıyı yapabiliriz,</p>
+<pre><code class="python">import requests
+
+headers = {  'Content-Type': 'application/json', }
+data = '[[51.3, 13.4], [51.4, 13.3]]'
+response = requests.post('https://elevation.racemap.com/api',
+                         headers=headers, data=data)
+print(response.text)
+</code></pre>
+
+<p>Daha Çetrefil Kullanım</p>
+<p>Alttaki örnekte bir kordinat alanıda 7 x 7 büyüklüğünde bir ızgara yaratıyoruz,
+o ızgara öğe kordinatları için yükseklik verisini alıyoruz, ve RBF tekniği [1]
+ile aradeğerleme (interpolation) yaparak yüksekliği yaklaşık şekilde temsil
+ediyoruz. </p>
+<pre><code class="python">import requests
+
+def get_elev_data(coords):
+    chunk = [list(x) for x in coords]
+    data = &quot;[&quot;
+    for i,x in enumerate(chunk):
+        data += str(x)
+        if i != len(chunk)-1: data += &quot;,&quot;
+    data += &quot;]&quot;
+    response = requests.post('https://elevation.racemap.com/api',
+                             headers={'Content-Type': 'application/json',},
+                             data=data)
+    res = response.text
+    res = res.replace(&quot;]&quot;,&quot;&quot;).replace(&quot;[&quot;,&quot;&quot;)
+    res = res.split(&quot;,&quot;)
+    res = [float(x) for x in res]
+    return res
+
+</code></pre>
+
+<p>Veri alındı, şimdi RBF,</p>
+<pre><code class="python">from scipy.interpolate import Rbf
+
+latlow = 36; lathigh = 37
+lonlow = 29; lonhigh = 30
+
+D = 7
+x = np.linspace(lonlow,lonhigh,D)
+y = np.linspace(latlow,lathigh,D)
+xx,yy = np.meshgrid(x,y)
+xxf = xx.reshape(D*D)
+yyf = yy.reshape(D*D)
+sampleCoords = []
+for yyy,xxx in zip(yyf,xxf):
+    sampleCoords.append([yyy,xxx])
+sampleCoords = np.array(sampleCoords)
+print (sampleCoords.shape)
+
+zr =  np.array(get_elev_data(sampleCoords))
+
+yr = sampleCoords[:,0]
+xr = sampleCoords[:,1]
+
+rbfi = Rbf(xr,yr,zr,function='multiquadric')
+</code></pre>
+
+<pre><code class="text">(49, 2)
+</code></pre>
+
+<p>Şimdi RBF kullanarak daha yüksek çözünürlü bir ızgara için yüksekliği
+aradeğerleme ile hesaplatabiliriz, altta 15 x 15 büyüklüğünde bir ızgara
+için bunu yapıyoruz,</p>
+<pre><code class="python">D = 15
+x = np.linspace(lonlow,lonhigh,D)
+y = np.linspace(latlow,lathigh,D)
+xx,yy = np.meshgrid(x,y)
+yhat = rbfi(xx,yy)
+
+fig, ax = plt.subplots()
+CS = ax.contour(xx,yy,yhat)
+plt.clabel(CS, inline=1, fontsize=10)
+plt.savefig('elev1.png')
+</code></pre>
+
+<p><img alt="" src="elev1.png" /></p>
+<p><a name='geotiff'/></p>
+<h3>DEM, GeoTiff</h3>
+<p>Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
+yerler daha kırmızımsı, daha alçaklar daha koyu gibi.. O zaman piksel
+yükseklik gösteriyorsa ve pikselleri depolayan teknoloji iyi durumdaysa,
+aynı işi yükseklik verisi kodlamak için de kullanabiliriz. DEM,
+GeoTiff formatı bunu yapar. Dünya verisi [2]'de, Zipped DEM GeoTiff
+indirilir, okumak için [3]. Örnek (İtalya'da bir yer)</p>
+<pre><code class="python">from geotiff import GeoTiff 
+import matplotlib.pyplot as plt
+
+tiff_file = &quot;/tmp/alwdgg.tif&quot;
+
+area_box = ((10, 45), (11, 46))
+
+g = GeoTiff(tiff_file, crs_code=4326, as_crs=4326,  band=0)
+arr = g.read_box(area_box)
+arr = np.flip(arr,axis=0)
+print (arr.shape)
+
+X = np.linspace(area_box[0][0],area_box[1][0],11)
+Y = np.linspace(area_box[0][1],area_box[1][1],11)
+X,Y = np.meshgrid(X,Y)
+
+CS=plt.contour(X,Y,arr)
+plt.clabel(CS, fontsize=10, inline=1)
+plt.savefig('elev2.png')
+</code></pre>
+
+<pre><code class="text">(11, 11)
+</code></pre>
+
+<p><img alt="" src="elev2.png" /></p>
+<p><code>area_box</code> içinde alt sol köse ve üşe sağ köşe verildi, bir kutu oluşturuldu,
+ve kutu içine düşen yükseklik verisi <code>read_box</code> ile alındı.</p>
+<p>[2] verisinin çözünülürlüğü en yüksek olduğu yerde "1 dakika" olarak
+verilmiş, yani aşağı yukarı 1 km x 1 km karelerinin yükseklik verisi
+alınabilir. Dosyanin büyüklüğü 20 MB'dan daha az. [3] kullanımı önemli
+çünkü bazı alternatif GeoTiff okuma yöntemleri GDAL kurulmasının
+gerektirir, [3] kütüphanesi hafif, direk DEM dosyalarının içeriğini
+okuyabilir.</p>
+<p>Kaynaklar</p>
+<p>[1] <a href="https://burakbayramli.github.io/dersblog/stat/stat_175_rbf/dairesel_baz_fonksiyonlari__radial_basis_functions_rbf__yukseklik_verisi_daglar.html">RBF</a></p>
+<p>[2] World digital elevation model (ETOPO5), https://www.eea.europa.eu/data-and-maps/data/world-digital-elevation-model-etopo5</p>
+<p>[3] https://github.com/KipCrossing/geotiff</p>

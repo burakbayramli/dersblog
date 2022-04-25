@@ -1,0 +1,38 @@
+<h1>Bilgisayari Konusturmak,  Metinden Konusma (Text-to-Speech)</h1>
+<p>Bilgisayari Konusturmak,  Metinden Konusma (Text-to-Speech)</p>
+<p>Python</p>
+<p>pip install gtts, pyttsx</p>
+<p>from gtts import gTTS
+import os
+tts = gTTS(text='Good morning', lang='en')
+tts.save("good.mp3")</p>
+<p>ya da </p>
+<p>import pyttsx</p>
+<p>engine = pyttsx.init()</p>
+<p>engine.say('Good morning.')</p>
+<p>engine.runAndWait()</p>
+<p>Not: Python 3 ile pyttsx3 gerekli.</p>
+<p>Ustteki iki yaklasimdan gtts daha iyi fakat bu paket Internet uzerinden Google'a eriserek ses degisimini yapiyor.</p>
+<p>Android uygulamasi icinde cep telefonunu konusturmak icin arayuz var. Herhangi bir Activity icinde</p>
+<p>import android.speech.tts.TextToSpeech;</p>
+<p>public class MyActivity extends Activity
+{
+    ...</p>
+<p>@Override
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        ...
+        t1=new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if(status != TextToSpeech.ERROR) {
+                        t1.setLanguage(Locale.UK);
+                    }
+                }
+            });
+     }
+}</p>
+<p>Ustteki onInit konusturma yapmadan once islemis olmali. Simdi herhangi bir metni okutmak icin</p>
+<p>String toSpeak = "How much wood could a woodchuck chuck";
+t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);     </p>

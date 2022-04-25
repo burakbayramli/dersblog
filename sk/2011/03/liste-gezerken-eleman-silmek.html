@@ -1,0 +1,22 @@
+<h1>Liste Gezerken Eleman Silmek</h1>
+<p>Python ile bir listeyi gezdigimiz anda gezdigimiz listeden eleman
+silersek, gezme islemi negatif sekilde etkilenmis olacaktir. Mesela
+soyle bir kod dusunelim:</p>
+<pre><code class="python">list = [[&quot;1&quot;,&quot;1&quot;], [&quot;2&quot;,&quot;2&quot;]]
+for item in list:
+   print item
+   if [&quot;1&quot;,&quot;1&quot;] in list: list.remove([&quot;1&quot;,&quot;1&quot;])
+</code></pre>
+
+<p>Bu kod sadece ['1', '1'] sonucunu basacaktır, çünkü gezme sırasında
+bir eleman (['1', '1']) silinmiştir, ve bu listeyi küçültmüştür.Eğer
+silme işleminin gezme işlemini etkilememesini istiyorsak, o zaman
+listenin bir "kopyası" üzerinde gezinti yapmamız lazım. Python'da
+kopya çıkartmak için clone, copy gibi çağrılar yerine bir operatör
+kullanılıyor; bu operatör [:] operatörü. O zaman:</p>
+<pre><code class="python">list = [[&quot;1&quot;,&quot;1&quot;], [&quot;2&quot;,&quot;2&quot;]]
+for item in list[:]:
+   print item if [&quot;1&quot;,&quot;1&quot;] in list: list.remove([&quot;1&quot;,&quot;1&quot;])
+</code></pre>
+
+<p>istediğimiz sonucu verecektir.</p>

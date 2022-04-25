@@ -1,0 +1,51 @@
+<h1>Python with komutu, ContextManager</h1>
+<p>Bir bloğun etrafında yapılacak öncesi / sonrası işlemlerini, daha özel
+olarak sürekli tekrarlanan rutin temizlik hareketlerini modülerize
+hale getirmek için Python with kullanılabilir. Standart örnek</p>
+<pre><code class="python">with open('/tmp/workfile', 'r') as f:    read_data = f.read()
+</code></pre>
+
+<p>Örnekteki with şunları yapar; kod bloğuna girmeden önce dosya açılir,
+çıktıktan sonra kapanır, bloktan çıkış nasıl olursa olsun. Fakat bu
+örnek bazı şeyleri göstermiyor; birincisi öpen komutu özel şekilde
+kodlanmıştır ki with ile kullanılabilsin. Daha kısa bir örnek</p>
+<pre><code class="python">from contextlibimport contextmanager
+
+@contextmanager
+def tag(name):
+    print &quot;&lt;%s&gt;&quot; % name
+    yield
+    print &quot;&lt;/%s&gt;&quot; % namewith tag(&quot;h1&quot;):
+    print &quot;foo&quot;
+</code></pre>
+
+<p>Burada tag komutunun with ile nasil kullanilabilir hale getirildigini
+goruyoruz.  tag icindeki yield komutu bir "yer isaretleyici / tutucu
+(placeholder)", islem o noktaya gelince with blogunun icindeki
+komutlar isletilir, yukaridaki ornekte print komutu. Bir ornek daha</p>
+<pre><code class="python">from contextlib import contextmanagerimport os
+
+@contextmanagerdef working_directory(path):
+    current_dir = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(current_dir)
+
+with working_directory(&quot;data/stuff&quot;):
+    # data/stuff icinde bir seyler yap
+</code></pre>
+
+<p>Örnekte working_directory with ile çağrıldığı zaman parametre olarak
+verilen string bir dizin olarak kabul edilir, o dizine "gidilir",
+sonra with bloğunda tanımlanan şeyler yapılır (yield), ve sonra o
+dizinden çıkılır. Çıkış işleminin finally içinde yapılması, işleyiş
+sırasında istisna (Exception) olsa / atılsa bile bu işin yapılmasını
+garantiler (open kodlamasında da herhalde benzer işler yapılıyor,
+açılmış dosyayı kapatmak için).</p>
+<p>Kısaca with ile kullanılan bloklar  "çevresinde" hep olacak / beraber
+olmasını istediğimiz kod parçalarını biraraya koyabiliriz.</p>
+<p>http://docs.python.org/2/tutorial/inputoutput.html</p>
+<p>http://docs.python.org/2/library/contextlib.html</p>
+<p>http://stackoverflow.com/questions/3012488/what-is-the-python-with-statement-designed-for</p>

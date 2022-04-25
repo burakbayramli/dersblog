@@ -1,0 +1,77 @@
+<h1>SQLite, Android, JDBC, Python</h1>
+<p>Android cep telefonlarında SQL bazlı erişilebilen bir taban gerekirse SQLite programı bu ihtiyaçı karşılıyor. Bu taban çok hafif, hızlı çalışır, taban olarak tek ihtiyaçı bir .db dosyasından ibarettir. Dizüstü bilgisayarında da SQLite kullanılabiliyor, pek çok dilden erişim var, Python, Ruby, Java, vs.. Diğer bazı özellikler tablo indeksleyebilmek, birleşim (join), alt sorgular (subjoin) - kuvvetli bir program.</p>
+<p>Bizim için en çok gereken özellik dışarıdan yaratılan (mobil için) büyükçe bir tabanı, 20 MB civarı, telefona kopyalayarak bu veriye anahtar bazlı hızlı erişim sağlamak. SQLite bunu rahatça sağladı. Niye koca bir JSON'u Android'den okuyup, mesela HashMap üzerinden, o şekilde direk erişim yapmadık? Çünkü o şekilde tek bir obje için 20 MB'in tamamını hafızaya yüklemek gerekir, SQLite, her diğer saygıdeğer ilişkisel tabanın yapacağı gibi, düzgün indekslendiği durumda disk'te sadece gerekli yere gider ve gereken satırı yükler, tabanının tamamını hafızaya yüklemeden.</p>
+<p>Geliştirme ortamında veriyi Ubuntu'da Python ile yaratıyoruz. Dizüstü Ubuntu ortamında kurmak</p>
+<p>sudo apt-get install sqlite3 libsqlite3-dev</p>
+<p>Basit kod</p>
+<pre><code>import sqlite3
+conn = sqlite3.connect('taban.db')
+
+c.execute('''CREATE TABLE vs (key text primary key not null, ... )''')
+
+c.execute('INSERT INTO vs values (...)')
+...
+
+conn.commit()
+
+conn.close()
+
+</code></pre>
+
+<p>Eger taban.db yoksa yaratilir. </p>
+<p>Android </p>
+<p>Yaratılan tabanı SD kartına kopyalarsak Android SQLite'i ona rahatça erişiyor. </p>
+<p>import android.database.sqlite.<em>;
+import android.database.</em>;</p>
+<p>..
+f = "/storage/emulated/0/Downloads/taban.db"</p>
+<p>SQLiteDatabase db = SQLiteDatabase.openDatabase(f, null, SQLiteDatabase.NO_LOCALIZED_COLLATORS);</p>
+<p>Cursor c = db.rawQuery("SELECT key FROM vs where ..", null);</p>
+<p>c.moveToFirst();</p>
+<p>Log.d("cam", "key"+c.getString(0));</p>
+<p>..</p>
+<p>c.close();</p>
+<p>db.close();</p>
+<p>Bu kod işler, burada problem yok.</p>
+<p>Fakat üstteki API JDBC değil, yani standart bir arayüz değil. Eğer geliştirme ortamında birim testi yazmak istersek bu kod baş ağrısı yaratacaktır. Gerçi üstteki kullanımın taklitleme (mocking) üzerinden testi mümkün, ama bizce en iyisi Android üzerinde JDBC kullanmak. </p>
+<p>Şu arkadaşlar Android için bir JDBC kodu yazmışlar, </p>
+<p>https://github.com/SQLDroid/SQLDroid</p>
+<p>Jar'i indirmek icin </p>
+<p>http://search.maven.org/#search%7Cga%7C1%7Csqldroid</p>
+<p>Biraz onceki kodu</p>
+<p>import java.sql.*;</p>
+<p>..
+try {
+    Class clazz = Class.forName("org.sqldroid.SQLDroidDriver");
+    DriverManager.registerDriver((Driver)clazz.newInstance());
+} catch (Exception e) {
+    e.printStackTrace();
+}</p>
+<p>String jdbcUrl = "jdbc:sqldroid:" + "/storage/emulated/0/Downloads/taban.db"</p>
+<p>try {</p>
+<p>Connection conn = DriverManager.getConnection(jdbcUrl);</p>
+<p>Statement stmt = conn.createStatement();</p>
+<p>String sql = "SELECT key FROM vs where ..";</p>
+<p>ResultSet rs = stmt.executeQuery(sql);</p>
+<p>rs.next();</p>
+<p>Log.d("cam", "key"+rs.getString(1));</p>
+<p>rs.close();</p>
+<p>conn.close();         </p>
+<p>} catch (SQLException e) {</p>
+<p>throw new RuntimeException(e);</p>
+<p>}       </p>
+<p>olarak değiştirebiliriz. Tabii SQLDroid jar'ını projemizin lib dizine koymayı unutmuyoruz.</p>
+<p>Dikkat: Android DB API'si kolonlara 0 indis bazlı erişiyor, JDBC 1 indis bazlı erişiyor.</p>
+<p>Birim testler şimdi daha kolaylaştı; Android kodundaki veri erişimini belli metotlara koyarız, bu metotlar dışarıdan bir taban bağlantısı Connection alırlar; Android ortamından bu objenin gerçekleştirimi / gerçek hali SQLDroıdConnection olur, geliştirme ortamında org.sqlite.JDBC olur.. ama test edilen metot bunlardan habersiz bir şekilde ona verilen Connection ile güzelce çalışır.</p>
+<p>Dizustu icin JDBC</p>
+<p>try {
+    Class clazz = Class.forName("org.sqlite.JDBC");
+    DriverManager.registerDriver((Driver)clazz.newInstance());
+    String jdbcUrl = "jdbc:sqlite:" + "/vs/vs/taban.db";
+    Connection connection = DriverManager.getConnection(jdbcUrl);
+} catch (Exception e) {
+    e.printStackTrace();
+}</p>
+<p>Not: Akla şu soru gelebilir, "Android'in kapalı API'sinin hangi jar'ı kullandığını bulsam, o jar'ı dizüstü'nde kullansam, testi bu şekilde işletebilir miyim?". Bu olmuyor, Android içindeki SQLite'i telefon dışında işletmek mümkün değil. Android benzetici (emulator) ile tabii tüm telefon fonksiyonları dizüstü'nde işletilebilir, ama bu da uzun iş. Zaten o sebeple insanlar taklitleme işine girmişler, ama o da bize göre külfetli.</p>
+<p>Dizustu ortami icin Java JDBC SQLite jar'i</p>
+<p>https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.8.9.1/</p>

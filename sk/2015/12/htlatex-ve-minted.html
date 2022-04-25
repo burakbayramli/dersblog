@@ -1,0 +1,34 @@
+<h1>htlatex ve minted, make4ht</h1>
+<p>TeX dosyalarindan HTML uretmek icin </p>
+<pre><code>htlatex dosya.tex
+</code></pre>
+
+<p>ifadesi kullanilir. Kurulu degilse</p>
+<pre><code>sudo apt-get install  tex4ht-common
+</code></pre>
+
+<p>Fakat icinde minted paketine referans olan tex dosyalarinda problem
+cikabilir; "-shell-escape secenegi kullanilmamis" hatasi verilecek,
+fakat bu secenek eklense bile problem devam ediyor. </p>
+<p>Cozum, </p>
+<pre><code>htlatex dosya.tex &quot;dosya&quot; &quot;&quot; &quot;&quot; -shell-escape
+</code></pre>
+
+<p>kullanimi, bunun icin ayrica dosya.cfg ayni dizinde olmali, icerigi </p>
+<pre><code>\Preamble{xhtml}
+
+\Configure{HColor}{DarkGray}{\#1A1A1A}
+
+\begin{document}
+
+\EndPreamble
+</code></pre>
+
+<p>Fakat ustteki program karakter kodlamasi (encoding) icin problem
+cikartabiliyor. Her seyi utf-8 bazli yapmak istiyorsak make4ht
+programi daha kullanisli olabilir,</p>
+<pre><code>make4ht -u dosya.tex -s 
+</code></pre>
+
+<p>Kaynak</p>
+<p>http://tex.stackexchange.com/questions/225763/latex-to-html-using-htlatex-background-problem</p>

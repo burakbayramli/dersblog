@@ -1,0 +1,86 @@
+<h1>JSON</h1>
+<p>Ayar (config) ya da veriyi hem insan hem makine tarafından okunabilir
+bir formatta paylaşmak istersek JSON kullanabiliriz. JSON bir bakıma
+Python sözlük (dictionary) kavramının dosyaya çevrilmiş hali. Python ile
+sözlük yaratmak hatırlarsak,</p>
+<pre><code class="python">mydict = {}
+mydict['anahtar1'] = 'deger1'
+print (mydict)
+</code></pre>
+
+<pre><code class="text">{'anahtar1': 'deger1'}
+</code></pre>
+
+<p>Bu kavramı metin dosyasından başlayarak yaratmak için JSON iyidir. 90'li yıllarda
+XML kullanılan yerlerde artık hep JSON görüyoruz.</p>
+<p>JSON içindeki yapı hiyerarşik olabilir, direk anahtar bazlı tekil
+değerler, ya da listeler, listeler içinde daha fazla listeler hep
+mümkündür. Altta mesela bir coğrafi kodda bizim kullandığımız bir
+örnek,</p>
+<pre><code class="python">print (open(&quot;test.json&quot;).read())
+</code></pre>
+
+<pre><code class="text">{
+    &quot;center&quot;: [41, 29],
+    &quot;points&quot;: {
+    &quot;city 1&quot;: [41.1, 29.2],
+    &quot;city 2&quot;: [41.4, 29.8]
+    },
+    &quot;plist&quot;: [[3,3],[5,5],[7,7]],
+    &quot;url1&quot;: &quot;https://www.cnn.com&quot;,
+    &quot;maps&quot;: [
+         &quot;file1.gpx&quot;,
+         &quot;file2.gpx&quot;,
+         &quot;file3.gpx&quot;,
+         &quot;file4.gpx&quot;
+     ]
+
+}
+
+</code></pre>
+
+<p>Harita merkezi <code>center</code>, nokta listeleri <code>points</code> ve onun altında yine anahtar
+bazlı <code>city</code>, <code>city 2</code> diye gidiyor. Erişmek için,</p>
+<pre><code class="python">import json
+
+jf = json.loads(open(&quot;test.json&quot;).read())
+print (jf.keys())
+</code></pre>
+
+<pre><code class="text">dict_keys(['center', 'points', 'plist', 'url1', 'maps'])
+</code></pre>
+
+<p>Sozluk demistik; iste en ust seviyede <code>dict_keys</code> ibaresi var. Simdi
+<code>points</code> noktalarindan <code>city 1</code> erisimi yapalim,</p>
+<pre><code class="python">print (jf['points']['city 1'])
+</code></pre>
+
+<pre><code class="text">[41.1, 29.2]
+</code></pre>
+
+<p>Bu hiyerarsik yapi istedigimiz kadar derine gidebilir. Isin guzel tarafi
+tiplemenin otomatik algilanip dogru Python objesi yaratilmasi, mesela </p>
+<pre><code class="python">print (type(jf['points']['city 1']))
+</code></pre>
+
+<pre><code class="text">&lt;class 'list'&gt;
+</code></pre>
+
+<p>Yani koseli parantez gorunce <code>json</code> paketi bunun liste objesi oldugunu
+anladi. Bu ozelligi farkli yerlerde de kullanabiliriz, cunku bazen bir
+veri dosyasinda ayri bir yerde metin bazli bir liste depolamis
+olabiliriz,</p>
+<pre><code class="python">str_liste1 = '[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;]'
+</code></pre>
+
+<p>Bu liste belki bir CSV'den Pandas objesi içinde geldi, pür metin halde. Eğer
+tipten eminsek, onu <code>json</code>'a çevirttirebiliriz, ki bu yaklaşım <code>eval</code> çağrısından
+çok daha hızlı ve güvenli işler, </p>
+<pre><code class="python">liste1 = json.loads(str_liste1)
+print (liste1)
+print (type(liste1))
+</code></pre>
+
+<pre><code class="text">['1', '2', '3']
+&lt;class 'list'&gt;
+</code></pre>

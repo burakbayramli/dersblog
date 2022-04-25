@@ -1,0 +1,123 @@
+<h1>Yükseklik Verisini Kontur olarak Folium Haritasında Göstermek</h1>
+<p>Matplotlib'de <code>contour</code> komutu <code>x,y</code> ızgarasında üç boyutta yükseklik
+olarak kabul edilebilecek <code>z</code> verisini "kuşbakışı" olarak
+gösterebilen, kesit seviyelerini, bir nevi topografik haritayı
+hesaplabilen bir komuttur. Peki bu seviyeleri alıp Matplotlib ile
+direk bağlantısı olmayan Folium [3] haritalarına taşımak istesek bunu
+nasıl yaparız? Üç boyutlu yükseklik verisini iki boyutlu kesit
+seviyelerine dönüştürmek kolay değil, <code>contour</code> içindeki kodu bu iş
+için kullansak tekrar yazmaya gerek kalmazdı. Bunu yapmak mümkün,
+çünkü <code>contour</code> bize seviyeleri temsil eden parçaları dondürebiliyor.</p>
+<p>Örnek üzerinde görelim. Belli <code>x,y</code> değerleri arasında bir ızgara
+yaratalım (bu değerler TR haritasında özel bir yere tekabül edecek
+şekilde seçildi, ki sonra Folium'da gösterim yapabilelim), ve ızgaraya
+bir tane "tepe" koyalım, bunu iki degiskenli (bivariate, ve üç
+boyutlu) Gaussian fonksiyonu ile yapabiliyoruz, ve kesit seviyelerini
+gösterelim,</p>
+<pre><code class="python">import matplotlib
+import numpy as np
+import matplotlib.cm as cm
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
+
+matplotlib.rcParams['xtick.direction'] = 'out'
+matplotlib.rcParams['ytick.direction'] = 'out'
+
+def bivariate_normal(X, Y, sigmax=1.0, sigmay=1.0,
+                 mux=0.0, muy=0.0, sigmaxy=0.0):
+    Xmu = X-mux
+    Ymu = Y-muy
+    rho = sigmaxy/(sigmax*sigmay)
+    z = Xmu**2/sigmax**2 + Ymu**2/sigmay**2 - 2*rho*Xmu*Ymu/(sigmax*sigmay)
+    denom = 2*np.pi*sigmax*sigmay*np.sqrt(1-rho**2)
+    return np.exp(-z/(2*(1-rho**2))) / denom
+
+delta = 0.025
+x = np.arange(29.06161, 29.20870, delta)
+y = np.arange(36.61599, 36.70624, delta)
+X, Y = np.meshgrid(x, y)
+Z = 10*bivariate_normal(X, Y, 0.02, 0.02, 29.13920, 36.64653)
+
+plt.figure()
+CS = plt.contour(X, Y, Z )
+plt.clabel(CS, inline=1, fontsize=10)
+plt.savefig('elev1.png')
+</code></pre>
+
+<p><img alt="" src="elev1.png" /></p>
+<p>Sanki bir "dağa" üstten bakıyoruz, dağın eteklerinde 500 metre
+yükseklik var, sonra giderek yükseliyor, ve en tepede 3000 metreye
+ulaşıyoruz.</p>
+<p>Üstteki grafiği oluşturan ham bilgilere erişmek mümkün. Gördüğümüz
+gibi çağrıyı <code>CS = plt.contour</code> ile yaptık, döndürülen <code>CS</code> içinde
+gerekli bilgiler var. Bu bilgiler bölümler (segments) olarak
+tutulmuş, mesela</p>
+<pre><code class="python">print (CS.levels)
+</code></pre>
+
+<pre><code class="text">[   0.  500. 1000. 1500. 2000. 2500. 3000. 3500. 4000.]
+</code></pre>
+
+<pre><code class="python">print (len(CS.allsegs))
+</code></pre>
+
+<pre><code class="text">9
+</code></pre>
+
+<p>sonucunu verir. 1'inci bölümdeki 0'ıncı alt bölümde,</p>
+<pre><code class="python">CS.allsegs[1][0]
+</code></pre>
+
+<pre><code class="text">Out[1]: 
+array([[29.16850299, 36.61599   ],
+       [29.18289603, 36.64099   ],
+       [29.17913935, 36.66599   ],
+       [29.16161   , 36.68398265],
+       [29.13661   , 36.68902999],
+       [29.11161   , 36.67980347],
+       [29.0986095 , 36.66599   ],
+       [29.09359308, 36.64099   ],
+       [29.11161   , 36.61651895],
+       [29.11231435, 36.61599   ]])
+</code></pre>
+
+<p>görülüyor. İşte bu noktalar kesit seviyelerini oluşturan çizgilerin baş
+ve son noktaları. Eğer o çizgileri ayrı ayrı kendimiz çizmek istesek,</p>
+<pre><code class="python">plt.figure()
+CS = plt.contour(X, Y, Z)
+for i in range(len(CS.allsegs)):
+    for li in range(len(CS.allsegs[i])):
+        x = CS.allsegs[i][li][:,0]
+        y = CS.allsegs[i][li][:,1]
+        plt.plot(x,y,'r-')
+plt.savefig('elev3.png')
+</code></pre>
+
+<p><img alt="" src="elev3.png" /></p>
+<p>Aynı grafiği Folium ile yapmak için,</p>
+<pre><code class="python">import folium
+
+clat,clon=36.64653, 29.13920
+
+m = folium.Map(location=[clat, clon], zoom_start=11, tiles=&quot;Stamen Terrain&quot;)
+for i in range(len(CS.allsegs)):
+    for li in range(len(CS.allsegs[i])):
+        points = []
+        x = CS.allsegs[i][li][:,0]
+        y = CS.allsegs[i][li][:,1]
+        for lon,lat in zip(x,y): points.append([lat,lon])
+        folium.PolyLine(points, color='red', weight=1.0, opacity=1).add_to(m)
+
+m.save('elev.html')
+</code></pre>
+
+<p>Sonuçlar <a href="elev.html">şurada</a> görülebilir.</p>
+<p>Yükseklik verilerini alma tekniklerini [4]'te göstermiştik; bir
+bölgedeki yükseklik verisini, sonra o veriyi kullanıp daha yüksek
+çözünürlü yükseklik verisini aradeğerleme ile hesaplama teknikleri o
+yazıda bulunabilir.</p>
+<p>Kaynaklar</p>
+<p>[1] <a href="https://www.tutorialspoint.com/how-to-get-coordinates-from-the-contour-in-matplotlib">Tutorialspoint</a></p>
+<p>[2] <a href="https://stackoverflow.com/questions/19418901/get-coordinates-from-the-contour-in-matplotlib">Stackoverflow</a></p>
+<p>[3] <a href="../../2020/02/haritalamak.md">Haritalamak</a></p>
+<p>[4] <a href="../../2019/04/elevation.md">Yükseklik (Elevation) Verileri</a></p>

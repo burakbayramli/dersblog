@@ -62,8 +62,6 @@
 
 [SASHA: Esle/Indirge Altyapisi](11/hizli-esleindirge-altyapisi-sasha.html)
 
-[Log Lineer Modeller ve Kosulsal Rasgele Alanlar (Log Linear Models and Conditional Random Fields -CRF-)](11/log-lineer-modeller-ve-kosulsal-rasgele.html)
-
 [Sayfadan Video Indirme, videolectures.net, rtmpdump](11/sayfadan-video-indirme-videolecturesnet.html)
 
 [Veri Bilimi, Ceviklik, Anlik Veri Ambari](11/veri-bilimi-ceviklik-anlik-veri-ambari.html)

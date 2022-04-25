@@ -37,6 +37,3 @@ derlendikten sonra, en son testleriniz otomatik olarak, yeni kod
 bile "doğru kod" sayılmaz. Derlenebilen VE testlerden geçebilen kod
 doğru koddur.
 
-
-
-

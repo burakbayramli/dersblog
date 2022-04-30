@@ -152,8 +152,8 @@ PyPİ sayfası olarak gözükecektir.
 Not
 
 PyPI'a versiyon arttırıp yeni kodu derleyp göndermeden önce kendi
-yerel kurulumda `lib/python../site-packages` gibi bir dizinde olacak,
-eski sürümün dizinini kendimiz silersek daha iyi olur.
+yerel kurulumuzda `lib/python../site-packages` gibi bir dizinde
+olacak, eski sürümün dizinini kendimiz silersek daha iyi olur.
 
 Kaynaklar
 

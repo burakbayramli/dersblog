@@ -149,6 +149,12 @@ setuptools.setup(
 tanımlarsak, bu paketi gönderince `README.md` içinde olan belgeleme direk
 PyPİ sayfası olarak gözükecektir.
 
+Not
+
+PyPI'a versiyon arttırıp yeni kodu derleyp göndermeden önce kendi
+yerel kurulumda `lib/python../site-packages` gibi bir dizinde olacak,
+eski sürümün dizinini kendimiz silersek daha iyi olur.
+
 Kaynaklar
 
 [1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication

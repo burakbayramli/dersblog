@@ -147,23 +147,23 @@ def init(z, alpha, beta):
 def flux(u):
     return 0.5*u**2
 
-def godunov_flux(um):
-    fhat = np.zeros((len(um),1))
+def godunov_flux(uval):
+    fhat = np.zeros((len(uval),1))
 
-    for i in range(0,len(um)-1):
-        wl = um[i]; wr = um[i+1]
+    for i in range(0,len(uval)-1):
+        ul = uval[i]; ur = uval[i+1]
 
-        s=(wl+wr)/2;
-        if wl &gt; wr:
+        s=(ul+ur)/2;
+        if ul &gt; ur:
             if s &lt; 0:
-                fhat[i] = flux(wr)
+                fhat[i] = flux(ur)
             else:
-                fhat[i] = flux(wl)
-        elif wl &lt; wr:
-            if wr &lt; 0:
-                fhat[i] = flux(wr)
-            elif wl &gt; 0.:
-                fhat[i] = flux(wl)
+                fhat[i] = flux(ul)
+        elif ul &lt; ur:
+            if ur &lt; 0:
+                fhat[i] = flux(ur)
+            elif ul &gt; 0.:
+                fhat[i] = flux(ul)
             else:
                 fhat[i] = 0
 
@@ -220,14 +220,14 @@ zamanda ilerletirken bunun hücrelerdeki o temsili değer üzerinden yapacak.</p
 </code></pre>
 
 <p>Not:</p>
-<pre><code class="python">if (um[i]*up[i]&lt;0.0 and um[i]&lt;=up[i]):
+<pre><code class="python">if (uval[i]*uval[i+1]&lt;0.0 and uval[i]&lt;=uval[i+1]):
     fhat[i] = 0.0
-elif (um[i]*up[i]&lt;0.0 and um[i]&gt;up[i]):
-    fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
-elif (um[i]*up[i]&gt;=0.0 and um[i]&lt;=up[i]):
-    fhat[i] = np.fmin(flux(um[i]), flux(up[i]))
-elif (um[i]*up[i]&gt;=0.0 and um[i]&gt;up[i]):
-    fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
+elif (uval[i]*uval[i+1]&lt;0.0 and uval[i]&gt;uval[i+1]):
+    fhat[i] = np.fmax(flux(uval[i]), flux(uval[i+1]))
+elif (uval[i]*uval[i+1]&gt;=0.0 and uval[i]&lt;=uval[i]):
+    fhat[i] = np.fmin(flux(uval[i]), flux(uval[i+1]))
+elif (uval[i]*uval[i+1]&gt;=0.0 and uval[i]&gt;uval[i]):
+    fhat[i] = np.fmax(flux(uval[i]), flux(uval[i+1]))
 </code></pre>
 
 <p>[devam edecek]</p>

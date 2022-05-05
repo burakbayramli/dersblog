@@ -144,6 +144,11 @@ $$
 \frac{h_t}{h_x} ( F_{j+1/2,l} - F_{j-1/2,l} )
 $$
 
+Sayısal akışı elde etmek için bize bir sayısal $u$ lazım, bunu FV ile bulacağız,
+sonra bu $u$'ları bildiğimiz $f()$ akışına verince sayısal $F$ elde edilecek.
+
+Bu kod alttaki gibidir,
+
 \begin{minted}[fontsize=\footnotesize]{python}
 import scipy.integrate as integrate
 import matplotlib.pyplot as plt
@@ -217,14 +222,25 @@ while t < T:
         plt.close('all')
 \end{minted}
 
-Kodda ilk önce içinde sinüs olan \verb!init! fonksiyonu üzerinden bir entegral
-aldık, bu entegraller FV hücreleri üzerinden \verb!integrate.quad! ile alındı, ve
+Kodda ilk önce başlangıç fonksiyonu tanımlandı, içinde sinüs olan \verb!init!
+bu; Bu fonksiyonun hücre bazında \verb!integrate.quad! ile entegrali alındı,
 böylece her hücreyi temsil eden o tek değeri elde ettik.
 
 \includegraphics[width=12em]{12-19-02.png}
 
 FV yöntemi bundan sonra o hücreler üzerinden hesabını yapacak, dinamik denklemi
 zamanda ilerletirken bunun hücrelerdeki o temsili değer üzerinden yapacak.
+
+Hücrelerin FV matematiği şöyle; mesela yanyana iki hücreye bakarsak, üstteki
+resimde $x_{i-2}$ ve $x_{i-1}$ diyelim, soldan ilk iki hücre, bu iki değer
+sanki bir Riemann problemini andırmıyor mu? Evet; ve FV çözümü için kullanılan
+teknik te zaten budur. İki hücre ortasındaki $x_{i-1/2}$ noktası hücre sınırı
+kabul edilir ve önceki sonraki değerler $u_L$ ve $u_R$ imiş gibi Riemann
+çözümü işletilir. Bu işlem tüm yanyana hücreler için işletilince bir
+zaman dilimi çözümü elde edilir, sonraki zaman dilimi için bu işlem
+tekrar baştan hesaplanır.
+
+
 
 
 \includegraphics[width=20em]{out-005.png}
@@ -249,10 +265,6 @@ elif (uval[i]*uval[i+1]>=0.0 and uval[i]>uval[i]):
     fhat[i] = np.fmax(flux(uval[i]), flux(uval[i+1]))
 \end{minted}
 
-
-
-
-[devam edecek]
   
 Kaynaklar
 

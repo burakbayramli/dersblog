@@ -141,11 +141,14 @@ sonra bu $u$'ları bildiğimiz $f()$ akışına verince sayısal $F$ elde edilec
 import matplotlib.pyplot as plt
 import numpy as np
 
+alpha = 0.0
+beta  = 1.0
+
 def init(z, alpha, beta):
     return alpha + beta*np.sin(z)
 
-# akis fonksiyonu 
-#   u_t + f(u)_x = 0
+# 
+#  u_t + f(u)_x = 0 denklemi icin akis (flux) fonksiyonu 
 #
 def flux(u):
     return 0.5*u**2
@@ -174,16 +177,11 @@ def godunov_flux(uval):
 
 a = 0
 b = 2*np.pi
-
-alpha = 0.0
-beta  = 1.0
-
 N  = 80
 T = 2.0
 
 x = np.linspace(a,b,N)     
 dx = (b-a)/(N-1);  
-
 u = np.zeros((len(x)-1,1)); 
 
 for i in range(0,N-1):
@@ -194,8 +192,7 @@ dt = dx/(2*np.amax(np.amax(u)))
 t = 0.0
 i = 0
 while t &lt; T:
-    um = u
-    fR = godunov_flux(um) 
+    fR = godunov_flux(u) 
     fL = np.roll(fR,1)
     u -= dt/dx*(fR - fL)
     t = t+dt
@@ -216,32 +213,67 @@ böylece her hücreyi temsil eden o tek değeri elde ettik.</p>
 <p>FV yöntemi bundan sonra o hücreler üzerinden hesabını yapacak, dinamik denklemi
 zamanda ilerletirken bunun hücrelerdeki o temsili değer üzerinden yapacak.</p>
 <p>Hücrelerin FV matematiği şöyle; mesela yanyana iki hücreye bakarsak, üstteki
-resimde $x_{i-2}$ ve $x_{i-1}$ diyelim, soldan ilk iki hücre, bu iki değer
-sanki bir Riemann problemini andırmıyor mu? Evet; ve FV çözümü için kullanılan
-teknik te zaten budur. İki hücre ortasındaki $x_{i-1/2}$ noktası hücre sınırı
-kabul edilir ve önceki sonraki değerler $u_L$ ve $u_R$ imiş gibi Riemann
-çözümü işletilir. Bu işlem tüm yanyana hücreler için işletilince bir
-zaman dilimi çözümü elde edilir, sonraki zaman dilimi için bu işlem
-tekrar baştan hesaplanır.</p>
+resimde $x_{i-2}$ ve $x_{i-1}$ diyelim, soldan ilk iki hücre, bu iki değer sanki
+bir Riemann problemini andırmıyor mu? Evet; ve Godunov'un icat ettiği FV çözümü
+için kullanılan teknik te zaten budur. İki hücre ortasındaki $x_{i-1/2}$ noktası
+hücre sınırı kabul edilir ve önceki sonraki değerler $u_L$ ve $u_R$ imiş gibi
+Riemann çözümü işletilir. Bu işlem tüm yanyana hücreler için işletilince bir
+zaman dilimi çözümü elde edilir, sonraki zaman dilimi için bu işlem tekrar
+baştan hesaplanır.</p>
+<p>Şimdi $x_{i}$ ile $x_{i+1}$ arasındaki $x_{1+1/2}$ sınırını baz alıp, ve
+[3]'teki Riemann çözümünü baz alarak şunu yazalım [4, sf. 109],</p>
+<p>$u_i^l \ge u_{i+1}^l$ için,</p>
+<p>$$
+u^\star_{i+1/2} = 
+\left\{ \begin{array}{lll}
+u_i^l &amp; \textrm{eğer} &amp; s &gt; (x-x_{i+1/2}) / t  \\
+u_{i+1}^l &amp; \textrm{eğer} &amp; s &lt; (x-x_{i+1/2}) / t
+\end{array} \right.
+$$</p>
+<p>Daha önce gördük $s$ dalga hızı, bu örnekte $s = (u_i^n + u_{i+1}^n)/2$.</p>
+<p>$u_i^l &lt; u_{i+1}^l$ için,</p>
+<p>$$
+u^\star_{i+1/2} = 
+\left\{ \begin{array}{lll}
+u_i^l &amp; \textrm{eğer} &amp; (x-x_{i+1/2})/t \le u_i^l   \\
+(x-x_{i+1/2})/t &amp; \textrm{eğer} &amp; u_i^l &lt; (x-x_{i+1/2})/t &lt; u_{i+1}^l   \\
+u_{i+1}^l &amp; \textrm{eğer} &amp; (x-x_{i+1/2})/t \ge u_{i+1}^l   \\
+\end{array} \right.
+$$</p>
+<p>Bir kez Riemann çözümü elde edilince Godunov sayısal akışı $u^\star_{i+1/2}$ ile
+kolayca hesaplanabilir, akış fonksiyonu $f()$ üzerinden $F = f(u^\star_{i+1/2})$.</p>
+<p>Üstteki formülleri daha da kolaylaştırmak mümkün, Godunov akışlarını
+$x = x_{i+1/2}$ noktasında hesapladığımız için bunu formülde $x$ yerine
+koyunca,</p>
+<p>$u_i^l \ge u_{i+1}^l$ için,</p>
+<p>$$
+u^\star_{i+1/2} = 
+\left\{ \begin{array}{lll}
+u_i^l &amp; \textrm{eğer} &amp; s &gt; 0  \\
+u_{i+1}^l &amp; \textrm{eğer} &amp; s &lt; 0
+\end{array} \right.
+$$</p>
+<p>$u_i^l &lt; u_{i+1}^l$ için,</p>
+<p>$$
+u^\star_{i+1/2} = 
+\left\{ \begin{array}{lll}
+u_i^l &amp; \textrm{eğer} &amp; 0 \le u_i^l   \\
+(x-x_{i+1/2})/t &amp; \textrm{eğer} &amp; u_i^l &lt; 0 &lt; u_{i+1}^l   \\
+u_{i+1}^l &amp; \textrm{eğer} &amp; 0 \ge u_{i+1}^l   \\
+\end{array} \right.
+$$</p>
+<p>Belli $t$ anlarından alınmış görüntüler altta bulunabilir.</p>
 <p><img alt="" src="out-005.png" />
 <img alt="" src="out-010.png" />
 <img alt="" src="out-020.png" />
 <img alt="" src="out-030.png" /></p>
+<p>Animasyon [1],</p>
 <pre><code class="python">! convert -delay 20 -loop 0 /tmp/out-*.png wave.gif
 </code></pre>
 
-<p>Not:</p>
-<pre><code class="python">if (uval[i]*uval[i+1]&lt;0.0 and uval[i]&lt;=uval[i+1]):
-    fhat[i] = 0.0
-elif (uval[i]*uval[i+1]&lt;0.0 and uval[i]&gt;uval[i+1]):
-    fhat[i] = np.fmax(flux(uval[i]), flux(uval[i+1]))
-elif (uval[i]*uval[i+1]&gt;=0.0 and uval[i]&lt;=uval[i]):
-    fhat[i] = np.fmin(flux(uval[i]), flux(uval[i+1]))
-elif (uval[i]*uval[i+1]&gt;=0.0 and uval[i]&gt;uval[i]):
-    fhat[i] = np.fmax(flux(uval[i]), flux(uval[i+1]))
-</code></pre>
-
 <p>Kaynaklar</p>
+<p>[1] Bayramlı, <em>Animasyon, Godunov Sonlu Hacim Yontemi ile Burgers Denklem Cozumu</em>
+    <a href="https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv2/wave.gif">https://github.com/burakbayramli/classnotes/raw/master/compscieng/compscieng_bpp50fv2/wave.gif</a></p>
 <p>[2] Kloeckner, <em>Numerical Methods for Partial Differential Equations CS555 / MATH555 / CSE510</em>
     <a href="https://relate.cs.illinois.edu/course/cs555-s20/">https://relate.cs.illinois.edu/course/cs555-s20/</a></p>
 <p>[3] Bayramlı, <em>Sonlu Hacim (Finite Volume) Yöntemi - 1</em></p>

@@ -1,75 +1,65 @@
+# convert -delay 20 -loop 0 /tmp/out-*.png wave.gif
 import scipy.integrate as integrate
 import matplotlib.pyplot as plt
 import numpy as np
 
-# returns the initial condition of the PDE
-def initial_condition(z, alpha, beta):
+def init(z, alpha, beta):
     return alpha + beta*np.sin(z)
 
-# flux function for the conservation law
+# akis fonksiyonu 
 #	u_t + f(u)_x = 0
 #
 def flux(u):
     return 0.5*u**2
 
-# Godunov numerical flux
-def godunov_flux(um, up):
+def godunov_flux(um):
     fhat = np.zeros((len(um),1))
 
-    for i in range(0,len(um)):
-        if (um[i]*up[i]<0.0 and um[i]<=up[i]):
-            fhat[i] = 0.0
-        elif (um[i]*up[i]<0.0 and um[i]>up[i]):
-            fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
-        elif (um[i]*up[i]>=0.0 and um[i]<=up[i]):
-            fhat[i] = np.fmin(flux(um[i]), flux(up[i]))
-        elif (um[i]*up[i]>=0.0 and um[i]>up[i]):
-            fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
+    for i in range(0,len(um)-1):
+        wl = um[i]; wr = um[i+1]
+
+        s=(wl+wr)/2;
+        if wl > wr:
+            if s < 0:
+                fhat[i] = flux(wr)
+            else:
+                fhat[i] = flux(wl)
+        elif wl < wr:
+            if wr < 0:
+                fhat[i] = flux(wr)
+            elif wl > 0.:
+                fhat[i] = flux(wl)
+            else:
+                fhat[i] = 0
+                
     return fhat
 
-
-# specify domain
 a = 0
 b = 2*np.pi
 
-# initial condition: u(x,0) = alpha + beta*sin(x)
 alpha = 0.0
 beta  = 1.0
 
-# number of grid points in spatial discretization
 N  = 80
-
-# stopping time
 T = 2.0
 
-# setup grid points
 x = np.linspace(a,b,N)     
 dx = (b-a)/(N-1);  
 
-# setup array to store cell averages; due to periodicity, we omit the last cell
 u = np.zeros((len(x)-1,1)); 
 
-# compute cell averages at t=0
 for i in range(0,N-1):
-    u[i] = (1.0/dx)*integrate.quad(initial_condition, x[i], x[i+1], args=(alpha,beta))[0]
+    u[i] = (1.0/dx)*integrate.quad(init, x[i], x[i+1], args=(alpha,beta))[0]
 
-# set the time step
 dt = dx/(2*np.amax(np.amax(u)))
 
-# this is the main time-stepping loop
 t = 0.0
 i = 0
 while t < T:
-    # compute numerical fluxes fhat_{j+1/2}
     um = u
-    up = np.roll(u,-1)
-    fR = godunov_flux(um, up) 
-    # compute numerical fluxes fhat_{j-1/2} (assuming periodic BCs)
+    fR = godunov_flux(um) 
     fL = np.roll(fR,1)
-    # first order explicit time-stepping
     u -= dt/dx*(fR - fL)
-
-    # increment time step
     t = t+dt
     i += 1
 
@@ -77,5 +67,5 @@ while t < T:
         plt.figure()
         plt.plot(u)
         plt.ylim(-1,1)
-        plt.savefig('/tmp/out-%02d.png' % i)
+        plt.savefig('/tmp/out-%03d.png' % i)
         plt.close('all')

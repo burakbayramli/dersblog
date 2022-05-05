@@ -23,7 +23,7 @@ Farklı bir grafik
 
 İki üstte görülen grafikte mesela $i$ ile $i+1$ noktası ortasındaki $i+1/2$
 noktası ve $i$ ile $i-1$ noktası ortasındaki $i-1/2$ arasında kalan fonksiyonun
-averajı alınacak, o zaman $< u_i >$ ya da $\overline{u}_i$
+averajı alınacak, ona $< u_i >$ ya da $\overline{u}_i$ diyoruz.
 
 $$
 \overline{u}_i = \frac{1}{\Delta x} \int _{x_{i-1/2}}^{x_{i+1/2}} u(x) \ud x
@@ -33,13 +33,14 @@ Dikkat; $i-1,i-2$ değerleri $i$ referanslı olduğu için eksi içerikli, $i=4$
 olsaydı onlar $3,2,..$ diye gidebilirdi. Ayrıca FD yönteminin aksine, indis
 değerlerine tekabül eden $x_i,x_{i+1}$ değerleri herhangi bir yerde olabilir,
 böylece eşit aralıklı olmayan ızgaralarla çalışmamız mümkün olur, bu FV
-yönteminin kuvvetlerinden biri.
+yönteminin kuvvetlerinden biri. 
+
+Gerçi biz bu anlatımda ve kodda eşit aralık farz edeceğiz, $\Delta x$, $h_x$
+burada devreye girer. 
 
 \includegraphics[width=20em]{12-20-00.png}
-\includegraphics[width=12em]{12-19-02.png}
 
-Notasyonda $f$ daha çok akış (flux) için kullanılır, karışıklık olmaması
-için $u$ diyelim [2], $\Delta x$ için $h_x$,
+Notasyonda $f$ akış (flux) için kullanılır [2], $\Delta x$ için $h_x$,
 
 $$
 \overline{u}_i =  \frac{1}{h_x} \int_{x_{i-1/2}}^{x_{i+1/2}} u(x) \ud x
@@ -145,6 +146,7 @@ $$
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import scipy.integrate as integrate
+import matplotlib.pyplot as plt
 import numpy as np
 
 def init(z, alpha, beta):
@@ -156,20 +158,27 @@ def init(z, alpha, beta):
 def flux(u):
     return 0.5*u**2
 
-def godunov_flux(um, up):
+def godunov_flux(um):
     fhat = np.zeros((len(um),1))
 
-    for i in range(0,len(um)):
-        if (um[i]*up[i]<0.0 and um[i]<=up[i]):
-            fhat[i] = 0.0
-        elif (um[i]*up[i]<0.0 and um[i]>up[i]):
-            fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
-        elif (um[i]*up[i]>=0.0 and um[i]<=up[i]):
-            fhat[i] = np.fmin(flux(um[i]), flux(up[i]))
-        elif (um[i]*up[i]>=0.0 and um[i]>up[i]):
-            fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
-    return fhat
+    for i in range(0,len(um)-1):
+        wl = um[i]; wr = um[i+1]
 
+        s=(wl+wr)/2;
+        if wl > wr:
+            if s < 0:
+                fhat[i] = flux(wr)
+            else:
+                fhat[i] = flux(wl)
+        elif wl < wr:
+            if wr < 0:
+                fhat[i] = flux(wr)
+            elif wl > 0.:
+                fhat[i] = flux(wl)
+            else:
+                fhat[i] = 0
+                
+    return fhat
 
 a = 0
 b = 2*np.pi
@@ -194,8 +203,7 @@ t = 0.0
 i = 0
 while t < T:
     um = u
-    up = np.roll(u,-1)
-    fR = godunov_flux(um, up) 
+    fR = godunov_flux(um) 
     fL = np.roll(fR,1)
     u -= dt/dx*(fR - fL)
     t = t+dt
@@ -209,6 +217,16 @@ while t < T:
         plt.close('all')
 \end{minted}
 
+Kodda ilk önce içinde sinüs olan \verb!init! fonksiyonu üzerinden bir entegral
+aldık, bu entegraller FV hücreleri üzerinden \verb!integrate.quad! ile alındı, ve
+böylece her hücreyi temsil eden o tek değeri elde ettik.
+
+\includegraphics[width=12em]{12-19-02.png}
+
+FV yöntemi bundan sonra o hücreler üzerinden hesabını yapacak, dinamik denklemi
+zamanda ilerletirken bunun hücrelerdeki o temsili değer üzerinden yapacak.
+
+
 \includegraphics[width=20em]{out-005.png}
 \includegraphics[width=20em]{out-010.png}
 \includegraphics[width=20em]{out-020.png}
@@ -218,11 +236,25 @@ while t < T:
 ! convert -delay 20 -loop 0 /tmp/out-*.png wave.gif
 \end{minted}
 
+Not:
+
+\begin{minted}[fontsize=\footnotesize]{python}
+if (um[i]*up[i]<0.0 and um[i]<=up[i]):
+    fhat[i] = 0.0
+elif (um[i]*up[i]<0.0 and um[i]>up[i]):
+    fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
+elif (um[i]*up[i]>=0.0 and um[i]<=up[i]):
+    fhat[i] = np.fmin(flux(um[i]), flux(up[i]))
+elif (um[i]*up[i]>=0.0 and um[i]>up[i]):
+    fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
+\end{minted}
+
+
+
+
 [devam edecek]
   
 Kaynaklar
-
-[1] Zingale, {\em PHY 604: Computational Methods in Physics and Astrophysics II}
 
 [2] Kloeckner, {\em Numerical Methods for Partial Differential Equations CS555 / MATH555 / CSE510}
     \url{https://relate.cs.illinois.edu/course/cs555-s20/}

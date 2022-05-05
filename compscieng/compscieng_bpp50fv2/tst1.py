@@ -1,210 +1,81 @@
-import numpy as np
+# convert -delay 20 -loop 0 /tmp/out-*.png wave.gif
 import scipy.integrate as integrate
-from scipy.optimize import fsolve
 import matplotlib.pyplot as plt
+import numpy as np
 
+def init(z, alpha, beta):
+    return alpha + beta*np.sin(z)
 
-# returns the initial condition of the PDE
-def initial_condition(z, alpha, beta):
-	return alpha + beta*np.sin(z)
-
-# nonlinear function f(xi) = x - x0 - beta*sin(x0)*t for method
-# of characteristics
-def myfun(x_past, x, t, beta):
-	return x - x_past - beta*np.sin(x_past)*t
-
-# apply nonlinear solve to obtain x0 in method of characteristics
-def burgers(beta, x, t):
-
-	# compute x0 using nonlinear solve
-	x_next = np.zeros((len(x),1))
-
-	for j in range(0,len(x)):
-		x_next[j] = fsolve(myfun, 0.0, args=(x[j], t, beta))
-
-	return beta*np.sin(x_next)
-
-# returns exact solution of Burgers equation
-def exact_solution(x, t, alpha, beta):
-
-	x = np.asarray(x)
-
-	# location of shock
-	if (np.pi + alpha*t > 2.0*np.pi):
-		d = pi + alpha*t - 2.0*pi*np.floor((pi + alpha*t)/(2.0*np.pi))
-		x += 2.0*pi*np.floor((pi + alpha*t)/(2.0*np.pi))
-	else:
-		d = np.pi + alpha*t
-
-	d2 = np.pi + alpha*t
-
-	# determine whether x lies before or after the shock
-	idx1 = np.all(x <= d2)
-	idx2 = np.all(x > d2)
-
-	x1 = x[idx1]
-	x2 = x[idx2]
-
-	if (x1.size != 0):
-		# coordinate transformation
-		xn = x1 - alpha*t
-
-		# solve burgers using the coordinate transformation
-		u = burgers(beta, xn, t)
-		v = alpha + u
-
-		x1 -= 2.0*np.pi*np.floor((np.pi+alpha*t)/(2.0*np.pi));
-
-		if (x2.size != 0):
-			x2 = np.flip(2.0*d2 - x2)
-			xn2 = x2 - alpha*t
-
-			u2 = burgers(beta, xn2, t)
-			v2 = alpha + u2
-
-			x2 -= 2.0*np.pi*floor((np.pi+alpha*t)/(2.0*np.pi))
-
-			vv = np.append(v, np.flip(2.0*alpha-v2))
-		else:
-			vv = v
-
-	elif (x2.size != 0):
-		x2 = np.flip(2.0*d2 - x2)
-		xn2 = x2 - alpha*t
-
-		u2 = burgers(beta, xn2, t)
-		v2 = alpha + u2
-
-		x2 -= 2.0*np.pi*np.floor((np.pi+alpha*t)/(2.0*np.pi))
-		vv = np.flip(2.0*alpha - v2)
-
-	return vv
-
-# flux function for the conservation law
+# akis fonksiyonu 
 #	u_t + f(u)_x = 0
 #
 def flux(u):
-	return 0.5*u**2
+    return 0.5*u**2
 
-# Roe numerical flux
-def roe_flux(um, up):
-	fm = flux(um)
-	fp = flux(up)
-	s = np.zeros((len(um),1))
+def godunov_flux(um):
+    fhat = np.zeros((len(um),1))
 
-	for i in range(0,len(um)):
-		if (up[i] == um[i]):
-			s[i] = um[i]
-		else:
-			s[i] = (fp[i]-fm[i])/(up[i]-um[i])
+    for i in range(0,len(um)-1):
+        wl = um[i]; wr = um[i+1]
 
-	return 0.5*(fm+fp - np.sign(s)*(fp-fm))
+        if (wl*wr<0.0 and wl<=wr):
+            fhat[i] = 0.0
+        elif (wl*wr<0.0 and wl>wr):
+            fhat[i] = np.fmax(flux(wl), flux(wr))
+        elif (wl*wr>=0.0 and wl<=wr):
+            fhat[i] = np.fmin(flux(wl), flux(wr))
+        elif (wl*wr>=0.0 and wl>wr):
+            fhat[i] = np.fmax(flux(wl), flux(wr))
 
-# Godunov numerical flux
-def godunov_flux(um, up):
-	fhat = np.zeros((len(um),1))
+    return fhat
+            
+"""        
+        s=(wl+wr)/2;
+        if wl > wr:
+            if s < 0: fhat[i] = flux(wr)
+        elif wl < wr:
+            if wr < 0: fhat[i] = flux(wr)
+            elif wl > 0.:
+                fhat[i] = flux(wl)
+            else:
+                fhat[i] = 0
+"""
 
-	for i in range(0,len(um)):
-		if (um[i]*up[i]<0.0 and um[i]<=up[i]):
-			fhat[i] = 0.0
-		elif (um[i]*up[i]<0.0 and um[i]>up[i]):
-			fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
-		elif (um[i]*up[i]>=0.0 and um[i]<=up[i]):
-			fhat[i] = np.fmin(flux(um[i]), flux(up[i]))
-		elif (um[i]*up[i]>=0.0 and um[i]>up[i]):
-			fhat[i] = np.fmax(flux(um[i]), flux(up[i]))
-	return fhat
+        
+        
 
-# Lax-Friedrichs numerical flux
-def lf_flux(um, up, A):
-	fm = flux(um)
-	fp = flux(up)
-
-	return 0.5*( fm+fp - A*(up-um) )
-
-# Engquist-Osher numerical flux
-def eo_flux(um, up):
-	fhat = np.zeros((len(um),1))
-
-	for i in range(0,len(um)):
-		if (um[i]>0.0):
-			a = flux(um[i])
-		else:
-			a = 0.0
-
-		if (up[i]>0.0):
-			b = 0.0
-		else:
-			b = flux(up[i])
-
-		fhat[i] = a+b
-
-	return fhat
-
-# Lax-Wendroff flux
-def lw_flux(um, up, dx, dt):
-	fm = flux(um)
-	fp = flux(up)
-
-	return 0.5*(fm+fp) - 0.5*(dt/dx)*0.5*(um+up)*(fp-fm)	
-
-# specify domain
 a = 0
 b = 2*np.pi
 
-# initial condition: u(x,0) = alpha + beta*sin(x)
 alpha = 0.0
 beta  = 1.0
 
-# number of grid points in spatial discretization
 N  = 80
+T = 2.0
 
-# stopping time
-T = 1.5
-
-# setup grid points
 x = np.linspace(a,b,N)     
 dx = (b-a)/(N-1);  
 
-# setup array to store cell averages; due to periodicity, we omit the last cell
 u = np.zeros((len(x)-1,1)); 
 
-# compute cell averages at t=0
 for i in range(0,N-1):
-    u[i] = (1.0/dx)*integrate.quad(initial_condition, x[i], x[i+1], args=(alpha,beta))[0]
+    u[i] = (1.0/dx)*integrate.quad(init, x[i], x[i+1], args=(alpha,beta))[0]
 
-# set the time step
 dt = dx/(2*np.amax(np.amax(u)))
 
-# this is the main time-stepping loop
 t = 0.0
 i = 0
 while t < T:
-        # alpha for the Lax-Friedrichs flux
-        A  = np.amax(np.amax(u));
+    um = u
+    fR = godunov_flux(um) 
+    fL = np.roll(fR,1)
+    u -= dt/dx*(fR - fL)
+    t = t+dt
+    i += 1
 
-        # compute numerical fluxes fhat_{j+1/2}
-        um = u
-        up = np.roll(u,-1)
-        # fR = roe_flux(um, up)
-        # fR = godunov_flux(um, up) 
-        fR = lf_flux(um, up, A)
-        # fR = eo_flux(um, up)
-        # fR = lw_flux(um, up, dx, dt)
-
-        # compute numerical fluxes fhat_{j-1/2} (assuming periodic BCs)
-        fL = np.roll(fR,1)
-
-        # first order explicit time-stepping
-        u -= dt/dx*(fR - fL)
-
-        # increment time step
-        t = t+dt
-
-        i += 1
-
-        if i % 5 == 0:
-                plt.figure()
-                plt.plot(u)
-                plt.savefig('/tmp/out-%02d.png' % i)
-
+    if i % 5 == 0:
+        plt.figure()
+        plt.plot(u)
+        plt.ylim(-1,1)
+        plt.savefig('/tmp/out-%03d.png' % i)
+        plt.close('all')

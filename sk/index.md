@@ -3,6 +3,8 @@
 
 ## En Son
 
+6/5 - [Sonlu Hacim (Finite Volume) Yöntemi - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_bpp50fv2/sonlu_hacim__finite_volume__yontemi__2.html)
+
 25/4 - [JSON](https://burakbayramli.github.io/dersblog/sk/2011/03/json.html)
 
 22/4 - [Python Paketleme](https://burakbayramli.github.io/dersblog/sk/2012/04/python-paketleme.html)
@@ -10,8 +12,6 @@
 22/3 - [Sonlu Hacim (Finite Volume) Yöntemi - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_bpp50fv1/sonlu_hacim__finite_volume__yontemi__1.html)
 
 8/3 - [Isı Denklemi (Heat Equation) - Ekler](https://burakbayramli.github.io/dersblog/phy/phy_005_basics_08/isi_denklemi__heat_equation_.html)
-
-2/3 - [Animasyon, Matplotlib, Mayavi](https://burakbayramli.github.io/dersblog/sk/2020/11/animasyon-matplotlib-mayavi-2d-3d.html)
 
 ## Konular, Referans
 

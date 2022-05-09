@@ -108,3 +108,7 @@ print (type(liste1))
 ['1', '2', '3']
 <class 'list'>
 ```
+
+Not: Programcılar bu paketin ismini 'jey-sin' olarak telafuz eder;
+erkek ismi Jason ile ses benzerliği var, yazanlar herhalde bunu bilerek
+ismi seçtiler.

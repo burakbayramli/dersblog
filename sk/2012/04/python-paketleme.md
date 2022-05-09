@@ -87,8 +87,8 @@ data_dir = os.path.dirname(__file__)
 ```
 
 ile alınması, ve kod içinde tüm veri erişimlerini mesela `veri.zip`
-için `data_dir + "/veri.zip"` olarak değiştirmek. Kod `__file__` anda
-içinde olunan dosyanın tüm adresidir, onun baz dizinini alıp veri
+için `data_dir + "/veri.zip"` olarak değiştirmek. Ibare `__file__` o
+anda içinde olunan dosyanın tüm adresidir, onun baz dizinini alıp veri
 dosya erişimini ona göre ayarlıyoruz.
 
 PyPi'da Paket Yayinlama, Pip Hazırlığı

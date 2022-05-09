@@ -151,7 +151,7 @@ PyPİ sayfası olarak gözükecektir.
 
 Not
 
-PyPI'a versiyon arttırıp yeni kodu derleyp göndermeden önce kendi
+PyPI'a versiyon arttırıp yeni kodu derleyip göndermeden önce kendi
 yerel kurulumuzda `lib/python../site-packages` gibi bir dizinde
 olacak, eski sürümün dizinini kendimiz silersek daha iyi olur.
 

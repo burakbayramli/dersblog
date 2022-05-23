@@ -3,7 +3,7 @@
 
 ## En Son
 
-23/6 - [Python ile Finans Verileri](https://burakbayramli.github.io/dersblog/sk/2016/01/python-ile-finans-verileri.html)
+23/5 - [Python ile Finans Verileri](https://burakbayramli.github.io/dersblog/sk/2016/01/python-ile-finans-verileri.html)
 
 6/5 - [Sonlu Hacim (Finite Volume) Yöntemi - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_bpp50fv2/sonlu_hacim__finite_volume__yontemi__2.html)
 
@@ -44,4 +44,7 @@
 [Sene](year.html)
 
 [Ara](ara.html)
+
+
+
 

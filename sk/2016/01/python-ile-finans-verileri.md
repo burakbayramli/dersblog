@@ -26,7 +26,7 @@ file = BytesIO(r)
 df = pd.read_csv(file,index_col='Date')3
 ```
 
-Aynı şekilde 'FRED' ABD merkez bankası tabanından veri indirilebiliyor.
+Aynı şekilde 'FRED' ABD merkez bankası tabanından veri indirilebiliyor. 
 ABD gayrı safi milli hasıla verisi için mesela,
 
 ```python
@@ -59,8 +59,10 @@ https://www.nasdaq.com/symbol/aapl/option-chain
 
 Makroekonomik Veriler ve Digerleri
 
-Alttaki ornek ABD/Avro doviz kuru icin; issizlik, enflasyon, vs. gibi
-pek cok veri mumkun. Ornek Ingiliz pound ile ABD dolari arasinda,
+Alttaki örnek ABD/Avro döviz kuru için; işsizlik, enflasyon, vs. gibi
+pek çok veri mümkün. Yanlız Quandl verisi için üye olup bir APİ
+anahtarı almak lazım, o anahtarı alıp `auth` içine yazınca herşey
+işler. Örnek İngiliz pound ile ABD doları arasında,
 
 ```
 import pandas_datareader.data as web

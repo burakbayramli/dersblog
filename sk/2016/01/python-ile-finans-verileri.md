@@ -2,13 +2,11 @@
 
 Finans verilerini indirmek, işlemek Python üzerinde iyice
 basitleşti. Veri işleme amaçlı başlatılan Pandas'ın yazarı zaten
-projesini ilk başta zaman serilerileri / finans verisi işlemek için
+projesini ilk başta zaman serileri / finans verisi işlemek için
 başlattığını söylemişti. Bu yakınlık devam etmiş anlaşılan, şu anda
 Yahoo Finance, Google Finance, hatta makroekonomik veriler için FRED
 bağlantısı var. Hatta birisi opsiyon (option) verisi indirecek kodları
-bile eklemiş - açık yazılımın faydaları.
-
-Bazi ornekler altta,
+bile eklemiş - açık yazılımın faydaları. Bazı örnekler altta.
 
 İndeks verisi, mesela Nasdaq için `^IXIC`, ama paketsiz, kendi işimizi
 kendimiz yapmamız gerekiyor,
@@ -55,7 +53,7 @@ DATE
 
 Opsiyon
 
-Alttaki url kazinabilir
+Alttaki url kazınabilir
 
 https://www.nasdaq.com/symbol/aapl/option-chain
 
@@ -104,6 +102,40 @@ endDate
 2020-12-31  152757000000  386064000000
 2021-12-31  197478000000  469822000000
 ```
+
+Hisse Başına Kâr (Earnings Per Share)
+
+Şirketlerin hisse başına karlılık oranları borsaçılar tarafından
+yakından takip edilir, her şirket her çeyrekte belli günlerde bu
+rakamı açıklar ve buna göre senet fiyatları yükselip düşebilir.
+Karlılık o kadar kritiktir ki önceden hakkında bir konsensüs tahmini
+yapılır ve bu açıkca bilinir, bu tahmine yaklaşıp yaklaşılmaması da
+senet fiyatını etkiler. Bu veriyi almak için, mesela Walmart şirketi
+için,
+
+```python
+from yahoo_fin.stock_info import get_earnings_history
+import pandas as pd
+
+res =  get_earnings_history('WMT')
+df = pd.DataFrame.from_dict(res)
+pd.set_option('display.max_columns', None)
+df.head(4)[['startdatetime','epsestimate','epsactual']]
+```
+
+```text
+Out[1]: 
+              startdatetime  epsestimate  epsactual
+0  2022-08-16T07:00:00.000Z  1.83        NaN       
+1  2022-05-17T07:02:00.000Z  1.48         1.30     
+2  2022-02-17T07:11:00.000Z  1.50         1.53     
+3  2021-11-16T07:01:00.000Z  1.40         1.45     
+```
+
+Görüldüğü gibi analist tahmini 1.48 ama birinci çeyrekte karlılık 1.30.
+Tahmine eriselemedi ve Walmart senetleri bunu yazdığımız Mayıs 2022'de
+ağır bir darbe yedi.
+
 
 
 

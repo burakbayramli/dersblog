@@ -136,5 +136,6 @@ Out[1]:
 
 Görüldüğü gibi analist tahmini 1.48 ama birinci çeyrekte karlılık 1.30.
 Tahmine eriselemedi ve Walmart senetleri bunu yazdığımız Mayıs 2022'de
-ağır bir darbe yedi.
+ağır bir darbe yedi. Ayrıca bir sonraki çeyrek için tahminin yapılmış olduğunu
+görüyoruz, 1.83 diyor. Bakalım ne olacak.
 

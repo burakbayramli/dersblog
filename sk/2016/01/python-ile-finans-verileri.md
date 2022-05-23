@@ -107,13 +107,13 @@ endDate
 
 Hisse Başına Kâr (Earnings Per Share)
 
-Şirketlerin hisse başına karlılık oranları borsaçılar tarafından
+Şirketlerin hisse başına karlılık oranları borsacılar tarafından
 yakından takip edilir, her şirket her çeyrekte belli günlerde bu
 rakamı açıklar ve buna göre senet fiyatları yükselip düşebilir.
 Karlılık o kadar kritiktir ki önceden hakkında bir konsensüs tahmini
-yapılır ve bu açıkca bilinir, bu tahmine yaklaşıp yaklaşılmaması da
-senet fiyatını etkiler. Bu veriyi almak için, mesela Walmart şirketi
-için,
+bile yapılır ve bu açıkça bilinir, bu tahmine yaklaşıp yaklaşılmaması
+da senet fiyatını etkiler. Bu veriyi almak için, mesela Walmart
+şirketi için,
 
 ```python
 from yahoo_fin.stock_info import get_earnings_history
@@ -137,11 +137,4 @@ Out[1]:
 Görüldüğü gibi analist tahmini 1.48 ama birinci çeyrekte karlılık 1.30.
 Tahmine eriselemedi ve Walmart senetleri bunu yazdığımız Mayıs 2022'de
 ağır bir darbe yedi.
-
-
-
-
-
-
-
 

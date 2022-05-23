@@ -13,8 +13,6 @@
 
 22/3 - [Sonlu Hacim (Finite Volume) Yöntemi - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_bpp50fv1/sonlu_hacim__finite_volume__yontemi__1.html)
 
-8/3 - [Isı Denklemi (Heat Equation) - Ekler](https://burakbayramli.github.io/dersblog/phy/phy_005_basics_08/isi_denklemi__heat_equation_.html)
-
 ## Konular, Referans
 
 [Python](2016/01/python-dil-ogrenimi.html)

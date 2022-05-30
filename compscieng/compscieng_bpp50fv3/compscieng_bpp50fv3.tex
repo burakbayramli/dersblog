@@ -42,7 +42,6 @@ def roe_averages(q_l, q_r, gamma=1.4):
     
     
 def Euler_roe(q_l, q_r, t, gamma=1.4):
-    
     rho_l = q_l[0]
     rhou_l = q_l[1]
     u_l = rhou_l/rho_l
@@ -84,17 +83,13 @@ def Euler_roe(q_l, q_r, t, gamma=1.4):
     q = conservative_to_primitive(rho, mom, E, gamma=1.4)
 
     fig, axes = plt.subplots(3, 1, figsize=(5, 6), sharex=True)
-    axes[0].plot(x,q[0]); axes[0].set_ylim(0,4)
+    axes[0].plot(x,q[0]); axes[0].set_ylim(0,4); axes[0].set_title('t = ' + str(t))
     axes[1].plot(x,q[1]); axes[0].set_ylim(0,1)
     axes[2].plot(x,q[2]); axes[0].set_ylim(0,4)
-    
     plt.savefig('euler-roe-%d.png' % (t*100))    
 \end{minted}
 
-
-
-\begin{minted}[fontsize=\footnotesize]{python}
-    
+\begin{minted}[fontsize=\footnotesize]{python}    
 left  = Primitive_State(Density = 3.,
                         Velocity = 0.,
                         Pressure = 3.)
@@ -111,7 +106,6 @@ Euler_roe(q_l, q_r, t=0.4)
 Euler_roe(q_l, q_r, t=0.6)
 Euler_roe(q_l, q_r, t=0.8)
 \end{minted}
-
 
 \includegraphics[width=20em]{euler-roe-20.png}
 

@@ -24,7 +24,7 @@
 </script>
 </head>
 
-<p>Euler gaz denkleminin Riemann Roe yontemi ile cozumu</p>
+<p>Euler gaz denkleminin Riemann Roe yöntemi ile çözümü</p>
 <pre><code class="python">from collections import namedtuple
 import matplotlib.pyplot as plt
 import numpy as np
@@ -87,7 +87,7 @@ def Euler_roe(q_l, q_r, t, gamma=1.4):
     speeds = [s1, s2, s3]
     wave_types = ['contact','contact', 'contact']
 
-    xmax = 0.9
+    xmax = 1.0
     x = np.linspace(-xmax, xmax, 100)
     xi = x/(t+1e-10)
     rho = (xi&lt;s1)*states[0,0] + (s1&lt;=xi)*(xi&lt;s2)*states[0,1] + \
@@ -100,9 +100,10 @@ def Euler_roe(q_l, q_r, t, gamma=1.4):
     q = conservative_to_primitive(rho, mom, E, gamma=1.4)
 
     fig, axes = plt.subplots(3, 1, figsize=(5, 6), sharex=True)
-    axes[0].plot(x,q[0]); axes[0].set_ylim(0,4); axes[0].set_title('t = ' + str(t))
+    axes[0].plot(x,q[0]); axes[0].set_ylim(0,4)
     axes[1].plot(x,q[1]); axes[0].set_ylim(0,1)
     axes[2].plot(x,q[2]); axes[0].set_ylim(0,4)
+    axes[0].set_title('t = ' + str(t))
     plt.savefig('euler-roe-%d.png' % (t*100))    
 </code></pre>
 

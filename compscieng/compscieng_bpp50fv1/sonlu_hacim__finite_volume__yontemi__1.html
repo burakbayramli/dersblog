@@ -78,99 +78,7 @@ diferansiyel formun her yerde düzgün işlemesi mümkün değil, çünkü kesin
 türev alınamıyor. Ayrıca pür kesintisiz olsa bile şok oluşumu denen sebeplerle
 türevsel fonksiyonlar çözülemiyor. Bu problemlerle başedebilmek için entegral
 formu kullanmak gerekecek.</p>
-<p>Formu yaratalım. İçinde gaz olan sadece tek boyutuna baktığımız bir tüp
-düşünelim, $x$ tüpün üzerindeki bir noktayı temsil edecek, $\rho(x,t)$ ise tüpün
-$x$ noktasında ve $t$ anındaki yoğunluğunu verecek diyelim. Yoğunluğu kullanarak
-$x_1$ ve $x_2$ noktaları arasındaki $t$ anındaki kütle</p>
-<p>$$
-\int _{x_1}^{x_2} \rho(x,t) \mathrm{d} x
-$$</p>
-<p>ile hesaplanabilir. Tüpün duvarları tam izole ise ve kütle yoktan varedilip
-yokedilemeyeceğine göre tüpe gaz giriş ya da çıkış sadece $x_1,x_2$
-noktalarından olabilir [3, sf. 14]. Şimdi bir gaz hareket hızı düşünelim,
-$v(x,t)$ ile, o zaman gaz akma oranı, ya da akış (flux)</p>
-<p>$$
-flux = \rho(x,t) v(x,t)
-$$</p>
-<p>olur. Üstteki fiziksel kurallardan hareketle $[x_1,x_2]$ deki kütlenin
-değişim oranı $x_1$ ve $x_2$ noktalarındaki akışın farkına eşit olmalıdır,</p>
-<p>$$
-\frac{\mathrm{d}}{\mathrm{d} t} \int _{x_1}^{x_2} \rho(x,t) \mathrm{d} x =
-\rho(x_1,t) v(x_1,t) - \rho(x_2,t) v(x_2,t)
-$$</p>
-<p>İşte bu muhafaza kanununun entegral formudur. </p>
-<p>Üstteki formülü $t_1,t_2$ zaman aralığı için entegre edersek, ki böylece
-bu zaman içindeki tüm toplam akışı hesaplayabilelim, o zaman</p>
-<p>$$
-\int_{t_1}^{t_2} \left( \frac{\mathrm{d}}{\mathrm{d} t} \int _{x_1}^{x_2} \rho(x,t) \mathrm{d} x  \right)  =
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \mathrm{d} t -
-\int_{t_1}^{t_2} \rho(x_2,t) v(x_2,t) \mathrm{d} t
-$$</p>
-<p>Soldaki kısım zaman üzerinden türevin yine zaman üzerinden entegrali, o zaman
-yokolabilir, Calculus'un Temel Teorisi üzerinden basitleştirirsek,</p>
-<p>$$
-\int _{x_1}^{x_2} \rho(x,t_2) \mathrm{d} x -
-\int _{x_1}^{x_2} \rho(x,t_1) \mathrm{d} x  = 
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \mathrm{d} t -
-\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) \mathrm{d} t
-$$</p>
-<p>Ufak bir yer değiştirme sonrası</p>
-<p>$$
-\int _{x_1}^{x_2} \rho(x,t_2) \mathrm{d} x =
-\int _{x_1}^{x_2} \rho(x,t_1) \mathrm{d} x  +
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \mathrm{d} t -
-\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) \mathrm{d} t
-$$</p>
-<p>Üstteki formun değişik bir şekli ileride lazım olacak, zaman adımı atmaya
-uğraştığımız hesapsal yöntemlerde $t_1$ ve $t_2$ üzerinden bir entegral, hesabı
-bir sonraki zamana geçirmeye uğraştığımızda, adım attığımızda.</p>
-<p>Neyse şimdi diferansiyel forma geçise dönelim. Bu noktada $\rho(x,t)$ ve
-$v(x,t)$'nin türevi alınabilir fonksiyonlar olduğunu farz ediyoruz. Üstekini,
-yine ufak bir değişim sonrası,</p>
-<p>$$
-\int _{x_1}^{x_2} \rho(x,t_1) \mathrm{d} x  +
-\int _{x_1}^{x_2} \rho(x,t_2) \mathrm{d} x -
-\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) \mathrm{d} t -
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \mathrm{d} t = 0
-\qquad (3)
-$$</p>
-<p>olarak görelim. Eğer Calculus'un Temel Teorisi ile ilk iki terime
-$\int_{t_1}^{t_2} .. \mathrm{d} / \mathrm{d} t$ son iki terime $\int_{x_1}^{x_2} .. \mathrm{d} / \mathrm{d} x$
-ekleyebilirsek, tüm terimlerde aynı entegraller olacağı için, 
-$\int_{t_1}^{t_2} \int_{x_1}^{x_2} $ altında tüm terimleri gruplayıp
-basitleştirmek mümkün, ve bunlar sıfıra eşit olur. Bu bizi diferansiyel
-forma götürebilir. Yani</p>
-<p>$$
-\rho(x,t_2) - \rho(x,t_1) = \int_{t_1}^{t_2}
-\frac{\partial }{\partial t} \rho(x,t) \mathrm{d} t
-$$</p>
-<p>ve</p>
-<p>$$
-\rho(x_2,t)v(x_2,t) - \rho(x_1,t)v(x_1,t) =
-\int _{x_1}^{x_2} \frac{\partial }{\partial x} (\rho(x,t)v(x,t)) \mathrm{d} x
-$$</p>
-<p>eşitliklerinden hareketle, bunları (3)'e uygulayıp</p>
-<p>$$
-\int _{t_1}^{t_2} \int _{x_1}^{x_2}  \left\{
-\frac{\partial }{\partial t} \rho(x,t)  +
-\frac{\partial }{\partial x} (\rho(x,t)v(x,t))
-\right\} \mathrm{d} x \mathrm{d} t = 0
-\qquad (4)
-$$</p>
-<p>elde ediyoruz. Bu ifadenin $[x_1,x_2]$ ve $[t_1,t_2]$ arasındaki tüm değerlerde
-doğru olması gerektiği için entegre edilenin sıfır olması gerekiyor ([2]'dekine
-benzer bir mantık yürütüldü), yani</p>
-<p>$$
-\rho_t + (\rho v)_x = 0
-$$</p>
-<p>olmalı. Böylece kütlenin muhafaza kuralını diferansiyel formda elde etmiş olduk.</p>
-<p>Bu formu izole halde çözmenin tek yolu $v$'nin önceden bilindiği durumdadır, ya
-da $v$ fonksiyon $\rho(x,t)$'ye bağlı bir fonksiyon olmalıdır, yani
-$f(\rho) = \rho v$ gibi. Bu durumda üstteki ifade $\rho$ için tek sayısal
-muhafaza kanunu haline gelir,</p>
-<p>$$
-\rho_t + f(\rho)_x = 0
-$$</p>
+<p>Bu formu [12]'de bulabiliriz. </p>
 <p>Riemann Problemi</p>
 <p>Kesintili ve iki parça içeren bir fonksiyon ile Burgers denkleminin çözümü
 mümkün; bu aslında basit, $u_t + u u_x = 0$ denklemi için başlangıç şartları</p>
@@ -488,3 +396,4 @@ rarefaction()
 <p>[10] Bayramli, <em>Cok Degiskenli Calculus, Ders 11</em></p>
 <p>[11] Muller, {Learn CFD, Lecture 15 - Part b},
      <a href="https://youtu.be/f8fuMRFZYwQ">https://youtu.be/f8fuMRFZYwQ</a></p>
+<p>[12] Bayramlı, <em>Fizik, Gazlar, Sıvılar 2</em></p>

@@ -70,126 +70,7 @@ türev alınamıyor. Ayrıca pür kesintisiz olsa bile şok oluşumu denen sebep
 türevsel fonksiyonlar çözülemiyor. Bu problemlerle başedebilmek için entegral
 formu kullanmak gerekecek.
 
-Formu yaratalım. İçinde gaz olan sadece tek boyutuna baktığımız bir tüp
-düşünelim, $x$ tüpün üzerindeki bir noktayı temsil edecek, $\rho(x,t)$ ise tüpün
-$x$ noktasında ve $t$ anındaki yoğunluğunu verecek diyelim. Yoğunluğu kullanarak
-$x_1$ ve $x_2$ noktaları arasındaki $t$ anındaki kütle
-
-$$
-\int _{x_1}^{x_2} \rho(x,t) \ud x
-$$
-
-ile hesaplanabilir. Tüpün duvarları tam izole ise ve kütle yoktan varedilip
-yokedilemeyeceğine göre tüpe gaz giriş ya da çıkış sadece $x_1,x_2$
-noktalarından olabilir [3, sf. 14]. Şimdi bir gaz hareket hızı düşünelim,
-$v(x,t)$ ile, o zaman gaz akma oranı, ya da akış (flux)
-
-$$
-flux = \rho(x,t) v(x,t)
-$$
-
-olur. Üstteki fiziksel kurallardan hareketle $[x_1,x_2]$ deki kütlenin
-değişim oranı $x_1$ ve $x_2$ noktalarındaki akışın farkına eşit olmalıdır,
-
-$$
-\frac{\ud}{\ud t} \int _{x_1}^{x_2} \rho(x,t) \ud x =
-\rho(x_1,t) v(x_1,t) - \rho(x_2,t) v(x_2,t)
-$$
-
-İşte bu muhafaza kanununun entegral formudur. 
-
-Üstteki formülü $t_1,t_2$ zaman aralığı için entegre edersek, ki böylece
-bu zaman içindeki tüm toplam akışı hesaplayabilelim, o zaman
-
-$$
-\int_{t_1}^{t_2} \left( \frac{\ud}{\ud t} \int _{x_1}^{x_2} \rho(x,t) \ud x  \right)  =
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \ud t -
-\int_{t_1}^{t_2} \rho(x_2,t) v(x_2,t) \ud t
-$$
-
-Soldaki kısım zaman üzerinden türevin yine zaman üzerinden entegrali, o zaman
-yokolabilir, Calculus'un Temel Teorisi üzerinden basitleştirirsek,
-
-$$
-\int _{x_1}^{x_2} \rho(x,t_2) \ud x -
-\int _{x_1}^{x_2} \rho(x,t_1) \ud x  = 
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \ud t -
-\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) \ud t
-$$
-
-Ufak bir yer değiştirme sonrası
-
-$$
-\int _{x_1}^{x_2} \rho(x,t_2) \ud x =
-\int _{x_1}^{x_2} \rho(x,t_1) \ud x  +
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \ud t -
-\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) \ud t
-$$
-
-Üstteki formun değişik bir şekli ileride lazım olacak, zaman adımı atmaya
-uğraştığımız hesapsal yöntemlerde $t_1$ ve $t_2$ üzerinden bir entegral, hesabı
-bir sonraki zamana geçirmeye uğraştığımızda, adım attığımızda.
-
-Neyse şimdi diferansiyel forma geçise dönelim. Bu noktada $\rho(x,t)$ ve
-$v(x,t)$'nin türevi alınabilir fonksiyonlar olduğunu farz ediyoruz. Üstekini,
-yine ufak bir değişim sonrası,
-
-$$
-\int _{x_1}^{x_2} \rho(x,t_1) \ud x  +
-\int _{x_1}^{x_2} \rho(x,t_2) \ud x -
-\int_{t_1}^{t_2}  \rho(x_2,t) v(x_2,t) \ud t -
-\int_{t_1}^{t_2} \rho(x_1,t) v(x_1,t) \ud t = 0
-\mlabel{3}
-$$
-
-olarak görelim. Eğer Calculus'un Temel Teorisi ile ilk iki terime
-$\int_{t_1}^{t_2} .. \ud / \ud t$ son iki terime $\int_{x_1}^{x_2} .. \ud / \ud x$
-ekleyebilirsek, tüm terimlerde aynı entegraller olacağı için, 
-$\int_{t_1}^{t_2} \int_{x_1}^{x_2} $ altında tüm terimleri gruplayıp
-basitleştirmek mümkün, ve bunlar sıfıra eşit olur. Bu bizi diferansiyel
-forma götürebilir. Yani
-
-$$
-\rho(x,t_2) - \rho(x,t_1) = \int_{t_1}^{t_2}
-\frac{\partial }{\partial t} \rho(x,t) \ud t
-$$
-
-ve
-
-$$
-\rho(x_2,t)v(x_2,t) - \rho(x_1,t)v(x_1,t) =
-\int _{x_1}^{x_2} \frac{\partial }{\partial x} (\rho(x,t)v(x,t)) \ud x
-$$
-
-eşitliklerinden hareketle, bunları (3)'e uygulayıp
-
-$$
-\int _{t_1}^{t_2} \int _{x_1}^{x_2}  \left\{
-\frac{\partial }{\partial t} \rho(x,t)  +
-\frac{\partial }{\partial x} (\rho(x,t)v(x,t))
-\right\} \ud x \ud t = 0
-\mlabel{4}
-$$
-
-elde ediyoruz. Bu ifadenin $[x_1,x_2]$ ve $[t_1,t_2]$ arasındaki tüm değerlerde
-doğru olması gerektiği için entegre edilenin sıfır olması gerekiyor ([2]'dekine
-benzer bir mantık yürütüldü), yani
-
-$$
-\rho_t + (\rho v)_x = 0
-$$
-
-olmalı. Böylece kütlenin muhafaza kuralını diferansiyel formda elde etmiş olduk.
-
-Bu formu izole halde çözmenin tek yolu $v$'nin önceden bilindiği durumdadır, ya
-da $v$ fonksiyon $\rho(x,t)$'ye bağlı bir fonksiyon olmalıdır, yani
-$f(\rho) = \rho v$ gibi. Bu durumda üstteki ifade $\rho$ için tek sayısal
-muhafaza kanunu haline gelir,
-
-$$
-\rho_t + f(\rho)_x = 0
-$$
-
+Bu formu [12]'de bulabiliriz. 
 
 Riemann Problemi
 
@@ -608,5 +489,7 @@ Kaynaklar
 
 [11] Muller, {Learn CFD, Lecture 15 - Part b},
      \url{https://youtu.be/f8fuMRFZYwQ}
-    
+
+[12] Bayramlı, {\em Fizik, Gazlar, Sıvılar 2}
+     
 \end{document}

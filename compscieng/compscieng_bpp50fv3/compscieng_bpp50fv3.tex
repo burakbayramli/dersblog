@@ -17,11 +17,8 @@ def primitive_to_conservative(rho, u, p, gamma=1.4):
     E   = p/(gamma-1.) + 0.5*rho*u**2
     return rho, mom, E
 
-def pospart(x):
-    return np.maximum(1.e-15,x)
-
 def conservative_to_primitive(rho, mom, E, gamma=1.4):
-    u = mom/pospart(rho)
+    u = mom/np.maximum(1.e-15,rho)
     p = (gamma-1.)*(E - 0.5*rho*u**2)
     return rho, u, p
 
@@ -36,8 +33,7 @@ def roe_averages(q_l, q_r, gamma=1.4):
     c_hat = np.sqrt((gamma-1)*(H_hat-0.5*u_hat**2))
     
     return u_hat, c_hat, H_hat
-    
-    
+        
 def Euler_roe(q_l, q_r, t, gamma=1.4):
     rho_l = q_l[0]
     rhou_l = q_l[1]
@@ -106,11 +102,9 @@ Euler_roe(q_l, q_r, t=0.8)
 \end{minted}
 
 \includegraphics[width=20em]{euler-roe-20.png}
-
 \includegraphics[width=20em]{euler-roe-40.png}
 
 \includegraphics[width=20em]{euler-roe-60.png}
-
 \includegraphics[width=20em]{euler-roe-80.png}
 
 

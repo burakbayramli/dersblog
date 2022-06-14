@@ -199,7 +199,10 @@ versiyonu için farklı bir mol spesifik ısı öne sürmek daha iyi olur, bunla
 biri basınç sabit tutulduğu durumdaki, diğeri de hacim sabit tutulduğu
 durumdaki mol spesifik ısı.
 
-$Q = n C_P \Delta T$
+$$
+Q = n C_P \Delta T
+\mlabel{2}
+$$
 
 $$
 Q = n C_V \Delta T
@@ -235,18 +238,104 @@ $$
 $$
 
 $E_{int}$ bir materyelin iç ısısı, ve sadece materyelin o anki iç konumuna bağlı
-(sıcaklığı, basıncı ve hacmi). $Q$ değişkeni sistemin onun çevresindekilerle
-yaptığı ısı alışverisini temsil ediyor, artı değerler materyel ısı çekiyor,
-negatif ısı veriyor demektir. $W$ ise sistemin yaptığı iş (work). Eger sistem
-genişliyorsa mesela iş yapılıyordur, genişleme ya da daralma yoksa $W=0$.
+(sıcaklığı, basıncı ve hacmi). $Q$ değişkeni sistemin çevresindekilerle yaptığı
+ısı alışverisini temsil ediyor, artı değerler materyel ısı çekiyor, negatif ısı
+veriyor demektir. $W$ ise sistemin yaptığı iş (work). Eğer sistem genişliyorsa
+mesela iş yapılıyordur, genişleme ya da daralma yoksa $W=0$.
 
-Ustteki formul icine bildigimiz diger formulleri koyabiliriz, mesela (1)
+Üstteki formül içine bildiğimiz diğer formülleri koyabiliriz, mesela (1)'i
 sokarsak,
 
 $$
-n R \Delta T = Q - W
+n C_V \Delta T = Q - W
+\mlabel{5}
 $$
 
+Yapılan iş $W$ hesaplamak için üstteki resmi düşünelim, alt bölmedeki gaz
+pistonu yukarı doğru iterek iş yapabilir. Bu işin pistonu $\vec{F}$ kuvvetiyle
+ve $\ud \vec{s}$ kadar sonsuz ufak bir değişime uğrattığını düşünelim.  Bu
+değişim çok ufak olduğu için $\vec{F}$'nin o değişim sırasında sabit olduğunu
+farz edebiliriz [2, sf. 529]. Bir diğer çıkarsama $\vec{F}$'nin $p A$'ya eşit
+olduğu - basınç $p$ kuvvet bölü alan $A$ ise aynı $p$ ile $A$'yi çarparsak
+kuvvete geri geliriz. Diferansiyel yapılan iş
+
+$$
+\ud W = \vec{F} \cdot \ud \vec{s} = (pA) (\ud s) = p (A \ud s)
+$$
+
+O zaman $V_i$ ile $V_f$ hacim değişimleri arasında yapılan iş üstteki formülün
+entegralidir,
+
+$$
+W = \int \ud W = \int_{V_i}^{V_f} p \ud V
+$$
+
+Bu hesabın detaylarına şimdi girmeyeceğiz, ama baktığımız sabit hacim
+durumu için üstteki hesap daha basitleşiyor, $W = p \Delta V$. Ayrıca
+ideal gaz kanunu $pV = n R T$ olduğu için $p \Delta V = n R \Delta T$
+de yazılabilir, o zaman $p \Delta V$ yerine $n R \Delta T$ kullanmak
+mümkün, (5)'e sokarsak,
+
+$$
+n C_V \Delta T = Q - n R \Delta T
+$$
+
+$Q$ ise basınç sabit durumdaki (2) formülünden geliyor zaten,
+
+$$
+n C_V \Delta T = n C_P \Delta T - n R \Delta T
+$$
+
+Her şeyi $n \Delta T$ ile bölersek,
+
+$$
+C_V = C_P - R
+$$
+
+Ya da
+
+$$
+C_P - C_V = R
+\mlabel{4}
+$$
+
+Bir diğer kullanışlı ilginç sabit
+
+$$
+\gamma = C_P / C_V
+\mlabel{3}
+$$
+
+oranıdır. Bu oran, politropik (polytrophic) gazlar denen, sabit hacimdeki
+durumun enerjisinin hesaplamak için faydalı. Tek bir mol için
+
+$$
+E_{int} = C_V T
+$$
+
+ile başlarsak, ve $T = p / R\rho$ formülünü $T$'ye sokunca [3, sf. 295],
+
+$$
+E_{int} = \frac{C_V}{R} \frac{p}{\rho}
+$$
+
+Gruplamayı bu şekilde yaptık çünkü birazdan $C_V/R$ yerine başka bir formül
+bulacağız. Devam edelim (3)'ten hareketle $\gamma C_V = C_P$ diyebiliriz. Bu
+formülü $C_P$ için (4)'ye koyalım,
+
+$$
+\gamma C_V - C_V = R \implies C_V(\gamma-1) = R \implies \frac{C_V}{R} =
+\frac{1}{\gamma-1}
+$$
+
+Bu sonuç iki üstteki ilk terim ile uyumlu, o zaman 
+
+$$
+E_{int} = \frac{p}{\rho (\gamma - 1)}
+$$
+
+Bu form politropik ideal gazların konum formülü (equation of state for an ideal
+polytropic gas) olarak biliniyor.
 
 
 [devam edecek]
@@ -257,6 +346,8 @@ Kaynaklar
     \url{https://chem.libretexts.org/@go/page/41408}
 
 [2] Resnick, Fundamentals of Physics, 10th Ed
+
+[3] Leveque, Finite Volume Methods
 
 [5] Feynman, {\em Feynman Lectures on Physics, I}
 

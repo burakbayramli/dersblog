@@ -3,7 +3,7 @@
 
 ## En Son
 
-16/6 - [Euler Gaz Dinamiği Formülleri](https://burakbayramli.github.io/dersblog/phy/phy_030_fluid12/gazlar_sivilar__2.html)
+16/6 - [Euler Gaz Dinamiği Formülleri (Euler Equations of Gas Dynamics)](https://burakbayramli.github.io/dersblog/phy/phy_030_fluid12/gazlar_sivilar__2.html)
 
 14/6 - [Termodinamik, İdeal Gazlar Kanunu, Basınç, Isı, Enerji](https://burakbayramli.github.io/dersblog/phy/phy_030_fluid05/ideal_gazlar_kanunu__ideal_gas_law_.html)
 

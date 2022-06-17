@@ -24,7 +24,54 @@
 </script>
 </head>
 
-<p>Euler gaz denkleminin Riemann Roe yöntemi ile çözümü</p>
+<p>Euler Gaz Denkleminin Çözümü</p>
+<p>[2]'de gösterilen tek boyutta Euler gaz dinamiği formülünü yazalım,</p>
+<p>$$
+\left[\begin{array}{c}
+\rho \\ \rho u  \\ E
+\end{array}\right]_t
++
+\left[\begin{array}{c}
+\rho u \\ \rho u^2 + p \\ (E+p) u 
+\end{array}\right]_x 
+= 0
+$$</p>
+<p>Üstteki formülü matris notasyonu ile tekrar yazarsak [3, sf. 88],</p>
+<p>$$
+U_t + F(U)_x = 0
+$$</p>
+<p>ki $U,F$ birer vektor olacaklar,</p>
+<p>$$
+U = \left[\begin{array}{c}
+\rho \\ \rho u  \\ E
+\end{array}\right], \qquad
+F(U) =
+\left[\begin{array}{c}
+\rho u \\ \rho u^2 + p \\ (E+p) u 
+\end{array}\right]
+$$</p>
+<p>Şimdi aynen yatay iletim (lineer advection) ve Burgers'ın denklemlerini
+hatırlarsak onları su formde gösterebiliyorduk,</p>
+<p>$$
+u_t + f'(u) u_x = 0
+$$</p>
+<p>ki yatay iletim için $f(u) = au$ ve Burgers için $f(u) = \frac{1}{2} u^2$,
+bu fonksiyonların türevleri sırasıyla $f'(u) = a$ ve $f'(u) = u u_x$,
+sonuç olarak</p>
+<p>$$
+u_t + a u_x = 0
+$$</p>
+<p>ve</p>
+<p>$$
+u_t + u u_x = 0
+$$</p>
+<p>denklemleri elde ediliyordu. Matris formu için de benzer mantık geçerli,
+eğer $F$ türevine Zincirleme Kuralı uygulanırsa,</p>
+<p>$$
+\frac{\partial F(U)}{\partial x} =
+\frac{\partial F}{\partial U} \frac{\partial U}{\partial x}
+$$</p>
+<p>Riemann Roe yöntemi </p>
 <pre><code class="python">from collections import namedtuple
 import matplotlib.pyplot as plt
 import numpy as np
@@ -127,3 +174,5 @@ Euler_roe(q_l, q_r, t=0.8)
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Leveque, <em>Riemann Problems and Jupyter Solutions</em></p>
+<p>[2] Bayramli, <em>Fizik, Gazlar, Sıvılar - 2</em></p>
+<p>[3] Toro, <em>Riemann Solvers and Numerical Methods for Fluid Dynamics</em></p>

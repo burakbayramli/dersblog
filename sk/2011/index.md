@@ -54,8 +54,6 @@
 
 [Python Radyo](10/python-radyo.html)
 
-[Excel, CSV, Python](12/excel-csv-python.html)
-
 [Imaj Gosterip Tiklama Almak, ImageTk](12/imaj-gosterip-tiklama-almak-imagetk.html)
 
 [PDF Formlari Otomatik Olarak Doldurmak](12/pdf-formlari-otomatik-olarak-doldurmak.html)

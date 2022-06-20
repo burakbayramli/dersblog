@@ -60,7 +60,7 @@
 
 [Postgres First_Value, Sum, Partition](05/postgres-firstvalue-sum-partition.html)
 
-[Python ile Dinamik Excel Dosyasi Yaratmak](05/python-ile-dinamik-excel-dosyasi.html)
+[Python, Pandas, Excel](05/python-pandas-excel.html)
 
 [Veri Zenginlestirmek](05/veri-zenginlestirmek.html)
 

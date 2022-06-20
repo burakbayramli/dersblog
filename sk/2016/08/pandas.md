@@ -523,9 +523,11 @@ Kolonun kendisini en büyük halde görmek için
 pd.set_option('display.max_colwidth',-1)
 ```
 
-
+Excel'den okuma teknikleri icin [2]
 
 Kaynaklar
 
-http://pandas.pydata.org/pandas-docs/stable/
+[1] http://pandas.pydata.org/pandas-docs/stable/
+
+[2] [Yazi](../../2012/05/python-pandas-excel.html)
 

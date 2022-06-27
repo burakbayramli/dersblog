@@ -323,7 +323,9 @@ sonuçta bir çember şekline doğru evrilecektir. Ortalama eğim (mean
 curvature) hesabı için şu denklem kullanılır:</p>
 <p>$$ \kappa = -div \bigg( \frac{\bigtriangledown \phi}
 {|\bigtriangledown \phi| } \bigg) $$</p>
-<pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
+<pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 def plot_phi(phi):
@@ -375,17 +377,17 @@ while iter &lt; 50:
     if iter % 10 == 0: 
         CS = plt.contour(phi,0,colors='r')
         plt.hold(False)
-        plt.savefig('level_1_'+ str(iter) + '.png')
+        plt.savefig('img1/level_1_'+ str(iter) + '.png')
         #plot_phi(phi)
-        plt.savefig('phi_1_'+ str(iter) + '.png')
+        plt.savefig('img1/phi_1_'+ str(iter) + '.png')
     iter += 1
 </code></pre>
 
-<p><img alt="" src="level_1_0.png" />
-<img alt="" src="level_1_10.png" />
-<img alt="" src="level_1_20.png" />
-<img alt="" src="level_1_30.png" />
-<img alt="" src="level_1_40.png" /></p>
+<p><img alt="" src="img1/level_1_0.png" />
+<img alt="" src="img1/level_1_10.png" />
+<img alt="" src="img1/level_1_20.png" />
+<img alt="" src="img1/level_1_30.png" />
+<img alt="" src="img1/level_1_40.png" /></p>
 <p>İmaj Gruplamak</p>
 <p>İmajı bölümlere ayırmak için (segmentation) birkaç faktörün bileşimi
 kullanılıyor. Köşeleri kullanan aktif kontur (edge based active contour)
@@ -410,7 +412,9 @@ matematiksel bilgisi devreye girebiliyor, matematiğin en yoğun şekilde
 kullanıldığı fizikten bol bol teknik alınabilir. Yani söylemek istediğimiz
 problemi çözmek için hemen kodlamaya başlamıyoruz, düşünsel eylemin önemli
 bir kısmı matematiksel formüllerle (belki kalem kağıtla) yapılıyor.</p>
-<pre><code class="python">import scipy.signal as signal
+<pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+import scipy.signal as signal
 import scipy.ndimage as image
 import time
 
@@ -486,16 +490,11 @@ while iter&lt;150:
         f=plt.figure()
         plt.imshow(Img, cmap='gray')
         CS = plt.contour(phi,0, colors='r') 
-        plt.savefig('level_2_' + str(iter) + '.png')
+        plt.savefig('/tmp/level_2_%03d.png' % iter)
 </code></pre>
 
-<p><img alt="" src="level_2_20.png" />
-<img alt="" src="level_2_40.png" />
-<img alt="" src="level_2_60.png" />
-<img alt="" src="level_2_80.png" />
-<img alt="" src="level_2_100.png" />
-<img alt="" src="level_2_120.png" />
-<img alt="" src="level_2_140.png" /></p>
+<p><img alt="" src="img1/level_2_040.png" />
+<img alt="" src="img1/level_2_100.png" /></p>
 <p>Kaynaklar</p>
 <p>[1] Courant, <em>Introduction to Calculus and Analysis Volume 2</em>, sf. 223-232</p>
 <p>[2] Wolfram Mathworld, <em>Curvature</em>, <a href="http://mathworld.wolfram.com/Curvature.html">http://mathworld.wolfram.com/Curvature.html</a></p>

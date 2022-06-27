@@ -407,70 +407,13 @@ curvature) hesabı için şu denklem kullanılır:
 $$ \kappa = -div \bigg( \frac{\bigtriangledown \phi}
 {|\bigtriangledown \phi| } \bigg) $$
 
-\begin{minted}[fontsize=\footnotesize]{python}
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
+\inputminted[fontsize=\footnotesize]{python}{levelset1o.py}
 
-def plot_phi(phi):
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    x = []
-    y = []
-    for (i,j),val in np.ndenumerate(phi):
-        x.append(i)
-        y.append(j)
-    ax.plot(xs=x, ys=y, zs=phi.flatten(), 
-            zdir='z', label='ys=0, zdir=z')
-
-f, ax = plt.subplots()
-
-# initial function phi - level set is a square 4 pixels
-# away from borders on each side, in 3D it looks like an empty
-# box
-c0=2; w=2
-nrow, ncol= (30,30)
-phi=c0*np.ones((nrow,ncol))
-phi[w+1:-w-1, w+1:-w-1]=-c0
-
-dt=1.
-
-phiOld=np.zeros((nrow,ncol))
-
-iter=0
-
-while iter < 50:
-    # gradient of phi
-    gradPhiY, gradPhiX = np.gradient(phi)
-    # magnitude of gradient of phi
-    absGradPhi=np.sqrt(gradPhiX**2+gradPhiY**2)                               
-    
-    # normalized gradient of phi - eliminating singularities
-    normGradPhiX=gradPhiX/(absGradPhi+(absGradPhi==0))
-    normGradPhiY=gradPhiY/(absGradPhi+(absGradPhi==0))
-    
-    divYnormGradPhiX, divXnormGradPhiX=np.gradient(normGradPhiX)
-    divYnormGradPhiY, divXnormGradPhiY=np.gradient(normGradPhiY)
-                           
-    # curvature is the divergence of normalized gradient of phi
-    K = divXnormGradPhiX + divYnormGradPhiY
-    dPhiBydT = K * absGradPhi # makes everything circle
-    
-    # level set evolution equation    
-    phi = phi + ( dt * dPhiBydT )
-    if iter % 10 == 0: 
-        CS = plt.contour(phi,0,colors='r')
-        plt.hold(False)
-        plt.savefig('level_1_'+ str(iter) + '.png')
-        #plot_phi(phi)
-        plt.savefig('phi_1_'+ str(iter) + '.png')
-    iter += 1
-\end{minted}
-
-\includegraphics[height=4cm]{level_1_0.png}
-\includegraphics[height=4cm]{level_1_10.png}
-\includegraphics[height=4cm]{level_1_20.png}
-\includegraphics[height=4cm]{level_1_30.png}
-\includegraphics[height=4cm]{level_1_40.png}
+\includegraphics[height=4cm]{img1/level_1_0.png}
+\includegraphics[height=4cm]{img1/level_1_10.png}
+\includegraphics[height=4cm]{img1/level_1_20.png}
+\includegraphics[height=4cm]{img1/level_1_30.png}
+\includegraphics[height=4cm]{img1/level_1_40.png}
 
 İmaj Gruplamak
 
@@ -499,93 +442,10 @@ kullanıldığı fizikten bol bol teknik alınabilir. Yani söylemek istediğimi
 problemi çözmek için hemen kodlamaya başlamıyoruz, düşünsel eylemin önemli
 bir kısmı matematiksel formüllerle (belki kalem kağıtla) yapılıyor.
 
-\begin{minted}[fontsize=\footnotesize]{python}
-import scipy.signal as signal
-import scipy.ndimage as image
-import time
+\inputminted[fontsize=\footnotesize]{python}{levelset2o.py}
 
-def gauss_kern():
-    """ Returns a normalized 2D gauss kernel array for convolutions """
-    h1 = 8
-    h2 = 8
-    x, y = np.mgrid[0:h2, 0:h1]
-    x = x-h2/2
-    y = y-h1/2
-    sigma = 10.0
-    g = np.exp( -( x**2 + y**2 ) / (2*sigma**2) );
-    return g / g.sum()
-
-Img = plt.imread("twoObj.bmp")
-Img = Img[::-1] 
-g = gauss_kern()
-Img_smooth = signal.convolve(Img,g,mode='same')
-Iy,Ix=np.gradient(Img_smooth)
-absGradI=np.sqrt(Ix**2+Iy**2);
-rows, cols = Img.shape
-
-# initial function phi - level set is a square 4 pixels
-# away from borders on each side, in 3D it looks like an empty
-# box
-c0=4
-w=4
-nrow, ncol=Img.shape
-phi=c0*np.ones((nrow,ncol))
-phi[w+1:-w-1, w+1:-w-1]=-c0
-
-# edge-stopping function
-g = 1 / (1+absGradI**2)
-
-# gradient of edge-stopping function
-gy,gx = np.gradient(g)
-
-# gradient descent step size
-dt=1
-
-# number of iterations after which we reinitialize the surface
-num_reinit=10
-
-phiOld=np.zeros((rows,cols))
-
-# number of iterations after which we reinitialize the surface
-iter=0
-
-while iter<150:
-    # gradient of phi
-    gradPhiY, gradPhiX = np.gradient(phi)    
-    # magnitude of gradient of phi
-    absGradPhi=np.sqrt(gradPhiX**2+gradPhiY**2)
-    # normalized gradient of phi - eliminating singularities
-    normGradPhiX=gradPhiX/(absGradPhi+(absGradPhi==0))
-    normGradPhiY=gradPhiY/(absGradPhi+(absGradPhi==0))
-    
-    divYnormGradPhiX, divXnormGradPhiX=np.gradient(normGradPhiX)
-    divYnormGradPhiY, divXnormGradPhiY=np.gradient(normGradPhiY)
-                           
-    # curvature is the divergence of normalized gradient of phi
-    K = divXnormGradPhiX + divYnormGradPhiY
-    tmp1 = g * K * absGradPhi
-    tmp2 = g * absGradPhi
-    tmp3 = gx * gradPhiX + gy*gradPhiY
-    dPhiBydT =tmp1 + tmp2 + tmp3    
-    
-    phiOld=phi
-    # level set evolution equation    
-    phi = phi + ( dt * dPhiBydT )
-    iter=iter+1
-    if np.mod(iter,20)==0:
-        f=plt.figure()
-        plt.imshow(Img, cmap='gray')
-        CS = plt.contour(phi,0, colors='r') 
-        plt.savefig('level_2_' + str(iter) + '.png')
-\end{minted}
-
-\includegraphics[height=4cm]{level_2_20.png}
-\includegraphics[height=4cm]{level_2_40.png}
-\includegraphics[height=4cm]{level_2_60.png}
-\includegraphics[height=4cm]{level_2_80.png}
-\includegraphics[height=4cm]{level_2_100.png}
-\includegraphics[height=4cm]{level_2_120.png}
-\includegraphics[height=4cm]{level_2_140.png}
+\includegraphics[height=4cm]{img1/level_2_040.png}
+\includegraphics[height=4cm]{img1/level_2_100.png}
 
 Kaynaklar
 

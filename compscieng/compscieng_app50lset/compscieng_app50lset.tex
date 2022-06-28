@@ -2,7 +2,7 @@
 \begin{document}
 Kesit Seviyeleri (Level Sets) ile İmaj Gruplamak 
 
-Bir dijital resimdeki bir kümeyi, grubu ortaya çıkartmak (segmentatıon) için bir
+Bir dijital resimdeki bir kümeyi, grubu ortaya çıkartmak (segmentation) için bir
 teknik daha, kesit seviyeleri kullanmak. Grup bulmak derken resimdeki
 diğerlerinden daha ayrı duran, bizim çıplak gözle gördüğümüz bir grubu
 diğerlerinden ayırıp etrafındaki sınırlar çizmek, ve bunları otomatik
@@ -13,8 +13,8 @@ fonksiyonunu minimize ederek kümenin etrafında ``sarmalayan'' yılan (snake)
 tekniğine benzese de, aslında daha derin ve kuvvetli özellikleri olan bir
 yaklaşımdır. Yılan tekniğinde eldeki bir eğriyi bizzat değiştirerek grup
 etrafını sarmalasına uğraşıyoruz. Kesit seviyeleri ile grubu tanımlayan manipüle
-ettiğimiz sınıların kendisi değil yansımayı oluşturan daha yüksek boyutlu bir
-başka fonksiyondur.
+ettiğimiz sınıların kendisi değil bir yansımadan dolaylı elde edilen ama kendisi
+daha yüksek boyutta olan başka bir fonksiyon.
 
 Alttaki görüntüler daha iyi açıklayabilir,
 
@@ -26,7 +26,7 @@ ise üç boyutlu bir $\phi$ fonksiyonu, ve gruplamayı yapan bu fonksiyonun sıf
 kesit seviyesindeki kontur çizgileridir, yani $\phi(x,y,t) = 0$ ne ise gruplama,
 küme (segment) odur.
 
-Altta değişen $\phi$'nin imaj düzlemindeki değişen kesit seviyesini görebiliyoruz.
+Altta, değişen $\phi$'nin imaj düzlemindeki değişen kesit seviyesini görebiliyoruz.
 
 \includegraphics[width=20em]{compscieng_app50lset_01.png}
 
@@ -68,7 +68,7 @@ $$
 
 Üstte eğrinin hareketinin $\phi$'ye normal / dik olduğunu söylemiş olduk,
 eğer yönü birim vektör olarak göstermek gerekirse, $\frac{\nabla \phi}{||\nabla \phi ||}$.
-Şimdi hızın kendisi lazım, düzlemdeki yere bağlı olarak değisebilecek
+Şimdi hızın kendisi lazım, düzlemdeki yere bağlı olarak değişebilecek
 bir $F$ kuvveti ile yönü çarparak yönsel hızı elde edebiliriz,
 $x_t = F \frac{\nabla \phi}{||\nabla \phi ||} $. Yerine koyarsak,
 
@@ -209,6 +209,11 @@ for i in range(n_iter):
 \includegraphics[width=12em]{img2/out-000.png}
 \includegraphics[width=12em]{img2/out-020.png}
 \includegraphics[width=12em]{img2/out-090.png}
+
+Kesit seviyeleri tekniğinin faydalarının görmek zor değil; üç boyutlu fonksiyonu
+daha esnek yönlerde değiştirebileceğimiz için onu düzlemdeki yansımaları
+birbirinden kopuk duran (ama alakalı) obje gruplarını bile bulup çıkartabilir.
+
 
 \newpage
 
@@ -679,4 +684,7 @@ Kaynaklar
     \url{https://profs.etsmtl.ca/hlombaert/levelset/}
     
 \end{document}
+
+
+
 

@@ -90,8 +90,106 @@ $$</p>
 <p>$$
 \phi_t = - F ||\nabla \phi|| 
 $$</p>
-<p>\vspace{100in}</p>
-<p>[devam edecek]</p>
+<p>Bu bize yüzeyin değişim hızı $\phi_t$'yi veriyor.</p>
+<p>Hesaplama</p>
+<p>$\phi$'nin başlangıç değerlerini biliyorsak ve değişim hız formülünü baz alarak
+hareket denklemini çözebiliriz / zamanda ileri doğru taşıyabiliriz. Yani bulmak
+istediğimiz herhangi bir $t$ anındaki $\phi$. Hesabı yapmanın en basit yolu
+Sonlu Farklar (Finite Differences) yöntemi ile.  Temel Calculus'tan hatırlarsak,</p>
+<p>$$
+f'(x) = \frac{f(x+\Delta x) - f(x)}{\Delta x}
+$$</p>
+<p>Bunu $\phi$ için uygularsak,</p>
+<p>$$
+\frac{\partial \phi(x(t),t)}{\partial t} =
+\frac{\phi(x(t),t+\Delta t) - \phi(x(t),t)}{\Delta t}
+$$</p>
+<p>$$
+\Delta t \phi_t = \phi(x(t),t+\Delta t) - \phi(x(t),t)
+$$</p>
+<p>$$
+\phi(x(t),t+\Delta t) = \phi(x(t),t) + \Delta t \phi_t
+$$</p>
+<p>Simdi $\phi_t$ icin daha once buldugumuz formulu koyarsak,</p>
+<p>$$
+\phi(x(t),t+\Delta t) = \phi(x(t),t) - \Delta t F ||\nabla \phi|| 
+$$</p>
+<p>Böylece değişim fonksiyonunu elde etmiş olduk. Yapay Öğrenim konusunu
+bilenlere üstteki formül tanıdık gelebilir, $\phi$ üzerinde $t$ bazlı
+olarak gradyan inişi (gradient descent) yapmış oluyoruz bir bakıma.</p>
+<p>$$
+\phi' = \phi + \Delta t F ||\nabla \phi ||
+$$</p>
+<p>Simdi $F$ konusuna gelelim; bu $F$'nin secilmesi kesit seviyesi yontemimize
+direk etki edecektir. Sonuc olarak egriyi belli bir yonde, ve hizda ittiren
+"kuvvet" budur. $F$ resmin her noktasinda tanimli bir nevi hiz, kuvvet
+alani (velocity field) olarak gorulebilir, her noktada bize $\phi$'nin
+hareketinin yonunu ve buyuklugunu verir.</p>
+<p>Simdi dusunelim, imajda gruplama yapmak istiyorsak, ve alttaki gibi bir resim
+var diyelim,</p>
+<p><img alt="" src="twoObj.png" /></p>
+<p>o zaman $F$'nin ortadaki objenin sınırlarına kadar yüksek olmasını ama
+sınırlarda çok az hatta sıfır olmasını isteyebiliriz, değil mi? Bu dolaylı
+olarak obje tanımlamayı gerçekleştirecektir, $\phi$ yüzeyi objeye gelinceye
+kadar hızla ilerleyecek, ardından obje çevresine geldiği noktalarda yavaşlar,
+ve yan etki olarak kesit seviyesi nesneyi sarmalamış olur, ve bu noktada
+gruplamayı yapmış oluruz.</p>
+<p>$F$'yi o zaman direk imajın kendisinden hesaplayabiliriz, ve onu bir nevi
+kenar algılayıcı (edge detector) olarak görebiliriz. Eh en basit kenar
+bulucu gradyan olduğuna göre imajın gradyanini almak yeterli olacaktır. $I$
+imajı için $g$ gradyanı [6],</p>
+<p>$$
+g(I) = \frac{1}{1  + || \nabla I ||^2}
+$$</p>
+<p>Hepsini bir araya koyunca alttaki kod yazilabilir,</p>
+<pre><code class="python">from skimage import color, io
+import scipy.ndimage
+
+def grad(x):
+    return np.array(np.gradient(x))
+
+def norm(x, axis=0):
+    return np.sqrt(np.sum(np.square(x), axis=axis))
+
+def stopping_fun(x):
+    return 1. / (1. + norm(grad(x))**2)
+
+def default_phi(x):
+    # phi yuzeyini imaj disindaki 5 piksel genisligindeki bantta 1
+    # bant icinde ise -1 olarak tanimliyoruz
+    phi = np.ones(x.shape[:2])
+    phi[5:-5, 5:-5] = -1.
+    return phi
+
+img = io.imread('twoObj.bmp')
+img = color.rgb2gray(img) # grilestir
+img = img - np.mean(img) # ortalamayi cikart
+# puruzsuzlestirme uygula yanyana pikseller daha benzer olsun
+img_smooth = scipy.ndimage.filters.gaussian_filter(img, sigma=2)
+
+F = stopping_fun(img_smooth)
+
+dt = 1.
+n_iter = 100
+phi = default_phi(img)
+for i in range(n_iter):
+    dphi = grad(phi)
+    dphi_norm = norm(dphi)
+    dphi_t = F * dphi_norm
+    phi = phi + dt * dphi_t
+    if i%10==0:
+        plt.imshow(img,cmap = 'gray')
+        plt.contour(phi, levels=[0],colors=['red'])
+        plt.savefig('img2/out-%03d.png' % i)
+        plt.close()
+</code></pre>
+
+<p>İşlemden seçilmiş üç kare alttadır,</p>
+<p><img alt="" src="img2/out-000.png" />
+<img alt="" src="img2/out-020.png" />
+<img alt="" src="img2/out-090.png" /></p>
+<hr>
+
 <p>Eski Yazı</p>
 <p>Eğim (Curvature)</p>
 <p>Kesit seviyeleri tekniğinde bir eğri normal formda değil, dolaylı

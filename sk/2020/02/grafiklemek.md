@@ -153,6 +153,28 @@ yani hucrelerin indisi.
 O zaman 321'in 32 kismi diger tum alt grafikler icin
 tekrarlanacak. Yeni grafikler 322, 323, 324, vs gibi gidecekler.
 
+Farkli Bir Kolon Isaretleme Teknigi
+
+Üstteki `avxspan` ile indeks bazlı aralıkları işaretleyebiliyoruz. Eğer
+herhangi bir kolon bazlı dikey işaretleme yapmak istesek bir diğer yöntem
+`fill_between` ile.
+
+```python
+x = np.linspace(0,10,100)
+y = np.cos(2*x)
+crisis = (x > 3) & (x < 8).astype(int)
+plt.plot(x,y)
+plt.grid(True)
+plt.fill_between(x, -1, 2, crisis, alpha=0.3)
+plt.savefig('graf_08.png')
+```
+
+![](graf_08.png)
+
+Böylece `crisis` (kriz) kolonuna dayanarak eğer orada 1 var ise o alanı
+dikey olarak işaretliyoruz, sıfır ise hiçbir şey gösterilmiyor. 
+
+
 
 
 

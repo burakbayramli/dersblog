@@ -199,147 +199,6 @@ birbirinden kopuk duran (ama alakalı) obje gruplarını bile bulup çıkartabil
 <hr>
 
 <p>Eski Yazı</p>
-<p>Eğim (Curvature)</p>
-<p>Kesit seviyeleri tekniğinde bir eğri normal formda değil, dolaylı
-(implicit) bir fonksiyon ile $F(x,y) = 0$ olarak gösterilir. Bu fonksiyonun
-tam diferansiyelini alırsak,</p>
-<p>$$ dF = F_x dx + F_y dy = 0  $$</p>
-<p>$$ dy = -F_x / F_y dx  $$</p>
-<p>$$ y' = \frac{dy}{dx} = -F_x / F_y = f'(x) = \frac{df}{dx} $$</p>
-<p>Burada bir faraziye daha var, o da aslında ilk verilen formülde olmasa bile
-$y=f(x)$ olarak kabul etmemiz, yani $F(x,y)$ nasıl bir formül olursa olsun,
-$y$'nin $x$'leri içerecek şekilde tekrar düzenlenebileceğini farz etmemiz,
-böylece $F(x,f(x))$ olabileceğini söylemiş oluyoruz [4].</p>
-<p>Şimdi $y'$ ifadesinin türevini bir daha alalım. Yukarıdaki $y'$ formülünde
-en sağ taraf bir bölme işlemi içerdiği için burada Calculus'un Bölümler
-Kuralını (Quotient Rule) uygulamamız lazım (detaylar için Bölüm Kuralı
-yazısına bakınız). Bu kural şöyle gösterilir:</p>
-<p>$$ \frac{d}{dx}\bigg(\frac{u}{v}\bigg) = 
-\frac{\displaystyle \frac{v du}{dx} - \frac{u dv}{dx}}{v^2} $$</p>
-<p>Bölümler Kuralı için $u$ ve $v$ tanımları nedir? </p>
-<p>$$ u = -F_x(x,f(x))  $$</p>
-<p>$$ v = F_y(x,f(x)) $$</p>
-<p>O zaman</p>
-<p>$$ 
-v \frac{du}{dx} = F_y \frac{dF_x}{dx} 
-\qquad (1)
-$$</p>
-<p>$$
-u \frac{dv}{dx} = -F_x \frac{dF_y }{dx} 
-\qquad (2)
-$$</p>
-<p>Bunlardan mesela $dF_x/dx$ üzerinde Zincirleme Kanunu (Chain Rule) uygulamak
-lazım (bu kural tam integral kuralının bir sonucu). </p>
-<p>$$ \frac{d F_x(x,f(x)) }{dx} = \frac{\partial F_x}{\partial  x}(x,f(x))+\frac{\partial F_x}{\partial y}\frac{df}{dx}\\ $$</p>
-<p>$$
-= F_{xx}(x,f(x))+F_{xy}(x,f(x))f'(x) 
-\qquad (3)
-$$</p>
-<p>$$
-\frac{d F_y(x,f(x)) }{dx} =  F_{xy}(x,f(x))+F_{yy}(x,f(x))f'(x) 
-\qquad (4)
-$$</p>
-<p>Zincirleme Kanunu niye üstteki şekilde açıldı? Tam Diferansiyeli bir daha
-hatırlayalım:</p>
-<p>$$ df = \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy  $$</p>
-<p>$$ \frac{df}{dx} = \frac{\partial f}{\partial x} \frac{dx}{dx} + \frac{\partial f}{\partial y} \frac{dy}{dx}  $$</p>
-<p>$$ \frac{df}{dx} = \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} \frac{dy}{dx}  $$</p>
-<p>O zaman formüller (1) (2) (3) ve (4) bir araya konulursa,</p>
-<p>$$ y " = - \frac{F_yF_{xx} - F_y F_{xy}\frac{F_x}{F_y} - F_xF_{xy} + F_xF_{yy}\frac{F_x}{F_y}}{F_y^2}\\ $$</p>
-<p>$$ y " = - \frac{F_yF_{xx} - F_{xy}F_x - F_xF_{xy} + \frac{F_x^2F_{yy}}{F_y}}{F_y^2} $$</p>
-<p>Üstteki bölümün hem bölen, hem bölünen terimlerini $F_y$ ile çarparsak, ve
-sadeleştirirsek</p>
-<p>$$ y " = - \frac{F_y^2F_{xx} - 2F_{xy}F_xF_y + F_x^2F_{yy}}{F_y^3} $$</p>
-<p>Şimdi surada [2] türetimi gösterilen eğim  formülüne
-bakalım. Not: Eğer</p>
-<p>$$ \kappa = \frac{x'y"-y'x"}{\bigg(x'^2 + y'^2 \bigg)^{3/2}} $$</p>
-<p>formülünün alttaki formüle nasıl dönüştüğü tam anlaşılır değilse,
-hatırlayalım ki, $y=f(x)$, ve $x'=1$, ve $x" = 0$.</p>
-<p>Bu formülün Courant [1] sf. 231'de benzer bir formunu görüyoruz (Bu arada o
-karmaşık formül yerine yaklaşıksal olarak hesaplama sırasında sadece $f"$
-kullanmak ta mümkün [3, giriş bölümü])</p>
-<p>$$ \kappa = \frac{f"}{(1+f'^2)^{3/2}} $$</p>
-<p>Bu formüldeki $f"$ yani $y"$ için üstte bulduğumuz sonucu, $f'$ yani $y'$
-için bu yazının başındaki formülü koyarsak,</p>
-<p>$$ 
-\kappa = \frac
-{-\frac
-{\displaystyle F_y^2F_{xx} - 2F_{xy}F_xF_y +  F_x^2F_{yy}}{\displaystyle F_y^3}}
-{(1+f'^2)^{3/2}} 
-$$  </p>
-<p>Bölen kısmı nedir?</p>
-<p>$$ (1+f'^2)^{3/2} = \bigg( 1 + \bigg(\frac{-F_x}{F_y}\bigg)^2 \bigg)^{3/2}  $$</p>
-<p>$$ = \bigg( 1 + \frac{F_x^2}{F_y^2} \bigg)^{3/2}  $$</p>
-<p>$$ = \bigg( \frac{F_y^2 + F_x^2}{F_y^2} \bigg)^{3/2}  $$</p>
-<p>$$ = (F_y^2 + F_x^2)^{3/2}(F_y^{-2})^{3/2}  $$</p>
-<p>$$ = (F_y^2 + F_x^2)^{3/2}F_y^{-6/2}  $$</p>
-<p>$$ = (F_y^2 + F_x^2)^{3/2}F_y^{-3} $$</p>
-<p>Yerine koyarsak,</p>
-<p>$$ 
-\kappa = \frac{\displaystyle
-- \frac{F_y^2F_{xx} - 2F_{xy}F_xF_y + F_x^2F_{yy}}{F_y^3}}
-{(F_y^2 + F_x^2)^{3/2}F_y^{-3}}
- $$</p>
-<p>$F_y^{-3}$ ve $F_y^{3}$ birbirlerini iptal ederler ve sonuç:</p>
-<p>$$
-\kappa = \frac{F_y^2F_{xx} - 2F_{xy}F_xF_y +
-    F_x^2F_{yy}}{(F_y^2 + F_x^2)^{3/2}}
-\qquad (5)
-$$</p>
-<p>Üstteki ünlü eğim  formülüdür. </p>
-<p>Bu eğim formülünün diğer bir şekli şöyledir ($F$ yerine $\phi$ kullanırsak)</p>
-<p>$$ \kappa = \bigtriangledown \cdot \frac{\bigtriangledown \phi}{|\bigtriangledown \phi|} $$</p>
-<p>Bunun okunuş şekli "birim normal gradyanın uzaklaşım ölçüsü (divergence of the
-unit normal gradient)" şeklindedir. Acaba bu formül, (5). formül ile
-uyumlu mu?</p>
-<p>$$ \kappa = \nabla \cdot \frac{\nabla \phi}{|\nabla \phi|}  $$</p>
-<p>$$ = \nabla \cdot \frac{(\phi_x,\phi_y)}{\sqrt{\phi_x^2+\phi_y^2}} $$</p>
-<p>$$ = \left(\partial_x \frac{\phi_x}{\sqrt{\phi_x^2+\phi_y^2}}\right)+ 
-\left(\partial_y \frac{\phi_y}{\sqrt{\phi_x^2+\phi_y^2}}\right)  $$</p>
-<p>$$ = \frac{\phi_{xx}}{\sqrt{\phi_x^2+\phi_y^2}} - \frac{\phi_x (\phi_x\phi_{xx}+\phi_y\phi_{xy})}
-{(\phi_x^2+\phi_y^2)^{3/2}} +
-\frac{\phi_{yy}}{\sqrt{\phi_x^2+\phi_y^2}} - \frac{\phi_y(\phi_x\phi_{xy}+\phi_y\phi_{yy})}
-{(\phi_x^2+\phi_y^2)^{3/2}}  $$</p>
-<p>$$ = \frac{\phi_{xx}(\phi_x^2+\phi_y^2) - \phi_x
-  (\phi_x\phi_{xx}+\phi_y\phi_{xy}) +\phi_{yy}(\phi_x^2+\phi_y^2) -
-  \phi_y(\phi_x\phi_{xy}+\phi_y\phi_{yy})}{(\phi_x^2+\phi_y^2)^{3/2}} $$</p>
-<p>$$ = \frac{\phi_{xx}\phi_y^2 - 2\phi_x\phi_y\phi_{xy} + \phi_{yy}\phi_x^2}{(\phi_x^2+\phi_y^2)^{3/2}}  $$</p>
-<p>Bu formül bizim (5). formül ile tıpatıp aynı.</p>
-<p>Üstteki işlemlerde uzaklaşım ölçüsü (divergence) operatörü $\nabla \cdot$
-ile gradyan operatörü $\nabla$ arasındaki farkı belirtelim: $\nabla \cdot$
-operatörü $F(x,y)$ üzerinde kısmi türevlerin toplamını verir, yani bir
-skalar tek sayı döndürür. Gradyan ise her bir elemanı bir kısmi türeve
-tekabül eden bir <em>vektör</em> geri getirir.</p>
-<p>Python Numpy kodlaması bağlamında, daha önce <em>Kesit Seviyeleri</em> yazısında
-ayrıksal olarak bir <code>phi</code> değişkeni içindeki bir fonksiyon üzerinde
-eğimselliği şöyle hesaplamıştık:</p>
-<pre><code class="python">gradPhiY, gradPhiX = np.gradient(phi)
-absGradPhi=np.sqrt(gradPhiX**2+gradPhiY**2)                               
-
-normGradPhiX=gradPhiX/(absGradPhi+(absGradPhi==0))
-normGradPhiY=gradPhiY/(absGradPhi+(absGradPhi==0))
-
-divYnormGradPhiX, divXnormGradPhiX=np.gradient(normGradPhiX)
-divYnormGradPhiY, divXnormGradPhiY=np.gradient(normGradPhiY)
-
-K = divXnormGradPhiX + divYnormGradPhiY
-</code></pre>
-
-<p>Bu satırların $\nabla \cdot \frac{\nabla \phi}{|\nabla \phi|}$ ifadesiyle
-birebir uyum gösterdiğini herhalde görebiliyoruz. Satır 1, $\nabla \phi$
-ifadesidir. Satırlar 4-5 $\frac{\nabla \phi}{|\nabla \phi|}$ işlemini
-gerçekleştiriyor, gradyanı onun uzunluğuna (magnitude) bölerek onu birim vektörü
-haline getiriyor. Satırlar 7-10 tekrar sonucun gradyanını bir daha alıyor, ama
-bu sefer hesapsal kısmi türevleri birbiriyle topluyor, böylece uzaklaşım ölçüsü
-(divergence) hesaplanmış oluyor. Tüm bu işlemlerin sonucu eğimsellik $\kappa$
-oluyor.</p>
-<p>Dikkat edilirse Python kodundaki K yani $\kappa$, N x N boyutlu bir matristir,
-bu mantıklı çünkü $\kappa$ hesabı için kullandığımız $F_x$, $F_y$ gibi
-türevler aslında $F_x(x,y)$, $F_y(x,y)$ formüllerine sahipler, yani her $x,y$
-kombinasyonu için farklı bir sonuç döndürebilirler. Bu sebeple K yani $\kappa$
-$\phi$ fonksiyonunun her $x,y$ noktası için tanımlıdır. </p>
-<p>Bazen literatürde $\nabla \cdot$ yerine $div(..)$ kullanıldığını görebilirsiniz,
-bu operatörlerin ikisi de aynıdır.</p>
 <p>Kesit Seviyeleri, Kenar Bazlı İmaj Gruplamak</p>
 <p>Bir dijital imajı renklere, objelere göre belli parçalara bölmek
 (segmentation) için, matematiksel bir formül kullanmak iyi çözümlerden
@@ -488,81 +347,7 @@ olan $\phi$'nin değişimidir. Döngünün her basamağında eski <code>phi</cod
 değerlerine bu farkları eklediğimiz zaman $\phi$ fonksiyonu istediğimiz
 gibi evrilecektir.</p>
 <p>Alttaki kodda bizim başlangıç $\phi$'miz kenarlardan w uzaklığında içi boş
-bir kutu olacak. </p>
-<p>Ortalama Eğim (Mean Curvature) Kullanmak</p>
-<p>Eğer sabit hız yerine sıfır kesit seviyesinin herhangi bir noktada ne kadar
-"eğri" olduğuna göre ilerlemesini işletseydik ne olurdu?  Diyelim ki çok
-eğri bölgelerde çok hızlı, az eğik (düz, düze yakın) bölgelerde ilerleme az
-hız istiyoruz. O zaman hangi şekille başlarsa başlasındalar $\phi$ kesiti
-sonuçta bir çember şekline doğru evrilecektir. Ortalama eğim (mean
-curvature) hesabı için şu denklem kullanılır:</p>
-<p>$$ \kappa = -div \bigg( \frac{\bigtriangledown \phi}
-{|\bigtriangledown \phi| } \bigg) $$</p>
-<pre><code class="python">import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-import numpy as np
-
-def plot_phi(phi):
-    fig = plt.figure()
-    ax = Axes3D(fig)
-    x = []
-    y = []
-    for (i,j),val in np.ndenumerate(phi):
-        x.append(i)
-        y.append(j)
-    ax.plot(xs=x, ys=y, zs=phi.flatten(), 
-            zdir='z', label='ys=0, zdir=z')
-
-f, ax = plt.subplots()
-
-# initial function phi - level set is a square 4 pixels
-# away from borders on each side, in 3D it looks like an empty
-# box
-c0=2; w=2
-nrow, ncol= (30,30)
-phi=c0*np.ones((nrow,ncol))
-phi[w+1:-w-1, w+1:-w-1]=-c0
-
-dt=1.
-
-phiOld=np.zeros((nrow,ncol))
-
-iter=0
-
-while iter &lt; 50:
-    # gradient of phi
-    gradPhiY, gradPhiX = np.gradient(phi)
-    # magnitude of gradient of phi
-    absGradPhi=np.sqrt(gradPhiX**2+gradPhiY**2)                               
-
-    # normalized gradient of phi - eliminating singularities
-    normGradPhiX=gradPhiX/(absGradPhi+(absGradPhi==0))
-    normGradPhiY=gradPhiY/(absGradPhi+(absGradPhi==0))
-
-    divYnormGradPhiX, divXnormGradPhiX=np.gradient(normGradPhiX)
-    divYnormGradPhiY, divXnormGradPhiY=np.gradient(normGradPhiY)
-
-    # curvature is the divergence of normalized gradient of phi
-    K = divXnormGradPhiX + divYnormGradPhiY
-    dPhiBydT = K * absGradPhi # makes everything circle
-
-    # level set evolution equation    
-    phi = phi + ( dt * dPhiBydT )
-    if iter % 10 == 0: 
-        CS = plt.contour(phi,0,colors='r')
-        plt.hold(False)
-        plt.savefig('img1/level_1_'+ str(iter) + '.png')
-        #plot_phi(phi)
-        plt.savefig('img1/phi_1_'+ str(iter) + '.png')
-    iter += 1
-</code></pre>
-
-<p><img alt="" src="img1/level_1_0.png" />
-<img alt="" src="img1/level_1_10.png" />
-<img alt="" src="img1/level_1_20.png" />
-<img alt="" src="img1/level_1_30.png" />
-<img alt="" src="img1/level_1_40.png" /></p>
+bir kutu olacak.</p>
 <p>İmaj Gruplamak</p>
 <p>İmajı bölümlere ayırmak için (segmentation) birkaç faktörün bileşimi
 kullanılıyor. Köşeleri kullanan aktif kontur (edge based active contour)
@@ -670,6 +455,223 @@ while iter&lt;150:
 
 <p><img alt="" src="img1/level_2_040.png" />
 <img alt="" src="img1/level_2_100.png" /></p>
+<p>Ortalama Eğim (Mean Curvature) Kullanmak</p>
+<p>Eğer imaj içindeki değer farklılıklarını hız için kullanmak yerine yerine sıfır
+kesit seviyesinin herhangi bir noktada ne kadar "eğri" olduğuna göre
+ilerlemesini işletseydik ne olurdu?  Diyelim ki çok eğri bölgelerde çok hızlı,
+az eğik (düz, düze yakın) bölgelerde ilerleme az hız istiyoruz. O zaman hangi
+şekille başlarsa başlasındalar $\phi$ kesiti sonuçta bir çember şekline doğru
+evrilecektir. Ortalama eğim (mean curvatüre) hesabı için şu denklem kullanılır:</p>
+<p>$$ \kappa = -div \bigg( \frac{\bigtriangledown \phi}
+{|\bigtriangledown \phi| } \bigg) $$</p>
+<p>Bu formul nereden geliyor?</p>
+<p>Eğim (Curvature)</p>
+<p>Kesit seviyeleri tekniğinde bir eğri normal formda değil, dolaylı
+(implicit) bir fonksiyon ile $F(x,y) = 0$ olarak gösterilir. Bu fonksiyonun
+tam diferansiyelini alırsak,</p>
+<p>$$ dF = F_x dx + F_y dy = 0  $$</p>
+<p>$$ dy = -F_x / F_y dx  $$</p>
+<p>$$ y' = \frac{dy}{dx} = -F_x / F_y = f'(x) = \frac{df}{dx} $$</p>
+<p>Burada bir faraziye daha var, o da aslında ilk verilen formülde olmasa bile
+$y=f(x)$ olarak kabul etmemiz, yani $F(x,y)$ nasıl bir formül olursa olsun,
+$y$'nin $x$'leri içerecek şekilde tekrar düzenlenebileceğini farz etmemiz,
+böylece $F(x,f(x))$ olabileceğini söylemiş oluyoruz [4].</p>
+<p>Şimdi $y'$ ifadesinin türevini bir daha alalım. Yukarıdaki $y'$ formülünde
+en sağ taraf bir bölme işlemi içerdiği için burada Calculus'un Bölümler
+Kuralını (Quotient Rule) uygulamamız lazım (detaylar için Bölüm Kuralı
+yazısına bakınız). Bu kural şöyle gösterilir:</p>
+<p>$$ \frac{d}{dx}\bigg(\frac{u}{v}\bigg) = 
+\frac{\displaystyle \frac{v du}{dx} - \frac{u dv}{dx}}{v^2} $$</p>
+<p>Bölümler Kuralı için $u$ ve $v$ tanımları nedir? </p>
+<p>$$ u = -F_x(x,f(x))  $$</p>
+<p>$$ v = F_y(x,f(x)) $$</p>
+<p>O zaman</p>
+<p>$$ 
+v \frac{du}{dx} = F_y \frac{dF_x}{dx} 
+\qquad (1)
+$$</p>
+<p>$$
+u \frac{dv}{dx} = -F_x \frac{dF_y }{dx} 
+\qquad (2)
+$$</p>
+<p>Bunlardan mesela $dF_x/dx$ üzerinde Zincirleme Kanunu (Chain Rule) uygulamak
+lazım (bu kural tam integral kuralının bir sonucu). </p>
+<p>$$ \frac{d F_x(x,f(x)) }{dx} = \frac{\partial F_x}{\partial  x}(x,f(x))+\frac{\partial F_x}{\partial y}\frac{df}{dx}\\ $$</p>
+<p>$$
+= F_{xx}(x,f(x))+F_{xy}(x,f(x))f'(x) 
+\qquad (3)
+$$</p>
+<p>$$
+\frac{d F_y(x,f(x)) }{dx} =  F_{xy}(x,f(x))+F_{yy}(x,f(x))f'(x) 
+\qquad (4)
+$$</p>
+<p>Zincirleme Kanunu niye üstteki şekilde açıldı? Tam Diferansiyeli bir daha
+hatırlayalım:</p>
+<p>$$ df = \frac{\partial f}{\partial x} dx + \frac{\partial f}{\partial y} dy  $$</p>
+<p>$$ \frac{df}{dx} = \frac{\partial f}{\partial x} \frac{dx}{dx} + \frac{\partial f}{\partial y} \frac{dy}{dx}  $$</p>
+<p>$$ \frac{df}{dx} = \frac{\partial f}{\partial x} + \frac{\partial f}{\partial y} \frac{dy}{dx}  $$</p>
+<p>O zaman formüller (1) (2) (3) ve (4) bir araya konulursa,</p>
+<p>$$ y " = - \frac{F_yF_{xx} - F_y F_{xy}\frac{F_x}{F_y} - F_xF_{xy} + F_xF_{yy}\frac{F_x}{F_y}}{F_y^2}\\ $$</p>
+<p>$$ y " = - \frac{F_yF_{xx} - F_{xy}F_x - F_xF_{xy} + \frac{F_x^2F_{yy}}{F_y}}{F_y^2} $$</p>
+<p>Üstteki bölümün hem bölen, hem bölünen terimlerini $F_y$ ile çarparsak, ve
+sadeleştirirsek</p>
+<p>$$ y " = - \frac{F_y^2F_{xx} - 2F_{xy}F_xF_y + F_x^2F_{yy}}{F_y^3} $$</p>
+<p>Şimdi surada [2] türetimi gösterilen eğim  formülüne
+bakalım. Not: Eğer</p>
+<p>$$ \kappa = \frac{x'y"-y'x"}{\bigg(x'^2 + y'^2 \bigg)^{3/2}} $$</p>
+<p>formülünün alttaki formüle nasıl dönüştüğü tam anlaşılır değilse,
+hatırlayalım ki, $y=f(x)$, ve $x'=1$, ve $x" = 0$.</p>
+<p>Bu formülün Courant [1] sf. 231'de benzer bir formunu görüyoruz (Bu arada o
+karmaşık formül yerine yaklaşıksal olarak hesaplama sırasında sadece $f"$
+kullanmak ta mümkün [3, giriş bölümü])</p>
+<p>$$ \kappa = \frac{f"}{(1+f'^2)^{3/2}} $$</p>
+<p>Bu formüldeki $f"$ yani $y"$ için üstte bulduğumuz sonucu, $f'$ yani $y'$
+için bu yazının başındaki formülü koyarsak,</p>
+<p>$$ 
+\kappa = \frac
+{-\frac
+{\displaystyle F_y^2F_{xx} - 2F_{xy}F_xF_y +  F_x^2F_{yy}}{\displaystyle F_y^3}}
+{(1+f'^2)^{3/2}} 
+$$  </p>
+<p>Bölen kısmı nedir?</p>
+<p>$$ (1+f'^2)^{3/2} = \bigg( 1 + \bigg(\frac{-F_x}{F_y}\bigg)^2 \bigg)^{3/2}  $$</p>
+<p>$$ = \bigg( 1 + \frac{F_x^2}{F_y^2} \bigg)^{3/2}  $$</p>
+<p>$$ = \bigg( \frac{F_y^2 + F_x^2}{F_y^2} \bigg)^{3/2}  $$</p>
+<p>$$ = (F_y^2 + F_x^2)^{3/2}(F_y^{-2})^{3/2}  $$</p>
+<p>$$ = (F_y^2 + F_x^2)^{3/2}F_y^{-6/2}  $$</p>
+<p>$$ = (F_y^2 + F_x^2)^{3/2}F_y^{-3} $$</p>
+<p>Yerine koyarsak,</p>
+<p>$$ 
+\kappa = \frac{\displaystyle
+- \frac{F_y^2F_{xx} - 2F_{xy}F_xF_y + F_x^2F_{yy}}{F_y^3}}
+{(F_y^2 + F_x^2)^{3/2}F_y^{-3}}
+ $$</p>
+<p>$F_y^{-3}$ ve $F_y^{3}$ birbirlerini iptal ederler ve sonuç:</p>
+<p>$$
+\kappa = \frac{F_y^2F_{xx} - 2F_{xy}F_xF_y +
+    F_x^2F_{yy}}{(F_y^2 + F_x^2)^{3/2}}
+\qquad (5)
+$$</p>
+<p>Üstteki ünlü eğim  formülüdür. </p>
+<p>Bu eğim formülünün diğer bir şekli şöyledir ($F$ yerine $\phi$ kullanırsak)</p>
+<p>$$ \kappa = \bigtriangledown \cdot \frac{\bigtriangledown \phi}{|\bigtriangledown \phi|} $$</p>
+<p>Bunun okunuş şekli "birim normal gradyanın uzaklaşım ölçüsü (divergence of the
+unit normal gradient)" şeklindedir. Acaba bu formül, (5). formül ile
+uyumlu mu?</p>
+<p>$$ \kappa = \nabla \cdot \frac{\nabla \phi}{|\nabla \phi|}  $$</p>
+<p>$$ = \nabla \cdot \frac{(\phi_x,\phi_y)}{\sqrt{\phi_x^2+\phi_y^2}} $$</p>
+<p>$$ = \left(\partial_x \frac{\phi_x}{\sqrt{\phi_x^2+\phi_y^2}}\right)+ 
+\left(\partial_y \frac{\phi_y}{\sqrt{\phi_x^2+\phi_y^2}}\right)  $$</p>
+<p>$$ = \frac{\phi_{xx}}{\sqrt{\phi_x^2+\phi_y^2}} - \frac{\phi_x (\phi_x\phi_{xx}+\phi_y\phi_{xy})}
+{(\phi_x^2+\phi_y^2)^{3/2}} +
+\frac{\phi_{yy}}{\sqrt{\phi_x^2+\phi_y^2}} - \frac{\phi_y(\phi_x\phi_{xy}+\phi_y\phi_{yy})}
+{(\phi_x^2+\phi_y^2)^{3/2}}  $$</p>
+<p>$$ = \frac{\phi_{xx}(\phi_x^2+\phi_y^2) - \phi_x
+  (\phi_x\phi_{xx}+\phi_y\phi_{xy}) +\phi_{yy}(\phi_x^2+\phi_y^2) -
+  \phi_y(\phi_x\phi_{xy}+\phi_y\phi_{yy})}{(\phi_x^2+\phi_y^2)^{3/2}} $$</p>
+<p>$$ = \frac{\phi_{xx}\phi_y^2 - 2\phi_x\phi_y\phi_{xy} + \phi_{yy}\phi_x^2}{(\phi_x^2+\phi_y^2)^{3/2}}  $$</p>
+<p>Bu formül bizim (5). formül ile tıpatıp aynı.</p>
+<p>Üstteki işlemlerde uzaklaşım ölçüsü (divergence) operatörü $\nabla \cdot$
+ile gradyan operatörü $\nabla$ arasındaki farkı belirtelim: $\nabla \cdot$
+operatörü $F(x,y)$ üzerinde kısmi türevlerin toplamını verir, yani bir
+skalar tek sayı döndürür. Gradyan ise her bir elemanı bir kısmi türeve
+tekabül eden bir <em>vektör</em> geri getirir.</p>
+<p>Python Numpy kodlaması bağlamında, daha önce <em>Kesit Seviyeleri</em> yazısında
+ayrıksal olarak bir <code>phi</code> değişkeni içindeki bir fonksiyon üzerinde
+eğimselliği şöyle hesaplamıştık:</p>
+<pre><code class="python">gradPhiY, gradPhiX = np.gradient(phi)
+absGradPhi=np.sqrt(gradPhiX**2+gradPhiY**2)                               
+
+normGradPhiX=gradPhiX/(absGradPhi+(absGradPhi==0))
+normGradPhiY=gradPhiY/(absGradPhi+(absGradPhi==0))
+
+divYnormGradPhiX, divXnormGradPhiX=np.gradient(normGradPhiX)
+divYnormGradPhiY, divXnormGradPhiY=np.gradient(normGradPhiY)
+
+K = divXnormGradPhiX + divYnormGradPhiY
+</code></pre>
+
+<p>Bu satırların $\nabla \cdot \frac{\nabla \phi}{|\nabla \phi|}$ ifadesiyle
+birebir uyum gösterdiğini herhalde görebiliyoruz. Satır 1, $\nabla \phi$
+ifadesidir. Satırlar 4-5 $\frac{\nabla \phi}{|\nabla \phi|}$ işlemini
+gerçekleştiriyor, gradyanı onun uzunluğuna (magnitude) bölerek onu birim vektörü
+haline getiriyor. Satırlar 7-10 tekrar sonucun gradyanını bir daha alıyor, ama
+bu sefer hesapsal kısmi türevleri birbiriyle topluyor, böylece uzaklaşım ölçüsü
+(divergence) hesaplanmış oluyor. Tüm bu işlemlerin sonucu eğimsellik $\kappa$
+oluyor.</p>
+<p>Dikkat edilirse Python kodundaki K yani $\kappa$, N x N boyutlu bir matristir,
+bu mantıklı çünkü $\kappa$ hesabı için kullandığımız $F_x$, $F_y$ gibi
+türevler aslında $F_x(x,y)$, $F_y(x,y)$ formüllerine sahipler, yani her $x,y$
+kombinasyonu için farklı bir sonuç döndürebilirler. Bu sebeple K yani $\kappa$
+$\phi$ fonksiyonunun her $x,y$ noktası için tanımlıdır. </p>
+<p>Bazen literatürde $\nabla \cdot$ yerine $div(..)$ kullanıldığını görebilirsiniz,
+bu operatörlerin ikisi de aynıdır.</p>
+<p>Kodu görelim,</p>
+<pre><code class="python">import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
+
+def plot_phi(phi):
+    fig = plt.figure()
+    ax = Axes3D(fig)
+    x = []
+    y = []
+    for (i,j),val in np.ndenumerate(phi):
+        x.append(i)
+        y.append(j)
+    ax.plot(xs=x, ys=y, zs=phi.flatten(), 
+            zdir='z', label='ys=0, zdir=z')
+
+f, ax = plt.subplots()
+
+# initial function phi - level set is a square 4 pixels
+# away from borders on each side, in 3D it looks like an empty
+# box
+c0=2; w=2
+nrow, ncol= (30,30)
+phi=c0*np.ones((nrow,ncol))
+phi[w+1:-w-1, w+1:-w-1]=-c0
+
+dt=1.
+
+phiOld=np.zeros((nrow,ncol))
+
+iter=0
+
+while iter &lt; 50:
+    # gradient of phi
+    gradPhiY, gradPhiX = np.gradient(phi)
+    # magnitude of gradient of phi
+    absGradPhi=np.sqrt(gradPhiX**2+gradPhiY**2)                               
+
+    # normalized gradient of phi - eliminating singularities
+    normGradPhiX=gradPhiX/(absGradPhi+(absGradPhi==0))
+    normGradPhiY=gradPhiY/(absGradPhi+(absGradPhi==0))
+
+    divYnormGradPhiX, divXnormGradPhiX=np.gradient(normGradPhiX)
+    divYnormGradPhiY, divXnormGradPhiY=np.gradient(normGradPhiY)
+
+    # curvature is the divergence of normalized gradient of phi
+    K = divXnormGradPhiX + divYnormGradPhiY
+    dPhiBydT = K * absGradPhi # makes everything circle
+
+    # level set evolution equation    
+    phi = phi + ( dt * dPhiBydT )
+    if iter % 10 == 0: 
+        CS = plt.contour(phi,0,colors='r')
+        plt.hold(False)
+        plt.savefig('img1/level_1_'+ str(iter) + '.png')
+        #plot_phi(phi)
+        plt.savefig('img1/phi_1_'+ str(iter) + '.png')
+    iter += 1
+</code></pre>
+
+<p><img alt="" src="img1/level_1_0.png" />
+<img alt="" src="img1/level_1_10.png" />
+<img alt="" src="img1/level_1_20.png" />
+<img alt="" src="img1/level_1_30.png" />
+<img alt="" src="img1/level_1_40.png" /></p>
 <p>Kaynaklar</p>
 <p>[1] Courant, <em>Introduction to Calculus and Analysis Volume 2</em>, sf. 223-232</p>
 <p>[2] Wolfram Mathworld, <em>Curvature</em>, <a href="http://mathworld.wolfram.com/Curvature.html">http://mathworld.wolfram.com/Curvature.html</a></p>

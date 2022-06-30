@@ -1,4 +1,8 @@
-# Uydu Fotograflarina Erismek
+# Uydu Fotoğraflarına Erişmek
+
+Sık güncellenen uydu fotoğraflarına erişmek için `pystac_client`;
+`pip` ile kurulur. Verili bir enlem, boylam için sonuçlar alttadır.
+
 
 ```python
 from pystac_client import Client
@@ -10,10 +14,8 @@ import rioxarray
 api_url = "https://earth-search.aws.element84.com/v0"
 client = Client.open(api_url)
 
-# collection: Sentinel-2, Level 2A, COGs
 collection = "sentinel-s2-l2a-cogs"
 
-# AMS coordinates
 lat, lon = 52.37, 4.90
 geometry = {"type": "Point", "coordinates": (lon, lat)}
 
@@ -27,7 +29,7 @@ for item in mysearch.items():
    print (item)
    print(item.assets["thumbnail"].href)
    visual_href = item.assets["visual"].href
-   break
+   break # ilk sonucu kullan
 ```
 
 ```text
@@ -35,7 +37,21 @@ for item in mysearch.items():
 https://roda.sentinel-hub.com/sentinel-s2-l1c/tiles/31/U/FU/2022/6/29/0/preview.jpg
 ```
 
+Üstteki sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya,
+erişilip bakılabilir, fakat esas detaylı dosya alttadır,
 
+```python
+print (visual_href)
+```
+
+```text
+https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/U/FU/2022/6/S2A_31UFU_20220629_0_L2A/TCI.tif
+```
+
+Dikkat bu dosya 100 MB'tan fazla olabilir, bu sebeple çoğunlukla
+yapılan dosyanin parçalarını indirmek. `rioxarray` bu işlemi
+gerçekleştiriyor, x,y için minimum, maksimum noktalar verip bir ufak kutu
+yaratabiliyoruz, ve sadece bu ufak kutudaki detaylı imaj geri döndürülüyor.
 
 
 ```python
@@ -67,6 +83,8 @@ Attributes:
 ```
 
 ![](uydu_01.png)
+
+Üstteki sonuç elde edildi. Fena değil, detaylar net gözüküyor.
 
 Kaynaklar
 

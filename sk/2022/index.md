@@ -1,4 +1,4 @@
 # 2022
 
-[Uydu Fotoğraflarına Erişmek](06/uydu-fotograf-satellite-image.html)
+[Uydu Fotoğrafları Erişimi](06/uydu-fotograf-satellite-image.html)
 

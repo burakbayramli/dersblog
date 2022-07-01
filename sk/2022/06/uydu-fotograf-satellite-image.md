@@ -1,4 +1,4 @@
-# Uydu Fotoğraflarına Erişmek
+# Uydu Fotoğrafları Erişimi
 
 Sık güncellenen uydu fotoğraflarına erişmek için `pystaç_client`;
 `pip` ile kurulur. Örnek enlem, boylam için,
@@ -104,4 +104,7 @@ Detaylar net gözüküyor..
 Kaynaklar
 
 [1] [The Carpentries Incubator](https://carpentries-incubator.github.io/geospatial-python/19-access-data/index.html)
+
+
+
 

@@ -1,14 +1,13 @@
 # Uydu Fotoğraflarına Erişmek
 
-Sık güncellenen uydu fotoğraflarına erişmek için `pystac_client`;
-`pip` ile kurulur. Verili bir enlem, boylam için sonuçlar alttadır.
+Sık güncellenen uydu fotoğraflarına erişmek için `pystaç_client`;
+`pip` ile kurulur. Örnek enlem, boylam için,
 
 
 ```python
 from pystac_client import Client
-import pandas as pd
-import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd, numpy as np
 import rioxarray
 
 api_url = "https://earth-search.aws.element84.com/v0"
@@ -37,7 +36,9 @@ for item in mysearch.items():
 https://roda.sentinel-hub.com/sentinel-s2-l1c/tiles/31/U/FU/2022/6/29/0/preview.jpg
 ```
 
-Öteki bilgiler,
+Sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya, erişilip
+bakılabilir, kabaca goruntunun nasil olduguna bakmak icin iyi
+olabilir. Öteki bilgiler,
 
 ```python
 print(item.datetime)
@@ -51,9 +52,7 @@ print(item.properties)
 {'datetime': '2022-06-29T10:56:35Z', 'platform': 'sentinel-2a', 'constellation': 'sentinel-2', 'instruments': ['msi'], 'gsd': 10, 'view:off_nadir': 0, 'proj:epsg': 32631, 'sentinel:utm_zone': 31, 'sentinel:latitude_band': 'U', 'sentinel:grid_square': 'FU', 'sentinel:sequence': '0', 'sentinel:product_id': 'S2A_MSIL2A_20220629T104631_N0400_R051_T31UFU_20220629T170417', 'sentinel:data_coverage': 100, 'eo:cloud_cover': 22.69, 'sentinel:valid_cloud_cover': True, 'sentinel:processing_baseline': '04.00', 'sentinel:boa_offset_applied': True, 'created': '2022-06-29T19:43:11.806Z', 'updated': '2022-06-29T19:43:11.806Z'}
 ```
 
-
-Üstteki sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya,
-erişilip bakılabilir, fakat esas detaylı dosya alttadır,
+Esas detaylı goruntu dosyası altta,
 
 ```python
 print (visual_href)
@@ -63,10 +62,11 @@ print (visual_href)
 https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/U/FU/2022/6/S2A_31UFU_20220629_0_L2A/TCI.tif
 ```
 
-Dikkat bu dosya 100 MB'tan fazla olabilir, bu sebeple çoğunlukla
-yapılan dosyanin parçalarını indirmek. `rioxarray` bu işlemi
-gerçekleştiriyor, x,y için minimum, maksimum noktalar verip bir ufak kutu
-yaratabiliyoruz, ve sadece bu ufak kutudaki detaylı imaj geri döndürülüyor.
+Fakat bu dosya 100 MB'tan fazla olabilir, bu sebeple çoğunlukla
+yapılan dosyanın parçalarını indirmek, `rioxarray` bu işlemi
+yapabiliyor, x,y için minimum, maksimum noktalar verip bir ufak kutu
+yaratabiliyoruz, ve sadece bu ufak kutudaki detaylı imaj parçası geri
+döndürülüyor.
 
 
 ```python
@@ -99,7 +99,7 @@ Attributes:
 
 ![](uydu_01.png)
 
-Üstteki sonuç elde edildi. Fena değil, detaylar net gözüküyor.
+Detaylar net gözüküyor.. 
 
 Kaynaklar
 

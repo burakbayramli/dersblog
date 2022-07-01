@@ -52,7 +52,11 @@ print(item.properties)
 {'datetime': '2022-06-29T10:56:35Z', 'platform': 'sentinel-2a', 'constellation': 'sentinel-2', 'instruments': ['msi'], 'gsd': 10, 'view:off_nadir': 0, 'proj:epsg': 32631, 'sentinel:utm_zone': 31, 'sentinel:latitude_band': 'U', 'sentinel:grid_square': 'FU', 'sentinel:sequence': '0', 'sentinel:product_id': 'S2A_MSIL2A_20220629T104631_N0400_R051_T31UFU_20220629T170417', 'sentinel:data_coverage': 100, 'eo:cloud_cover': 22.69, 'sentinel:valid_cloud_cover': True, 'sentinel:processing_baseline': '04.00', 'sentinel:boa_offset_applied': True, 'created': '2022-06-29T19:43:11.806Z', 'updated': '2022-06-29T19:43:11.806Z'}
 ```
 
-Esas detaylı goruntu dosyası altta,
+Zaman damgasına bakıyoruz 29/6 diyor, kodu 30/6'da işlettik, fena
+değil. Birkaç günlük gecikme ile yeryüzünde pek çok noktanın
+görüntüsüne erişmek mümkün demek ki.
+
+Esas detaylı görüntü dosyası altta,
 
 ```python
 print (visual_href)

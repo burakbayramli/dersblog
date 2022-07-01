@@ -36,8 +36,8 @@ for item in mysearch.items():
 https://roda.sentinel-hub.com/sentinel-s2-l1c/tiles/31/U/FU/2022/6/29/0/preview.jpg
 ```
 
-Sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya, erişilip
-bakılabilir, kabaca goruntunun nasil olduguna bakmak icin iyi
+Sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya, erışılıp
+bakılabilir, kabaca görüntünün nasıl olduğuna anlamak için iyi
 olabilir. Öteki bilgiler,
 
 ```python

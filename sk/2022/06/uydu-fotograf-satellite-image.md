@@ -1,6 +1,6 @@
 # Uydu Fotoğrafları Erişimi
 
-Sık güncellenen uydu fotoğraflarına erişmek için `pystaç_client`;
+Sık güncellenen uydu fotoğraflarına erişmek için `pystac_client`,`rioxarray`;
 `pip` ile kurulur. Örnek enlem, boylam için,
 
 

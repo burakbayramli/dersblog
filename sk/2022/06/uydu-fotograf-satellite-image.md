@@ -36,7 +36,7 @@ for item in mysearch.items():
 https://roda.sentinel-hub.com/sentinel-s2-l1c/tiles/31/U/FU/2022/6/29/0/preview.jpg
 ```
 
-Sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya, erışılıp
+Sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya, erişilip
 bakılabilir, kabaca görüntünün nasıl olduğunu anlamak için iyi
 olabilir. Öteki bilgiler,
 
@@ -68,7 +68,7 @@ https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/U/FU/20
 
 Fakat bu dosya 100 MB'tan fazla olabilir, bu sebeple çoğunlukla
 yapılan dosyanın parçalarını indirmek, `rioxarray` bu işlemi
-yapabiliyor, x,y için minimum, maksimum noktalar verip bir ufak kutu
+gerçekleştirebilir, x,y için minimum, maksimum noktalar verip bir ufak kutu
 yaratabiliyoruz, ve sadece bu ufak kutudaki detaylı imaj parçası geri
 döndürülüyor.
 

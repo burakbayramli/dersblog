@@ -37,7 +37,7 @@ https://roda.sentinel-hub.com/sentinel-s2-l1c/tiles/31/U/FU/2022/6/29/0/preview.
 ```
 
 Sonuçta bir `preview.jpg` görülüyor. Bu ufak bir dosya, erışılıp
-bakılabilir, kabaca görüntünün nasıl olduğuna anlamak için iyi
+bakılabilir, kabaca görüntünün nasıl olduğunu anlamak için iyi
 olabilir. Öteki bilgiler,
 
 ```python
@@ -108,7 +108,3 @@ Detaylar net gözüküyor..
 Kaynaklar
 
 [1] [The Carpentries Incubator](https://carpentries-incubator.github.io/geospatial-python/19-access-data/index.html)
-
-
-
-

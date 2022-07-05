@@ -3,6 +3,8 @@
 
 ## En Son
 
+5/7 - [Kesit Seviyeleri (Level Sets) ile İmaj Gruplamak](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app50lset/kesit_seviyeleri__level_sets__ile_imaj_gruplamak_.html)
+
 1/7 - [Uydu Fotoğrafları Erişimi](https://burakbayramli.github.io/dersblog/sk/2022/06/uydu-fotograf-satellite-image.html)
 
 28/6 - [Python, Pandas, Excel](https://burakbayramli.github.io/dersblog/sk/2012/05/python-pandas-excel.html)
@@ -10,8 +12,6 @@
 16/6 - [Euler Gaz Dinamiği Formülleri (Euler Equations of Gas Dynamics)](https://burakbayramli.github.io/dersblog/phy/phy_030_fluid12/gazlar_sivilar__2.html)
 
 14/6 - [Termodinamik, İdeal Gazlar Kanunu, Basınç, Isı, Enerji](https://burakbayramli.github.io/dersblog/phy/phy_030_fluid05/ideal_gazlar_kanunu__ideal_gas_law_.html)
-
-23/5 - [Python ile Finans Verileri](https://burakbayramli.github.io/dersblog/sk/2016/01/python-ile-finans-verileri.html)
 
 ## Konular, Referans
 

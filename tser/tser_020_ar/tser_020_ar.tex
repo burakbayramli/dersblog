@@ -476,6 +476,56 @@ zaman özyineli ifade şu olur [8, sf. 502],
 
 $$ y_t = \alpha x_t + (1-\alpha) y_{t-1}$$
 
+Enflasyon
+
+Fiyat seviyesi (CPİ) kendisiyle alakalı bir şeridir, bu mantıklı çünkü ekonomik
+psikoloji açısından yüksek fiyat seviyesi daha yüksek fiyatları gidişi
+tetikleyebilir. Alışverişte yüksek fiyatlar görüyorsam ben de kendi müşterimden
+daha yüksek fiyatlar istemeye başlayabilirim. Bu kendisiyle korelasyonu
+nasıl buluruz? Durbin-Watson testi burada faydalı,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+cpi = pd.read_csv('cpi.csv',index_col=0)
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import statsmodels.formula.api as smf
+from statsmodels.stats.stattools import durbin_watson
+inf = np.log(cpi)
+results = smf.ols('CPIAUCNS ~ 1', data=inf).fit()
+print (durbin_watson(results.resid))
+\end{minted}
+
+\begin{verbatim}
+9.222098132626552e-05
+\end{verbatim}
+
+Düşük bir değer kendisiyle korelasyon varlığının işareti olabilir. Not: Bu
+istatistik normal regresyon paketleri tarafından çoğunlukla rapor edilir çünkü
+basit regresyonun önkabulü kendisiyle korelasyon olmadığıdır, bu sebeple DW
+korelasyon varlığına işaret ediyorsa analizci için bu önemli bir sinyal olmalı.
+
+Durbin-Watson istatiği 0 ile 4 arasında bir değere sahiptir, 0 ile 2 arasındaki
+değerler pozitif kendisiyle korelasyonun, 2 ile 4 arası negatif kendisiyle
+korelasyonun işaretidir. Tam 2 değeri korelasyon yok demektir.
+
+Bir diger test Ljung-Box testi, 
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import statsmodels.tsa.stattools as tsa
+acf,ci,q,pvalues = tsa.acf(results.resid, nlags=4, alpha=95,qstat=True, unbiased=True)
+print (acf)
+print (pvalues)
+\end{minted}
+
+\begin{verbatim}
+[1.         0.99585547 0.99164499 0.98737151 0.98305291]
+[1.02286496e-121 5.63735022e-239 0.00000000e+000 0.00000000e+000]
+\end{verbatim}
+
+P-değerlerinin hepsinin 0.05'ten küçük olması kendisiyle korelasyon varlığı
+için bir işaret daha.
 
 Kaynaklar
 

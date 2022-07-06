@@ -391,31 +391,6 @@ son derece nadir bir durum olan Gaussian süreçleri durumunda kendisiyle
 korelasyon size hakikaten bilmeniz gereken <em>herşeyi</em> söyler. Üç, birazcık
 daha az nadir olan lineer tahmin durumunda yine bilmemiz gereken herşeyi bize
 söyler. </p>
-<p>Veri Analizi Örneği</p>
-<pre><code class="python">import pandas as pd
-cpi = pd.read_csv('cpi.csv',index_col=0)
-</code></pre>
-
-<pre><code class="python">import statsmodels.formula.api as smf
-from statsmodels.stats.stattools import durbin_watson
-inf = np.log(cpi)
-results = smf.ols('CPIAUCNS ~ 1', data=inf).fit()
-print (durbin_watson(results.resid))
-</code></pre>
-
-<pre><code>9.222098132626552e-05
-</code></pre>
-
-<pre><code class="python">import statsmodels.tsa.stattools as tsa
-acf,ci,q,pvalues = tsa.acf(results.resid, nlags=4, alpha=95,qstat=True, unbiased=True)
-print (acf)
-print (pvalues)
-</code></pre>
-
-<pre><code>[1.         0.99585547 0.99164499 0.98737151 0.98305291]
-[1.02286496e-121 5.63735022e-239 0.00000000e+000 0.00000000e+000]
-</code></pre>
-
 <p>Kaynaklar</p>
 <p>[1] Carver, <em>Systematic Trading</em></p>
 <p>[2] Macrooption, <em>Why Is Volatility Proportional to the Square Root of  Time</em>,

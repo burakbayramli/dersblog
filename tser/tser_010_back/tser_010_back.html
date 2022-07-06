@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Geriye Dönük Testler (Backtesting)</h1>
+<h1>Portföy Performansı</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Geriye Dönük Testler (Backtesting)
+    <title>Portföy Performansı
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -24,6 +24,66 @@
 </script>
 </head>
 
+<p>Kayıpları Hesaplamak</p>
+<p>Rasgele sayı üretimi kullanarak zaman serisi üretmek simülasyon amaçlı faydalı
+bir işlem; mesela istediğimiz hedeflediğimiz oynaklık seviyesi, ve SO üzerinden
+belli bir yamukluğa sahip bir zaman serisini üretip (daha doğrusu getirileri
+üretip sonra zaman kumulatif hesap ile seriyi üretip), onun üzerinden muhtemel
+kayıpların ne seviyede olacağını görebiliriz. Diyelim ki hiç yamukluğu olmayan,
+yüzde 50 oynaklık hedefi ile yıllık SÖ=0.5 üzerinden kayıplar ne olacaktır?</p>
+<pre><code class="python">from commonrandom import arbitrary_timeindex, skew_returns_annualised
+from common import account_curve
+import pandas as pd
+
+want_skew = 0.0
+annualSR = 0.5
+days = 256*10. # 10 senelik
+res = skew_returns_annualised(annualSR=annualSR, want_skew=want_skew, \
+                              voltarget=0.50, size=days) 
+df = pd.DataFrame(res)
+df = df.set_index(pd.to_datetime(df.index, unit='d'))
+df['cum'] = (1+df).cumprod() # kumulatif - zaman serisinin kendisi burada
+</code></pre>
+
+<p>Her ayın en kötü günlük kaybı, 100,000 Eur'lik sermaye üzerinden diyelim,</p>
+<pre><code class="python">K = 1000; capital = 100*K
+print capital * df[0].quantile(q=0.05)
+</code></pre>
+
+<pre><code>-5144.01215594
+</code></pre>
+
+<p>0.05 yüzdelik dilimine (quantile) baktık, çünkü 100 gün içinde 5 gün 20 gün
+içinde 1 gün demektir, bir ayda 20 iş günü olduğunu kabul edersek her ayın en
+kötü kaybını bu şekilde hesaplayabiliriz.</p>
+<p>Yüzdelik dilime bakmak güzel bir numara; getirilerin dağılımına bakıyoruz, ama
+yamukluk sebebiyle bu dağılımın analitik bir formülü elimizde yok, sadece
+sayısal bir dağılım var, yani verinin kendisi. Bu sayısal dağılımda yüzdelik
+dilime bakmak, analitik durumda ters kumulatif yoğunluk fonksiyonu (inverse cdf)
+hesabı yapmak ile eşdeğerdir, yani "olasılığı (olasılık yoğunluk alanı, ya da
+cdf) vesaire olan şey hangi değere tekabül eder?" sorusunun cevabını sayısal
+olarak buluyoruz.</p>
+<p>Her sene en kötü haftalık kayıp için elimizdeki günlük getirileri haftalık
+getiriye çevirmemiz lazım. Bunun için getirilerin kumulatifi (yani zaman
+serisinin gerçek hali) alıp, ondan haftasal örneklem alıp, bu yeni zaman serisi
+üzerinde getirileri tekrar hesaplamak lazım, ve bakacağımız yüzdelik dilimi
+yüzde 1/52 noktası çünkü bir yıl içinde 52 hafta var.</p>
+<pre><code class="python">weekly_returns = df.cum.resample('W').pct_change()
+print capital * weekly_returns.quantile(q=1/52.)
+</code></pre>
+
+<pre><code>-12480.850705
+</code></pre>
+
+<p>Her 10 sene en kötü aylık kayıp,</p>
+<pre><code class="python">weekly_returns = df.cum.resample('M').pct_change()
+print capital * weekly_returns.quantile(q=1/120.)
+</code></pre>
+
+<pre><code>-26703.5859597
+</code></pre>
+
+<p>Geriye Dönük Testler (Backtesting)</p>
 <p>Bir stratejiyi tasarladıktan sonra onu piyasada kullanmadan önce geriye dönük
 veri üzerinde testten geçirmek gerekir. Stratejinin başarısını ölçmek için bazı
 kriterler var, Sharpe Oranı, Düşüş Kalıcılığı bu ölçütlerden bazıları. </p>

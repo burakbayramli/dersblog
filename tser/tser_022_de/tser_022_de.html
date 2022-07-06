@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Sezonsallık, Trend Çıkartmak, Değişim Noktası, CUSUM</h1>
+<h1>Değişim Noktası Analizi, CUSUM, Chow Test</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sezonsallık, Trend Çıkartmak, Değişim Noktası, CUSUM
+    <title>Değişim Noktası Analizi, CUSUM, Chow Test
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -24,134 +24,221 @@
 </script>
 </head>
 
-<p>Zaman serilerini trendini, sezonsallığını nasıl inceleriz, ve trendde değişim
-varsa bunu nasıl yakalarız?</p>
-<p>Bir örnek üzerinde görelim, bir şirketin şampuan satış kazancı, veri [1]'den,</p>
+<p>Poisson bazlı bir tekniği [8]'de görmüştük. Bir diğer yaklaşım herhangi bir
+nokta öncesi ve sonrası zaman serisi parçalarını almak, ve önceki parçada lineer
+regresyon, yapıp katsayıları alıp gürültünün normalliğini kontrol etmektir. Eğer
+normallik varsa, katsayılar alınıp ikinci parçada kullanılır, gürültü yine
+normalse kopuş yoktur (aynı zaman serisi). Birincide gürültü normalliği yoksa
+kopuş yine yoktur, ilk parça doğru tanımlı değil. Sezonsallık benzer şekilde
+kontrol edilebilir, vs.</p>
+<p>Chow</p>
+<p>Chow Testi ve Yapısal Kopma (Structural Break)</p>
+<p>Diyelim ki elimizdeki bir modelin bir verinin iki parçasında değişik
+sonuçlar verip vermeyeceğini merak ediyoruz. Önceki regresyon örneğinde
+bunu tek kesi ve değişken üzerinden gördük. Peki ya model daha çetrefil
+olsaydı?</p>
+<p>Bu durumda Chow Testini kullanabiliriz. Bu test daha önce gördüğümüz
+F-testini verinin iki parçası üzerinde işletir, modelin her iki parça
+üzerindeki SSE değeri, yani hata karelerinin toplamı (sum of squared
+errors) üzerinden bir istatistik yaratır. Sıfır hipotezi katsayıların iki
+bölgede aynı olduğudur, ve bunun irdelenmesi modelin her iki bölgedeki
+varyansına bakılarak yapılır. Tersi yönde kanıt var ise faraziyeyi
+reddederiz, ve iki bölgenin (en azından kullandığımız model açısından) çok
+farklı olduğu sonucuna varırız.</p>
+<p>F-testi için kısıtlı (restricted), ve kısıtlı olmayan (unrestricted) modeli
+tanımlamak gerekiyor. Regresyonun her iki veri bölgesinde değişik değerlere
+sahip olmasına izin verirsek (yani regresyonu ayrı ayrı iki parça üzerinde
+işletirsek) bu kısıtlı olmayan demektir, eğer tüm veri üzerinde aynı
+regresyonu kullanıyorsak o zaman katsayılar değişik bölgelere göre
+değişemezler, bu da kısıtlı model olacaktır. Getirdiğimiz kısıtlama sayısı
+regresyonun kullandığı değişken sayısına eşittir. Eğer değişken sayısı $k$
+veri nokta sayısı $n$ işe formül,</p>
+<p>$$ 
+F = \frac{SSE_r - (SSE_1 + SSE_2) / k}{(SSE_1 + SSE_2) / (n-2k)}
+ $$</p>
+<p>ki $SSE_1,SSE_2$ sırasıyla 1. ve 2. bölgedeki hataların kare toplamıdır, $SSE_u
+= SSE_1 + SSE_2$, yani bölgelerin ayrı ayrı hesaplanan hata kare toplamının
+toplamı kısıtlı olmayan SSE'yi verir. $F$ rasgele değişkeni $F_{k,n-2k}$
+serbestlik derecesine sahip bir F dağılımına sahiptir. Kısıtlama $k$ çünkü
+ikinci bölgede $k$ kadar değişkenin değişik olmasına izin vermedik.</p>
+<p>Örnek</p>
+<p>Kullanacağımız veri Amerika'daki benzin tüketimi ile alakalı, bu veri
+içinde aslında iki farklı periyotu kapsıyor [8, sf. 209]. 1973'e kadar
+dünyada petrol boldu ve dünya petrol fiyatları ya stabil ya da düşüş
+trendinde idi. Fakat 1973'teki ambargo piyasada büyük değişimlere sebep
+oldu, kıtlık başladı, fiyatlar yükseldi. </p>
+<p>Alttaki figürde benzin fiyatı (PG) ile kişi başına tüketim (per capita
+consumption) grafikli, ve görüldüğü gibi 1973 öncesi piyasa oldukça stabil
+gidiyor (kırmızı noktalar) ama sonrasında işler karışıyor (mavi noktalar).</p>
 <pre><code class="python">import pandas as pd
-def parser(x):
-    return pd.datetime.strptime( '190'+x, '%Y-%m' )
+df = pd.read_csv('gasoline.csv',sep='\s+')
 
-df = pd.read_csv('shampoo-sales.csv', header=0, index_col=0, \
-     parse_dates=True, date_parser=parser)
-df.Satis.plot()
-plt.savefig('tser_022_de_07.png')
+plt.plot(df[df.Year&lt;=1973].G,df[df.Year&lt;=1973].Pg,'r.')
+plt.xlabel('G'); plt.ylabel('PG')
+plt.plot(df[df.Year&gt;1973].G,df[df.Year&gt;1973].Pg,'b.')
+plt.savefig('stat_tests2_02.png')
 </code></pre>
 
-<p><img alt="" src="tser_022_de_07.png" /></p>
-<p>Yukarı doğru bir trend var. Bu trendi veriye bir düz çizgi uydurarak (fit), yani
-tek değişkenli, ikinci derece lineer regresyon yaparak yakalayabiliriz. Bunu
-yapmayı pek çok diğer derste gösterdik, <code>statsmodels.regression</code>
-paketinden, <code>linear_model.OLS</code> ile, <code>statsmodels.formula.api</code> ile,
-ya da direk Lineer Cebir kullanarak.. Altta <code>polyfit</code>  çağrısı
-kullanılacak.</p>
-<p>Modelden gelen katsayıları (coefficients) kullanıp tahmini $y$ değerleri üretmek
-için alttaki fonksiyon var,</p>
-<pre><code class="python">def model_compute(X, coef):
-   degree = len(coef)-1
-   curve = [np.sum([coef[-1]] + [x**(degree-d)*c for d,c \
-            in enumerate(coef[:-1])]) for x in X]
-   return curve
+<p><img alt="" src="stat_tests2_02.png" /></p>
+<p>1973 ve 1980'deki fiyat zıplamaları net bir şekilde görülüyor, ayrıca
+tüketimde de daha fazla değişkenlik / varyans mevcut. Eğer bu veriye bir
+model uydurmak isteseydik, aynı modelin iki ayrı bölgeye her değişken için
+aynı mükemmeliyette uymasını beklemek hayalcilik olurdu.</p>
+<p>Test edeceğimiz model şöyle, </p>
+<pre><code class="python">model = 'Ln_G_Pop ~ Ln_Income_Pop + Ln_Pg + Ln_Pnc + Ln_Puc'
 </code></pre>
 
-<p>Uydurmayı yapıp modeli veri üzerinde gösterelim,</p>
-<pre><code class="python">X = np.array(range(len(df))).reshape(-1)
-y = df.values.reshape(-1)
-degree = 1
-coef = np.polyfit(X, y, degree)
-df['Model']  = model_compute(X, coef)
-df.plot()
-plt.savefig('tser_022_de_01.png')
+<p>Bu modeldeki fiyatlar <code>G,Pnc,Puc</code>, sırasıyla benzin, yeni araba ve
+kullanılmış araba fiyatları. <code>Ln_G_Pop</code>, <code>G</code> ile <code>Pop</code>
+(nüfus) bölünmesiyle elde ediliyor, ve <code>Ln</code> notasyonumuz log işlemi
+demek. <code>Income</code> ülke geliri, o da <code>Pop</code> ile bölünüyor ve log'u
+alınıyor.</p>
+<pre><code class="python">df['Ln_G_Pop'] = np.log(df.G/df.Pop)
+df['Ln_Income_Pop'] = np.log(df.Y/df.Pop)
+df['Ln_Pg'] = np.log(df.Pg)
+df['Ln_Pnc'] = np.log(df.Pnc)
+df['Ln_Puc'] = np.log(df.Puc)
 </code></pre>
 
-<p><img alt="" src="tser_022_de_01.png" /></p>
-<p>Veriden "trendi çıkartabiliriz". Bunu basit bir şekilde veriden modeli
-eksilterek yapabiliriz. Bu durumda geriye kalan sadece trend haricinde olan
-şeyler olacaktır. Trend çıkartmanın pek çok amacı olabilir, belki trend
-haricinde olan kalıpları, eğer hala varsa, görmek istiyoruz, ya da modelin
-artığına (residual) bakarak onun gürültü olup olmadığını anlamak
-istiyoruz. Bilindiği gibi lineer regresyonun faraziyesi verinin model artı
-gürültü olduğudur, o zaman model veriden çıkartılınca geriye kalan artık,
-"tortu" sadece gürültüdür. Gürültünün matematiksel tanımı Gaussian, ya da
-Normal dağılımıdır, demek ki artıklar üzerinde normallik testi bir anlamda
-modelin uyma başarısını da ölçer.</p>
-<pre><code class="python">detrended = df.Satis-df.Model
-detrended.plot()
-plt.savefig('tser_022_de_03.png')
+<pre><code class="python">plt.plot(df.Year,df.Ln_G_Pop)
+plt.xlabel('Sene')
+plt.ylabel('Ln(G/Nufus)')
+plt.title('Amerika Benzin Tuketimi')
+plt.savefig('stat_tests2_03.png')
 </code></pre>
 
-<p><img alt="" src="tser_022_de_03.png" /></p>
-<p>Normallik testini uygulayalım,</p>
-<pre><code class="python">from scipy import stats
-val,pval = stats.shapiro(detrended)
-print ('p degeri =', pval)
+<p><img alt="" src="stat_tests2_03.png" /></p>
+<p>Modeli tüm veri üzerinde işletirsek,</p>
+<pre><code class="python">from statsmodels.formula.api import ols
+res_r = ols(model, data=df).fit()
+print (res_r.summary())
 </code></pre>
 
-<pre><code>p degeri = 0.09782794862985611
+<pre><code>                            OLS Regression Results                            
+==============================================================================
+Dep. Variable:               Ln_G_Pop   R-squared:                       0.969
+Model:                            OLS   Adj. R-squared:                  0.965
+Method:                 Least Squares   F-statistic:                     243.2
+Date:                Wed, 17 Nov 2021   Prob (F-statistic):           6.25e-23
+Time:                        10:06:35   Log-Likelihood:                 79.913
+No. Observations:                  36   AIC:                            -149.8
+Df Residuals:                      31   BIC:                            -141.9
+Df Model:                           4                                         
+Covariance Type:            nonrobust                                         
+=================================================================================
+                    coef    std err          t      P&gt;|t|      [0.025      0.975]
+---------------------------------------------------------------------------------
+Intercept        -7.7892      0.359    -21.679      0.000      -8.522      -7.056
+Ln_Income_Pop     2.1175      0.099     21.443      0.000       1.916       2.319
+Ln_Pg            -0.0979      0.028     -3.459      0.002      -0.156      -0.040
+Ln_Pnc            0.1224      0.112      1.092      0.283      -0.106       0.351
+Ln_Puc           -0.1022      0.069     -1.475      0.150      -0.243       0.039
+==============================================================================
+Omnibus:                        2.323   Durbin-Watson:                   0.891
+Prob(Omnibus):                  0.313   Jarque-Bera (JB):                1.281
+Skew:                           0.049   Prob(JB):                        0.527
+Kurtosis:                       2.081   Cond. No.                         319.
+==============================================================================
+
+Notes:
+[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
 </code></pre>
 
-<p>Shapiro-Wilk testinde p-değerinin 0.05'ten küçük olması normalliğin reddedilmesi
-demektir. Üstte normal olmadığın reddedemedik, demek ki büyük ihtimalle elimizde
-bir Normal dağılım var.</p>
-<p>Sezonsallık</p>
-<p>Benzer bir şekilde sezonşallığı da modelleyebiliriz. Sezonsallık bir
-periyotsallığı ima eder, o zaman en genel şekilde bir sinüs fonksiyonunu veriye
-uydurabiliriz. Fakat bu sinüs fonksiyonunun benliğini, başlangıç noktasını
-bilmiyoruz, bu durumlarda [6]'da sinüssel regresyon tekniğini gördük. Fakat
-belki de daha rahatı veriye bir 4'üncü derece polinom uydurmaktır.</p>
-<p>Bu garip gelebilir, polinom uydurmayı çoğunlukla ikinci, üçüncü derecede
-eğrileri modelleyen çerçevede görmüş olabiliriz, bu yaklaşım fakat periyotsal
-fonksiyonları da çok rahat temsil edebiliyor. Sebebi herhalde sinüs fonsiyonunun
-Taylor açılımında [3] gizli, Taylor açılımında sonsuza kadar giden türevler
-polinom açılımda kullanılır, sinüsün 1'den 4'e kadar olan türevlerine bakarsak,</p>
-<p>$\sin^{\prime}(x)=\cos(x),\quad$
-$\sin^{\prime\prime}(x)=-\sin(x),\quad$,
-$\sin^{\prime\prime\prime}(x)=-\cos(x),\quad$,
-$\sin^{(4)}(x)=\sin(x)$.</p>
-<p>Dördüncü türevin tekrar $\sin(x)$'a dönüş yaptığını görüyoruz. Demek ki 4'üncü
-derece polinom açılımı periyotsal fonksiyonları temsil etmek için yeterlidir.</p>
-<p>Altta bir bölgeden alınmış günlük, o günün minimum hava sıcaklığı ölçümlerini
-görüyoruz. Ona modeli uyduralım,</p>
-<pre><code class="python">import pandas as pd
-df = pd.read_csv('daily-min-temperatures.csv', header=0,\
-                 index_col=0, parse_dates=True)
-X = [i%365 for i in range(0, len(df))]
-y = df.values
-degree = 4
-coef = np.polyfit(X, y, degree)
-df['Model']  = model_compute(X, coef)
-df.plot()
-plt.savefig('tser_022_de_02.png')
+<p>Şimdi her iki parça üzerinde ayrı ayrı regresyon işletelim, ki parçaları
+1973 değeri üzerinden oluşturacağız, bu bildiğimiz bir değer ve bir anlamda
+bu değerin gerçekten bir kopuş noktası olup olmadığını test etmek
+istiyoruz, ve ardından Chow testi için gerekli değerleri hesaplıyoruz,</p>
+<pre><code class="python">df_x = df[['Ln_Income_Pop','Ln_Pg','Ln_Pnc','Ln_Puc']]
+df_y = df['Ln_G_Pop']
+
+print (len(df[df.Year&lt;=1973]), len(df[df.Year&gt;1973]))
+res1 = ols(model, data=df[df.Year&lt;1974]).fit()
+res2 = ols(model, data=df[df.Year&gt;=1974]).fit()
+S_1 = np.sum(res1.resid**2)
+S_2 = np.sum(res2.resid**2)
+S_r = np.sum(res_r.resid**2)
+print ('S 1 =', S_1)
+print ('S 2 =', S_2)
+print ('S_r =', S_r)
+print ('N =', len(df))
+k = df_x.shape[1]
+tmp1 = (S_r-(S_1+S_2))/k
+tmp2 = (S_1+S_2)/(len(df)-2*k-1)
+F = tmp1/tmp2
+print ('F =', F)
+
+import scipy.stats as st
+f = st.f(k,len(df)-2*k-1)
+print ('p degeri =', 1-f.cdf(F))
 </code></pre>
 
-<p><img alt="" src="tser_022_de_02.png" /></p>
-<p>Periyotsallık yakalanmış gibi duruyor. Sezonsallığı veriden çıkartalım,</p>
-<pre><code class="python">deseasoned = df.Temp-df.Model
-deseasoned.plot()
-plt.savefig('tser_022_de_04.png')
+<pre><code>14 22
+S 1 = 0.002567339947532824
+S 2 = 0.0049117547066572
+S_r = 0.02487343626197274
+N = 36
+F = 15.698665584711588
+p degeri = 9.40286063455531e-07
 </code></pre>
 
-<p><img alt="" src="tser_022_de_04.png" /></p>
-<p>Artıklar üzerinde normallik testi,</p>
-<pre><code class="python">from scipy import stats
-val,pval = stats.shapiro(deseasoned)
-print ('p degeri =', pval)
+<p>Hesaplanan p değeri çok küçük, ve 0.05'ten daha az, demek ki hipotez
+reddedildi. Demek ki hakikaten 1973'te bir değişim olmuş!</p>
+<p>Değişim Noktasını Bulmak</p>
+<p>Eğer değişim anı 1973'ü bilmeseydik onu nasıl ortaya çıkartırdık? Bir
+yaklaşıma göre [5] tüm seneleri teker teker deneyerek Chow testini ardı
+ardına işletebilirdik ve elde edilen en büyük F değeri bize değişim
+noktasını verirdi. Bu kodu işletirsek,</p>
+<pre><code class="python">from statsmodels.regression.linear_model import OLS
+from numpy.linalg import pinv
+
+def supf(y, x, p):
+    N = y.shape[0]
+    range = np.floor(np.array([N * p, N * (1 - p)]))
+    range = np.arange(range[0], range[1] + 1, dtype=np.int32)
+    x = x - np.mean(x)
+    y = y - np.mean(y)
+    e = OLS(y,x).fit().resid
+    S_r = np.sum(e**2)
+    k = x.shape[1]
+    print ('N =',N)
+    print ('k =',k)
+    print ('N-k =',N-k)
+    F_stat = np.zeros(N)
+    for t in range:
+        X1 = x[:t]
+        X2 = x[t:]
+        e[:t] = OLS(y[:t],X1).fit().resid
+        e[t:] = OLS(y[t:],X2).fit().resid
+        R2_u = 1 - e.dot(e) / y.dot(y)
+        S_u = np.sum(e**2)
+        F_stat[t] = ((S_r - S_u) / k) / (( S_u) / (N-2*k))
+    return F_stat.argmax(),F_stat.max()
+
+p = 0.2
+
+idx,val = supf(df_y, df_x, p)
+print (idx,val)
+print ('Sene', df.Year[idx])
 </code></pre>
 
-<pre><code>p degeri = 4.155807920014354e-10
+<pre><code>N = 36
+k = 4
+N-k = 32
+14 3.904972193103
+Sene 1974
 </code></pre>
 
-<p>Normal değil. Bunun sebebi veri içinde birden fazla sezonsallık, ya da başka bir
-örüntünün hala mevcut olması olabilir. Bu senaryoları test etmek ödev olsun.</p>
-<p>Yapısal Kopuş (Structural Break) Uygulaması</p>
-<p>Üstteki teknikleri zaman serisinde "ciddi" bir değişim olup olmadığı, varsa
-nerede olduğunun bulmak için kullanmak mümkündür. Yapısal kopuş için Chow
-testini [7]'de ve Poisson bazlı [8]'de görmüştük.</p>
-<p>Üstteki teknikleri kullanarak bir yaklaşım herhangi bir nokta öncesi ve sonrası
-zaman serisi parçalarını almak, ve önceki parçada lineer regresyon, yapıp
-katsayıları alıp gürültünün normalliğini kontrol etmektir. Eğer normallik varsa,
-katsayılar alınıp ikinci parçada kullanılır, gürültü yine normalse kopuş yoktur
-(aynı zaman serisi). Birincide gürültü normalliği yoksa kopuş yine yoktur, ilk
-parça doğru tanımlı değil. Sezonsallık benzer şekilde kontrol edilebilir, vs.</p>
+<p>Not: Sene araması için baştan ve sonda bir kısım veri atlandı, ki her iki
+parça için elde yeterli veri olabilsin. </p>
+<p>Not: <code>lmfit</code> hakkında bazı tavsiyeler için bkz [12] yazısı.</p>
+<p>Sonucu 1974 olarak bulduk. Fena değil!</p>
+<p>Not: Fakat şu gözlemi de eklemek gerekiyor.. p değerini nihai bir karar verici
+olarak kullanmak her zaman ise yaramayabilir. Dikkat edersek örneklem büyüklüğü
+p değeri hesabında önemli bir yer tutuyor, o sebeple veri setlerinin büyüdüğü bu
+günlerde p değeri her zaman çok küçük değerler gösterebilir. Her noktada F
+değeri hesaplayıp en büyüğünü bulmak ise yarar fakat tek bir noktaya bakıp
+"bu nokta ayraç olarak istatistiki öneme sahip mi?" sorusu her örneklem
+büyüklüğünde işlemeyebilir. </p>
 <p>Cusum</p>
 <p>Cusum yaklaşımı [5] makalesinde araştırılmış, özyineli (recursive), yani teker
 teker her yeni veri noktası üzerinde işlem yapan ve kopuşları o anda yakalamaya
@@ -271,6 +358,6 @@ gözüküyor herhalde. Kırmızı noktalar ise alarm anları olarak tanımlanmı
          <a href="https://ocw.mit.edu/courses/mathematics/18-01sc-single-variable-calculus-fall-2010/index.htm">https://ocw.mit.edu/courses/mathematics/18-01sc-single-variable-calculus-fall-2010/index.htm</a></p>
 <p>[4] Bayramli, <em>Hesapsal Bilim, Özyineli En Az Kareler</em></p>
 <p>[5] Brown, et al, <em>Techniques for Testing the Constancy of Regression Relationships over Time</em></p>
-<p>[6] Bayramli, <em>Zaman Serileri, Sinüssel Regresyon (Sinusoidal Regression)</em></p>
-<p>[7] Bayramli, <em>Istatistik, Testlere devam</em></p>
-<p>[8] Bayramli, <em>Istatistik, Değişim Noktası Analizi</em></p>
+<p>[6] Bayramlı, <em>Zaman Serileri, Sinüssel Regresyon (Sinusoidal Regression)</em></p>
+<p>[7] Bayramlı, <em>Istatistik, Testlere devam</em></p>
+<p>[8] Bayramlı, <em>Istatistik, Değişim Noktası Analizi</em></p>

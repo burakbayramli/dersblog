@@ -311,11 +311,12 @@ blokunu göstermek için $X_i^j = (X_i,X_{i+1},...,X_{j-1},X_j)$.
 
 Durağanlık (Stationarity)
 
-Eski dünyamızda durum nasıldı? IID veri noktalarımız vardı, bu bize analizde
-bazı faydalar sağlıyordu. Zaman serileri için de benzer bir aynılık özelliğinin
-olması iyi olmaz mıydı?  Böyle bir özellik var, ve ismi durağanlık. Kelimenin
-anlamı zaman serisinin hiç değişmediği anlamına gelmiyor tabii, onun {\em
-  dağılımının} değişmediği anlamına geliyor.
+Tablosal dünyamızda durum nasıldı? Her biri birbirinden bağımsız ama aynı
+dağılımlı (IID) veri noktalarımız var, bu bize analizde bazı faydalar
+sağlıyor. Zaman serileri için de benzer bir aynılık özelliğinin olması iyi olmaz
+mıydı?  Böyle bir özellik var, ve ismi durağanlık. Kelimenin anlamı zaman
+serisinin hiç değişmediği anlamına gelmiyor tabii, onun {\em dağılımının}
+değişmediği anlamına geliyor.
 
 Daha kesin bir şekilde belirtmek gerekirse, eğer tüm $k,t$ için $X_1^k$ ve
 $X_t^{t+k-1}$ aynı dağılıma sahipse bu zaman serisi $X$'in güçlü durağan
@@ -349,10 +350,10 @@ kendinden önceki ve sonraki tüm değerler ile bağlantılıdır. Fakat bu bağ
 her mesafede aynı etkide değildir, çoğunlukla bir bağlantı kaybı (decay of
 dependence) durumu sözkonusudur (bazen korelasyon kaybı -decay of correlations-
 ismi de veriliyor), yani $h \to \infty$ iken $X_t,X_{t+h}$ değişkenleri
-birbirinden gittikçe daha çok neredeyse tam bağımsız hale gelir [kelimelendirme
-  kritik, hoca tam bağımsız olur demiyor, çok az bağımlılık hala kalabilir, ama
-  aralık büyüdükçe, hatta sonsuzluğa yaklaştıkça bağımsızlık artar, neredeyse
-  tam bağımsızlık haline gelir].
+birbirinden gittikçe daha çok neredeyse tam bağımsız hale gelir (kelimelendirme
+kritik, hoca tam bağımsız olur demiyor, çok az bağımlılık hala kalabilir, ama
+aralık büyüdükçe, hatta sonsuzluğa yaklaştıkça bağımsızlık artar, neredeyse tam
+bağımsızlık haline gelir).
 
 Bu durumu ölçmenin bilinen en eski yöntemi kendisiyle koveryans (dikkat
 korelasyon değil) ölçütüdür,
@@ -449,27 +450,48 @@ plt.savefig('tser_stoc_10.png')
 
 Yani kendisiyle korelasyon her zaman gerekli bilgiyi vermeyebilir, ama bilinmesi
 iyi olur. Daha genel ölçütler mesela Spearman $X_{t+h},X_t$ kerte korelasyonu
-(Spearman rank-correlation) ya da ortak bilgi (mütual ınformation) gibi
+(Spearman rank-correlation) ya da ortak bilgi (mutual information) gibi
 ölçütler.
 
 Ama aslında kendisiyle korelasyonun önemli olmasının 4 sebebi var. İlki, bu
 ölçüt istatistikteki en eski ölçütlerden biri, yani ``kullanıcı bazı'' geniş,
-herkes kk hakkında birşeyler biliyor, iletişimde bu kavramı kullanıyorlar, ve
-gelip size bu ölçüt hakkında birşeyler soracaklar. İkincisi, son derece nadir
-bir durum olan Gaussian süreçleri durumunda kk size hakikaten bilmeniz gereken
-{\em herşeyi} söyler. Üç, birazcık daha az nadir olan lineer tahmin durumunda
-yine bilmemiz gereken herşeyi bize söyler. Dört, kk sonraki bölümde
-işleyeceğimiz teorik bir sonuçta kritik bir rol oynuyor.
+herkes kendisiyle korelasyon hakkında birşeyler biliyor, iletişimde bu kavramı
+kullanıyorlar, ve gelip size bu ölçüt hakkında birşeyler soracaklar. İkincisi,
+son derece nadir bir durum olan Gaussian süreçleri durumunda kendisiyle
+korelasyon size hakikaten bilmeniz gereken {\em herşeyi} söyler. Üç, birazcık
+daha az nadir olan lineer tahmin durumunda yine bilmemiz gereken herşeyi bize
+söyler. 
 
+Veri Analizi Örneği
 
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+cpi = pd.read_csv('cpi.csv',index_col=0)
+\end{minted}
 
+\begin{minted}[fontsize=\footnotesize]{python}
+import statsmodels.formula.api as smf
+from statsmodels.stats.stattools import durbin_watson
+inf = np.log(cpi)
+results = smf.ols('CPIAUCNS ~ 1', data=inf).fit()
+print (durbin_watson(results.resid))
+\end{minted}
 
+\begin{verbatim}
+9.222098132626552e-05
+\end{verbatim}
 
+\begin{minted}[fontsize=\footnotesize]{python}
+import statsmodels.tsa.stattools as tsa
+acf,ci,q,pvalues = tsa.acf(results.resid, nlags=4, alpha=95,qstat=True, unbiased=True)
+print (acf)
+print (pvalues)
+\end{minted}
 
-
-
-
-
+\begin{verbatim}
+[1.         0.99585547 0.99164499 0.98737151 0.98305291]
+[1.02286496e-121 5.63735022e-239 0.00000000e+000 0.00000000e+000]
+\end{verbatim}
 
 
 

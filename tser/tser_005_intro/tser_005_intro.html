@@ -274,11 +274,12 @@ vs demek yerine) her öğenin seri içindeki yerini kullanmak daha rahattır,
 $X_1,X_2,..$ gibi. Buradan hareketle bir kısayol notasyonu şudur: bir zaman
 blokunu göstermek için $X_i^j = (X_i,X_{i+1},...,X_{j-1},X_j)$.</p>
 <p>Durağanlık (Stationarity)</p>
-<p>Eski dünyamızda durum nasıldı? IID veri noktalarımız vardı, bu bize analizde
-bazı faydalar sağlıyordu. Zaman serileri için de benzer bir aynılık özelliğinin
-olması iyi olmaz mıydı?  Böyle bir özellik var, ve ismi durağanlık. Kelimenin
-anlamı zaman serisinin hiç değişmediği anlamına gelmiyor tabii, onun {\em
-  dağılımının} değişmediği anlamına geliyor.</p>
+<p>Tablosal dünyamızda durum nasıldı? Her biri birbirinden bağımsız ama aynı
+dağılımlı (IID) veri noktalarımız var, bu bize analizde bazı faydalar
+sağlıyor. Zaman serileri için de benzer bir aynılık özelliğinin olması iyi olmaz
+mıydı?  Böyle bir özellik var, ve ismi durağanlık. Kelimenin anlamı zaman
+serisinin hiç değişmediği anlamına gelmiyor tabii, onun <em>dağılımının</em>
+değişmediği anlamına geliyor.</p>
 <p>Daha kesin bir şekilde belirtmek gerekirse, eğer tüm $k,t$ için $X_1^k$ ve
 $X_t^{t+k-1}$ aynı dağılıma sahipse bu zaman serisi $X$'in güçlü durağan
 (strongly stationary), ya da kesin durağan (strictly stationary) olduğu
@@ -306,10 +307,10 @@ kendinden önceki ve sonraki tüm değerler ile bağlantılıdır. Fakat bu bağ
 her mesafede aynı etkide değildir, çoğunlukla bir bağlantı kaybı (decay of
 dependence) durumu sözkonusudur (bazen korelasyon kaybı -decay of correlations-
 ismi de veriliyor), yani $h \to \infty$ iken $X_t,X_{t+h}$ değişkenleri
-birbirinden gittikçe daha çok neredeyse tam bağımsız hale gelir [kelimelendirme
-  kritik, hoca tam bağımsız olur demiyor, çok az bağımlılık hala kalabilir, ama
-  aralık büyüdükçe, hatta sonsuzluğa yaklaştıkça bağımsızlık artar, neredeyse
-  tam bağımsızlık haline gelir].</p>
+birbirinden gittikçe daha çok neredeyse tam bağımsız hale gelir (kelimelendirme
+kritik, hoca tam bağımsız olur demiyor, çok az bağımlılık hala kalabilir, ama
+aralık büyüdükçe, hatta sonsuzluğa yaklaştıkça bağımsızlık artar, neredeyse tam
+bağımsızlık haline gelir).</p>
 <p>Bu durumu ölçmenin bilinen en eski yöntemi kendisiyle koveryans (dikkat
 korelasyon değil) ölçütüdür,</p>
 <p>$$ \gamma(h) = Cov(X_t,X_{t+h}) $$</p>
@@ -380,16 +381,41 @@ plt.savefig('tser_stoc_10.png')
 <p><img alt="" src="tser_stoc_10.png" /></p>
 <p>Yani kendisiyle korelasyon her zaman gerekli bilgiyi vermeyebilir, ama bilinmesi
 iyi olur. Daha genel ölçütler mesela Spearman $X_{t+h},X_t$ kerte korelasyonu
-(Spearman rank-correlation) ya da ortak bilgi (mütual ınformation) gibi
+(Spearman rank-correlation) ya da ortak bilgi (mutual information) gibi
 ölçütler.</p>
 <p>Ama aslında kendisiyle korelasyonun önemli olmasının 4 sebebi var. İlki, bu
 ölçüt istatistikteki en eski ölçütlerden biri, yani "kullanıcı bazı" geniş,
-herkes kk hakkında birşeyler biliyor, iletişimde bu kavramı kullanıyorlar, ve
-gelip size bu ölçüt hakkında birşeyler soracaklar. İkincisi, son derece nadir
-bir durum olan Gaussian süreçleri durumunda kk size hakikaten bilmeniz gereken
-<em>herşeyi</em> söyler. Üç, birazcık daha az nadir olan lineer tahmin durumunda
-yine bilmemiz gereken herşeyi bize söyler. Dört, kk sonraki bölümde
-işleyeceğimiz teorik bir sonuçta kritik bir rol oynuyor.</p>
+herkes kendisiyle korelasyon hakkında birşeyler biliyor, iletişimde bu kavramı
+kullanıyorlar, ve gelip size bu ölçüt hakkında birşeyler soracaklar. İkincisi,
+son derece nadir bir durum olan Gaussian süreçleri durumunda kendisiyle
+korelasyon size hakikaten bilmeniz gereken <em>herşeyi</em> söyler. Üç, birazcık
+daha az nadir olan lineer tahmin durumunda yine bilmemiz gereken herşeyi bize
+söyler. </p>
+<p>Veri Analizi Örneği</p>
+<pre><code class="python">import pandas as pd
+cpi = pd.read_csv('cpi.csv',index_col=0)
+</code></pre>
+
+<pre><code class="python">import statsmodels.formula.api as smf
+from statsmodels.stats.stattools import durbin_watson
+inf = np.log(cpi)
+results = smf.ols('CPIAUCNS ~ 1', data=inf).fit()
+print (durbin_watson(results.resid))
+</code></pre>
+
+<pre><code>9.222098132626552e-05
+</code></pre>
+
+<pre><code class="python">import statsmodels.tsa.stattools as tsa
+acf,ci,q,pvalues = tsa.acf(results.resid, nlags=4, alpha=95,qstat=True, unbiased=True)
+print (acf)
+print (pvalues)
+</code></pre>
+
+<pre><code>[1.         0.99585547 0.99164499 0.98737151 0.98305291]
+[1.02286496e-121 5.63735022e-239 0.00000000e+000 0.00000000e+000]
+</code></pre>
+
 <p>Kaynaklar</p>
 <p>[1] Carver, <em>Systematic Trading</em></p>
 <p>[2] Macrooption, <em>Why Is Volatility Proportional to the Square Root of  Time</em>,

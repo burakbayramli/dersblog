@@ -1,12 +1,12 @@
 # Grafikten Veri Cikartmak
 
-Bazen mesela grafiksel gordugumuz bir zaman serisinin verisi elde
-olmayabilir. Veriyi grafikten cikartmak icin, ornege bakalim
+Bazen mesela grafiksel gördüğümüz bir zaman serisinin verisi elde
+olmayabilir. Veriyi grafikten çıkartmak için, örneğe bakalım
 
-Veriyi sayisal olarak cikartmak icin imaj isleme (image processing)
-metotlarini kullanabiliriz. Mesela bir metot yanyana iki pikselin
-farkini hesaplar, eger fark buyukse orada bir "kenar" vardir. Bu
-teknikle yukaridaki imajdaki egri bulunabilir.
+Veriyi sayısal olarak çıkartmak için imaj işleme (image processing)
+metotlarını kullanabiliriz. Mesela bir metot yanyana iki pikselin
+farkını hesaplar, eğer fark büyükse orada bir "kenar" vardır. Bu
+teknikle yukarıdaki imajdaki eğri bulunabilir.
 
 Ana imaj
 
@@ -46,3 +46,6 @@ plt.savefig('ex1.png')
 ```
 
 ![](320px-Extinction_intensity.svg.png)
+
+
+

@@ -1,19 +1,12 @@
 # Grafikten Veri Cikartmak
 
+Bazen mesela grafiksel gordugumuz bir zaman serisinin verisi elde
+olmayabilir. Veriyi grafikten cikartmak icin, ornege bakalim
 
-
-
-Grafikten Veri Cikartmak 
-
-
-
-
-Bazen mesela grafiksel gordugumuz bir zaman serisinin verisi elde olmayabilir. Veriyi grafikten cikartmak icin, ornege bakalim
-
-
-
-
-Veriyi sayisal olarak cikartmak icin imaj isleme (image processing) metotlarini kullanabiliriz. Mesela bir metot yanyana iki pikselin farkini hesaplar, eger fark buyukse orada bir "kenar" vardir. Bu teknikle yukaridaki imajdaki egri bulunabilir.
+Veriyi sayisal olarak cikartmak icin imaj isleme (image processing)
+metotlarini kullanabiliriz. Mesela bir metot yanyana iki pikselin
+farkini hesaplar, eger fark buyukse orada bir "kenar" vardir. Bu
+teknikle yukaridaki imajdaki egri bulunabilir.
 
 Ana imaj
 
@@ -21,10 +14,13 @@ https://en.wikipedia.org/wiki/File:Extinction_intensity.svg
 
 PGM'e cevirelim
 
-convert  -crop 495x245+29+54 -resize 900x400 Extinction_intensity.svg  extinct.pgm
+```
+convert -crop 495x245+29+54 -resize 900x400 Extinction_intensity.svg  extinct.pgm
+```
 
 Imaj isleme kodu
 
+```python
 import pandas as pd
 from PIL import Image
 
@@ -47,8 +43,6 @@ ext = ext.set_index(np.linspace(542,1,len(ext)))
 ext[0].plot()
 ext = ext[0]
 plt.savefig('ex1.png')
-
-
-
+```
 
 ![](320px-Extinction_intensity.svg.png)

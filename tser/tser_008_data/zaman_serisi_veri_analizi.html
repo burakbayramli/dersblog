@@ -25,6 +25,40 @@
 </head>
 
 <p>Daha fazla ilerlemeden bu yazıda bazı veri işlem numaraları göreceğiz.</p>
+<p>Trend Çıkartmak (Detrending)</p>
+<p>Bazen bir zaman serisi verisinde genel gidişata değil diğer değişikliklere
+odaklanmak istiyoruz. O zaman genel gidişat, yani trendi veriden
+çıkartabiliriz. Örnek olarak Apple şirketinin borsa fiyatlarını kullanalım.</p>
+<pre><code class="python">import pandas as pd
+df = pd.read_csv('AAPL.csv').reset_index()
+</code></pre>
+
+<p>Veri üzerinde lineer regresyon yaparız. LR tanım itibariyle veriye bir düz çizgi
+uydurduğu (fit) için, bu düz çizgiyi alıp veriden çıkartarak trend çıkartma
+işlemi olarak kullanabiliriz. Ama LR katsayılarına dalmadan önce şunu düşünelim,
+LR'de yan ürün olarak hesaplanan artıklar (residuals) aslında lineer çizgi ile
+gerçek verinin farkı değil midir? O zaman bu artıklar zaten verinin trend
+çıkartılmış halidir!</p>
+<pre><code class="python">import statsmodels.formula.api as smf
+results = smf.ols('AAPL ~ index', data=df).fit()
+df['AAPL Trendsiz'] = results.resid
+df[['AAPL','AAPL Trendsiz']].plot()
+plt.savefig('tser_008_data_02.png')
+</code></pre>
+
+<p><img alt="" src="tser_008_data_02.png" /></p>
+<p>Trend çıkarılmış grafik için <code>resid</code> verisi kullanıldı çünkü bu değişken
+içinde model ile gerçek değerler arasındaki fark, 'artıklar' gösteriliyor, ki
+bu dolaylı olarak veriden trend çıkartılmış hal demektir.</p>
+<p>Fark Hesabi ile Trend Cikartmak</p>
+<p>Fakat belki de en basit trend cikartma yontemi basit fark hesabi.</p>
+<pre><code class="python">import pandas as pd
+df = pd.read_csv('AAPL.csv',index_col=0).reset_index()
+df.AAPL.diff().dropna().plot()
+plt.savefig('tser_008_data_03.png')
+</code></pre>
+
+<p><img alt="" src="tser_008_data_03.png" /></p>
 <p>Durağanlığı Çıkartmak</p>
 <p>Yapay Öğrenim (machine learning) ya da diğer istatistiki tahminsel yaklaşımlar
 çoğunlukla işledikleri verinin durağan olmasının beklerler [1]. Durağanlık

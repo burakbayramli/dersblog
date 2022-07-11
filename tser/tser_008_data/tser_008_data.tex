@@ -4,25 +4,137 @@ Zaman Serisi Veri Analizi
 
 Daha fazla ilerlemeden bu yazıda bazı veri işlem numaraları göreceğiz.
 
-Trend Çıkartmak (Detrending)
+Durağanlık
 
-Bazen bir zaman serisi verisinde genel gidişata değil diğer değişikliklere
-odaklanmak istiyoruz. O zaman genel gidişat, yani trendi veriden
-çıkartabiliriz. Örnek olarak Apple şirketinin borsa fiyatlarını kullanalım.
+Yapay Öğrenim (machine learning) ya da diğer istatistiki tahminsel yaklaşımlar
+çoğunlukla işledikleri verinin durağan olmasının beklerler [1]. Durağanlık zaman
+serisindeki her veri noktasının diğerleri ile aynı dağılıma sahip olması
+demektir. Bu durum yoksa algoritmalar için bu rahatsızlık yaratır. Ve zaman
+serilerinde durağanlık olmaması pek çok kez ortaya çıkar; serilerde bazen
+sezonşallık görülür, bazen trend mevcuttur vs. O zaman durağan olmayan serileri
+durağan hale getirmek zaman serisi analizi, tahmininde önemli bir beceri
+olacaktır.
+
+Alttaki resimlere bakalım ve hangisinin durağan olduğunu tahmin etmeye
+uğraşalım. 
+
+\includegraphics[width=30em]{tser_008_data_01.png}
+
+Durağan serilerin sabit varyansı olduğuna göre a,c,e,f ve i resimlerini
+atabiliriz. Bu seriler ya net bir yukarı ya da aşağı trend içeriyorlar ya
+da seviyelerde değişim var, mesela f örneğindeki gibi.
+
+d ve h içinde sezonsal kalıplar var, onları da atıyoruz. Ya peki g?  Sanki
+sezonsal bir kalıp varmış gibi duruyor fakat bu doğru değil.  Bu seri vasak
+denen hayvanların nüfusunu gösteriyor, yiyecek azalınca hayvanlar azalıyor,
+yiyecek varsa nüfus artıyor, bu tür tekrar eden bir süreç sezonşallıkla aynı şey
+değil. Sezonşallık varsa herhangi bir zaman diliminde ne olacağını kesinlikle
+biliyoruz. Kıyasla vasak nüfusunun artış azalış tekrarı tahmin edilebilir
+değil.
+
+O zaman eldeki tek durağan seri b ve g.
+
+Testler
+
+Durağanlığı bulmak için bazı istatistiki testler var, bu testlere birim kök
+(ünit root) testleri adı veriliyor, en popüleri olanı eklemlenmiş Dickey-Fuller
+testi. Bu teste göre sıfır hipotezi serinin durağan olmadığıdır, o zaman bu
+hipotez reddedilirse, mesela 0.05, ya da 0.01'den az bir p-değeri elde edilirse,
+bu demektir ki elde bir durağan seri var. 
+
+Ornek olarak elmasla verisine bakalim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import seaborn as sns
+from statsmodels.tsa.stattools import adfuller
+diamonds = sns.load_dataset("diamonds")
+test_results = adfuller(diamonds["price"])
+print(f"ADF test statistic: {test_results[0]}")
+print(f"p-value: {test_results[1]}")
+print("Critical thresholds:")
+for key, value in test_results[4].items():
+    print(f"\t{key}: {value}")
+\end{minted}
+
+\begin{verbatim}
+ADF test statistic: -8.11493066831561
+p-value: 1.1980457313375998e-12
+Critical thresholds:
+	1%: -3.430471308341908
+	5%: -2.8615936158814588
+	10%: -2.566798537945544
+\end{verbatim}
+
+p-degerine bakiyoruz, neredeyse sifir. O zaman H0 reddedildi, seri duragan.
+
+Şimdi büyük ihtimalle durağan olmayan bir seriye bakalım,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+df = pd.read_csv('AAPL.csv',index_col=0)
+df.plot()
+plt.savefig('tser_008_data_04.png')
+\end{minted}
+
+\includegraphics[width=20em]{tser_008_data_04.png}
+
+Şeride açık bir yukarı doğru trend var. Test edelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+adfuller(df)[1]
+\end{minted}
+
+\begin{verbatim}
+Out[1]: 0.9069640607490215
+\end{verbatim}
+
+Sıfırdan çok uzak bir p-değeri bu, demek ki seri durağan değil.
+
+Bir seriyi duragan hale getirmek icin kullanilan en basit yontem fark
+almaktir, yani serideki her veri noktasini bir oncekinden cikartmak. Mesela
+ustteki AAPL sent verisi icin bunu yaparsak ve testi tekrar uygularsak,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+d1 = df.diff().dropna()
+d1.plot()
+plt.savefig('tser_008_data_03.png')
+\end{minted}
+
+\includegraphics[height=6cm]{tser_008_data_03.png}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+from statsmodels.tsa.stattools import adfuller
+adfuller(d1)[1]
+\end{minted}
+
+\begin{verbatim}
+Out[1]: 9.132206809895503e-19
+\end{verbatim}
+
+p-değeri çok küçük, demek ki farkı alınmış seri durağan hale geldi.
+
+Fark alma ne işlemini yapıyor? Bu işlemin ne olduğunu görmek zor değil, fark
+alma işlemlerini bir türevi yaklaşık olarak temsil eden bir işlem olarak
+görebiliriz, 
+
+$$
+\frac{f(x)-f(x+\Delta)}{\Delta}
+$$
+
+ki $\Delta$ değerleri 1'de sabitlenmiş oluyor (ve yokolur) ve bir sonraki
+$f(x)$'e ulaşmak için sabit artış farzedersek o zaman zaman serisinde fark almak
+bir tür türev almakla eşdeğerdir. Bu sebeple basit fark işlemi trendi çıkartır,
+eğer elde gürültülü bir $y = ax + b$ var ise türev sonrası elde $a$ eğimi
+ve gürültü kalacaktır.
+
+Tabii gürültülü bir veride yaklaşık bir işlem yapıyoruz, eğer hakikaten trendi
+genel eğim üzerinden çıkartmak istersek, veri üzerinde lineer regresyon
+yapabilirdik,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import pandas as pd
 df = pd.read_csv('AAPL.csv').reset_index()
-\end{minted}
-
-Veri üzerinde lineer regresyon yaparız. LR tanım itibariyle veriye bir düz çizgi
-uydurduğu (fit) için, bu düz çizgiyi alıp veriden çıkartarak trend çıkartma
-işlemi olarak kullanabiliriz. Ama LR katsayılarına dalmadan önce şunu düşünelim,
-LR'de yan ürün olarak hesaplanan artıklar (residuals) aslında lineer çizgi ile
-gerçek verinin farkı değil midir? O zaman bu artıklar zaten verinin trend
-çıkartılmış halidir!
-
-\begin{minted}[fontsize=\footnotesize]{python}
 import statsmodels.formula.api as smf
 results = smf.ols('AAPL ~ index', data=df).fit()
 df['AAPL Trendsiz'] = results.resid
@@ -33,32 +145,13 @@ plt.savefig('tser_008_data_02.png')
 \includegraphics[height=6cm]{tser_008_data_02.png}
 
 Trend çıkarılmış grafik için \verb!resid! verisi kullanıldı çünkü bu değişken
-içinde model ile gerçek değerler arasındaki fark, 'artıklar' gösteriliyor, ki
-bu dolaylı olarak veriden trend çıkartılmış hal demektir.
-
-Fark Hesabi ile Trend Cikartmak
-
-Fakat belki de en basit trend cikartma yontemi basit fark hesabi.
-
-\begin{minted}[fontsize=\footnotesize]{python}
-import pandas as pd
-df = pd.read_csv('AAPL.csv',index_col=0).reset_index()
-df.AAPL.diff().dropna().plot()
-plt.savefig('tser_008_data_03.png')
-\end{minted}
-
-\includegraphics[height=6cm]{tser_008_data_03.png}
+içinde model ile gerçek değerler arasındaki fark, 'artıklar' gösteriliyor, ki bu
+dolaylı olarak veriden trend çıkartılmış hal demektir.
 
 
 
-Durağanlığı Çıkartmak
 
-Yapay Öğrenim (machine learning) ya da diğer istatistiki tahminsel yaklaşımlar
-çoğunlukla işledikleri verinin durağan olmasının beklerler [1]. Durağanlık
-zaman serisindeki her veri noktasının diğerleri ile aynı dağılıma sahip olması
-demektir. Bunun tersini farzeden algoritmalar için bu rahatsızlık yaratır. 
 
-\includegraphics[width=25em]{tser_008_data_01.png}
 
 
 
@@ -77,4 +170,7 @@ Kaynaklar
 [1] {\em How to Remove Non-Stationarity From Time Series},
     \url{https://www.kaggle.com/code/bextuychiev/how-to-remove-non-stationarity-from-time-series?scriptVersionId=73876070}
 
+[2] Stackexchange,
+    \url{https://stats.stackexchange.com/questions/200517/why-does-differencing-once-remove-not-only-linear-but-also-nonlinear-trends}
+    
 \end{document}

@@ -181,8 +181,37 @@ dolaylı olarak veriden trend çıkartılmış hal demektir.
 
 Gayri-Lineerlik
 
+Fakat her dağılım bu kadar kolayca idare edilemeyebilir. Mesela alttaki
+zaman serisine bakalım, bu Amazon şirketinin hisse senet fiyatları,
 
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+df = pd.read_csv('AMZN.csv',index_col=0)
+df.plot()
+plt.savefig('tser_008_data_06.png')
+\end{minted}
 
+\includegraphics[width=20em]{tser_008_data_06.png}
+
+Bu şeride fark almadan önce bariz olan gayrı lineerligi göz önüne almamız
+gerekiyor, yoksa fark aldıktan sonra bile seri durağan olmaz. Gayri-lineerligi
+çıkartmak için logarıtmık fonksiyon kullanılabilir, ondan sonra fark alınır.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+transformed_amzn = np.log(df).diff().dropna()
+transformed_amzn.plot(figsize=(14, 4));
+plt.savefig('tser_008_data_07.png')
+\end{minted}
+
+\includegraphics[width=30em]{tser_008_data_07.png}
+
+Gayri lineerligi çıkartmak ile log alakası nedir? Bildiğimiz gibi
+nüfus artışı, gelir dağılımı gibi pek çok ölçüm mevcut seviyeye bağlı
+olarak artan serilerdir, ve orada bir üstel bağlantı vardır, $e^{ax}$
+gibi.. Bu tür serileri lineerize etmek için üstel fonksiyonu nötralize
+etmek gerekir bu da onun tersi olan log fonksiyonu ile yapılabilir.
+
+Sezonsallık
 
 \begin{minted}[fontsize=\footnotesize]{python}
 drugs = pd.read_csv("drug_sales.csv", index_col=0)
@@ -194,7 +223,22 @@ plt.savefig('tser_008_data_05.png')
 
 \includegraphics[height=4.5cm]{tser_008_data_05.png}
 
-Bu seride hem yukari dogru bir trend, hem de guclu sezonsallik var. 
+Bu seride hem yukarı doğru bir trend, hem de güçlü sezonsallık var.  Burada
+tekrar log uygulayacağız ve sezonsallığı çıkartmak için sene farkı alacağız,
+seri aylık ölçüde olduğuna göre 12 adımlık fark alırsak senesel sezonsallığı
+çıkartmış oluruz.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

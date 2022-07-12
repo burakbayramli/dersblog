@@ -90,9 +90,9 @@ Out[1]: 0.9069640607490215
 
 Sıfırdan çok uzak bir p-değeri bu, demek ki seri durağan değil.
 
-Bir seriyi duragan hale getirmek icin kullanilan en basit yontem fark
-almaktir, yani serideki her veri noktasini bir oncekinden cikartmak. Mesela
-ustteki AAPL sent verisi icin bunu yaparsak ve testi tekrar uygularsak,
+Bir seriyi durağan hale getirmek için kullanılan en basit yöntem fark
+almaktır, yani şerideki her veri noktasını bir öncekinden çıkartmak. Mesela
+üstteki AAPL şent verisi için bunu yaparsak ve testi tekrar uygularsak,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import pandas as pd
@@ -124,9 +124,40 @@ $$
 
 ki $\Delta$ değerleri 1'de sabitlenmiş oluyor (ve yokolur) ve bir sonraki
 $f(x)$'e ulaşmak için sabit artış farzedersek o zaman zaman serisinde fark almak
-bir tür türev almakla eşdeğerdir. Bu sebeple basit fark işlemi trendi çıkartır,
-eğer elde gürültülü bir $y = ax + b$ var ise türev sonrası elde $a$ eğimi
-ve gürültü kalacaktır.
+bir tür türev almakla eşdeğerdir [2]. Bu sebeple basit fark işlemi trendi
+çıkartır, eğer elde gürültülü bir $y = ax + b$ var ise türev sonrası elde $a$
+eğimi ve gürültü kalacaktır.
+
+Fark işlemleri birkaç derecede yapılabilir, mesela iki kez türev almaya
+eşdeğer olan farkın farkını almak, \verb!diff(periods=2)! ile yapılabilir.
+Birkaç örneği yanyana görelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+pd.set_option('display.max_columns', None)
+df = pd.read_csv('AAPL.csv',index_col=0)
+df['diff_1'] = df.AAPL.diff(periods=1)
+df['diff_2'] = df.AAPL.diff(periods=2)
+df['diff_3'] = df.AAPL.diff(periods=3)
+print (df[['diff_1','diff_2','diff_3']])
+\end{minted}
+
+\begin{verbatim}
+              diff_1    diff_2    diff_3
+Date                                    
+2003-12-31       NaN       NaN       NaN
+2004-01-02 -0.001607       NaN       NaN
+2004-01-05  0.015893  0.014286       NaN
+2004-01-06 -0.001429  0.014464  0.012857
+2004-01-07  0.008929  0.007500  0.023393
+...              ...       ...       ...
+2006-12-22 -0.025000 -0.091429 -0.146786
+2006-12-26 -0.024643 -0.049643 -0.116072
+2006-12-27  0.000358 -0.024285 -0.049285
+2006-12-28 -0.023215 -0.022857 -0.047500
+2006-12-29  0.141786  0.118571  0.118929
+
+[756 rows x 3 columns]
+\end{verbatim}
 
 Tabii gürültülü bir veride yaklaşık bir işlem yapıyoruz, eğer hakikaten trendi
 genel eğim üzerinden çıkartmak istersek, veri üzerinde lineer regresyon
@@ -148,6 +179,13 @@ Trend çıkarılmış grafik için \verb!resid! verisi kullanıldı çünkü bu 
 içinde model ile gerçek değerler arasındaki fark, 'artıklar' gösteriliyor, ki bu
 dolaylı olarak veriden trend çıkartılmış hal demektir.
 
+\begin{minted}[fontsize=\footnotesize]{python}
+drugs = pd.read_csv("drug_sales.csv", index_col=0)
+drugs.value.plot(figsize=(20, 5))
+plt.xlabel("Year")
+plt.ylabel("Anibiotics Sold (mln)");
+plt.savefig('tser_008_data_05.png')
+\end{minted}
 
 
 
@@ -156,12 +194,10 @@ dolaylı olarak veriden trend çıkartılmış hal demektir.
 
 
 
-
-
-
-
-
-
+Bu yazıdaki anlatım konuya daha pür verisel yaklaştı, ilk bakılan veride
+yapılabilecek ilk işlemleri gördük bir bakıma. Durağanlık, sezonsallık,
+kendisiyle korelasyon hakkında daha derin detaylar [3,4,5,6] yazılarında
+bulunabilir.
 
 [devam edecek]
 
@@ -172,5 +208,16 @@ Kaynaklar
 
 [2] Stackexchange,
     \url{https://stats.stackexchange.com/questions/200517/why-does-differencing-once-remove-not-only-linear-but-also-nonlinear-trends}
-    
+
+[3] Bayramli, {\em Zaman Serileri, Rasgele Yürüyüş Testleri}
+
+[4] Bayramli, {\em Zaman Serileri, ARIMA, ARCH, GARCH, Periyotlar, Yürüyen Ortalama}
+
+[5] Bayramli, {\em Zaman Serileri,Sezonsallık, Periyotlar}
+
+[6] Bayramli, {\em Zaman Serileri, Durağanlık ve Testler}
+
 \end{document}
+
+
+

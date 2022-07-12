@@ -54,7 +54,7 @@ değil.</p>
 testi. Bu teste göre sıfır hipotezi serinin durağan olmadığıdır, o zaman bu
 hipotez reddedilirse, mesela 0.05, ya da 0.01'den az bir p-değeri elde edilirse,
 bu demektir ki elde bir durağan seri var. </p>
-<p>Ornek olarak elmasla verisine bakalim,</p>
+<p>Örnek olarak elmas verisine bakalım,</p>
 <pre><code class="python">import seaborn as sns
 from statsmodels.tsa.stattools import adfuller
 diamonds = sns.load_dataset(&quot;diamonds&quot;)
@@ -74,7 +74,7 @@ Critical thresholds:
     10%: -2.566798537945544
 </code></pre>
 
-<p>p-degerine bakiyoruz, neredeyse sifir. O zaman H0 reddedildi, seri duragan.</p>
+<p>p-değerine bakıyoruz, neredeyse sıfır. O zaman H0 reddedildi, seri durağan.</p>
 <p>Şimdi büyük ihtimalle durağan olmayan bir seriye bakalım,</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('AAPL.csv',index_col=0)
@@ -201,17 +201,41 @@ plt.savefig('tser_008_data_05.png')
 tekrar log uygulayacağız ve sezonsallığı çıkartmak için sene farkı alacağız,
 seri aylık ölçüde olduğuna göre 12 adımlık fark alırsak senesel sezonsallığı
 çıkartmış oluruz.</p>
-<p>Bu yazıdaki anlatım konuya daha pür verisel yaklaştı, ilk bakılan veride
+<pre><code class="python">fig, ax = plt.subplots(2, 1, figsize=(20, 15))
+drugs = pd.read_csv(&quot;drug_sales.csv&quot;, index_col=0)
+drugs['log'] = np.log(drugs['value'])
+drugs['logdiff'] = np.log(drugs['value']).diff(periods=12)
+drugs.log.plot(ax=ax[0])
+drugs.logdiff.plot(ax=ax[1])
+plt.savefig('tser_008_data_08.png')
+</code></pre>
+
+<p><img alt="" src="tser_008_data_08.png" /></p>
+<p>Duraganligi ispat etmek icin testi uygulayalim,</p>
+<pre><code class="python">from statsmodels.tsa.stattools import adfuller
+adfuller(drugs.logdiff.dropna())[1]
+</code></pre>
+
+<pre><code>Out[1]: 8.209874468611596e-06
+</code></pre>
+
+<p>Bu çok ufak bir değer demek ki seri durağan hale geldi, transformasyonlar
+ise yaradı.</p>
+<p>Fakat akılda tutalım ki her zaman serisi farklıdır ve durağanlığa erişmek için
+farklı operasyonları ardı ardına zincirleme kullanmak gerekebilir.  Fakat bu
+işlemler çoğunlukla logarıtma almak, birinci, ikinci derece ya da sezonsal fark
+almak olacaktır.</p>
+<p>Not: Bu yazıdaki anlatım konuya daha pür verisel yaklaştı, ilk bakılan veride
 yapılabilecek ilk işlemleri gördük bir bakıma. Durağanlık, sezonsallık,
 kendisiyle korelasyon hakkında daha derin detaylar [3,4,5,6] yazılarında
 bulunabilir.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
-<p>[1] <em>How to Remove Non-Stationarity From Time Series</em>,
+<p>[1] Bexgboost, <em>How to Remove Non-Stationarity From Time Series</em>,
     <a href="https://www.kaggle.com/code/bextuychiev/how-to-remove-non-stationarity-from-time-series?scriptVersionId=73876070">https://www.kaggle.com/code/bextuychiev/how-to-remove-non-stationarity-from-time-series?scriptVersionId=73876070</a></p>
 <p>[2] Stackexchange,
     <a href="https://stats.stackexchange.com/questions/200517/why-does-differencing-once-remove-not-only-linear-but-also-nonlinear-trends">https://stats.stackexchange.com/questions/200517/why-does-differencing-once-remove-not-only-linear-but-also-nonlinear-trends</a></p>
-<p>[3] Bayramli, <em>Zaman Serileri, Rasgele Yürüyüş Testleri</em></p>
-<p>[4] Bayramli, <em>Zaman Serileri, ARIMA, ARCH, GARCH, Periyotlar, Yürüyen Ortalama</em></p>
-<p>[5] Bayramli, <em>Zaman Serileri,Sezonsallık, Periyotlar</em></p>
-<p>[6] Bayramli, <em>Zaman Serileri, Durağanlık ve Testler</em></p>
+<p>[3] Bayramlı, <em>Zaman Serileri, Rasgele Yürüyüş Testleri</em></p>
+<p>[4] Bayramlı, <em>Zaman Serileri, ARIMA, ARCH, GARCH, Periyotlar, Yürüyen Ortalama</em></p>
+<p>[5] Bayramlı, <em>Zaman Serileri,Sezonsallık, Periyotlar</em></p>
+<p>[6] Bayramlı, <em>Zaman Serileri, Durağanlık ve Testler</em></p>

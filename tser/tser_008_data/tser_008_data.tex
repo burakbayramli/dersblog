@@ -42,7 +42,7 @@ testi. Bu teste göre sıfır hipotezi serinin durağan olmadığıdır, o zaman
 hipotez reddedilirse, mesela 0.05, ya da 0.01'den az bir p-değeri elde edilirse,
 bu demektir ki elde bir durağan seri var. 
 
-Ornek olarak elmasla verisine bakalim,
+Örnek olarak elmas verisine bakalım,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import seaborn as sns
@@ -65,7 +65,7 @@ Critical thresholds:
 	10%: -2.566798537945544
 \end{verbatim}
 
-p-degerine bakiyoruz, neredeyse sifir. O zaman H0 reddedildi, seri duragan.
+p-değerine bakıyoruz, neredeyse sıfır. O zaman H0 reddedildi, seri durağan.
 
 Şimdi büyük ihtimalle durağan olmayan bir seriye bakalım,
 
@@ -229,22 +229,38 @@ seri aylık ölçüde olduğuna göre 12 adımlık fark alırsak senesel sezonsa
 çıkartmış oluruz.
 
 
+\begin{minted}[fontsize=\footnotesize]{python}
+fig, ax = plt.subplots(2, 1, figsize=(20, 15))
+drugs = pd.read_csv("drug_sales.csv", index_col=0)
+drugs['log'] = np.log(drugs['value'])
+drugs['logdiff'] = np.log(drugs['value']).diff(periods=12)
+drugs.log.plot(ax=ax[0])
+drugs.logdiff.plot(ax=ax[1])
+plt.savefig('tser_008_data_08.png')
+\end{minted}
 
+\includegraphics[height=11cm]{tser_008_data_08.png}
 
+Duraganligi ispat etmek icin testi uygulayalim,
 
+\begin{minted}[fontsize=\footnotesize]{python}
+from statsmodels.tsa.stattools import adfuller
+adfuller(drugs.logdiff.dropna())[1]
+\end{minted}
 
+\begin{verbatim}
+Out[1]: 8.209874468611596e-06
+\end{verbatim}
 
+Bu çok ufak bir değer demek ki seri durağan hale geldi, transformasyonlar
+ise yaradı.
 
+Fakat akılda tutalım ki her zaman serisi farklıdır ve durağanlığa erişmek için
+farklı operasyonları ardı ardına zincirleme kullanmak gerekebilir.  Fakat bu
+işlemler çoğunlukla logarıtma almak, birinci, ikinci derece ya da sezonsal fark
+almak olacaktır.
 
-
-
-
-
-
-
-
-
-Bu yazıdaki anlatım konuya daha pür verisel yaklaştı, ilk bakılan veride
+Not: Bu yazıdaki anlatım konuya daha pür verisel yaklaştı, ilk bakılan veride
 yapılabilecek ilk işlemleri gördük bir bakıma. Durağanlık, sezonsallık,
 kendisiyle korelasyon hakkında daha derin detaylar [3,4,5,6] yazılarında
 bulunabilir.
@@ -253,21 +269,19 @@ bulunabilir.
 
 Kaynaklar
 
-[1] {\em How to Remove Non-Stationarity From Time Series},
+[1] Bexgboost, {\em How to Remove Non-Stationarity From Time Series},
     \url{https://www.kaggle.com/code/bextuychiev/how-to-remove-non-stationarity-from-time-series?scriptVersionId=73876070}
 
 [2] Stackexchange,
     \url{https://stats.stackexchange.com/questions/200517/why-does-differencing-once-remove-not-only-linear-but-also-nonlinear-trends}
 
-[3] Bayramli, {\em Zaman Serileri, Rasgele Yürüyüş Testleri}
+[3] Bayramlı, {\em Zaman Serileri, Rasgele Yürüyüş Testleri}
 
-[4] Bayramli, {\em Zaman Serileri, ARIMA, ARCH, GARCH, Periyotlar, Yürüyen Ortalama}
+[4] Bayramlı, {\em Zaman Serileri, ARIMA, ARCH, GARCH, Periyotlar, Yürüyen Ortalama}
 
-[5] Bayramli, {\em Zaman Serileri,Sezonsallık, Periyotlar}
+[5] Bayramlı, {\em Zaman Serileri,Sezonsallık, Periyotlar}
 
-[6] Bayramli, {\em Zaman Serileri, Durağanlık ve Testler}
+[6] Bayramlı, {\em Zaman Serileri, Durağanlık ve Testler}
 
 \end{document}
-
-
 

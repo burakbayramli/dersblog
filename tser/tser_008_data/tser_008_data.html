@@ -31,26 +31,24 @@
 serisindeki her veri noktasının diğerleri ile aynı dağılıma sahip olması
 demektir. Bu durum yoksa algoritmalar için bu rahatsızlık yaratır. Ve zaman
 serilerinde durağanlık olmaması pek çok kez ortaya çıkar; serilerde bazen
-sezonşallık görülür, bazen trend mevcuttur vs. O zaman durağan olmayan serileri
-durağan hale getirmek zaman serisi analizi, tahmininde önemli bir beceri
-olacaktır.</p>
-<p>Alttaki resimlere bakalım ve hangisinin durağan olduğunu tahmin etmeye
+sezonsallık vardır, bazen trend mevcuttur vs. O zaman durağan olmayan serileri
+durağan hale getirmek zaman serisi analizi, tahmininde önemli bir kabiliyettir.</p>
+<p>Şimdi alttaki resimlere bakalım ve hangisinin durağan olduğunu tahmin etmeye
 uğraşalım. </p>
 <p><img alt="" src="tser_008_data_01.png" /></p>
 <p>Durağan serilerin sabit varyansı olduğuna göre a,c,e,f ve i resimlerini
 atabiliriz. Bu seriler ya net bir yukarı ya da aşağı trend içeriyorlar ya
 da seviyelerde değişim var, mesela f örneğindeki gibi.</p>
 <p>d ve h içinde sezonsal kalıplar var, onları da atıyoruz. Ya peki g?  Sanki
-sezonsal bir kalıp varmış gibi duruyor fakat bu doğru değil.  Bu seri vasak
-denen hayvanların nüfusunu gösteriyor, yiyecek azalınca hayvanlar azalıyor,
-yiyecek varsa nüfus artıyor, bu tür tekrar eden bir süreç sezonşallıkla aynı şey
-değil. Sezonşallık varsa herhangi bir zaman diliminde ne olacağını kesinlikle
-biliyoruz. Kıyasla vasak nüfusunun artış azalış tekrarı tahmin edilebilir
-değil.</p>
+sezonsal bir kalıp varmış gibi duruyor fakat bu doğru değil. Bu seri vaşak denen
+hayvanların nüfusunu gösteriyor, yiyecek azalınca hayvanlar azalıyor, yiyecek
+varsa nüfus artıyor, bu tür tekrar eden bir süreç sezonsallıkla aynı şey
+değil. Sezonsallık varsa herhangi bir zaman diliminde ne olacağını kesinlikle
+biliyoruz. Kıyasla vaşak nüfusunun artış azalış tekrarı tahmin edilebilir değil.</p>
 <p>O zaman eldeki tek durağan seri b ve g.</p>
 <p>Testler</p>
 <p>Durağanlığı bulmak için bazı istatistiki testler var, bu testlere birim kök
-(ünit root) testleri adı veriliyor, en popüleri olanı eklemlenmiş Dickey-Fuller
+(unit root) testleri adı veriliyor, en popüleri olanı eklemlenmiş Dickey-Fuller
 testi. Bu teste göre sıfır hipotezi serinin durağan olmadığıdır, o zaman bu
 hipotez reddedilirse, mesela 0.05, ya da 0.01'den az bir p-değeri elde edilirse,
 bu demektir ki elde bir durağan seri var. </p>
@@ -75,7 +73,8 @@ Critical thresholds:
 </code></pre>
 
 <p>p-değerine bakıyoruz, neredeyse sıfır. O zaman H0 reddedildi, seri durağan.</p>
-<p>Şimdi büyük ihtimalle durağan olmayan bir seriye bakalım,</p>
+<p>Şimdi büyük ihtimalle durağan olmayan bir seriye bakalım, Apple şirketinin
+hisse senet fiyati bu,</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('AAPL.csv',index_col=0)
 df.plot()
@@ -91,9 +90,9 @@ plt.savefig('tser_008_data_04.png')
 </code></pre>
 
 <p>Sıfırdan çok uzak bir p-değeri bu, demek ki seri durağan değil.</p>
-<p>Bir seriyi durağan hale getirmek için kullanılan en basit yöntem fark
-almaktır, yani şerideki her veri noktasını bir öncekinden çıkartmak. Mesela
-üstteki AAPL şent verisi için bunu yaparsak ve testi tekrar uygularsak,</p>
+<p>Bir seriyi durağan hale getirmek için kullanılan en basit yöntem fark almaktır,
+yani serideki her veri noktasını bir öncekinden çıkartmak. Mesela üstteki AAPL
+senet verisi için bunu yaparsak ve testi tekrar uygularsak,</p>
 <pre><code class="python">import pandas as pd
 d1 = df.diff().dropna()
 d1.plot()
@@ -109,17 +108,17 @@ adfuller(d1)[1]
 </code></pre>
 
 <p>p-değeri çok küçük, demek ki farkı alınmış seri durağan hale geldi.</p>
-<p>Fark alma ne işlemini yapıyor? Bu işlemin ne olduğunu görmek zor değil, fark
-alma işlemlerini bir türevi yaklaşık olarak temsil eden bir işlem olarak
-görebiliriz, </p>
+<p>Peki fark alarak hangi matematiksel işlemi uygulamış oluyoruz? Bu işlemin ne
+olduğunu görmek zor değil, fark alma işlemlerinin bir türevin yaklaşık hali
+olarak görebiliriz,</p>
 <p>$$
 \frac{f(x)-f(x+\Delta)}{\Delta}
 $$</p>
 <p>ki $\Delta$ değerleri 1'de sabitlenmiş oluyor (ve yokolur) ve bir sonraki
 $f(x)$'e ulaşmak için sabit artış farzedersek o zaman zaman serisinde fark almak
 bir tür türev almakla eşdeğerdir [2]. Bu sebeple basit fark işlemi trendi
-çıkartır, eğer elde gürültülü bir $y = ax + b$ var ise türev sonrası elde $a$
-eğimi ve gürültü kalacaktır.</p>
+çıkartır, eğer elde gürültülü bir $y = ax + b$ var ise türev sonrası (gürültülü)
+$a$ elde edilmesi gibi..</p>
 <p>Fark işlemleri birkaç derecede yapılabilir, mesela iki kez türev almaya
 eşdeğer olan farkın farkını almak, <code>diff(periods=2)</code> ile yapılabilir.
 Birkaç örneği yanyana görelim,</p>
@@ -150,7 +149,7 @@ Date
 
 <p>Tabii gürültülü bir veride yaklaşık bir işlem yapıyoruz, eğer hakikaten trendi
 genel eğim üzerinden çıkartmak istersek, veri üzerinde lineer regresyon
-yapabilirdik,</p>
+yapabilirdik ve regresyon eğrisini ana seriden çıkartabilirdik,</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('AAPL.csv').reset_index()
 import statsmodels.formula.api as smf
@@ -174,9 +173,9 @@ plt.savefig('tser_008_data_06.png')
 </code></pre>
 
 <p><img alt="" src="tser_008_data_06.png" /></p>
-<p>Bu şeride fark almadan önce bariz olan gayrı lineerligi göz önüne almamız
+<p>Bu seride fark almadan önce bariz olan gayrı lineerligi göz önüne almamız
 gerekiyor, yoksa fark aldıktan sonra bile seri durağan olmaz. Gayri-lineerligi
-çıkartmak için logarıtmık fonksiyon kullanılabilir, ondan sonra fark alınır.</p>
+çıkartmak için logaritmik fonksiyon kullanılabilir, ondan sonra fark alınır.</p>
 <pre><code class="python">transformed_amzn = np.log(df).diff().dropna()
 transformed_amzn.plot(figsize=(14, 4));
 plt.savefig('tser_008_data_07.png')

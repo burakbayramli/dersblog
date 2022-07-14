@@ -140,7 +140,8 @@ bolumlere koyma yetenegine sahip. Bu orneklere bakarken, belki de 332,
 
 ```
 fig = plt.figure()
-ax1 = fig.add_subplot(321,title="baslik")ax1.plot(data1)
+ax1 = fig.add_subplot(321,title="baslik")
+ax1.plot(data1)
 ```
 
 gibi. Burada 321'in anlami sudur: Ana ekran 3 satir ve 2 kolon olmak

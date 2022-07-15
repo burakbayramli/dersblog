@@ -127,4 +127,115 @@ e_1 \\ e_2 \\ e_3 \\ e_4
 u_1 \\ u_2 \\ u_3 
 \end{array}\right]
 $$</p>
+<p>Ustte gorulen satir bu tur matrislerde tipik bir satirdir. Peki birinci
+satir neye benzer? Orada sadece $u_1$ olur, tabii $u_1 - u_0$ farki
+ama ilk yay en ustte sabitlendigi icin orada yer degisim olmasi mumkun
+degil $u_0 = 0$, geriye sadece $u_1$ kaliyor.</p>
+<p>Ucuncu satir kolay. Dorduncu satirda $u_4$ sabitlenmis yani sifir,
+tek kalan $-u_3$. Hepsi bir arada,</p>
+<p>$$
+\left[\begin{array}{c}
+e_1 \\ e_2 \\ e_3 \\ e_4
+\end{array}\right] =
+\left[\begin{array}{rrrr}
+1 &amp; 0 &amp; 0 \\ -1 &amp; 1 &amp; 0 \\ 0 &amp; -1 &amp; 1 \\ 0 &amp; 0 &amp; -1
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ u_2 \\ u_3 
+\end{array}\right]
+\qquad (1)
+$$</p>
+<p>Matrise $A$ ismi verirsek, ustteki denklem $e = A u $ olarak belirtilebilir.</p>
+<p>Bir adim daha var, kuvvet denge denklemi. Disaridan etki eden kuvvet yercekimi,
+$m_1 g$, $m_2 g$, $m_3 g$. Denge icin mesela ilk kutleye bakarim, ona hangi
+kuvvetler etki eder diye sorarim kendime ve onlari dengelemeye ugrasirim.
+Bu bana nasil bir denklem verir acaba?</p>
+<p>Ilk kutle icin kuvvetlere bakarsak, yukari, asagi.. Yukari ceken bir kuvvet
+var, yay kuvveti $w_1$. Asagi ceken $w_2$, degil mi? Alttaki yay her iki
+yone de bir kuvvet uygular. Ayrica bir de yercekimi var, $m_1 g$. Hepsi bir
+arada</p>
+<p>$$
+w_1 = w_2 + m_1 g
+$$</p>
+<p>Digerleri benzer sekilde,</p>
+<p>$$
+w_2 = w_3 + m_2 g
+$$</p>
+<p>$$
+w_3 = w_4 + m_3 g
+$$</p>
+<p>Usttekini vektor, matris olarak yazmak istiyorum tabii ki, $w$'larin
+hepsini sol tarafa gecirirsek isler daha kolaylasabilir,</p>
+<p>$$
+w_1 - w_2 = m_1 g
+$$</p>
+<p>$$
+w_2 - w_3 = m_2 g
+$$</p>
+<p>$$
+w_3 - w_4 = m_3 g
+$$</p>
+<p>Bunlar dis kuvvetler.. Yani (1)'deki ic kuvvetlerle ustteki dis kuvvetleri
+dengeleyecegiz, ustteki $w$'lar ic kuvvetler. Bir matris ortaya cikacak simdi.
+Onceki numarayi tekrarlarsak,</p>
+<p>$$
+\left[\begin{array}{rrrr}
+1 &amp; -1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; -1 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; -1 
+\end{array}\right]
+\left[\begin{array}{c}
+w_1 \\ w_2 \\ w_3 \\ w_4
+\end{array}\right] =
+\left[\begin{array}{c}
+f_1 \\ f_2 \\ f_3
+\end{array}\right]
+\qquad (2)
+$$</p>
+<p>ki $f_i = m_i g$. </p>
+<p>Nasil ufak adimlarla ilerledik gorebiliyoruz herhalde.. Uc adim attik, birinci
+adim bizi yer degisimlerinden yaylara goturdu, ikincisi yaylar arasindaki
+iliskilere bakti, ucuncu adimda dugum noktalara, kutlelere baktik.</p>
+<p>Simdi ana soru su, ustteki ucuncu adimdaki matris nedir? Onun icin yeni bir isme
+ihtiyacimiz var mi?</p>
+<p>Aslinda yok. Dikkat edersek (2)'deki matris (1)'dekinin devrigi degil mi? Evet!
+O zaman ona sadece $A^T$ diyecegiz.</p>
+<p>Uc adimdaki formulleri yanyana koyalim simdi,</p>
+<p>$$
+e = Au
+$$</p>
+<p>$$
+w = Ce
+$$</p>
+<p>$$
+f = A^T w
+$$</p>
+<p>Bu uc formulu birlestirip nasil tek formul haline getiririm? Ucuncu formuldeki
+$w$ icine ikinci formuldeki $w$'yu sokabilirim, sonra elde edilenin icine
+birinci formuldeki $e$'yi sokarim,</p>
+<p>$$
+f = A^T w = A^T C e = A^T C A u
+$$</p>
+<p>Nihai sonuc</p>
+<p>$$
+f = A^T C A u
+$$</p>
+<p>Tum yapiyi biraraya getiren formul bu iste, cozmemiz gereken nihai denklem.
+Literaturde $A^T C A$'ye direngenlik (stiffness) matrisi adi veriliyor, ve ben
+cogunlukla o matris icin $K$ sembolunu kullanirim, yani bu ornek icin
+$K = A^T C A$ ve cozmemiz gereken sistem $K u = f$.</p>
+<p>Bu arada $w$ bilinmiyor, aslinda burada iki bilinmeyen, bulmaya ugrastigimiz iki
+tane fiziksel degisken bloku var, kuvvetler $w$ ve yer degisimleri $e$; bir
+kopru, baska bir tur yapi tasarliyor olabilirdik, onun icin yer degisimlerini ve
+icsel kuvvetler $w$ degerlerini ariyor olurduk. $w$ ve $u$ degisken obekleri
+birbiriyle yakin ilintili (dual), bazen biri, bazen oteki, ya da ikisiyle ayni
+anda is yapiyor olabiliriz, biraz ileri atlamak oluyor ama sonlu ogeler (finite
+element) metodu ustteki formul altyapisini cozer (aslinda direngenlik matrisi
+kavrami oradan cikmistir, simdi her yerde onumuze cikiyor).</p>
+<p>$A^T C A$ matrisine yakindan bakmak bilgilendirici olur; mesela boyutlari nedir?
+$A$ boyutu 4 x 3, $C$ boyutu 4 x 4, $A^T$ tabii ki 3 x 4, carpimin sonucu 3 x 3.</p>
+<p>Carpim buyuk ihtimalle simetrik, oyle mi bakalim, simetrik demek devrigin
+kendisi ile ayni olmasi demektir, </p>
+<p>$$
+(A^T C A)^T = A^T C^T (A^T)^T = A^T C A 3
+$$</p>
+<p>Baslangica donduk demek ki simetri var.</p>
 <p>[devam edecek]</p>

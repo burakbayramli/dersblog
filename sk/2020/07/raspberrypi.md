@@ -109,9 +109,23 @@ Wifi üzerinden bu bağlantı işliyor çünkü aynı hotspot'a bağlandıysak
 aynı network'un içindeyiz demektir ve aynı network içinde makinalar
 birbirlerini bulabilirler.
 
+Bazi Ayarlar
+
+Bazi klavye kisayollari iptal etmek isteyebiliriz, mesela biz Alt-Space
+tusunu Emacs uzerinde ozel bir amacla kullaniyoruz, fakat bu RPi
+uzerinde bir pencere menusu acmak icin kisayol yapilmis. Iptal icin
+
+`sudo nano /etc/xdg/openbox/lxde-pi-rc.xml`
+
+ile dosya acilir ve `Keybindings for running applications` bolumune
+gidilir orada her kisayol icin bir `<keybind>.. </keybind>` bolumu
+var, bizi ilgilendiren tanima gidip onu silebiliriz. RPi tekrar
+baslatilir ve degisim devreye girmis olur.
+
+
 Taşınabilir RPi 
 
-Çok az mıktarda elektronik aletle, mesela kampta vs, seyahat etmek
+Çok az miktarda elektronik aletle, mesela kampta vs, seyahat etmek
 isteyenler, cep telefonuna bir SSH müşteri programı kurup onun
 üzerinden RPi'ye komut satırından bağlanabilir. RPi tam tekmilli bir
 Linux olduğu için istenen her ağır işlem burada gerçekleştirilir, HDMİ

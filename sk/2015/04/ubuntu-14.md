@@ -33,10 +33,10 @@ Zoom Page eklentisi, default zoom 120 yap.
 
 Ses Efektleri
 
-Eger konsol icine mesela gidilemeyecek durumda bile
- backspace yapilinca cikan bip, tan, tun seslerini kapatmak istiyorsak 
-System Tools | System Settings, oradan Sound ve Sound Effects. Bir ses 
-kontrol ayari var, onun yaninda Mute secilirse artik uyarici sesleri 
+Eger konsol icine mesela gidilemeyecek durumda bile backspace
+yapilinca cikan bip, tan, tun seslerini kapatmak istiyorsak System
+Tools | System Settings, oradan Sound ve Sound Effects. Bir ses
+kontrol ayari var, onun yaninda Mute secilirse artik uyarici sesleri
 cikmaz.
 
 Baslangic Davul Sesini Yokedin

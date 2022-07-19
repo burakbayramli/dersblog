@@ -31,7 +31,7 @@ sabitlenmiş.</p>
 <p><img alt="" src="compscieng_1_08_01.png" /></p>
 <p>Kütlelerin bir ağırlığı var tabii, ağırlıklar o yaylar aşağı doğru çekiyor, bu
 çekim yayları açacak, gerecek, soru yayların ne kadar aşağı ineceği.  Bir yer
-değişim (dışplacement) sorusu bu yani. Unutmayalım yay açılip kapanan bir
+değişim (displacement) sorusu bu yani. Unutmayalım yay açılip kapanan bir
 mekanizmadır ama açılirken de kapanırken de bir direnç gösterir. Yer değişim en
 üstte ve en altta sıfır çünkü oralar sabitlenmiş.</p>
 <p>Bir başlangıç hali düşünürsek, diyelim ki yerçekimi o anda etkisiz, ama sonra
@@ -250,8 +250,20 @@ teker çıktı, tabii anahtar ilk çözüm $u = K^{-1} f$.</p>
 $K^{-1} = A^{-1}C^{-1} (A^T)^{-1}$ olur ve sağ tarafta bazı hızlı hesaplar
 yapabilir miydim acaba? Ne yazık ki $A$ matrisi kare matris olmayabilir ve
 bu tür matrislerin tersini almak istemiyorum. </p>
-<p>O zaman $K$ için çarpım yapmamız lazım [biz altta bu çarpımı hemen
-<code>sympy</code> ile yapalım]</p>
+<p>O zaman $K$ için çarpım yapmamız lazım, yani</p>
+<p>$$
+K = \left[\begin{array}{rrrr}
+1 &amp; 0 &amp; 0 \\ -1 &amp; 1 &amp; 0 \\ 0 &amp; -1 &amp; 1 \\ 0 &amp; 0 &amp; -1
+\end{array}\right]
+\left[\begin{array}{cccc}
+c_1 &amp; &amp; &amp; \\  &amp; c_2 &amp; &amp; \\  &amp; &amp; c_3 &amp; \\ &amp; &amp; &amp; c_4
+\end{array}\right]
+\left[\begin{array}{rrrr}
+1 &amp; -1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; -1 &amp; 0 \\ 0 &amp; 0 &amp; 1 &amp; -1 
+\end{array}\right]
+\qquad (5)
+$$</p>
+<p>Biz altta bu çarpımı hemen <code>sympy</code> ile yapalım</p>
 <pre><code class="python">import sympy aş sp
 c1,c2,c3,c4 = sp.symbols('c1 c2 c3 c4')
 A = sp.Matrix([[1, 0, 0],
@@ -298,5 +310,33 @@ iki üstteki matristen anlayabiliriz. </p>
 <p>$K$ hakkındaki önemli ipuçları nedir? Kare, simetrik dedik, ayrıca pozitif kesin
 bir matris. Ve pozitif kesinlik bizi diğer bir özelliğe götürür, bu matrisin
 tersi alınabilir.</p>
-<p>Peki $K$ matrisi niye pozitif kesin?  [44:50 devam]</p>
+<p>Peki $K$ matrisi niye pozitif kesin? Hatırlarsak pozitif kesinliğin ana kavramı
+pozitif enerji idi. Şu ifade $u^T A^T C A u$ pozitif olmalı, parantezleri 
+$(u^T A^T) C (A u)$ şeklinde koyunca belli oluyor, ya da $(u A)^T C (A u)$. 
+Ayrıca $Au$ için bir eşitliğimiz var, $Au = e$ o zaman $e^T C e$. Eğer $e,C,e^T$
+açık yazarsam,</p>
+<p>$$
+\left[\begin{array}{rrr}
+e_1 &amp; e_2 &amp; e_3 
+\end{array}\right]
+\left[\begin{array}{rrr}
+c_1 &amp;        &amp; \\
+    &amp; \ddots &amp; \\
+    &amp;        &amp; c_n
+\end{array}\right]
+\left[\begin{array}{r}
+e_1 \\ e_2 \\ e_3
+\end{array}\right]
+$$</p>
+<p>Bu bana $c_1 e_1^2 + c_2 e_2^2 + c_3 e_3^2 + c_4 e_4^2$ verir. Hooke Kanuna
+dönerse bir esnetilmiş yaydaki enerji bu karesel formülle hesaplanır. Formülün
+esası her şeyi 1/2 ile böler aslında, neyse, ana mesajımız şu, hesaplanan tek
+sayı pozitif. Pozitif sayılarla çarpılan karelerin toplamı tabii ki pozitif.</p>
+<p>Şimdi Profesör Bathe'nin ADINA adlı o ünlü sonlu öğeler çözen yazılım paketini
+düşünürsek, ya da herhangi bir diğer paketi, Ansys, Abaqus gibi, bu paketlerin
+odaklandığı büyük resim nedir? Bu paketleri geliştirmek için yıllar geçmiştir,
+onlara bir sürü kod eklenmiştir, fakat hepsinin arkasındaki temel fikir sudur,
+modeli seç, materyel özellikler (bizim $C$ matrisi) ekle, $K$ matrisini bir
+araya getir, nihai adımda sonlu öğeler tekniğiyle sistemi çöz. Her şey $K$
+matrisi etrafında dönüyor.</p>
 <p>[devam edecek]</p>

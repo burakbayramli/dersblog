@@ -395,12 +395,46 @@ modeli seç, materyel özellikler (bizim $C$ matrisi) ekle, $K$ matrisini bir
 araya getir, nihai adımda sonlu öğeler tekniğiyle sistemi çöz. Her şey $K$
 matrisi etrafında dönüyor.
 
+Son bir konuya daha değinmek isterim; matris çarpımına değişik bir bakış açısı
+konusu. Bu önemli çünkü ADANI gibi sonlu öğeler paketleri çarpımı böyle
+yapıyorlar.
 
+Klasik çarpım yöntemi nedir? Satır çarpı kolon yöntemidir. Mesela (5)'teki
+çarpım için soldaki matrisin ilk satırını alıp sağdakinin ilk sol kolonu ile
+çarparım, bu bana bir tek sayı verir, onu sonuç matrisin (1,1) kordinatındaki
+hücreye yazarım, böyle devam ederim.
 
+Fakat sonlu öğeler paketlerinin kullandığı, hatta çoğunlukla doğru bakış açısı
+denebilecek olan yöntem bunun tam tersidir. Bu yöntem soldaki matrisin {\em kolonu}
+ile sağdaki matrisin satırını çarpar. Boyutsal olarak düşünürsek mesela 3 x 1
+kolon ile 1 x 3 satır çarpılınca ne çıkar? 3 x 3 boyutunda bir matris değil mi?
+Ve bunu tüm mümkün kolonlar ve satırlar için yapınca aynı boyutta daha fazla
+matris elde ederiz ve nihai çarpım sonucu tüm bu matrislerin toplamı olacaktır.
 
+Mesela (5) için ilk kolon çarpı ilk satır (aradaki $C$ matris değerlerini de
+dahil ederek tabii),
 
+$$
+\left[\begin{array}{rrr}
+c_1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 
+\end{array}\right] 
+$$
 
+Şimdi bu matrisin problemimiz bağlamında bir anlamı da var (bu bakış açısının
+bir faydası da bu), üstteki matris bir öğe matrisi. Üstteki parça içinde $c_1$
+içeren parça. Belki soldan ikinci kolon $c_2$ ve sağdan ikinci satırı kullanınca
+daha iyi anlaşılacak, 
 
+$$
+\left[\begin{array}{rrr}
+c_1 & 0 & 0 \\ 0 & 0 & 0 \\ 0 & 0 & 0 
+\end{array}\right]
++
+\left[\begin{array}{rrr}
+c_2 & -c_2 & 0 \\ -c_2 & c_2 & 0 \\ 0 & 0 & 0 
+\end{array}\right]
++ ...
+$$
 
 
 

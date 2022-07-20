@@ -351,6 +351,7 @@ c1 + c2   &     -c2 &       0 \\
 -c2       & c2 + c3 &     -c3 \\
 0         & -c3     &      c3 + c4
 \end{array}\right]
+\mlabel{6}
 $$
 
 Tüm yay sabitleri bu matris içinde. Üstteki matris hakkında önemli bilgileri
@@ -440,6 +441,109 @@ toplayarak nihai sistemi elde edebiliyoruz. Klasik yaklaşımla çarpıma bu şe
 bakmazsınız, fakat mesela ADINA sistemi çarpımı aynen tarif ettiğim şekilde
 biraraya getiriyor. ADINA türü sistemler klasik çarpımı yapmazlar, tarif
 ettiğimiz kolon çarpı satır metotunu uygularlar.
+
+Problem
+
+Farz edelim ki üstteki kütle-yay sisteminde $c_i = c$ ve $m_j = m$, yani
+tüm yaylar aynı materyel ve tüm kütleler aynı ağırlıkta. Yer değişimi $u$
+ve kuvvet $w$'ler hesapla [1, sf. 103].
+
+Çözüm
+
+Önce $K$ matrisinin tersini bulmak istiyoruz. Eğer $c_i = c$ ise (6)'daki $K$
+matrisi şu hale gelir,
+
+$$ K = 
+\left[\begin{array}{rrr}
+2c   &     -c &       0 \\
+-c       & 2c &     -c \\
+0         & -c     &      2c
+\end{array}\right]
+$$
+
+$c$'yi dışarı çıkartalım,
+
+$$ K = c
+\left[\begin{array}{rrr}
+2   &     -1 &       0 \\
+-1       & 2 &     -1 \\
+0         & -1     &      2
+\end{array}\right]
+$$
+
+Temel lineer cebirden biliyoruz ki $(cA)^{-1} = c^{-1} A^{-1}$, tabii
+skalar tek sayı $c$ için $c^{-1} = 1/c$ demektir. O zaman üstteki matrisin
+tersini alalım sadece ve $1/c$ ile çarpalım,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy.linalg as lin
+K = np.array([[2,-1,0],[-1,2,-1],[0,-1,2]])
+print (lin.inv(K))
+\end{minted}
+
+\begin{verbatim}
+[[0.75 0.5  0.25]
+ [0.5  1.   0.5 ]
+ [0.25 0.5  0.75]]
+\end{verbatim}
+
+$$ K^{-1} = 1/c
+\left[\begin{array}{rrr}
+0.75   &     0.5 &       0.25 \\
+0.5       & 1 &     0.5 \\
+0.25         & 0.5     &      0.75
+\end{array}\right]
+$$
+
+[1, sf. 103]'ta görülen sonuçla aynı olması için matrisi 4 ile çarpıp dışarı
+1/4 çıkartalım,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy.linalg as lin
+print (4*lin.inv(K))
+\end{minted}
+
+\begin{verbatim}
+[[3. 2. 1.]
+ [2. 4. 2.]
+ [1. 2. 3.]]
+\end{verbatim}
+
+Aynı sonuca erişiyoruz,
+
+$$ K^{-1} = \frac{1}{4c}
+\left[\begin{array}{rrr}
+3 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 3
+\end{array}\right]
+$$
+
+Yer değişimleri o zaman 
+
+$$
+u = K^{-1} f = \frac{1}{4c}
+\left[\begin{array}{rrr}
+3 & 2 & 1 \\ 2 & 4 & 2 \\ 1 & 2 & 3
+\end{array}\right]
+\left[\begin{array}{r}
+mg \\ mg \\ mg
+\end{array}\right] =
+\frac{mg}{c}
+\left[\begin{array}{r}
+1.5 \\ 2.0 \\ 1.5
+\end{array}\right]
+$$
+
+Ortadaki kütle yer değişimi $u_2$'nin diğer $u_1,u_3$'ten daha fazla olduğunu
+görüyoruz. Birimleri hemen kontrol ediyoruz, kuvvet $mg$ bolu birim uzunluktaki
+kuvvet $c$ bize uzunluk $u$'yi veriyor. 
+
+
+
+
+
+Kaynaklar
+
+[1] Strang, {\em Computational Science and Engineering}
 
 \end{document}
 

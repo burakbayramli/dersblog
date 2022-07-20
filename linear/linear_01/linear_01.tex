@@ -563,4 +563,101 @@ $$
 
 ve böyle devam edilir.
 
+Kolon Satir Carpim Bakisi
+
+Bir diğer bakış açısı $A$'nin bir kolonunu, çarpan matris $B$'nin bir satırı ile
+çarpılıp, bu her çarpımdan bir matris elde etmek, ve sonra bu matrisleri
+toplamaktır. Örnekte görelim,
+
+$$
+\left[\begin{array}{ccc}
+1 & 1 & 6 \\
+3 & 0 & 1 \\
+1 & 1 & 4 \\
+\end{array}\right]
+\left[\begin{array}{ccc}
+2 & 2  \\
+3 & 1  \\
+9 & 5  \\
+\end{array}\right]
+$$
+
+Boyutları düşünürsek daha açık hale gelebilir, soldaki matrisin bir kolonu 3 x 1
+boyutunda, sağdaki bir satır 1 x 2 boyutunda. Sonuç tabii ki 3 x 2 boyutunda bir
+matris olacaktır ve bu boyuttaki bir matris her kolon-satır çarpımından elde
+edilecektir. Bu durumda mesela ilk yapılan çarpım,
+
+$$
+\left[\begin{array}{ccc}
+1  \\
+3  \\
+1  \\
+\end{array}\right]
+\left[\begin{array}{ccc}
+2 & 2 
+\end{array}\right]
+$$
+
+çarpımı olur. Hesabı altta yapalım,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+A = np.array([[1],[3],[1]])
+b1 = np.array([[2, 2]])
+print (np.dot(A,b1))
+\end{minted}
+
+\begin{verbatim}
+[[2 2]
+ [6 6]
+ [2 2]]
+\end{verbatim}
+
+Bu şekilde diğer kolon-satır kombinasyonlarını da yaparsak (birinci kolon ile
+birinci satır, ikinci kolon ile ikinci satır, üçüncü kolon ile üçüncü satır
+çarpılacak),
+
+\begin{minted}[fontsize=\footnotesize]{python}
+A = np.array([[1 ,1 , 6],[3 , 0 , 1],[1 , 1 , 4]])
+B = np.array([[2, 2],[3, 1],[9, 5]])
+i = 0; r1 = np.dot(A[:,i].reshape(3,1),B[i,:].reshape(1,2))
+i = 1; r2 = np.dot(A[:,i].reshape(3,1),B[i,:].reshape(1,2))
+i = 2; r3 = np.dot(A[:,i].reshape(3,1),B[i,:].reshape(1,2))
+print (r1)
+print (r2)
+print (r3)
+\end{minted}
+
+\begin{verbatim}
+[[2 2]
+ [6 6]
+ [2 2]]
+[[3 1]
+ [0 0]
+ [3 1]]
+[[54 30]
+ [ 9  5]
+ [36 20]]
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print ('kolon-matris carpim toplami')
+print (r1+r2+r3)
+print ('tum carpim')
+print (A.dot(B))
+\end{minted}
+
+\begin{verbatim}
+kolon-matris carpim toplami
+[[59 33]
+ [15 11]
+ [41 23]]
+tum carpim
+[[59 33]
+ [15 11]
+ [41 23]]
+\end{verbatim}
+
+Aynı sonuca varıldığını görüyoruz.
+
+
 \end{document}

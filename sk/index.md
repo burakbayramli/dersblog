@@ -3,7 +3,7 @@
 
 ## En Son
 
-27/7 - [Hesapsal Bilim - Ders 1-8](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_08/ders_18.html)
+28/7 - [Hesapsal Bilim - Ders 1-8](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_08/ders_18.html)
 
 14/7 - [Zaman Serisi Veri Analizi](https://burakbayramli.github.io/dersblog/tser/tser_008_data/zaman_serisi_veri_analizi.html)
 
@@ -44,6 +44,10 @@
 [Sene](year.html)
 
 [Ara](ara.html)
+
+
+
+
 
 
 

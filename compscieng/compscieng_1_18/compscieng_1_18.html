@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Sonlu Öğeler - 2. Bölüm</h1>
+<h1>Sonlu Öğeler  - 2. Bölüm</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Sonlu Öğeler - 2. Bölüm
+    <title>Sonlu Öğeler  - 2. Bölüm
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -40,11 +40,11 @@ tarafindan.. Detaylari simdi gorecegiz.</p>
 \int _{0}^{1} f(x) v(x) \mathrm{d} x
 $$</p>
 <p>ki eger $u(1)=0$ ise $v(1) = 0$ (sinir sarti).</p>
-<p>Sonlu ogelerin temeli $KU = F$. Ustteki denklemde okun sol tarafi diferansiyel
-denklemimiz, sinir sartlari vs ile "guclu formda", oktan sonrasi zayif form,
-ki onun da kendi sinir sartlari var. Sabit degiskenler guclu formdan zayif forma
-geciyor, ama serbest degiskenler gecmiyor. $v$'yi $u$'dan olan ufak sapmalar
-olarak gordugum icin eger $u$'yi sabitliyorsam $v$ de sabitleniyor.</p>
+<p>Sonlu ogeler metotunun (FEM) temeli $KU = F$. Ustteki denklemde okun sol tarafi
+diferansiyel denklemimiz, sinir sartlari vs ile "guclu formda", oktan sonrasi
+zayif form, ki onun da kendi sinir sartlari var. Sabit degiskenler guclu formdan
+zayif forma geciyor, ama serbest degiskenler gecmiyor. $v$'yi $u$'dan olan ufak
+sapmalar olarak gordugum icin eger $u$'yi sabitliyorsam $v$ de sabitleniyor.</p>
 <p>Tum bunlari gorduk ama hala ayaklarimiz yere basmadi; bir cok fikirden
 bahsettik, ama simdi daha gercek dunyaya baglanacagiz. Gercek dunya demek tabii
 $\phi$'lerle alakali, hangi somut fonksiyonlari $\phi$ olarak sececegiz?</p>
@@ -52,10 +52,46 @@ $\phi$'lerle alakali, hangi somut fonksiyonlari $\phi$ olarak sececegiz?</p>
 parcali lineer fonksiyon kullanabilirim,</p>
 <p><img alt="" src="compscieng_1_18_01.png" /></p>
 <p>Bu fonksiyona $\phi_2(x)$ diyelim, 1 ila 3 arasinda 2 uzerinde tepe yapiyor
-diger yerlerde ya lineer egimi var, ya da degeri sifir. Onun sagindaki $\phi_3$
-olabilir, benzer bir fonksiyon sadece 3 degeri bazli tanimli. Buradaki
-ana amac sistemi basit ogeler uzerinde insa etmek. Sonlu ogelerin ana fikri
-budur; $\phi$ icin basit fonksiyonlar kullan. Bu basitligin devami olarak
-$\phi$ ve $v$ fonksiyonlarini ayni sec.</p>
-<p>Peki sinir noktalarinda ne olacak? </p>
+diger yerlerde ya lineer egimi var, ya da degeri sifir. Her $\phi$ maksimum tepe
+noktasi 1 olarak secilabilir. Onun sagindaki $\phi_3$ olabilir, benzer bir
+fonksiyon sadece 3 degeri bazli tanimli. Buradaki ana amac sistemi basit ogeler
+uzerinde insa etmek. FEM'in ana fikri budur; $\phi$ icin basit fonksiyonlar
+kullan. Bu basitligin devami olarak $\phi$ ve $v$ fonksiyonlarini ayni sec.</p>
+<p>Peki sinir noktalarinda ne olacak? Ustte serbest-sabit problemi cozecegim,
+sol uc nokta serbest, sag uc nokta sabit (sinir tanimlanmis). </p>
+<p><img alt="" src="compscieng_1_18_02.png" /></p>
+<p>Ustteki resme bakarsak, $x=0$ icin bir "yarim sapka" fonksiyonu tanimladim,
+$\phi_0$ diyelim, ve eger diger ucgen fonksiyonlara tam sapka dersek bu da yarim
+sapka. O noktada $\phi$ ve $v$'lerim kisitli degiller. Boylece elimde bes tane
+deneme fonksiyonu oluyor, $\phi_0$, $\phi_1$, $\phi_2$, $\phi_3$, $\phi_4$.</p>
+<p>Amac nedir? Yaklasik FEM cozumum $U(x)$'in ustteki basit sapka fonksiyonlarinin
+bir kombinasyonu olmasini istiyorum.</p>
+<p>$$
+U(x) = U_0 \phi_0(x) + ... + U_4 \phi_4(x)
+$$</p>
+<p>$U_0,..,U_4$ degerleri skalar, tek sayi.. onlar ilk basta bilinmeyen "agirlik"
+degerleri, $\phi$'leri belli sekilde carpacaklar ve bu carpimlarin toplami
+yaklasik bir $u$ olacak.</p>
+<p>Bu kombinasyonlar neye benzerdi acaba? </p>
+<p><img alt="" src="compscieng_1_18_03.png" /></p>
+<p>Baslangictaki deger niye $u_0$? Cunku orada tum diger $\phi$ fonksiyonlari sifir
+seviyesinde, hemen yandaki $\phi_1$ bile orada sifir ve maksimum $\phi$ deger 1
+oldugu icin baslangic degeri $u_0$.</p>
+<p>Bu arada Galerkin, ismini tasiyan yontemi bulurken, aklinda erismeye ugrastigi
+belli bir cozum fonksiyonu vardi, ve sapka fonksiyonlarini oraya varmak icin
+secmisti fakat modern FEM yaklasimlarinda, yazilimlarinda bir temel fonksiyonu
+ilk bastan seceriz, problem hakkinda bir sey bilmesek bile. Sapka fonksiyonlari
+bu fonksiyonlardan biridir.</p>
+<p>Sonlu ogeler temel fonksiyonlari dugum noktalariyla baglantilidir, bu baglamda
+sonlu farklilikler (finite differences) metotuna benzer (tabii FD ile esit
+aralikla bolmek gerekir, FEM ile bu zorunluluk yok), ogeler dugum noktalarina
+oturtuluyor. FEM ile sapka fonksiyonu ozelinde her dugum noktasindaki $u$
+degerinin o noktadaki agirlik degeri ile ayni olmasini zorlamis oluyoruz; mesela
+1 dugumundeki deger nedir? $u_1$! Cunku orada diger tum sapka fonksiyonlari
+sifirdir, sadece $\phi_1$ degeri 1, toplanan tum terimler yokoluyor geriye
+sadece $u_1 \phi_1 = u_1$ kaliyor.</p>
+<p>FD benzerligi hakkinda, $KU=F$'i olusturdugumuzda onun bir FD denklemine oldukca
+benzedigini gorecegiz, arada yapisal farklar var tabii, FD ile ayriksal
+denklemleri biz tanimliyoruz, FEM ile sadece baz ogeleri seciyoruz denklemin
+ne oldugunu Galerkin yontemi bize soyluyor.</p>
 <p>[devam edecek]</p>

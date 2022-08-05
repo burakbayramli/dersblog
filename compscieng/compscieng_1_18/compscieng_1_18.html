@@ -25,7 +25,7 @@
 </head>
 
 <p>Sonlu Öğeler, 2. Bölüm</p>
-<p>Üzerinden geçelim, sistem zayıf form ile ise başlar. Önceki dersin sonunda
+<p>Üzerinden geçelim, sistem zayıf form ile işe başlar. Önceki dersin sonunda
 Galerkin fikrini tanıştırdık, sürekli diferansiyel denklem yerine onu ayrıksal
 temsil etmeye uğraş. Galerkin bunun için bazı deneme fonsiyonları kullanır
 onlara $\phi_1,...,\phi_N$ diyelim, ayrıca test fonksiyonları da vardır
@@ -37,8 +37,11 @@ ikinci denklemin (oktan sonra) sag tarafindan geliyor, $K$ ise sol
 tarafindan.. Detaylari simdi gorecegiz.</p>
 <p>$$
 - \frac{\mathrm{d}}{\mathrm{d} x} \left( c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \right) = f(x) \to
+$$</p>
+<p>$$
 \int _{0}^{1} c \frac{\mathrm{d} u}{\mathrm{d} x} \frac{\mathrm{d} v}{\mathrm{d} x} \mathrm{d} x =
 \int _{0}^{1} f(x) v(x) \mathrm{d} x
+\qquad (1)
 $$</p>
 <p>ki eger $u(1)=0$ ise $v(1) = 0$ (sinir sarti).</p>
 <p>Sonlu ogeler metotunun (FEM) temeli $KU = F$. Ustteki denklemde okun sol tarafi
@@ -69,6 +72,7 @@ deneme fonksiyonu oluyor, $\phi_0$, $\phi_1$, $\phi_2$, $\phi_3$, $\phi_4$.</p>
 bir kombinasyonu olmasini istiyorum.</p>
 <p>$$
 U(x) = U_0 \phi_0(x) + ... + U_4 \phi_4(x)
+\qquad (2)
 $$</p>
 <p>$U_0,..,U_4$ degerleri skalar, tek sayi.. onlar ilk basta bilinmeyen "agirlik"
 degerleri, $\phi$'leri belli sekilde carpacaklar ve bu carpimlarin toplami
@@ -98,7 +102,33 @@ denklemleri biz tanimliyoruz, FEM ile sadece baz ogeleri seciyoruz denklemin
 ne oldugunu Galerkin yontemi bize soyluyor.</p>
 <p>Simdi bize lazim olan ustteki resimdeki her nokta icin ayri bir denklem, yani
 toplam 5 tane denklem. Bu denklemler nereden gelecek? Kritik bir soru.</p>
-<p>Bu denklemler zayif formdan gelecekler. </p>
+<p>Bu denklemler zayif formdan gelecekler. Sunu yapiyorum, (1)'deki $u$ yerine
+(2)'deki $U$'yu sokuyorum. Ayrica bir $v$ lazim, daha once $v(1)=0$ sarti takip
+edilmek suretiyle herhangi bir $v$ olabilir demistik, ama simdi ayriksal forma
+gectik, ben de $\phi_i$ fonksiyonlarini $V_i$ fonksiyonlarim icin kullanmaya
+karar veriyorum. Boylece,</p>
+<p>$$
+\int _{0}^{1} c(x) \frac{\mathrm{d} U}{\mathrm{d} x} \frac{\mathrm{d} V_i}{\mathrm{d} x} \mathrm{d} x =
+\int _{0}^{1} f(x) V_i(x) \mathrm{d} x
+$$</p>
+<p>ki $i=0,1,2,3,4$. Boylece 5 tane denklem elde ediyorum, 5 tane $V$ ile ana
+formulu "test ediyorum". Yani ustteki denklemi 5 tane $V$ icin farkli
+sekillerle uretmis oluyorum. Iste 5 x 5 sistemim bu. Neler yaptim simdiye kadar?
+Baz fonksiyonlarini sectik, onlari zayif forma sokuyoruz. $\mathrm{d} U / \mathrm{d} x$
+agirlikli toplamdan geliyor (dikkat tum $V$'leri kullanarak), sonra
+$\mathrm{d} V_i / \mathrm{d} x$ sokuyoruz, ve entegrali hesapliyoruz. FD durumunda bu
+hesap yoktu, entegral hesabi yani, FEM ile var, esitligin hem saginda hem de
+solunda.  Esitligin sagindaki entegral her $V_i$ icin bize bir $F_i$ verecek,
+yani $F$ vektorunun bir satirini. Tabii $K$ matrisi esitligin solundan
+bir sekilde cikacak, nasil birazdan gorecegiz.</p>
+<p>Ornek 1</p>
+<p>Sag tarafa bakalim once, mesela $i=0$ icin, $f(x)=1$ olsun (ornege gore
+boyle) bu durumda $\int_{0}^{1} 1 \cdot V_0(x) \mathrm{d} x$ entegrali ne
+olur? Entegral bir alan hesabidir hatirlarsak, o zaman </p>
+<p><img alt="" src="compscieng_1_18_05.png" /></p>
+<p>$V_0$ ustteki ilk yarim sapka, o ucgenin alani, eger $x$ ekseni esit araliklarla
+bolmussek ve her aralik $\Delta x$ ise,
+$(\Delta x \cdot 1) / 2 = \frac{\Delta x}{2}$.</p>
 <p>[devam edecek]</p>
 <p>Alttaki Eski Bir Ders Video'sundan Alinmistir</p>
 <p>Sonlu Öğeler Metodu (Finite Elements Method)</p>

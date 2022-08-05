@@ -4,7 +4,7 @@ Ders 1-18
 
 Sonlu Öğeler, 2. Bölüm
 
-Üzerinden geçelim, sistem zayıf form ile ise başlar. Önceki dersin sonunda
+Üzerinden geçelim, sistem zayıf form ile işe başlar. Önceki dersin sonunda
 Galerkin fikrini tanıştırdık, sürekli diferansiyel denklem yerine onu ayrıksal
 temsil etmeye uğraş. Galerkin bunun için bazı deneme fonsiyonları kullanır
 onlara $\phi_1,...,\phi_N$ diyelim, ayrıca test fonksiyonları da vardır
@@ -17,8 +17,12 @@ tarafindan.. Detaylari simdi gorecegiz.
 
 $$
 - \frac{\ud}{\ud x} \left( c(x) \frac{\ud u}{\ud x} \right) = f(x) \to
+$$
+
+$$
 \int _{0}^{1} c \frac{\ud u}{\ud x} \frac{\ud v}{\ud x} \ud x =
 \int _{0}^{1} f(x) v(x) \ud x
+\mlabel{1}
 $$
 
 ki eger $u(1)=0$ ise $v(1) = 0$ (sinir sarti).
@@ -60,6 +64,7 @@ bir kombinasyonu olmasini istiyorum.
 
 $$
 U(x) = U_0 \phi_0(x) + ... + U_4 \phi_4(x)
+\mlabel{2}
 $$
 
 $U_0,..,U_4$ degerleri skalar, tek sayi.. onlar ilk basta bilinmeyen ``agirlik''
@@ -99,10 +104,39 @@ ne oldugunu Galerkin yontemi bize soyluyor.
 Simdi bize lazim olan ustteki resimdeki her nokta icin ayri bir denklem, yani
 toplam 5 tane denklem. Bu denklemler nereden gelecek? Kritik bir soru.
 
-Bu denklemler zayif formdan gelecekler. 
+Bu denklemler zayif formdan gelecekler. Sunu yapiyorum, (1)'deki $u$ yerine
+(2)'deki $U$'yu sokuyorum. Ayrica bir $v$ lazim, daha once $v(1)=0$ sarti takip
+edilmek suretiyle herhangi bir $v$ olabilir demistik, ama simdi ayriksal forma
+gectik, ben de $\phi_i$ fonksiyonlarini $V_i$ fonksiyonlarim icin kullanmaya
+karar veriyorum. Boylece,
 
+$$
+\int _{0}^{1} c(x) \frac{\ud U}{\ud x} \frac{\ud V_i}{\ud x} \ud x =
+\int _{0}^{1} f(x) V_i(x) \ud x
+$$
 
+ki $i=0,1,2,3,4$. Boylece 5 tane denklem elde ediyorum, 5 tane $V$ ile ana
+formulu ``test ediyorum''. Yani ustteki denklemi 5 tane $V$ icin farkli
+sekillerle uretmis oluyorum. Iste 5 x 5 sistemim bu. Neler yaptim simdiye kadar?
+Baz fonksiyonlarini sectik, onlari zayif forma sokuyoruz. $\ud U / \ud x$
+agirlikli toplamdan geliyor (dikkat tum $V$'leri kullanarak), sonra
+$\ud V_i / \ud x$ sokuyoruz, ve entegrali hesapliyoruz. FD durumunda bu
+hesap yoktu, entegral hesabi yani, FEM ile var, esitligin hem saginda hem de
+solunda.  Esitligin sagindaki entegral her $V_i$ icin bize bir $F_i$ verecek,
+yani $F$ vektorunun bir satirini. Tabii $K$ matrisi esitligin solundan
+bir sekilde cikacak, nasil birazdan gorecegiz.
 
+Ornek 1
+
+Sag tarafa bakalim once, mesela $i=0$ icin, $f(x)=1$ olsun (ornege gore
+boyle) bu durumda $\int_{0}^{1} 1 \cdot V_0(x) \ud x$ entegrali ne
+olur? Entegral bir alan hesabidir hatirlarsak, o zaman 
+
+\includegraphics[width=10em]{compscieng_1_18_05.png}
+
+$V_0$ ustteki ilk yarim sapka, o ucgenin alani, eger $x$ ekseni esit araliklarla
+bolmussek ve her aralik $\Delta x$ ise,
+$(\Delta x \cdot 1) / 2 = \frac{\Delta x}{2}$.
 
 
 
@@ -121,6 +155,7 @@ Bu denklemler zayif formdan gelecekler.
 
 
 [devam edecek]
+
 
 Alttaki Eski Bir Ders Video'sundan Alinmistir
 
@@ -343,6 +378,8 @@ başardık.
 Kaynaklar
 
 [1] Strang, G., {\em Computational Science and Engineering}
+
+
 
 \end{document}
 

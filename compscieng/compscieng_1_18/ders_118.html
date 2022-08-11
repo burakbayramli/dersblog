@@ -25,16 +25,16 @@
 </head>
 
 <p>Sonlu Öğeler, 2. Bölüm</p>
-<p>Üzerinden geçelim, sistem zayıf form ile işe başlar. Önceki dersin sonunda
+<p>Üzerinden geçelim, sistem zayıf form ile ise başlar. Önceki dersin sonunda
 Galerkin fikrini tanıştırdık, sürekli diferansiyel denklem yerine onu ayrıksal
-temsil etmeye uğraş. Galerkin bunun için bazı deneme fonsiyonları kullanır
-onlara $\phi_1,...,\phi_N$ diyelim, ayrıca test fonksiyonları da vardır
-(çoğunlukla test fonksiyonları ile deneme, yani $\phi$ ve $v$ fonksiyonları
-aynıdır). Bugün işleyeceğimiz bu fonksiyonların nasıl seçildiği ve hazirlik
-asamasini gosterdikten sonra bunun verdigi $KU = F$ denklemin nasil
-cozuldugu. $K$ nereden geliyor, $F$ nereden geliyor? $F$ bir sekilde alttaki
-ikinci denklemin (oktan sonra) sag tarafindan geliyor, $K$ ise sol
-tarafindan.. Detaylari simdi gorecegiz.</p>
+temsil etmeye uğraştık. Galerkin bunun için bazı deneme fonsiyonları kullanır
+onlara $\phi_1,...,\phi_N$ diyelim, ayrıca test fonksiyonları da vardır (fakat
+çoğunlukla test fonksiyonları ile deneme, yani $\phi$ ve $v$ fonksiyonları aynı
+seçilir). Bugün işleyeceğimiz bu fonksiyonların nasıl seçildiği ve hazırlık
+aşamasını gösterdikten sonra bunun verdiği $KU = F$ denklemin nasıl
+çözüldüğü. $K$ nereden geliyor, $F$ nereden geliyor? $F$ bir şekilde alttaki
+ikinci denklemin (oktan sonra) sağ tarafından geliyor, $K$ ise sol
+tarafından.. Detayları şimdi göreceğiz.</p>
 <p>$$
 - \frac{\mathrm{d}}{\mathrm{d} x} \left( c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \right) = f(x) \to
 $$</p>
@@ -57,7 +57,7 @@ parcali lineer fonksiyon kullanabilirim,</p>
 <p><img alt="" src="compscieng_1_18_01.png" /></p>
 <p>Bu fonksiyona $\phi_2(x)$ diyelim, 1 ila 3 arasinda 2 uzerinde tepe yapiyor
 diger yerlerde ya lineer egimi var, ya da degeri sifir. Her $\phi$ maksimum tepe
-noktasi 1 olarak secilabilir. Onun sagindaki $\phi_3$ olabilir, benzer bir
+noktasi 1 olarak secilebilir. Onun sagindaki $\phi_3$ olabilir, benzer bir
 fonksiyon sadece 3 degeri bazli tanimli. Buradaki ana amac sistemi basit ogeler
 uzerinde insa etmek. FEM'in ana fikri budur; $\phi$ icin basit fonksiyonlar
 kullan. Bu basitligin devami olarak $\phi$ ve $v$ fonksiyonlarini ayni sec.</p>
@@ -110,6 +110,7 @@ karar veriyorum. Boylece,</p>
 <p>$$
 \int _{0}^{1} c(x) \frac{\mathrm{d} U}{\mathrm{d} x} \frac{\mathrm{d} V_i}{\mathrm{d} x} \mathrm{d} x =
 \int _{0}^{1} f(x) V_i(x) \mathrm{d} x
+\qquad (3)
 $$</p>
 <p>ki $i=0,1,2,3,4$. Boylece 5 tane denklem elde ediyorum, 5 tane $V$ ile ana
 formulu "test ediyorum". Yani ustteki denklemi 5 tane $V$ icin farkli
@@ -127,163 +128,49 @@ boyle) bu durumda $\int_{0}^{1} 1 \cdot V_0(x) \mathrm{d} x$ entegrali ne
 olur? Entegral bir alan hesabidir hatirlarsak, o zaman </p>
 <p><img alt="" src="compscieng_1_18_05.png" /></p>
 <p>$V_0$ ustteki ilk yarim sapka, o ucgenin alani, eger $x$ ekseni esit araliklarla
-bolmussek ve her aralik $\Delta x$ ise,
-$(\Delta x \cdot 1) / 2 = \frac{\Delta x}{2}$.</p>
+bolmussek ve her aralik $\Delta x$ ise, $(\Delta x \cdot 1) / 2 = \frac{\Delta x}{2}$.</p>
+<p>Dikkat 0 ila 1 arasi entegral ustteki resimdeki tum yatay ekseni kapsar,
+0,1,2,..  indisleri kafa karistirmasin. O indisler $x=0$ ile $x=1$ arasini
+indisliyor. O zaman 0 ile 1 arasi entegral tum $V$'lerin oldugu alan uzerinden
+alinir, fakat biz her seferinde birini sectigimiz icin onun alanini hesaplamis
+oluyoruz cunku mesela $V_0$ tanimlandigi yer sonrasinda sifir degerinde.</p>
+<p>$i=1$ icin ne olur? $\int_{0}^{1} 1 \cdot V_1(x) \mathrm{d} x$, ucgen tabani
+$2 \Delta x$,  carpi 1, sonuc $\Delta x$. diger $V$ degerleri benzer sekilde,
+o zaman $F$ vektor su sekilde,</p>
+<p>$$
+F = \left[\begin{array}{c}
+1/2 \\ 1 \\ 1 \\ 1 \\ 1
+\end{array}\right]
+$$</p>
+<p>$K$ icin hazir miyiz? Anahtar bolum orasi.</p>
+<p>(3) formulunun tum sol tarafi $KU$'yu vermeli.. Satir satir gidelim, mesela
+sifirinci denklem hangisi? $i=0$ oldugu zaman, yani $V_0$ kullanilan, zayif
+formu $V_0$ ile test ettigimiz durumdur. Her seyi acarak yazarsak,</p>
+<p>$$
+\int _{0}^{1} c(x)
+\left( U_0 \phi_0' + ... + U_4 \phi_4'  \right)
+\frac{\mathrm{d} V_0}{\mathrm{d} x} \mathrm{d} x = F_0 = \Delta x \cdot \frac{1}{2}
+$$</p>
+<p>Su ana kadar eldekileri matris formunda yazarsak,</p>
+<p>$$
+\left[\begin{array}{rrrrr}
+ &amp; &amp; &amp; &amp; \\
+ &amp; &amp; &amp; &amp; \\
+ &amp; &amp; &amp; &amp; \\
+ &amp; &amp; &amp; &amp; 
+\end{array}\right]
+\left[\begin{array}{r}
+U_0 \\ U_1 \\ U_2 \\ U_3 \\ U_4
+\end{array}\right] =
+\left[\begin{array}{r}
+F_0 \\ F_1 \\ F_2 \\ F_3 \\ F_4
+\end{array}\right]
+$$</p>
+<p>Bos matrisin ilk satirini $V_0$'yi kullanarak yapacagim entegral hesabindan elde
+edecegim. Daha kolay baslayalim, ilk satirin sol ilk hucresine ne gelir?
+$K_{00}$ diyelim, oradaki deger $U_0$'i carpiyor degil mi ve bir sekilde
+entegralinin alinmasi lazim.. Soyle olabilir mi?</p>
+<p>$$
+K_{00} = \int _{0}^{1} c(x) \phi_0' V_0' \mathrm{d} x
+$$</p>
 <p>[devam edecek]</p>
-<p>Alttaki Eski Bir Ders Video'sundan Alinmistir</p>
-<p>Sonlu Öğeler Metodu (Finite Elements Method)</p>
-<p>Bu metot differansiyel, kısmi differansiyel denklemleri (partial differential
-equations) yaklaşıksal olarak modelleme ve çözmenin yöntemleridir.</p>
-<p>Formül: Başlangıç denklemi</p>
-<p>$$ \frac{-d}{\mathrm{d} x} \bigg( c(x) \ \frac{\mathrm{d} u}{\mathrm{d} x} \bigg) = f(x) $$</p>
-<p>İki tarafı da  $v(x)$ ile çarpıyoruz ve 0 to 1 sınırlarıyla entegralini alıyoruz.</p>
-<p>$$
-\int_0^1 \frac{-d}{\mathrm{d} x} \bigg( c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \bigg) v(x)\mathrm{d} x
-= \int_0^1 f(x)v(x) \mathrm{d} x
-$$</p>
-<p>Parçalı entegral (integration by parts) formülü şöyledir:</p>
-<p>$$ \int y \mathrm{d} z = y  z - \int z \mathrm{d} y $$</p>
-<p>Ana formülün bölümlerini, parçalı entegrale göre bölüştürürsek:</p>
-<p>$$ dz = \frac{-d}{dx} \bigg( c(x) \ \frac{du}{dx} \bigg) dx  $$</p>
-<p>$$ z = - c(x) \ \frac{du}{dx}  $$</p>
-<p>$$ y = v(x)  $$</p>
-<p>$$ dy = \frac{dv}{dx}dx $$</p>
-<p>Yukarıda $dz$ içinde $dx$ ve $\frac{1}{dx}$ birbirini iptal eder. Parçalı
-entegral formülünün sağ tarafına göre yerlerine koyarsak:</p>
-<p>$$
-\int_0^1 v(x)\mathrm{d} x \frac{-d}{\mathrm{d} x} \bigg( c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \bigg)
-= - \bigg[ v(x) c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \bigg]_{x=0}^{x=1} \int_0^1 c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \frac{\mathrm{d} v}{\mathrm{d} x} \mathrm{d} x
-$$</p>
-<p>Üstteki parçalı entegral açılımında sol taraf entegrale sınır
-değerleri aldığında, sağ taraftaki $yz$ sonucunun aynı sınır
-değerlerine tabi olduğuna dikkat edelim.</p>
-<p>Differansiyel denklemde sınır koşulları $x=1$ durumunda $c(1)u'(1)=0$,
-ve $x=0$ durumunda $v(0)=0$ olarak biliniyor. O zaman üstteki
-denklemin sol tarafında $x=0$ ve $x=1$ koşulları için tanımlı bölüm $0
-- 0 = 0$ olacaktır ve denklemden atılabilir. Geriye kalanlar</p>
-<p>$$
-\int_0^1 c(x) \frac{\mathrm{d} u}{\mathrm{d} x} \frac{\mathrm{d} v}{\mathrm{d} x} \mathrm{d} x
-= \int_0^1 f(x)v(x) \mathrm{d} x
-$$</p>
-<p>Bu fonksiyonu Galerkin adlı bir matematikçi bulmuş, "zayıf form (weak
-form)" olarak adlandırılıyor.</p>
-<p>Şimdi diyelim ki n tane test fonksiyonu seçtik $\phi_1(x),..,\phi(n)$
-ve bu fonksiyonların $U_j$ sayıları ile çarpımının toplamını, yani bir
-tür kombinasyonunu $u(x)$ yerine kullanmaya karar verdik.</p>
-<p>$$ U(x) = U_1 \phi_1+ ... + U_n\phi_n $$</p>
-<p>O zaman</p>
-<p>$$ U'(x) = U_1 \phi_1'+ ... + U_n\phi_n' $$</p>
-<p>$$ = \sum_1^n U_j \frac{d\phi_j}{dx} $$</p>
-<p>Şimdi $du / dx$ yerine $U'(x)$ koyarsak</p>
-<p>$$
-\int_0^1 c(x) \bigg( \sum_1^n U_j \frac{\mathrm{d}\phi_j}{\mathrm{d} x}\bigg)
-\frac{\mathrm{d} V_i}{\mathrm{d} x}\mathrm{d} x
-= \int_0^1 f(x)V_i(x)\mathrm{d} x
-$$</p>
-<p>Dikkat edelim, $v(x)$ yerine $V_i(x)$ kullandık. Üstteki formül her i için yeni
-bir formül "üretecek". Niye $V_i$? Zayıf formdaki $v(x)$ formülünü de zaten biz
-uydurmuştuk, yani $v(x)$ biz ne istersek o olur. O zaman bu fonksiyonu n tane
-formül üretmek için bir numara olarak kullanıyoruz, n tane formül olunca
-matrisin n x n elemanını doldurabileceğiz ve çözüme erişebileceğiz. Ek not,
-çoğunlukla $V_i(x)$ için $\phi_i$ sembolü kullanılıyor.</p>
-<p>Ayrıca formüldeki $U_j$ kısmını cekip çıkartırsak ve bir vektör içine koyarsak,
-geri kalanlar bir $K_{ij}$ matrisi içinde tutulabilir. </p>
-<p>$$ K_{ij} = \int_0^1 c(x) \frac{\mathrm{d}\phi_j}{\mathrm{d} x} \frac{\mathrm{d} V_i}{\mathrm{d} x} \mathrm{d} x  $$</p>
-<p>Sağ taraf aynı şekilde i tane formül üretir</p>
-<p>$$ F_i = \int_0^1 f(x)V_i(x) \mathrm{d} x $$</p>
-<p>Final formül matrix formunda basit bir şekilde temsil edilebilecektir. </p>
-<p>$$ KU = F $$</p>
-<p>Örnek</p>
-<p>Örnek olarak $-u" = 1$ denklemini çözelim. Not: Differansiyel
-denklemlerde sonuç bulmak demek bir "fonksiyon" bulmak
-demektir. Normal cebirsel denklemlerde sonuç bulmak değişkenlerin
-"sayısal" değerini bulmak demektir. Birazdan bulacağımız sonuç
-$u(x)$ "fonksiyonu" olacak.</p>
-<p>Eğer denklem $-u"=1$ ise o zaman bu formülü ana forma uygun hale
-getirmek için $c(x) = 1$ olarak almamız gerekir. $-u"=1$ denkleminde
-eşitliğin sağ tarafı 1 olduğuna göre $f(x) = 1$ demektir.</p>
-<p>Artık $\phi$ fonksiyonlarını seçme zamanı geldi. Bu fonksiyonların
-"toplamı" hedeflediğimiz fonksiyonu yaklaşıksal (approximate) olarak
-temsil edecek. Örnek olarak seçebileceğimiz bir fonksiyon "şapka
-fonksiyonu (hat function)" olarak bilinen üçgen fonksiyonlar
-olabilir. Alttaki figürde bu fonksiyonları görüyoruz.</p>
-<p><img alt="" src="fem_hat.png" /></p>
-<p>Bu figürde x ekseninin h büyüklüğündeki parçalara bölündüğünü görüyoruz. </p>
-<p>Entegralleri hesaplayalım</p>
-<p>$$ F_1 = \int_0^1 V_1(x) \mathrm{d} x $$</p>
-<p>Daha önce $V_1$ ve $\phi_1$'i aynı kabul ettiğimizi belirtmiştik. </p>
-<p>Yukarıdaki entegralin aslında bir alan hesabı yaptığını
-görüyoruz. Sınırlar $0$ ve $1$ arasında, ama $2h$ ötesinde zaten
-$\phi_1$ fonksiyonu yok. $\phi_1$'in alanı nedir? Alan üçgenin alanı:
-Taban çarpı yükseklik bölü 2: $2h$, yüksekliği $1$, o zaman alan $(2h
-\times 1) / 2 = 1/3$</p>
-<p>Benzer mantıkla bakarsak, $F_2$ ile $F_1$ aynı, yani $1/3$. $F_3$ ise
-onların yarısı, yani $1/6$.</p>
-<p>$K_{ij}$ nasıl hesaplanacak? $c(x) = 1$ olduğu için formülden
-çıkarılabilir ve $V_1$ ve $\phi_1$'in aynı olduğuna söyledik:</p>
-<p>$$ K_{ij} = \int_0^1 c(x) \frac{\mathrm{d}\phi_j}{\mathrm{d} x} \frac{\mathrm{d} V_i}{\mathrm{d} x} \mathrm{d} x $$</p>
-<p>$$ K_{11} = \int_0^1 \bigg( \frac{\mathrm{d} V_1}{\mathrm{d} x} \bigg) ^2 \mathrm{d} x  $$</p>
-<p>$dV_1/dx$ nedir? Birinci şapka fonksiyonunun türevidir. Bu türeve
-bakarsak, $0$ ve $h$ arasında artı eğim (slope) $1/h$, $h$ ve $2h$
-arasında eksi eğim $-1/h$ oluyor. Ama kare aldığımız için sonuç aynı,
-$1/h^2$. O zaman h = 1/3 olduğuna göre $1/(1/3)^2$, yani $dV_1/dx =
-9$.</p>
-<p>$$ K_{11} = \int_0^{2/3} 9 \mathrm{d} x = 9x \bigg|_0^{2/3} = (9)(2/3) - 0 = 6 $$</p>
-<p>$K_{22}$ şeklen aynı fonksiyon parçasını temel aldığı için aynı değere
-sahip: 6. $K_{33}$ onların yarısı, eşittir 3.</p>
-<p>$K_{12}$ farklı eğimlerin çarpımı anlamına gelir, yani $V_1'$ ile
-$V_2'$ çarpımı olur. Bu iki fonksiyona bakalım, 0 ile h arasında $V_2$
-yok, eğim 0. İkisinin de sıfır olmadığı, çarpımda kullanılabilecek bir
-eğiminin olduğu tek aralık h ve 2h arası. Burada $V_1' = -3, V_2 = 3$.</p>
-<p>$$
-K_{12} = \int_{1/3}^{2/3} (3)(-3) \mathrm{d} x
-= -9x \bigg|_{1/3}^{2/3} = -6 - (-3) = -3
-$$</p>
-<p>Aynı şekilde $K_{23} = -3$. Ama $K_{13} = 0$ çünkü hiç çakışma yok.</p>
-<p>Matrisi doldurursak, </p>
-<p>$$
-KU = F
-$$</p>
-<p>$$ 
-\left[\begin{array}{ccc}
-    6 &amp; -3 &amp; 0 \\
-    -3 &amp; 6 &amp; -3 \\
-    0 &amp; -3 &amp; 3   <br />
-\end{array}\right]
-\left[\begin{array}{c}
-    U_1 \\
-    U_2 \\
-    U_3
-\end{array}\right]
-=
-\left[\begin{array}{c}
-    1/3 \\
-    1/3 \\
-    1/6
-\end{array}\right]
-$$</p>
-<p>Python kodu </p>
-<pre><code class="python">K = [[6., -3., 0],
-     [-3., 6., -3.],
-     [0., -3., 3.]]
-
-f = [1./3., 1./3., 1./6.]
-
-print np.linalg.solve(K,f)
-</code></pre>
-
-<pre><code>[ 0.27777778  0.44444444  0.5       ]
-</code></pre>
-
-<pre><code class="python">print 5./18., 4./9., 1./2.
-</code></pre>
-
-<pre><code>0.277777777778 0.444444444444 0.5
-</code></pre>
-
-<p>Rapor edilen değerler bu denklemin bilinen çözümü $u(x) = x - \frac{1}{2}x^2$ 
-ile 0, h, 2h noktalarında (mesh points) birebir uyum gösterdiğini
-görüyoruz.  Yani yaklaşıksal olarak differansiyel denklemi çözmeyi 
-başardık.</p>
-<p>Kaynaklar</p>
-<p>[1] Strang, G., <em>Computational Science and Engineering</em></p>

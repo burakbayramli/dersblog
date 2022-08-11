@@ -161,8 +161,6 @@ plt.savefig('elev1.png')
 
 ![](elev1.png)
 
-<a name='geotiff'/>
-
 ### DEM, GeoTiff
 
 Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
@@ -211,6 +209,76 @@ alınabilir. Dosyanin büyüklüğü 20 MB'dan daha az. [3] kullanımı önemli
 gerektirir, [3] kütüphanesi hafif, direk DEM dosyalarının içeriğini
 okuyabilir.
 
+### GLOBE
+
+GLOBE veri seti [4] tam ismiyle Global Land Öne-kilometer Base
+Elevation, NOAA kurumu tarafından paylaşılıyor. Kabaca verideki
+frekansa bakılırsa kilometre kare başına bir yükseklik noktası olduğu
+söylenebilir. Çok detaylı grafikleme için yeterli olmayablir fakat
+geniş alanların yükseklik haritası için faydalı.
+
+Bu verinin iyi bir tarafı verinin Numpy matrisi olarak rahat
+okunabilmesi.  [4] bağlantısındaki haritaya bakılınca dünya A,B,C,D vs
+parçalarına bölünmüş, her bölümün yükseklik verisi ayrı bir
+dosyada. Ben tüm verileri tek bir zıp dosyası olarak indirdim, 300 MB
+civarı, A,B,C,D bölge dosyaları bu tek zıp içinde, "All Tiles in Öne
+.zıp file" seçeneğiyle. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
+olacaktır, bazıları daha az olabilir, altta her bölgenin boyutları
+var.
+
+Zıp dosyasını açın, alttaki kod `g10g` bölgesini okuyup haritaliyor,
+[5] kodu örnek alındı, `downsample` ile veriyi daha da azalttığımızı
+görebiliyoruz, istemeyenler bu satırı çıkartıp ya da `downsample=1`
+ile veriyi olduğu gibi kullanabilir.
+
+
+```python
+gltiles = {
+    "a10g": [50, 90, -180, -90, 1, 6098, 10800, 4800],
+    "b10g": [50, 90, -90, 0, 1, 3940, 10800, 4800],
+    "c10g": [50, 90, 0, 90, -30, 4010, 10800, 4800],
+    "d10g": [50, 90, 90, 180, 1, 4588, 10800, 4800],
+    "e10g": [0, 50, -180, -90, -84, 5443, 10800, 6000],
+    "f10g": [0, 50, -90, 0, -40, 6085, 10800, 6000],
+    "g10g": [0, 50, 0, 90, -407, 8752, 10800, 6000],
+    "h10g": [0, 50, 90, 180, -63, 7491, 10800, 6000],
+    "i10g": [-50, 0, -180, -90, 1, 2732, 10800, 6000],
+    "j10g": [-50, 0, -90, 0, -127, 6798, 10800, 6000],
+    "k10g": [-50, 0, 0, 90, 1, 5825, 10800, 6000],
+    "l10g": [-50, 0, 90, 180, 1, 5179, 10800, 6000],
+    "m10g": [-90, -50, -180, -90, 1, 4009, 10800, 4800],
+    "n10g": [-90, -50, -90, 0, 1, 4743, 10800, 4800],
+    "o10g": [-90, -50, 0, 90, 1, 4039, 10800, 4800],
+    "p10g": [-90, -50, 90, 180, 1, 4363, 10800, 4800] }
+
+z = np.fromfile('all10g/all10/g10g',dtype='<i2')
+
+t, lat_min, lat_max, lon_min, lon_max, elev_max, cols, rows = gltiles['g10g']
+
+z = np.reshape(z,(round(z.__len__()/cols), cols))
+
+z[z==-500]=0
+
+lon = lon_min + 1/120*np.arange(10800)
+lat = lat_max - 1/120*np.arange(round(z.size/10800))
+
+downsample = 2
+lat_select = np.arange(0,len(lat),downsample)
+lon_select = np.arange(0,len(lon),downsample)
+
+y = lat[lat_select]
+x = lon[lon_select]
+
+xg, yg = np.meshgrid(x, y)
+
+zm = z[np.ix_(lat_select,lon_select)]
+
+plt.contour(xg,yg,zm)
+plt.savefig('gltiles1.png')
+```
+
+![](gltiles1.png)
+
 Kaynaklar
 
 [1] [RBF](https://burakbayramli.github.io/dersblog/stat/stat_175_rbf/dairesel_baz_fonksiyonlari__radial_basis_functions_rbf__yukseklik_verisi_daglar.html)
@@ -219,6 +287,6 @@ Kaynaklar
 
 [3] https://github.com/KipCrossing/geotiff
 
+[4] [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/gltiles.html)
 
-
-
+[5] https://github.com/developmentseed/landsat-util

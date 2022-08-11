@@ -254,14 +254,14 @@ gltiles = {
 
 z = np.fromfile('all10g/all10/g10g',dtype='<i2')
 
-t, lat_min, lat_max, lon_min, lon_max, elev_max, cols, rows = gltiles['g10g']
+lat_min, lat_max, lon_min, lon_max, elev_min, elev_max, cols, rows = gltiles['g10g']
 
 z = np.reshape(z,(round(z.__len__()/cols), cols))
 
 z[z==-500]=0
 
-lon = lon_min + 1/120*np.arange(10800)
-lat = lat_max - 1/120*np.arange(round(z.size/10800))
+lon = lon_min + 1/120*np.arange(cols)
+lat = lat_max - 1/120*np.arange(round(z.size/cols))
 
 downsample = 2
 lat_select = np.arange(0,len(lat),downsample)

@@ -198,7 +198,6 @@ plt.savefig('elev2.png')
 
 ![](elev2.png)
 
-
 `area_box` içinde alt sol köse ve üşe sağ köşe verildi, bir kutu oluşturuldu,
 ve kutu içine düşen yükseklik verisi `read_box` ile alındı.
 
@@ -208,6 +207,8 @@ alınabilir. Dosyanin büyüklüğü 20 MB'dan daha az. [3] kullanımı önemli
 çünkü bazı alternatif GeoTiff okuma yöntemleri GDAL kurulmasının
 gerektirir, [3] kütüphanesi hafif, direk DEM dosyalarının içeriğini
 okuyabilir.
+
+<a name='globe'/>
 
 ### GLOBE
 

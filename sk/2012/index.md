@@ -94,11 +94,11 @@
 
 [supervisord](07/supervisord.html)
 
+[Aradeğerleme (Interpolation)](08/aradegerleme-interpolation.html)
+
 [Klavye Tusunu Mouse Tiklamasi Haline Getirmek](08/klavye-tusunu-mouse-tiklamasi-haline.html)
 
 [Postgresql ve Levenhstein](08/kolon-degerleri-arasinda-harfleme.html)
-
-[Matriste Bos Degerleri Yakin Degerle Doldurmak (Interpolation)](08/matriste-bos-degerleri-yakin-degerle.html)
 
 [Tabanlar Arasi Buyuk Veri Transferi, pg_dump](08/tabanlar-arasi-buyuk-veri-transferi.html)
 
@@ -129,4 +129,12 @@
 [Kategorik Veri, 1-in-n, Faktorler, R ve Patsy](12/kategorik-veri-1-in-n-faktorler-ve-r.html)
 
 [Mahout, Jython ve Yapay Ogrenim](12/mahout-jython-ve-yapay-ogrenim.html)
+
+
+
+
+
+
+
+
 

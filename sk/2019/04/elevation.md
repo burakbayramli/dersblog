@@ -212,22 +212,22 @@ okuyabilir.
 
 ### GLOBE
 
-GLOBE veri seti [4] tam ismiyle Global Land Öne-kilometer Base
-Elevation, NOAA kurumu tarafından paylaşılıyor. Kabaca verideki
-frekansa bakılırsa kilometre kare başına bir yükseklik noktası olduğu
-söylenebilir. Çok detaylı grafikleme için yeterli olmayablir fakat
-geniş alanların yükseklik haritası için faydalı.
+Bir yöntem daha. GLOBE veri seti [4], tam ismiyle Global Land
+One-kilometer Base Elevation, NOAA kurumu tarafından
+paylaşılıyor. Kabaca verideki frekansa bakılırsa kilometre kare başına
+bir yükseklik noktası olduğu söylenebilir. Çok detaylı grafikleme için
+yeterli olmayabilir fakat geniş alanların yükseklik haritası için
+yeterli.
 
-Bu verinin iyi bir tarafı verinin Numpy matrisi olarak rahat
-okunabilmesi.  [4] bağlantısındaki haritaya bakılınca dünya A,B,C,D vs
+Bu verinin iyi bir tarafı verinin Numpy matrisi olarak direk
+okunabilmesi. [4] bağlantısındaki haritaya bakılınca dünya A,B,C,D vs
 parçalarına bölünmüş, her bölümün yükseklik verisi ayrı bir
-dosyada. Ben tüm verileri tek bir zıp dosyası olarak indirdim, 300 MB
-civarı, A,B,C,D bölge dosyaları bu tek zıp içinde, "All Tiles in Öne
-.zıp file" seçeneğiyle. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
-olacaktır, bazıları daha az olabilir, altta her bölgenin boyutları
-var.
+dosyada. Tüm verileri tek bir zip dosyası olarak indirebiliriz, 300 MB
+civarı, A,B,C,D bölge dosyaları bu zip içinde, "All Tiles in One .zip
+file" seçeneği. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
+olacaktır, bazıları daha az, altta her bölgenin boyutları var.
 
-Zıp dosyasını açın, alttaki kod `g10g` bölgesini okuyup haritaliyor,
+Zip dosyasını açalım, alttaki kod `g10g` bölgesini okuyup haritalıyor,
 [5] kodu örnek alındı, `downsample` ile veriyi daha da azalttığımızı
 görebiliyoruz, istemeyenler bu satırı çıkartıp ya da `downsample=1`
 ile veriyi olduğu gibi kullanabilir.
@@ -291,3 +291,6 @@ Kaynaklar
 [4] [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/gltiles.html)
 
 [5] https://github.com/developmentseed/landsat-util
+
+
+

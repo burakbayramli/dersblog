@@ -56,12 +56,13 @@ bir nokta için, mesela 4,4 için aradeğerleme nasıl yapardık?
 ```python
 from scipy.interpolate import Rbf
 rbfi = Rbf(xx,yy,zz,function='gaussian')
-print (rbfi([4],[4]))
+print ('Aradeg:',rbfi([4],[4]), 'Gercek:',func(4,4))
 ```
 
 ```text
-[0.53970076]
+Aradeg: [0.53970076] Gercek: 0.540029869446153
 ```
+
 
 Sonuç akla yatkın, 4,4 kordinatlarına tekabül eden z değeri tepeye
 oldukca yakın.

@@ -98,7 +98,7 @@ plt.savefig('aradegerleme-interpolation_03.png')
 
 ![](aradegerleme-interpolation_03.png)
 
-Farkettiysek üstteki ızgara her ekseni 50 parçaya boldu, `interp`
+Farkettiysek üstteki ızgara her ekseni 50 parçaya böldü, `interp`
 objesi 30 parçalık izgara üzerinden yaratılmıştı; böylece elde olmayan
 bir sürü değeri sormuş olduk ama nihai grafik hala orijinale
 benziyor. Ayrıca Clough/Tocher yaklaşımı çok hızlı işler.
@@ -226,3 +226,6 @@ Kaynaklar
 [3] [Eğri Uydurma, Aradeğerleme (Interpolation) - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit2/egri_uydurma_aradegerleme__interpolation___2.html)
 
 [4] [Eğri Uydurma, Aradeğerleme (Interpolation) - 3](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit3/egri_uydurma_aradegerleme__interpolation___3.html)
+
+
+

@@ -70,7 +70,7 @@ matris oalrak verdik (tek boyutlu vektör de işliyor), RBF objesi
 
 ### CloughTocher2DInterpolator
 
-Hızlı işleyen bir kod, CloughTocher2DInterpolatör.
+Hızlı işleyen bir kod, CloughTocher2DInterpolator.
 
 ```python
 from scipy.interpolate import CloughTocher2DInterpolator
@@ -226,6 +226,3 @@ Kaynaklar
 [3] [Eğri Uydurma, Aradeğerleme (Interpolation) - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit2/egri_uydurma_aradegerleme__interpolation___2.html)
 
 [4] [Eğri Uydurma, Aradeğerleme (Interpolation) - 3](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit3/egri_uydurma_aradegerleme__interpolation___3.html)
-
-
-

@@ -169,6 +169,7 @@ Mesela vektor
 
 ```
 1, nan, nan, 2, 2, nan, 0
+```
 
 olsun, ve `nan` diyen yerlerde 1 ve 2 arası, sonraki `nan` yerine 2 ve 0
 arası değerler olmalı.

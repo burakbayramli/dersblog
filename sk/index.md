@@ -3,6 +3,8 @@
 
 ## En Son
 
+13/8 - [Aradeğerleme (Interpolation)](https://burakbayramli.github.io/dersblog/sk/2012/08/aradegerleme-interpolation.html)
+
 11/8 - [Hesapsal Bilim Ders 1-15 - Makaskirişler (Truss)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_15/ders_115.html)
 
 28/7 - [Hesapsal Bilim - Ders 1-8](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_08/ders_18.html)
@@ -10,8 +12,6 @@
 14/7 - [Zaman Serisi Veri Analizi](https://burakbayramli.github.io/dersblog/tser/tser_008_data/zaman_serisi_veri_analizi.html)
 
 5/7 - [Kesit Seviyeleri (Level Sets) ile İmaj Gruplamak](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app50lset/kesit_seviyeleri__level_sets__ile_imaj_gruplamak_.html)
-
-1/7 - [Uydu Fotoğrafları Erişimi](https://burakbayramli.github.io/dersblog/sk/2022/06/uydu-fotograf-satellite-image.html)
 
 ## Konular, Referans
 

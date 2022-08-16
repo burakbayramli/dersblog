@@ -7,9 +7,9 @@ elde x,y verisi var ise ki bu verinin f(x) = y gibi bir fonksiyondan
 verilince bunun eşleneceği y değeri acaba ne olur?
 
 Bu bağlamda aradeğerleme model uydurma, modele sorma ikilisi ile
-çözülebilir, mesela elimde alttaki gibi değerler var, veriye bir
-düz çizgi uyduruyorum, yeni nokta mesela 7 değeri sorulunca modele
-danışıyorum, ve oradan gelen y sonucu aradeğerlenen sonuç oluyor.
+çözülebilir, mesela elimde alttaki gibi değerler var, veriye bir düz
+çizgi uyduruyorum, yeni nokta 7 değeri sorulunca modele danışıyorum,
+ve oradan gelen y sonucu aradeğerlenen sonuç oluyor.
 
 ![](aradegerleme-interpolation_01.jpeg)
 

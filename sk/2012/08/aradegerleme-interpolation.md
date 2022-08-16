@@ -65,12 +65,10 @@ Aradeg: [0.53970076] Gercek: 0.540029869446153
 ```
 
 
-Sonuç akla yatkın, 4,4 kordinatlarına tekabül eden z değeri tepeye
-oldukca yakın.
-
-Görüldüğü gibi kullanım oldukca basit; x,y,z değerlerini iki boyutlu
-matris oalrak verdik (tek boyutlu vektör de işliyor), RBF objesi
-üzerinden ek değerler için aradeğerleme yaptık.
+4,4 kordinatlarına tekabül eden z değeri tepeye oldukca yakın,
+grafikle uyumlu. Görüldüğü gibi kullanım oldukca basit; x,y,z
+değerlerini iki boyutlu matris oalrak verdik (tek boyutlu vektör de
+işliyor), RBF objesi üzerinden ek değerler için aradeğerleme yaptık.
 
 ### CloughTocher2DInterpolator
 

@@ -50,8 +50,9 @@ plt.savefig('aradegerleme-interpolation_02.png')
 
 ![](aradegerleme-interpolation_02.png)
 
-Eğer üstteki fonksiyon elde olmasaydı, sadece verileri kullanarak yeni
-bir nokta için, mesela 4,4 için aradeğerleme nasıl yapardık?
+Eğer `func` fonksiyonu elde olmasaydı, onun verilerine bakarak RBF ile
+yeni bir nokta için, 4,4 diyelim, aradeğerlemeyi alttaki gibi
+yapardık,
 
 ```python
 from scipy.interpolate import Rbf

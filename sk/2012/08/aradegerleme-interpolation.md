@@ -100,7 +100,7 @@ plt.savefig('aradegerleme-interpolation_03.png')
 
 Farkettiysek üstteki ızgara her ekseni 50 parçaya boldu, `interp`
 objesi 30 parçalık izgara üzerinden yaratılmıştı; böylece elde olmayan
-bir sürü değeri sormuş olduk ama nihai grafik hala orijinale çok
+bir sürü değeri sormuş olduk ama nihai grafik hala orijinale
 benziyor. Ayrıca Clough/Tocher yaklaşımı çok hızlı işler.
 
 ### Pandas

@@ -1,6 +1,33 @@
 \documentclass[12pt,fleqn]{article}\usepackage{../../common}
 \begin{document}
-Dışbükeylik, Noktaları Çevreleyen Bölgeler, Dışbükey Zarf (Convex Hull)
+Nokta Bulutları, Noktaları Çevreleyen Bölgeler
+
+Üçgenleme, Delanuay (Triangulation)
+
+Delanuay tekniği bir nokta bulutunu veri alarak o noktaları birbiri ile
+bağlantılı üçgenler haline çevirmek için kullanışlıdır; bu tür noktalar mekanik
+mühendislikte ortaya çıkabilir, diferansiyel denklem çözmek için sayısal
+hesaplara gereken izgaralar Delanuay ile yaratılabilir. Noktalar verilir,
+üçgen bazlı izgara ortaya çıkartılır, bu izgara hücreleri baz alınarak
+hesabın gerisi işletilir.
+
+Kütüphane \verb!scipy! içinde Delanuay hesabı yapabilen kodlar var.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+from scipy.spatial import Delaunay
+points = [[101, 237], [198, 207], [316, 214], [ 58, 179], [162, 138], 
+          [217, 120], [310, 116], [153,  87], [257,  43]]
+points = np.array(points)
+
+tri = Delaunay(points,furthest_site=False)
+plt.triplot(points[:,0], points[:,1], tri.simplices)
+plt.savefig('algs_075_enc_12.png')
+\end{minted}
+
+\includegraphics[width=15em]{algs_075_enc_12.png}
+
+
+Dışbükey Zarf (Convex Hull)
 
 Verili herhangi bir boyuttaki bir nokta bulutunu düşünelim. Bu noktalar
 mesela bir yapay görüş uygulamasında bir görüntüsel bölgeyi (blob) temsil
@@ -238,7 +265,7 @@ print inside_quad(rect1, pt2)
 
 Sonuç beklenen şekilde geldi. 
 
-Sargilanan Sayi Algoritmasi (Winding Number Algoritm)
+Sargılanan Sayı Algorıtması (Winding Number Algoritm)
 
 Eğer bir nokta bir polygon içinde ise o noktadan her köşe noktasına birer
 çizgi çeksek ve ortaya çıkan açılara baksak, bu açılar 360'a toplanacaktır.
@@ -246,8 +273,7 @@ Fakat nokta dışarıda ise bu doğru olmazdı,
 
 \includegraphics[width=20em]{winding.jpg}
 
-Sargılanan sayı algoritması bunu temel alıyor. Surada [6] bahsediliyor,
-ornek kod alttadir,
+Sargılanan sayı algoritması bunu temel alıyor, bkz [6], örnek kod alttadır,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import math
@@ -375,9 +401,11 @@ Kaynaklar
 
 [4] Mathematics Stack Exchange, {\em Determine If 2D Pixel Inside a Region Without Formula},\url{http://math.stackexchange.com/questions/1956626/determine-if-2d-pixel-inside-a-region-without-formula}
 
-[5] Bayramli, {\em Çok Değişkenli Calculus, Ders 3}
+[5] Bayramlı, {\em Çok Değişkenli Calculus, Ders 3}
 
 [6] Stackoverflow, \url{https://stackoverflow.com/a/43822141/423805}
+
+[7] \url{https://en.wikipedia.org/wiki/Delaunay_triangulation}
 
 \end{document}
 

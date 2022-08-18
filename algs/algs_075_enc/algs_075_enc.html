@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Dışbükeylik, Noktaları Çevreleyen Bölgeler, Dışbükey Zarf (Convex Hull)</h1>
+<h1>Nokta Bulutları, Noktaları Çevreleyen Bölgeler</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dışbükeylik, Noktaları Çevreleyen Bölgeler, Dışbükey Zarf (Convex Hull)
+    <title>Nokta Bulutları, Noktaları Çevreleyen Bölgeler
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -24,6 +24,26 @@
 </script>
 </head>
 
+<p>Üçgenleme, Delanuay (Triangulation)</p>
+<p>Delanuay tekniği bir nokta bulutunu veri alarak o noktaları birbiri ile
+bağlantılı üçgenler haline çevirmek için kullanışlıdır; bu tür noktalar mekanik
+mühendislikte ortaya çıkabilir, diferansiyel denklem çözmek için sayısal
+hesaplara gereken izgaralar Delanuay ile yaratılabilir. Noktalar verilir,
+üçgen bazlı izgara ortaya çıkartılır, bu izgara hücreleri baz alınarak
+hesabın gerisi işletilir.</p>
+<p>Kütüphane <code>scipy</code> içinde Delanuay hesabı yapabilen kodlar var.</p>
+<pre><code class="python">from scipy.spatial import Delaunay
+points = [[101, 237], [198, 207], [316, 214], [ 58, 179], [162, 138], 
+          [217, 120], [310, 116], [153,  87], [257,  43]]
+points = np.array(points)
+
+tri = Delaunay(points,furthest_site=False)
+plt.triplot(points[:,0], points[:,1], tri.simplices)
+plt.savefig('algs_075_enc_12.png')
+</code></pre>
+
+<p><img alt="" src="algs_075_enc_12.png" /></p>
+<p>Dışbükey Zarf (Convex Hull)</p>
 <p>Verili herhangi bir boyuttaki bir nokta bulutunu düşünelim. Bu noktalar
 mesela bir yapay görüş uygulamasında bir görüntüsel bölgeyi (blob) temsil
 ediyor olabilir, ki gerçek dünyada o bölge bir obje olabilir. Ya da uzaklık
@@ -222,13 +242,12 @@ print inside_quad(rect1, pt2)
 </code></pre>
 
 <p>Sonuç beklenen şekilde geldi. </p>
-<p>Sargilanan Sayi Algoritmasi (Winding Number Algoritm)</p>
+<p>Sargılanan Sayı Algorıtması (Winding Number Algoritm)</p>
 <p>Eğer bir nokta bir polygon içinde ise o noktadan her köşe noktasına birer
 çizgi çeksek ve ortaya çıkan açılara baksak, bu açılar 360'a toplanacaktır.
 Fakat nokta dışarıda ise bu doğru olmazdı, </p>
 <p><img alt="" src="winding.jpg" /></p>
-<p>Sargılanan sayı algoritması bunu temel alıyor. Surada [6] bahsediliyor,
-ornek kod alttadir,</p>
+<p>Sargılanan sayı algoritması bunu temel alıyor, bkz [6], örnek kod alttadır,</p>
 <pre><code class="python">import math
 
 def offsetCoords(polygon, newOrigin):
@@ -341,5 +360,6 @@ sağdaki bazı noktaları dışarıda bırakmış. Bu noktalar rutinimiz tarafı
 <p>[2] The Geometry Center Home Page, <em>QHull</em>, <a href="http://www.qhull.org">http://www.qhull.org</a></p>
 <p>[3] Preparata, <em>Computational Geometry An Introduction</em></p>
 <p>[4] Mathematics Stack Exchange, <em>Determine If 2D Pixel Inside a Region Without Formula</em>,<a href="http://math.stackexchange.com/questions/1956626/determine-if-2d-pixel-inside-a-region-without-formula">http://math.stackexchange.com/questions/1956626/determine-if-2d-pixel-inside-a-region-without-formula</a></p>
-<p>[5] Bayramli, <em>Çok Değişkenli Calculus, Ders 3</em></p>
+<p>[5] Bayramlı, <em>Çok Değişkenli Calculus, Ders 3</em></p>
 <p>[6] Stackoverflow, <a href="https://stackoverflow.com/a/43822141/423805">https://stackoverflow.com/a/43822141/423805</a></p>
+<p>[7] <a href="https://en.wikipedia.org/wiki/Delaunay_triangulation">https://en.wikipedia.org/wiki/Delaunay_triangulation</a></p>

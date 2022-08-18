@@ -97,6 +97,57 @@ plt.savefig('algs_075_enc_13.png')
 </code></pre>
 
 <p><img alt="" src="algs_075_enc_13.png" /></p>
+<p>Farklı bir şekle bakalım,</p>
+<pre><code class="python">import pandas as pd
+
+points = np.array(pd.read_csv('cres.csv',header=None))
+plt.plot(points[:,0],points[:,1],'.')
+plt.savefig('algs_075_enc_14.png')
+</code></pre>
+
+<p><img alt="" src="algs_075_enc_14.png" /></p>
+<p>Bu nokta bulutu üzerinde Delanuay uygularsak,</p>
+<pre><code class="python">tri = Delaunay(points,furthest_site=False)
+plt.triplot(points[:,0], points[:,1], tri.simplices)
+plt.savefig('algs_075_enc_15.png')
+</code></pre>
+
+<p><img alt="" src="algs_075_enc_15.png" /></p>
+<p>Bu veride büyük açılı üçgenleri çıkartsak bile hala geriye iç kısımdaki bazı çok
+uzun çizgiler kalacak. Eğer aşırı uzun bağlantıları, çizgileri çıkartırsak belki
+istenilen objeye yaklaşabiliriz. "Çok uzun" tanımını izafi olarak tanımlamak
+lazım tabii ki, kod içine kafamıza göre gelişigüzel seçtiğimiz bir takım sihirli
+sabit sayılar koymak istemiyoruz, filtreyi şöyle tanımlayalım, eğer bir çizgi
+diğer tüm bağlantıların ortalamasından bir sapmadan fazla uzaktaysa o çizgiyi
+içeren üçgen çok büyük olarak kabul edilir ve çıkartılır. Büyük açı mantığını
+hala tutuyoruz.</p>
+<pre><code class="python">tri = Delaunay(points,furthest_site=False)
+res = []
+for t in tri.simplices:
+  A,B,C = points[t[0]],points[t[1]],points[t[2]]
+  e1 = B-A; e2 = C-A
+  num = np.dot(e1, e2)
+  n1 = np.linalg.norm(e1); n2 = np.linalg.norm(e2)
+  denom =  n1 * n2
+  d1 = np.rad2deg(np.arccos(num/denom))
+  e1 = C-B; e2 = A-B
+  num = np.dot(e1, e2)
+  denom = np.linalg.norm(e1) * np.linalg.norm(e2)
+  d2 = np.rad2deg(np.arccos(num/denom))
+  d3 = 180-d1-d2
+  res.append([n1,n2,d1,d2,d3])
+
+res = np.array(res)
+m = res[:,[0,1]].mean()*res[:,[0,1]].std()
+
+mask = np.any(res[:,[2,3,4]] &gt; 110) &amp; (res[:,0] &lt; m) &amp; (res[:,1] &lt; m )
+
+plt.triplot(points[:,0], points[:,1], tri.simplices[mask])
+plt.savefig('algs_075_enc_16.png')
+</code></pre>
+
+<p><img alt="" src="algs_075_enc_16.png" /></p>
+<p>Bu güzel bir şekil oldu.</p>
 <p>Dışbükey Zarf (Convex Hull)</p>
 <p>Verili herhangi bir boyuttaki bir nokta bulutunu düşünelim. Bu noktalar
 mesela bir yapay görüş uygulamasında bir görüntüsel bölgeyi (blob) temsil

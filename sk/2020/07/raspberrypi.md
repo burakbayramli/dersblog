@@ -139,12 +139,12 @@ neredeyse dizüstü bilgisayara eşdeğer bir sistem elde edebilmiş
 oluruz. 
 
 Eğer ufak monitörlerle uğraşılmak istenmezse bir seçenek RPi üzerinde
-masaüstü paylaşımı VNÇ programını aktif hale getirmek, ve bu servise
-mesela bir Android VNÇ istemci (client) ile bağlanmak. Böylece tüm
-masaüstünü Android üzerinden görebiliriz. `Pi | Preferences | RPi Configüration | Interfaces`
-menüsünden VNÇ aktif yapılır, Android üzerinde VNÇ (RealVNÇ) programı
-kurulur. Bu programa kullanıcı / şifre gerekli, realvnç.com adresinde
-üye olunur, ve istemciye girildiğinde + işareti ile yeni bir İP
+masaüstü paylaşımı VNC programını aktif hale getirmek, ve bu servise
+mesela bir Android VNC istemci (client) ile bağlanmak. Böylece tüm
+masaüstünü Android üzerinden görebiliriz. `Pi | Preferences | RPi Configuration | Interfaces`
+menüsünden VNC aktif yapılır, Android üzerinde VNC (RealVNC) programı
+kurulur. Bu programa kullanıcı / şifre gerekli, realvnc.com adresinde
+üye olunur, ve istemciye girildiğinde + işareti ile yeni bir IP
 adresi eklenir. Direk İP ile bağlanmak en iyisi.
 
 Mobil sistem şöyle olabilir demek ki, Android Hotstpot ile İnternet bağlantısını
@@ -254,4 +254,7 @@ Kaynaklar
 [3] https://www.raspberrypi.org/documentation/remote-access/ssh/
 
 [4] https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md
+
+
+
 

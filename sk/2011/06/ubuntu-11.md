@@ -17,32 +17,37 @@ sepeti, vs. gibi seyleri geri alabilirsiniz. "Have File Manager Handle
 Desktop" On yapilmali. 11.04Bu versiyon kurulus sirasinda masaustu
 (desktop) secenegi sunmuyor. Kurulum bittikten sonra ilk yuklenen
 desktop, asiri buyuk dugmelerle, habire animasyon yapan Windows
-Vista'ya benzer acaip bir ortam. Buradan hemen kurtulmak icin soldaki
-program ikonlari (toolbar) icinde + isaretinden uygulamalara girilir,
-oradan "Ubuntu Software Center" bulunur, ve center icinde
-"kubuntu-desktop" yazilir. Bu paket Internet'ten indirilecek, ve
-kurulacak. Sonra classic desktop secerek basit, sade bir desktop
-ortamina kavusabilirsiniz.Tex / Latex icintetex-.. paketleri degil
-alttaki kullanilmalisudo apt-get install texliveUbuntu 11 Emacs 23'u
-destekliyor, apt-get ile 22 alinamiyor, apt-get ile 23 gelecek,sudo
-apt-get install emacsEmacs uzerindeki preview-latex programini tekrar
-kurarken sunlari kullandiksudo apt-get install emacs-extra
-emacs-goodies-el preview-latex dvipng.emacs icindeki tanimlar su hale
-geldi:(custom-set-variables..'(preview-scale-function
-1.2)'(preview-image-type (quote dvipng))..)Eger bunlara ragmen
-islemediyse, Auctex (preview-latex paketi artik bu isimde) paketini
-kaynak olarak indirin, ve configure, make, sudo make install ile
-kurun. .emacs icine (load "preview-latex.el" nil t t) yazin ve hersey
-guzelce islemeye baslayacak.OpenCV 2.0Ubuntu paketleri icinde OpenCV
-2.1 icin destek var. Kurmak icin apt-get install python-opencv. Bu
-gerekli ek paketleri indirip kuracaktir. Eger webcam'e erisilemiyorsa,
-gstreamer-properties programindan WebCam ismini direk secmek
-gerekebilir.Chat IkonuSag ust kosede bir mektup zarfi ve balon
-sekillerinde gereksiz iki ikon var. Bunlar silmek uzerine tiklayarak
-mumkun olmadi. Suraya gore apt-get kullanmak lazim:sudo apt-get remove
-indicator-me indicator-messagesMatplotlibshow() komutu en son
-kurulumda problem cikardi. Cizim yaptirilan arka plandaki motorun
-(backend) secilmesi gerekiyor. WX iyi bir secenek, kurmak icin
+Vista'ya benzer acaip bir ortam.
+
+Buradan hemen kurtulmak icin soldaki program ikonlari (toolbar) icinde
++ isaretinden uygulamalara girilir, oradan "Ubuntu Software Center"
+bulunur, ve center icinde "kubuntu-desktop" yazilir. Bu paket
+Internet'ten indirilecek, ve kurulacak. Sonra classic desktop secerek
+basit, sade bir desktop ortamina kavusabilirsiniz.Tex / Latex
+icintetex-.. paketleri degil alttaki kullanilmalisudo apt-get install
+texliveUbuntu 11 Emacs 23'u destekliyor, apt-get ile 22 alinamiyor,
+apt-get ile 23 gelecek,sudo apt-get install emacsEmacs uzerindeki
+preview-latex programini tekrar kurarken sunlari kullandiksudo apt-get
+install emacs-extra emacs-goodies-el preview-latex dvipng.emacs
+icindeki tanimlar su hale geldi:
+
+(custom-set-variables..'(preview-scale-function
+1.2)'(preview-image-type (quote dvipng))..)
+
+Eger bunlara ragmen islemediyse, Auctex (preview-latex paketi artik bu
+isimde) paketini kaynak olarak indirin, ve configure, make, sudo make
+install ile kurun. .emacs icine (load "preview-latex.el" nil t t)
+yazin ve hersey guzelce islemeye baslayacak.OpenCV 2.0Ubuntu paketleri
+icinde OpenCV 2.1 icin destek var. Kurmak icin apt-get install
+python-opencv. Bu gerekli ek paketleri indirip kuracaktir. Eger
+webcam'e erisilemiyorsa, gstreamer-properties programindan WebCam
+ismini direk secmek gerekebilir.Chat IkonuSag ust kosede bir mektup
+zarfi ve balon sekillerinde gereksiz iki ikon var. Bunlar silmek
+uzerine tiklayarak mumkun olmadi. Suraya gore apt-get kullanmak
+lazim:sudo apt-get remove indicator-me
+indicator-messagesMatplotlibshow() komutu en son kurulumda problem
+cikardi. Cizim yaptirilan arka plandaki motorun (backend) secilmesi
+gerekiyor. WX iyi bir secenek, kurmak icin
 
 sudo apt-get install wxgtk2.8Matplotlib'in bundan haberdar olmasi icin
 
@@ -94,7 +99,4 @@ isterseniz, o zaman "sudo passwd [kullanici isminiz]" ile istediginiz
 sifreyi verebilirsiniz. Kendiniz super kullanici olmaniza ragmen sudo
 uzerinden tekrar kendi kullanicinizi referans etmeniz garip olabilir,
 ama kisa sifre bu sekilde memnun oluyor.
-
-
-
 

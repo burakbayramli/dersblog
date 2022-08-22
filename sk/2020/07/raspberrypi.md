@@ -10,6 +10,8 @@ bazlıdır, ve masaüstü kullanımına hazırdır,
 
 <img width="300" src="pi.png"/>
 
+### Kuruluş
+
 RPi kurmak için Mikro SD kart gerekli, isletim sistemi bu karttan
 okunuyor. Eğer satın alınan paketten içinde RPi işletim sistemi olan
 bir SD çıkmadıysa (bazı paketlere dahil ediliyor) bir diğer
@@ -109,7 +111,7 @@ Wifi üzerinden bu bağlantı işliyor çünkü aynı hotspot'a bağlandıysak
 aynı network'un içindeyiz demektir ve aynı network içinde makinalar
 birbirlerini bulabilirler.
 
-Bazi Ayarlar
+Bazı Ayarlar
 
 Bazi klavye kisayollari iptal etmek isteyebiliriz, mesela biz Alt-Space
 tusunu Emacs uzerinde ozel bir amacla kullaniyoruz, fakat bu RPi
@@ -122,8 +124,7 @@ gidilir orada her kisayol icin bir `<keybind>.. </keybind>` bolumu
 var, bizi ilgilendiren tanima gidip onu silebiliriz. RPi tekrar
 baslatilir ve degisim devreye girmis olur.
 
-
-Taşınabilir RPi 
+### Taşınabilir RPi
 
 Çok az miktarda elektronik aletle, mesela kampta vs, seyahat etmek
 isteyenler, cep telefonuna bir SSH müşteri programı kurup onun
@@ -135,7 +136,36 @@ olarak herhangi bir taşınabilir pil, powerbank, RPi işletebiliyor. Pi
 Pi çok rahat şekilde (Ubuntu olduğu için) her türlü harici diske
 erisebilir. Kablosuz klavye ile RPi'ye bağlanabiliyoruz, bu durumda
 neredeyse dizüstü bilgisayara eşdeğer bir sistem elde edebilmiş
-oluruz.
+oluruz. 
+
+Eğer ufak monitörlerle uğraşılmak istenmezse bir seçenek RPi üzerinde
+masaüstü paylaşımı VNÇ programını aktif hale getirmek, ve bu servise
+mesela bir Android VNÇ istemci (client) ile bağlanmak. Böylece tüm
+masaüstünü Android üzerinden görebiliriz. `Pi | Preferences | RPi Configüration | Interfaces`
+menüsünden VNÇ aktif yapılır, Android üzerinde VNÇ (RealVNÇ) programı
+kurulur. Bu programa kullanıcı / şifre gerekli, realvnç.com adresinde
+üye olunur, ve istemciye girildiğinde + işareti ile yeni bir İP
+adresi eklenir. Direk İP ile bağlanmak en iyisi.
+
+Mobil sistem şöyle olabilir demek ki, Android Hotstpot ile İnternet bağlantısını
+paylaşır, bunu yaparken DHCP üzerinden İP adresi de yaratmaktadır,
+bu adresi `ifconfig -a` ile bulup (192.168.x.x gibi olur çoğunlukla)
+ona ya SSH ya da VNC ile bağlanabiliriz. Powerbank ile RPi isletilebilir,
+bundan bahsettik, zaten telefonun pili de benzer sekilde doldurulabilmektedir.
+
+Eğer tüm VNC masaüstü ekranda görülmüyorsa RPi düşük çözünürlükle
+açılış yapmış olabilir, `/boot/config.txt` içinde
+
+```
+framebuffer_width=1280
+framebuffer_height=720
+```
+
+satırlarını aktif yaparsak RPi başlayınca belli bir çözünürlüğü
+zorlamış oluruz.
+
+
+### Donanım Programcılığı
 
 Pin Kontrolu, Ilk Program
 

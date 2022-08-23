@@ -3,6 +3,8 @@
 
 ## En Son
 
+23/8 - [Hesapsal Bilim Ders 1-17 - Sonlu Öğeler Metodu - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_17/ders_1.17.html)
+
 19/8 - [GLOBE Verisi, Yükseklik Haritası](https://burakbayramli.github.io/dersblog/sk/2019/04/elevation.html#globe)
 
 13/8 - [Aradeğerleme (Interpolation)](https://burakbayramli.github.io/dersblog/sk/2012/08/aradegerleme-interpolation.html)

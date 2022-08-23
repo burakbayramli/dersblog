@@ -1,5 +1,4 @@
 import os, sys, glob, shutil
-sys.path.append("../.."); import util
 
 pdfs = " ".join(sorted(list(glob.glob('./*/*.pdf'))))
 d = os.environ['HOME']
@@ -23,6 +22,7 @@ elif sys.argv[1] == 'tex':
     os.system("pdflatex -shell-escape %s" % file[0])
         
 elif sys.argv[1] == 'md':
+    sys.path.append("../.."); import util
     file = glob.glob('*.tex')
     ftex = file[0]; path = os.getcwd()
     util.tex_mathjax_html(path + "/" + ftex, path + "/" + "out.html","adkasdf")

@@ -91,7 +91,6 @@ if __name__ == "__main__":
             <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
             <meta name="description" content="ODE, Fizik, Çok Değişkenli Calculus, Lineer Cebir, Hesapsal Bilim, İstatistik, Fonksiyonel Analiz, Yapay Zeka, Zaman Serisi Analizi ders notlari.">
             <title>%s</title>
-            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1121997141902625" crossorigin="anonymous"></script>            
             </head>  
             <body>                    
             <p>

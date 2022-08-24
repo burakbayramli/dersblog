@@ -75,3 +75,4 @@ sh run.sh $LH_DATA_DIR/$1/[tablo]_idx.sql
 
 
 
+

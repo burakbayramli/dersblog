@@ -50,3 +50,4 @@ artık cvs komutu başarıyla tamamlanacak. Depoda artık güncel dosyanız
 bulunuyor!
 
 
+

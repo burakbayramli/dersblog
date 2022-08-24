@@ -71,3 +71,4 @@ yaratıyor olurduk. Bu hem hafıza hem CPU israfı demek olurdu.
 
 
 
+

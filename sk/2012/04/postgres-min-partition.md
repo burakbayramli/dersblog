@@ -10,3 +10,4 @@ PG tabaninin bir kolonu temel alarak partition etme ozelligi var. Bu komut, seci
 
 
 
+

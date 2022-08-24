@@ -20,3 +20,4 @@ numara ile CNN sayfalari gormeniz mumkundur.
 
 
 
+

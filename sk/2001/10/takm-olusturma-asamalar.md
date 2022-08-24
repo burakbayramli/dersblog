@@ -79,3 +79,4 @@ azaltilmasi
 bilinçli olarak bu noktalara dikkat etmelidirler.
 
 
+

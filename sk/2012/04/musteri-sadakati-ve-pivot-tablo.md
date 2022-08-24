@@ -39,3 +39,4 @@ Bu ciktiyi da out2.csv de bulabilirsiniz.
 
 
 
+

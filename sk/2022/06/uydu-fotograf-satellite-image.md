@@ -108,3 +108,4 @@ Detaylar net gözüküyor..
 Kaynaklar
 
 [1] [The Carpentries Incubator](https://carpentries-incubator.github.io/geospatial-python/19-access-data/index.html)
+

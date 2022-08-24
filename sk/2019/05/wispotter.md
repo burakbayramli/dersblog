@@ -22,3 +22,4 @@ Hataların bazı adreslerin onbelleklenmesi, ya da ziyaret tarihçesinin
 dolması, vs. gibi durumlarda olduğu söyleniyor, gerçi biz oralarda
 temizlik yapsak ta bu problem çıkabiliyor. Son seçenek üstteki yaklaşım. 
 
+

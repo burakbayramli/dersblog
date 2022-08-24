@@ -16,3 +16,4 @@ Bu altyapi ile mrjob usulu tanimlanan class job dosyalari ile esle/indirge hesap
 
 
 
+

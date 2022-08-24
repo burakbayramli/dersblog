@@ -420,3 +420,4 @@ herhangi bir nesnenin metot çâğrımları üzerinde istediğimiz gibi
 yakalama yapabiliyoruz, bütün bunlar sâğlanmış. CGLib'in tarihçesini
 merak edenler için ekleyeyim, bu kütüphane BCel ve ASM üzerinde
 yazılmış.
+

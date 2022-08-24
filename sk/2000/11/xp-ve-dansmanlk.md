@@ -90,3 +90,4 @@ kurmaya başlayınca, danışmanlar toplu bir "hayır" korosuna
 dönüşebilirler. Yukarıdaki "dengeleme" sözcüğü de bu zamandan miras
 kalmıştır, fakat yazıda tutulacaktır.  Yani, stratejik dönemde ve
 sonrasında hem dengeleyin, hem de müşterinizin "ufuklarını" açın.
+

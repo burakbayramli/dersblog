@@ -390,3 +390,4 @@ düzen ise yaramayacaktır yani.Martin Fowler
 
 
 
+

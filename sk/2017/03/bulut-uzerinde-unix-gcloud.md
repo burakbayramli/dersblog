@@ -110,3 +110,4 @@ sudo mount -o discard,defaults /dev/sdb /mnt/hd2
 
 ![](Screenshot%2Bfrom%2B2017-03-24%2B14-15-53.png)
 ![](Screenshot%2Bfrom%2B2017-03-24%2B14-22-47.png)
+

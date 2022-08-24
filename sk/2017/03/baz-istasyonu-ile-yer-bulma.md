@@ -39,3 +39,4 @@ Not: Kaynaklarda telefonun etrafindaki birden fazla olabilecek baz istasyonunun 
 
 
 
+

@@ -104,3 +104,4 @@ erişti.  Bu yaklaşım da yazılım projelerinde bir devrim oldu.
 
 
 
+

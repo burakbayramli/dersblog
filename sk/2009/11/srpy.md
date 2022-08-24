@@ -51,3 +51,4 @@ rasgele sayinin ekrana basildigini gorecegiz.
 
 
 
+

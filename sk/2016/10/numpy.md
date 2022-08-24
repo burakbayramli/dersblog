@@ -329,3 +329,4 @@ Ekler
 [Grafiklemek, Matplotlib, Pandas](../../2020/02/grafiklemek.html)
 
 
+

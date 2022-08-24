@@ -21,3 +21,4 @@ ana sayfadaki kutu bu is icin zaten, baglantiyi oraya gireriz, ve Go!
 ile not defterimizin son halini elde ederiz.
 
 
+

@@ -96,3 +96,4 @@ tekerleğe baglayın. Program çalışınca, oyuncak arabanız iki kere
 ileri, iki gere geri gidecek.
 
 ![](lego.jpg)
+

@@ -30,3 +30,4 @@ cekirdek %100'e yakin kullanim (utilization) rapor ettiler.Kaynak
 
 
 
+

@@ -198,3 +198,4 @@ Tekrarlamak gerekirse: tepe noktası "sağında ve solunda vadiler olan orta nok
 
 ![](test_02.png)
 ![](test_01.png)
+

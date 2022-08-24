@@ -109,3 +109,4 @@ https://youtu.be/Cgxsv1riJhI - bir diger YOLO ustasindan video
 ![](stoppred.png)
 
 ![](tlpred.png)
+

@@ -16,3 +16,4 @@ rengi için kullanılıyor (255,0,0 kırmızı rengi).
 
 
 
+

@@ -10,3 +10,4 @@
 
 [Yerel Ağ (Network) Kurmak - Ubuntu](../../2013/09/yerel-ag-kurmak-ubuntu.html)
 
+

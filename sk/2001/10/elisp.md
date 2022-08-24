@@ -44,3 +44,4 @@ Komut satırına elisp içinden bir program işlettirebilmek için
 
 
 
+

@@ -15,3 +15,4 @@ olarak isletildikten sonra, bir CSV dosyasi c:/temp/cikti.csv olarak
 
 
 
+

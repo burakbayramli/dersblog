@@ -155,3 +155,4 @@ ffmpeg -y -ss 00:02:10 -i vid.mp4 -t 00:00:04 -q:a 0 -map a out.mp3
 Kaynaklar
 
 https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/
+

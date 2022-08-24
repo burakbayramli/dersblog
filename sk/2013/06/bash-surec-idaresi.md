@@ -52,3 +52,4 @@ komutu arka plana atmaya / isletmeye yarar (background process).
 
 
 
+

@@ -17,3 +17,4 @@ Python uzerinden kendi arama mekanizmanizi yaratmak.
 
 [Doküman İndeksleme, Arama](../../2018/12/dokuman-indeksleme-arama.html)
 
+

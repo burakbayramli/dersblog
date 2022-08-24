@@ -74,3 +74,4 @@ olursa sunu yap, bu olursa bunu yap' seklinde programlardir.
 
 
 
+

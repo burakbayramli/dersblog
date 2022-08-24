@@ -36,3 +36,4 @@
 
 [Python ve Komut Satırına Erişmek, Popen](12/popen-python-ve-komut-satirina-erismek.html)
 
+

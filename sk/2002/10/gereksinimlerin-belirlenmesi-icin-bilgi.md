@@ -142,3 +142,4 @@ fikir üretiminden hemen sonra fikirin gerçeklestirilmesi saglanir.
 
 
 
+

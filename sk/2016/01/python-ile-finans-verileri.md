@@ -142,3 +142,4 @@ görüyoruz, 1.83 diyor. Bakalım ne olacak.
 
 
 
+

@@ -20,3 +20,4 @@ iletisimi, kullanimi bitince kapatilmayan bir Webcam gibi.Kaynak
 
 
 
+

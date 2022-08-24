@@ -576,3 +576,4 @@ Referans, Kaynaklar
 
 [Paralel KMeans, Hadoop](https://burakbayramli.github.io/dersblog/algs/algs_085_kmeans_mr/paralel_kmeans_hadoop.html)
 
+

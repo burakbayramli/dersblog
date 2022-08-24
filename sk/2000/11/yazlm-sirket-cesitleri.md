@@ -182,3 +182,4 @@ bahsettiğimiz gibi, eğer danışman şirket belli bir ürün demeti
 üzerinde uzmanlayı (odaklanmayı) başarır ise, o zaman daha az zamanlı
 ve fiyatlı proje satmayı başarabilir, ve programcıyı daha az öğütür.
 
+

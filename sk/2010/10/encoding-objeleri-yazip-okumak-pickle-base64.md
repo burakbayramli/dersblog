@@ -134,3 +134,4 @@ onu çıkartsak ta geriye kodlama bize aynı sonucu verecektir.
 
 
 
+

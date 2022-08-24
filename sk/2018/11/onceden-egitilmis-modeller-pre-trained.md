@@ -415,3 +415,4 @@ Cevap
 ![](image_0088.jpg)
 ![](image_0087.jpg)
 ![](vgg16.png)
+

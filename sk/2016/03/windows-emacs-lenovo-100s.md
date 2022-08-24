@@ -180,3 +180,4 @@ Win10 kafasina gore ekran aydinligini azaltiyor; bu "adaptive brightness" denen 
 
 
 
+

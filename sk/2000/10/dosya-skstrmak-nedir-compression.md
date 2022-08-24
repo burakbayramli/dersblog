@@ -43,3 +43,4 @@ bilgileri küçültüp büyültebilirler.
 
 
 
+

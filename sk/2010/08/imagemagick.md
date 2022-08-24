@@ -106,3 +106,4 @@ GİF resmi optimize etmek için
 convert -scale 70% -fuzz 6% +dither -layers Optimize +map in.gif out.gif
 ```
 
+

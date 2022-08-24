@@ -65,3 +65,4 @@ seçerek uygulamanın dilini tamamen değiştirmeniz mümkün.
 
 ![](itracker.gif)
 
+

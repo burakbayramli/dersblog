@@ -179,3 +179,4 @@ telefondan ssh, scp ile bağlanıp 'servis' olarak RPi kullanabiliriz.
 Bluetooth klavye + Telefon + Pi tasinabilir bir Linux ortami saglar. 
 
 
+

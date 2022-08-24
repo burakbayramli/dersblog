@@ -162,3 +162,4 @@ Kaynaklar
 [2] [Virtualenv](../../2018/08/virtualenv-python-izole-sanal-calsma.html)
 
 [3] http://guide.python-distribute.org/creation.html
+

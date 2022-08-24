@@ -71,3 +71,4 @@ Bu kodla gunluk bazda bir suru olcum noktasini aliyoruz, kolonlar
 olarak bir matris icine yerlestiriyoruz, ve csv dosyasi olarak diske
 yaziyoruz.
 
+

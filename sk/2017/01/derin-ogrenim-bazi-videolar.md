@@ -36,3 +36,4 @@ YSA egitiminde kullanilan geriye dogru yayilma (backprop) algoritmasini kimin ke
 
 
 
+

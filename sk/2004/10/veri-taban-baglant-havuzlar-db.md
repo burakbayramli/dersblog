@@ -153,3 +153,4 @@ kullanmaktadır. Her iki uygulama da, daha önce bahsettiğimiz gibi,
 Hibernate tarafından kullanılmaktadırlar.
   
 
+

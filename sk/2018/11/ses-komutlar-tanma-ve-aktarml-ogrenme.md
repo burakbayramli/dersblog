@@ -166,3 +166,4 @@ Yani ses komutunu bırakalım, müzik üzerinde, ve müziğin tipini kategorize 
 
 
 ![](diagram.png)
+

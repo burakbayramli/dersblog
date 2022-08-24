@@ -25,3 +25,4 @@ res.to_csv("sonuc.csv",  sep='\t')
 
 
 
+

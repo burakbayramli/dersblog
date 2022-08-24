@@ -13,3 +13,4 @@ Amazon bu veriyi alinca o sirket icin ayirdigi veri server makinlarina
 bu veriyi yukleyecek.
 
 
+

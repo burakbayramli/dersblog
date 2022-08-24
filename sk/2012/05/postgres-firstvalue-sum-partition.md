@@ -56,3 +56,4 @@ kullanabilmeye baslar. SQL kumesel olarak dusunur, ve her satirin bu
 sebeple atomik olmasi iyidir, satirlarin kendi hakkindaki bilgiyi
 kendi uzerinde tasimasi lazimdir -- OVER.. PARTITION ile gereken bu
 tur ek bilgileri satirlara ekleyebilmis oluruz.
+

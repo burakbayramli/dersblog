@@ -26,3 +26,4 @@ Felzenswalb kumelemesi bu arada Minimum Kapsamli Agac (Minimum Spanning Tree) ka
 
 
 
+

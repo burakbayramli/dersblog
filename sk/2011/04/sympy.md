@@ -69,3 +69,4 @@ log(I⋅x - q)
 ![](heat.png)
 
 ![](heat_sol.png)
+

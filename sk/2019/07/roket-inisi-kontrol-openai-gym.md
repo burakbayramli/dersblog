@@ -121,3 +121,4 @@ Diğer değişkenlerden, `env.remaining_fuel` kalan yakıtı raporlar,
 değişkenleri `dir(env)` ile görebiliriz.
 
 
+

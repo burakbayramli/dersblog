@@ -116,3 +116,4 @@ sonuç ortamı üzerinde işletir.
 
 ![](kod_hareketleri.gif)
 
+

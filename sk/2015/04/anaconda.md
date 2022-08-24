@@ -106,3 +106,4 @@ Ama en iyisi belki de Emacs'ı komut satırından, bir conda çevresine
 girdikten sonra isletmek.
 
 
+

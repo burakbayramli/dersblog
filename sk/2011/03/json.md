@@ -112,3 +112,4 @@ print (type(liste1))
 Not: Programcılar bu paketin ismini 'jey-sin' olarak telafuz eder;
 erkek ismi Jason ile ses benzerliği var, yazanlar herhalde bunu bilerek
 ismi seçtiler.
+

@@ -30,3 +30,4 @@ tekrarlayacak, bu sirada verileri toplayacak. Ornek veri dosyasi da
 ekte bulunabilir.
 
 ![](complex-world.png)
+

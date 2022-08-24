@@ -58,3 +58,4 @@ bu nesnelerin yerine taklit olanların konulacağını göreceksiniz.
 
 
 
+

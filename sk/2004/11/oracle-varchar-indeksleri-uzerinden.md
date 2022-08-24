@@ -60,3 +60,4 @@ bahsedilen veri ambarını şu anda Oracle 10g üzerinde tutmaktadır.
 
 
 
+

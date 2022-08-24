@@ -27,3 +27,4 @@ Ve bugune geliyoruz: veri analizini akim islemesi (stream processing) olarak gor
 
 
 
+

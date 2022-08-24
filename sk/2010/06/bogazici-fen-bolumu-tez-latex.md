@@ -7,3 +7,4 @@ indirebilirsiniz. Bizim tezin icerigi bu zip icinde, gerekli
 LaTeX dosyalari vs. hepsi dahil; belki baska master / doktora
 ogrencileri icin faydali olur.
 
+

@@ -102,3 +102,4 @@ bellekteDosya = yardimci.substitute(degistir, bellekteDosya);
 
 
 
+

@@ -121,3 +121,4 @@ koyduk", vs gibi.  Karakterler bunlar.  Hiç elektronikçi ile
 çalışmadım, fakat CompEng'e benzeyeceğini düşünüyorum. Eğitim olarak
 müfredatlar birbirine yakındır.
 
+

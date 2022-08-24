@@ -37,3 +37,4 @@ işleme ÜRL-rewriting denir, yani "anında link değiştirme".
 
 
 
+

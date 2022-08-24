@@ -10,3 +10,4 @@ android:icon="@drawable/[dosya]">olarak referans vermemiz yeterli.Not:
 
 
 
+

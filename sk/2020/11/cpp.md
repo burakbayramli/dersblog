@@ -295,3 +295,4 @@ Kaynaklar
 [2] https://linuxconfig.org/how-to-install-g-the-c-compiler-on-ubuntu-18-04-bionic-beaver-linux
 
 [3] https://stackoverflow.com/questions/58058/using-c-classes-in-so-libraries
+

@@ -144,3 +144,4 @@ Sehir ici etiketlenmis goruntuler icin Cityscapes veri seti ilginc.
 
 ![](out2.png)
 ![](out4.png)
+

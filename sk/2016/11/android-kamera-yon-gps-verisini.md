@@ -374,3 +374,4 @@ public class MyCamera extends Activity implements SensorEventListener
 
 
 
+

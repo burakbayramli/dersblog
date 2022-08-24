@@ -10,3 +10,4 @@
 
 [Gavin King İle Mülâkat](10/gavin-king-ile-mulakat.html)
 
+

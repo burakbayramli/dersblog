@@ -47,3 +47,4 @@ Fikri [şuradaki arkadaştan](https://mec560sbu.github.io/Prersentations/Pres_Sy
 
 
 
+

@@ -22,3 +22,4 @@ Fakat gerçek dünyada şu olur: kullanılmış dış dünyadan gelen / gelmis v
 
 
 
+

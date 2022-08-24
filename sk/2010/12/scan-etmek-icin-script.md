@@ -16,3 +16,4 @@ two_digitize(i) run_command("scanimage --resolution 200 -x 200 -y 100
 
 
 
+

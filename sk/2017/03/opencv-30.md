@@ -44,3 +44,4 @@ g++ -o videostab.exe videostab.o `pkg-config --libs opencv`
 
 
 
+

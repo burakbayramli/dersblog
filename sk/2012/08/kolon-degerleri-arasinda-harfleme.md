@@ -46,3 +46,4 @@ uzakligi kullanmadik, bu iki adresin ayni olmasi demek olurdu. Onlarla
 ilgilenmiyoruz. 3'ten fazla uzaklik ise herhalde o adresin hakikaten
 degisik bir fiziki adres oldugu anlamina gelirdi. 
 
+

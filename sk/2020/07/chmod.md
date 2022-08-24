@@ -74,3 +74,4 @@ ezbere bilirler, ya da kafadan ikisel / onlu tercüme yaparlar.
 
 
 
+

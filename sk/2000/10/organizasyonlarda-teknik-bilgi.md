@@ -73,3 +73,4 @@ değil, arz ucunde çözmek lazımdır.
 
 
 
+

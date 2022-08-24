@@ -80,3 +80,4 @@ Kaynak
 
 [https://www.sqlite.org/fts3.html](https://www.sqlite.org/fts3.html)
 
+

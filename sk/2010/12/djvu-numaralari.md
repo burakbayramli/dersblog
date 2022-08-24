@@ -22,3 +22,4 @@ Sona eklemek icin
 djvm -i dosya.djvu ek.djvu
 
 
+

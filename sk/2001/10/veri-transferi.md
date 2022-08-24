@@ -48,3 +48,4 @@ bilmeden yazılmış SQL arasındaki fark 10 kat bile olabilir!
 
 
 
+

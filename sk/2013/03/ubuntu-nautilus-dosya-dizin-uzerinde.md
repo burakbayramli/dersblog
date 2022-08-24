@@ -24,3 +24,4 @@ geciliyor, ama URI oldugu icin icinde file:/// ibaresi var. Biz de o
 degeri cikartiyoruz. Ardindan istenilen ek islem yapilabilir.
 
 ![](Screenshotfrom2013-03-31153819.png)
+

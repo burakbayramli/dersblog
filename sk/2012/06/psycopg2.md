@@ -118,3 +118,4 @@ Jupyter kurmak istemeyenler, direk markdown md dosyaları içinden
 eklentiyi kullanabilir.
 
 
+

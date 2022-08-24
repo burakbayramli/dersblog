@@ -64,3 +64,4 @@ akılda tutulması gerekir.
 
 
 
+

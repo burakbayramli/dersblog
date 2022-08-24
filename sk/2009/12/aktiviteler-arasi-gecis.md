@@ -17,3 +17,4 @@ yapiliyor. Bu yuzden static kullanimin tehlikesi yok.
 
 
 
+

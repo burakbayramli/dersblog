@@ -73,3 +73,4 @@ Octave tarafinda
 ```
 load A.mat
 ```
+

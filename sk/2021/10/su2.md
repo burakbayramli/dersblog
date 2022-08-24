@@ -116,3 +116,4 @@ Kaynaklar
 
 [1] https://su2code.github.io/tutorials/Inc_Turbulent_NACA0012/
 
+

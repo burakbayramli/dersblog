@@ -89,3 +89,4 @@ D.L. Goodstein, J.R. Goodstein, "Feynman'ın Kayıp Dersi", s. 37
 
 
 
+

@@ -79,3 +79,4 @@ yapip, ortak olmasi gereken islemi Tofas nesnesinden, Araba nesnesine
 mumkundur.  Bu islemi yaptiktan sonra, test programlariniz tekrar
 isletmeyi unutmayin..
 
+

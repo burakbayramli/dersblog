@@ -26,3 +26,4 @@ pd.dismiss(); // diger gui elementleri burada yaratilabilir } };}
 
 
 
+

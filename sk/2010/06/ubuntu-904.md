@@ -39,3 +39,4 @@ mesajlarini kaldirmak icin su yeterli:sudo mv
 /usr/share/dbus-1/services/org.freedesktop.Notifications.service.disabledBilgisayari
 kapatip actiktan sonra mesajlarin bir daha gelmedigini goreceksiniz.
 
+

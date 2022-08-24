@@ -207,3 +207,4 @@ python -u console.py bing dog --limit 10 --json
 
 10 tane kopek imaji indirilip dataset dizini altina yazilacak.
 
+

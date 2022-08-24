@@ -119,3 +119,4 @@ Kitap olarak PostGIS In Action tavsiye edilir.
 
 
 
+

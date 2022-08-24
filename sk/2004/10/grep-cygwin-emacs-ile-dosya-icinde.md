@@ -45,3 +45,4 @@ ile oraya buraya tıklamaya gerek yok! Örnek bir çıktıyı aşağıda
 görüyoruz.
 
 ![](emacs_cygwin_find.jpg)
+

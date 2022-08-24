@@ -196,3 +196,4 @@ Eğer dosya büyüklüğüne göre sıralı liste istersek (içinde olduğumuz d
 ```
 sudo du -hb --max-depth=2 . | sort -n
 ```
+

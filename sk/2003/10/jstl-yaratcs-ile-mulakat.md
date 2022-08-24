@@ -219,3 +219,4 @@ birisi bu mantığı nesne modeli üzerine koyabilir, ve bu model
 edebilir.
 
 ![](BayernBig.jpg)
+

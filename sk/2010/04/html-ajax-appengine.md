@@ -65,3 +65,4 @@ gelebilmek icin boyle yapmak daha mantikli.
 
 
 
+

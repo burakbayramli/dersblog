@@ -108,3 +108,4 @@ Yine manage drivers'dan sqllite icin yeni profil yaratilir. Sonra yeni baglanti 
 
 
 
+

@@ -65,3 +65,4 @@ gibi "farkli" bir isimde cikacak ikon uzerinden yapmak. Bunun
 haricinde baska hicbir ek tanima gerek yok.
 
 ![](Screenshotfrom2014-04-10161526.png)
+

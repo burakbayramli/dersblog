@@ -30,3 +30,4 @@ from_perc ve to_perc yuzde degerleri. 
 
 
 
+

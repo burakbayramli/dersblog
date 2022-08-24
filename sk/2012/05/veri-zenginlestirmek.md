@@ -26,3 +26,4 @@ SELECT .., last_value(orderdate) over (partition by customerid) < (now() - inter
 
 
 
+

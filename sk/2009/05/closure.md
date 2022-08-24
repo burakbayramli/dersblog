@@ -20,3 +20,4 @@ printer()
 Ustteki ornekte '5' sayisi ekrana basilacaktir.
 
 
+

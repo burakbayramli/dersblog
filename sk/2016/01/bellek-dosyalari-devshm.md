@@ -11,3 +11,4 @@ kodlanmış, ama sürekli olarak hızlı bir şekilde bu ikisi arasında
 alışveriş istiyorsak, transferi direk `/dev/shm` üzerinden yapmak
 problemi çözer.
 
+

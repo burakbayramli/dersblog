@@ -73,3 +73,4 @@ yazılarımız altta,
 [Pandas](../../2016/08/pandas.html)
 
 
+

@@ -170,3 +170,4 @@ basacaktır. İstediğiniz noktalara zoom yapmak için zoom ikonuna
 tıklayıp istenen bölgeyi haritada bir dikdörtgen içine aldığınız zaman
 o bölgenin detayları görülecektir. Üstte paylaştığımız yazıda bunun
 Japonya için yapıldığını görüyoruz.
+

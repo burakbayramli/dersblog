@@ -71,3 +71,4 @@ bağlantısının ortak kullanıldığı yerlerde pek çok kişi bir proxy
 gözükebilirler, o zaman üstteki `key_func` için farklı bir çağrı
 kullanabilir.
 
+

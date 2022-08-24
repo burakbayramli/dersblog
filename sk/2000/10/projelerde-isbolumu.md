@@ -54,3 +54,4 @@ bilgisini kullanıldığı alanlarda olabilir.  Fakat takımın çoğunluğunun
 kural geçerli olmalıdır.
 
 ![](cake.jpg)
+

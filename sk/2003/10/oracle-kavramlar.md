@@ -77,3 +77,4 @@ belirttiğimiz yokluk değeri (default) alan1 altında yaratılır.
 
 
 
+

@@ -83,3 +83,4 @@ karakterinin kaynağı artık C:\gecici\kaynak\ altında.
 
 
 
+

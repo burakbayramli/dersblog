@@ -48,3 +48,4 @@ olacak sekilde ayarladik. O zaman sonuc:Burada bir float degenr var:
 
 
 
+

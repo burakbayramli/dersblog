@@ -122,3 +122,4 @@ bu öğeye `o.was` diye erişiyoruz.
 
 
 
+

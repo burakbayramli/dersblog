@@ -188,3 +188,4 @@ listeyi dışarı vermeden önce `numpy.sum(..)` ile topluyoruz.
 
 
 
+

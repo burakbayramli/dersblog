@@ -11,3 +11,4 @@ Python icin yazilmis memory_profiler adli bir paket, etiketleme (annotation) oze
 
 
 
+

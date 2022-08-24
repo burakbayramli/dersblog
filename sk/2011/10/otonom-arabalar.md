@@ -13,3 +13,4 @@ insan, bisiklet, diger arabalar, vs gibi.
 
 
 
+

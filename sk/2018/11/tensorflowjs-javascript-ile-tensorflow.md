@@ -296,3 +296,4 @@ Tensor
 ```
 
 Görüldüğü gibi doğru bit 1 halinde, sırasıyla 7., 6. ve 0. bitler.
+

@@ -25,7 +25,9 @@ Sistemden cikip login ekranina donunce Ubuntu sembolu uzerine tiklayin, Cinnamon
 
 Sol altta Menu | Preferences | Mouse Touchpad'i baslatin, Touchpad'den "Tap to Click"i OFF haline getirilebilir. Ben daha cok klavye bazli is yaptigim ve hizli kullanma amacli oldugum icin pad'in tiklama amacli olmasi karisiklik yaratiyor.
 
-Emacs'de Alt-Space'i cok kullaniyoruz fakat Gnome bu kombinasyonu "kapmis". Iptal etmek icin Menu | Preferences | Keyboard | Shortcuts ve Windows | Activate Windows Menu icin Alt-Space iptal edilir.
+Emacs'de Alt-Space'i cok kullaniyoruz fakat Gnome bu kombinasyonu
+"kapmis". Iptal etmek icin Menu | Preferences | Keyboard | Shortcuts
+ve Windows | Activate Windows Menu icin Alt-Space iptal edilir.
 
 Ilk kurulacak programlar
 
@@ -78,6 +80,7 @@ Alt serit (Taskbar) uzerine masaustunden birakilan herhangi bir
 program, kisayol alt seritte gosterilir. Alt seritten program
 cikartmak icin program uzerine gelip Alt + Fare Sol Tiklama, ve Remove
 secilir. 
+
 
 
 

@@ -216,3 +216,4 @@ Diğer Postgres Yazıları
 
 [Enlemler, Boylamlar ve PostgreSql PostGis](../../2012/06/enlemler-boylamlar-ve-postgresql.html)
 
+

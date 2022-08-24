@@ -53,3 +53,4 @@ Not: bazi durumlarda ./configure cagrisini --with-pgm ile yapmak gerekebilir.
 
 
 
+

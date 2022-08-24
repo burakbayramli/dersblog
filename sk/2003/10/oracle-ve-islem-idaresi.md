@@ -38,3 +38,4 @@ bağlantı üzerindeki ilk SQL komutu otomatik olarak sonraki işlemi
 başlatır.
 
 ![](transaction.jpg)
+

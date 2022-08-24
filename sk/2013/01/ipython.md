@@ -137,3 +137,4 @@ gerektirir.
 
 
 ![](Screenshotfrom2013-01-05162202.png)
+

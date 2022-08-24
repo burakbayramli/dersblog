@@ -20,3 +20,4 @@ Hatta Platfora, Zoomdata gibi teknolojiler, urunler bu sorgularin gorsel araclar
 
 
 
+

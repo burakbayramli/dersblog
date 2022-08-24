@@ -7,3 +7,4 @@ sembolu bulup gosteriyor. Altta bizim theta icin yaptigimiz arama..
 
 ![](detexify.png)
 
+

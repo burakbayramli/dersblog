@@ -46,3 +46,4 @@ kapatıldığında veriyi `out.csv` dosyasına yazar.
 
 Anahtar kelimeler: click, onclick, sample data, ornek veri, uretmek
 
+

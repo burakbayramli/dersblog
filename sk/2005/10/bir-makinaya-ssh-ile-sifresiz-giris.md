@@ -227,3 +227,4 @@ $ chmod 0600 id_rsa
 
 .. ve bundan sonra ssh ve scp komutlarınız düzgün çalışacak.
 
+

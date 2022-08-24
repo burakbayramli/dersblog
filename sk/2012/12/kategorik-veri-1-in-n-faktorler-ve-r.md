@@ -64,3 +64,4 @@ cagirabilirsiniz. Matris Numpy formatiyla uyumludur. 
 
 
 
+

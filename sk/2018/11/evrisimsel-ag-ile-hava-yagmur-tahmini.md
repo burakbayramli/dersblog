@@ -91,3 +91,4 @@ boyutlu) evrişimsel ağ işletilir. Zaman faktörü için makalede
 arkadaşın yaptığı gibi önceki günlerin ek tensorları konur ve [3
 boyutlu evrişim](https://youtu.be/ecbeIRVqD7g) işletilir.
 
+

@@ -66,3 +66,4 @@ Kaynaklar * Enscript (Doug Clancy)
 
 
 ![](enscript_kucuk.jpg)
+

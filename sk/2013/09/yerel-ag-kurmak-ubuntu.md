@@ -51,3 +51,4 @@ ile anahtar uretmek, sonra id_rsa.pub'in alinip oteki makinaya
 kopyalanip .ssh/authorized_keys'e eklenmesi, ardindan ustteki ssh (ve
 scp) komutu sifresiz olarak giris yapma numarasi kullanilabilir.
 
+

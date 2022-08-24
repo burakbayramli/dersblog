@@ -42,3 +42,4 @@
 
 [Yaygın İnternet Teknolojileri](10/yaygn-internet-teknolojileri.html)
 
+

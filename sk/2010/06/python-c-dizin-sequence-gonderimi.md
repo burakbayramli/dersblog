@@ -27,3 +27,4 @@ etmek icin dizin([10.,20.,30.]) gibi bir cagri yapilabilir.
 
 
 
+

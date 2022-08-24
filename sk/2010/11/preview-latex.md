@@ -64,3 +64,4 @@ büyüt" anlamına geliyor. Diğer ayarlar
 ![](http://1.bp.blogspot.com/_jmxNhrLj_qQ/TNnIuSc0NLI/AAAAAAAAArI/9tN0_alKi2U/s320/preview-latex.png)
 
 
+

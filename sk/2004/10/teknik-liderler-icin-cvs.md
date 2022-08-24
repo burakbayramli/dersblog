@@ -75,3 +75,4 @@ değerin kullanıldığı kodu ihraç etmek için şu komut yeterlidir.
 
 cvs export -r etiket_ismi havuz_ismi
 
+

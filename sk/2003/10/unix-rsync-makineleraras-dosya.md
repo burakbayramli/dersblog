@@ -86,3 +86,4 @@ rsync --recursive -ve 'ssh -p [port]' /yerel/dizin kullanici@1.1.2.13:/uzak/dizi
 Not: Bizim sifirdan Python uzerinde yazdigimiz [rsync.py](https://github.com/burakbayramli/kod/blob/master/rsync.py)
 komutu da burada kullanilabilir.
 
+

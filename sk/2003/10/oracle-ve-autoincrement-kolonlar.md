@@ -24,3 +24,4 @@ kalmadan, bir sonraki ID sayısı hesaplanacak ve kolona koyulacaktır.
 
 
 
+

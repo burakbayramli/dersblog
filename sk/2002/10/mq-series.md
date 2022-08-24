@@ -69,3 +69,4 @@ ihtiyacınızı karşılıyabilir.
 
 
 ![](kuyruk1.gif)
+

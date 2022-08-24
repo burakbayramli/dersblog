@@ -10,3 +10,4 @@ olmamasi bu gecisi tetikleyen ana sebeplerden. Kitabin sitesi surada,
 tum Python ornek kodlari oradan indirilebilir.
 
 ![](41G8p6DFoAL._SL500_AA240_.jpg)
+

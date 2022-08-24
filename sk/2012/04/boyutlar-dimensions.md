@@ -43,3 +43,4 @@ ve boyutlarin solundaki yukari, asagi ok isaretlerini kullanarak siralamayi iste
 ![](Screenshot+at+2012-04-26+14:28:41.png)
 ![](Screenshot+at+2012-04-26+14:29:29.png)
 ![](Screenshot+at+2012-04-26+14:32:42.png)
+

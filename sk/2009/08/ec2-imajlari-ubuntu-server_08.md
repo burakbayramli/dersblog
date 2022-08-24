@@ -56,3 +56,4 @@ komutu ile bildigimiz islemleri gerceklestirebiliriz.Bir kaynak:
 
 
 
+

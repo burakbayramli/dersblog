@@ -179,3 +179,4 @@ dikey olarak işaretliyoruz, sıfır ise hiçbir şey gösterilmiyor.
 
 
 
+

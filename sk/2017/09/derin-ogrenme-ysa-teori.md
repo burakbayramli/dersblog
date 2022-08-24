@@ -26,3 +26,4 @@ Paralel baglamda, derin ogrenmenin diger babalarinan Yann LeCun ve YSA uzmani / 
 
 
 
+

@@ -96,3 +96,4 @@ Ustteki kodun ortalama hatasi 19 gun.
 
 
 
+

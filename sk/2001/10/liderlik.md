@@ -180,3 +180,4 @@ düzeltmeniz için size nasıl yardım edebilirim?"  Böylece size düşen
 etki/endişe alanınızı doğru saptadınız. Takımın etki/endişe alanı da
 doğru bir düzene girmiş oldu.
 
+

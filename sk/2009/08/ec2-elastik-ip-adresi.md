@@ -48,3 +48,4 @@ degisimi EC2 tarafinda yapabilerek optimal bir cozumu bulmus oluyoruz.
 
 
 
+

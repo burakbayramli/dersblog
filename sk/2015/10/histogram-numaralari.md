@@ -66,3 +66,4 @@ print hst[1]
 Orta noktada cok daha fazla yogunluk oldugunu goruyoruz, bu normal
 tabii cunku dagilim da normal (!). Not: yogunluk fonksiyonu 1'den
 buyuk degerler dondurebilir (ama kumulatif yogunluk donduremez). 
+

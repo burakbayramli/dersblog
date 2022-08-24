@@ -144,3 +144,4 @@ select * from veri_getir();
 
 
 
+

@@ -111,3 +111,4 @@ zoom ettirmemiz gerekiyordu, vs.Bu kadar.
 
 
 
+

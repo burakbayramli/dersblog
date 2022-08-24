@@ -16,3 +16,4 @@ servisine geri gönderir.
 kullanıcıya yollar.
 
 ![](int_arch.jpg)
+

@@ -22,3 +22,4 @@ ile girin, ve `backend` diyen satirda `GTKAgg` ibaresini `PDF`
 kelimesine degistirin. Bundan sonra gorsel islemler bos gecilecek, ama
 hesap yapan kodlar hala isleyecek.
 
+

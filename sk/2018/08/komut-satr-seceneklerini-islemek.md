@@ -92,3 +92,4 @@ o tipi bool olarak tanımlamıştık.
 
 
 
+

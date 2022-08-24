@@ -131,3 +131,4 @@ anda sadece tek bir şeyi yapabilirler. Aynı anda birkaç şeyi
 yapamazlar.
 
 
+

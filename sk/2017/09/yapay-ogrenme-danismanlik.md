@@ -32,3 +32,4 @@ Not: NVidia GPU kartlari uzerinden derin ogrenmeye bir giris yapmisti, ve gelist
 
 
 
+

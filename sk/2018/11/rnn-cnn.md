@@ -30,3 +30,4 @@ Böyle kim batıyor, kim çıkıyor hakkında bir sürü tartışma, konuşma va
 
 
 
+

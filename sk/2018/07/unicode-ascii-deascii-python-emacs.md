@@ -34,3 +34,4 @@ editörden nasıl çağrıldığını bulabiliriz
 
 
 
+

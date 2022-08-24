@@ -23,3 +23,4 @@ komutlar içeren bir dosyadan ibarettir.
 
 
 
+

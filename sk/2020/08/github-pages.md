@@ -126,3 +126,4 @@ def gen_html():
 Kod en üst dizin seviyesinden işletilir, ve gördüğü her .md dosyası için
 aynı isimde bir .html dosyası üretir.
 
+

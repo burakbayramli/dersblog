@@ -149,3 +149,4 @@ Kaynaklar
 
 [4] [Yükseklik (Elevation) Verileri](../../2019/04/elevation.html)
 
+

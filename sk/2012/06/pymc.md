@@ -28,3 +28,4 @@ srrs.csv
 
 dosyalari lazim. Ana kod 16.3-PYMC.py.
 
+

@@ -84,3 +84,4 @@ kapansa bile 'kaybolmayan' türden olması gereken programlar tutabilir.
 
 
 ![](jstamp_in_hand.jpg)
+

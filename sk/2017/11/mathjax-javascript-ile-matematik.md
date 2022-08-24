@@ -79,3 +79,4 @@ MathJax yaklaşımı güzel çünkü ek bir "üretme komutu"na gerek duymuyor
 neredeyse hiç işlem yapılmıyor, sayfayı görmek isteyen kişinin
 bilgisayarı gerekli işlemi yaparak formülü görüyor. 
 
+

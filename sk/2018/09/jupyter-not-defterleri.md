@@ -31,3 +31,4 @@ Kaynaklar
 [Video, Jupyter Not Defterleri -Jupyter Notebooks-](https://youtu.be/uDOO1A-Aja0)
 
 [Video, Python, Komut Satiri, VirtualEnv, ipython](https://youtu.be/iaWyvH67Nrg)
+

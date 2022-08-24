@@ -239,3 +239,4 @@ miktarının az olması, az sayıda dış arayüz kullanılıyor olunması,
 vs..vs..
 
 
+

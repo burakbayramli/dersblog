@@ -32,3 +32,4 @@ Derini  Ogrenim'i Hinton burada anlatiyor
 
 
 
+

@@ -25,3 +25,4 @@ Tabii tum bunlari kolaylastiracak bir script soyle, import ospkgs = ['paket1','p
 
 
 
+

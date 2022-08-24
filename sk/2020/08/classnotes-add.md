@@ -3,8 +3,7 @@
 Emacs Bağlantısı
 
 Github projelerimizden biriyle Emacs'te LaTeX doküman *içinde* iken
-Python kodlarını
-[emacs-ipython](https://github.com/burakbayramli/emacs-ipython) adlı
+Python kodlarını [emacs-ipython](https://github.com/burakbayramli/emacs-ipython) adlı
 bir teknoloji üzerinden direk belge içinde işletmek mümkün (arka
 planda ipython'a bağlanıyor, yani aynı temel yapı kullanılıyor). Bu
 durumda, emacs-ipython gereken tüm ipython ayarlarını kendisi yapıyor.
@@ -36,4 +35,5 @@ Latex Format
 The format of these documents, fonts, the pseudocode look-and-feel was
 taken from Andrew Cotter's thesis called *Stochastic Optimization for
 Machine Learning*.
+
 

@@ -219,3 +219,4 @@ göreceksiniz.  Serbest yazılım ile bol ölçekli günler sizin olsun.
 
 
 ![](distributed.jpg)
+

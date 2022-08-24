@@ -10,3 +10,4 @@ Apt-get ile kurulussudo apt-get install libavformat-dev ffmpeg libcv2.1 libcvaux
 
 
 
+

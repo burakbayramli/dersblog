@@ -13,3 +13,4 @@ More details, for jars etc
 
 http://sayilarvekuramlar.blogspot.com/2019/12/mapforge-statik-harita-tabandan-osm.html
 
+

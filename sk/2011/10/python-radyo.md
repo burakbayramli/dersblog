@@ -28,3 +28,4 @@ girişte bu kanal listede gözükecektir.
 Belki daha da kolay bir yaklaşım `mpv` komutu pls ÜRL'e bağlanacaktır.
 
 
+

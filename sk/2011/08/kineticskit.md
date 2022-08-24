@@ -84,3 +84,4 @@ sistem baslangic halinde kalir, tabii kullanici mouse ile kutleleri
 cekip cevirirse sistem buna gore kendini duzenliyor.
 
 ![](elastic_uniform_load.png)
+

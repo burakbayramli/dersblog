@@ -98,3 +98,4 @@ Bu kod intro.csv adli bir dosyaya ihtiyac duyar. Bu ornek veri
 
 
 
+

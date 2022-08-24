@@ -38,3 +38,4 @@ Kaynakça
 
 [1] Kutadgubilik Felsefe ve Bilim Araştırmaları Yayını, Mart 2003 Sayısı
 
+

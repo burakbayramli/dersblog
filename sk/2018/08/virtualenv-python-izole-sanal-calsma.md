@@ -13,7 +13,7 @@ mesela).
 Biz daha az iddialı ama bir o kadar faydalı, sadece sanal, izole ortam
 yaratan virtualenv'i anlatalım.
 
-Ubuntu'da mesela python kurduğumuzda, bu sudo apt-get ile olabilir,
+Ubuntu'da mesela python kurduğumuzda, bu `sudo apt-get` ile olabilir,
 komut satırında çağırdığımız python global, makinanın tümü için
 geçerli bir çağrıdır. Ardından pip install ile paket kurduğumuzda bu
 global python için yine global paket kurulumu yapmış oluruz. Kurulan
@@ -148,4 +148,5 @@ Kaynaklar
 https://help.dreamhost.com/hc/en-us/articles/115000218612-Installing-a-custom-version-of-Python-2
 
 https://help.dreamhost.com/hc/en-us/articles/215489338-Installing-and-using-virtualenv-with-Python-2
+
 

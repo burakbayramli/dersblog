@@ -39,3 +39,4 @@ case "$1" in
 komutlarını yazın, [KULLANIÇİ] sizin Ünix kullanıcı isminiz
 olacak. Ayrıca script.sh dosyasını u+x ile chmod'lamayı unutmayın.
 
+

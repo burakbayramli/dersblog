@@ -47,3 +47,4 @@ kodlari gondeririz, sonraappcfg.py upload_data --config_file=loader.py
 
 
 
+

@@ -72,3 +72,4 @@ t1.speak(toSpeak, TextToSpeech.QUEUE_FLUSH, null);     
 
 
 
+

@@ -77,3 +77,4 @@ ve indis kavramlarına gerek kalmıyor.
 
 
 
+

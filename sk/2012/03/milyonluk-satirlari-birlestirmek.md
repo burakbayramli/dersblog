@@ -32,3 +32,4 @@ eklenebilir. Bu durumda birleşimlerin hızlı işlediği görülecektir.
 
 
 
+

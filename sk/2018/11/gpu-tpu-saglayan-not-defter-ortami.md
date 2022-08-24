@@ -56,3 +56,4 @@ sınırlamaya raslamadım. Fakat GPU hafızası biraz sınırlanmış olabilir,
 ama orada da ayarlarla oynayarak büyütme mümkün olabilir. 
 
 ![](collab.png)
+

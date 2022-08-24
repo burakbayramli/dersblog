@@ -97,3 +97,4 @@ Kaynaklar
 
 [11] https://batteryuniversity.com/learn/article/serial_and_parallel_battery_configurations
 
+

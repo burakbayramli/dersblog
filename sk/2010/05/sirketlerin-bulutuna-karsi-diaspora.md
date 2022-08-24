@@ -127,3 +127,4 @@ Stallman'ın kendisi dahil böyle bir anti-ticaret duruşun kültürün
 
 
 
+

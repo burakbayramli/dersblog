@@ -91,3 +91,4 @@ mumkun. Mesela bir Java kayidi degistiginde, java hedefi isletilir. Bu
 hedef 'baglanmis' diger bir hedef var ise, onun da isletilmesi
 gerekir, ve ant bunu otomatik olarak yapacaktir.
 
+

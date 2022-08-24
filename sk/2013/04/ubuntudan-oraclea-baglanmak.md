@@ -92,3 +92,4 @@ ile Oracle verisi bir Dataframe içine alınmış olur.
 
 
 
+

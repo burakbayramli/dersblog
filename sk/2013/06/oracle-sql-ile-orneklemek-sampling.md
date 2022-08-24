@@ -32,3 +32,4 @@ degerini degistiririz, ve farkli rasgele sonuclar aliriz.
 
 
 
+

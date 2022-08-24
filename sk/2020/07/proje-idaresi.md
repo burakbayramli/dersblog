@@ -14,7 +14,7 @@
 
 [Yeniden Düzenleme (Refactoring)](../../2000/10/yeniden-duzenleme-refactoring.html)
 
-[Program Nasıl Test Edilir](../../2000/10/program-nasl-test-edilir.html)
+[Birim Testler](../../2016/05/birim-testleri-taklitlemek-mocking-ve.html)
 
 [Projelerde İşbölümü](../../2000/10/projelerde-isbolumu.html)
 
@@ -57,4 +57,5 @@
 [Proje Planlamasi ve Trello](../../2014/04/proje-planlamasi-ve-trello.html)
 
 [Projelerde Git](../../2014/03/projelerde-git.html)
+
 

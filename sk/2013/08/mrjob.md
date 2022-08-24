@@ -175,3 +175,4 @@ girdi.csv > cikti.csv` işletikten sonra virgülle ayrılmış anahtarsız
 güzel bir çıktı buluruz.
 
 
+

@@ -40,3 +40,4 @@ ve
 464.19
 
 degeri gelecek. Goruldugu gibi arada buyuk fark var.
+

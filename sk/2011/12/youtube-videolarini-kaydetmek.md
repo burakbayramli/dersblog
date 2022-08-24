@@ -69,3 +69,4 @@ ile indirmeyi yaparız.
 
 
 
+

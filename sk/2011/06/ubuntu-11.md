@@ -100,3 +100,4 @@ sifreyi verebilirsiniz. Kendiniz super kullanici olmaniza ragmen sudo
 uzerinden tekrar kendi kullanicinizi referans etmeniz garip olabilir,
 ama kisa sifre bu sekilde memnun oluyor.
 
+

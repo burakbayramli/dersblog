@@ -36,3 +36,4 @@ olmuyor (colsep ile set edilen ayarin pek bir anlami yok yani).
 Ayrica SQLPlus kolon isimlerini otomatik olarak vermiyor. Biz bu
 isimleri Pandas ile okurken kendimiz veriyoruz.
 
+

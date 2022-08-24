@@ -3,6 +3,8 @@
 
 ## En Son
 
+24/8 - [Hesapsal Bilim Ders 1-18 - Sonlu Öğeler Metodu - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_18/ders_118.html)
+
 23/8 - [Hesapsal Bilim Ders 1-17 - Sonlu Öğeler Metodu - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_17/ders_1.17.html)
 
 19/8 - [GLOBE Verisi, Yükseklik Haritası](https://burakbayramli.github.io/dersblog/sk/2019/04/elevation.html#globe)
@@ -12,8 +14,6 @@
 11/8 - [Hesapsal Bilim Ders 1-15 - Makaskirişler (Truss)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_15/ders_115.html)
 
 28/7 - [Hesapsal Bilim - Ders 1-8](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_08/ders_18.html)
-
-14/7 - [Zaman Serisi Veri Analizi](https://burakbayramli.github.io/dersblog/tser/tser_008_data/zaman_serisi_veri_analizi.html)
 
 ## Konular, Referans
 

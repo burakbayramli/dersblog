@@ -285,6 +285,3 @@ Eski Anlatım
 Düzenli İfadeler, Perl, Kurumsal Java kitabından, [PDF](https://github.com/burakbayramli/classnotes/raw/master/sk/2016/02/regex-kj.pdf)
 
 
-
-
-

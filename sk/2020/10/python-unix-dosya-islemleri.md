@@ -101,19 +101,3 @@ print (ls("/tmp/filan1"))
 ls ignore lst []
 (['/tmp/filan1/filan12', '/tmp/filan1/filan13', '/tmp/filan1/filan12/filan121'], [])
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -137,6 +137,23 @@ Eğer birçok dosya üzerinde üstteki değişimi yapmak istersek,
 find .-type f -name "*" -exec python replace.py {} \;
 ```
 
+Bu tür kullanımda `{} \;` ile alınan dosyalar teker teker Python'a geçiliyor,
+dosya ismi `sys.argv[1]` içinde olmak üzere.
+
+Üstteki türden kullanımı daha akıllıca bir `grep` için de
+kullanabilirdik.  Mesela her dosya içinde çetrefil bir regex üzerinden
+bir arama yapmak istersek bu yapılabilir. Bir kere içinde şu tür
+ifadeler içeren dosyaları aramak gerekmişti, "bir satırda tek başına
+iki dolar işareti, ardındaki satırda tek başına eşittir işareti olan
+tüm dosyalar". Unix'te `find` ile alttaki koda çağrı yaptım,
+
+```python
+res = re.findall('^\$\$\s*\n=\s*\n',open(sys.argv[1]).read(), re.MULTILINE)
+if len(res)>0:
+    print (sys.argv[1], res)
+```
+
+
 Dosyayı kullanan program hangisi
 
 lsof [DOSYA]

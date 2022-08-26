@@ -224,7 +224,3 @@ Referans
 
 [Dosya İşlemleri, Unix, Python](../../2020/10/python-unix-dosya-islemleri.html)
 
-
-
-
-

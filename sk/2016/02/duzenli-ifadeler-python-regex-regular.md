@@ -181,7 +181,7 @@ res = re.findall(regex, s6, re.DOTALL)
 Burada ilginç bir numara kullanıldı; | komutu ile metni iki bölüme
 ayırmış olduk, bu komut "ya onu ya bunu" şeklinde bir seçim yaptığı
 için önce sol tarafa uyacaktır, fakat belli bir noktadan sonra sağ
-kısmi uyduracaktır ve o kısım içinde gruplama vardır, ve o gruplamanın
+kısmı uyduracaktır ve o kısım içinde gruplama vardır, ve o gruplamanın
 içi doldurulur. Bu komut
 
 ```

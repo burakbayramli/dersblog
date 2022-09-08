@@ -51,14 +51,14 @@ kurmak lazim, bizim uyguladigimiz komutlar,
 sudo apt install libxslt1-dev zlib1g-dev libxapian-dev
 ```
 
-Ardindan recoll acilmis zip dizinine gidilir, ve
+Ardından recoll açılmış zip dizinine gidilir, ve
 
 ```
 ./configure --disable-qtgui
 ```
 
-Bu bir Makefile hazirlayacak, ayni zamanda Python paketini de kurulmaya
-hazir hale getirecek. Eger tum recoll bu kaynaktan gelsin istiyorsak
+Bu bir Makefile hazırlayacak, aynı zamanda Python paketini de kurulmaya
+hazır hale getirecek. Eğer tüm recoll bu kaynaktan gelsin istiyorsak
 
 ```
 make
@@ -71,7 +71,7 @@ Bu bittikten sonra `recoll --version` ile yeni kurulum yapıldığını kontrol
 ederiz, şimdi sıra Python'a geldi. Alt dizin `python/recoll` altında şimdi
 bir `setup.py` dosyası olmalı. Yanlız dikkat: bu dosyayı yazanlar kodu
 biraz eksik bırakmış, mesela virtualenv gibi geliştirme ortamı kullananlar
-ortamlarına girip hangi `setup.py` üzerinde `ınstall` işletirlerse o
+ortamlarına girip hangi `setup.py` üzerinde `install` işletirlerse o
 kurulumun içinde olduğu ortamın parçası olmasını beklerler. Bu arkadaşlar
 böyle yapmamış, tüm hazırlığı sistem seviyesindeki Python için yapmışlar.
 
@@ -118,5 +118,9 @@ Kaynaklar
 [1] https://www.lesbonscomptes.com/recoll/pages/download.html
 
 [2] https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.INSTALL
+
+
+
+
 
 

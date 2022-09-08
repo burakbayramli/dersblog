@@ -1,17 +1,122 @@
 # Lokal Dosya Arama - recoll
 
-Google Desktop yerel dosyalari indekslerken bazen hata yapiyor. Onun
-yerine daha yalin / basit bir sistemi denedik: recoll. Kurmak icin
+Kendi diskimizdeki dosyalari, PDF, EPUB, ne olursa olsun,
+indeksleyebilmemizi saglayan `recoll` araci var. Kurmak icin
 
 ```
 sudo apt-get install recoll
 ```
 
-Komutta recoll yazılınca GUİ açılir. Preferences | Indexing
-configüration ile indekslenecek dizinler eklenebilir,
-çıkartılabilir. Komut satırından indeksleme için `recollindex` çağrısı
-yeterli.
+Komutta `recoll` yazılınca GUI açılır. `Preferences | Indexing configuration` 
+ile indekslenecek dizinler eklenebilir, çıkartılabilir. Komut
+satırından indeksleme için `recollindex` çağrısı yeterli. Ben tipik olarak
+bir kitaplar üst dizinini veriyorum, ve oraya yeni doküman eklendikçe arada
+sırada `recollindex` çağrısı yapıp indeksi güncelliyorum.
 
-[Doküman İndeksleme, Arama](../../2018/12/dokuman-indeksleme-arama.html)
+Doküman bulmak için `recoll` GUI'sinde kutuya istenen kelimeler yazılır
+ve sonuçlar altta listelenir.
+
+Komut Satirindan Aramak
+
+Direk komut satırından arama için `recoll -t` çağrısı ardından anahtar
+kelimeler verilir, ve sonuç listelenebilir. Bu çağrıyı sarmalayan basit bir
+Python script alttadır,
+
+```
+import subprocess, re, sys
+q = "bunlari ara"
+p = subprocess.Popen(['recoll','-t',q], stdout=subprocess.PIPE)
+for line in p.stdout:
+    res = re.findall('\[file:\/\/(.*?)\]', str(line), re.DOTALL)
+    print (res)
+    if (len(res)>0):
+        print ("%s:1:1" % res[0])
+```
+
+Fakat bu çıktıdan arama sonucunu temsil eden özet paragraflar
+çıkartmak zor olabilir.
+
+Bir diğer yöntem `recoll` yazılımının kendi kaynağı içindeki Python
+kodlarını bir Python paketi olarak kurmak. Fakat bunu için tüm recoll
+kodunu almak, ve tümünü derleyecek olmasak bile derleyecekmiş gibi
+hazırlık yapmak gerekiyor. Bence bu yola gidilecekse ana kodları da
+kaynaktan derleyip kullanmak faydalı olabilir, böylece `apt get` den
+gelen recoll ile kaynaktan gelen Python arasındaki olası uyumsuzluk
+engellenmiş olur.
+
+Kaynaklar [1] adresinde, kurulus tarifi [2]. Onceden bazi paketleri
+kurmak lazim, bizim uyguladigimiz komutlar,
+
+```
+sudo apt install libxslt1-dev zlib1g-dev libxapian-dev
+```
+
+Ardindan recoll acilmis zip dizinine gidilir, ve
+
+```
+./configure --disable-qtgui
+```
+
+Bu bir Makefile hazirlayacak, ayni zamanda Python paketini de kurulmaya
+hazir hale getirecek. Eger tum recoll bu kaynaktan gelsin istiyorsak
+
+```
+make
+sudo make install
+```
+
+ile kurulumu yapabiliriz.
+
+Bu bittikten sonra `recoll --version` ile yeni kurulum yapıldığını kontrol
+ederiz, şimdi sıra Python'a geldi. Alt dizin `python/recoll` altında şimdi
+bir `setup.py` dosyası olmalı. Yanlız dikkat: bu dosyayı yazanlar kodu
+biraz eksik bırakmış, mesela virtualenv gibi geliştirme ortamı kullananlar
+ortamlarına girip hangi `setup.py` üzerinde `ınstall` işletirlerse o
+kurulumun içinde olduğu ortamın parçası olmasını beklerler. Bu arkadaşlar
+böyle yapmamış, tüm hazırlığı sistem seviyesindeki Python için yapmışlar.
+
+O sebeple eğer bir virtualenv ortamındaysak mesela `deactivate` ile
+dışarı çıkıyoruz, ve oradan eski usul, ilk Python öğrendiğimiz emekleme
+günlerinde olduğu gibi haldır huldur bir `sudo python3 setup.py install`
+işletiyoruz. Eğer bu paketi geliştirme ortamından kullanmak istersek ufak
+bir takla atarak sistem Python'undaki recoll'dan geliştirme ortamına bir sembolik
+bağlantı oluşturmak yeterli. Mesela ben kendi `env3/lib/python3.6/site-packages`
+ortamıma
+
+```
+/usr/local/lib/python3.6/dist-packages/Recoll-1.32.7-py3.6-linux-x86_64.egg/recoll
+```
+
+adresine gösteren bir `recoll` sembolik bağlantısı yarattım, ve her şey
+ortam içinden normal şekilde çalışmaya başladı.
+
+Altta Python eklerini kullanan bir kodu görebiliriz, bir kelime arayıp ilk
+5 sonucu özetleriyle beraber gösteriyor.
+
+```python
+q = "kelime"
+
+from recoll import recoll
+
+db = recoll.connect()
+db.setAbstractParams(maxchars=80, contextwords=4)
+
+query = db.query()
+nres = query.execute(q)
+print("Result count: %d" % nres)
+for i in range(5):
+    doc = query.fetchone()
+    print("Result #%d" % (query.rownumber))
+    for k in ("title", "size", "url"):
+        print("%s : %s" % (k, getattr(doc, k)))
+    print("%s\n" % db.makeDocAbstract(doc, query))
+```
+
+
+Kaynaklar
+
+[1] https://www.lesbonscomptes.com/recoll/pages/download.html
+
+[2] https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.INSTALL
 
 

@@ -95,13 +95,10 @@ Bu paketi kullanan bir kodu altta görebiliriz, bir kelime arayıp ilk 5
 sonucu özetleriyle beraber gösteriyor.
 
 ```python
-q = "kelime"
-
 from recoll import recoll
-
 db = recoll.connect()
 db.setAbstractParams(maxchars=80, contextwords=4)
-
+q = "kelime"
 query = db.query()
 nres = query.execute(q)
 print("Result count: %d" % nres)

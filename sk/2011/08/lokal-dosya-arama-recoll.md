@@ -76,12 +76,13 @@ kurulumun içinde olduğu ortamın parçası olmasını beklerler. Bu arkadaşla
 böyle yapmamış, tüm hazırlığı sistem seviyesindeki Python için yapmışlar.
 
 O sebeple eğer bir virtualenv ortamındaysak mesela `deactivate` ile
-dışarı çıkıyoruz, ve oradan eski usul, ilk Python öğrendiğimiz emekleme
-günlerinde olduğu gibi haldır huldur bir `sudo python3 setup.py install`
-işletiyoruz. Eğer bu paketi geliştirme ortamından kullanmak istersek ufak
-bir takla atarak sistem Python'undaki recoll'dan geliştirme ortamına bir sembolik
-bağlantı oluşturmak yeterli. Mesela ben kendi `env3/lib/python3.6/site-packages`
-ortamıma
+dışarı çıkıyoruz, ve oradan eski usul, ilk Python öğrendiğimiz
+emekleme günlerinde olduğu gibi haldır huldur bir `sudo python3
+setup.py install` işletiyoruz. Bu komut kurulumu sistem seviyesinde
+yapacaktır. Şimdi eğer bu paketi geliştirme ortamından kullanmak istersek
+bir takla atarak sistem Python'undaki recoll'dan geliştirme
+ortamına bir sembolik bağlantı oluşturmak yeterli. Mesela ben kendi
+`env3/lib/python3.6/site-packages` ortamıma
 
 ```
 /usr/local/lib/python3.6/dist-packages/Recoll-1.32.7-py3.6-linux-x86_64.egg/recoll
@@ -90,8 +91,8 @@ ortamıma
 adresine gösteren bir `recoll` sembolik bağlantısı yarattım, ve her şey
 ortam içinden normal şekilde çalışmaya başladı.
 
-Altta Python eklerini kullanan bir kodu görebiliriz, bir kelime arayıp ilk
-5 sonucu özetleriyle beraber gösteriyor.
+Bu paketi kullanan bir kodu altta görebiliriz, bir kelime arayıp ilk 5
+sonucu özetleriyle beraber gösteriyor.
 
 ```python
 q = "kelime"

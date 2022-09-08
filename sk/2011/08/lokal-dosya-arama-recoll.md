@@ -81,14 +81,14 @@ emekleme günlerinde olduğu gibi haldır huldur bir `sudo python3
 setup.py install` işletiyoruz. Bu komut kurulumu sistem seviyesinde
 yapacaktır. Şimdi eğer bu paketi geliştirme ortamından kullanmak istersek
 bir takla atarak sistem Python'undaki recoll'dan geliştirme
-ortamına bir sembolik bağlantı oluşturmak yeterli. Mesela ben kendi
-`env3/lib/python3.6/site-packages` ortamıma
+ortamına bir sembolik bağlantı oluşturmak yeterli. Mesela ben kendi `env3`
+adındaki ortamımın dizini `env3/lib/python3.6/site-packages` altında
 
 ```
 /usr/local/lib/python3.6/dist-packages/Recoll-1.32.7-py3.6-linux-x86_64.egg/recoll
 ```
 
-adresine gösteren bir `recoll` sembolik bağlantısı yarattım, ve her şey
+adresini gösteren bir `recoll` sembolik bağlantısı yarattım, ve her şey
 ortam içinden normal şekilde çalışmaya başladı.
 
 Bu paketi kullanan bir kodu altta görebiliriz, bir kelime arayıp ilk 5

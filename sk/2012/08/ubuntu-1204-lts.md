@@ -159,9 +159,12 @@ Eger GPU ile ilgili bir hata ortaya cikiyorsa,
 
 sudo gksu gedit /etc/default/apport
 
-ile ustteki dosya edit edilir, ve "enabled" diyen yer '1' degerinden '0' degerine getirilir ve dosya kaydedilir. 
+ile ustteki dosya edit edilir, ve "enabled" diyen yer '1' degerinden
+'0' degerine getirilir ve dosya kaydedilir.
 
-Ust sag kosede olan Bluetooth ikonu Bluetooth iptal edilmis olsa bile orada gozukmeye devam ediyor, ve kalabalik yaratiyor. Bu ikonu tamamen yoketmek icin
+Ust sag kosede olan Bluetooth ikonu Bluetooth iptal edilmis olsa bile
+orada gozukmeye devam ediyor, ve kalabalik yaratiyor. Bu ikonu tamamen
+yoketmek icin
 
 gksu nautilus /etc/xdg/autostart 
 

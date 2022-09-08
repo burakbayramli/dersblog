@@ -7,13 +7,10 @@ yerine daha yalin / basit bir sistemi denedik: recoll. Kurmak icin
 sudo apt-get install recoll
 ```
 
-Komutta recoll yazilinca GUI acilir. Preferences | Indexing
-configuration ile indekslenecek dizinler eklenebilir,
-cikartilabilir. Komut satirindan indeksleme icin recollindex cagrisi
+Komutta recoll yazılınca GUİ açılir. Preferences | Indexing
+configüration ile indekslenecek dizinler eklenebilir,
+çıkartılabilir. Komut satırından indeksleme için `recollindex` çağrısı
 yeterli.
-
-Eger herhangi bir sebeple `recoll` isletilemiyorsa o zaman bir secenek
-Python uzerinden kendi arama mekanizmanizi yaratmak.
 
 [Doküman İndeksleme, Arama](../../2018/12/dokuman-indeksleme-arama.html)
 

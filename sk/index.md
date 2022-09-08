@@ -3,6 +3,8 @@
 
 ## En Son
 
+8/9 - [Üçgenleme, Delanuay (Triangulation)](https://burakbayramli.github.io/dersblog/algs/algs_075_enc/nokta_bulutlari_noktalari_cevreleyen_bolgeler.html)
+
 24/8 - [Hesapsal Bilim Ders 1-18 - Sonlu Öğeler Metodu - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_18/ders_118.html)
 
 23/8 - [Hesapsal Bilim Ders 1-17 - Sonlu Öğeler Metodu - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_17/ders_1.17.html)
@@ -12,8 +14,6 @@
 13/8 - [Aradeğerleme (Interpolation)](https://burakbayramli.github.io/dersblog/sk/2012/08/aradegerleme-interpolation.html)
 
 11/8 - [Hesapsal Bilim Ders 1-15 - Makaskirişler (Truss)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_15/ders_115.html)
-
-28/7 - [Hesapsal Bilim - Ders 1-8](https://burakbayramli.github.io/dersblog/compscieng/compscieng_1_08/ders_18.html)
 
 ## Konular, Referans
 

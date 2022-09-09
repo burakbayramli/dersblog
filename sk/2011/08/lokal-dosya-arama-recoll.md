@@ -97,7 +97,7 @@ sonucu özetleriyle beraber gösteriyor.
 ```python
 from recoll import recoll
 db = recoll.connect()
-db.setAbstractParams(maxchars=80, contextwords=4)
+db.setAbstractParams(maxchars=300, contextwords=4)
 q = "kelime"
 query = db.query()
 nres = query.execute(q)

@@ -57,7 +57,7 @@ bağlantı koparılmayacaktır.
 Yerel Ağ Baglantısı
 
 Test ettik, Tablet -> RPi arasındaki bağlantı eğer dış İnternet
-bağlantısı olmasa bile işliyor. DHCP sonuçta yerel ağlarda da işleyen
+bağlantısı olmasa bile işliyor. DHCP sonuçta yerel ağlarda işleyen
 bir teknolojidir, dış İnternet olmasa da Android hotspot bir İP adresi
 (çoğunlukla hep aynı) üretip Raspberry Pi'a verecektir. Alternatif
 arayanlar mesela USB-USB ile bağlantı kurmak isteyenler [3,4,5]

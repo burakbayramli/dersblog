@@ -113,6 +113,15 @@ kablo ile hızlı bir bağlantı kuruldu belki (Wifi üzerinden yavaş
 olur), o zaman RPi üzerinde VNC aktif edilebilir [6], ve Android
 üzerinde VNC ile bağlantı yapılır.
 
+X11
+
+Eğer Android üzerinde işleyen, sağlam bir X istemcisi bulunabilirse,
+RPi servis tarafı zaten X11 servisi yapmak için hazırdır, bu durumda
+tüm masaüstü yerien tek bir grafik program görsel olarak Android
+üzerinde işletilebilir. Bir ihtimal Termux üzerinden bu yapılabilirdi,
+ne yazık ki o proje şu anda sakat durumda. Ama işleyen uygulama
+bulabilenler için teorik olarak bu bir seçenektir. 
+
 Kaynaklar
 
 [1] [exkeymo](https://exkeymo.herokuapp.com/)

@@ -120,7 +120,9 @@ RPi servis tarafı zaten X11 servisi yapmak için hazırdır, bu durumda
 tüm masaüstü yerien tek bir grafik program görsel olarak Android
 üzerinde işletilebilir. Bir ihtimal Termux üzerinden bu yapılabilirdi,
 ne yazık ki o proje şu anda sakat durumda. Ama işleyen uygulama
-bulabilenler için teorik olarak bu bir seçenektir. 
+bulabilenler için teorik olarak bu bir seçenektir. 90'li yıllarda
+Solaris Unix makinasına X ile bağlanıp Emacs ile C++ programı
+geliştiriyordum; X hızlı işler.
 
 Kaynaklar
 

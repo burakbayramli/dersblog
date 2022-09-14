@@ -117,7 +117,7 @@ X11
 
 Android üzerinde işleyen, sağlam bir X istemcisi bulunabilirse, RPi
 servis tarafı zaten X11 servisi yapmak için hazırdır, bu durumda tüm
-masaüstü yerien tek bir grafik program görsel olarak Android üzerinde
+masaüstü yerine tek bir grafik program görsel olarak Android üzerinde
 işletilebilir. Bir ihtimal Termux üzerinden bu yapılabilirdi, ne yazık
 ki o proje şu anda sakat durumda. Ama işleyen uygulama bulabilenler
 için teorik olarak bu bir seçenektir. 90'li yıllarda Solaris Unix
@@ -139,4 +139,3 @@ Kaynaklar
 [6] [Raspberry Pi](../../2020/07/raspberrypi.html)
 
 [7] [Android Uzerinde Linux - Termux](../../2018/09/android-uzerinde-linux-termux.html)
-

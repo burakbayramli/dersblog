@@ -108,10 +108,10 @@ dizindeki içeriği servis edebiliriz.
 
 VNC
 
-Eğer illa EPI masaüstünü tablet üzerinde görmek istiyorum diyenler
-varsa, direk kablo ile hızlı bir bağlantı kuruldu belki (Wifi
-üzerinden yavaş olur), o zaman RPi üzerinde VNC aktif edilebilir [6],
-ve Android üzerinde VNC ile bağlantı yapılır.
+Eğer RPI masaüstünü tablet üzerinde görmek istiyenler varsa, direk
+kablo ile hızlı bir bağlantı kuruldu belki (Wifi üzerinden yavaş
+olur), o zaman RPi üzerinde VNC aktif edilebilir [6], ve Android
+üzerinde VNC ile bağlantı yapılır.
 
 Kaynaklar
 

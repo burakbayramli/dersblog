@@ -108,21 +108,21 @@ dizindeki içeriği servis edebiliriz.
 
 VNC
 
-Eğer RPI masaüstünü tablet üzerinde görmek istiyenler varsa, direk
-kablo ile hızlı bir bağlantı kuruldu belki (Wifi üzerinden yavaş
-olur), o zaman RPi üzerinde VNC aktif edilebilir [6], ve Android
-üzerinde VNC ile bağlantı yapılır.
+RPI masaüstünü tablet üzerinde görmek istiyenler varsa, direk kablo
+ile hızlı bir bağlantı kuruldu belki (Wifi üzerinden yavaş olur), o
+zaman RPi üzerinde VNC aktif edilebilir [6], ve Android üzerinde VNC
+ile bağlantı yapılır.
 
 X11
 
-Eğer Android üzerinde işleyen, sağlam bir X istemcisi bulunabilirse,
-RPi servis tarafı zaten X11 servisi yapmak için hazırdır, bu durumda
-tüm masaüstü yerien tek bir grafik program görsel olarak Android
-üzerinde işletilebilir. Bir ihtimal Termux üzerinden bu yapılabilirdi,
-ne yazık ki o proje şu anda sakat durumda. Ama işleyen uygulama
-bulabilenler için teorik olarak bu bir seçenektir. 90'li yıllarda
-Solaris Unix makinasına X ile bağlanıp Emacs ile C++ programı
-geliştiriyordum; X hızlı işler.
+Android üzerinde işleyen, sağlam bir X istemcisi bulunabilirse, RPi
+servis tarafı zaten X11 servisi yapmak için hazırdır, bu durumda tüm
+masaüstü yerien tek bir grafik program görsel olarak Android üzerinde
+işletilebilir. Bir ihtimal Termux üzerinden bu yapılabilirdi, ne yazık
+ki o proje şu anda sakat durumda. Ama işleyen uygulama bulabilenler
+için teorik olarak bu bir seçenektir. 90'li yıllarda Solaris Unix
+makinasına X ile bağlanıp Emacs ile C++ programı geliştiriyordum; X
+hızlı işler.
 
 Kaynaklar
 

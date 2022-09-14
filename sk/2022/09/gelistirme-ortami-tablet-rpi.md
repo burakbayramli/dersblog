@@ -69,6 +69,50 @@ tablet için Ethernet->mikro USB adaptörü gerekir. Mikro USB-Mikro USB
 bağlantısının bir avantajı tableti artık RPi için güç kaynağı olarak
 kullanabilmektir.
 
+Neler Yapılabilir?
+
+Servis tarafindaki RPi tam tekmilli bir Linux (Ubuntu) oldugu icin
+servis tarafinda yapılamayacak sey yok. `sudo apt install` ile her
+türlü program kurulabilir. Mesela flask kurulup herhangi bir html
+sayfasını servis edebiliriz, bu sayfalari tablet tarayıcısı ile tablet
+üzerinde görebiliriz. Bende markdown -> HTML üretebilen ufak bir
+python script var,
+
+```python
+import markdown, sys, os
+head = '''
+<html>
+<head>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({  tex2jax: {inlineMath: [["$","$"]  ]}});</script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+<meta charset='utf-8'>
+</head>
+<body>
+'''
+content=open(sys.argv[1]).read()
+print (head)
+print (markdown.markdown(content, extensions=['fenced_code','tables']))
+print ("""
+</body>
+</html>
+""")
+```
+
+Tablet->SSH->Emacs ile RPİ'da (içinde matematik sembolleri bile olan)
+içerik yazıp, üstteki script ile HTML üretiliyor, onu Flask ile
+gösteriyoruz. Diyelim Flask `/home/user1/app4` altında başlatılmışsa,
+Flask o dizindeki `static` dizinini olduğu gibi servis etmek için
+hazırdır, o dizin altına Unix sembolik link koyarak istediğimiz
+dizindeki içeriği servis edebiliriz.
+
+VNC
+
+Eğer illa EPI masaüstünü tablet üzerinde görmek istiyorum diyenler
+varsa, direk kablo ile hızlı bir bağlantı kuruldu belki (Wifi
+üzerinden yavaş olur), o zaman RPi üzerinde VNC aktif edilebilir [6],
+ve Android üzerinde VNC ile bağlantı yapılır.
+
 Kaynaklar
 
 [1] [exkeymo](https://exkeymo.herokuapp.com/)
@@ -84,8 +128,4 @@ Kaynaklar
 [6] [Raspberry Pi](../../2020/07/raspberrypi.html)
 
 [7] [Android Uzerinde Linux - Termux](../../2018/09/android-uzerinde-linux-termux.html)
-
-
-
-
 

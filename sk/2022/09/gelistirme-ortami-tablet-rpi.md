@@ -60,12 +60,12 @@ Test ettik, Tablet -> RPi arasındaki bağlantı eğer dış İnternet
 bağlantısı olmasa bile işliyor. DHCP sonuçta yerel ağlarda işleyen bir
 teknolojidir, dış İnternet olmasa da Android Wifi hotspot bir İP
 adresi (çoğunlukla hep aynı) üretip Raspberry Pi'a
-verecektir. Alternatif arayanlar mesela USB-USB ile bağlantı kurmak
-isteyenler [3,4,5] yazılarına bakabilir.  [5] yazısı için her iki ucun
-mikro USB olması lazım, genelde kablolar USB->mikro USB, bir ucu mikro
-USB yapan adaptörler var. [5] için iki ucun Ethernet olması lazım, RPi
-üzerinde zaten Ethernet var, bu durumda tablet için Ethernet->mikro
-USB adaptörü gerekir.
+verecektir. Alternatif arayanlar mesela direk kablo ile USB-USB ile
+bağlantı kurmak isteyenler [3,4,5] yazılarına bakabilir.  [5] yazısı
+için her iki ucun mikro USB olması lazım, genelde kablolar USB->mikro
+USB, bir ucu mikro USB yapan adaptörler var. [5] için iki ucun
+Ethernet olması lazım, RPi üzerinde zaten Ethernet var, bu durumda
+tablet için Ethernet->mikro USB adaptörü gerekir.
 
 Kaynaklar
 

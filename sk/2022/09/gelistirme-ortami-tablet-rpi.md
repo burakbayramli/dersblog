@@ -8,8 +8,9 @@ girerek kodlama yapıyorsak (görsel çıktılar RPi mikro web servisi
 Powerbank RPi çalıştırır. Tablet ile Android üzerinde yazıyoruz,
 Android hotspot üzerinden Raspberry'ye DHCP IP adresi verdiriyoruz
 (192.168.43.x gibi bir adres bunu `ifconfig -a` ile RPi uzerinden
-ogrenebiliriz) (RPi üzerinde WiFi aktif hale getirmek lazım). Ardından
-tablet üzerinden Termux [7] `ssh` ile RPi'a bağlanırız. Kuruluş böyle.
+ögrenebiliriz, ve RPi üzerinde WiFi aktif hale getirmek
+lazım). Ardından tablet üzerinden Termux [7] `ssh` ile RPi'a
+bağlanırız. Kuruluş böyle.
 
 [Resim](tablrpi1.jpg)
 

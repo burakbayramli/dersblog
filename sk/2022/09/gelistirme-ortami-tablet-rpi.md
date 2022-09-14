@@ -83,7 +83,7 @@ Kaynaklar
 
 [6] [Raspberry Pi](../../2020/07/raspberrypi.html)
 
-[7] [Android Uzerinde Linux - Termux](2018/09/android-uzerinde-linux-termux.html)
+[7] [Android Uzerinde Linux - Termux](../../2018/09/android-uzerinde-linux-termux.html)
 
 
 

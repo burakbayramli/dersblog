@@ -96,4 +96,3 @@
 
 [Scan Etmek icin Script](12/scan-etmek-icin-script.html)
 
-

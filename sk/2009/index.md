@@ -88,4 +88,3 @@
 
 [Simulatorden Deger Toplamak](12/simulatorden-deger-toplamak.html)
 
-

@@ -28,4 +28,3 @@
 
 [Mapsforge, OSM Bazlı Harita Tabanından Harita Görüntüsü Almak](12/mapforge-statik-harita-tabandan-osm.html)
 
-

@@ -12,4 +12,3 @@
 
 [Python Liste Kavraması (List Comprehension)](12/python-list-comprehension.html)
 
-

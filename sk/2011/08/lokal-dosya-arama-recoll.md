@@ -38,23 +38,19 @@ Fakat bu çıktıdan arama sonucunu temsil eden özet paragraflar
 
 Bir diğer yöntem `recoll` yazılımının kendi kaynağı içindeki Python
 kodlarını bir Python paketi olarak kurmak. Fakat bunu için tüm recoll
-kodunu almak, ve tümünü derleyecek olmasak bile derleyecekmiş gibi
-hazırlık yapmak gerekiyor. Bence bu yola gidilecekse ana kodları da
-kaynaktan derleyip kullanmak faydalı olabilir, böylece `apt get` den
-gelen recoll ile kaynaktan gelen Python arasındaki olası uyumsuzluk
-engellenmiş olur.
+kodunu almak ve derlemek gerekiyor.
 
 Kaynaklar [1] adresinde, kurulus tarifi [2]. Onceden bazi paketleri
 kurmak lazim, bizim uyguladigimiz komutlar,
 
 ```
-sudo apt install libxslt1-dev zlib1g-dev libxapian-dev
+sudo apt install libxslt1-dev zlib1g-dev libxapian-dev libx11-dev
 ```
 
 Ardından recoll açılmış zip dizinine gidilir, ve
 
 ```
-./configure --disable-qtgui
+./configure --disable-qtgui ekle --disable-python-chm
 ```
 
 Bu bir Makefile hazırlayacak, aynı zamanda Python paketini de kurulmaya
@@ -89,7 +85,9 @@ adındaki ortamımın dizini `env3/lib/python3.6/site-packages` altında
 ```
 
 adresini gösteren bir `recoll` sembolik bağlantısı yarattım, ve her şey
-ortam içinden normal şekilde çalışmaya başladı.
+ortam içinden normal şekilde çalışmaya başladı. Not: üstteki dizin herkes
+için aynı olmayabilir, mesela python3.6 yerine başka bir dizin olabilir,
+bunu kontrol etmek gerekebilir.
 
 Bu paketi kullanan bir kodu altta görebiliriz, bir kelime arayıp ilk 5
 sonucu özetleriyle beraber gösteriyor.

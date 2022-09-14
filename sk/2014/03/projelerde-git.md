@@ -229,17 +229,6 @@ yapmak. Alınan repo'ya bakın, `.git` içinde bir `config` dosyası olacak. O d
 
 gibi durmalı. Artık `git commit` yapınca ve `git push origin master`
 ile kodu yollamak istediğinizde ikinci kullanıcı ve şifre
-sorulacak. Girince ikinci repoya kod gönderilecek. Dikkat ürl isminde
-`https` olması önemli, o yüzden kullanıcı / şifre soruluyor zaten. SSH
-üzerinden şifresiz commit için ayarlanan repo'larda bu ürl
-`git@github.com:...` diye gider.
-
-
-
-
-
-
-
-
-
-
+sorulmayacak. Dikkat url isminde `https` olmaması önemli, o yüzden
+kullanıcı / şifre soruluyor zaten. SSH üzerinden şifresiz commit için
+ayarlanan repo'larda bu url `git@github.com:...` diye gider.

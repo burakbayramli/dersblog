@@ -1,5 +1,9 @@
 # Android Uzerinde Linux - Termux
 
+*Not*: Google Playstore'daki Termux artık desteklenmiyor, fakat hala
+içinde `ssh` olan iskelet bir komut satırı kuruluşu yapılabiliyor.
+Alttaki yazının bazı kısımları hala geçerli. 
+
 Android işletim sisteminin temeli Linux işletim sistemidir, en azından
 çekirdek seviyesinde bu böyle. Peki madem böyle niye Ubuntu'da, ya da
 diğer Debian bazlı sistemlerde olduğu gibi apt-get, python, ruby,

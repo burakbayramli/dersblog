@@ -6,4 +6,3 @@
 
 [Perl İle Kod HeykelTraşlığı](10/perl-ile-kod-heykeltraslg.html)
 
-

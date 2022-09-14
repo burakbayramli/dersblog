@@ -2,4 +2,5 @@
 
 [Uydu Fotoğrafları Erişimi](06/uydu-fotograf-satellite-image.html)
 
+[Klavye, Android, Raspberry Pi](09/gelistirme-ortami-tablet-rpi.html)
 

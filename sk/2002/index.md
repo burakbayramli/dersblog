@@ -24,4 +24,3 @@
 
 [Kontrol Edilmeyen (Unchecked) Exception'lar](11/kontrol-edilmeyen-unchecked-exception.html)
 
-

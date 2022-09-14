@@ -54,4 +54,3 @@
 
 [SQLite, Android, JDBC, Python](12/sqlite-android-jdbc-python.html)
 
-

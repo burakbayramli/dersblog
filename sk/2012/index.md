@@ -130,12 +130,3 @@
 
 [Mahout, Jython ve Yapay Ogrenim](12/mahout-jython-ve-yapay-ogrenim.html)
 
-
-
-
-
-
-
-
-
-

@@ -6,4 +6,3 @@
 
 [Ubuntu'da CAPS Tusunu Control Yapmak](12/ubuntu-caps-tusunu-control-yapmak.html)
 
-

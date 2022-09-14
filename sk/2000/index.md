@@ -66,4 +66,3 @@
 
 [Yazılım Şirket Çeşitleri](11/yazlm-sirket-cesitleri.html)
 
-

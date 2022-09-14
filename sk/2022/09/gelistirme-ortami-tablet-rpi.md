@@ -1,23 +1,21 @@
-# Klavye, Android, Raspberry Pi Geliştirme Ortamı
+# Android, Raspberry Pi Geliştirme Ortamı
 
-Mobil geliştirme ortamı hazırlamak için Bluetooth klavye, Android
+Rahat taşınabilir geliştirme ortamı için Bluetooth klavye, Android
 Tablet, SSH, RPi üzerinde Ubuntu olabilir. Çoğu işi editör'de metin
 girerek kodlama yapıyorsak (görsel çıktılar RPi mikro web servisi
-üzerinden alınabilir) bu işler.
-
-Powerbank RPi çalıştırır. Tablet ile Android üzerinde yazıyoruz,
-Android hotspot üzerinden Raspberry'ye DHCP IP adresi verdiriyoruz
-(192.168.43.x gibi bir adres bunu `ifconfig -a` ile RPi uzerinden
-ögrenebiliriz, ve RPi üzerinde WiFi aktif hale getirmek
-lazım). Ardından tablet üzerinden Termux [7] `ssh` ile RPi'a
-bağlanırız. Kuruluş böyle.
+üzerinden alınabilir) bu işler. Powerbank RPi çalıştırır. Tablet ile
+Android üzerinde yazıyoruz, Android hotspot üzerinden Raspberry'ye
+DHCP IP adresi verdiriyoruz (192.168.43.x gibi bir adres bunu
+`ifconfig -a` ile RPi uzerinden ögrenebiliriz, ve RPi üzerinde WiFi
+aktif hale getirmek lazım). Ardından tablet üzerinden Termux [7] `ssh`
+ile RPi'a bağlanırız. Tüm girdi metin bazlı yapılır. Kuruluş böyle.
 
 [Resim](tablrpi1.jpg)
 
 Assistant
 
 Bizim tablet Lenovo M8, Eğer editör kullanacaksak, üstte görülen
-tablet uzerinden, Windows tuşunu iptal etmek iyi fikir [2].
+tablet üzerinden, Windows tuşunu iptal etmek iyi fikir [2].
 
 Adım 1: `Device Settings` açılır, sonra `Apps/Application Manager`.
 
@@ -54,6 +52,8 @@ Host *
 yazılır, artık `ssh` komut satırında 4 dakika hiçbir işlem olmasa bile
 bağlantı koparılmayacaktır.
 
+Note: Alternatif Android SSH programı Juice SSH.
+
 Yerel Ağ Baglantısı
 
 Test ettik, Tablet -> RPi arasındaki bağlantı eğer dış İnternet
@@ -69,7 +69,7 @@ tablet için Ethernet->mikro USB adaptörü gerekir. Mikro USB-Mikro USB
 bağlantısının bir avantajı tableti artık RPi için güç kaynağı olarak
 kullanabilmektir.
 
-Neler Yapılabilir?
+Bu Sistemle Neler Yapılabilir?
 
 Servis tarafindaki RPi tam tekmilli bir Linux (Ubuntu) oldugu icin
 servis tarafinda yapılamayacak sey yok. `sudo apt install` ile her

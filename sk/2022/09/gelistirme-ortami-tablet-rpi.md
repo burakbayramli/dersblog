@@ -19,13 +19,13 @@ Assistant
 Bizim tablet Lenovo M8, Eğer editör kullanacaksak, üstte görülen
 tablet uzerinden, Windows tuşunu iptal etmek iyi fikir [2].
 
-Adım 1: `device Settings` açılır, sonra `Apps/Application Manager`.
+Adım 1: `Device Settings` açılır, sonra `Apps/Application Manager`.
 
 Adım 2: `Default apps` tıklanır, sonra `Assist & voice input`.
 
-Adım 3: `Assist app` seçeneği seçilir. Sonraki ekranda `assist app`
+Adım 3: `Assist app` seçeneği seçilir. Sonraki ekranda `Assist app`
 için `Google` gösteren bir app listesi görüyoruz. Biz `home` düğmesi
-için `Nöne` seçiyoruz, böylece Assistant artık çıkmıyor.
+için `None` seçiyoruz, böylece Assistant artık çıkmıyor.
 
 Tuş Değişimi
 
@@ -35,7 +35,7 @@ yapabiliriz. Fakat Android seviyesinde değişiklik lazım. Şu [1]
 uygulama ile web üzerinde bir .apk ürettiriliyor (arka planda derleme
 vs işleri yapılıyor), bu .apk indirilip kurulunca (Android uyarılarını
 dikkate almayız) artık CAPS tuşu CTRL haline gelir. Üretimden önce
-seçeneklerde `Caps Lock aş Left Ctrl` seçmiş olmak lazım, bu seçim
+seçeneklerde `Caps Lock as Left Ctrl` seçmiş olmak lazım, bu seçim
 `map key 58 CTRL_LEFT` komutunu alttaki kutuya ekler. Bu tanım daha
 sonra yaratılacak .apk içine koyulacak. Uygulamaya güvenmeyenler aynı
 sayfadaki bağlantıdan kaynak koduna gidip Android kodunu derleyebilir.
@@ -82,5 +82,8 @@ Kaynaklar
 [6] [Raspberry Pi](../../2020/07/raspberrypi.html)
 
 [7] [Android Uzerinde Linux - Termux](2018/09/android-uzerinde-linux-termux.html)
+
+
+
 
 

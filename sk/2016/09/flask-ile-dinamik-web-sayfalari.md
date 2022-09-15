@@ -34,15 +34,16 @@ if __name__ == '__main__':
     app.run(host="localhost", port=5000)
 ```
 
-Şablonların olağan olarak templates adında bir alt dizinde olduğu
-kabul edilir.
+Şablonların olağan ayarlara göre `templates` adında bir alt dizinde
+olduğu kabul edilir.
 
-Not: `app.debug=True` ile servis başlatınca kodda yapılan değişim
+`app.debug=True` ile servis başlatınca kodda yapılan değişim
 servisin tekrar yüklenmesine sebep olur, bu geliştirme açısından
 faydalı.
 
-Not: Chrome ile sayfa içeriği onbellekte tutuluyor ve kod değiştiği
+Chrome ile sayfa içeriği önbellekte tutuluyor ve kod değiştiği bazen
 farkedilemiyor. Bu sebeple geliştirme için Firefox daha iyi olabilir.
+Ya da Chrome'un güncellemesini CTRL-R ile zorlamak lazım.
 
 Sayfalar
 
@@ -122,6 +123,7 @@ yaratabiliriz. Bu objenin ayni Python sureci icinde tek olacagindan
 emin oluruz, kodumuzun farkli taraflari arasinda bilgi paylasmak icin
 bu nesneyi kullanabiliriz.
 
+```python
 class OnlyOne(object):
     class __OnlyOne:
         def __init__(self):
@@ -139,6 +141,7 @@ class OnlyOne(object):
         return getattr(self.instance, name)
     def __setattr__(self, name):
         return setattr(self.instance, name)
+```
 
 Simdi OnlyOne().db ile erişince ilk başta yükleme yapılıp ardından
 yüklenen taban kullanılacak. Taban dediğimiz basit bir Pandas
@@ -146,7 +149,7 @@ Dataframe objesi. Sonuçları, mesela herhangi bir listelemeden gelecek
 sonuçlar için some_results kullanmışız, ona OnlyOne().some_results ile
 erisiriz.
 
-JSON Üretmek
+### JSON Üretmek
 
 Herhangi Python bazlı bir yazılımı dış dünyaya (servis olarak) açmak
 için en basit seçeneklerden biri HTTP servisi üzerinden JSON iledir,
@@ -209,6 +212,66 @@ def upload_file():
       return 'file uploaded successfully'
 
 ```
+
+### Form Verisi
+
+Bir girdi kutusu var, o kutuya girilen parametre ile, bir işlem
+yapılıyor, ve sonuçlar aynı sayfada gösteriliyor. Mesela bu bir arama
+fonksiyonu olabilir.
+
+Sayfa
+
+```
+<h1>Arama</h1>
+
+  <form action="/submit_search" method="post">
+    
+    <input type="text" name="search"/>
+    <br/><br/>  
+    <input type="submit">
+   </form>
+
+   {{ results }}
+
+```
+
+Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
+gibi ekrana basılacak. Servis tarafı,
+
+
+```python
+from flask import Flask, render_template, request
+
+@app.route('/search')
+def search():
+    return render_template('/search.html')
+
+@app.route('/submit_search', methods=['POST'])
+def submit_search():
+    print ("Arananan kelime:", request.form['search'])
+    results = []
+    for i in range(2):
+    	results.append([i, 'sonuc '+str(i)])
+    return render_template("/search.html",results=results)
+
+```
+
+Tarayıcıda `/search` adresine gideriz oradaki forma bilgi yazıp
+tıklayınca girilen veriye `request.form['search']` ile
+erisebiliyioruz. İki tane sonuç uydurduk üstte, listeye iki öğeli bir
+satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
+gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
+teker erisebilirdi mesela,
+
+```
+{% for x in results %}
+  <p>
+  Bu ilk oge {{x[0]}}, ikinci oge {{x[1]}}  
+  </p>
+{% endfor %}        
+```
+
+gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. 
 
 ### Başlatma Numaraları
 

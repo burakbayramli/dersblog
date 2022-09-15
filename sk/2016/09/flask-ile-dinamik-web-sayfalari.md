@@ -86,9 +86,9 @@ dosyayi static alt dizinine koymak lazim (python uzerinden servis
 edilmeyen her sayfa, icerik buraya gider), ve html icinde
 
 ```
-  <head>
-    <link rel="stylesheet" type="text/css" href="/static/main.css" media="screen" />
-  </head>
+<head>
+  <link rel="stylesheet" type="text/css" href="/static/main.css" media="screen" />
+</head>
 ```
 
 gerekli.
@@ -121,14 +121,14 @@ Sayfa
 ```
 <h1>Arama</h1>
 
-  <form action="/submit_search" method="post">
-    
-    <input type="text" name="search"/>
-    <br/><br/>  
-    <input type="submit">
-   </form>
+<form action="/submit_search" method="post">
+  
+  <input type="text" name="search"/>
+  <br/><br/>  
+  <input type="submit">
+</form>
 
-   {{ results }}
+{{ results }}
 
 ```
 

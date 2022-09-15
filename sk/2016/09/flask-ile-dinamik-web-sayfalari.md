@@ -16,7 +16,7 @@ değişkenlerin değeri dışarıdan verilerek doldurulur.
 
 Ilk main.py
 
-```
+```python
 from flask import Flask, render_template
 
 app = Flask(__name__)
@@ -258,7 +258,7 @@ Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML
 
 Python içinde
 
-```
+```python
 @app.route('/book_uploader', methods = ['GET', 'POST'])
 def upload_file():
 

@@ -100,8 +100,6 @@ Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
 
 ```
 <html>
-
-
   <head>
     ...
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -109,9 +107,68 @@ Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
   <body>
     ....
 
-
 </html>
 ```
+
+### Form Verisi
+
+Bir girdi kutusu var, o kutuya girilen parametre ile, bir işlem
+yapılıyor, ve sonuçlar aynı sayfada gösteriliyor. Mesela bu bir arama
+fonksiyonu olabilir.
+
+Sayfa
+
+```
+<h1>Arama</h1>
+
+  <form action="/submit_search" method="post">
+    
+    <input type="text" name="search"/>
+    <br/><br/>  
+    <input type="submit">
+   </form>
+
+   {{ results }}
+
+```
+
+Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
+gibi ekrana basılacak. Servis tarafı,
+
+
+```python
+from flask import Flask, render_template, request
+
+@app.route('/search')
+def search():
+    return render_template('/search.html')
+
+@app.route('/submit_search', methods=['POST'])
+def submit_search():
+    print ("Arananan kelime:", request.form['search'])
+    results = []
+    for i in range(2):
+    	results.append([i, 'sonuc '+str(i)])
+    return render_template("/search.html",results=results)
+
+```
+
+Tarayıcıda `/search` adresine gideriz oradaki forma bilgi yazıp
+tıklayınca girilen veriye `request.form['search']` ile
+erisebiliyioruz. İki tane sonuç uydurduk üstte, listeye iki öğeli bir
+satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
+gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
+teker erisebilirdi mesela,
+
+```
+{% for x in results %}
+  <p>
+  Bu ilk oge {{x[0]}}, ikinci oge {{x[1]}}  
+  </p>
+{% endfor %}        
+```
+
+gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. 
 
 ### Hafızada Sonuç, Referans Veri Tutmak
 
@@ -186,7 +243,7 @@ görülür. Sonra curl ile `curl -H "Content-Type: application/json" -d
 ozel URL'e JSON gonderilir. Kodun tek yaptigi listeyi alip siralamak,
 yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.
 
-Dosya Yüklemek (Upload)
+### Dosya Yüklemek (Upload)
 
 Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML
 
@@ -214,65 +271,6 @@ def upload_file():
 ```
 <a name='form'/>
 
-### Form Verisi
-
-Bir girdi kutusu var, o kutuya girilen parametre ile, bir işlem
-yapılıyor, ve sonuçlar aynı sayfada gösteriliyor. Mesela bu bir arama
-fonksiyonu olabilir.
-
-Sayfa
-
-```
-<h1>Arama</h1>
-
-  <form action="/submit_search" method="post">
-    
-    <input type="text" name="search"/>
-    <br/><br/>  
-    <input type="submit">
-   </form>
-
-   {{ results }}
-
-```
-
-Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
-gibi ekrana basılacak. Servis tarafı,
-
-
-```python
-from flask import Flask, render_template, request
-
-@app.route('/search')
-def search():
-    return render_template('/search.html')
-
-@app.route('/submit_search', methods=['POST'])
-def submit_search():
-    print ("Arananan kelime:", request.form['search'])
-    results = []
-    for i in range(2):
-    	results.append([i, 'sonuc '+str(i)])
-    return render_template("/search.html",results=results)
-
-```
-
-Tarayıcıda `/search` adresine gideriz oradaki forma bilgi yazıp
-tıklayınca girilen veriye `request.form['search']` ile
-erisebiliyioruz. İki tane sonuç uydurduk üstte, listeye iki öğeli bir
-satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
-gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
-teker erisebilirdi mesela,
-
-```
-{% for x in results %}
-  <p>
-  Bu ilk oge {{x[0]}}, ikinci oge {{x[1]}}  
-  </p>
-{% endfor %}        
-```
-
-gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. 
 
 ### Başlatma Numaraları
 
@@ -301,3 +299,6 @@ Eğer servise dışarıdan erişmek istiyorsak `host` için o erişilecek IP
 adresini vermemiz gerekir, makinanın adresi `ifconfig -a` ile
 bakılabilir, ve mesela `host="192.168.22.33"` gibi bir seçenek
 geçilir.
+
+
+

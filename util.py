@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*- 
 import os, sys, re, codecs, shutil, markdown, json
 
 html_head = '''
@@ -112,7 +114,7 @@ def tex_mathjax_html(texfile, htmlfile, title):
          line = line.replace("_","@@UUEEE@@") # special code
          fout.write(line)
       elif '\\mlabel' in line:
-         line = re.sub(r'\\mlabel{(.*?)}', r'\qquad (\1)', line)
+         line = re.sub("\\\mlabel{(.*?)}", "\\\qquad (\\1)", line)
          fout.write(line)
       else:
           fout.write(line)

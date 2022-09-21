@@ -72,14 +72,13 @@ plt.savefig('tser_coint_03.png')
 </code></pre>
 
 <p><img alt="" src="tser_coint_03.png" /></p>
-<p>Aslında "birleştirmek" tam doğru bir kelime değil. Bir regresyon
-işlettik, ve $y$ içinden $x$'i <em>çıkarttık</em>. Arada lineer bağlantı
-vardı, ve bu durumda (eğer model iyi ise) geri kalan nedir? Gürültüdür!
-Gürültü, yani verili bir ortalama (mean) etrafında salınım Gaussian /
-Normal dağılım değil midir?  Evet! Aslında zamana yayılmış Gaussian gürültü
-durağandır. Yani gürültü üzerinde borsa işlemi karlı bir şeydir! İlginç
-değil mi? Örnek olarak 100 tane standart normal dağılımdan gelen veri
-noktası üretelim,</p>
+<p>Aslında "birleştirmek" tam doğru bir kelime değil [4, sf. 413]. Bir regresyon
+işlettik, ve $y$ içinden $x$'i <em>çıkarttık</em>. Arada lineer bağlantı vardı, ve
+bu durumda (eğer model iyi ise) geri kalan nedir? Gürültüdür!  Gürültü, yani
+verili bir ortalama (mean) etrafında salınım Gaussian / Normal dağılım değil
+midir?  Evet! Aslında zamana yayılmış Gaussian gürültü durağandır. Yani gürültü
+üzerinde borsa işlemi karlı bir şeydir! İlginç değil mi? Örnek olarak 100 tane
+standart normal dağılımdan gelen veri noktası üretelim,</p>
 <pre><code class="python">plt.plot(np.random.normal(loc=0,scale=1.0,size=100))
 plt.title(u'Standard Normal Yapay Veri Noktaları')
 plt.savefig('tser_coint_04.png')
@@ -150,7 +149,7 @@ ortalamaya-dönüş ise, çok boyutta regresyon yaparım ve artıkları
 kullanırım. Burada problem şudur: hangi değişken $y$ hangisi $x$ (vektörü)
 olacak? Tüm seçenekleri denemek zaman alabilir. Johansen testi aslında
 akıllıca bir özvektör hesabı ile tam da bunu gerçekleştiriyor (detaylar
-için [1]). </p>
+için [1, sf. 165]). </p>
 <pre><code class="python">from johansen import coint_johansen, print_johan_stats
 res = coint_johansen(df[['ewa','ewc']], 0, 1)
 print_johan_stats(res)
@@ -315,6 +314,7 @@ kurulmuştur. Korelasyon ise aynı tek tek, atomik noktalardaki değişimlerin
 aynı yönde olup olmadığının istatistiği bir anlamda. Bu iki hesap çok
 farklı şeyleri anlatıyorlar.</p>
 <p>Kaynaklar </p>
-<p>[1] Hauser, <em>Financial Econometrics Lecture Notes</em></p>
+<p>[1] Maddala, <em>Unit Roots, Cointegration, and Structural Change</em></p>
 <p>[2] Chan, <em>Algorithmic Trading</em></p>
 <p>[3] Chan, <em>Quantitative Trading</em></p>
+<p>[4] Ruppert, <em>Statistics and Data Analysis for Financial Engineering</em></p>

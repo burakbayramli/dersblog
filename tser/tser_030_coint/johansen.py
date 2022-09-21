@@ -60,7 +60,7 @@ from numpy import zeros, ones, flipud, log
 from numpy.linalg import inv, eig, cholesky as chol
 from statsmodels.regression.linear_model import OLS
 
-from coint_tables import c_sja, c_sjt
+from statsmodels.tsa.coint_tables import c_sja, c_sjt
 
 tdiff = np.diff
 
@@ -219,17 +219,17 @@ def coint_johansen(x, p, k):
     return result
 
 def print_johan_stats(res):
-     print 'trace statistic', res.lr1
-     print 'critical vals %90,%95,%99'
-     for i in range(len(res.cvt)): print 'r<=%d' % i, res.cvt[i]
+     print ('trace statistic', res.lr1)
+     print ('critical vals %90,%95,%99')
+     for i in range(len(res.cvt)): print ('r<=%d' % i, res.cvt[i])
      print
-     print 'eigen statistic', res.lr2
-     print 'critical values  %90,%95,%99'
-     for i in range(len(res.cvm)): print 'r<=%d' % i, res.cvm[i]
+     print ('eigen statistic', res.lr2)
+     print ('critical values  %90,%95,%99')
+     for i in range(len(res.cvm)): print ('r<=%d' % i, res.cvm[i])
      print
-     print 'ozdegerler', res.eig
+     print ('ozdegerler', res.eig)
      print
-     print 'ozvektorler'
+     print ('ozvektorler')
      print
-     print res.evec
+     print (res.evec)
     

@@ -265,8 +265,6 @@ plt.savefig('har6.png')
 
 ![](har6.png)
 
-<a name='shp'/>
-
 ### SHP ile Kendimiz Sınır Çizelim
 
 Bazen Cartopy ve hatta Folium bile uygulamamıza biraz yük

@@ -153,8 +153,6 @@ COG noktasinda atalet matrisi
  [-2.31301332e-02  6.33494132e+01  1.02767050e+05]]
 ```
 
-<a name='3drot'>
-
 3D Döndürme
 
 Bir objeyi döndürmek için gereken matematiği [6]'da görmüştük. Eğer bir simit

@@ -319,6 +319,7 @@ elde ediyoruz, böylece [5]'teki forma erişmiş olduk, yani maksimizasyon
 problemi $\Sigma$ özdeğerlerini bulma problemi haline geldi.
 
 \begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
 import numpy.linalg as lin
 
 df = pd.read_csv('ETF.csv',index_col=0)
@@ -346,15 +347,15 @@ büyük, en küçük olan ortadaki. Her özdeğere tekabül eden özvektörleri 
 üç zaman serisini lineer olarak birleştirip varyansı hesaplarsak,
 
 \begin{minted}[fontsize=\footnotesize]{python}
-print (np.std(np.dot(df[cols], evec[:,0])))
-print (np.std(np.dot(df[cols], evec[:,1])))
-print (np.std(np.dot(df[cols], evec[:,2])))
+print (np.std(np.dot(df[cols], evec[:,0]))**2)
+print (np.std(np.dot(df[cols], evec[:,1]))**2)
+print (np.std(np.dot(df[cols], evec[:,2]))**2)
 \end{minted}
 
 \begin{verbatim}
-9.191133914711925
-0.7019466595263606
-1.6696557090446438
+84.47694263816774
+0.4927291128202164
+2.787750186745372
 \end{verbatim}
 
 Hakikaten de varyansların özdeğer büyüklük sırasına uyduğunu görüyoruz.

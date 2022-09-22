@@ -288,6 +288,77 @@ $$</p>
 $$</p>
 <p>elde ediyoruz, böylece [5]'teki forma erişmiş olduk, yani maksimizasyon
 problemi $\Sigma$ özdeğerlerini bulma problemi haline geldi.</p>
+<pre><code class="python">import numpy.linalg as lin
+
+df = pd.read_csv('ETF.csv',index_col=0)
+cols = ['ewc','ewa','ige']
+Sigma = df[cols].cov()
+print (Sigma)
+eval,evec = lin.eig(Sigma)
+print (eval)
+print (evec)
+</code></pre>
+
+<pre><code>           ewc        ewa        ige
+ewc  21.837037  20.803273  30.010970
+ewa  20.803273  21.615375  28.060908
+ige  30.010970  28.060908  44.363554
+[84.53329817  0.49305782  2.78960993]
+[[ 0.50327072  0.84935206 -0.15912154]
+ [ 0.48528435 -0.43015916 -0.76122415]
+ [ 0.71499488 -0.30588263  0.62866377]]
+</code></pre>
+
+<p>Özdeğerleri gösterdik, en büyük olanı ilk baştaki, üçüncü (indis 2) olan ikinci
+büyük, en küçük olan ortadaki. Her özdeğere tekabül eden özvektörleri kullanarak
+üç zaman serisini lineer olarak birleştirip varyansı hesaplarsak,</p>
+<pre><code class="python">print (np.std(np.dot(df[cols], evec[:,0])))
+print (np.std(np.dot(df[cols], evec[:,1])))
+print (np.std(np.dot(df[cols], evec[:,2])))
+</code></pre>
+
+<pre><code>9.191133914711925
+0.7019466595263606
+1.6696557090446438
+</code></pre>
+
+<p>Hakikaten de varyansların özdeğer büyüklük sırasına uyduğunu görüyoruz.</p>
+<p>Zaman serilerini grafikleyelim,</p>
+<pre><code class="python">df['yport0'] = np.dot(df[cols], evec[:,0])
+df['yport1'] = np.dot(df[cols], evec[:,1])
+df['yport2'] = np.dot(df[cols], evec[:,2])
+
+fig, axs = plt.subplots(3,sharex=True)
+df['yport0'].plot(ax=axs[0])
+df['yport1'].plot(ax=axs[1])
+df['yport2'].plot(ax=axs[2])
+plt.savefig('tser_coint_08.png')
+</code></pre>
+
+<p><img alt="" src="tser_coint_08.png" /></p>
+<p>Kabaca bakınca ortadaki seri daha durağan gibi gözüküyor.</p>
+<p>Ana bileşenler ile koentegrasyonun bağlantısı açık olarak ortada.  Koentegrasyon
+ile oluşturulan zaman serisinin varyansı bir $I(1)$ tur serinin varyansından
+düşük olacağına göre (ki $I(1)$ durağan olmayan bir serinin tek farkını alarak
+elde edilebilen bir seridir), o zaman küçük olan özdeğerlere tekabül eden
+özvektörler kullanılarak oluşturulan seri koentegre olacaktır, daha büyük
+olanlara tekabül eden birleşimler baz serilerin ortak rasgele trendlerini ortaya
+çıkartacaktır.</p>
+<p>Birleştirilen tüm serileri üzerinde durağanlık testi yaparsak,</p>
+<pre><code class="python">from statsmodels.tsa.stattools import adfuller
+print (adfuller(df['yport0'])[1])
+print (adfuller(df['yport1'])[1])
+print (adfuller(df['yport2'])[1])
+</code></pre>
+
+<pre><code>0.32289800956874337
+0.011909826790814142
+0.06403183470108954
+</code></pre>
+
+<p>Hakikaten de 0.05'ten küçük olan tek zaman serisi ortadaki, o zaman
+en küçük özdeğere tekabül eden birleştirim durağan bir seri ortaya
+çıkarttı.</p>
 <p>Koentegrasyon ve Korelasyon</p>
 <p>Koentegrasyon kavramı pek çok borsacı tarafından bilinmez, ama korelasyonu
 çoğu kişi iyi biliyor. Bu iki kavram pek çok kişinin kulağına sanki aynı

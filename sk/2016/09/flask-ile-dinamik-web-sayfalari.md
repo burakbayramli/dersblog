@@ -157,7 +157,7 @@ def submit_search():
 
 Tarayıcıda `/search` adresine gideriz oradaki forma bilgi yazıp
 tıklayınca girilen veriye `request.form['search']` ile
-erisebiliyioruz. İki tane sonuç uydurduk üstte, listeye iki öğeli bir
+erisebiliyoruz. İki tane sonuç uydurduk üstte, listeye iki öğeli bir
 satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
 gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
 teker erisebilirdi mesela,

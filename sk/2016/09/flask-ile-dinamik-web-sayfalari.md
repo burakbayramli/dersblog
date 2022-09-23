@@ -110,11 +110,13 @@ Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
 </html>
 ```
 
+<a name='form'/>
+
 ### Form Verisi
 
-Bir girdi kutusu var, o kutuya girilen parametre ile, bir işlem
-yapılıyor, ve sonuçlar aynı sayfada gösteriliyor. Mesela bu bir arama
-fonksiyonu olabilir.
+Örnek olarak bir girdi kutusu düşünelim, o kutuya girilen parametre
+ile bir işlem yapılıyor, sonuçlar aynı sayfada gösteriliyor, bir arama
+fonksiyonu mesela;
 
 Sayfa
 

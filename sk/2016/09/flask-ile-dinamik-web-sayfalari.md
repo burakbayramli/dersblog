@@ -120,7 +120,8 @@ fonksiyonu mesela;
 
 Sayfa
 
-```
+{% highlight html%}
+{% raw %}
 <h1>Arama</h1>
 
 <form action="/submit_search" method="post">
@@ -129,10 +130,11 @@ Sayfa
   <br/><br/>  
   <input type="submit">
 </form>
-```
-{% raw %}
+
 {{ results }}
+
 {% endraw %}
+{% endhighlight %}
 
 
 Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu

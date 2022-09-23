@@ -162,7 +162,7 @@ satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
 gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
 teker erisebilirdi mesela,
 
-```
+```html
 {% for x in results %}
   <p>
   Bu ilk oge {{x[0]}}, ikinci oge {{x[1]}}  

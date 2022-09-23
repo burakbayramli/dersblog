@@ -129,8 +129,10 @@ Sayfa
   <br/><br/>  
   <input type="submit">
 </form>
+
+\{\{ results \}\}
+
 ```
-`{{ results }}`
 
 Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
 gibi ekrana basılacak. Servis tarafı,

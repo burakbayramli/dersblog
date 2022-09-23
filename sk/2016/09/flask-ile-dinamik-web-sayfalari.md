@@ -120,7 +120,7 @@ fonksiyonu mesela;
 
 Sayfa
 
-```
+```html
 <h1>Arama</h1>
 
 <form action="/submit_search" method="post">

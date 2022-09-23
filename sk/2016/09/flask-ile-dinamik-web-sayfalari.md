@@ -300,3 +300,9 @@ Eğer servise dışarıdan erişmek istiyorsak `host` için o erişilecek IP
 adresini vermemiz gerekir, makinanın adresi `ifconfig -a` ile
 bakılabilir, ve mesela `host="192.168.22.33"` gibi bir seçenek
 geçilir.
+
+
+
+
+
+

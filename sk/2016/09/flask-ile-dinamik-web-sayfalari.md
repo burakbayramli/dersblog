@@ -120,7 +120,7 @@ fonksiyonu mesela;
 
 Sayfa
 
-```html
+<![CDATA[
 <h1>Arama</h1>
 
 <form action="/submit_search" method="post">
@@ -130,9 +130,8 @@ Sayfa
   <input type="submit">
 </form>
 
-&#123; &#123; results &#125; &#125;
-
-```
+{{ results }}
+]]>
 
 Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
 gibi ekrana basılacak. Servis tarafı,
@@ -299,6 +298,3 @@ Eğer servise dışarıdan erişmek istiyorsak `host` için o erişilecek IP
 adresini vermemiz gerekir, makinanın adresi `ifconfig -a` ile
 bakılabilir, ve mesela `host="192.168.22.33"` gibi bir seçenek
 geçilir.
-
-
-

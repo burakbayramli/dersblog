@@ -120,7 +120,7 @@ fonksiyonu mesela;
 
 Sayfa
 
-```html
+```
 <h1>Arama</h1>
 
 <form action="/submit_search" method="post">
@@ -129,10 +129,11 @@ Sayfa
   <br/><br/>  
   <input type="submit">
 </form>
-
-\{\{ results \}\}
-
 ```
+{% raw %}
+{{ results }}
+{% endraw %}
+
 
 Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
 gibi ekrana basılacak. Servis tarafı,

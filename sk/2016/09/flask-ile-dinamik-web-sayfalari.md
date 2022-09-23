@@ -130,7 +130,7 @@ Sayfa
   <input type="submit">
 </form>
 
-{{ results }}
+&#123; &#123; results &#125; &#125;
 
 ```
 

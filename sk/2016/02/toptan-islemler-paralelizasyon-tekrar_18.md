@@ -65,7 +65,7 @@ performansın önündeki engel mikroişlemci değil. Fakat paralelizasyon
 hala faydalı çünkü bir süreç network'u beklerken diğeri verinin kendi
 parçası üzerinde ilerleme sağlayabilir.
 
-2. problemin çözümü, mesela işlenecek şeyler bir veri tabanından
+Ikinci problemin çözümü, mesela işlenecek şeyler bir veri tabanından
 geliyorlarsa, tabanda bir status kolonu yaratmak, ve işlenen veri
 satırında bu statü belirten kolonu o satır için "işlendi" konumuna
 getirmek. Her satır işlenmeden önce bu statüye bakılır, eğer işlenmiş

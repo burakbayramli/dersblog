@@ -1,5 +1,7 @@
 # PDF Numaralari, pdftk, pdfjam, gs, mutool
 
+PDFtk
+
 PDF dosyalari uzerinden pek cok islem pdftk ile yapilabilir. Kurmak icin
 
 ```
@@ -103,6 +105,25 @@ gostermek icin, kucultmek icin kalitesini azaltmak isteyebiliriz. Eger
 gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -q -o output.pdf input.pdf
 ```
 
+Python
 
+Bazen PDF içinden tablo verisi çıkartmak gerekiyor. İşaretle-kopyala
+ile bu işlem her zaman rahat olmayabiliyor. Bir Python kütüphanesi
+faydalı olabilir,
 
+```
+pip install tabula-py
+```
 
+ile kurarız. Tabula PDF tablolarını Pandas DataFrame olarak döndürmeye
+uğraşır. Mesela 30-35 sayfalarındaki tabloları tek bir DataFrame olarak
+almak için,
+
+```python
+import tabula, pandas as pd
+ps = list(range(30,35))
+print (ps)
+table = tabula.read_pdf("doc.pdf",pages=ps)
+df = pd.concat(table,axis=0)
+df.to_csv('out.csv',sep=';')
+```

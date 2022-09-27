@@ -62,26 +62,21 @@ Gerekli exe indirilir, kurulur (bir kere indirme islemi bana hata verdi, ama ert
  git config --global user.email "user@filan.com"
  git config --global user.name 'Isim'
 
-
-
 ile bunlar halledilir. Eger Github'a baglanti gerekiyorsa, bir SSH anahtari yaratmak lazim, 
-
-
 
 ssh-keygen
 
-
-
-Bu komut HOME/.ssh altinda id_rsa.pub yaratir, bu dosya icerigini Github | Settings | Add SSH Keys uzerinden hesabimiza ekleriz, boylece sifresiz commit yapabiliriz. Eger satir sonlari ile ilgili hatalari gormek istemezsek, 
-
-
+Bu komut HOME/.ssh altinda id_rsa.pub yaratir, bu dosya icerigini
+Github | Settings | Add SSH Keys uzerinden hesabimiza ekleriz, boylece
+sifresiz commit yapabiliriz. Eger satir sonlari ile ilgili hatalari
+gormek istemezsek, 
 
 git config --global core.safecrlf false
 
-
 PDF Okumak
 
-PDF dosyalarini okumak icin evince var, MS dahil edilmis program Edge yerine bu daha iyi ve hizli
+PDF dosyalarini okumak icin evince var, MS dahil edilmis program Edge
+yerine bu daha iyi ve hizli
 
 https://wiki.gnome.org/Apps/Evince/Downloads
 

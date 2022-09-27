@@ -1,8 +1,8 @@
 # Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python
 
-Mesafe hesabi yapmak
+Mesafe hesabı yapmak
 
-Iki enlem, boylam kordinati arasinda mesafe hesabi icin geopy kullanilabilir.
+İki enlem, boylam kordinatı arasında mesafe hesabı için geopy kullanılabilir.
 
 ```python
 import geopy.distance
@@ -39,8 +39,8 @@ def get_bearing(lat1,lon1,lat2,lon2):
 Sonuç 0 derece kuzey olmak üzere 0-360 derece arasında saat yönüne
 doğru artacak şekilde açı.
 
-Bir kordinattan "10 km doguya, batiya, vs. adim atinca nereye
-geliriz?" sorusunun cevabi icin
+Bir kordinattan "10 km doğuya, batıya, vs. adım atınca nereye
+geliriz?" sorusunun cevabı için
 
 ```python
 import geopy
@@ -158,6 +158,27 @@ p = LatLon(45.1, 1.1)
 b = LatLon(45, 1), LatLon(45, 2), LatLon(46, 2), LatLon(46, 1)
 print (p.isenclosedBy(b))
 ```
+
+DMS ve Ondalik Formatlar Gecisi
+
+Bazen `000° 00′ 05.31″W` ve `51° 28′ 40.12″ N` şeklinde enlem ve
+boylam verisi görebiliriz. Bu format yeri saat, dakika, saniye
+üzerinden göstermektedir. Çevirmek için `pygeodesy` içinde gerekli
+fonksiyonlar var,
+
+```python
+from pygeodesy import parse3llh, fstr
+
+x = parse3llh('000° 00′ 05.31″W, 51° 28′ 40.12″ N')
+print (fstr(x, prec=6))
+```
+
+```text
+51.477811, -0.001475, 0.0
+```
+
+İlk iki sayı enlem ve boylamdır.
+
 
 HTML5 ve Javascript ile Yer Bulmak
 

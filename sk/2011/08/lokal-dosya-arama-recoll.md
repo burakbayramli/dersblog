@@ -22,7 +22,7 @@ Direk komut satırından arama için `recoll -t` çağrısı ardından anahtar
 kelimeler verilir, ve sonuç listelenebilir. Bu çağrıyı sarmalayan basit bir
 Python script alttadır,
 
-```
+```python
 import subprocess, re, sys
 q = "bunlari ara"
 p = subprocess.Popen(['recoll','-t',q], stdout=subprocess.PIPE)

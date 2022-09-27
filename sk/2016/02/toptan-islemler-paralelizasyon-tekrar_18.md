@@ -282,33 +282,35 @@ haşır neşir oluruz.
 
 Eğer SQL bazlı veri tabanındaki kayıtları işliyorsam en basit yaklaşım
 işlenen satırlar üzerinde bir statü kolonu koymak, ve süreç
-başladığında 'işlenmemiş satırlar' statüsündeki satırlar almak, ve o
+başladığında 'işlenmemiş satırlar' statüsündeki satırları almak, ve o
 satır işlendikten sonra onu 'işlendi' statüsüne getirmek. Bu yaklaşım
 daha önce bahsedilen 'satır kitleme' yaklaşımıyla uyumlu, ben işlerken
 diğer süreçler bu satırı kitlemeyecek, bir sonraki satıra gidecekler,
 ben o sırada işimi yapacağım. İsim bitince statüyü 'işlendi' haline
 getireceğim, eh zaten kilit bende, ve bu şekilde elimdeki bir sonraki
-satıra bakacağım.
+satıra bakacağım. Eğer süreci ikinci kez başlatıyorsam ben ya da
+benden sonraki süreç statüyü kitler, ve yine işlenmemiş olan satırları
+alır, ve işe devam eder.
 
-Eğer tek surecli ve mesela CSV bazlı işlem yapıyorsak yaklaşım ne
+Peki tek süreçli ve mesela CSV bazlı işlem yapıyorsak yaklaşım ne
 olmalı? Mesela `in.csv` içindeki satırları işleyip bir `out.csv`
 üreteceğim, bir Web sitesinde sorgulama yapıp yeni bir kolon
 ekleyeceğim belki, ve İnternet bağlantısı düşebilir, pek çok şey
 olabilir, tekrar başlattığımda kaldığım yerden devam etmek istiyorum.
 
-Burada en kolay yaklasim sudur, eger girdi verisinde bastan sonra
-dogru artan bir ID, kimlik satiri varsa (ki yoksa biz ekleyebiliriz)
-satir satir islem yaparken once ciktidaki en son islenmis kimligi
-aliriz, yoksa sifir kabul ederiz, ve girdide bu son kimlikten buyuk
-olan satirlari alip islem yapariz.
+Burada en kolay yaklaşım şudur, eğer girdi verisinde baştan sonra
+doğru artan bir İD, kimlik satırı varsa (ki yoksa biz ekleyebiliriz)
+satır satır işlem yaparken önce çıktıdaki en son işlenmiş kimliği
+alırız, yoksa sıfır kabul ederiz, ve girdide bu son kimlikten büyük
+olan satırları alıp işlem yaparız.
 
 Bu numaranın Python, CSV bazlı işlemesi için kritik hareketler şunlar,
 işlenen her satır çıktı mesela `write` yazıldıktan sonra muhakkak
-`flush` ile diske yazımı zorlanmalı, ve çıktı dosyası her defasında
-`w` ile değil `a` ile açılmalı. Böylece ilk hareketle süreç patlarsa o
-yazılan satırı kurtarmus oluruz, ve bir sonraki işletim ondan sonraki
-satıra geçebilir, ikinci hareketle çıktı dosyasına ek yapmış oluruz,
-önceki sonuçları ezmeyiz.
+`flush` ile diske yazımı zorlanmalı, ve çıktı dosyası (ilk başlatım
+sonrası) her defasında `w` ile değil `a` ile açılmalı. Böylece, ilk
+hareketle, süreç patlarsa o yazılan satırı kurtarmus oluruz, ve bir
+sonraki işletim ondan sonraki satıra geçebilir, ikinci hareketle çıktı
+dosyasına ek yapmış oluruz, önceki sonuçları ezmeyiz.
 
 Örnek üzerinde görelim, standart Pandas bazlı satır satır işlemi kalıbı,
 
@@ -333,7 +335,7 @@ for idx,row in df.iterrows():
 11 n18 2
 ```
 
-Bir script şöyle olabilir. 
+Oldukça basmakalıp. Bu tema ile bir script şöyle olabilir,
 
 ```python
 import numpy as np, time, pandas as pd, sys, os
@@ -341,8 +343,8 @@ import numpy as np, time, pandas as pd, sys, os
 def ext_proc(x):
     # dis web sitesi baglantisi bu olsun, degil ama
     # yapay kodlarla oymus gibi yapalim
-    time.sleep(np.random.rand())
-    return x + np.random.rand()
+    time.sleep(np.random.rand()) # suni bekleme ekledik
+    return x + np.random.rand() # rasgele deger dondur
 
 infile = "in.csv"; outfile = "/tmp/out.csv"
 
@@ -354,13 +356,13 @@ if len(sys.argv)>1 and sys.argv[1] == "init":
 
 dfi = pd.read_csv(infile)
 dfo = pd.read_csv(outfile)
-if len(dfo) > 0:
+if len(dfo) > 0: # ilk baslatimda cikti bos, onu kontrol et
     dfi = dfi[dfi.id > dfo.id.max()]
 print (dfi)
 
 fout = open(outfile,"a")
 for idx,row in dfi.iterrows():
-    newval = row['value'] + ext_proc(row['value'])
+    newval = ext_proc(row['value'])
     line = "%s,%s,%s,%s\n" % (row['id'],row['name'],row['value'],newval)
     print (line)
     fout.write(line)
@@ -376,17 +378,4 @@ göreceğiz, yeni işlenen satırlar çıktının sonuna eklenecek.
 Dikkat edersek `dfi[dfi.id > dfo.id.max()]` filtresi ile girdi verisinin
 çıktı verisindeki en büyük id'den daha büyük olanlarını almış oluyoruz,
 böylece o satırlar işlenmiyor, ve çıktıya sürekli ekler yapılıyor.
-
-
-
-
-
-
-
-
-
-
-
-
-
 

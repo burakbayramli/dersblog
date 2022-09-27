@@ -1,6 +1,6 @@
 # Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python
 
-Mesafe hesabı yapmak
+### Mesafe hesabı yapmak
 
 İki enlem, boylam kordinatı arasında mesafe hesabı için geopy kullanılabilir.
 
@@ -24,7 +24,7 @@ p2 = LatLon(lat2, lon2)
 p1.distanceTo(p2)
 ```
 
-İki nokta arasında birinciden ikinciye olan açısal yön (bearing),
+### İki nokta arasında birinciden ikinciye olan açısal yön (bearing),
 
 ```python
 def get_bearing(lat1,lon1,lat2,lon2):
@@ -76,6 +76,8 @@ print ( lowleft )
 
 Örnekte Anadolu ortasından başlayıp 45 derece kuzeydoğuya ve 225
 derece güneybatıya 1000 km adım atınca nereye geldiğimizi görüyoruz.
+
+### Orta Nokta
 
 Bir GPS kordinat listesinin orta noktasını bulmak için,
 
@@ -142,7 +144,7 @@ print (mid.lat, mid.lon)
 (0.700656, 0.018347, 0.713264)
 ```
 
-Bir Coğrafi Nokta Bir Alan İçinde mi
+### Nokta Bir Alan İçinde mi
 
 Elde köşeleri bilinen bir üçgen, kare ya da dışbükey poligon var
 diyelim, mesela Bermuda Ucgeni! Elimizdeki bir noktanın o alan içine
@@ -159,7 +161,7 @@ b = LatLon(45, 1), LatLon(45, 2), LatLon(46, 2), LatLon(46, 1)
 print (p.isenclosedBy(b))
 ```
 
-DMS ve Ondalik Formatlar Gecisi
+### DMS ve Ondalik Formatlar Gecisi
 
 Bazen `000° 00′ 05.31″W` ve `51° 28′ 40.12″ N` şeklinde enlem ve
 boylam verisi görebiliriz. Bu format yeri saat, dakika, saniye
@@ -179,8 +181,7 @@ print (fstr(x, prec=6))
 
 İlk iki sayı enlem ve boylamdır.
 
-
-HTML5 ve Javascript ile Yer Bulmak
+### HTML5 ve Javascript ile Yer Bulmak
 
 Javascript icinden yer bulmak mumkun, bu cep telefonunda da isliyor,
 Google'in Wifi, Telekom, GPS uzerinden yer bulan arayuzu ile
@@ -222,6 +223,52 @@ olarak eklenecek.
 
 </html>
 ```
+
+### İsimden Kordinat Bulmak
+
+Bölge ve ülke ismi vererek dünyadaki pek çok yeri bulmak için `geonames`
+sitesi kullanılabilir, http://www.geonames.org adresine gidilip bilgiler
+girilince sonuçlar listeleniyor.
+
+Script üzerinden bu bilgiyi nasıl çekeriz? Site URL parametresi olarak
+girdi kabul ediyor, eğer sonuçlardan ilkini çekip çıkartabilirek onu
+kordinat sonucu olarak alabiliriz. Mesela Ağrı Dağları icin
+
+http://www.geonames.org/search.html?q=Agri+Mountain&country=TR
+
+Script uzerinden
+
+```python
+from pygeodesy import parse3llh, fstr
+import urllib.request as urllib2, re
+
+def geoname(keyword, ccode):
+    url = "http://www.geonames.org/search.html?q=%s&country=%s" % (keyword,ccode)    
+    url = url.replace(" ","+")
+    print (url)
+    r = urllib2.urlopen(url).read()
+    content = r.decode('utf-8')
+    res = re.findall("Latitude.*?<td nowrap>(.*?)</td><td nowrap>(.*?)</td>",content, re.DOTALL)
+    if len(res)==0: return False,99999,999999
+    lats = res[0][1]; lons = res[0][0]
+    lats = lats[1:] + lats[0]
+    lons = lons[1:] + lons[0]
+    geos = lats + "," + lons
+    x = parse3llh(geos)
+    res = fstr(x, prec=6).split(",")
+    return True,float(res[0]),float(res[1])
+
+print (geoname("Agri Mountain","TR"))
+```
+
+Sonuc
+
+```
+(True, 39.702222, 44.297778)
+```
+
+olarak çıkacak. İlk değer bir statü değeri, eğer veri işlemede problem
+çıkarsa problem bu şekilde iletilebilir.
 
 Kaynaklar
 

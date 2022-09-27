@@ -1,13 +1,31 @@
-# Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilme (Restartability)
+# Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilirlik (Restartability)
+
+### Paralel İşlem
 
 IT veri işlemciliğinde çok karşılaşılan bir problem: çok sayıda bir
 grup verinin sırayla işlenmesi. İşlemi paralelize edersek (eldeki her
 çekirdek için bir veya daha fazla süreç başlatarak) aynı anda daha
 fazla veri işleyebiliriz. Fakat paralelize etmeden önce süreçlerin
-birbiriyle kordinasyonunu ayarlamak gerekli. Kordinasyonun en basit
-hali her paralel sürecin tamamen ayrı bir veri grubu üzerinde işlem
-yapması. Yani elde 100 satır var ise 4 süreç başlatırız, her süreç 25
-satır üzerinde, diğerlerinden tamamen bağımsız bir şekilde iş yapar.
+birbiriyle kordinasyonunu ayarlamak gerekli.
+
+Bir yaklaşım her paralel süreç işlemek istedikleri kayıtı "kitlemeye"
+uğraşabilirler, önce gelen kitler, sonrakiler başarısız olup sonraki
+kayıdı kitlemeye uğraşırlar, vs. Bu yaklaşımı Kurumsal Java kitabında
+işlemiştik.  Bu tabii daha farklı bir dünyaydı, Oracle, satır bazlı
+kilitler, vs. Artık anahtar/değer tabanları dünyasındayız, Mongo ile
+bir kaydın anahtar üzerinden statüsünü kontrol etmek çok hızlı. Diğer
+yaklaşımın da faydalı olacağı yerler olabilir muhakkak. Faydalardan
+biri önceden parça sayısı (bilahere kaç sürecin paralel işleyeceği)
+tanımlamaya gerek yok, ihtiyaca göre yeni bir süreç başlatılır, yeni
+süreç hemen işlenmemiş kayıt / kitleme mekanizmasına dahil olur,
+sıradaki kayıdı alıp işlemeye başlar. Fakat çoğunlukla önceden hangi
+makinada kaç süreç işleyeceği hakkında iyi bir fikrimiz vardır, bu
+durumda külfetli kitleme işlerine girmeye gerek olmayabilir.
+
+Ama en basit olan her paralel sürecin tamamen ayrı bir veri grubu
+üzerinde işlem yapması. Yani elde 100 satır var ise 4 süreç
+başlatırız, her süreç 25 satır üzerinde, diğerlerinden tamamen
+bağımsız bir şekilde iş yapar.
 
 Bir IT problemi daha: kaç süreçli olursa olsun üstte bahsettiğimiz
 işlem bizimle alakalı olmayan bir sebepten dolayı çökebilir. Ardından
@@ -192,27 +210,6 @@ stream=sys.stdout kullanabiliriz.
 
 Not:
 
-Kordinasyondan bahsettik; başka hangi yollar mevcuttur? Her paralel
-süreç "işlenmemiş" bir liste yaratabilir, fakat bu durumda süreçlerde
-aynı işlem parçası olur (diğer örneğin bölerek elde ettiği parçalardan
-biri, burada bölme yok), peki kimin hangi kayıdı işlediği nasıl
-kararlaştırılacak? O zaman süreçler işlemek istedikleri kayıtı
-"kitlemeye" uğraşabilirler, önce gelen kitler, sonrakiler başarısız
-olup sonraki kayıdı kitlemeye uğraşırlar, vs. Bu yaklaşımı Kurumsal
-Java kitabında işlemiştik.  Bu tabii daha farklı bir dünyaydı, Oracle,
-satır bazlı kilitler, vs. Artık anahtar/değer tabanları dünyasındayız,
-Mongo ile bir kaydın anahtar üzerinden statüsünü kontrol etmek çok
-hızlı. Diğer yaklaşımın da faydalı olacağı yerler olabilir
-muhakkak. Faydalardan biri önceden parça sayısı (bilahere kaç sürecin
-paralel işleyeceği) tanımlamaya gerek yok, ihtiyaca göre yeni bir
-süreç başlatılır, yeni süreç hemen işlenmemiş kayıt / kitleme
-mekanizmasına dahil olur, sıradaki kayıdı alıp işlemeye başlar. Fakat
-çoğunlukla önceden hangi makinada kaç süreç işleyeceği hakkında iyi
-bir fikrimiz vardır, bu durumda külfetli kitleme işlerine girmeye
-gerek var mı? Mühendislik hep al-ver (trade-off) kararları üzerine!
-
-Not:
-
 Örnekte meteoroloji sitesinin tüm HTML'i içinden sadece sıcaklık
 verisini çekip çıkarttık; yani bir Web kazıma (scraping) işlemi
 yaptık.  Kazıma güzel bir isim, sanki duvardan boya kazıyormuş gibi,
@@ -278,6 +275,115 @@ var; toptan işlemler için paralelizasyon yapıyorsak, işin en başında
 belli sayıda süreç başlatırız; bu bedeli başta öderiz, ardından iş
 bitene kadar o belli sayıda süreci ayakta tutmakla, takip etmekle
 haşır neşir oluruz.
+
+<a name='restart'/>
+
+### Tekrar Başlatılabilirlik (Restartability)
+
+Eğer SQL bazlı veri tabanındaki kayıtları işliyorsam en basit yaklaşım
+işlenen satırlar üzerinde bir statü kolonu koymak, ve süreç
+başladığında 'işlenmemiş satırlar' statüsündeki satırlar almak, ve o
+satır işlendikten sonra onu 'işlendi' statüsüne getirmek. Bu yaklaşım
+daha önce bahsedilen 'satır kitleme' yaklaşımıyla uyumlu, ben işlerken
+diğer süreçler bu satırı kitlemeyecek, bir sonraki satıra gidecekler,
+ben o sırada işimi yapacağım. İsim bitince statüyü 'işlendi' haline
+getireceğim, eh zaten kilit bende, ve bu şekilde elimdeki bir sonraki
+satıra bakacağım.
+
+Eğer tek surecli ve mesela CSV bazlı işlem yapıyorsak yaklaşım ne
+olmalı? Mesela `in.csv` içindeki satırları işleyip bir `out.csv`
+üreteceğim, bir Web sitesinde sorgulama yapıp yeni bir kolon
+ekleyeceğim belki, ve İnternet bağlantısı düşebilir, pek çok şey
+olabilir, tekrar başlattığımda kaldığım yerden devam etmek istiyorum.
+
+Burada en kolay yaklasim sudur, eger girdi verisinde bastan sonra
+dogru artan bir ID, kimlik satiri varsa (ki yoksa biz ekleyebiliriz)
+satir satir islem yaparken once ciktidaki en son islenmis kimligi
+aliriz, yoksa sifir kabul ederiz, ve girdide bu son kimlikten buyuk
+olan satirlari alip islem yapariz.
+
+Bu numaranın Python, CSV bazlı işlemesi için kritik hareketler şunlar,
+işlenen her satır çıktı mesela `write` yazıldıktan sonra muhakkak
+`flush` ile diske yazımı zorlanmalı, ve çıktı dosyası her defasında
+`w` ile değil `a` ile açılmalı. Böylece ilk hareketle süreç patlarsa o
+yazılan satırı kurtarmus oluruz, ve bir sonraki işletim ondan sonraki
+satıra geçebilir, ikinci hareketle çıktı dosyasına ek yapmış oluruz,
+önceki sonuçları ezmeyiz.
+
+Örnek üzerinde görelim, standart Pandas bazlı satır satır işlemi kalıbı,
+
+```python
+import pandas as pd
+df = pd.read_csv('in.csv')
+for idx,row in df.iterrows():
+    print (row['id'],row['name'],row['value'])
+```
+
+```text
+1 n1 30
+2 n2 10
+3 n3 33
+4 n4 8
+5 nx 39
+6 nu 57
+7 ne 22
+8 na 12
+9 nn 31
+10 ni 1
+11 n18 2
+```
+
+Bir script şöyle olabilir. 
+
+```python
+import numpy as np, time, pandas as pd, sys, os
+
+def ext_proc(x):
+    # dis web sitesi baglantisi bu olsun, degil ama
+    # yapay kodlarla oymus gibi yapalim
+    time.sleep(np.random.rand())
+    return x + np.random.rand()
+
+infile = "in.csv"; outfile = "/tmp/out.csv"
+
+if len(sys.argv)>1 and sys.argv[1] == "init":
+    os.remove(outfile)
+    fout = open(outfile,"w")
+    fout.write("id,name,value,newval\n")
+    fout.close()    
+
+dfi = pd.read_csv(infile)
+dfo = pd.read_csv(outfile)
+if len(dfo) > 0:
+    dfi = dfi[dfi.id > dfo.id.max()]
+print (dfi)
+
+fout = open(outfile,"a")
+for idx,row in dfi.iterrows():
+    newval = row['value'] + ext_proc(row['value'])
+    line = "%s,%s,%s,%s\n" % (row['id'],row['name'],row['value'],newval)
+    print (line)
+    fout.write(line)
+    fout.flush()
+fout.close()
+```
+
+İlk başlatımda `init` seçeneği ile işletiriz, böylece `out.csv` düzgün
+şekilde yaratılır. İşlem olurken programı yarıda keselim, sonra `init`
+olmadan tekrar başlatalım. Bu başlatımın kalınan yerden devam ettiğini
+göreceğiz, yeni işlenen satırlar çıktının sonuna eklenecek.
+
+Dikkat edersek `dfi[dfi.id > dfo.id.max()]` filtresi ile girdi verisinin
+çıktı verisindeki en büyük id'den daha büyük olanlarını almış oluyoruz,
+böylece o satırlar işlenmiyor, ve çıktıya sürekli ekler yapılıyor.
+
+
+
+
+
+
+
+
 
 
 

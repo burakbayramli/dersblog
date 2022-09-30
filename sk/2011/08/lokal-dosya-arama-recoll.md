@@ -111,9 +111,9 @@ for i in range(5):
 
 Kaynaklar
 
-[1] https://www.lesbonscomptes.com/recoll/pages/download.html
+[1] [LesBonsComptes Download](https://www.lesbonscomptes.com/recoll/pages/download.html)
 
-[2] https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.INSTALL
+[2] [LesBonsComptes Install](https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.INSTALL)
 
 
 

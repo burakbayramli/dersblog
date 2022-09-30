@@ -24,7 +24,7 @@ Python script alttadır,
 
 ```python
 import subprocess, re, sys
-q = "bunlari ara"
+q = "kelime"
 p = subprocess.Popen(['recoll','-t',q], stdout=subprocess.PIPE)
 for line in p.stdout:
     res = re.findall('\[file:\/\/(.*?)\]', str(line), re.DOTALL)

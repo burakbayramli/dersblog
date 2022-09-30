@@ -224,7 +224,7 @@ olur. En alt seviyede web servisi olarak mikro servis Flask
 olabilir. Flask'in güzel bir özelliği mantıklı ÜRL ile Python
 fonksiyonu ilişkisini etiket (annotation) ile halledebilmesi.
 
-```
+```python
 from flask import Flask, url_for, jsonify
 from flask import request, Response
 app = Flask(__name__)
@@ -257,12 +257,12 @@ yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.
 Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML
 
 ```
-     <form action="/book_uploader" method="POST" enctype = "multipart/form-data">
-      <p>
-        <input type = "file" name = "file" />
-      </p>
-      <input type="submit" value="Gonder"/>
-    </form>
+ <form action="/book_uploader" method="POST" enctype = "multipart/form-data">
+  <p>
+    <input type = "file" name = "file" />
+  </p>
+  <input type="submit" value="Gonder"/>
+</form>
 ```
 
 Python içinde

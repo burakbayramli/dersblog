@@ -6,6 +6,15 @@ bir sayfada okunabilir olan, HTML etiketleri haricindeki kelimeleri
 kastediyoruz, istatistiki analiz icin mesela herhangi bir gunun
 "kelime dagarcigini" cekip cikarmak icin boyle kodlar gerekebilir.
 
+Öncelikle bir sayfayı script içinden okutup metnini alma komutunu görelim,
+
+```python
+import re, urllib.request as req, io
+content = req.urlopen("https://www.cnn.com").read().decode('utf-8')
+```
+
+Artık `content` içinde içerik text olarak var.
+
 ```python
 import re
 import urllib

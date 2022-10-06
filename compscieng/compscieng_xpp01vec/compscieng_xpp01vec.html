@@ -1,0 +1,45 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Vektor Alanlari ve Hesaplar</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Vektor Alanlari ve Hesaplar
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Entegre Edilmiş Kinetik Enerji (İntegrated Kinetic Enerji)</p>
+<p>Bir kasırganın tahrip edici kuvveti nedir? Katrina, İvan, Ian gibi kasırgalar
+kategorize ediliyorlar</p>
+<pre><code class="python">u_wind = np.load('uwind.npz')['arr_0']
+v_wind = np.load('vwind.npz')['arr_0']
+gi,gj = u_wind.shape
+cell_count = gi*gj
+area = 2000*1e9 # bu alani veri alirken tanimlamis olduk
+cell_area = area / cell_count
+
+wspeedsquare = u_wind**2+v_wind**2
+wspeedsquare = wspeedsquare.reshape(-1)
+wspeedsquare = wspeedsquare[wspeedsquare &gt; 30.0]
+IKE = np.sum(0.5*wspeedsquare*cell_area) / 1e12
+print (np.round(IKE,2), 'terrajoule')
+</code></pre>
+
+<pre><code>340.98 terrajoule
+</code></pre>

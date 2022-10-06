@@ -1,0 +1,31 @@
+\documentclass[12pt,fleqn]{article}\usepackage{../../common}
+\begin{document}
+Vektor Alanlari ve Hesaplar
+
+Entegre Edilmiş Kinetik Enerji (İntegrated Kinetic Enerji)
+
+Bir kasırganın tahrip edici kuvveti nedir? Katrina, İvan, Ian gibi kasırgalar
+kategorize ediliyorlar
+
+\begin{minted}[fontsize=\footnotesize]{python}
+u_wind = np.load('uwind.npz')['arr_0']
+v_wind = np.load('vwind.npz')['arr_0']
+gi,gj = u_wind.shape
+cell_count = gi*gj
+area = 2000*1e9 # bu alani veri alirken tanimlamis olduk
+cell_area = area / cell_count
+
+wspeedsquare = u_wind**2+v_wind**2
+wspeedsquare = wspeedsquare.reshape(-1)
+wspeedsquare = wspeedsquare[wspeedsquare > 30.0]
+IKE = np.sum(0.5*wspeedsquare*cell_area) / 1e12
+print (np.round(IKE,2), 'terrajoule')
+\end{minted}
+
+\begin{verbatim}
+340.98 terrajoule
+\end{verbatim}
+
+
+
+\end{document}

@@ -2,7 +2,7 @@
 \begin{document}
 Vektör Alanları ve Hesaplar
 
-Entegre Edilmiş Kinetik Enerji (İntegrated Kinetic Enerji)
+Entegre Edilmiş Kinetik Enerji (Integrated Kinetic Enerji)
 
 Bir kasırganın tahrip edici kuvveti nedir? Katrina, İvan, Ian gibi kasırgalar 1
 ila 5 arası sayılar ile kategorize ediliyorlar. Bu sayılar Saffir-Simpson
@@ -49,14 +49,30 @@ için lazım, $u^2+v^2$ yeterli. 0.5 çarpı hız karesi çarpı üstte bahsedil
 kütleyi çarpıp bunu kasırganın etkili olduğu coğrafyadaki tüm kutular için
 yapıp toplarsak kasırga İKE'sini elde etmiş oluruz 
 
-kenari 1400 km'lik bir kare
+Katrina fırtınası İKE hesabı için NOAA kurumundan gerekli veriyi alabiliriz.
+Script \verb!wdata.py! içinde enlem 25 boylam -90 noktasında 2005 yılı
+Eylül 30 tarihindeki 1400 x 1400 km büyüklüğündeki bir alanın rüzgar verisini
+indirmek için gerekli kodlar var. Bu kodlar işletildi ve gerekli veri
+\verb!'uwind.npz!, \verb!'vwind.npz! içinde.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 u_wind = np.load('uwind.npz')['arr_0']
 v_wind = np.load('vwind.npz')['arr_0']
+# ufak bir bolgeyi grafikle
+xx,yy = np.meshgrid(np.linspace(1,59,59),np.linspace(1,60,60))
+mi,mj = np.meshgrid(np.array(range(35,55,1)),np.array(range(10,30,1)))
+plt.quiver(xx[mi,mj],yy[mi,mj],u_wind[mi,mj],v_wind[mi,mj])
+plt.savefig('compscieng_xpp01vec_01.png')
+\end{minted}
+
+\includegraphics[width=20em]{compscieng_xpp01vec_01.png}
+
+Tüm veri üzerinden IKE hesabını yapalım şimdi,
+
+\begin{minted}[fontsize=\footnotesize]{python}
 gi,gj = u_wind.shape
 cell_count = gi*gj
-area = 2000*1e9 # bu alani veri alirken tanimlamis olduk
+area = 2000*1e9 # m2, bu alani veriyi alirken tanimlamistik
 cell_area = area / cell_count
 
 wspeedsquare = u_wind**2+v_wind**2
@@ -70,6 +86,7 @@ print (np.round(IKE,2), 'terrajoule')
 340.98 terrajoule
 \end{verbatim}
 
+Bu enerji Camille fırtınasının enerjisinden daha fazladır. 
 
 
 Kaynaklar

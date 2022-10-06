@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Vektor Alanlari ve Hesaplar</h1>
+<h1>Vektör Alanları ve Hesaplar</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Vektor Alanlari ve Hesaplar
+    <title>Vektör Alanları ve Hesaplar
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -25,8 +25,43 @@
 </head>
 
 <p>Entegre Edilmiş Kinetik Enerji (İntegrated Kinetic Enerji)</p>
-<p>Bir kasırganın tahrip edici kuvveti nedir? Katrina, İvan, Ian gibi kasırgalar
-kategorize ediliyorlar</p>
+<p>Bir kasırganın tahrip edici kuvveti nedir? Katrina, İvan, Ian gibi kasırgalar 1
+ila 5 arası sayılar ile kategorize ediliyorlar. Bu sayılar Saffir-Simpson
+skalasıyla, ölçüm sistemiyle alakalı, bu sisteme göre fırtanın bir dakika
+içindeki en yüksek ani rüzgarı (gust) ölçülür, ve tüm fırtına bu ölçüme göre
+kategorize edilir [1].</p>
+<p>Bu sayının problemi kasırgayı sadece varabildiği en yüksek rüzgar hızı üzerinden
+ölçmesi. Bu en yüksek hızın ölçülmesinin teknik olarak çıkarttığı problemler bir
+yana, bu sayı bize fırtınanın kapladığı alan ve bu alan içinde rüzgar şiddetinin
+nasıl dağıldığı hakkında hiçbir şey söylemiyor.</p>
+<p>Camille ve Katrina örneklerini düşünelim, birincisinde şiddetli rüzgarlar var
+ama ufak alana odaklı, ikincisinin en yüksek rüzgar hızı daha az olmasına rağmen
+daha geniş alana yayılı ve SS skalasında daha küçük bir kasırga olarak geçiyor.
+Fakat Katrinanın çok daha zarar verici olduğunu biliyoruz.</p>
+<p>Acaba daha iyi bir olcum olamaz mi? Kasirgalar tehlikelidir cunku ittikleri,
+hareket ettirdikleri hava bloklarinda kinetik enerji vardir. Daha az yogun olsa
+da havanin bir kutlesi var, gunluk hayatta fazla dusunmesek bile bu kutle yeteri
+kadar hiza ulastiginda etraftaki nesnelere carpip onlari darmadigin
+edebiliyorlar, agaclar, binalar, ve bunu yaparken bir enerji transferi
+gerceklestirmis oluyorlar.</p>
+<p>Bazi bilimciler bu sebeple SS skalasi yerine IKE adli bir hesabi tercih
+ediyorlar. Bu hesap</p>
+<p>$$
+IKE = \int_v \frac{1}{2} \rho U^2 dV
+$$</p>
+<p>ile yapılır, $v$ hacim, $\rho$ yoğunluk, $U$ ise hızdır. Aslında burada yapılan
+standart $1/2 m v^2$ hesabının bir çeşidi (son $v$ hız, hacim değil).</p>
+<p>Sayısal bağlamda elimizde kutular olacak, her kutu içindeki hava miktarı belli
+olur, onun kütlesini referans alabiliriz. Kütle hesabı için aslında tek alan
+hesabı yeterli olacak çünkü hava yoğunluğu olarak 1 $kg/m^3$ farzedeceğiz, kutu
+yüksekliği olarak 1 metre, böylece kutu alanı hesabı sonrası çarpı 1 $kg/m^3$ ve
+çarpı 1 metre ile aynı sayıdır, kütleyi direk alandan elde etmiş oluruz.</p>
+<p>Her kutu içindeki rüzgar hızı yatay ve dikey bileşenleri $u,v$ ile gelecek, $hız
+= \sqrt{u^2+v^2}$ ile hız hesaplanabilir ya da, nasıl olsa hız karesi enerji
+için lazım, $u^2+v^2$ yeterli. 0.5 çarpı hız karesi çarpı üstte bahsedilen
+kütleyi çarpıp bunu kasırganın etkili olduğu coğrafyadaki tüm kutular için
+yapıp toplarsak kasırga İKE'sini elde etmiş oluruz </p>
+<p>kenari 1400 km'lik bir kare</p>
 <pre><code class="python">u_wind = np.load('uwind.npz')['arr_0']
 v_wind = np.load('vwind.npz')['arr_0']
 gi,gj = u_wind.shape
@@ -43,3 +78,6 @@ print (np.round(IKE,2), 'terrajoule')
 
 <pre><code>340.98 terrajoule
 </code></pre>
+
+<p>Kaynaklar</p>
+<p>[1] <em>Wired</em>, <a href="https://www.wired.com/2012/11/what-is-the-true-measure-of-a-storm">https://www.wired.com/2012/11/what-is-the-true-measure-of-a-storm</a></p>

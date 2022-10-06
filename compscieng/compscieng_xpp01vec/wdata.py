@@ -31,6 +31,7 @@ def get_data(lat,lon,day,month,year,hour):
     west = int(lower_left[1])
 
     side = np.cos(np.deg2rad(45))*brg*2
+    print (side, 'km')
     area = side*side*1e6
 
     dt = datetime(year, month, day, hour)
@@ -56,6 +57,8 @@ def get_data(lat,lon,day,month,year,hour):
     np.savez('uwind',u_wind)
     np.savez('vwind',v_wind)
     print ('alan', area)
+
+if __name__ == "__main__": 
     
-lat=25;lon=-90; year = 2005;month = 8;day = 30; hour = 10
-get_data(lat,lon,day,month,year,hour)
+    lat=25;lon=-90; year = 2005;month = 8;day = 30; hour = 10
+    get_data(lat,lon,day,month,year,hour)

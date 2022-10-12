@@ -299,16 +299,16 @@ ekleyeceğim belki, ve İnternet bağlantısı düşebilir, pek çok şey
 olabilir, tekrar başlattığımda kaldığım yerden devam etmek istiyorum.
 
 Burada en kolay yaklaşım şudur, eğer girdi verisinde baştan sonra
-doğru artan bir İD, kimlik satırı varsa (ki yoksa biz ekleyebiliriz)
-satır satır işlem yaparken önce çıktıdaki en son işlenmiş kimliği
-alırız, yoksa sıfır kabul ederiz, ve girdide bu son kimlikten büyük
-olan satırları alıp işlem yaparız.
+doğru artan bir ID, kimlik satırı varsa (ki yoksa biz ekleyebiliriz)
+her süreç başlangıcında çıktıdaki en son işlenmiş kimliği alırız,
+yoksa sıfır kabul ederiz, ve girdide bu son kimlikten büyük olan
+satırları alıp teker teker işleriz.
 
 Bu numaranın Python, CSV bazlı işlemesi için kritik hareketler şunlar,
 işlenen her satır çıktı mesela `write` yazıldıktan sonra muhakkak
 `flush` ile diske yazımı zorlanmalı, ve çıktı dosyası (ilk başlatım
 sonrası) her defasında `w` ile değil `a` ile açılmalı. Böylece, ilk
-hareketle, süreç patlarsa o yazılan satırı kurtarmus oluruz, ve bir
+hareketle, süreç patlarsa o yazılan satırı kurtarmış oluruz, ve bir
 sonraki işletim ondan sonraki satıra geçebilir, ikinci hareketle çıktı
 dosyasına ek yapmış oluruz, önceki sonuçları ezmeyiz.
 
@@ -378,4 +378,12 @@ göreceğiz, yeni işlenen satırlar çıktının sonuna eklenecek.
 Dikkat edersek `dfi[dfi.id > dfo.id.max()]` filtresi ile girdi verisinin
 çıktı verisindeki en büyük id'den daha büyük olanlarını almış oluyoruz,
 böylece o satırlar işlenmiyor, ve çıktıya sürekli ekler yapılıyor.
+
+Üstte gösterilen yöntemlerden sadece biri. En son işlenen satırın
+kimliğini her satırı işlerken ufak bir dosyaya da yazabilirdik, sonra
+süreç başlangıcında onu okuyup devam kalan yerden devam ederdik. Devam
+etme yöntemi `DataFrame` filtrelemesi yerine `csv` paketinde bir sonrakine
+atlama üzerinden olabilirdi, seçenekler muhtelif.
+
+
 

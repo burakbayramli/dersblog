@@ -1,0 +1,243 @@
+# Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilirlik (Restartability)
+
+### Paralel İşlem
+
+IT veri işlemciliğinde çok karşılaşılan bir problem: çok sayıda bir
+grup verinin sırayla işlenmesi. İşlemi paralelize edersek (eldeki her
+çekirdek için bir veya daha fazla süreç başlatarak) aynı anda daha
+fazla veri işleyebiliriz. Fakat paralelize etmeden önce süreçlerin
+birbiriyle kordinasyonunu ayarlamak gerekli.
+
+Bir yaklaşım her paralel süreç işlemek istedikleri kayıtı "kitlemeye"
+uğraşabilirler, önce gelen kitler, sonrakiler başarısız olup sonraki
+kayıdı kitlemeye uğraşırlar, vs. Bu yaklaşımı Kurumsal Java kitabında
+işlemiştik.  Bu tabii daha farklı bir dünyaydı, Oracle, satır bazlı
+kilitler, vs. Artık anahtar/değer tabanları dünyasındayız, Mongo ile
+bir kaydın anahtar üzerinden statüsünü kontrol etmek çok hızlı. Diğer
+yaklaşımın da faydalı olacağı yerler olabilir muhakkak. Faydalardan
+biri önceden parça sayısı (bilahere kaç sürecin paralel işleyeceği)
+tanımlamaya gerek yok, ihtiyaca göre yeni bir süreç başlatılır, yeni
+süreç hemen işlenmemiş kayıt / kitleme mekanizmasına dahil olur,
+sıradaki kayıdı alıp işlemeye başlar. Fakat çoğunlukla önceden hangi
+makinada kaç süreç işleyeceği hakkında iyi bir fikrimiz vardır, bu
+durumda külfetli kitleme işlerine girmeye gerek olmayabilir.
+
+Ama en basit olan her paralel sürecin tamamen ayrı bir veri grubu
+üzerinde işlem yapması. Yani elde 100 satır var ise 4 süreç
+başlatırız, her süreç 25 satır üzerinde, diğerlerinden tamamen
+bağımsız bir şekilde iş yapar.
+
+Bir IT problemi daha: kaç süreçli olursa olsun üstte bahsettiğimiz
+işlem bizimle alakalı olmayan bir sebepten dolayı çökebilir. Ardından
+programı tekrar başlatırsak programın o ana kadar işlediği satırları
+atlayıp, işlenmemiş satırlara gitmesini isteriz, bu "kaldığımız yerden
+devam" özelliği zamandan tasarruf sağlar.
+
+Önce 1. probleme bir çözüm bulalım. Bir işleyici script düşünelim,
+eğer parçalı işlem mantığını kodlayacaksak, şöyle bir komut satırı
+arayuzu düşünebiliriz,
+
+python isle.py 0 4
+
+Bu komut script'e veriyi 4 parçaya böldürüp 0. parçayı (çünkü
+kullandığımız dil 0-indis bazlı) işlemeye başlar. Unix ortamında
+sonuna & koyarak script'i arka planda işletmeye başlatabilirdik,
+ardından
+
+python isle.py 1 4 &
+
+ile hemen bir diğer parça üzerinde de işlem başlatırdık. Dikkat:
+parçaya bölmek için "işlenecek şeyler" listesi hazırladık, bu liste
+her süreçte aynı, o yüzden bir tarafta 1. bir tarafta 2. vs. parçasına
+gidebiliyoruz, çünkü liste aynı liste, ayrı parçalarının birbiriyle
+alakasının olmadığına eminiz.
+
+Bu şekilde devam edip 4 tane aynı anda paralel işleyen süreç
+başlatarak, veriyi 4 kat daha hızlı işleyebilirdik, tabii bunu derken
+işlemi yapan bilgisayarda 4 veya daha fazla mikroişlemci / çekirdek
+olduğunu varsayıyoruz. Ama bu yorumu biraz daha genisletelim; eğer
+yaptığımız işlemler mikroişlemciyi çok meşgul tutan türden değil ise,
+mesela Internet'ten bilgi indirmek (bu durumda network bekleniyor), ya
+da sabit disk işlemleri (bu durumda diskin işini bitirmesini
+bekleniyor, İngilizce "IO-bound" denen durum) bu durumlarda 4 süreç
+için 2 tane mikroişlemci olması bile yeterli olabilir, çünkü daha iyi
+performansın önündeki engel mikroişlemci değil. Fakat paralelizasyon
+hala faydalı çünkü bir süreç network'u beklerken diğeri verinin kendi
+parçası üzerinde ilerleme sağlayabilir.
+
+Ikinci problemin çözümü, mesela işlenecek şeyler bir veri tabanından
+geliyorlarsa, tabanda bir status kolonu yaratmak, ve işlenen veri
+satırında bu statü belirten kolonu o satır için "işlendi" konumuna
+getirmek. Her satır işlenmeden önce bu statüye bakılır, eğer işlenmiş
+ise atlanır.
+
+Statü irdelemesi farklı yollardan olabilir; eldeki 10 senet için
+kapanış fiyatlarını güncel tutmak isteyen bir program varsa "kaldığı
+yerden devam etmek" her senet için eldeki en son tarihten (mesela dün,
+iki gün oncesi, vs) o günün tarihine, yani bugüne kadar olan yeni
+senet fiyatlarını almaktır. Eğer eksişözlük sitesinden 100 tane sayfa
+indirip bu sayfaları HTML olarak bir dizine yazıyorsam, o HTML
+dosyasının dizin içinde olup olmaması bir tür statüdür; eğer orada ise
+o işlem tamamlanmıştır.
+
+Çöküş ardından tekrar başlatım için pek çok Unix bazlı takip edici
+programlar var; mesela supervisord - bizim tercihimiz dand. Bu takip
+edici araçlar sayesinde komut satırından elle biz program
+başlatmıyoruz, takip edici programlarımızı başlatıyor, onları izliyor,
+çökmüs ise tekrar başlatıyor, vs.
+
+<a name='csv'/>
+
+Satır Satır Paralel Dosya İşlemek
+
+Paralel işlem için işbölümünün nasıl yapılacağını kararlaştırmak
+lazım, burada en kolay yöntem veriyi baştan parçalara bölerek her
+sürecin kendi parçası üzerinde çalışmasını sağlamak.
+
+İkinci soru şu, bir koordine edici "kalfa" süreç mi iş dağıtsın, yoksa
+her süreç buna kendisi mi karar versin? İkinci seçenek daha kolay;
+aynen üstte işlediğimiz gibi, N parça içinden her sürece İ parçası
+üzerinde çalışacağını söyleriz, süreç gerekli yere giderek işlemi
+yapar.
+
+Satır satır noktayla ayrılmış metin bazlı dosya (CSV) işlerken bu
+parçalar ayrı satırlar olacaktır. Mesela 10 satırlı bir dosyanin ilk 5
+satırını bir süreç ikinci 5 satırını başka bir süreç işleyebilir.
+
+
+
+
+
+Bir diger ornek [1]'de bulunabilir.
+
+Loglama
+
+Bir takipçi tarafından, paralel şekilde program işletiliyorsa, artık print ile ekrana mesaj basmak yeterli değil, loglama gerekli, yani bir log dosyasına çıktıları güzel bir format ile yazmak. Python'da logging kütüphanesi bu işi çok rahat yapar; script başında import logging ile dahil ederiz, ve örneğimiz için alttaki kodu ekleriz,
+
+```
+fmt = '%(asctime)s - %(message)s - %(pathname)s'
+fout = '/tmp/hava-%d.log' % int(sys.argv[1])
+logging.basicConfig(filename=fout, level=logging.DEBUG, format=fmt)  
+```
+
+Artık logging.debug(...) ile yazılan her mesaj o sürecin kendisine ait
+log dosyasına yazılacaktır, mesela 0. parça için bu /tmp/hava-0.log
+olacak. Eger mesajlar direk ekrana basilsin istiyorsak filename yerine
+stream=sys.stdout kullanabiliriz.
+
+
+<a name='restart'/>
+
+### Tekrar Başlatılabilirlik (Restartability)
+
+Eğer SQL bazlı veri tabanındaki kayıtları işliyorsam en basit yaklaşım
+işlenen satırlar üzerinde bir statü kolonu koymak, ve süreç
+başladığında 'işlenmemiş satırlar' statüsündeki satırları almak, ve o
+satır işlendikten sonra onu 'işlendi' statüsüne getirmek. Bu yaklaşım
+daha önce bahsedilen 'satır kitleme' yaklaşımıyla uyumlu, ben işlerken
+diğer süreçler bu satırı kitlemeyecek, bir sonraki satıra gidecekler,
+ben o sırada işimi yapacağım. İsim bitince statüyü 'işlendi' haline
+getireceğim, eh zaten kilit bende, ve bu şekilde elimdeki bir sonraki
+satıra bakacağım. Eğer süreci ikinci kez başlatıyorsam ben ya da
+benden sonraki süreç statüyü kitler, ve yine işlenmemiş olan satırları
+alır, ve işe devam eder.
+
+Peki tek süreçli ve mesela CSV bazlı işlem yapıyorsak yaklaşım ne
+olmalı? Mesela `in.csv` içindeki satırları işleyip bir `out.csv`
+üreteceğim, bir Web sitesinde sorgulama yapıp yeni bir kolon
+ekleyeceğim belki, ve İnternet bağlantısı düşebilir, pek çok şey
+olabilir, tekrar başlattığımda kaldığım yerden devam etmek istiyorum.
+
+Burada en kolay yaklaşım şudur, eğer girdi verisinde baştan sonra
+doğru artan bir ID, kimlik satırı varsa (ki yoksa biz ekleyebiliriz)
+her süreç başlangıcında çıktıdaki en son işlenmiş kimliği alırız,
+yoksa sıfır kabul ederiz, ve girdide bu son kimlikten büyük olan
+satırları alıp teker teker işleriz.
+
+Bu numaranın Python, CSV bazlı işlemesi için kritik hareketler şunlar,
+işlenen her satır çıktı mesela `write` yazıldıktan sonra muhakkak
+`flush` ile diske yazımı zorlanmalı, ve çıktı dosyası (ilk başlatım
+sonrası) her defasında `w` ile değil `a` ile açılmalı. Böylece, ilk
+hareketle, süreç patlarsa o yazılan satırı kurtarmış oluruz, ve bir
+sonraki işletim ondan sonraki satıra geçebilir, ikinci hareketle çıktı
+dosyasına ek yapmış oluruz, önceki sonuçları ezmeyiz.
+
+Örnek üzerinde görelim, standart Pandas bazlı satır satır işlemi kalıbı,
+
+```python
+import pandas as pd
+df = pd.read_csv('in1.csv')
+for idx,row in df.iterrows():
+    print (row['id'],row['name'],row['value'])
+```
+
+```text
+1 n1 30
+2 n2 10
+3 n3 33
+4 n4 8
+5 nx 39
+6 nu 57
+7 ne 22
+8 na 12
+9 nn 31
+10 ni 1
+11 n18 2
+```
+
+Oldukça basmakalıp. Bu tema ile bir script şöyle olabilir,
+
+```python
+import numpy as np, time, pandas as pd, sys, os
+
+def ext_proc(x):
+    # dis web sitesi baglantisi bu olsun, degil ama
+    # yapay kodlarla oymus gibi yapalim
+    time.sleep(np.random.rand()) # suni bekleme ekledik
+    return x + np.random.rand() # rasgele deger dondur
+
+infile = "in1.csv"; outfile = "/tmp/out.csv"
+
+if len(sys.argv)>1 and sys.argv[1] == "init":
+    os.remove(outfile)
+    fout = open(outfile,"w")
+    fout.write("id,name,value,newval\n")
+    fout.close()    
+
+dfi = pd.read_csv(infile)
+dfo = pd.read_csv(outfile)
+if len(dfo) > 0: # ilk baslatimda cikti bos, onu kontrol et
+    dfi = dfi[dfi.id > dfo.id.max()]
+print (dfi)
+
+fout = open(outfile,"a")
+for idx,row in dfi.iterrows():
+    newval = ext_proc(row['value'])
+    line = "%s,%s,%s,%s\n" % (row['id'],row['name'],row['value'],newval)
+    print (line)
+    fout.write(line)
+    fout.flush()
+fout.close()
+```
+
+İlk başlatımda `init` seçeneği ile işletiriz, böylece `out.csv` düzgün
+şekilde yaratılır. İşlem olurken programı yarıda keselim, sonra `init`
+olmadan tekrar başlatalım. Bu başlatımın kalınan yerden devam ettiğini
+göreceğiz, yeni işlenen satırlar çıktının sonuna eklenecek.
+
+Dikkat edersek `dfi[dfi.id > dfo.id.max()]` filtresi ile girdi verisinin
+çıktı verisindeki en büyük id'den daha büyük olanlarını almış oluyoruz,
+böylece o satırlar işlenmiyor, ve çıktıya sürekli ekler yapılıyor.
+
+Üstte gösterilen yöntemlerden sadece biri. En son işlenen satırın
+kimliğini her satırı işlerken ufak bir dosyaya da yazabilirdik, sonra
+süreç başlangıcında onu okuyup devam kalan yerden devam ederdik. Devam
+etme yöntemi `DataFrame` filtrelemesi yerine `csv` paketinde bir sonrakine
+atlama üzerinden olabilirdi, seçenekler muhtelif.
+
+Kaynaklar
+
+[1] [Hava Verisi Islemek](hava-verisi-islemek.html)
+
+[2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)
+

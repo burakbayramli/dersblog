@@ -285,7 +285,7 @@ dosya kopyalanır, ya da disk paylaşım teknikleri ile erişim yapılır.
 Parça hesabı, ileri zıplama tekniği her kod içinde ayrı işletilebildiği için
 bir merkezi kordinasyon mekanizmasına ihtiyaç yoktur.
 
-Demo amacli olarak her parcayi simdi ayri bir Thread uzerinde isletelim,
+Demo amaçlı olarak her parçayı şimdi ayrı bir Thread üzerinde işletelim,
 
 ```python
 import threading
@@ -313,10 +313,11 @@ p1.start()
 p2.start()
 ```
 
-Sonuç üstteki ile aynı olacak. Eğer süreçlerin yaratıldığını görmek
-istersek, kod içine `time.sleep` ekleyip işleyiciyi yavaşlatabiliriz,
-ve bu arada işletim sisteminde komut satırına geçip orada `ps eaf` ya
-da `htop` ile yaratılan süreçleri görebiliriz.
+Sonuç iki üstteki ile aynı olacak. Girdi dosyası ufak olduğu için
+herşey çok hızlı işliyor, ama eğer süreçlerin yaratıldığını
+gözlemlemek istersek, kod içine `time.sleep` ekleyip işleyiciyi suni
+şekile yavaşlatabiliriz, ve bu arada işletim sisteminde geçip komut
+satırında `ps eaf` ya da `htop` ile yaratılan süreçleri görebiliriz.
 
 Bir diger ornek [1]'de bulunabilir.
 

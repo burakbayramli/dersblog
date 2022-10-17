@@ -277,6 +277,15 @@ process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob())
 [['9', '99999999\n'], ['10', '1010101\n'], ['11', '1111111\n'], ['12', '1212121\n'], ['13', '1311313\n'], ['14', '1414141\n']]
 ```
 
+Güzel oldu. Dikkat edersek `process` çağrısını tek makinadaki farklı
+süreçlerden, hatta tamamen ayrı bir makinadaki bir süreçten
+çağırabilirdik. A makinasında `0 3`, `1 3` deriz mesela, B makinasında
+`2 3`.  Aynı girdi dosyası her makinada olmalı muhakkak ama bu kolay,
+dosya kopyalanır, ya da disk paylaşım teknikleri ile erişim yapılır.
+Parça hesabı, ileri zıplama tekniği her kod içinde ayrı işletilebildiği için
+bir merkezi kordinasyon mekanizmasına ihtiyaç yoktur.
+
+
 Bir diger ornek [1]'de bulunabilir.
 
 <a name='restart'/>

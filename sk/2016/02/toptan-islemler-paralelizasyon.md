@@ -151,18 +151,18 @@ tum = 154 her parca = 77.0
 ```python
 with open(file_name, 'r') as f:
     f.seek(79)
-    c = f.read(1)
+    c = f.read(5)
     print (c)
 f.close()
 ```
 
 ```text
-8
+88888
 ```
 
-`8` sayısı var, `8,88888888` satırında bir yerlere geldik yani. Ama
-bize satır başı lazım, eger `seek` sonrasi `readline` dersek, icinde
-oldugumuz satiri bitirip bir sonrakine gecebiliriz,
+`8,88888888` satırında bir yerlere geldik yani. Ama bize satır başı
+lazım, bir numara yapalım, eğer `seek` sonrası `readline` dersek,
+içinde olduğumüz satırı bitirip bir sonrakine geçmiş oluyoruz,
 
 ```python
 with open(file_name, 'r') as f:
@@ -170,26 +170,50 @@ with open(file_name, 'r') as f:
     f.readline()
     c = f.read(5) # bir sonraki satirdayiz simdi
     print (c)
+    print ('bayt noktasi', f.tell())
 f.close()
 ```
 
 ```text
 9,999
+bayt noktasi 93
 ```
 
-Evet gördüğümüz gibi 8'li satırı geçtik ve `f.read(5)` dediğimiz anda
-artık sonraki satır başındaydık.
+Evet gördüğümüz gibi 8'li satırı geçtik 9'lu satırın başına gelmiş olduk,
+bu bayt olarak 93'uncu karaktermiş.
 
 Bu teknikleri daha organize şekilde bir araya koyabiliriz. Öyle bir
 yardımcı fonksiyon lazim ki,
 
-- Bir dosya ismi ve parça (chünk) sayısı verilince her parçanın
-  satırsal başlangıç bayt noktalarını bir liste olarak hesaplasın.
+- Bir dosya ismi ve parça (chunk) sayısı alınca her parçanın
+  *satırsal* başlangıç bayt noktalarını bir liste olarak hesaplasın.
   
-- Satırsal işleyici kod parça bilincine sahip olsun, bir parçanın
-  başlangıcına atladıktan sonra o parçanın bitiş noktasından daha ileri
-  gitmesin.
+- İşleyici kod parça bilincine sahip olsun, bir parçanın satırsal
+  başlangıcına atladıktan sonra, o parçanın bitiş noktasından daha
+  ileri gitmesin.
 
+Bu yardımcıyı daha da süsleyebiliriz, farklı şekillerde kullanabilmek
+için biraz daha genelleştirelim. Mesela "beni arama ben seni ararım"
+tekniği ile yardımcı fonksiyon "çengel çağrılar" üzerinden her satırı
+işlemek için bir dış fonksiyonu çağırabilir, böylece isteğe uygun
+(custom) kodlama kolaylaşır. Parçalara ayırma, zıplama vs işlemleri
+halledildi, fakat her uygulamanın satır işleyişi farklı, orada
+dışarıdan tanımlı tek bir özel fonksiyon bu işleri yapabilir, altyapı
+kodunun her seferinde değişmesine gerek kalmaz.
+
+- Her satırın nasıl işleneceği bir dış obje üzerindeki `exec` çağrısı
+  içinde tanımlanır, işleyici altyapı her satır için bu kodu çağırır.
+
+- Dış objenin kendi hafızası vardır, bu obje içinde her satırın ekleme
+  yapabileceği veri yapıları tutulabilir. Mesela her dosya satırındaki
+  bilgi bir matrisin verisine ek yapabilir, parça işlemi bitince bu
+  matris içindeki birikmiş bilgiyi objeden alabiliriz.
+
+- Parçanın tüm satırları işlendikten sonra dış objenin `post` adlı
+  çağırılır, bu kod içinde son rötuşları koyma, temizlik yapma vs gibi
+  kodlar olabilir. Bu kodların ne olacağına kullanıcı karar
+  verecektir, altyapı orada ne olduğu ile ilgilenmez (aranmıyor,
+  arıyor). 
 
 Bir diger ornek [1]'de bulunabilir.
 

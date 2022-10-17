@@ -96,9 +96,8 @@ parçalara bölerek her sürecin kendi parçası üzerinde çalışmasını
 sağlamak. İkinci soru, bir koordine edici "kalfa" süreç mi iş
 dağıtsın, yoksa her süreç buna kendisi mi karar versin?" İkinci
 seçenek daha kolay; N parça içinden her sürece P parçası üzerinde
-çalışacağını söyleriz, süreç gerekli yere giderek işlemi yapar.
-
-Satır satır, metin bazlı dosya (CSV) işlerken parçalar ayrı satırlar
+çalışacağını söyleriz, süreç gerekli yere giderek işlemi yapar. Satır
+satır, metin bazlı dosya (CSV) işlerken parçalar ayrı satırlar
 olur. 10 satırlı bir dosyanin ilk 5 satırını bir süreç ikinci 5
 satırını başka bir süreç işleyebilir.
 
@@ -130,7 +129,8 @@ Bir dosya uzerinde gorelim,
 11,1111111
 12,1212121
 13,1311313
-14,1414141```
+14,1414141
+```
 
 Bu dosyayı 2 parçaya bölelim, 
 
@@ -456,4 +456,7 @@ Kaynaklar
 [1] [Hava Verisi Islemek](hava-verisi-islemek.html)
 
 [2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)
+
+
+
 

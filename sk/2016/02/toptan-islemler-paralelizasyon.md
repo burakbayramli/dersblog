@@ -109,7 +109,7 @@ yok. O zaman biraz takla atarak her parça için hızla gittiğimiz bayta
 en yakın satır başına gidebilmemiz lazım, böylece oradan satır satır
 işlem yapabilelim.
 
-Bir dosya uzerinde gorelim,
+Bir dosya üzerinde görelim,
 
 ```python
 !cat in2.csv
@@ -146,7 +146,8 @@ print ('tum =', file_size, 'her parca =', file_size / N)
 tum = 154 her parca = 77.0
 ```
 
-Şimdi `seek` ile ikinci parçaya gidebiliriz, ve oradaki karakteri okuyalım,
+Şimdi `seek` ile ikinci parçaya gidebiliriz, ve oradan birkac
+karakteri okuyalım,
 
 ```python
 with open(file_name, 'r') as f:

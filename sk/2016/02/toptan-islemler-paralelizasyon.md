@@ -319,6 +319,11 @@ gözlemlemek istersek, kod içine `time.sleep` ekleyip işleyiciyi suni
 şekile yavaşlatabiliriz, ve bu arada işletim sisteminde geçip komut
 satırında `ps eaf` ya da `htop` ile yaratılan süreçleri görebiliriz.
 
+Altyapı kodu üzerinde bazı süslemeler yapılabilir, mesela `split` ile
+alınan kolonlara indis yerine isim bazlı erişim yapmak istersek bu
+özelliği altyapı seviyesinde ekleyebiliriz. Ya da dosyanin ilk K
+satırı atlansın istersek bu farklı bir özellik olabilir. 
+
 Bir diger ornek [1]'de bulunabilir.
 
 <a name='restart'/>

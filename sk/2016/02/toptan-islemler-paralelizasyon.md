@@ -217,7 +217,7 @@ dış obje verelim, orada
   altyapı çengellerde ne olduğu ile ilgilenmez (altyapı aranmıyor, o
   arıyor).
 
-Soyle bir kod yazabiliriz,
+Şöyle bir kod yazabiliriz,
 
 ```python
 import os
@@ -457,7 +457,4 @@ Kaynaklar
 [1] [Hava Verisi Islemek](hava-verisi-islemek.html)
 
 [2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)
-
-
-
 

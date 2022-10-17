@@ -325,7 +325,9 @@ alınan kolonlara indis yerine isim bazlı erişim yapmak istersek bu
 özelliği altyapı seviyesinde ekleyebiliriz. Ya da dosyanin ilk K
 satırı atlansın istersek bu farklı bir özellik olabilir. 
 
-Bir diger ornek [1]'de bulunabilir.
+Üstteki kodların en güncel son hali [3]'te olacak.
+
+Parça parça işleme hakkında bir örnek [1]'de bulunabilir.
 
 <a name='restart'/>
 
@@ -457,4 +459,6 @@ Kaynaklar
 [1] [Hava Verisi Islemek](hava-verisi-islemek.html)
 
 [2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)
+
+[3] [Dand](https://github.com/burakbayramli/kod/tree/master/dand)
 

@@ -211,9 +211,9 @@ dış obje verelim, orada
   bilginin işlenmesi bir iç matrisin verisine ek yapabilir, parça
   bitince o matris içindeki birikmiş bilgiyi objeden alabiliriz.
 
-- Parçanın bittikten sonra dış objenin `post` denebilecek bir diğer
-  çengeli çağırılır, burada son rötuşları koyma, temizlik yapma vs
-  gibi kodlar olabilir, ne olacağına kullanıcı karar verecektir,
+- Parçanın işlemesi bittikten sonra dış objenin `post` denebilecek bir
+  diğer çengeli çağırılır, burada son rötuşları koyma, temizlik yapma
+  vs gibi kodlar olabilir, ne olacağına kullanıcı karar verecektir,
   altyapı çengellerde ne olduğu ile ilgilenmez (altyapı aranmıyor, o
   arıyor).
 

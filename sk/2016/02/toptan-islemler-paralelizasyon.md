@@ -199,21 +199,22 @@ işlemek için bir dış fonksiyonu çağırabilir, böylece isteğe uygun
 (custom) kodlama kolaylaşır. Parçalara ayırma, zıplama vs işlemleri
 halledildi, fakat her uygulamanın satır işleyişi farklı, orada
 dışarıdan tanımlı tek bir özel fonksiyon bu işleri yapabilir, altyapı
-kodunun her seferinde değişmesine gerek kalmaz.
+kodunun her seferinde değişmesine gerek kalmaz. O zaman islemciye bir
+dış obje verelim, orada
 
-- Her satırın nasıl işleneceği bir dış obje üzerindeki `exec` çağrısı
-  içinde tanımlanır, işleyici altyapı her satır için bu kodu çağırır.
+- Her satırın nasıl işleneceği obje üzerindeki `exec` çağrısı içinde
+  tanımlanır, işleyici altyapı her satır için bu kodu çağırır.
 
-- Dış objenin kendi hafızası vardır, bu obje içinde her satırın ekleme
+- Dış objenin kendi hafızası vardır, burada her satırın ekleme
   yapabileceği veri yapıları tutulabilir. Mesela her dosya satırındaki
-  bilgi bir matrisin verisine ek yapabilir, parça işlemi bitince bu
-  matris içindeki birikmiş bilgiyi objeden alabiliriz.
+  bilginin işlenmesi bir iç matrisin verisine ek yapabilir, parça
+  bitince o matris içindeki birikmiş bilgiyi objeden alabiliriz.
 
-- Parçanın tüm satırları işlendikten sonra dış objenin `post` adlı
-  çağırılır, bu kod içinde son rötuşları koyma, temizlik yapma vs gibi
-  kodlar olabilir. Bu kodların ne olacağına kullanıcı karar
-  verecektir, altyapı orada ne olduğu ile ilgilenmez (aranmıyor,
-  arıyor). 
+- Parçanın bittikten sonra dış objenin `post` denebilecek bir diğer
+  çengeli çağırılır, burada son rötuşları koyma, temizlik yapma vs
+  gibi kodlar olabilir, ne olacağına kullanıcı karar verecektir,
+  altyapı çengellerde ne olduğu ile ilgilenmez (altyapı aranmıyor, o
+  arıyor).
 
 Bir diger ornek [1]'de bulunabilir.
 

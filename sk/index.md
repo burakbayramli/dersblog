@@ -3,7 +3,7 @@
 
 ## En Son
 
-7/10 - [Tekrar Başlatılabilirlik (Restartability)](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon-tekrar_18.html#restart)
+7/10 - [Tekrar Başlatılabilirlik (Restartability)](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon.html#restart)
 
 28/9 - [Lokal Dosya Arama - recoll](https://burakbayramli.github.io/dersblog/sk/2011/08/lokal-dosya-arama-recoll.html)
 

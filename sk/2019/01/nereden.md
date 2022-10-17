@@ -51,7 +51,7 @@ işlemler bir başlar, sürekli ayaktadır, veri varsa hemen işler, işi
 bitince bekleme döngüsüne girebilir, çökerse kaldığı yerden devam
 edebilmelidir. Bunlar bilinmeli.
 
-[Link](../../2016/02/toptan-islemler-paralelizasyon-tekrar_18.html)
+[Link](../../2016/02/toptan-islemler-paralelizasyon.html)
 
 Bizim video'lar
 

@@ -12,9 +12,11 @@
 
 [Düzenli İfadeler, Python, Regex (Regular Expressions)](02/duzenli-ifadeler-python-regex-regular.html)
 
+[Hava Verisi Islemek](02/hava-verisi-islemek.html)
+
 [Piyasa Verileri, Programlar, dand](02/piyasa-verileri-programlar.html)
 
-[Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilme (Restartability)](02/toptan-islemler-paralelizasyon-tekrar_18.html)
+[Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilirlik (Restartability)](02/toptan-islemler-paralelizasyon.html)
 
 [Windows, Emacs, Lenovo 100S](03/windows-emacs-lenovo-100s.html)
 

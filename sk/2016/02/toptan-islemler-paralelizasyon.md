@@ -216,6 +216,67 @@ dış obje verelim, orada
   altyapı çengellerde ne olduğu ile ilgilenmez (altyapı aranmıyor, o
   arıyor).
 
+Soyle bir kod yazabiliriz,
+
+```python
+import os
+
+def process(file_name,ci,N,hookobj):
+    file_size = os.path.getsize(file_name)
+    beg = 0
+    chunks = []
+    for i in range(N):
+        with open(file_name, 'r') as f:
+            s = int((file_size / N)*(i+1))
+            f.seek(s)
+            f.readline()
+            end_chunk = f.tell()-1
+            chunks.append([beg,end_chunk])
+            f.close()
+        beg = end_chunk+1
+    c = chunks[ci]
+    with open(file_name, 'r') as f:
+        f.seek(c[0])
+        while True:
+            line = f.readline()
+            hookobj.exec(line)
+            if f.tell() > c[1]: break
+        f.close()
+        hookobj.post()
+```
+
+Dışarıdan tanımlanacak obje şu işlemleri yapsın; `exeç` içinde verilen
+her satırı alıp noktasal bazlı `split` ile ayırsın, ve bu ufak
+parçaları bir iç listeye eklesin.  Tüm işlemler bitince `post` içinde
+tüm iç listeyi ekrana bassın.
+
+```python
+class SimpleJob:
+    def __init__(self):
+        self.res = []
+    def exec(self,line):
+        tok = line.split(',')
+        self.res.append(tok)
+    def post(self):
+        print (self.res)
+
+# iki parca icinden ilkini isle
+process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob())
+```
+
+```text
+[['1', '11111111\n'], ['2', '22222222\n'], ['3', '33333333\n'], ['4', '44444444\n'], ['5', '55555555\n'], ['6', '66666666\n'], ['7', '77777777\n'], ['8', '88888888\n']]
+```
+
+```python
+# iki parca icinden ikincisini isle
+process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob())
+```
+
+```text
+[['9', '99999999\n'], ['10', '1010101\n'], ['11', '1111111\n'], ['12', '1212121\n'], ['13', '1311313\n'], ['14', '1414141\n']]
+```
+
 Bir diger ornek [1]'de bulunabilir.
 
 <a name='restart'/>

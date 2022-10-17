@@ -91,40 +91,107 @@ başlatmıyoruz, takip edici programlarımızı başlatıyor, onları izliyor,
 Satır Satır Paralel Dosya İşlemek
 
 Paralel işlem için işbölümünün nasıl yapılacağını kararlaştırmak
-lazım, burada en kolay yöntem veriyi baştan parçalara bölerek her
-sürecin kendi parçası üzerinde çalışmasını sağlamak.
+lazım, burada en kolay yöntem ustte bahsettigimiz gibi veriyi baştan
+parçalara bölerek her sürecin kendi parçası üzerinde çalışmasını
+sağlamak. İkinci soru, bir koordine edici "kalfa" süreç mi iş
+dağıtsın, yoksa her süreç buna kendisi mi karar versin?" İkinci
+seçenek daha kolay; N parça içinden her sürece P parçası üzerinde
+çalışacağını söyleriz, süreç gerekli yere giderek işlemi yapar.
 
-İkinci soru şu, bir koordine edici "kalfa" süreç mi iş dağıtsın, yoksa
-her süreç buna kendisi mi karar versin? İkinci seçenek daha kolay;
-aynen üstte işlediğimiz gibi, N parça içinden her sürece İ parçası
-üzerinde çalışacağını söyleriz, süreç gerekli yere giderek işlemi
-yapar.
+Satır satır, metin bazlı dosya (CSV) işlerken parçalar ayrı satırlar
+olur. 10 satırlı bir dosyanin ilk 5 satırını bir süreç ikinci 5
+satırını başka bir süreç işleyebilir.
 
-Satır satır noktayla ayrılmış metin bazlı dosya (CSV) işlerken bu
-parçalar ayrı satırlar olacaktır. Mesela 10 satırlı bir dosyanin ilk 5
-satırını bir süreç ikinci 5 satırını başka bir süreç işleyebilir.
+Fakat bir problem var, CSV kütüphaneleri satır bazlı ileri zıplama
+yapamaz, bayt bazlı zıplama yaparlar. Mesela 1200 baytlik dosyanin
+125'inci baytina (karakterine) git diyebiliyoruz, ve bu hızlı oluyor,
+fakat bu işlemin herhangi bir satırın başına gitme garantisi tabii ki
+yok. O zaman biraz takla atarak her parça için hızla gittiğimiz bayta
+en yakın satır başına gidebilmemiz lazım, böylece oradan satır satır
+işlem yapabilelim.
 
+Bir dosya uzerinde gorelim,
 
+```python
+!cat in2.csv
+```
 
+```text
+1,11111111
+2,22222222
+3,33333333
+4,44444444
+5,55555555
+6,66666666
+7,77777777
+8,88888888
+9,99999999
+10,1010101
+11,1111111
+12,1212121
+13,1311313
+14,1414141```
+
+Bu dosyayı 2 parçaya bölelim, 
+
+```python
+import os
+file_name = 'in2.csv'
+N = 2
+file_size = os.path.getsize(file_name)
+print ('tum =', file_size, 'her parca =', file_size / N)
+```
+
+```text
+tum = 154 her parca = 77.0
+```
+
+Şimdi `seek` ile ikinci parçaya gidebiliriz, ve oradaki karakteri okuyalım,
+
+```python
+with open(file_name, 'r') as f:
+    f.seek(79)
+    c = f.read(1)
+    print (c)
+f.close()
+```
+
+```text
+8
+```
+
+`8` sayısı var, `8,88888888` satırında bir yerlere geldik yani. Ama
+bize satır başı lazım, eger `seek` sonrasi `readline` dersek, icinde
+oldugumuz satiri bitirip bir sonrakine gecebiliriz,
+
+```python
+with open(file_name, 'r') as f:
+    f.seek(79)
+    f.readline()
+    c = f.read(5) # bir sonraki satirdayiz simdi
+    print (c)
+f.close()
+```
+
+```text
+9,999
+```
+
+Evet gördüğümüz gibi 8'li satırı geçtik ve `f.read(5)` dediğimiz anda
+artık sonraki satır başındaydık.
+
+Bu teknikleri daha organize şekilde bir araya koyabiliriz. Öyle bir
+yardımcı fonksiyon lazim ki,
+
+- Bir dosya ismi ve parça (chünk) sayısı verilince her parçanın
+  satırsal başlangıç bayt noktalarını bir liste olarak hesaplasın.
+  
+- Satırsal işleyici kod parça bilincine sahip olsun, bir parçanın
+  başlangıcına atladıktan sonra o parçanın bitiş noktasından daha ileri
+  gitmesin.
 
 
 Bir diger ornek [1]'de bulunabilir.
-
-Loglama
-
-Bir takipçi tarafından, paralel şekilde program işletiliyorsa, artık print ile ekrana mesaj basmak yeterli değil, loglama gerekli, yani bir log dosyasına çıktıları güzel bir format ile yazmak. Python'da logging kütüphanesi bu işi çok rahat yapar; script başında import logging ile dahil ederiz, ve örneğimiz için alttaki kodu ekleriz,
-
-```
-fmt = '%(asctime)s - %(message)s - %(pathname)s'
-fout = '/tmp/hava-%d.log' % int(sys.argv[1])
-logging.basicConfig(filename=fout, level=logging.DEBUG, format=fmt)  
-```
-
-Artık logging.debug(...) ile yazılan her mesaj o sürecin kendisine ait
-log dosyasına yazılacaktır, mesela 0. parça için bu /tmp/hava-0.log
-olacak. Eger mesajlar direk ekrana basilsin istiyorsak filename yerine
-stream=sys.stdout kullanabiliriz.
-
 
 <a name='restart'/>
 
@@ -234,6 +301,22 @@ kimliğini her satırı işlerken ufak bir dosyaya da yazabilirdik, sonra
 süreç başlangıcında onu okuyup devam kalan yerden devam ederdik. Devam
 etme yöntemi `DataFrame` filtrelemesi yerine `csv` paketinde bir sonrakine
 atlama üzerinden olabilirdi, seçenekler muhtelif.
+
+### Loglama
+
+Bir takipçi tarafından, paralel şekilde program işletiliyorsa, artık print ile ekrana mesaj basmak yeterli değil, loglama gerekli, yani bir log dosyasına çıktıları güzel bir format ile yazmak. Python'da logging kütüphanesi bu işi çok rahat yapar; script başında import logging ile dahil ederiz, ve örneğimiz için alttaki kodu ekleriz,
+
+```
+fmt = '%(asctime)s - %(message)s - %(pathname)s'
+fout = '/tmp/hava-%d.log' % int(sys.argv[1])
+logging.basicConfig(filename=fout, level=logging.DEBUG, format=fmt)  
+```
+
+Artık logging.debug(...) ile yazılan her mesaj o sürecin kendisine ait
+log dosyasına yazılacaktır, mesela 0. parça için bu /tmp/hava-0.log
+olacak. Eger mesajlar direk ekrana basilsin istiyorsak filename yerine
+stream=sys.stdout kullanabiliriz.
+
 
 Kaynaklar
 

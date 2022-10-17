@@ -1,8 +1,8 @@
-import os, sys
+import os, threading
+from multiprocessing import Process
 
-def process(file_name,ci,N,lineobj):
+def process(file_name,ci,N,hookobj):
     file_size = os.path.getsize(file_name)
-    print (file_size)
     beg = 0
     chunks = []
     for i in range(N):
@@ -19,14 +19,14 @@ def process(file_name,ci,N,lineobj):
         f.seek(c[0])
         while True:
             line = f.readline()
-            lineobj.exec(line)
+            hookobj.exec(line)
             if f.tell() > c[1]: break
         f.close()
-        lineobj.post()
+        hookobj.post()
 
 if __name__ == "__main__":
 
-    class Job:
+    class SimpleJob:
         def __init__(self):
             self.res = []
         def exec(self,line):
@@ -34,11 +34,15 @@ if __name__ == "__main__":
             self.res.append(tok)
         def post(self):
             print (self.res)
+
     
-    file_name = sys.argv[1]
-    ci = int(sys.argv[2])
-    N = int(sys.argv[3])
-    #process(file_name,ci,N,print)
-    j = Job()
-    process(file_name,ci,N,j)
+    thread1 = threading.Thread(target=process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob()))
+    thread2 = threading.Thread(target=process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob()))
     
+    thread1.start()
+    thread2.start()
+    
+    p1 = Process(target=process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob()))
+    p2 = Process(target=process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob()))
+    p1.start()
+    p2.start()

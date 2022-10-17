@@ -285,6 +285,38 @@ dosya kopyalanır, ya da disk paylaşım teknikleri ile erişim yapılır.
 Parça hesabı, ileri zıplama tekniği her kod içinde ayrı işletilebildiği için
 bir merkezi kordinasyon mekanizmasına ihtiyaç yoktur.
 
+Demo amacli olarak her parcayi simdi ayri bir Thread uzerinde isletelim,
+
+```python
+import threading
+
+thread1 = threading.Thread(target=process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob()))
+thread2 = threading.Thread(target=process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob()))
+
+thread1.start()
+thread2.start()
+```
+
+```text
+[['1', '11111111\n'], ['2', '22222222\n'], ['3', '33333333\n'], ['4', '44444444\n'], ['5', '55555555\n'], ['6', '66666666\n'], ['7', '77777777\n'], ['8', '88888888\n']]
+[['9', '99999999\n'], ['10', '1010101\n'], ['11', '1111111\n'], ['12', '1212121\n'], ['13', '1311313\n'], ['14', '1414141\n']]
+```
+
+Eğer Thread yerine farklı süreçlerde [2] işlem yapılsın istersek,
+
+```python
+from multiprocessing import Process
+
+p1 = Process(target=process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob()))
+p2 = Process(target=process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob()))
+p1.start()
+p2.start()
+```
+
+Sonuç üstteki ile aynı olacak. Eğer süreçlerin yaratıldığını görmek
+istersek, kod içine `time.sleep` ekleyip işleyiciyi yavaşlatabiliriz,
+ve bu arada işletim sisteminde komut satırına geçip orada `ps eaf` ya
+da `htop` ile yaratılan süreçleri görebiliriz.
 
 Bir diger ornek [1]'de bulunabilir.
 

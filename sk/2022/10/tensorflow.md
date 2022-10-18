@@ -188,3 +188,6 @@ eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
 çizite vermek için kullanılır.
 
 
+
+
+

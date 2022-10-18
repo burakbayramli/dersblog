@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Tensorflow (TF)</h1>
+<h1>Tensorflow ile Regresyon, YSA</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Tensorflow (TF)
+    <title>Tensorflow ile Regresyon, YSA
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -24,167 +24,11 @@
 </script>
 </head>
 
-<p>Google'ın yazdığı ve açık yazılım haline getirdiği paket TF çoğunlukla
-yapay öğrenim bağlamında gündeme geliyor, fakat TF aslında genel kullanımı
-olan bir paket. TF bir sayısal hesap kütüphanesi, daha spesifik olarak, ona
-çizit olarak verilen hesapları yapabilen bir sayısal hesap paketi.</p>
-<p>TF ile hesap yapmak için hesabı temsil eden bir çizit kurulur, mesela
-$f(x,y) = x^2y + y + 2$ için</p>
-<p><img alt="" src="tf_01.png" /></p>
-<p>Bu hesap ağaçında görülen sayılar tek sayı olabilir, çok boyutlu vektör,
-matris, ya da çok boyutlu matris olabilir. Matematikte bu objelere genel
-olarak "tensor" ismi veriliyor, paketin ismi de buradan geliyor,
-tensorlar hesap çiziti içinde bir hesaptan diğerine "akıyorlar"
-(flow). Hesabı çizit olarak belirtmenin bazı avantajları var, en önemlisi
-çizit üzerinde direk otomatik türev alınabilir, bkz [4] yazısı, ve bu
-şekilde gradyan hesapları kolay bir şekilde yapılabiliyor. Bir diğeri
-çizitin paralelleştirme için doğal bir yapı olması; çiziti istediğimiz
-şekilde bölerek parçaları farklı mikroişlemci (CPU), ya da grafik işlemci
-(GPU) üzerinde paralel bir şekilde işletebiliriz, mesela üstteki $f$ için
-$f(3,4)$ hesabı,</p>
-<p><img alt="" src="tf_02.png" /></p>
-<p>şeklinde iki parçaya bölünebilir. 3 girilen soldaki parça kendi başına
-hesabını yaparken aynı anda 4 girilen diğer parça işlemine devam
-edebilir. Ayrıca Google TPU adı verilen tensor işlemci üniteleri üzerinden
-artık CPU, GPU yerine direk TF için optimize edilmiş yeni işlemciler
-üzerinden paralelizasyon yapılabiliyor.</p>
-<p>TF kodlaması nasıl olur? Üstteki örnek için</p>
-<pre><code class="python">import tensorflow as tf
-
-x = tf.Variable(3, name=&quot;x&quot;)
-y = tf.Variable(4, name=&quot;y&quot;)
-f = x*x*y + y + 2
-</code></pre>
-
-<p>İçinde $x,y,f$ düğümleri (node) olan bir çizit yaratıldı. Bu kadar! Fakat
-anlamamız gereken önemli bir nokta var, üstteki kodu işletince halen bir
-hesap yapmış olmuyoruz, sadece üzerinden hesabın yapılabileceği çizit
-yapısını yaratmış oluyoruz. Hesabın kendisi için bir TF oturumu (session)
-açmak lazım, bu oturum üzerinden değişkenler başlangıç değerlerlerine
-eşitlenir, ve sonra $f$ hesabı tetiklenir. Esas hesap bu şekilde ortaya
-çıkar.</p>
-<pre><code class="python">sess = tf.Session()
-sess.run(x.initializer)
-sess.run(y.initializer)
-result = sess.run(f)
-print(result)
-</code></pre>
-
-<pre><code>42
-</code></pre>
-
-<p>Eğer işimiz bitti ise ve kaynakların (bellek, işlemci gibi) geri
-dönüşümünü, serbest bırakılmasını istiyorsak oturumu kapatırız,</p>
-<pre><code class="python">sess.close()
-</code></pre>
-
-<p>Kodlama açısından biraz daha temiz bir yol, </p>
-<pre><code class="python">with tf.Session() as sess:
-    x.initializer.run()
-    y.initializer.run()
-    result = f.eval()
-print result
-</code></pre>
-
-<pre><code>42
-</code></pre>
-
-<p><code>with</code> kullanımı ile blok dışına çıkılınca kapatma işlemi otomatik
-olarak yapılıyor. Nihai hesap için <code>eval</code> çağrısı yapıldığını gördük,
-bu çağrı aslında herhangi bir düğümün hesaplanmasını tetikleyebilir. Bu
-tetikleme sonrasında TF bir düğümün hangi diğer düğümlere bağlı olduğuna
-bakarak çizitte önce o düğümlerin hesabını yapacaktır, ve o çıktıları
-çizite göre birleştirerek nihai sonucu bulacaktır. Mesela</p>
-<pre><code class="python">w = tf.constant(3)
-x = w + 2
-y = x + 5
-z = x * 3
-
-with tf.Session() as sess:
-    print 'y =', y.eval()
-    print 'z =', z.eval()
-</code></pre>
-
-<pre><code>y = 10
-z = 15
-</code></pre>
-
-<p>TF otomatik olarak $y$'nin $w$'ye, onun da $x$'e bağlı olduğunu gördü, önce
-$w$'yi işletti, sonra $y$'yi, ve onu da $z$ hesabı için kullandı. Dikkat,
-TF önbellekleme yapmaz, yani üstteki kod $w,x$ hesabını iki kere
-yapar. Hesap çağrısı sonrası değişken değerleri muhafaza edilir (çünkü
-onlar çizitin parçası) fakat düğüm değerleri yokolur.</p>
-<p>TF bir anlamda numpy kütüphanesinin çizitli, çok işlemcili versiyonu olarak
-görülebilir. Bir numpy matrisi üzerinde yapılan pek çok işlem TF ile de
-yapılabilir. Mesela bir matrisin tümü, herhangi bir ekseni bazındaki toplam
-alttaki gibi alınabiliyor,</p>
-<pre><code class="python">x = tf.constant([[1., 1., 1.], [1., 1.,1.]])
-c1 = tf.reduce_sum(x)
-print tf.Session().run(c1)
-c1 = tf.reduce_sum(x, 0) # y ekseni uzerinden toplam
-print tf.Session().run(c1)
-c2 = tf.reduce_sum(x, 1) # x ekseni uzerinden toplam
-print tf.Session().run(c2)
-</code></pre>
-
-<pre><code>6.0
-[ 2.  2.  2.]
-[ 3.  3.]
-</code></pre>
-
-<p>Boyutları tekrar düzenlemek için <code>reshape</code> var, alışık olunan numpy
-versiyonu gibi işliyor. <code>-1</code> değerinin özel bir önemi var, sadece bir
-tane <code>-1</code> kullanılabilir, ve bu durumda o boyutta "ne olduğu önemli
-değil" mesajı verilmiş olur.</p>
-<pre><code class="python">x1 = tf.constant([1, 2, 3, 4, 5, 6, 7, 8, 9])
-
-x2 = tf.constant([[[1, 1, 1],[2, 2, 2]],
-                 [[3, 3, 3],[4, 4, 4]],
-                 [[5, 5, 5],[6, 6, 6]]])
-
-with tf.Session() as sess:
-    res1 = tf.reshape(x1, [3, 3])
-    print tf.Session().run(res1)
-    res2 = tf.reshape(x2, [2, -1])
-    print tf.Session().run(res2)
-</code></pre>
-
-<pre><code>[[1 2 3]
- [4 5 6]
- [7 8 9]]
-[[1 1 1 2 2 2 3 3 3]
- [4 4 4 5 5 5 6 6 6]]
-</code></pre>
-
-<p>Dışarıdan Okunan Veriyi Çizite Vermek</p>
-<p>Bunu yapmanın en basit yolu yer tutucu düğüm (placeholder node)
-kullanmak. Bu düğümler özel düğümler, hiç bir iş yapmıyorlar, içlerinde
-veri yok, sadece onlara dışarıdan verdiğimiz veriyi çizit içine taşıyorlar,
-yani çizitin akışına dahil ediyorlar. Eğer işleyiş anında onlara dışarıdan
-veri verilmezse TF bir hata mesajı verecektir.</p>
-<p>Yer tutucuları tanımlarken onların önceden tipini tanımlayabiliriz, şart
-degil ama bir büyüklük te tanımlanabilir, <code>None</code> ile burayı boş
-bırakmak ta mümkün. Şimdi yer tutucu <code>A</code> tanımlayalım, <code>B</code> ona
-bağlı olsun, sonra <code>B</code> değerini hesaplamak için <code>eval</code> çağrırken
-yer tutucunun içini o anda dolduralım, ve sonuca bakalım,</p>
-<pre><code class="python">A = tf.placeholder(tf.float32, shape=(None, 3))
-B = A + 5
-with tf.Session() as sess:
-    print  B.eval(feed_dict={A: [[1, 2, 3]]})
-</code></pre>
-
-<pre><code>[[ 6.  7.  8.]]
-</code></pre>
-
-<p>Yer tutucular tipik olarak gradyan inişi ile optimizasyon sırasında eğitim
-verisini ufak toptan parçalar olarak mesela $X,y$ uzerinden çizite vermek
-için kullanılır.</p>
-<p>Lineer Regresyon</p>
-<p>Şimdi bir toptan basit lineer regresyon hesabını TF ile yapalım. Regresyonu
-California emlak veri seti üzerinde işleteceğiz, bu veride bölge bazlı
-olarak ev sahiplerinin ortalama yaşı, geliri, gibi değişkenler ile hedef
-değişkeni olan ev fiyatı kayıtlı. Hedef ve kaynak değişkenler arasındaki
-lineer ilişki lineer regresyon ile hesaplanabilir, tanıdık formül,</p>
+<p>Toptan basit lineer regresyon hesabını Tensorflow [5] ile nasıl yaparız?
+Regresyonu California emlak veri seti üzerinde işleteceğiz, bu veride bölge
+bazlı olarak ev sahiplerinin ortalama yaşı, geliri, gibi değişkenler ile hedef
+değişkeni olan ev fiyatı kayıtlı. Hedef ve kaynak değişkenler arasındaki lineer
+ilişki lineer regresyon ile hesaplanabilir, tanıdık formül,</p>
 <p>$\hat{\theta} = (X^TX )^{-1} X^T y $</p>
 <p>Veriye bir yanlılık (sadece 1 değeri içeren yeni bir kolon) ekleyip üstteki
 hesabı yapalım.</p>
@@ -868,3 +712,4 @@ with tf.Session() as sess:
 <p>[2] Heidelberg U., <em>Risk Factors Associated with Low Infant Birth Weight</em>, <a href="http://www.statlab.uni-heidelberg.de/data/linmod/birthweight.html">http://www.statlab.uni-heidelberg.de/data/linmod/birthweight.html</a></p>
 <p>[3] McClure, <em>TensorFlow Machine Learning Cookbook</em></p>
 <p>[4] Bayramli, Bilgisayar Bilim, <em>Otomatik Türev Almak</em></p>
+<p>[5] Bayramli, Tensorflow, </p>

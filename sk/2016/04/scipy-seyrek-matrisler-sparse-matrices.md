@@ -7,24 +7,24 @@ depolanır, seyrek durumda bu sebeple sadece sıfır harici değerler için
 yer ayrılacaktır. Tabii bu seyrek matrisler hala çarpım, toplama, vs,
 gibi işlemlerin yapılmasına izin verirler, mesela toplama durumunda
 iki seyrek matris A,B üzerinden A+B arka planda şöyle kodlanabilir,
-B'de olmayan öğe  ile A'da olan bir değer toplanıyorsa sonuç direk
+B'de olmayan öğe  ile A'da olan bir değer toplanıyorsa sonuç direk
 A'daki değer olur, çünkü olmayan değer otomatik olarak sıfırdır, bu
 şekilde pek çok hesap daha hızlı şekilde yapılabilir.
 
-Örnek: diyelim ki Netflix, kullanıcı filmi seyretmişse  müşterileri
+Örnek: diyelim ki Netflix, kullanıcı filmi seyretmişse  müşterileri
 satırda, filmler kolonda olacak şekilde bir matriste ona verdiği
 beğeni değerini 1-5 arası bir değerle kaydetmiş olabilir. Bir
 kullanıcı çoğunlukla filmlerin hepsini seyretmiş olamaz, o zaman bu
-matriste satır başı en fazla 100-200 civarı  öğe / kolon değeri "dolu"
+matriste satır başı en fazla 100-200 civarı  öğe / kolon değeri "dolu"
 olacak, gerisi boş olacaktır. Eğer bu matrisi scipy.sparse üzerinden
 işlersek, bellek ve işlem hızında ilerleme sağlarız.
 
 Seyrek matris yaratmak icin onceden boyut tanımlanabilir, fakat o
-boyut kadar yer bellekte onceden ayrilmaz.  Mesela
+boyut kadar yer bellekte onceden ayrilmaz.  Mesela
 
 ```
 import scipy.sparse as sps
-A = sps.lil_matrix((N,D)) 
+A = sps.lil_matrix((N,D)) 
 ```
 
 N,D ne olursa olsun A bellekte hiç / çok az yer tutar.
@@ -41,7 +41,7 @@ Bazı Numaralar
 
 ```
 X = sps.lil_matrix((2,5))
-X[0,2] = 2.0  
+X[0,2] = 2.0  
 X[1,3] = 5.0
 ```
 
@@ -52,12 +52,12 @@ print X.todense()
 ```
 
 ```
-[[ 0.  0.  2.  0.  0.]
+[[ 0.  0.  2.  0.  0.]
 
- [ 0.  0.  0.  5.  0.]]
+ [ 0.  0.  0.  5.  0.]]
 ```
 
-Sıfır Olmayan Öğeleri Gezmek 
+Sıfır Olmayan Öğeleri Gezmek 
 
 Direk `lil_matrix` ile
 
@@ -66,7 +66,7 @@ rows,cols = X.nonzero()
 
 for row,col in zip(rows,cols):
 
-    print row,col, ' = ', X[row,col]
+    print row,col, ' = ', X[row,col]
 ```
 
 Eger coo_matrisi olsaydi
@@ -76,10 +76,10 @@ cx = X.tocoo()
 
 for i,j,v in zip(cx.row, cx.col, cx.data):
 
-   print i,j,' = ',v
+   print i,j,' = ',v
 ```
 
-Bir satırı bir matrisin her satırıyla ögesel olarak çarpmak, 
+Bir satırı bir matrisin her satırıyla ögesel olarak çarpmak, 
 
 ```
 X2 = sps.lil_matrix((1,5))
@@ -90,22 +90,22 @@ print X2.todense()
 ```
 
 ```
-[[ 0.  0.  0.  9.  0.]]
+[[ 0.  0.  0.  9.  0.]]
 ```
 
-Bu matrisi alıp önceki X'in her satırı ile öğesel çarptırmak için 
+Bu matrisi alıp önceki X'in her satırı ile öğesel çarptırmak için 
 
 ```
 print X.multiply(X2).todense()
 ```
 
 ```
-[[  0.   0.   0.   0.   0.]
+[[  0.   0.   0.   0.   0.]
 
- [  0.   0.   0.  45.   0.]]
+ [  0.   0.   0.  45.   0.]]
 ```
 
-Sadece sıfır olmayan ogelerinin log'unu almak, 
+Sadece sıfır olmayan ogelerinin log'unu almak, 
 
 ```
 X=X.tocoo()
@@ -118,7 +118,7 @@ print X2.todense()
 ```
 
 ```
-[[ 0.          0.          0.          2.19722458  0.        ]]
+[[ 0.          0.          0.          2.19722458  0.        ]]
 ```
 
 Ortalama Çıkartmak
@@ -134,37 +134,37 @@ import scipy.sparse as sps
 
 def center(mat):
 
-    mat = mat.T
+    mat = mat.T
 
-    vec = sps.csc_matrix(mat.mean(axis=1))
+    vec = sps.csc_matrix(mat.mean(axis=1))
 
-    mat_row = mat.tocsr()
+    mat_row = mat.tocsr()
 
-    vec_row = vec.T
+    vec_row = vec.T
 
-    mat_row.data -= np.repeat(vec_row.toarray()[0],np.diff(mat_row.indptr))
+    mat_row.data -= np.repeat(vec_row.toarray()[0],np.diff(mat_row.indptr))
 
-    return mat_row.T
+    return mat_row.T
 
 
 mat = sps.csc_matrix([[1, 2, 3, 5.],
 
-                      [2, 3, 4, 5.],
+                      [2, 3, 4, 5.],
 
-                      [3, 4, 5, 5.]])
+                      [3, 4, 5, 5.]])
 
 
 print center(mat).todense()
 
 
-[[-1. -1. -1.  0.]
+[[-1. -1. -1.  0.]
 
- [ 0.  0.  0.  0.]
+ [ 0.  0.  0.  0.]
 
- [ 1.  1.  1.  0.]]
+ [ 1.  1.  1.  0.]]
 ```
 
-Normalize Etmek 
+Normalize Etmek 
 
 Standardize etmek hem ortalamayı çıkartmak (demean), sonra normalize
 etmek demektir. Bu iki işlem birbirinden bağımsız yapılabilir, bazen
@@ -172,7 +172,7 @@ biri bazen diğeri kullanılabilir. Normalize etmek, mesela satir L2
 normalizasyonu diyelim, oyle bir islemdir ki o islem ardindan her
 satirdaki ogelerin karesini toplayip karekoku alinca 1 sonucunu elde
 edebilmek mumkun olacaktir, Normalize etmek için scikit-learn
-paketinin fonksiyonları vardır, 
+paketinin fonksiyonları vardır, 
 
 ```
 from sklearn.preprocessing import normalize
@@ -181,11 +181,11 @@ print normalize(mat, norm='l1', axis=0).todense()
 ```
 
 ```
-[[-0.5 -0.5 -0.5  0. ]
+[[-0.5 -0.5 -0.5  0. ]
 
- [ 0.   0.   0.   0. ]
+ [ 0.   0.   0.   0. ]
 
- [ 0.5  0.5  0.5  0. ]]
+ [ 0.5  0.5  0.5  0. ]]
 ```
 
 Üstteki çağrı matrisin kolonlarını (çünkü axis=0 seçildi, bu kolon
@@ -198,21 +198,21 @@ print normalize(mat, norm='l2', axis=0).todense()
 ```
 
 ```
-[[-0.70710678 -0.70710678 -0.70710678  0.        ]
+[[-0.70710678 -0.70710678 -0.70710678  0.        ]
 
- [ 0.          0.          0.          0.        ]
+ [ 0.          0.          0.          0.        ]
 
- [ 0.70710678  0.70710678  0.70710678  0.        ]]
+ [ 0.70710678  0.70710678  0.70710678  0.        ]]
 ```
 
-Satırları normalize edebilirdik, 
+Satırları normalize edebilirdik, 
 
 ```
-[[-0.33333333 -0.33333333 -0.33333333  0.        ]
+[[-0.33333333 -0.33333333 -0.33333333  0.        ]
 
- [ 0.          0.          0.          0.        ]
+ [ 0.          0.          0.          0.        ]
 
- [ 0.33333333  0.33333333  0.33333333  0.        ]]
+ [ 0.33333333  0.33333333  0.33333333  0.        ]]
 ```
 
 Kosegenlik
@@ -238,7 +238,7 @@ array([[-1,  1,  0,  0],
 
 
 
-Bu belgeye ekler olacak. 
+Bu belgeye ekler olacak. 
 
 
 

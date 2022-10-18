@@ -291,8 +291,8 @@ Demo amaçlı olarak her parçayı şimdi ayrı bir Thread üzerinde işletelim,
 ```python
 import threading
 
-thread1 = threading.Thread(target=process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob()))
-thread2 = threading.Thread(target=process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob()))
+thread1 = threading.Thread(target=process, args=('in2.csv', 0, 2, SimpleJob()))
+thread2 = threading.Thread(target=process, args=('in2.csv', 1, 2, SimpleJob()))
 
 thread1.start()
 thread2.start()
@@ -308,8 +308,8 @@ Eğer Thread yerine farklı süreçlerde [2] işlem yapılsın istersek,
 ```python
 from multiprocessing import Process
 
-p1 = Process(target=process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob()))
-p2 = Process(target=process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob()))
+p1 = Process(target=process, args=('in2.csv', 0, 2, SimpleJob()))
+p1 = Process(target=process, args=('in2.csv', 1, 2, SimpleJob()))
 p1.start()
 p2.start()
 ```

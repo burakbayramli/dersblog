@@ -4,3 +4,5 @@
 
 [Android, Raspberry Pi Geliştirme Ortamı](09/gelistirme-ortami-tablet-rpi.html)
 
+[Tensorflow](10/tensorflow.html)
+

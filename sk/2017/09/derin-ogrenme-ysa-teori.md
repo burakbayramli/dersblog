@@ -1,21 +1,15 @@
 # Derin Öğrenme, YSA, Teori
 
+Derin YSA (yapay sinir aglari) alaninda bazi gelismeler: Naftali
+Tishby adli enformasyon teorisi arastirmacisi derin aglarin niye bu
+kadar iyi isledigi hakkindaki bulgularini paylasiyor.
 
 
-
-Derin Öğrenme, YSA, Teori
-
-
-
-
-Derin YSA (yapay sinir aglari) alaninda bazi gelismeler: Naftali Tishby adli enformasyon teorisi arastirmacisi derin aglarin niye bu kadar iyi isledigi hakkindaki bulgularini paylasiyor.
-
-
-
-
-
-
-Tishby'ye gore DYSA'larin iyi islemesinin sebebi her katmanin bir sonraki katmana bilgi aktarirken bir sıkıştırma (compression) yapmaya mecbur kalmasi (cunku az sayida noron ile cok sayida veriyi temsil etmek zorunda) ve bunun bir ogrenme sureci ortaya cikartmasi. Ayrica ogrenmenin onemli bir parcasi unutmak :)
+Tishby'ye gore DYSA'larin iyi islemesinin sebebi her katmanin bir
+sonraki katmana bilgi aktarirken bir sıkıştırma (compression) yapmaya
+mecbur kalmasi (cunku az sayida noron ile cok sayida veriyi temsil
+etmek zorunda) ve bunun bir ogrenme sureci ortaya cikartmasi. Ayrica
+ogrenmenin onemli bir parcasi unutmak :)
 
 Tabii sıkıştırma = ogrenme gibi bir esitlik oldugu biliniyordu, 90'li yillarda (galiba M. Kearns adli arastirmaci) bu alanda bir tez yazmisti, fakat Tishby ogrenmeyi YSA baglaminda anlatiyor. Gerci cok katmanli YSA'larda eger girdiyi ve ciktiyi ayni hale getirirsek ilk katmanin kodlayici (encoder) son katmanin kodçözücü (decoder) haline geldigi de biliniyordu, ama Tishby enformasyon teorisi matematigini konuya uygulamis, ve unutma, katmanlarin genellestirmesi vs gibi yeni gozlemler yapmis. DYSA babalarindan Hinton bu yeni arastirma hakkinda bayagi mutlu olmus, diye duyduk.
 

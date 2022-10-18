@@ -16,6 +16,8 @@
 
 [Piyasa Verileri, Programlar, dand](02/piyasa-verileri-programlar.html)
 
+[Ne Zaman Thread Ne Zaman Süreç?](02/thread-process-surec.html)
+
 [Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilirlik (Restartability)](02/toptan-islemler-paralelizasyon.html)
 
 [Windows, Emacs, Lenovo 100S](03/windows-emacs-lenovo-100s.html)

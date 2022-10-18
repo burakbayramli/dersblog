@@ -53,7 +53,6 @@ print X.todense()
 
 ```
 [[ 0.  0.  2.  0.  0.]
-
  [ 0.  0.  0.  5.  0.]]
 ```
 
@@ -65,7 +64,6 @@ Direk `lil_matrix` ile
 rows,cols = X.nonzero()
 
 for row,col in zip(rows,cols):
-
     print row,col, ' = ', X[row,col]
 ```
 
@@ -75,7 +73,6 @@ Eger coo_matrisi olsaydi
 cx = X.tocoo()
 
 for i,j,v in zip(cx.row, cx.col, cx.data):
-
    print i,j,' = ',v
 ```
 
@@ -83,9 +80,7 @@ Bir satırı bir matrisin her satırıyla ögesel olarak çarpmak,
 
 ```
 X2 = sps.lil_matrix((1,5))
-
 X2[0,3] = 9
-
 print X2.todense()
 ```
 
@@ -101,7 +96,6 @@ print X.multiply(X2).todense()
 
 ```
 [[  0.   0.   0.   0.   0.]
-
  [  0.   0.   0.  45.   0.]]
 ```
 
@@ -109,11 +103,8 @@ Sadece sıfır olmayan ogelerinin log'unu almak,
 
 ```
 X=X.tocoo()
-
 X2=X2.tocoo()
-
 X2.data = np.log(X2.data)
-
 print X2.todense()
 ```
 
@@ -131,36 +122,22 @@ verilmemiş). Fakat bu özellik gerekiyorsa, şöyle yapılır,
 ```
 import scipy.sparse as sps
 
-
 def center(mat):
-
     mat = mat.T
-
     vec = sps.csc_matrix(mat.mean(axis=1))
-
     mat_row = mat.tocsr()
-
     vec_row = vec.T
-
     mat_row.data -= np.repeat(vec_row.toarray()[0],np.diff(mat_row.indptr))
-
     return mat_row.T
 
-
 mat = sps.csc_matrix([[1, 2, 3, 5.],
-
                       [2, 3, 4, 5.],
-
                       [3, 4, 5, 5.]])
-
 
 print center(mat).todense()
 
-
 [[-1. -1. -1.  0.]
-
  [ 0.  0.  0.  0.]
-
  [ 1.  1.  1.  0.]]
 ```
 
@@ -176,15 +153,12 @@ paketinin fonksiyonları vardır,
 
 ```
 from sklearn.preprocessing import normalize
-
 print normalize(mat, norm='l1', axis=0).todense()
 ```
 
 ```
 [[-0.5 -0.5 -0.5  0. ]
-
  [ 0.   0.   0.   0. ]
-
  [ 0.5  0.5  0.5  0. ]]
 ```
 
@@ -199,9 +173,7 @@ print normalize(mat, norm='l2', axis=0).todense()
 
 ```
 [[-0.70710678 -0.70710678 -0.70710678  0.        ]
-
  [ 0.          0.          0.          0.        ]
-
  [ 0.70710678  0.70710678  0.70710678  0.        ]]
 ```
 
@@ -209,9 +181,7 @@ Satırları normalize edebilirdik,
 
 ```
 [[-0.33333333 -0.33333333 -0.33333333  0.        ]
-
  [ 0.          0.          0.          0.        ]
-
  [ 0.33333333  0.33333333  0.33333333  0.        ]]
 ```
 
@@ -236,14 +206,40 @@ array([[-1,  1,  0,  0],
        [ 0,  0,  0, -1]])
 ```
 
+Diske Yazmak, Okumak
 
+En kullanışlı yaklaşım `scipy.iö` içindeki `mmread` ve `mmwrite`
+kullanımı. Matrisi diske yazmak için
 
-Bu belgeye ekler olacak. 
+```python
+import scipy.sparse as sps, scipy.io as io
 
+A = sps.lil_matrix((4,4))
+A[2,3] = 10
+io.mmwrite("/tmp/A",A)
+```
 
+Yazılan dosya metin bazlı, düz okunabilen bir dosyadır,
 
+```python
+! cat /tmp/A.mtx
+```
 
+```text
+%%MatrixMarket matrix coordinate real general
+%
+4 4 1
+3 4 1.000000000000000e+01
+```
 
+Okumak için
 
+```python
+X = io.mmread("/tmp/A").tolil()
+print (X.shape, X[2,3])
+```
 
+```text
+(4, 4) 10.0
+```
 

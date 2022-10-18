@@ -12,9 +12,9 @@ f(x,y) = x^2 y + y + 2 için
 
 Bu hesap ağacında görülen sayılar tek sayı olabilir, çok boyutlu
 vektör, matris, ya da çok boyutlu matris olabilir. Matematikte bu
-objelere genel olarak ``tensor'' ismi veriliyor, paketin ismi de
-buradan geliyor, tensorlar hesap çiziti içinde bir hesaptan diğerine
-``akıyorlar'' (flow). Hesabı çizit olarak belirtmenin bazı avantajları
+objelere genel olarak "tensor" ismi veriliyor, paketin ismi de buradan
+geliyor, tensorlar hesap çiziti içinde bir hesaptan diğerine
+"akıyorlar" (flow). Hesabı çizit olarak belirtmenin bazı avantajları
 var, en önemlisi çizit üzerinde direk otomatik türev alınabilir, bkz
 [4] yazısı, ve bu şekilde gradyan hesapları kolay bir şekilde
 yapılabiliyor. Bir diğeri çizitin paralelleştirme için doğal bir yapı

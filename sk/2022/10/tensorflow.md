@@ -8,7 +8,7 @@ olan bir paket. TF bir sayısal hesap kütüphanesi, daha spesifik olarak, ona
 TF ile hesap yapmak için hesabı temsil eden bir çizit kurulur, mesela
 f(x,y) = x^2 y + y + 2 için
 
-[!](tf_01.png)
+![](tf_01.png)
 
 Bu hesap ağacında görülen sayılar tek sayı olabilir, çok boyutlu
 vektör, matris, ya da çok boyutlu matris olabilir. Matematikte bu
@@ -22,7 +22,7 @@ olması; çiziti istediğimiz şekilde bölerek parçaları farklı
 mikroişlemci (CPU), ya da grafik işlemci (GPU) üzerinde paralel bir
 şekilde işletebiliriz, mesela üstteki f için f(3,4) hesabı,
 
-[!](tf_02.png)
+![](tf_02.png)
 
 şeklinde iki parçaya bölünebilir. 3 girilen soldaki parça kendi başına
 hesabını yaparken aynı anda 4 girilen diğer parça işlemine devam
@@ -186,8 +186,3 @@ with tf.Session() as sess:
 Yer tutucular tipik olarak gradyan inişi ile optimizasyon sırasında
 eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
 çizite vermek için kullanılır.
-
-
-
-
-

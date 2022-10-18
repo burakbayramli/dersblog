@@ -10,7 +10,7 @@ f(x,y) = x^2 y + y + 2 için
 
 [!](tf_01.png)
 
-Bu hesap ağaçında görülen sayılar tek sayı olabilir, çok boyutlu
+Bu hesap ağacında görülen sayılar tek sayı olabilir, çok boyutlu
 vektör, matris, ya da çok boyutlu matris olabilir. Matematikte bu
 objelere genel olarak ``tensor'' ismi veriliyor, paketin ismi de
 buradan geliyor, tensorlar hesap çiziti içinde bir hesaptan diğerine
@@ -186,3 +186,5 @@ with tf.Session() as sess:
 Yer tutucular tipik olarak gradyan inişi ile optimizasyon sırasında
 eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
 çizite vermek için kullanılır.
+
+

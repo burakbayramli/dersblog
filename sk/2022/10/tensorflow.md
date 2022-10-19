@@ -192,14 +192,81 @@ eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
 
 ### Tensorflow 2
 
+Yeni versiyonda bazı değişiklikler var, mesela sürekli `Session`
+kullanımı gerekli değil,
+
+```
+import tensorflow as tf
+print("TensorFlow version:", tf.__version__)
+```
+
+```
+TensorFlow version: 2.9.2
+```
+
+Basit bir çarpma örneği,
+
+```
+a = tf.constant([1, 2, 3, 4, 5, 6], shape=[2, 3])
+b = tf.constant([7, 8, 9, 10, 11, 12], shape=[3, 2])
+c = tf.matmul(a, b)
+print (c)
+```
+
+```
+<tf.Tensor: shape=(2, 2), dtype=int32, numpy=
+array([[ 58,  64],
+       [139, 154]], dtype=int32)>
+```
+
+Hız Kontrolü
+
+Tensorflow basit matris çarpımlarını ne kadar hızlandırıyor? Kontrol edelim,
+
+```
+import numpy as np
+N = 3000
+A = np.random.randn(N,N)
+B = np.random.randn(N,N)
+
+from timeit import default_timer as timer
+from datetime import timedelta
+
+start = timer()
+C = np.dot(A,B)
+end = timer()
+print('elapsed time', timedelta(seconds=end-start))
+```
+
+```
+elapsed time 0:00:01.292723
+```
+
+Şimdi TF ile çarpım,
+
+```
+TA = tf.random.normal([N,N], 0, 1, tf.float32)
+TB = tf.random.normal([N,N], 0, 1, tf.float32)
+
+start = timer()
+TC = tf.matmul(TA, TB)
+end = timer()
+print('elapsed time', timedelta(seconds=end-start))
+print (TC.shape)
+```
+
+```
+elapsed time 0:00:00.043483
+```
+
 ### Kurulum
 
-Tensorflow kullanimi ve gelisimi GPU [1] performansiyla kol kola
-gitmistir, zannederim bu sebeple CPU kurulum sekli gozardi edilmeye
-baslandi. Bazi versiyonlar ve isletim sistemlerinde CPU kullanimi
-artik yapilamiyor. Bu sebeple Google Collab [2] denenebilir, Internet
-sayfasi uzerinden kodlama yani, ya da spesifik bir GPU donanimi
-alinabilir, mesela NVidia Jetson [3]. Jetson uzerinde kurulum o yazida
+Tensorflow kullanımı ve gelişimi GPU [1] performansıyla kol kola
+gitmiştir, zannederim bu sebeple CPU kurulum şekli gözardı edilmeye
+başlandı. Bazı versiyonlar ve işletim sistemlerinde CPU kullanımı
+artık yapılamıyor. Bu sebeple Google Çollab [2] denenebilir, İnternet
+sayfası üzerinden kodlama yani, ya da spesifik bir GPU donanımı
+alınabilir, mesela NVidia Jetson [3]. Jetson üzerinde kurulum o yazıda
 bulunabilir.
 
 Kaynaklar
@@ -209,4 +276,6 @@ Kaynaklar
 [2] [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.html).
 
 [3] [Jetson Nano](../../2020/12/nvidia-jetson-nano-2GB-wifi.html)
+
+
 

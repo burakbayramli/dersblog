@@ -269,13 +269,13 @@ gözüküyor.
 
 ### Kurulum
 
-Tensorflow kullanımı ve gelişimi GPU [1] performansıyla kol kola
-gitmiştir, zannederim bu sebeple CPU kurulum şekli gözardı edilmeye
+Tensorflow kullanımı ve gelişimi GPU [1] gelişimi ile kol kola
+gitmiştir, zannederim bu sebeple CPU üzerinde kurulum gözardı edilmeye
 başlandı. Bazı versiyonlar ve işletim sistemlerinde CPU kullanımı
-artık yapılamıyor. Bu sebeple Google Çollab [2] denenebilir, İnternet
+yapılamıyor. Bu sebeple Google Collab [2] denenebilir, İnternet
 sayfası üzerinden kodlama yani, ya da spesifik bir GPU donanımı
 alınabilir, mesela NVidia Jetson [3]. Jetson üzerinde kurulum o yazıda
-bulunabilir.
+var.
 
 Kaynaklar
 

@@ -1,9 +1,10 @@
 # Tensorflow
 
 Google'ın yazdığı ve açık yazılım haline getirdiği paket TF çoğunlukla
-yapay öğrenim bağlamında gündeme geliyor, fakat TF aslında genel kullanımı
-olan bir paket. TF bir sayısal hesap kütüphanesi, daha spesifik olarak, ona
-çizit olarak verilen hesapları yapabilen bir sayısal hesap paketi.
+yapay öğrenim bağlamında gündeme geliyor, fakat TF aslında genel
+kullanımı olan bir yazılım. TF bir sayısal hesap kütüphanesi, daha
+spesifik olarak, ona çizit olarak verilen hesapları yapabilen bir
+sayısal hesap paketi.
 
 TF ile hesap yapmak için hesabı temsil eden bir çizit kurulur, mesela
 f(x,y) = x^2 y + y + 2 için
@@ -29,6 +30,8 @@ hesabını yaparken aynı anda 4 girilen diğer parça işlemine devam
 edebilir. Ayrıca Google TPU adı verilen tensor işlemci üniteleri üzerinden
 artık CPU, GPU yerine direk TF için optimize edilmiş yeni işlemciler
 üzerinden paralelizasyon yapılabiliyor.
+
+### Tensorflow 1
 
 TF kodlaması nasıl olur? Üstteki örnek için
 
@@ -186,3 +189,21 @@ with tf.Session() as sess:
 Yer tutucular tipik olarak gradyan inişi ile optimizasyon sırasında
 eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
 çizite vermek için kullanılır.
+
+### Tensorflow 2
+
+### Kurulum
+
+Tensorflow kullanimi ve gelisimi GPU performansiyla kol kola
+gitmistir, zannederim bu sebeple CPU kurulum sekli gozardi edilmeye
+baslandi. Bazi versiyonlar ve isletim sistemlerinde CPU kullanimi
+artik yapilamiyor. Bu sebeple Google Collab [2] denenebilir, Internet
+sayfasi uzerinden kodlama yani, ya da spesifik bir GPU donanimi
+alinabilir, mesela NVidia Jetson [1]. Jetson uzerinde kurulum [2]'de
+bulunabilir.
+
+Kaynaklar
+
+[1] [GPU](../../2020/12/gpu-cuda-pycuda.html)
+
+[2] [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.html).

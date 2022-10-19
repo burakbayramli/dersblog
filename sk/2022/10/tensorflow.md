@@ -252,7 +252,6 @@ start = timer()
 TC = tf.matmul(TA, TB)
 end = timer()
 print('elapsed time', timedelta(seconds=end-start))
-print (TC.shape)
 ```
 
 ```
@@ -262,10 +261,10 @@ elapsed time 0:00:00.043483
 Kod Google Collab üzerinde işletildi, ve bu örnek için çarpım 30 kat
 daha hızlı yapıldı. Yanlız GPU'ya veri kopyalama durumuna dikkat, eğer
 Numpy matrisleri A, B'yi alıp Tensorflow'a `constant` ile verseydim,
-TF çarpmımı ilk seferinde daha hızlı olmazdı (2'inci, 3'uncu hızlı,
-herhalde onbellekleme var) çünkü kopyalarken zaman kaybetmiş
+TF çarpmımı ilk seferinde daha hızlı olmazdı (2'inci, 3'üncü hızlı,
+herhalde önbellekleme var) çünkü kopyalarken zaman kaybetmiş
 olurdum. Fonksiyon `tf.random.normal` ile matrisi GPU üzerinde
-yaratılmasını zorlamış olduğumüz için, GPU çarpım işlem farkı hemen
+yaratılmasını zorlamış olduğumuz için, GPU çarpım işlem farkı hemen
 gözüküyor.
 
 ### Kurulum

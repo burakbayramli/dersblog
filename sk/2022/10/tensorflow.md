@@ -194,12 +194,12 @@ eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
 
 ### Kurulum
 
-Tensorflow kullanimi ve gelisimi GPU performansiyla kol kola
+Tensorflow kullanimi ve gelisimi GPU [1] performansiyla kol kola
 gitmistir, zannederim bu sebeple CPU kurulum sekli gozardi edilmeye
 baslandi. Bazi versiyonlar ve isletim sistemlerinde CPU kullanimi
 artik yapilamiyor. Bu sebeple Google Collab [2] denenebilir, Internet
 sayfasi uzerinden kodlama yani, ya da spesifik bir GPU donanimi
-alinabilir, mesela NVidia Jetson [1]. Jetson uzerinde kurulum [2]'de
+alinabilir, mesela NVidia Jetson [3]. Jetson uzerinde kurulum o yazida
 bulunabilir.
 
 Kaynaklar
@@ -207,3 +207,6 @@ Kaynaklar
 [1] [GPU](../../2020/12/gpu-cuda-pycuda.html)
 
 [2] [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.html).
+
+[3] [Jetson Nano](../../2020/12/nvidia-jetson-nano-2GB-wifi.html)
+

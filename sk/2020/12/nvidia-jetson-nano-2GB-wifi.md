@@ -329,7 +329,29 @@ olduğu kadar çıkartılmış hali altta bulunabilir,
 [particleSystem.h](particles/particleSystem.h),
 [view.py](particles/view.py)
 
+Tensorflow
 
+Jetson üzerinde Tensorflow kurulumu için hangi Jetpack geliştirme ortamına
+sahip olduğumüza bakalım,
+
+```
+sudo apt-cache show nvidia-jetpack
+```
+
+Ben gördüğüm versiyona göre [10]'a danıştım, ve gerekli wheel `.whl`
+dosyasını indirdim,
+
+```
+wget https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+```
+
+Sonra bu dosyayı ayrı bir virtualenv içinde
+
+```
+pip3 install tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+```
+
+ile kurduk. 
 
 Kaynaklar
 
@@ -350,6 +372,8 @@ Kaynaklar
 [8] https://developer.nvidia.com/embedded/learn/tutorials/vnc-setup
 
 [9] https://www.youtube.com/watch?v=KROP46Wte4Q
+
+[10] [Forum](https://forums.developer.nvidia.com/t/correct-version-of-tensorflow-for-jetpack-4-4/149310/3)
 
 
 

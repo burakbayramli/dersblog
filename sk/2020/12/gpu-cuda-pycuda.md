@@ -432,10 +432,6 @@ hello collab
 
 Bu derlemek işlemini `nvcc` ile de yapabilirdik.
 
-Ilgili
-
-[Jetson Nano](jetson-nano-2GB.html)
-
 Kaynaklar
 
 [1] Tuomanen, *Hands-On GPU Programming with Python and CUDA*
@@ -447,3 +443,5 @@ Kaynaklar
 [4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html)
 
 [5] https://developer.nvidia.com/blog/even-easier-introduction-cuda/
+
+[6] [Jetson Nano](nvidia-jetson-nano-2GB-wifi.html)

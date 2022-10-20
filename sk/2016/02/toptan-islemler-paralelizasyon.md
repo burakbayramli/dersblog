@@ -88,18 +88,20 @@ başlatmıyoruz, takip edici programlarımızı başlatıyor, onları izliyor,
 
 <a name='csv'/>
 
-Satır Satır Paralel Dosya İşlemek
+Paralel, Satır Bazlı Dosya İşlemek
 
 Paralel işlem için işbölümünün nasıl yapılacağını kararlaştırmak
 lazım, burada en kolay yöntem ustte bahsettigimiz gibi veriyi baştan
 parçalara bölerek her sürecin kendi parçası üzerinde çalışmasını
-sağlamak. İkinci soru, bir koordine edici "kalfa" süreç mi iş
-dağıtsın, yoksa her süreç buna kendisi mi karar versin?" İkinci
-seçenek daha kolay; N parça içinden her sürece P parçası üzerinde
-çalışacağını söyleriz, süreç gerekli yere giderek işlemi yapar. Satır
-satır, metin bazlı dosya (CSV) işlerken parçalar ayrı satırlar
-olur. 10 satırlı bir dosyanin ilk 5 satırını bir süreç ikinci 5
-satırını başka bir süreç işleyebilir.
+sağlamak. Her süreç veriyi satır satır okur ve anında işler (böylece
+fazla bellek sarfedilmiş olmaz), ve sonraki satıra geçer.
+
+İkinci soru, bir koordine edici "kalfa" süreç mi iş dağıtsın, yoksa
+her süreç buna kendisi mi karar versin?" İkinci seçenek daha kolay; N
+parça içinden her sürece P parçası üzerinde çalışacağını söyleriz,
+süreç gerekli yere giderek işlemi yapar. Metin bazlı dosya (CSV)
+işlerken parçalar ayrı satırlardır. 10 satırlı bir dosyanin ilk 5
+satırını bir süreç ikinci 5 satırını başka bir süreç işleyebilir.
 
 Fakat bir problem var, CSV kütüphaneleri satır bazlı ileri zıplama
 yapamaz, bayt bazlı zıplama yaparlar. Mesela 1200 baytlik dosyanin

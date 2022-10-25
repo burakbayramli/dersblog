@@ -20,25 +20,25 @@ matris A, mavi olan B, sonuç C ise yeşil matris içindedir.
 
 ![](carpim1.gif)
 
-A'yi satir satir aldik bu tamam. Fakat B'ye olacak? Ne yazik ki her A
-satiri icin B'nin tamami bastan sona gezilmeli. Bundan kacis yok,
-zaten matris carpimi O(3) cetrefilligindeki bir operasyondur, standart
-kodlama uc tane ic ice dongu icerir, bunun sonucu olarak her satirda
-B'nin basa sarilmasi gerekecektir.
+A'yı satır satır aldık bu tamam. Fakat B'ye olacak? Ne yazık ki her A
+satırı için B'nin tamamı baştan sona gezilmeli. Bundan kaçış yok,
+zaten matris çarpımı O(3) çetrefilliğindeki bir operasyondur, standart
+kodlama üç tane iç içe döngü içerir, bunun sonucu olarak her satırda
+B'nin başa sarılması gerekecektir.
 
-Simdi B icin de satir gezme yaklasimi dusunmeden once, problemde bir
-basitlestirme yapalim; A, B matrisleri sirasiyla M x D ve D x N
-boyutlarinda diyelim, ve farzedelim ki "cok olan" buyukluk M, D
-nispeten buyuk ama fazla degil, N ise potansiyel olarak D'den kucuk.
+Şimdi B için de satır gezme yaklaşımı düşünmeden önce, problemde bir
+basitleştirme yapalım; A, B matrisleri sırasıyla M x D ve D x N
+boyutlarında diyelim, ve farzedelim ki "çok olan" büyüklük M, D
+nispeten büyük ama fazla değil, N ise potansiyel olarak D'den küçük.
 
-Bu tur verileri mesela Buyuk Veri problemlerine surekli goruyoruz, M
-sayisi milyarlarca (satir) olabilir, veri noktalari bunlardir, verinin
-degisken boyutu is D, yas, boy, kilo gibi mesela ozellikler (features)
-bu degiskenlerde, cok sayida olabilirler ama milyarlarca degil, N ise
-daha ufak bir boyut. Ornek uygulama rasgele matris carpimi ile boyut
-kucultme olabilir, milyarlarca satir binlerece kolon olabilecek A'yi
-bir D x N boyutundaki B ile carpiyoruz, mesela eger N=100 ise carpim
-sonucu A x N kolon boyutu azalmis hale geliyor.
+Bu tür verileri mesela Büyük Veri problemlerine sürekli görüyoruz, M
+sayısı milyarlarca (satır) olabilir, veri noktaları bunlardır, verinin
+değişken boyutu iş D, yaş, boy, kilo gibi mesela özellikler (features)
+bu değişkenlerde, çok sayıda olabilirler ama milyarlarca değil, N ise
+daha ufak bir boyut. Örnek uygulama rasgele matris çarpımı ile boyut
+küçültme olabilir, milyarlarca satır binlerece kolon olabilecek A'yı
+bir D x N boyutundaki B ile çarpıyoruz, mesela eğer N=100 ise çarpım
+sonucu A x N kolon boyutu azalmış hale geliyor.
 
 Basitleştirme şurada; üstteki türden bir kullanım için B matrisinin
 tamamını, her çekirdek için, hafızaya alabiliriz. Eğer B matrisi
@@ -235,8 +235,3 @@ Kaynaklar
 [3] https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html
 
 [4] [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
-
-
-
-
-

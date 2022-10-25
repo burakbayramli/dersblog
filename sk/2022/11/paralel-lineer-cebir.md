@@ -74,7 +74,7 @@ print (a*B)
 
 Dikkat `*` kullanıldı, `numpy.dot` değil. Çarpım sonucu elde edilen
 matrisin tüm satırlarının toplamı yine `numpy` üzerinden, basit bir
-`sum(axis=0)` ile.
+`sum(axis=0)` ile hesaplanabilir.
 
 Şimdi örnek veriyi üretelim. Bunlar rasgele matrisler olacak. 
 

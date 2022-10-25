@@ -70,7 +70,7 @@ print (a*B)
  [6 6 6]]
 ```
 
-Dikkat `*` kullanildi, `numpy.dot` degil.
+Dikkat `*` kullanıldı, `numpy.dot` değil.
 
 Şimdi örnek veriyi üretelim. Bunlar rasgele matrisler olacak. 
 
@@ -221,6 +221,8 @@ Bu durumda azar azar alıp işleyen üstteki yaklaşım banamısın demez,
 satırını işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman
 veri ne kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte
 Büyük Veri bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
+
+
 
 
 

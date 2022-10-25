@@ -58,6 +58,8 @@
 
 [ØMQ](10/mq.html)
 
+[Paralel KMeans, Hadoop](10/paralel-kmeans-hadoop.html)
+
 [Anlik Veri Ambari](11/anlik-veri-ambari.html)
 
 [SASHA: Esle/Indirge Altyapisi](11/hizli-esleindirge-altyapisi-sasha.html)

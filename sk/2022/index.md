@@ -6,3 +6,5 @@
 
 [Tensorflow](10/tensorflow.html)
 
+[Paralel Lineer Cebir](11/paralel-lineer-cebir.html)
+

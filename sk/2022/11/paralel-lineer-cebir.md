@@ -215,7 +215,7 @@ versiyonlarında paralellik vardır. Demek ki bizim eşzamanlı kodlama
 
 Fakat bir diğer önemli ilerleme şuradadır; Eğer A satır sayısını bir
 milyondan iki milyona çıkartacak olsak pür hafıza kullanan yaklaşımlar
-kullanılmaz hale gelir çünkü artık A matrisi tamamen bellege sigmaz.
+kullanılmaz hale gelir çünkü artık A matrisi tamamen bellege sığmaz.
 Bu durumda azar azar alıp işleyen üstteki yaklaşım banamısın demez,
 çünkü A büyüklüğü ne olursa olsun her seferinde onun sadece tek
 satırını işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman
@@ -235,4 +235,8 @@ Kaynaklar
 [3] https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html
 
 [4] [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+
+
+
+
 

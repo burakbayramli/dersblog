@@ -72,7 +72,9 @@ print (a*B)
  [6 6 6]]
 ```
 
-Dikkat `*` kullanıldı, `numpy.dot` değil.
+Dikkat `*` kullanıldı, `numpy.dot` değil. Çarpım sonucu elde edilen
+matrisin tüm satırlarının toplamı yine `numpy` üzerinden, basit bir
+`sum(axis=0)` ile.
 
 Şimdi örnek veriyi üretelim. Bunlar rasgele matrisler olacak. 
 

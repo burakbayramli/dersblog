@@ -147,10 +147,10 @@ def process(afile,bfile,ci,N,obj,skip_lines=0):
 
 class MultJob:
     def __init__(self):
-        self.afile = "" # proccessor sets it
-        self.B = "" # proccessor sets it
-        self.ci = -1 # proccessor sets it
-        self.outfile = None # proccessor sets it
+        self.afile = ""
+        self.B = "" 
+        self.ci = -1 
+        self.outfile = None 
     def exec(self,line):        
         vec = np.array([np.float(x) for x in line.strip().split(";")])
         vec = np.reshape(vec, (len(vec),1))

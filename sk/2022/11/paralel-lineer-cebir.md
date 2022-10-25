@@ -213,14 +213,16 @@ kullanılıyordu, kullanıcı yorumlarına bakılırsa bazı Python ve `numpy`
 versiyonlarında paralellik vardır. Demek ki bizim eşzamanlı kodlama
 `numpy` kodlamasını geçti. 
 
-Fakat bir diğer önemli ilerleme şuradadır. Eğer A satır sayısını bir
+Fakat bir diğer önemli ilerleme şuradadır; Eğer A satır sayısını bir
 milyondan iki milyona çıkartacak olsak pür hafıza kullanan yaklaşımlar
 kullanılmaz hale gelir çünkü artık A matrisi tamamen bellege sigmaz.
-Bu durumda azar azar alıp işleyen üstteki yaklaşım banamışın demez,
-çünkü A büyüklüğü ne olursa olsun her seferinde onun sadece tek satırını
-işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman veri ne kadar
-buyurse büyüsün bizim işlem yapmamız mümkündür. İşte Büyük Veri bu tür
-yaklaşımlar sayesinde başedilebilir hale gelmiştir.
+Bu durumda azar azar alıp işleyen üstteki yaklaşım banamısın demez,
+çünkü A büyüklüğü ne olursa olsun her seferinde onun sadece tek
+satırını işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman
+veri ne kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte
+Büyük Veri bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
+
+
 
 
 

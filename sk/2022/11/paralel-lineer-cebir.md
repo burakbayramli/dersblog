@@ -20,6 +20,8 @@ matris A, mavi olan B, sonuç C ise yeşil matris içindedir.
 
 ![](carpim1.gif)
 
+Gittikçe kararan yeşil hücreleri oraya yapılan toplam sebebiyle.
+
 A'yı satır satır aldık bu tamam. Fakat B'ye olacak? Ne yazık ki her A
 satırı için B'nin tamamı baştan sona gezilmeli. Bundan kaçış yok,
 zaten matris çarpımı O(3) çetrefilliğindeki bir operasyondur, standart

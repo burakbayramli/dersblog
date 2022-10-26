@@ -35,12 +35,12 @@ nispeten büyük ama fazla değil, N ise potansiyel olarak D'den küçük.
 
 Bu tür verileri mesela Büyük Veri problemlerine sürekli görüyoruz, M
 sayısı milyarlarca (satır) olabilir, veri noktaları bunlardır, verinin
-değişken boyutu ise D, yaş, boy, kilo gibi mesela özellikler (features)
-bu değişkenlerde, çok sayıda olabilirler ama milyarlarca değil, N ise
-daha ufak bir boyut. Örnek uygulama rasgele matris çarpımı ile boyut
-küçültme olabilir, milyarlarca satır binlerece kolon olabilecek A'yı
-bir D x N boyutundaki B ile çarpıyoruz, mesela eğer N=100 ise çarpım
-sonucu A x N kolon boyutu azalmış hale geliyor.
+değişken boyutu ise D, yaş, boy, kilo gibi mesela özellikler
+(features) bu değişkenlerde, çok sayıda olabilirler ama milyarlarca
+değil, N ise daha ufak bir boyut. Örnek uygulama rasgele matris
+çarpımı ile boyut küçültme olabilir, milyarlarca satır binlerce kolon
+olabilecek A'yı bir D x N boyutundaki B ile çarpıyoruz, mesela eğer
+N=100 ise çarpım sonucu A x N kolon boyutu azalmış hale geliyor.
 
 Basitleştirme şurada; üstteki türden bir kullanım için B matrisinin
 tamamını, her çekirdek için, hafızaya alabiliriz. Eğer B matrisi

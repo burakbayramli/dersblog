@@ -310,11 +310,11 @@ print np.dot(A,B.T)
 ```
 
 Çarpımlar aynı. Yanlız dikkat, satırların sırası değişik olabilir,
-burada problem eşle/indirge işleminin $A$'yi parçalama sonucu her
-çarpım parçasının değişik bir sırada ele geçiyor olması. Eğer
-sıralamayı aynı $A$ gibi istiyorsak, bu sıra no'sunu $A$ verisi içinde
-ilk satıra koymak lazım ve eşleyiciler oradan alıp bu no'yu anahtar
-olarak yayınlamalılar. Bu eklemeyi okuyucuya bırakıyorum!
+burada problem eşle/indirge işleminin A'yi parçalama sonucu her çarpım
+parçasının değişik bir sırada ele geçiyor olması. Eğer sıralamayı aynı
+A gibi istiyorsak, bu sıra no'sunu A verisi içinde ilk satıra koymak
+lazım ve eşleyiciler oradan alıp bu no'yu anahtar olarak
+yayınlamalılar. Bu eklemeyi okuyucuya bırakıyorum!
 
 Şimdi QR hesabını bu şekilde yapıp yapamayacağımızı kontrol
 edelim. Eğer `qr` ile Q hesaplarsak,

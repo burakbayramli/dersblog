@@ -36,32 +36,34 @@ hayali bir ilk parçayı kırmızı çizgi ile belirttik), bu parça içinde mes
 satırı kendisi ile çarparken (1'inci ok) aynı blok içindeyiz. Bu önemli bir
 nokta, çarparken bloklar arası geçiş yok.
 
-Tabii ki nihai çarpımdaki (1,1) hesabı için $A^T$'deki birinci satırın {\em
-  tamamen} $A$'daki birinci kolonla nokta çarpımının bitirilmiş olması gerekir,
-ama şimdi düşünelim, başka bir makinaya ikinci parça verilmiş ise, makinada o
-birinci satırın geri kalanı çarpılıp toplanacaktır (2. ok), ve eğer tüm
-parçalar, tüm makinalarda bu şekilde işlenirse, (1,1) hesabı için o
-makinalardaki o tüm çarpımları alıp nihai bir noktada toplamak bize (1,1) için
-nihai sonucu verecektir. Bu tipik bir eşle/indirge hesabı olabilir, eşle
-safhasında eldeki parça $A_p$ üzerinde $A_p^T A_p$ yapılır, indirge safhasında
-bu parçalar toplanır.
+Tabii ki nihai çarpımdaki (1,1) hesabı için A' icindeki birinci
+satırın *tamamen* A'daki birinci kolonla nokta çarpımının bitirilmiş
+olması gerekir, ama şimdi düşünelim, başka bir makinaya ikinci parça
+verilmiş ise, makinada o birinci satırın geri kalanı çarpılıp
+toplanacaktır (2. ok), ve eğer tüm parçalar, tüm makinalarda bu
+şekilde işlenirse, (1,1) hesabı için o makinalardaki o tüm çarpımları
+alıp nihai bir noktada toplamak bize (1,1) için nihai sonucu
+verecektir. Bu tipik bir eşle/indirge hesabı olabilir, eşle safhasında
+eldeki parça P üzerinde P'P yapılır, indirge safhasında bu parçalar
+toplanır.
 
-Eşleme safhasından yayınlanacak (emit) anahtar ve değerler, bizce, $A_p^T A_p$
-içindeki her satırın satır no'su ve satır değeri olmalı. Niye? (Aynı sabit bir
-anahtar değeriyle beraber $A_p^T A_p$'in tamamını da yayınlayabilirdik).
+Eşleme safhasından yayınlanacak (emit) anahtar ve değerler, bizce, P'P
+içindeki her satırın satır no'su ve satır değeri olmalı. Niye? (Aynı
+sabit bir anahtar değeriyle beraber P'P nin tamamını da
+yayınlayabilirdik).
 
-Hatırlayalım, nihai çarpım $n \times n$ boyutunda, her parça $p$ olsa bile, $n
-\times p \cdot p \times n$ yine bize $n \times n$ veriyor. Yani her makina $n
-\times n$ boyutunda bir çarpım sonucunu üretiyor. Evet $n$ nispeten küçük bir
-sayı, fakat yine de onbinlerde olsa bile $10,000 \times 10,000$ mesela, büyük
-bir sayı. Eğer tüm toplamı tek bir indirgeyici makinaya yaptırırsak, pek çok $n
-\times n$ boyutunda matrisin toplamı bu makinayı kaşar. O sebeple indirgeme
-sonrası matrisleri değil, o matrislerin her $n$ satırını satır no'su ile
-yayınlıyoruz, böylece aynı satırlar aynı indirgeyiciye gidip orada
-toplanıyorlar, ama birçok indirgeyici var yani toplama işlemi paralel hale
-gelmiş oluyor. Tabii indirgeme sonrası o sonuçlar yayınlanıyor, ve satır no'ya
-göre doğal olarak sıralanmış halde nihai sonuç çıkıyor.  Ama toplama işlemi
-paralel. Kod alttaki gibi
+Hatırlayalım, nihai çarpım n x n boyutunda, her parça p olsa bile, n x
+p * p x n yine bize n x n veriyor. Yani her makina n x n boyutunda bir
+çarpım sonucunu üretiyor. Evet n nispeten küçük bir sayı, fakat yine
+de onbinlerde olsa bile 10,000 x 10,000 mesela, büyük bir sayı. Eğer
+tüm toplamı tek bir indirgeyici makinaya yaptırırsak, pek çok n x n
+boyutunda matrisin toplamı bu makinayı kaşar. O sebeple indirgeme
+sonrası matrisleri değil, o matrislerin her $n$ satırını satır no'su
+ile yayınlıyoruz, böylece aynı satırlar aynı indirgeyiciye gidip orada
+toplanıyorlar, ama birçok indirgeyici var yani toplama işlemi paralel
+hale gelmiş oluyor. Tabii indirgeme sonrası o sonuçlar yayınlanıyor,
+ve satır no'ya göre doğal olarak sıralanmış halde nihai sonuç çıkıyor.
+Ama toplama işlemi paralel. Kod alttaki gibi
 
 ```python
 from mrjob.job import MRJob

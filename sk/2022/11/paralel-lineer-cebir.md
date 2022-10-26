@@ -393,3 +393,4 @@ Kaynaklar
 [3] https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html
 
 [4] [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+

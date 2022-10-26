@@ -331,7 +331,9 @@ satırı atlansın istersek bu farklı bir özellik olabilir.
 
 Parça parça işleme hakkında bir örnek [1]'de bulunabilir.
 
-Her 
+Parçalar farklı makinalarda da işleyebilir, bu durumda scriptleme
+işlerinin kolay yapılabilmesi için şifresiz `ssh` girişi her makinada
+ayarlanırsa faydalı olur [4].
 
 <a name='restart'/>
 

@@ -317,11 +317,67 @@ Paralel versiyon üstteki kodun ruhunu takip edecek, her eşzamanlı
 süreç yine (kendi parçası içinde) satırları gezecek, her satır kendisi
 ile dış çarpıma tabi tutulacak, sonuç matrisleri her eşzamanlı süreç
 içinde toplanacak. Paralel durumda ayrıca ek olarak tüm süreçler
-işlemini bitirdikten sonra her sürecin toplam matrisı alinip bir daha
+işlemini bitirdikten sonra her sürecin toplam matrisi alinip bir daha
 birbiri ile toplanacak, ve nihai matrisi elde edilecek.
 
+Kodlamaya gelirsek, veri yaratalım,
 
+```python
+import numpy as np
 
+M = 3000; D = 20
+A = np.random.rand(M,D)*10
+np.savetxt('/tmp/A.csv', A, delimiter=';',fmt='%1.6f')
+
+C = np.dot(A.transpose(),A)
+print (C.shape)
+np.savetxt('/tmp/Cf-1.csv', C, delimiter=';',fmt='%1.6f')
+```
+
+Yine [4]'teki gibi bir `process` kodu kullaniyoruz, kod bu dizin
+icinde `util.py` dosyasinda bulunabilir,
+
+```python
+import os, numpy as np, util
+
+class ATAJob:
+    def __init__(self,D):
+        self.C = np.zeros((D,D))
+        self.ci = -1
+    def exec(self,line):
+        tok = line.split(';')
+        vec = np.array([float(x) for x in tok])
+        self.C = self.C + np.outer(vec, vec)
+    def post(self):
+        outfile = "/tmp/C-%d.csv" % self.ci
+        print (self.ci)
+        np.savetxt(outfile, self.C, delimiter=';',fmt='%1.6f')
+        
+util.process(file_name='/tmp/A.csv', ci=0, N=2, hookobj = ATAJob(20))
+util.process(file_name='/tmp/A.csv', ci=1, N=2, hookobj = ATAJob(20))
+
+C0 = np.loadtxt("/tmp/C-0.csv",delimiter=';')
+C1 = np.loadtxt("/tmp/C-1.csv",delimiter=';')
+
+C = C0 + C1
+
+np.savetxt("/tmp/Cf-2.csv", C, delimiter=';',fmt='%1.6f')
+```
+
+```python
+import numpy as np
+Cf1 = np.loadtxt("/tmp/Cf-1.csv",delimiter=';')
+Cf2 = np.loadtxt("/tmp/Cf-2.csv",delimiter=';')
+print ((Cf1-Cf2).mean())
+print ((Cf1-Cf2).sum())
+```
+
+```text
+-1.8024999735644087e-06
+-0.0007209999894257635
+```
+
+İki matris birbirine çok yakın; demek ki paralel yöntem işledi.
 
 Kaynaklar
 

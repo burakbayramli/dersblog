@@ -48,8 +48,8 @@ milyarlarca satır / kolon içeriyor olsaydı bu olamazdı ama faraziyeye
 göre B'nin binlerce satırı ve çok az kolonu olacak. 
 
 B hafızaya alınabilirse artık bazı `numpy` özelliklerinden
-faydalabiliriz. Mesela, anımasyonda da görüyoruz, bir A satırının her
-hücresi gezilirken oradaki değer alinip bir B satırı ile
+faydalanabiliriz. Mesela, animasyonda da görüyoruz, bir A satırının
+her hücresi gezilirken oradaki değer alinip bir B satırı ile
 çarpılıyordu. Bu çarpımı işlenen tüm A satırı ve tüm B matrisi için
 bir kerede yapabiliriz. Alttaki kod örneğine bakalım,
 

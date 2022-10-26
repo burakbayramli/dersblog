@@ -265,7 +265,7 @@ yeşil matris biraz daha koyu yeşil hale gelecek.
 
 Bu işlemi paralelleştirmek mümkün, çünkü toplam sırabağımsız bir
 işlem, elde N tane parça var ise her birinden bir alt toplam D x D
-matrisi olarak gelir, N tane toplam matrisı birbiriyle toplanır ve
+matrisi olarak gelir, N tane toplam matrisi birbiriyle toplanır ve
 nihai sonuç elde edilir.
 
 Her A' kolonu için matris sonucu nasıl elde edilir? Bir defasında tüm
@@ -332,6 +332,3 @@ Kaynaklar
 [3] https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html
 
 [4] [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
-
-
-

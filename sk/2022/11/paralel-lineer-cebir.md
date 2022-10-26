@@ -35,7 +35,7 @@ nispeten büyük ama fazla değil, N ise potansiyel olarak D'den küçük.
 
 Bu tür verileri mesela Büyük Veri problemlerine sürekli görüyoruz, M
 sayısı milyarlarca (satır) olabilir, veri noktaları bunlardır, verinin
-değişken boyutu iş D, yaş, boy, kilo gibi mesela özellikler (features)
+değişken boyutu ise D, yaş, boy, kilo gibi mesela özellikler (features)
 bu değişkenlerde, çok sayıda olabilirler ama milyarlarca değil, N ise
 daha ufak bir boyut. Örnek uygulama rasgele matris çarpımı ile boyut
 küçültme olabilir, milyarlarca satır binlerece kolon olabilecek A'yı
@@ -313,11 +313,11 @@ print (np.dot(A.transpose(),A))
 Aynı sonucu aldık.
 
 Paralel versiyon üstteki kodun ruhunu takip edecek, her eşzamanlı
-süreç yine satırları gezecek, her satır kendisi ile dış çarpıma tabi
-tutulacak, sonuç matrisleri her eşzamanlı süreç içinde
-toplanacak. Farklı olan tüm süreçler işlemini bitirdikten sonra
-her sürecin toplam matrisini alıp bir daha birbiri ile toplayıp nihai
-matrisi elde etmek.
+süreç yine (kendi parçası içinde) satırları gezecek, her satır kendisi
+ile dış çarpıma tabi tutulacak, sonuç matrisleri her eşzamanlı süreç
+içinde toplanacak. Paralel durumda ayrıca ek olarak tüm süreçler
+işlemini bitirdikten sonra her sürecin toplam matrisı alinip bir daha
+birbiri ile toplanacak, ve nihai matrisi elde edilecek.
 
 
 

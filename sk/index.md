@@ -3,6 +3,8 @@
 
 ## En Son
 
+26/10 - [Paralel, Satır Bazlı Dosya İşlemek](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon.html#csv)
+
 24/10 - [PCA ile Koentegrasyon](https://burakbayramli.github.io/dersblog/tser/tser_030_coint/koentegrasyon__cointegration_.html#pca)
 
 7/10 - [Tekrar Başlatılabilirlik (Restartability)](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon.html#restart)
@@ -10,8 +12,6 @@
 28/9 - [Lokal Dosya Arama - recoll](https://burakbayramli.github.io/dersblog/sk/2011/08/lokal-dosya-arama-recoll.html)
 
 23/9 - [Flask, Form Verisi](https://burakbayramli.github.io/dersblog/sk/2016/09/flask-ile-dinamik-web-sayfalari.html#form)
-
-14/9 - [Android, Raspberry Pi Geliştirme Ortamı](https://burakbayramli.github.io/dersblog/sk/2022/09/gelistirme-ortami-tablet-rpi.html)
 
 ## Konular, Referans
 

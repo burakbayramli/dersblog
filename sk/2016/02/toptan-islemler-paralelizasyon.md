@@ -153,14 +153,14 @@ karakteri okuyalım,
 
 ```python
 with open(file_name, 'r') as f:
-    f.seek(79)
+    f.seek(78)
     c = f.read(5)
     print (c)
 f.close()
 ```
 
 ```text
-88888
+,8888
 ```
 
 `8,88888888` satırında bir yerlere geldik yani. Ama bize satır başı
@@ -169,7 +169,7 @@ içinde olduğumüz satırı bitirip bir sonrakine geçmiş oluyoruz,
 
 ```python
 with open(file_name, 'r') as f:
-    f.seek(79)
+    f.seek(78)
     f.readline()
     c = f.read(5) # bir sonraki satirdayiz simdi
     print (c)
@@ -469,5 +469,3 @@ Kaynaklar
 [3] [Dand](https://github.com/burakbayramli/kod/tree/master/dand)
 
 [4] [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)
-
-

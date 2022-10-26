@@ -331,6 +331,8 @@ satırı atlansın istersek bu farklı bir özellik olabilir.
 
 Parça parça işleme hakkında bir örnek [1]'de bulunabilir.
 
+Her 
+
 <a name='restart'/>
 
 ### Tekrar Başlatılabilirlik (Restartability)
@@ -464,6 +466,6 @@ Kaynaklar
 
 [3] [Dand](https://github.com/burakbayramli/kod/tree/master/dand)
 
-
+[4] [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)
 
 

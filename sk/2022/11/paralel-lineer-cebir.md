@@ -49,7 +49,7 @@ göre B'nin binlerce satırı ve çok az kolonu olacak.
 
 B hafızaya alınabilirse artık bazı `numpy` özelliklerinden
 faydalanabiliriz. Mesela, animasyonda da görüyoruz, bir A satırının
-her hücresi gezilirken oradaki değer alinip bir B satırı ile
+her hücresi gezilirken oradaki değer alınıp bir B satırı ile
 çarpılıyordu. Bu çarpımı işlenen tüm A satırı ve tüm B matrisi için
 bir kerede yapabiliriz. Alttaki kod örneğine bakalım,
 
@@ -331,3 +331,6 @@ Kaynaklar
 [3] https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html
 
 [4] [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+
+
+

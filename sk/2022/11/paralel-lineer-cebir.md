@@ -245,15 +245,14 @@ işlemleri yapmak lazım.
 
 Önceki animasyona bakarsak soldaki matriste bir satırda soldan sağa
 doğru gidiliyordu. Fakat yeni durumda A satırlarını gezerken, bir
-bakıma A' kolonlarını geziyoruz ve bunu hesaba katarak işlem yapmamız
-gerekli. Ve her kolona geldigimizde o kolonun tüm öğelerine sahibiz.
+bakıma A' kolonlarını geziyoruz. Ayrıca her kolona geldigimizde o
+kolonun tüm öğelerine sahibiz.
 
-Elde edilebilecekler şunlardır: her kolonun her ögesini tüm kolon ile
-çarpınca bize sonucun bir satırı verilir. Bunu tüm öğeler için
-yaparsak tüm bir matris elde ederiz. Tabii ki bu matris sonuçlarına
-ekler olacak, bir sonraki A' kolonundan gelen yeni bir matris ilk
-toplama eklenir. Böyle devam eder, ta ki tüm A satırları (A'
-kolonları) bitene kadar.
+Her kolonun bir ögesini tüm kolon ile çarpınca bize sonucun bir satırı
+verilir. Bunu tüm öğeler için yaparsak tüm bir matris elde
+ederiz. Tabii ki bu matris sonuçlarına ekler olmalıdır, bir sonraki A'
+kolonundan gelen yeni bir matris ilk toplama eklenir. Böyle devam
+eder, ta ki tüm A satırları (A' kolonları) bitene kadar.
 
 ![](carpim2.png)
 

@@ -213,19 +213,20 @@ Oldukça yakın. Farklılıklar ufak yuvarlama farklılıkları, ya da
 verinin her iki yöntem için de okunup yazılırkenki kaybedilebilecek
 noktadan sonraki bazı değerleri sebebiyle olabilir.
 
-Çarpım `numpy` ile yapılırken çekirdekleri gözledik, tüm çekirdekler
-kullanılıyordu, kullanıcı yorumlarına bakılırsa bazı Python ve `numpy`
-versiyonlarında paralellik vardır. Demek ki bizim eşzamanlı kodlama
-`numpy` kodlamasını geçti. 
+Pür bellek durumunda tüm çarpım `numpy` ile yapılırken çekirdekleri
+gözledik, tüm çekirdekler kullanılıyordu, kullanıcı yorumlarına
+bakılırsa bazı Python ve `numpy` versiyonlarında paralellik
+vardır. Demek ki bizim eşzamanlı kodlama `numpy` eşzamanlı kodlamasını
+geçti.
 
 Fakat bir diğer önemli ilerleme şuradadır; Eğer A satır sayısını bir
-milyondan iki milyona çıkartacak olsak pür hafıza kullanan yaklaşımlar
+milyondan iki milyona çıkartacak olsak pür hafıza kullanan yaklaşım
 kullanılmaz hale gelir çünkü artık A matrisi tamamen bellege sığmaz.
-Bu durumda azar azar alıp işleyen üstteki yaklaşım banamısın demez,
-çünkü A büyüklüğü ne olursa olsun her seferinde onun sadece tek
-satırını işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman
-veri ne kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte
-Büyük Veri bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
+Kıyasla azar azar alıp işleyen üstteki yaklaşım banamısın demez, çünkü
+A büyüklüğü ne olursa olsun her seferinde onun sadece tek satırını
+işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman veri ne
+kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte Büyük Veri
+bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
 
 ### A Devriği Çarpı A 
 

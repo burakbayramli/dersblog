@@ -374,6 +374,6 @@ print np.dot(A,lin.inv(B.T))
 Sonuçlar birebir aynı.
 
 Üstteki teknikleri kullanarak artık devasa boyutlarda satırı olan bir
-$A$ matrisi üzerinde artık QR hesabı yapılabilir.
+A matrisi üzerinde artık QR hesabı yapılabilir.
 
 

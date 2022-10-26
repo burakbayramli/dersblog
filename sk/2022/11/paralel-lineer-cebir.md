@@ -227,9 +227,92 @@ satırını işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman
 veri ne kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte
 Büyük Veri bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
 
+### A Devriği Çarpı A 
 
+A'A çarpımı lineer cebir, istatistikte faydalı olabilecek bir işlem;
+özellikle "uzun boylu, zayıf" A matrisleri için, yani çok sayıda
+satırı ama az sayıda kolonu olan matrislerde bu çarpım ufak bir
+matrisi hesaplar. Mesela A boyutları M x D ise, D x M ve M x D matris
+çarpımı bize D x D boyutunda bir kare matris verecektir, D ufak ise D
+x D sonucu da ufaktır.
 
+Paralel işletmek için üstteki çarpımı biraz değiştirmek
+gerekli. Unutmayalım, paralel işlemde her zaman çok fazla satırı azar
+azar işlemek istiyoruz, o zaman A matrisini işlemek lazım (daha önceki
+çarpım yaklaşımına ilk bakışta A devriğini gezmek gerekirdi). Fakat
+A'yı gezerken A devriğini gezdiğimiz bilgisiyle gerekli çarpımları
+yapmak lazım.
 
+Önceki animasyona bakarsak soldaki matriste bir satırda soldan sağa
+doğru gidiliyordu. Fakat yeni durumda A satırlarını gezerken, bir
+bakıma A' kolonlarını geziyoruz ve bunu hesaba katarak işlem yapmamız
+gerekli. Ve her kolona geldigimizde o kolonun tüm öğelerine sahibiz.
+
+Elde edilebilecekler şunlardır: her kolonun her ögesini tüm kolon ile
+çarpınca bize sonucun bir satırı verilir. Bunu tüm öğeler için
+yaparsak tüm bir matris elde ederiz. Tabii ki bu matris sonuçlarına
+ekler olacak, bir sonraki A' kolonundan gelen yeni bir matris ilk
+toplama eklenir. Böyle devam eder, ta ki tüm A satırları (A'
+kolonları) bitene kadar.
+
+![](carpim2.png)
+
+Üstteki resimde ilk A' kolonu işlendikten sonraki sonucu görüyoruz.
+İlk kolonun tamamını kullanıyoruz bu sebeple tüm kolon koyu kırmızı,
+ve oradan gelen sonuçlar tam bir matris veriyor, bu sebeple sonuç
+açık yeşil (tüm hücrelerde biraz toplam yapılmış).
+
+Bu işlemi paralelleştirmek mümkün, çünkü toplam sırabağımsız bir
+işlem, elde N tane parça var ise her birinden bir alt toplam D x D
+matrisi olarak gelir, N tane toplam matrisı birbiriyle toplanır ve
+nihai sonuç elde edilir.
+
+Her A' kolonu için matris sonucu nasıl elde edilir? Bir defasında tüm
+A' satırlarına sahibiz demiştik, orada her hücre tüm A' satırı ile
+teker teker çarpılır, bu çarpımlar birbirine yapıştırılarak matris
+elde edilir. Fakat sonuçta çarpılan ve çarpan hep aynı vektör içinde.
+Bu bize bir lineer cebir demirbaş işlemini hatırlatabilir: dış çarpım
+(outer product). Kütüphane `numpy.outer` ile her A' kolonu için gereken
+matrisi tek bir çağrıda elde edebiliriz.
+
+Altta ufak bir örnek üzerinde görüyoruz. Bu örnek gezme işlemini
+göstermek için yazıldı, hala paralel, veriyi dosyadan teker teker
+okuma özelliklerine sahip değil, fakat gereken işlemlerin sırasını
+görmek için faydalı olabilir.
+
+```python
+A = [[1,2,3],
+     [3,4,5],
+     [4,5,6],
+     [6,7,8]]
+A = np.array(A)
+
+s = np.zeros((3,3))
+for i in range(4):
+  print (A[i,:])
+  s = s + np.outer(A[i,:],A[i,:])
+print (s)    
+```
+
+```text
+[1 2 3]
+[3 4 5]
+[4 5 6]
+[6 7 8]
+[[ 62.  76.  90.]
+ [ 76.  94. 112.]
+ [ 90. 112. 134.]]
+```
+
+```python
+print (np.dot(A.transpose(),A))
+```
+
+```text
+[[ 62  76  90]
+ [ 76  94 112]
+ [ 90 112 134]]
+```
 
 
 

@@ -330,12 +330,12 @@ A = np.random.rand(M,D)*10
 np.savetxt('/tmp/A.csv', A, delimiter=';',fmt='%1.6f')
 
 C = np.dot(A.transpose(),A)
-print (C.shape)
 np.savetxt('/tmp/Cf-1.csv', C, delimiter=';',fmt='%1.6f')
 ```
 
-Yine [4]'teki gibi bir `process` kodu kullaniyoruz, kod bu dizin
-icinde `util.py` dosyasinda bulunabilir,
+Paralel kodlar için yine [4]'teki gibi bir `process` kodu
+kullanıyoruz, kod bu dizin içindeki `util.py` dosyasında da
+bulunabilir,
 
 ```python
 import os, numpy as np, util
@@ -364,6 +364,10 @@ C = C0 + C1
 np.savetxt("/tmp/Cf-2.csv", C, delimiter=';',fmt='%1.6f')
 ```
 
+Bu sefer ayrı süreçler yaratmadık, fonksiyonu iki kere çağırdık, fakat
+artık paralellik için yapılacakları biliyoruz. Şimdi pür hafıza ve bizim
+yöntemin sonuçlarını karşılaştıralım,
+
 ```python
 import numpy as np
 Cf1 = np.loadtxt("/tmp/Cf-1.csv",delimiter=';')
@@ -377,7 +381,8 @@ print ((Cf1-Cf2).sum())
 -0.0007209999894257635
 ```
 
-İki matris birbirine çok yakın; demek ki paralel yöntem işledi.
+İki matris birbirine çok yakın; demek ki satırsal paralel yöntem
+işledi.
 
 Kaynaklar
 

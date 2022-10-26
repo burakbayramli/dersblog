@@ -248,9 +248,9 @@ def process(file_name,ci,N,hookobj):
         hookobj.post()
 ```
 
-Dışarıdan tanımlanacak obje şu işlemleri yapsın; `exeç` içinde verilen
+Dışarıdan tanımlanacak obje şu işlemleri yapsın; `exec` içinde verilen
 her satırı alıp noktasal bazlı `split` ile ayırsın, ve bu ufak
-parçaları bir iç listeye eklesin.  Tüm işlemler bitince `post` içinde
+parçaları bir iç listeye eklesin. Tüm işlemler bitince `post` içinde
 tüm iç listeyi ekrana bassın.
 
 ```python
@@ -463,4 +463,7 @@ Kaynaklar
 [2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)
 
 [3] [Dand](https://github.com/burakbayramli/kod/tree/master/dand)
+
+
+
 

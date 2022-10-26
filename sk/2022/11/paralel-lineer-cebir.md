@@ -272,13 +272,12 @@ A' satırlarına sahibiz demiştik, orada her hücre tüm A' satırı ile
 teker teker çarpılır, bu çarpımlar birbirine yapıştırılarak matris
 elde edilir. Fakat sonuçta çarpılan ve çarpan hep aynı vektör içinde.
 Bu bize bir lineer cebir demirbaş işlemini hatırlatabilir: dış çarpım
-(outer product). Kütüphane `numpy.outer` ile her A' kolonu için gereken
-matrisi tek bir çağrıda elde edebiliriz.
-
-Altta ufak bir örnek üzerinde görüyoruz. Bu örnek gezme işlemini
-göstermek için yazıldı, hala paralel, veriyi dosyadan teker teker
-okuma özelliklerine sahip değil, fakat gereken işlemlerin sırasını
-görmek için faydalı olabilir.
+(outer product). Kütüphane `numpy.outer` ile her A' kolonu için
+gereken matrisi tek bir çağrıda elde edebiliriz. Altta ufak bir örnek
+üzerinde görüyoruz. Bu örnek gezme ve dış çarpım işlemlerini göstermek
+için yazıldı, hala paralel, veriyi dosyadan teker teker okuma
+özelliklerine sahip değil, fakat gereken işlemlerin sırasını görmek
+için faydalı olabilir.
 
 ```python
 A = [[1,2,3],
@@ -289,20 +288,17 @@ A = np.array(A)
 
 s = np.zeros((3,3))
 for i in range(4):
-  print (A[i,:])
   s = s + np.outer(A[i,:],A[i,:])
 print (s)    
 ```
 
 ```text
-[1 2 3]
-[3 4 5]
-[4 5 6]
-[6 7 8]
 [[ 62.  76.  90.]
  [ 76.  94. 112.]
  [ 90. 112. 134.]]
 ```
+
+Aynı işlemi direk yapalım,
 
 ```python
 print (np.dot(A.transpose(),A))
@@ -313,6 +309,16 @@ print (np.dot(A.transpose(),A))
  [ 76  94 112]
  [ 90 112 134]]
 ```
+
+Aynı sonucu aldık.
+
+Paralel versiyon üstteki kodun ruhunu takip edecek, her eşzamanlı
+süreç yine satırları gezecek, her satır kendisi ile dış çarpıma tabi
+tutulacak, sonuç matrisleri her eşzamanlı süreç içinde
+toplanacak. Farklı olan tüm süreçler işlemini bitirdikten sonra
+her sürecin toplam matrisini alıp bir daha birbiri ile toplayıp nihai
+matrisi elde etmek.
+
 
 
 

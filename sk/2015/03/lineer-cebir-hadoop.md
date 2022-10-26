@@ -163,6 +163,8 @@ print np.dot(A.T,A)
 
 Tıpatıp aynı. 
 
+### Cholesky ve QR
+
 Şimdi bu sonuç üzerinde Cholesky yapalım
 
 ```python
@@ -213,7 +215,7 @@ yavaş olmaz. Daha sonra bu R^-1'i alıp bu sefer başka bir eşle/indirge
 ile çarpım işlemine tabi tutarız. R'yi direk alttaki script içine
 yazdık (B olarak) bir sonuç ortamında bu verinin başka bir şekilde
 MRJob işlemine verilmiş olması lazım. Bir işleme zinciri var, zincirde
-önce A'A, Cholesky, oradan $R$ alınıp başka bir işleme (job)
+önce A'A, Cholesky, oradan R alınıp başka bir işleme (job)
 aktarılıyor.
 
 ```python

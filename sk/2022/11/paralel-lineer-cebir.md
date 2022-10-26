@@ -239,10 +239,9 @@ x D sonucu da ufaktır.
 
 Paralel işletmek için üstteki çarpımı biraz değiştirmek
 gerekli. Unutmayalım, paralel işlemde her zaman çok fazla satırı azar
-azar işlemek istiyoruz, o zaman A matrisini işlemek lazım (daha önceki
-çarpım yaklaşımına ilk bakışta A devriğini gezmek gerekirdi). Fakat
-A'yı gezerken A devriğini gezdiğimiz bilgisiyle gerekli çarpımları
-yapmak lazım.
+azar işlemek istiyoruz, o zaman A matrisini işlemek lazım. Fakat A'yı
+gezerken A devriğinin kolonlarını gezdiğimiz bilgisiyle gerekli
+işlemleri yapmak lazım.
 
 Önceki animasyona bakarsak soldaki matriste bir satırda soldan sağa
 doğru gidiliyordu. Fakat yeni durumda A satırlarını gezerken, bir

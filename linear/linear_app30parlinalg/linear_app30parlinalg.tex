@@ -2,18 +2,64 @@
 \begin{document}
 Paralel Lineer Cebir Temeli
 
-[5] adlı yazı tek makinalı ortamda matris çarpımının nasıl yapılacağını, ve
-nasıl görülecebileğini anlattı. Satır bakış açısı, kolon bakış açısı
-işlendi. Parallel (Hadoop), eşle/indirge ortamında matris çarpımını nasıl
-yaparız?  Mesela $A^TA$'yi ele alalım. Bu çarpım oldukça önemli çünkü başka
-sonuçlar için de kullanılabiliyor. Mesela $A$ üzerinde $QR$ ayrıştırması
-yapmak isterseniz (bkz. Lineer Cebir ders notlarımız) bu çarpım
-kullanılabiliyor.
+[5]'te tek makinalı ortamda matris çarpımının nasıl yapılacağını, ve nasıl
+görülecebileğini anlattık. Satır bakış açısı, kolon bakış açısı işlendi. Peki
+parallel bir ortamda hangi matematik bizi ilgilendirmeli? Mesela $A^TA$'yi ele
+alalım. Bu çarpım oldukça önemli çünkü başka sonuçlar için de kullanılabiliyor,
+SVD bunlardan biri.
 
-Nasıl? QR ayrıştırması kolonların hepsi bilindiği gibi birbirine dik
-(orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel (upper
-triangular) bir $R$ matrisi oluşturur. Ayrıştırmanın $A^TA$ ile bağlantısı
-nedir? Eğer $A$ yerine onun ayrıştırmasını $QR$ koyarsak,
+Büyük Veri ve paralel işlem bağlamında $A^TA$'nin önemli şurada; eğer $A$
+matrisi ``uzun boylu ve zayıf'' ise, yani çok miktarda satırı ama az miktarda
+kolonu var ise, $m \times d$ diyelim, $A^TA$ çarpımı bize $d \times d$ boyutunda
+ufak bir matris verir. Eğer SVD hesabını bu matris üzerinden yapabilirsek,
+işimizi kolaylaştırmış oluruz. 
+
+İlk yönteme erişmek için $A^TA$ açılımını yapalım [7], bir $A$ için SVD
+ayrıştırması
+
+$$
+A = U \Sigma V^T
+$$
+
+olduğuna göre
+
+$$
+A^TA =  (U \Sigma V^T)^T  U \Sigma V^T
+$$
+
+olacaktır, devam edersek,
+
+$$
+= V \Sigma U^T U \Sigma V^T 
+$$
+
+$U^T U = I$ olduğu için geri kalanlar
+
+$$
+A^TA = V \Sigma^2 V^T 
+$$
+
+Görüldüğü gibi eşsiz değerleri ve sağ eşsiz vektörler $V$ sadece $A^T A$
+üzerinden hesaplanabiliyor.
+
+$U$'yi elde etmek için basit matris çarpımları yeterli,
+
+$$
+A = U \Sigma V^T \to U = A V \Sigma^{-1}
+$$
+
+Yani $V$ elde edildikten sonra onunla $A$'yi çarpıyoruz, sonra $\Sigma^{-1}$
+ile. $A$ ne kadar büyük olursa olsun onu bir vektör $V$ ile çarpmak hızlı
+işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basittir.
+
+Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.
+
+QR
+
+QR ile SVD yapmak mumkundur. QR ayrıştırması [4] kolonların hepsi bilindiği gibi
+birbirine dik (orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel
+(upper triangular) bir $R$ matrisi oluşturur. Ayrıştırmanın $A^TA$ ile
+bağlantısı nedir? Eğer $A$ yerine onun ayrıştırmasını $QR$ koyarsak,
 
 $$
 C = A^TA = (QR)^T (QR) = R^T Q^T QR
@@ -120,4 +166,10 @@ Kaynaklar
 
 [6] [Lineer Cebir ve Hadoop](https://burakbayramli.github.io/dersblog/sk/2015/03/lineer-cebir-hadoop.html)
 
+[7] Zadeh, {\em CME 323: Distributed Algorithms and Optimization, Lecture 17},
+    \url{https://stanford.edu/~rezab/classes/cme323/S17/}
+
+[8] Bayramli, {\em Paralel Lineer Cebir},
+    \url{https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html}
+    
 \end{document}

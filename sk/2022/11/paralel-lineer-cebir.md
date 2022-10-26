@@ -350,7 +350,6 @@ class ATAJob:
         self.C = self.C + np.outer(vec, vec)
     def post(self):
         outfile = "/tmp/C-%d.csv" % self.ci
-        print (self.ci)
         np.savetxt(outfile, self.C, delimiter=';',fmt='%1.6f')
         
 util.process(file_name='/tmp/A.csv', ci=0, N=2, hookobj = ATAJob(20))

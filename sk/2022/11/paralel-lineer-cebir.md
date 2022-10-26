@@ -258,8 +258,10 @@ eder, ta ki tüm A satırları (A' kolonları) bitene kadar.
 
 Üstteki resimde ilk A' kolonu işlendikten sonraki sonucu görüyoruz.
 İlk kolonun tamamını kullanıyoruz bu sebeple tüm kolon koyu kırmızı,
-ve oradan gelen sonuçlar tam bir matris veriyor, bu sebeple sonuç
-açık yeşil (tüm hücrelerde biraz toplam yapılmış).
+ve oradan gelen sonuçlar tam bir matris veriyor, bu sebeple sonuç açık
+yeşil (tüm hücrelerde biraz toplam yapılmış). A' matrisinde bir
+sonraki kolona geçilince oradan yeni bir matris elde edilecek, sağdaki
+yeşil matris biraz daha koyu yeşil hale gelecek.
 
 Bu işlemi paralelleştirmek mümkün, çünkü toplam sırabağımsız bir
 işlem, elde N tane parça var ise her birinden bir alt toplam D x D

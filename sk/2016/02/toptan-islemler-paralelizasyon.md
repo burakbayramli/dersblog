@@ -228,6 +228,7 @@ def process(file_name,ci,N,hookobj):
     file_size = os.path.getsize(file_name)
     beg = 0
     chunks = []
+    hookobj.ci = ci
     for i in range(N):
         with open(file_name, 'r') as f:
             s = int((file_size / N)*(i+1))
@@ -345,7 +346,7 @@ başladığında 'işlenmemiş satırlar' statüsündeki satırları almak, ve o
 satır işlendikten sonra onu 'işlendi' statüsüne getirmek. Bu yaklaşım
 daha önce bahsedilen 'satır kitleme' yaklaşımıyla uyumlu, ben işlerken
 diğer süreçler bu satırı kitlemeyecek, bir sonraki satıra gidecekler,
-ben o sırada işimi yapacağım. İsim bitince statüyü 'işlendi' haline
+ben o sırada işimi yapacağım. İşim bitince statüyü 'işlendi' haline
 getireceğim, eh zaten kilit bende, ve bu şekilde elimdeki bir sonraki
 satıra bakacağım. Eğer süreci ikinci kez başlatıyorsam ben ya da
 benden sonraki süreç statüyü kitler, ve yine işlenmemiş olan satırları

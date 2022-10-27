@@ -8,3 +8,5 @@
 
 [Paralel Lineer Cebir](11/paralel-lineer-cebir.html)
 
+[Paralel Veri Analizi Istatistik](11/paralel-veri-analizi-istatistik.html)
+

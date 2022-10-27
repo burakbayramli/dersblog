@@ -48,8 +48,6 @@
 
 [Yerel Ağ (Network) Kurmak - Ubuntu](09/yerel-ag-kurmak-ubuntu.html)
 
-[Buyuk Matrisler Uzerinde SVD Ayristirmasi (SVD Factorization for Tall-and-Fat Matrices on Map/Reduce Architectures)](10/buyuk-matrisler-uzerinde-svd.html)
-
 [Buyuk Veri, Akim Analizi](10/buyuk-veri-akim-analizi.html)
 
 [LAN Icindeki Diger Makinalari Bulmak](10/lan-icindeki-diger-makinalari-bulmak.html)

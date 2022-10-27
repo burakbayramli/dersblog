@@ -383,13 +383,33 @@ print ((Cf1-Cf2).sum())
 İki matris birbirine çok yakın; demek ki satırsal paralel yöntem
 işledi.
 
+### SVD
+
+Üstteki parçaları anladıysak onları kullanarak SVD hesaplamak
+kolaydır.  Önce bir A matrisi alındığında A'A hesaplanır, ardından
+[5]'teki matematiği kullanarak V vektörünü elde ederiz, ve onu A ile
+çarparak Ü elde ederiz. A büyük bir matris, matris çarpımlarını başta
+işledik.
+
+Ya eğer A matrisi uzun ama zayıf değilse? Belki elimizde uzun ve
+şişman bir matris var, yani aşırı sayıda kolon. Bu durumda,
+uygulamanın gerekliliklerine göre hala bir kolon, boyut küçültme
+(dimensionality reduction) yapılabilir, mesela uzaklık bağlamında bir
+matrisi rasgele (random) ve daha ufak boyutlu bir başka matrisle
+çarpmak sonucun mesafe ölçütlerini değiştirmez diye bir teori vardır,
+o zaman yine baştaki matris çarpımı teknikleri ile bir çarpım yaparız,
+ve ufaltılmış boyuttaki yeni sonuçla işleme devam ederiz. 
+
+
 Kaynaklar
 
 [1] https://www.adityaagrawal.net/blog/architecture/matrix_multiplication
 
-[2] https://www.geeksforgeeks.org/strassens-matrix-multiplication/
+[2] [GeeksforGeeks](https://www.geeksforgeeks.org/strassens-matrix-multiplication/)
 
-[3] https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html
+[3] Bayramli, [Lineer Cebir Ders 1](https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html)
 
-[4] [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+[4] Bayramli, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+
+[5] Bayramli, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
 

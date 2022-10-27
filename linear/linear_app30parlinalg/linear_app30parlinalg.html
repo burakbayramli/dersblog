@@ -24,18 +24,22 @@
 </script>
 </head>
 
+<p>Satırsal $A^TA$</p>
 <p>[5]'te tek makinalı ortamda matris çarpımının nasıl yapılacağını, ve nasıl
 görülecebileğini anlattık. Satır bakış açısı, kolon bakış açısı işlendi. Peki
 parallel bir ortamda hangi matematik bizi ilgilendirmeli? Mesela $A^TA$'yi ele
 alalım. Bu çarpım oldukça önemli çünkü başka sonuçlar için de kullanılabiliyor,
-SVD bunlardan biri.</p>
+Eşsiz Değer Ayrıştırması (Singular Value Decomposition -SVD-) bunlardan biri.</p>
 <p>Büyük Veri ve paralel işlem bağlamında $A^TA$'nin önemli şurada; eğer $A$
 matrisi "uzun boylu ve zayıf" ise, yani çok miktarda satırı ama az miktarda
 kolonu var ise, $m \times d$ diyelim, $A^TA$ çarpımı bize $d \times d$ boyutunda
 ufak bir matris verir. Eğer SVD hesabını bu matris üzerinden yapabilirsek,
 işimizi kolaylaştırmış oluruz. </p>
-<p>İlk yönteme erişmek için $A^TA$ açılımını yapalım [7], bir $A$ için SVD
-ayrıştırması</p>
+<p>Satırsal olarak $A^TA$ hesabı yapmak için satır satır gezerken her satırın
+kendisi ile dışsal çarpımını (outer product) alıp sonuçları toplamak yeterli
+[9].</p>
+<p>$A^TA$ ve SVD</p>
+<p>$A^TA$ açılımını yapalım [7], bir $A$ için SVD ayrıştırması</p>
 <p>$$
 A = U \Sigma V^T
 $$</p>
@@ -61,7 +65,7 @@ $$</p>
 ile. $A$ ne kadar büyük olursa olsun onu bir vektör $V$ ile çarpmak hızlı
 işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basittir.</p>
 <p>Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.</p>
-<p>QR</p>
+<p>SVD İçin QR</p>
 <p>QR ile SVD yapmak mumkundur. QR ayrıştırması [4] kolonların hepsi bilindiği gibi
 birbirine dik (orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel
 (upper triangular) bir $R$ matrisi oluşturur. Ayrıştırmanın $A^TA$ ile
@@ -141,3 +145,5 @@ paralel yapılabilir.</p>
     <a href="https://stanford.edu/~rezab/classes/cme323/S17/">https://stanford.edu/~rezab/classes/cme323/S17/</a></p>
 <p>[8] Bayramli, <em>Paralel Lineer Cebir</em>,
     <a href="https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html">https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html</a></p>
+<p>[9] Gundersen, <em>Matrix Multiplication as the Sum of Outer Products</em>,
+    <a href="https://gregorygundersen.com/blog/2020/07/17/matmul/">https://gregorygundersen.com/blog/2020/07/17/matmul/</a></p>

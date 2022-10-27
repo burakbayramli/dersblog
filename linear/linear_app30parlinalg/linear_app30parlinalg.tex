@@ -2,11 +2,13 @@
 \begin{document}
 Paralel Lineer Cebir Temeli
 
+Satırsal $A^TA$
+
 [5]'te tek makinalı ortamda matris çarpımının nasıl yapılacağını, ve nasıl
 görülecebileğini anlattık. Satır bakış açısı, kolon bakış açısı işlendi. Peki
 parallel bir ortamda hangi matematik bizi ilgilendirmeli? Mesela $A^TA$'yi ele
 alalım. Bu çarpım oldukça önemli çünkü başka sonuçlar için de kullanılabiliyor,
-SVD bunlardan biri.
+Eşsiz Değer Ayrıştırması (Singular Value Decomposition -SVD-) bunlardan biri.
 
 Büyük Veri ve paralel işlem bağlamında $A^TA$'nin önemli şurada; eğer $A$
 matrisi ``uzun boylu ve zayıf'' ise, yani çok miktarda satırı ama az miktarda
@@ -14,8 +16,13 @@ kolonu var ise, $m \times d$ diyelim, $A^TA$ çarpımı bize $d \times d$ boyutu
 ufak bir matris verir. Eğer SVD hesabını bu matris üzerinden yapabilirsek,
 işimizi kolaylaştırmış oluruz. 
 
-İlk yönteme erişmek için $A^TA$ açılımını yapalım [7], bir $A$ için SVD
-ayrıştırması
+Satırsal olarak $A^TA$ hesabı yapmak için satır satır gezerken her satırın
+kendisi ile dışsal çarpımını (outer product) alıp sonuçları toplamak yeterli
+[9].
+
+$A^TA$ ve SVD
+
+$A^TA$ açılımını yapalım [7], bir $A$ için SVD ayrıştırması
 
 $$
 A = U \Sigma V^T
@@ -54,7 +61,7 @@ işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basitt
 
 Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.
 
-QR
+SVD İçin QR
 
 QR ile SVD yapmak mumkundur. QR ayrıştırması [4] kolonların hepsi bilindiği gibi
 birbirine dik (orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel
@@ -169,5 +176,8 @@ Kaynaklar
 
 [8] Bayramli, {\em Paralel Lineer Cebir},
     \url{https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html}
+
+[9] Gundersen, {\em Matrix Multiplication as the Sum of Outer Products},
+    \url{https://gregorygundersen.com/blog/2020/07/17/matmul/}
     
 \end{document}

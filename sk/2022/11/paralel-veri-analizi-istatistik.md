@@ -59,42 +59,9 @@ print (df.index.min(), df.index.max(), np.mean(df.index))
 0 474390 79792.60683260683
 ```
 
-Dört tane kutu sınırlarını
-
-```python
-N = 4
-P = df.index.max() / N
-bins = np.array([0, int(P), int(2*P), int(3*P), df.index.max()+1])
-print (bins)
-```
-
-```text
-[     0 118597 237195 355792 474391]
-```
-
-olarak tanımlayabiliriz. Bu sayıları bulmak için tüm dosyayı hafızaya
-yükledik ama profosyonel ortamda onlari bellege yüklemeden yapmadan
-yine bulabilirdik.
-
-```python
-def bucket(id):
-   return np.argmax(bins > id)-1
-   
-print (bucket(240000))
-print (bucket(10))
-print (bucket(0))
-print (bucket(118597))
-print (bucket(474390))
-```
-
-```text
-2
-0
-0
-1
-3
-```
-
+Alttaki kodda bu rakamlara bakarak bazı sınırları deneme/yanilma ile
+tanımladık, fakat profosyonel ortamda bu sınırları bulmak ta ayrı bir
+paralel süreç olabilirdi.
 
 
 ```python
@@ -104,8 +71,8 @@ class BucketJob:
     def __init__(self):
         self.ci = -1
         self.res = [] # satirlari burada biriktir
-        self.bins = np.array([0, 118597, 237195, 355792, 474391])
-    def bucket(self, id):
+        self.bins = np.array([0, 50000, 80000, 130000, 474391])
+    def bucket(self, id): # id hangi kutuya ait?
         return np.argmax(self.bins > id)-1        
     def exec(self,line):
         toks = line.strip().split(',')
@@ -117,9 +84,24 @@ class BucketJob:
         df = df.sort_values(by=0) # hafizada sirala
         # diske yaz
         df.to_csv("/tmp/L-%d.csv" % self.ci,index=None,header=None)
-        
+
+# seri isledi ama nihai ortamda paralel isler
 util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob())
+util.process(file_name='/tmp/input.csv', ci=1, N=4, hookobj = BucketJob())
+util.process(file_name='/tmp/input.csv', ci=2, N=4, hookobj = BucketJob())
+util.process(file_name='/tmp/input.csv', ci=3, N=4, hookobj = BucketJob())
 ```
+
+Artık parçaları pür Ünix komutu ile birleştirebiliriz, `L-0.csv`, `L-1.csv`,..
+birbirine yapıştırılıyor yani.. 
+
+```python
+! cat /tmp/L-* > /tmp/Lfinal.csv
+```
+
+Sonuç `/tmp/Lfinal.csv` içinde. Sıralanmış bir halde çünkü ilk kutudaki
+satırların ikinci kutudaki satırlardan önce geleceğini biliyoruz. Kutulamayı
+buna göre yaptık. 
 
 Yontem 2
 

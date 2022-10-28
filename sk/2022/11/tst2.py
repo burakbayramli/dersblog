@@ -7,7 +7,7 @@ class BucketJob:
     def __init__(self):
         self.ci = -1
         self.res = [] # satirlari burada biriktir
-        self.bins = np.array([0, 118597, 237195, 355792, 474391])
+        self.bins = np.array([0, 50000, 80000, 130000, 474391])
     def bucket(self, id):
         return np.argmax(self.bins > id)-1        
     def exec(self,line):
@@ -22,3 +22,6 @@ class BucketJob:
         df.to_csv("/tmp/L-%d.csv" % self.ci,index=None,header=None)
         
 util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob())
+util.process(file_name='/tmp/input.csv', ci=1, N=4, hookobj = BucketJob())
+util.process(file_name='/tmp/input.csv', ci=2, N=4, hookobj = BucketJob())
+util.process(file_name='/tmp/input.csv', ci=3, N=4, hookobj = BucketJob())

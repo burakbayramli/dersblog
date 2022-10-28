@@ -1,3 +1,4 @@
+import random, pandas as pd, string, uuid
 import os, numpy as np
 
 def process(file_name,ci,N,hookobj):
@@ -24,3 +25,15 @@ def process(file_name,ci,N,hookobj):
         f.close()
         hookobj.post()
         
+
+def create_sort_synthetic(N):
+    M = len(string.ascii_letters)
+    ids = [int(np.abs(np.random.randn()*100000)) for i in range(N)]
+    def stringify(x):
+       return "".join([string.ascii_letters[x % M] for i in range(20)])
+    names = [stringify(id) for id in ids]
+    d = {"id": ids, "name": names, "address": names}
+    df = pd.DataFrame(d)
+    df.to_csv('/tmp/input.csv',index=None)    
+
+   

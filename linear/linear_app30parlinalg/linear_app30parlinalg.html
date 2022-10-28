@@ -55,8 +55,10 @@ $$</p>
 <p>$$
 A^TA = V \Sigma^2 V^T 
 $$</p>
-<p>Görüldüğü gibi eşsiz değerleri ve sağ eşsiz vektörler $V$ sadece $A^T A$
-üzerinden hesaplanabiliyor.</p>
+<p>Peki eşitliğin sağından $V$'yi nasıl çıkartırız? Bir dikgen matris çarpı köşegen
+bir matris çarpı o dikgen matrisin devriği bize bir şeyi hatırlatıyor mu?  Evet,
+bu bir özdeğer / özvektör hesabına benziyor. O zaman $A^TA$'nin öz hesabını
+yaparsak oradaki özvektör bize $V$ matrisini verecektir. </p>
 <p>$U$'yi elde etmek için basit matris çarpımları yeterli,</p>
 <p>$$
 A = U \Sigma V^T \to U = A V \Sigma^{-1}
@@ -65,6 +67,39 @@ $$</p>
 ile. $A$ ne kadar büyük olursa olsun onu bir vektör $V$ ile çarpmak hızlı
 işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basittir.</p>
 <p>Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.</p>
+<pre><code class="python">import numpy.linalg as lin
+import pandas as pd
+
+k = 7 # izdusum uzayinin boyutlari
+df = pd.read_csv(&quot;../linear_app10rndsvd/w1.dat&quot;,sep=';',header=None)
+A = np.array(df)[:,1:]
+print (A.shape)
+</code></pre>
+
+<pre><code>(71, 30)
+</code></pre>
+
+<pre><code class="python">ATA = np.dot(A.T,A)
+print (ATA.shape)
+eval,evec = lin.eig(ATA)
+print (eval.shape)
+print (evec.shape)
+
+np.savetxt('/tmp/2eval.csv', eval, delimiter=';',fmt='%1.6f')
+np.savetxt('/tmp/2evec.csv', evec, delimiter=';',fmt='%1.6f')
+</code></pre>
+
+<pre><code>(30, 30)
+(30,)
+(30, 30)
+</code></pre>
+
+<pre><code class="python">u,s,v = lin.svd(A)
+np.savetxt('/tmp/1u.csv', u, delimiter=';',fmt='%1.6f')
+np.savetxt('/tmp/1s.csv', s, delimiter=';',fmt='%1.6f')
+np.savetxt('/tmp/1v.csv', v, delimiter=';',fmt='%1.6f')
+</code></pre>
+
 <p>SVD İçin QR</p>
 <p>QR ile SVD yapmak mumkundur. QR ayrıştırması [4] kolonların hepsi bilindiği gibi
 birbirine dik (orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel

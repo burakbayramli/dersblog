@@ -11,7 +11,7 @@ katmadeğer elde edebilen, sonuca daha yaklaşabilen algoritmalar.
 
 ### Sıralama (Sorting)
 
-Yontem 1
+Yöntem 1
 
 Eldeki makina, çekirdek N ise, N tane kutu yaratırız, ve hangi kolon
 bazında sıralama yapıyorsak, mesela bir kimlik (id) diyelim, o
@@ -221,4 +221,9 @@ Kaynaklar
 [4] https://en.wikipedia.org/wiki/K-way_merge_algorithm
 
 [5] https://stackoverflow.com/questions/29494594/sorting-data-with-space-contrainsts
+
+
+
+
+
 

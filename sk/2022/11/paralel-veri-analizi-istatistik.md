@@ -11,12 +11,128 @@ katmadeğer elde edebilen, sonuca daha yaklaşabilen algoritmalar.
 
 ### Sıralama (Sorting)
 
-Paralel sıralama için önemli numara dosyanın ufak parçalarını hafızada
-sıralamak, onları diske yazmak, sonra sıralanmış parçaları artık disk
-bazlı (satır satır) birleştirebilmek.
+Yontem 1
 
-Sıralanmış parçaların sıralanmış halde birleşmiş hale gelmesi için
-(merge) bir algoritma,
+Eldeki makina, çekirdek N ise, N tane kutu yaratırız, ve hangi kolon
+bazında sıralama yapıyorsak, mesela bir kimlik (id) diyelim, o
+kimliklerin sırasal olarak 1,2,3, kutusuna düşmesini sağlarız. Eğer
+maksimum 1000 kimliği var ise, ve N=4 için, kmliklerden 0 ile 250
+arası 1'inci kutuya, 251 ile 500 arası 2'inci kutuya vb gibi gitmeli.
+Bu ilk tarama 4 tane yeni daha ufak dosya yaratır.
+
+Ardından paralel olarak her ufak dosyayı hafızada sıralarız.
+
+Bu bitince sıralanmış dosyaları alt alta ekleriz / yapıştırırız
+(append) ve sıralanmış dosya elde edilir.
+
+Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
+kimlik (id) kolonu, iki tane isim, adres için metinsel iki kolon.
+
+```python
+import util
+util.create_sort_synthetic(1000000)
+```
+
+```python
+! head -5 /tmp/input.csv
+```
+
+```text
+83473,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
+46657,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
+98157,HHHHHHHHHHHHHHHHHHHH,HHHHHHHHHHHHHHHHHHHH
+111152,CCCCCCCCCCCCCCCCCCCC,CCCCCCCCCCCCCCCCCCCC
+```
+
+1 milyon satırlık karışık bir veri oldu.
+
+```python
+import pandas as pd
+df = pd.read_csv("/tmp/input.csv",index_col=0)
+```
+
+```python
+print (df.index.min(), df.index.max(), np.mean(df.index))
+```
+
+```text
+0 474390 79792.60683260683
+```
+
+Dört tane kutu sınırlarını
+
+```python
+N = 4
+P = df.index.max() / N
+bins = np.array([0, int(P), int(2*P), int(3*P), df.index.max()+1])
+print (bins)
+```
+
+```text
+[     0 118597 237195 355792 474391]
+```
+
+olarak tanımlayabiliriz. Bu sayıları bulmak için tüm dosyayı hafızaya
+yükledik ama profosyonel ortamda onlari bellege yüklemeden yapmadan
+yine bulabilirdik.
+
+```python
+def bucket(id):
+   return np.argmax(bins > id)-1
+   
+print (bucket(240000))
+print (bucket(10))
+print (bucket(0))
+print (bucket(118597))
+print (bucket(474390))
+```
+
+```text
+2
+0
+0
+1
+3
+```
+
+
+
+```python
+import os, numpy as np, util
+
+class BucketJob:
+    def __init__(self):
+        self.ci = -1
+        self.res = [] # satirlari burada biriktir
+        self.bins = np.array([0, 118597, 237195, 355792, 474391])
+    def bucket(self, id):
+        return np.argmax(self.bins > id)-1        
+    def exec(self,line):
+        toks = line.strip().split(',')
+        if self.bucket(float(toks[0])) == self.ci:
+           self.res.append(toks)
+    def post(self):
+        df = pd.DataFrame(self.res) # birikmis satirlarla DataFrame yarat
+        df[0] = pd.to_numeric(df[0])
+        df = df.sort_values(by=0) # hafizada sirala
+        # diske yaz
+        df.to_csv("/tmp/L-%d.csv" % self.ci,index=None,header=None)
+        
+util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob())
+```
+
+Yontem 2
+
+Bu yöntem alternatif değil aslında, belki farklı durumlarda
+kullanılacak bir yaklaşım. Yöntem 2 bize daha az hafıza ile daha
+büyük dosyaları sıralama şansı veriyor. Paralellik hala var,
+fakat son birlestirme asamasi her ne kadar disk yogunluklu olsa da
+tek bir makinada yapilmali.
+
+Bu yöntemle dosyanın ufak parçalarını yine hafızada sıralarız, sonra
+tek bir surec o parcalari disk bazlı (satır satır)
+birleştirir. Sıralanmış parçaların sıralanmış halde birleşmiş hale
+gelmesi için bir algoritma,
 
 * Her iki parçanın başına git
 
@@ -91,47 +207,32 @@ siralanmis liste [2, 5, 29, 32, 33, 43, 48, 49, 52, 59, 60, 73, 81, 83, 93]
 Siralama isledi mi? True
 ```
 
-Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
-kimlik (id) kolonu, iki tane isim, adres için metinsel iki kolon.
+Ardından alttaki taklit kod gibi bir kod teker teker satırları alacak,
+ve üstteki mantığın benzerini işletecek.
 
 ```python
-import util
-util.create_sort_synthetic(1000000)
-```
+import os
 
-```python
-! head -5 /tmp/input.csv
-```
+def merge_sorted(file1,file2,outfile):
+    fout = open(outfile, "w")
 
-```text
-83473,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
-46657,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
-98157,HHHHHHHHHHHHHHHHHHHH,HHHHHHHHHHHHHHHHHHHH
-111152,CCCCCCCCCCCCCCCCCCCC,CCCCCCCCCCCCCCCCCCCC
-```
-
-1 milyon satırlık karışık bir veri oldu.
-
-
-```python
-import os, numpy as np, util
-
-class SplitSortJob:
-    def __init__(self):
-        self.ci = -1
-        self.res = [] # satirlari burada biriktir
-    def exec(self,line):
-        toks = line.strip().split(',')
-        self.res.append(toks)
-    def post(self):
-        df = pd.DataFrame(self.res) # birikmis satirlarla DataFrame yarat
-        df[0] = pd.to_numeric(df[0])
-        df = df.sort_values(by=0) # hafizada sirala
-        # diske yaz
-        df.to_csv("/tmp/L-%d.csv" % self.ci,index=None,header=None)
+    f1 = open(file1, 'r')
+    f2 = open(file2, 'r')
+    s1 = os.path.getsize(file1)
+    s2 = os.path.getsize(file2)
+    print (s1,s2)
+    
+    l1 = f1.readline().strip()
+    toks1 = l1.split(',')
+    l2 = f2.readline().strip()
+    toks2 = l2.split(',')
+    
+    # herhangi bir dosyada sona gelene kadar donguyu islet
+    while (f1.tell() < s1 and f2.tell() < s2):
+        ...
         
-util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = SplitSortJob())
-```
+```        
+
 
 
 

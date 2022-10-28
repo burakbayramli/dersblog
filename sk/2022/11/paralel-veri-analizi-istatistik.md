@@ -34,10 +34,11 @@ Altta bu işlemleri gösteren bir örnek görüyoruz.
 Listeden bir öğe alındığında o öğeyi "çıkartılmış" gibi gösterdik,
 fakat kodlama bağlamında yapılan bir indisin ilerletilmesinden ibaret.
 
-Kod olarak birleştirmenin işlediğini altta görebiliriz. İki tane
-rasgele veri içeren liste yarattık, onları önce hafızada sıraladık,
-sonra teker teker her birinden en ufak öğeyi alarak yeni listeyi
-oluşturduk, ve yeni liste otomatik olarak sıralanmış hale geldi.
+Tarif edilen birleştirmenin işlediğini alttaki ufak kodda
+görebiliriz. İki tane rasgele veri içeren liste yarattık, onları önce
+hafızada sıraladık, sonra teker teker her birinden en ufak öğeyi
+alarak yeni listeyi oluşturduk, ve yeni liste otomatik olarak
+sıralanmış hale geldi.
 
 ```python
 import numpy as np, random, util
@@ -75,17 +76,19 @@ def chunkmerge():
         res.append(arr2[j])
         j = j + 1
     print ('siralanmis liste',res)
+    # iki listeyi birlestirip klasik sekilde sirala
     arrsorted = sorted(arr1 + arr2)
-    print (arrsorted == res)
+    # ayni sonuc mu
+    print ('Siralama isledi mi?',arrsorted == res)
 
 chunkmerge()   
 ```
 
 ```text
-liste 1 [27, 42, 53, 57, 81]
-liste 2 [0, 8, 23, 31, 54, 68, 73, 74, 88, 88]
-siralanmis liste [0, 8, 23, 27, 31, 42, 53, 54, 57, 68, 73, 74, 81, 88, 88]
-True
+liste 1 [2, 33, 43, 49, 83]
+liste 2 [5, 29, 32, 48, 52, 59, 60, 73, 81, 93]
+siralanmis liste [2, 5, 29, 32, 33, 43, 48, 49, 52, 59, 60, 73, 81, 83, 93]
+Siralama isledi mi? True
 ```
 
 Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
@@ -101,14 +104,36 @@ util.create_sort_synthetic(1000000)
 ```
 
 ```text
-id,name,address
 83473,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
 46657,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
 98157,HHHHHHHHHHHHHHHHHHHH,HHHHHHHHHHHHHHHHHHHH
 111152,CCCCCCCCCCCCCCCCCCCC,CCCCCCCCCCCCCCCCCCCC
 ```
 
-1 milyon satırlık karışık bir veri oldu. 
+1 milyon satırlık karışık bir veri oldu.
+
+
+```python
+import os, numpy as np, util
+
+class SplitSortJob:
+    def __init__(self):
+        self.ci = -1
+        self.res = [] # satirlari burada biriktir
+    def exec(self,line):
+        toks = line.strip().split(',')
+        self.res.append(toks)
+    def post(self):
+        df = pd.DataFrame(self.res) # birikmis satirlarla DataFrame yarat
+        df[0] = pd.to_numeric(df[0])
+        df = df.sort_values(by=0) # hafizada sirala
+        # diske yaz
+        df.to_csv("/tmp/L-%d.csv" % self.ci,index=None,header=None)
+        
+util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = SplitSortJob())
+```
+
+
 
 ### Kümeleme (KMeans)
 

@@ -34,6 +34,6 @@ def create_sort_synthetic(N):
     names = [stringify(id) for id in ids]
     d = {"id": ids, "name": names, "address": names}
     df = pd.DataFrame(d)
-    df.to_csv('/tmp/input.csv',index=None)    
+    df.to_csv('/tmp/input.csv',index=None,header=None)    
 
    

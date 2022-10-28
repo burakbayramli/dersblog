@@ -92,8 +92,8 @@ util.process(file_name='/tmp/input.csv', ci=2, N=4, hookobj = BucketJob())
 util.process(file_name='/tmp/input.csv', ci=3, N=4, hookobj = BucketJob())
 ```
 
-Artık parçaları pür Ünix komutu ile birleştirebiliriz, `L-0.csv`, `L-1.csv`,..
-birbirine yapıştırılıyor yani.. 
+Artık parçaları pür Unix komutu ile birleştirebiliriz, `L-0.csv`,
+`L-1.csv`,..  birbirine yapıştırılıyor yani..
 
 ```python
 ! cat /tmp/L-* > /tmp/Lfinal.csv
@@ -103,18 +103,17 @@ Sonuç `/tmp/Lfinal.csv` içinde. Sıralanmış bir halde çünkü ilk kutudaki
 satırların ikinci kutudaki satırlardan önce geleceğini biliyoruz. Kutulamayı
 buna göre yaptık. 
 
-Yontem 2
+Yöntem 2
 
 Bu yöntem alternatif değil aslında, belki farklı durumlarda
-kullanılacak bir yaklaşım. Yöntem 2 bize daha az hafıza ile daha
-büyük dosyaları sıralama şansı veriyor. Paralellik hala var,
-fakat son birlestirme asamasi her ne kadar disk yogunluklu olsa da
-tek bir makinada yapilmali.
+kullanılacak bir yaklaşım. Yöntem 2 bize daha az hafıza ile daha büyük
+dosyaları tek makinada sıralama şansı veriyor. Paralellik hala var,
+fakat son birleştirme aşaması her ne kadar disk yoğunluklu olsa da tek
+bir makinada yapılmalı.
 
 Bu yöntemle dosyanın ufak parçalarını yine hafızada sıralarız, sonra
-tek bir surec o parcalari disk bazlı (satır satır)
-birleştirir. Sıralanmış parçaların sıralanmış halde birleşmiş hale
-gelmesi için bir algoritma,
+bir süreç o parçaları disk bazlı (satır satır) birleştirir. Sıralanmış
+parçaların birleşmiş ve hala sıralı halde olması için bir algoritma,
 
 * Her iki parçanın başına git
 
@@ -189,34 +188,19 @@ siralanmis liste [2, 5, 29, 32, 33, 43, 48, 49, 52, 59, 60, 73, 81, 83, 93]
 Siralama isledi mi? True
 ```
 
-Ardından alttaki taklit kod gibi bir kod teker teker satırları alacak,
-ve üstteki mantığın benzerini işletecek.
+Nihai kod üstteki mantığı dosya satırları için yapar, iki dosyadan
+satırlar teker teker alınır, döngü içinde kimlikleri birbiri ile
+karşılaştırır, hangi dosyadan gelen kimlik daha küçük ise onun satırı,
+o dönüşte, çıktıya yazılır. Bir dosya bitene kadar bu devam eder, sonra
+kalan dosyanin satırları direk çıktıya yazılır. 
 
-```python
-import os
+Bu yaklaşımla diyeli dört parça L0,L1,L2,L3 yarattık, L0,L1 birleşimi
+bir süreçte, L2,L3 birleşimi ayrı bir süreçte yapılabilir. Fakat son kalan
+nihai iki dosyanin birleşimi tek bir süreç tarafından yapılmalı.
 
-def merge_sorted(file1,file2,outfile):
-    fout = open(outfile, "w")
-
-    f1 = open(file1, 'r')
-    f2 = open(file2, 'r')
-    s1 = os.path.getsize(file1)
-    s2 = os.path.getsize(file2)
-    print (s1,s2)
-    
-    l1 = f1.readline().strip()
-    toks1 = l1.split(',')
-    l2 = f2.readline().strip()
-    toks2 = l2.split(',')
-    
-    # herhangi bir dosyada sona gelene kadar donguyu islet
-    while (f1.tell() < s1 and f2.tell() < s2):
-        ...
-        
-```        
-
-
-
+Satırsal birleştirme tekniği dediğimiz gibi farklı makinalarda tam
+paralellikten çok bir makinanın hafızasından fazla büyük bir dosyayı
+sıralayabilmesini sağlar.
 
 ### Kümeleme (KMeans)
 

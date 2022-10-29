@@ -63,7 +63,6 @@ işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basitt
 
 Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.
 
-
 \begin{minted}[fontsize=\footnotesize]{python}
 import numpy.linalg as lin
 import pandas as pd
@@ -96,17 +95,19 @@ print (v.T[:4,idx])
 [ 0.08234979  0.21984904  0.52854556 -0.21314772]
 \end{verbatim}
 
-Baktigimiz birkac deger birbirine esit, tum matrisi kontrol edelim,
+Baktığımız birkaç değer birbirine eşit, tüm matrisi kontrol edelim,
 
 \begin{minted}[fontsize=\footnotesize]{python}
-print ( np.mean(v.T) )
-print ( np.mean( (evec - v.T)**2) )
+print ( np.mean(np.abs(evec) - np.abs(v.T)))
 \end{minted}
 
 \begin{verbatim}
 0.005230468666628483
-0.05777777777783249
+-2.7259159635502234e-13
 \end{verbatim}
+
+İki matris farkı çok ufak (\verb!abs! ile mutlak değer kullandık çünkü bazen
+tüm bir kolon diğerinin eksi hali olabiliyor).
 
 SVD İçin QR
 

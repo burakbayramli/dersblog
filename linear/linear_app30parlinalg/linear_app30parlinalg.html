@@ -95,15 +95,16 @@ print (v.T[:4,idx])
 [ 0.08234979  0.21984904  0.52854556 -0.21314772]
 </code></pre>
 
-<p>Baktigimiz birkac deger birbirine esit, tum matrisi kontrol edelim,</p>
-<pre><code class="python">print ( np.mean(v.T) )
-print ( np.mean( (evec - v.T)**2) )
+<p>Baktığımız birkaç değer birbirine eşit, tüm matrisi kontrol edelim,</p>
+<pre><code class="python">print ( np.mean(np.abs(evec) - np.abs(v.T)))
 </code></pre>
 
 <pre><code>0.005230468666628483
-0.05777777777783249
+-2.7259159635502234e-13
 </code></pre>
 
+<p>İki matris farkı çok ufak (<code>abs</code> ile mutlak değer kullandık çünkü bazen
+tüm bir kolon diğerinin eksi hali olabiliyor).</p>
 <p>SVD İçin QR</p>
 <p>QR ile SVD yapmak mumkundur. QR ayrıştırması [4] kolonların hepsi bilindiği gibi
 birbirine dik (orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel

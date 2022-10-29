@@ -80,30 +80,33 @@ print (A.shape)
 
 \begin{minted}[fontsize=\footnotesize]{python}
 ATA = np.dot(A.T,A)
-print (ATA.shape)
 eval,evec = lin.eig(ATA)
-print (eval.shape)
+u,s,v = lin.svd(A)
 print (evec.shape)
-
-np.savetxt('/tmp/2eval.csv', eval, delimiter=';',fmt='%1.6f')
-np.savetxt('/tmp/2evec.csv', evec, delimiter=';',fmt='%1.6f')
+print (v.shape)
+idx = 2
+print (evec[:4,idx])
+print (v.T[:4,idx])
 \end{minted}
 
 \begin{verbatim}
 (30, 30)
-(30,)
 (30, 30)
+[ 0.08234979  0.21984904  0.52854556 -0.21314772]
+[ 0.08234979  0.21984904  0.52854556 -0.21314772]
 \end{verbatim}
 
+Baktigimiz birkac deger birbirine esit, tum matrisi kontrol edelim,
+
 \begin{minted}[fontsize=\footnotesize]{python}
-u,s,v = lin.svd(A)
-np.savetxt('/tmp/1u.csv', u, delimiter=';',fmt='%1.6f')
-np.savetxt('/tmp/1s.csv', s, delimiter=';',fmt='%1.6f')
-np.savetxt('/tmp/1v.csv', v, delimiter=';',fmt='%1.6f')
+print ( np.mean(v.T) )
+print ( np.mean( (evec - v.T)**2) )
 \end{minted}
 
-
-
+\begin{verbatim}
+0.005230468666628483
+0.05777777777783249
+\end{verbatim}
 
 SVD İçin QR
 

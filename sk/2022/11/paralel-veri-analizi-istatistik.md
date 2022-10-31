@@ -208,7 +208,36 @@ Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl
 yapacağımızı gördük. Eğer [2]'deki yöntemi kullanmak istiyorsak, yani
 altyapı bir veriyi herhangi bir kritere göre (çoğunlukla basit bloklar
 üzerinden) bölmemizi sağlıyor ve her bölüm üzerinde ayrı bir süreç
-işliyor, o zaman bazı kavramlarda birkaç değişiklik gerekir. 
+işliyor, o zaman paralel KMeans algoritma kavramlarında birkaç
+değişiklik gerekir. [2]'de bahsettiğimiz gibi takip ettiğimiz yaklaşım
+hiçbir şey paylaşma (share nothing) yaklaşımıdır. Süreç işe
+başladığında kendi veri parçasını bilir, ve diğer süreçlerle
+iletişimde bulunmaz.
+
+Fakat unutmayalim, KMeans ozyineli (recursive) bir yaklasimdir,
+verinin uzerinden tek bir gecerek (single pass) kume yaratamaz. Veri
+birkac kere bastan sonra taranmalidir. 
+
+Bir algoritma şöyle olabilir;
+
+- Her geçişte, döngüde verinin başına gidilir, ve küme merkezlerinin
+  en son ne olduğu `centers.txt` dosyasından tüm süreçler tarafından
+  okunur. Bu çok ufak bir veridir, anında okunabilir.
+
+- Her surec odaklandigi verinin her noktasinin hangi merkeze yakin
+  oldugunu saptar.
+
+- Ardından başa dönerek biraz önce yapılan üyelik atamasına göre yeni
+  küme merkezlerini hesaplar. Bu yeni merkezler `C-0-0`, `C-0-1` gibi
+  bir dosyaya yazılır, ki `C-0-1` 0'inci kümenin 1'inci süreç tarafından
+  hesaplanmış merkezidir. 
+
+- Bu merkezler tabii ki tamamlanmış değildir, bir süreçten gelen
+  hesaplardır bunlar, ana takip edici script tüm süreçlerin o
+  geçişteki işi bitince, her küme için yarım hesaplanmış merkezleri
+  alır, ortalamasını hesaplayıp yeni `centers.txt` dosyasını oluşturur.
+
+![](kmeans.gif)
 
 Kaynaklar
 

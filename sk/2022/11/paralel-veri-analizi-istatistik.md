@@ -208,39 +208,40 @@ Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl
 yapacağımızı gördük. Eğer [2]'deki yöntemi kullanmak istiyorsak, yani
 altyapı bir veriyi herhangi bir kritere göre (çoğunlukla basit bloklar
 üzerinden) bölmek ve her bölüm üzerinde ayrı bir süreç işletmek
-istiyorsak, o zaman paralel KMeans algoritma kavramlarında birkaç
-değişiklik gerekir. [2]'de bahsettiğimiz gibi takip ettiğimiz yaklaşım
-hiçbir şey paylaşma (share nothing) yaklaşımıdır. Süreç işe
-başladığında kendi veri parçasını bilir, ve diğer süreçlerle
-iletişimde bulunmaz.
+istiyorsak (indirgeme mimarisi kullanmadan), paralel KMeans
+algoritması şöyle kodlanabilir. [2]'de bahsettiğimiz gibi takip
+ettiğimiz yaklaşım hiçbir şey paylaşma (share nothing)
+yaklaşımı. Süreç işe başladığında kendi veri parçasını bilir, ve diğer
+süreçlerle iletişimde bulunmaz.
 
-Fakat unutmayalim, KMeans ozyineli (recursive) bir yaklasimdir,
-verinin uzerinden tek bir gecerek (single pass) kume yaratamaz. Veri
-birkac kere bastan sonra taranmalidir. 
+Fakat unutmayalım, KMeans özyineli (recursive) bir algoritmadir,
+verinin üzerinden tek bir geçiş (single pass) yeterli değildir. Veri
+birkaç kere baştan sonra taranmalıdır.
 
 Bir algoritma şöyle olabilir;
 
-- Her geçişte, döngüde verinin başına gidilir, ve küme merkezlerinin
+- Her geçişte, döngüde, verinin başına gidilir, ve küme merkezlerinin
   en son ne olduğu `centers.txt` dosyasından tüm süreçler tarafından
-  okunur. Bu çok ufak bir veridir, anında okunabilir.
+  okunur (başta rasgele olabilir). Bu çok ufak bir veridir, anında
+  okunabilir.
 
-- Her surec odaklandigi verinin her noktasinin hangi merkeze yakin
-  oldugunu saptar.
+- Her süreç elindeki verinin her noktasının hangi merkeze yakın
+  olduğunu saptar.
 
-- Ardından başa dönerek biraz önce yapılan üyelik atamasına göre yeni
-  küme merkezlerini hesaplar. Bu yeni merkezler `C-0-0`, `C-0-1` gibi
-  bir dosyaya yazılır, ki `C-0-1` 0'inci kümenin 1'inci süreç tarafından
-  hesaplanmış merkezidir. 
+- Ardından başa dönülür, biraz önce yapılan üyelik atamasına göre yeni
+  küme merkezleri hesaplanır. Bu yeni merkezler `C-0-0`, `C-0-1` gibi
+  bir dosyaya yazılır, ki `C-0-1` 0'inci kümenin 1'inci süreç
+  tarafından hesaplanmış merkezidir.
 
 - Bu merkezler tabii ki tamamlanmış değildir, bir süreçten gelen
   hesaplardır bunlar, ana takip edici script tüm süreçlerin o
   geçişteki işi bitince, her küme için yarım hesaplanmış merkezleri
   alır, ortalamasını hesaplayıp yeni `centers.txt` dosyasını oluşturur.
 
-- Başa dönülür, tüm bu işlemler tekrarlanır ta ki belli bir geçiş
-  sayısı ya da "değişimin bitmesi" durumu oluncaya kadar, mesela eğer
-  küme merkezlerinde her geçiş sonrası artık büyük değişimler olmuyor
-  ise iş bitmiş kabul edilebilir.
+- Üstteki adımlar tekrarlanır, ta ki belli bir geçiş sayısı ya da
+  "stabiliteye erişim" durumu oluncaya kadar, stabilite derken mesela
+  eğer küme merkezlerinde her geçiş sonrası artık büyük değişimler
+  olmuyor ise, iş bitmiş kabul edilebilir.
 
 ![](kmeans.gif)
 

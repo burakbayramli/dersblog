@@ -341,9 +341,9 @@ bulunabilir,
 import os, numpy as np, util
 
 class ATAJob:
-    def __init__(self,D):
+    def __init__(self,D,ci):
         self.C = np.zeros((D,D))
-        self.ci = -1
+        self.ci = ci
     def exec(self,line):
         tok = line.split(';')
         vec = np.array([float(x) for x in tok])
@@ -352,8 +352,8 @@ class ATAJob:
         outfile = "/tmp/C-%d.csv" % self.ci
         np.savetxt(outfile, self.C, delimiter=';',fmt='%1.6f')
         
-util.process(file_name='/tmp/A.csv', ci=0, N=2, hookobj = ATAJob(20))
-util.process(file_name='/tmp/A.csv', ci=1, N=2, hookobj = ATAJob(20))
+util.process(file_name='/tmp/A.csv', ci=0, N=2, hookobj = ATAJob(20,ci=0))
+util.process(file_name='/tmp/A.csv', ci=1, N=2, hookobj = ATAJob(20,ci=1))
 
 C0 = np.loadtxt("/tmp/C-0.csv",delimiter=';')
 C1 = np.loadtxt("/tmp/C-1.csv",delimiter=';')

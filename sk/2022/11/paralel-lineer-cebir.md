@@ -14,9 +14,9 @@ etmek zordur. Bize bir matrisi satır satır işlememizi sağlayacak bir
 yaklaşım gerekiyor. [3]'e danışırsak oradaki "satır kombinasyon bakış
 açısı" bize uygun gözüküyor, çünkü bu yöntemle A çarpı B deki A'yı
 azar azar işlemek mümkündür, her A satırı için bir sonuç satırı
-üretilebilecektir. Çarpım yöntemleri [1]'de yazısında da ve
-animasyonları ile işlenmiş, bizim istediğimiz alttakidir. Kırmızı
-matris A, mavi olan B, sonuç C ise yeşil matris içindedir.
+üretilebilecektir. Çarpım yöntemleri [1]'de yazıda da ve animasyonları
+ile işlenmiş, bizim istediğimiz alttakidir. Kırmızı matris A, mavi
+olan B, sonuç C ise yeşil matris içindedir.
 
 ![](carpim1.gif)
 

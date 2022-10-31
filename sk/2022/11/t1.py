@@ -5,7 +5,9 @@ class BucketJob:
     def __init__(self,B):
         self.ci = -1
         self.B = B
-        self.bins = np.array([0, 50000, 80000, 130000, 474391])
+        M = 474391
+        P = int(M / 4)
+        self.bins = np.array([0, P, 2*P, 3*P, M])
         self.fout = open("/tmp/B-%d-%d.csv" % (self.B,self.ci), "w")
     def bucket(self, id): # id hangi kutuya ait?
         return np.argmax(self.bins > id)-1        
@@ -31,10 +33,14 @@ class BucketSortJob:
         df = df.sort_values(by=0) # hafizada sirala
         # diske yaz
         df.to_csv("/tmp/B-%d-sorted.csv" % (self.ci),index=None,header=None)
+
+
+
+util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob(B))
         
 # seri isledi ama nihai ortamda paralel isler
-for B in range (4):
-    util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob(B))
-    util.process(file_name='/tmp/input.csv', ci=1, N=4, hookobj = BucketJob(B))
-    util.process(file_name='/tmp/input.csv', ci=2, N=4, hookobj = BucketJob(B))
-    util.process(file_name='/tmp/input.csv', ci=3, N=4, hookobj = BucketJob(B))
+#for B in range (4):
+#    util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob(B))
+#    util.process(file_name='/tmp/input.csv', ci=1, N=4, hookobj = BucketJob(B))
+#    util.process(file_name='/tmp/input.csv', ci=2, N=4, hookobj = BucketJob(B))
+#    util.process(file_name='/tmp/input.csv', ci=3, N=4, hookobj = BucketJob(B))

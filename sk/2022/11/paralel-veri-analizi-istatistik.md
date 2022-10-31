@@ -228,6 +228,13 @@ küçük ise onun satırı, o dönüşte, çıktıya yazılır, o dosya üzerind
 biri bitene kadar bu devam eder, sonra kalan dosyanın satırları direk
 çıktıya yazılır.
 
+Not: Kutulama ile her kutu için dört dosya elde ediyoruz demiştik, ve
+üstteki algoritma ile her kutu için parçaları ikiser ikiser
+birleştirebiliyoruz. Acaba dört parçanın dosyasını aynı anda açıp her
+seferinde sıradaki dört değerden minimum olanı almak yine sıralanmış
+bir sonuç yaratır mı? Bu durumda dört dosya bir kerede satır satır
+okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
+
 ### Kümeleme (KMeans)
 
 Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl

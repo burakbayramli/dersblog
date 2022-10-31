@@ -108,7 +108,7 @@ tarif edilen yaklaşım hiçbir şey paylaşmayan (share nothing)
 mimarisidir, çok büyük olan girdi dosyasına tüm çekirdekler,
 makinaların hızlı erisebileceği farz edilir, işbölümü veri bazlıdır
 tüm süreçler hangi parçanın kendilerinde olduğunu işe başlamadan
-öğrenirler, ardından iletişim olmaz. Böylece ıaslem sırasında fazla
+öğrenirler, ardından iletişim olmaz. Böylece işlem sırasında fazla
 makinalararası iletişimle ortaya çıkabilecek hataların önüne geçilir,
 ve kodlama rahatlaşır, işlem hızlanır.
 

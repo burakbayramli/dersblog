@@ -207,8 +207,8 @@ sıralayabilmesini sağlar.
 Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl
 yapacağımızı gördük. Eğer [2]'deki yöntemi kullanmak istiyorsak, yani
 altyapı bir veriyi herhangi bir kritere göre (çoğunlukla basit bloklar
-üzerinden) bölmemizi sağlıyor ve her bölüm üzerinde ayrı bir süreç
-işliyor, o zaman paralel KMeans algoritma kavramlarında birkaç
+üzerinden) bölmek ve her bölüm üzerinde ayrı bir süreç işletmek
+istiyorsak, o zaman paralel KMeans algoritma kavramlarında birkaç
 değişiklik gerekir. [2]'de bahsettiğimiz gibi takip ettiğimiz yaklaşım
 hiçbir şey paylaşma (share nothing) yaklaşımıdır. Süreç işe
 başladığında kendi veri parçasını bilir, ve diğer süreçlerle
@@ -243,6 +243,14 @@ Bir algoritma şöyle olabilir;
   ise iş bitmiş kabul edilebilir.
 
 ![](kmeans.gif)
+
+Önemli noktaları vurgulayalım, veri satırsal şekilde paylaştırılır,
+her sürecin işlediği parçada her kümeden değer olabilir. Her geçişte
+işlem paralel olur, fakat bir takip edici script o geçiş bitince bir
+sonraki geçişi hazırlamakla sorumludur, her süreçten gelen merkezlerin
+ortalaması, bir sonraki geçişin başlatılması bir script'in
+sorumluluğundadır. Bu işlemler ağır işlemler değildir bu sebeple seri
+işlemelerinde problem yoktur.
 
 Kaynaklar
 

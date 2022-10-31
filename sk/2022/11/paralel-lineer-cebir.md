@@ -118,12 +118,20 @@ from timeit import default_timer as timer
 from datetime import timedelta
 import os, numpy as np
 
-def process(file_name,N,hookobj):
-    file_size = os.path.getsize(file_name)
-    beg = 0
+def process(afile,bfile,N,obj,skip_lines=0):
+    file_size = os.path.getsize(afile)
+    obj.afile = afile
+    obj.B = np.loadtxt(bfile,delimiter=';')
+    cname = "%s/C-%d.csv" % (os.path.dirname(afile), ci)
+    obj.outfile = open(cname, "w")
+    
+    with open(afile, 'r') as f:
+        for j in range(skip_lines): f.readline()
+        beg = f.tell()
+        f.close()
     chunks = []
     for i in range(N):
-        with open(file_name, 'r') as f:
+        with open(afile, 'r') as f:
             s = int((file_size / N)*(i+1))
             f.seek(s)
             f.readline()
@@ -131,16 +139,16 @@ def process(file_name,N,hookobj):
             chunks.append([beg,end_chunk])
             f.close()
         beg = end_chunk+1
-    c = chunks[hookobj.ci]
-    with open(file_name, 'r') as f:
+    c = chunks[ci]
+    with open(afile, 'r') as f:
         f.seek(c[0])
         while True:
             line = f.readline()
-            hookobj.exec(line)
+            obj.exec(line) # process the line
             if f.tell() > c[1]: break
         f.close()
-        hookobj.post()
-        
+        obj.post()
+
 class MultJob:
     def __init__(self,ci):
         self.afile = ""

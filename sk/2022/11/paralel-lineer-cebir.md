@@ -24,9 +24,9 @@ Gittikçe kararan yeşil hücreleri oraya yapılan toplam sebebiyle.
 
 A'yı satır satır aldık bu tamam. Fakat B'ye olacak? Ne yazık ki her A
 satırı için B'nin tamamı baştan sona gezilmeli. Bundan kaçış yok,
-zaten matris çarpımı O(3) çetrefilliğindeki bir operasyondur, standart
-kodlama üç tane iç içe döngü içerir, bunun sonucu olarak her satırda
-B'nin başa sarılması gerekecektir.
+zaten matris çarpımı O(N^3) çetrefilliğindeki bir operasyondur,
+standart kodlama üç tane iç içe döngü içerir, bunun sonucu olarak her
+satırda B'nin başa sarılması gerekecektir.
 
 Şimdi B için de satır gezme yaklaşımı düşünmeden önce, problemde bir
 basitleştirme yapalım; A, B matrisleri sırasıyla M x D ve D x N

@@ -112,13 +112,13 @@ tüm süreçler hangi parçanın kendilerinde olduğunu işe başlamadan
 makinalararası iletişimle ortaya çıkabilecek hataların önüne geçilir,
 ve kodlama rahatlaşır, işlem hızlanır.
 
-Fakat bir problem var, CSV kütüphaneleri satır bazlı ileri zıplama
-yapamaz, bayt bazlı zıplama yaparlar. Mesela 1200 baytlik dosyanin
-125'inci baytina (karakterine) git diyebiliyoruz, ve bu hızlı oluyor,
-fakat bu işlemin herhangi bir satırın başına gitme garantisi tabii ki
-yok. O zaman biraz takla atarak her parça için hızla gittiğimiz bayta
-en yakın satır başına gidebilmemiz lazım, böylece oradan satır satır
-işlem yapabilelim.
+Fakat temel teknik bir problem var, CSV kütüphaneleri satır bazlı
+ileri zıplama yapamaz, bayt bazlı zıplama yaparlar. Mesela 1200
+baytlik dosyanin 125'inci baytina (karakterine) git diyebiliyoruz, ve
+bu hızlı oluyor, fakat bu işlemin herhangi bir satırın başına gitme
+garantisi tabii ki yok. O zaman biraz takla atarak her parça için
+hızla gittiğimiz bayta en yakın satır başına gidebilmemiz lazım,
+böylece oradan satır satır işlem yapabilelim.
 
 Bir dosya üzerinde görelim,
 

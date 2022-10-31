@@ -106,9 +106,9 @@ satırını bir süreç ikinci 5 satırını başka bir süreç işleyebilir.
 Basit olan yaklaşımlar daha rahat ölçeklenebilir, bu sebeple üstte
 tarif edilen yaklaşım hiçbir şey paylaşmayan (share nothing)
 mimarisidir, çok büyük olan girdi dosyasına tüm çekirdekler,
-makinaların hızlı erisebileceği farz edilir, paylaşım veri bazlıdır
-tüm süreçler hangi parçanın kendilerinde olduğunu ise başlamadan
-öğrenilirler, ardından iletişim olmaz. Böylece ıaslem sırasında fazla
+makinaların hızlı erisebileceği farz edilir, işbölümü veri bazlıdır
+tüm süreçler hangi parçanın kendilerinde olduğunu işe başlamadan
+öğrenirler, ardından iletişim olmaz. Böylece ıaslem sırasında fazla
 makinalararası iletişimle ortaya çıkabilecek hataların önüne geçilir,
 ve kodlama rahatlaşır, işlem hızlanır.
 

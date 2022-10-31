@@ -1,11 +1,10 @@
 import random, pandas as pd, string, uuid
 import os, numpy as np
 
-def process(file_name,ci,N,hookobj):
+def process(file_name,N,hookobj):
     file_size = os.path.getsize(file_name)
     beg = 0
     chunks = []
-    hookobj.ci = ci
     for i in range(N):
         with open(file_name, 'r') as f:
             s = int((file_size / N)*(i+1))
@@ -15,7 +14,7 @@ def process(file_name,ci,N,hookobj):
             chunks.append([beg,end_chunk])
             f.close()
         beg = end_chunk+1
-    c = chunks[ci]
+    c = chunks[hookobj.ci]
     with open(file_name, 'r') as f:
         f.seek(c[0])
         while True:

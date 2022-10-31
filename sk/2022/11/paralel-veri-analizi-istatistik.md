@@ -4,7 +4,7 @@ Eşzamanlı olarak veri işleme, analizi tekniklerinin temel yaklaşımını
 [2]'de gördük, orada ve bu yazıda kullanacağımız ana yapı şöyle;
 İşlenecek çok büyük bir CSV dosyası var, her çekirdek (birden fazla
 ise) her makina by dosyaya direk erişebilir, paralel işlemler bu
-dosyanın farklı kısımlarını ayna anda işleyebilmek üzerinden
+dosyanın farklı kısımlarını aynı anda işleyebilmek üzerinden
 gerçekleşecektir. Tercihimiz her zaman satır satır mesafe katedebilen
 algoritmalardır, yani verinin tek bir satırına bakarak bir bir
 katmadeğer elde edebilen, sonuca daha yaklaşabilen algoritmalar.
@@ -13,17 +13,23 @@ katmadeğer elde edebilen, sonuca daha yaklaşabilen algoritmalar.
 
 Yöntem 1
 
-Eldeki makina, çekirdek N ise, N tane kutu yaratırız, ve hangi kolon
-bazında sıralama yapıyorsak, mesela bir kimlik (id) diyelim, o
-kimliklerin sırasal olarak 1,2,3, kutusuna düşmesini sağlarız. Eğer
-maksimum 1000 kimliği var ise, ve N=4 için, kmliklerden 0 ile 250
-arası 1'inci kutuya, 251 ile 500 arası 2'inci kutuya vb gibi gitmeli.
-Bu ilk tarama 4 tane yeni daha ufak dosya yaratır.
+- B tane kutu yaratırız, ve hangi kolon bazında sıralama yapıyorsak,
+  mesela bir kimlik (id) diyelim, o kimliklerin büyüklük olarak 1,2,3,
+  kutusuna düşmesini sağlarız. Eğer maksimum 1000 kimliği var ise, ve
+  N=4 için, kimliklerden 0 ile 250 arası 1'inci kutuya, 251 ile 500
+  arası 2'inci kutuya vb gibi gitmeli.
 
-Ardından paralel olarak her ufak dosyayı hafızada sıralarız.
+- İlk tarama mesela 4 paralel süreç 4 kutu üzerinden 16 tane dosya
+  yaratır.  Dikkat: her kutu için, mesela kutu=1, dort tane paralel
+  süreç verinin tamamında 1'inci kutuya düşen verileri bulup çıkartır.
 
-Bu bitince sıralanmış dosyaları alt alta ekleriz / yapıştırırız
-(append) ve sıralanmış dosya elde edilir.
+- Ardından paralel olarak yine her kutu için, o kutuya ait olan tüm
+  parçaları alırız, hafızada birleştiriz, hafızada sıralarız, ve o
+  kutu için diske yazarız.
+
+- Bu bitince sıralanmış tüm kutuların sıralanış dosyalarını alt alta
+  ekleriz / yapıştırırız (basit Unix `cat` ile), ve sıralanmış nihai
+  dosya elde edilir.
 
 Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
 kimlik (id) kolonu, iki tane isim, adres için metinsel iki kolon.
@@ -44,7 +50,7 @@ util.create_sort_synthetic(1000000)
 111152,CCCCCCCCCCCCCCCCCCCC,CCCCCCCCCCCCCCCCCCCC
 ```
 
-1 milyon satırlık karışık bir veri oldu.
+1 milyon satırlık bir veri oldu.
 
 ```python
 import pandas as pd
@@ -63,66 +69,91 @@ Alttaki kodda bu rakamlara bakarak bazı sınırları deneme/yanilma ile
 tanımladık, fakat profosyonel ortamda bu sınırları bulmak ta ayrı bir
 paralel süreç olabilirdi.
 
+Şimdi ilk paralel kod, her kutuya düşen satırları paralel olarak bul, kendi
+dosyasına yaz.
+
 
 ```python
 import os, numpy as np, util
 
 class BucketJob:
-    def __init__(self):
-        self.ci = -1
-        self.res = [] # satirlari burada biriktir
+    def __init__(self,B,ci):
+        self.B = B
+        self.ci = ci
         self.bins = np.array([0, 50000, 80000, 130000, 474391])
+        print (self.B,self.ci)
+        self.fout = open("/tmp/B-%d-%d.csv" % (self.B,self.ci), "w")
     def bucket(self, id): # id hangi kutuya ait?
         return np.argmax(self.bins > id)-1        
     def exec(self,line):
         toks = line.strip().split(',')
-        if self.bucket(float(toks[0])) == self.ci:
-           self.res.append(toks)
+        if self.bucket(float(toks[0])) == self.B:
+           self.fout.write(line)
     def post(self):
-        df = pd.DataFrame(self.res) # birikmis satirlarla DataFrame yarat
-        df[0] = pd.to_numeric(df[0])
-        df = df.sort_values(by=0) # hafizada sirala
         # diske yaz
-        df.to_csv("/tmp/L-%d.csv" % self.ci,index=None,header=None)
+        self.fout.close()
 
-# seri isledi ama nihai ortamda paralel isler
-util.process(file_name='/tmp/input.csv', ci=0, N=4, hookobj = BucketJob())
-util.process(file_name='/tmp/input.csv', ci=1, N=4, hookobj = BucketJob())
-util.process(file_name='/tmp/input.csv', ci=2, N=4, hookobj = BucketJob())
-util.process(file_name='/tmp/input.csv', ci=3, N=4, hookobj = BucketJob())
+# altta seri islem var ama her kutu icin 4 paralel surec baslatilabilir
+for B in range(4):
+    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,0))
+    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,1))
+    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,2))
+    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,3))        
 ```
 
-Artık parçaları pür Unix komutu ile birleştirebiliriz, `L-0.csv`,
-`L-1.csv`,..  birbirine yapıştırılıyor yani..
+Şimdi her kutu için parçaları hafızaya getir, Pandas üzerinden hafızada sırala,
 
 ```python
-! cat /tmp/L-* > /tmp/Lfinal.csv
+import pandas as pd, glob
+import os, numpy as np, util
+
+for B in range(4):
+    dfs = [pd.read_csv('/tmp/B-%d-%d.csv' % (B,i),header=None) for i in range(4)]
+    df = pd.concat(dfs,axis=0)
+    df = df.sort_values(by=0)
+    df.to_csv("/tmp/B-%d-sorted.csv" % B, header=None,index=None)
 ```
 
-Sonuç `/tmp/Lfinal.csv` içinde. Sıralanmış bir halde çünkü ilk kutudaki
-satırların ikinci kutudaki satırlardan önce geleceğini biliyoruz. Kutulamayı
-buna göre yaptık. 
+Ve nihai olarak tum kutu parcalarini birlestir,
+
+```
+! cat /tmp/B-*-sorted.csv > /tmp/B-final.csv
+```
+
+Kutu parçalarını basit alt alta yapıştırma ile birleştirmek işliyor
+çünkü her kutu içindeki kimlikler belli bir kutuya gitmiş durumda,
+mesela id=1000 kimliği B=0 içinde, id=72000 kimliği ikinci kutu içinde,
+ve eğer her kutunun dosyası kendi içinde sıralanmış ise, yapıştırılmış
+yeni dosyanin kendiliğinden sıralanmış hale geleceği garantidir.
+
+Tek problem olabilecek su'dur; her kutu icin ustteki ornekte dort tane
+parcayi hafizaya getirdik, ve orada siraladik. Ya bu siralama icin
+hafiza yeterli olmazsa?
+
+Bu durumda az hafıza ile diskteki dosyaları satır satır birleştirmenin
+bir yolu alttadır.
 
 Yöntem 2
 
-Bu yöntem alternatif değil aslında, belki farklı durumlarda
-kullanılacak bir yaklaşım. Yöntem 2 bize daha az hafıza ile daha büyük
-dosyaları tek makinada sıralama şansı veriyor. Paralellik hala var,
-fakat son birleştirme aşaması her ne kadar disk yoğunluklu olsa da tek
-bir makinada yapılmalı.
+Bu yöntem bize daha az hafıza ile daha büyük dosyaları tek makinada
+sıralama şansı veriyor. Paralellik hala var, fakat son birleştirme
+aşaması her ne kadar disk yoğunluklu olsa da tek bir makinada
+yapılmalı. 
 
-Bu yöntemle dosyanın ufak parçalarını yine hafızada sıralarız, sonra
-bir süreç o parçaları disk bazlı (satır satır) birleştirir. Sıralanmış
-parçaların birleşmiş ve hala sıralı halde olması için bir algoritma,
+2'inci yöntem ile dosyanın ufak parçalarını yine hafızada sıralarız,
+diske yazarız, sonra bir süreç o parçaları disk bazlı (satır satır)
+okuyarak birleştirir. Sıralanmış parçaların birleşmiş ve hala sıralı
+halde olmasını nasıl garantileriz? Bir algoritma,
 
 * Her iki parçanın başına git
 
-* Bir döngü içinde her ikisinin sıradaki en küçük parçasına bak
+* Bir döngü içinde her ikisinin sıradaki en küçük parçasına bak (zaten
+  sıralanmış dosyalar için bu en üstteki satır)
 
-* En ufak olanını al, yeni listeye ekle, bunu tekrarla
+* Bu iki öğe arasından en ufak olanını al, yeni listeye ekle, tekrarla
 
-* Listeler farklı boylarda olabilir, bir liste öncekinden önce biterse
-  önemli değil, kalan listeyi olduğu gibi yeni listeye ekle.
+Listeler farklı boylarda olabilir, bir liste öncekinden önce biterse
+önemli değil, kalan listeyi olduğu gibi yeni listeye ekle.
 
 Altta bu işlemleri gösteren bir örnek görüyoruz.
 
@@ -188,19 +219,13 @@ siralanmis liste [2, 5, 29, 32, 33, 43, 48, 49, 52, 59, 60, 73, 81, 83, 93]
 Siralama isledi mi? True
 ```
 
-Nihai kod üstteki mantığı dosya satırları için yapar, iki dosyadan
-satırlar teker teker alınır, döngü içinde kimlikleri birbiri ile
-karşılaştırır, hangi dosyadan gelen kimlik daha küçük ise onun satırı,
-o dönüşte, çıktıya yazılır. Bir dosya bitene kadar bu devam eder, sonra
-kalan dosyanin satırları direk çıktıya yazılır. 
-
-Bu yaklaşımla diyeli dört parça L0,L1,L2,L3 yarattık, L0,L1 birleşimi
-bir süreçte, L2,L3 birleşimi ayrı bir süreçte yapılabilir. Fakat son kalan
-nihai iki dosyanin birleşimi tek bir süreç tarafından yapılmalı.
-
-Satırsal birleştirme tekniği dediğimiz gibi farklı makinalarda tam
-paralellikten çok bir makinanın hafızasından fazla büyük bir dosyayı
-sıralayabilmesini sağlar.
+Disk bazlı kod üstteki mantığı dosya satırları için yapar, her iki
+dosya açılır, satırlar bu dosyalardan teker teker alınır, döngü içinde
+kimlikleri birbiri ile karşılaştırır, hangi dosyadan gelen kimlik daha
+küçük ise onun satırı, o dönüşte, çıktıya yazılır, o dosya üzerinde
+`readline` çağırılır böylece bir sonraki satıra geçilir. Dosyalardan
+biri bitene kadar bu devam eder, sonra kalan dosyanın satırları direk
+çıktıya yazılır.
 
 ### Kümeleme (KMeans)
 

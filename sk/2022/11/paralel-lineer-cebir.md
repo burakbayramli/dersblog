@@ -118,21 +118,12 @@ from timeit import default_timer as timer
 from datetime import timedelta
 import os, numpy as np
 
-def process(afile,bfile,ci,N,obj,skip_lines=0):
-    file_size = os.path.getsize(afile)
-    obj.afile = afile
-    obj.B = np.loadtxt(bfile,delimiter=';')
-    obj.ci = ci
-    cname = "%s/C-%d.csv" % (os.path.dirname(afile), ci)
-    obj.outfile = open(cname, "w")
-    
-    with open(afile, 'r') as f:
-        for j in range(skip_lines): f.readline()
-        beg = f.tell()
-        f.close()
+def process(file_name,N,hookobj):
+    file_size = os.path.getsize(file_name)
+    beg = 0
     chunks = []
     for i in range(N):
-        with open(afile, 'r') as f:
+        with open(file_name, 'r') as f:
             s = int((file_size / N)*(i+1))
             f.seek(s)
             f.readline()
@@ -140,21 +131,21 @@ def process(afile,bfile,ci,N,obj,skip_lines=0):
             chunks.append([beg,end_chunk])
             f.close()
         beg = end_chunk+1
-    c = chunks[ci]
-    with open(afile, 'r') as f:
+    c = chunks[hookobj.ci]
+    with open(file_name, 'r') as f:
         f.seek(c[0])
         while True:
             line = f.readline()
-            obj.exec(line) # process the line
+            hookobj.exec(line)
             if f.tell() > c[1]: break
         f.close()
-        obj.post()
-
+        hookobj.post()
+        
 class MultJob:
-    def __init__(self):
+    def __init__(self,ci):
         self.afile = ""
         self.B = "" 
-        self.ci = -1 
+        self.ci = ci
         self.outfile = None 
     def exec(self,line):        
         vec = np.array([np.float(x) for x in line.strip().split(";")])
@@ -174,7 +165,7 @@ bfile = dir + "/" + "B.csv"
 start = timer()
    
 N = 4 # kac paralel islem var
-ps = [Process(target=process,args=(afile, bfile, i, N, MultJob())) for i in range(N)]
+ps = [Process(target=process,args=(afile, bfile, N, MultJob(i))) for i in range(N)]
 for p in ps: p.start()
 for p in ps: p.join()
 end = timer()

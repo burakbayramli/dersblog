@@ -237,6 +237,11 @@ Bir algoritma şöyle olabilir;
   geçişteki işi bitince, her küme için yarım hesaplanmış merkezleri
   alır, ortalamasını hesaplayıp yeni `centers.txt` dosyasını oluşturur.
 
+- Başa dönülür, tüm bu işlemler tekrarlanır ta ki belli bir geçiş
+  sayısı ya da "değişimin bitmesi" durumu oluncaya kadar, mesela eğer
+  küme merkezlerinde her geçiş sonrası artık büyük değişimler olmuyor
+  ise iş bitmiş kabul edilebilir.
+
 ![](kmeans.gif)
 
 Kaynaklar

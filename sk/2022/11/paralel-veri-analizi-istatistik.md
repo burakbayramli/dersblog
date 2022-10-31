@@ -262,6 +262,6 @@ Kaynaklar
 
 [4] https://en.wikipedia.org/wiki/K-way_merge_algorithm
 
-[5] https://stackoverflow.com/questions/29494594/sorting-data-with-space-contrainsts
+[5] [Stackoverflow](https://stackoverflow.com/questions/29494594/sorting-data-with-space-contrainsts)
 
 

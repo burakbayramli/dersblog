@@ -57,8 +57,10 @@ A^TA = V \Sigma^2 V^T
 $$</p>
 <p>Peki eşitliğin sağından $V$'yi nasıl çıkartırız? Bir dikgen matris çarpı köşegen
 bir matris çarpı o dikgen matrisin devriği bize bir şeyi hatırlatıyor mu?  Evet,
-bu bir özdeğer / özvektör hesabına benziyor. O zaman $A^TA$'nin öz hesabını
-yaparsak oradaki özvektör bize $V$ matrisini verecektir. </p>
+bu bir özdeğer / özvektör hesabına benziyor, [11]'de görüldüğü gibi $A=S\Lambda
+S^{-1}$ ayrıştırması da var (birimdik matrislerde tersi alma işleminin devrik
+ile aynı şey olduğunu unutmayalım). O zaman $A^TA$'nin öz hesabını yaparsak
+oradaki özvektör bize $V$ matrisini verecektir.</p>
 <p>$U$'yi elde etmek için basit matris çarpımları yeterli,</p>
 <p>$$
 A = U \Sigma V^T \to U = A V \Sigma^{-1}
@@ -67,6 +69,7 @@ $$</p>
 ile. $A$ ne kadar büyük olursa olsun onu bir vektör $V$ ile çarpmak hızlı
 işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basittir.</p>
 <p>Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.</p>
+<p>SVD ve öz hesapların benzerliği için alttaki koda bakılabilir,</p>
 <pre><code class="python">import numpy.linalg as lin
 import pandas as pd
 
@@ -84,18 +87,13 @@ eval,evec = lin.eig(ATA)
 u,s,v = lin.svd(A)
 print (evec.shape)
 print (v.shape)
-idx = 2
-print (evec[:4,idx])
-print (v.T[:4,idx])
 </code></pre>
 
 <pre><code>(30, 30)
 (30, 30)
-[ 0.08234979  0.21984904  0.52854556 -0.21314772]
-[ 0.08234979  0.21984904  0.52854556 -0.21314772]
 </code></pre>
 
-<p>Baktığımız birkaç değer birbirine eşit, tüm matrisi kontrol edelim,</p>
+<p>Matrisler birbirine değersel olarak ne kadar yakın, kontrol edelim,</p>
 <pre><code class="python">print ( np.mean(np.abs(evec) - np.abs(v.T)))
 </code></pre>
 
@@ -103,8 +101,8 @@ print (v.T[:4,idx])
 -2.7259159635502234e-13
 </code></pre>
 
-<p>İki matris farkı çok ufak (<code>abs</code> ile mutlak değer kullandık çünkü bazen
-tüm bir kolon diğerinin eksi hali olabiliyor).</p>
+<p>Fark çok ufak (<code>abs</code> ile mutlak değer kullandık çünkü bazen tüm bir kolon
+diğerinin eksi hali olabiliyor).</p>
 <p>SVD İçin QR</p>
 <p>QR ile SVD yapmak mumkundur. QR ayrıştırması [4] kolonların hepsi bilindiği gibi
 birbirine dik (orthogonal) birim vektörler olan bir $Q$ matrisi ve üst üçgensel
@@ -188,3 +186,5 @@ paralel yapılabilir.</p>
 <p>[9] Gundersen, <em>Matrix Multiplication as the Sum of Outer Products</em>,
     <a href="https://gregorygundersen.com/blog/2020/07/17/matmul/">https://gregorygundersen.com/blog/2020/07/17/matmul/</a></p>
 <p>[10] Bayramli, <a href="https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html">https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html</a></p>
+<p>[11] Bayramli, <em>Lineer Cebir Ders 22</em>,
+     <a href="https://burakbayramli.github.io/dersblog/linear/linear_22/ders_22.html">https://burakbayramli.github.io/dersblog/linear/linear_22/ders_22.html</a></p>

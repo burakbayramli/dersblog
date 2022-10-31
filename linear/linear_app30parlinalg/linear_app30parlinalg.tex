@@ -48,8 +48,10 @@ $$
 
 Peki eşitliğin sağından $V$'yi nasıl çıkartırız? Bir dikgen matris çarpı köşegen
 bir matris çarpı o dikgen matrisin devriği bize bir şeyi hatırlatıyor mu?  Evet,
-bu bir özdeğer / özvektör hesabına benziyor. O zaman $A^TA$'nin öz hesabını
-yaparsak oradaki özvektör bize $V$ matrisini verecektir. 
+bu bir özdeğer / özvektör hesabına benziyor, [11]'de görüldüğü gibi $A=S\Lambda
+S^{-1}$ ayrıştırması da var (birimdik matrislerde tersi alma işleminin devrik
+ile aynı şey olduğunu unutmayalım). O zaman $A^TA$'nin öz hesabını yaparsak
+oradaki özvektör bize $V$ matrisini verecektir.
 
 $U$'yi elde etmek için basit matris çarpımları yeterli,
 
@@ -62,6 +64,8 @@ ile. $A$ ne kadar büyük olursa olsun onu bir vektör $V$ ile çarpmak hızlı
 işler, $\Sigma$ ise köşegen, seyrek bir matristır, onun çarpımı da basittir.
 
 Bu işlemlerin paralel versiyonları için [8, 6] kaynaklarına bakılabilir.
+
+SVD ve öz hesapların benzerliği için alttaki koda bakılabilir,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import numpy.linalg as lin
@@ -83,19 +87,14 @@ eval,evec = lin.eig(ATA)
 u,s,v = lin.svd(A)
 print (evec.shape)
 print (v.shape)
-idx = 2
-print (evec[:4,idx])
-print (v.T[:4,idx])
 \end{minted}
 
 \begin{verbatim}
 (30, 30)
 (30, 30)
-[ 0.08234979  0.21984904  0.52854556 -0.21314772]
-[ 0.08234979  0.21984904  0.52854556 -0.21314772]
 \end{verbatim}
 
-Baktığımız birkaç değer birbirine eşit, tüm matrisi kontrol edelim,
+Matrisler birbirine değersel olarak ne kadar yakın, kontrol edelim,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 print ( np.mean(np.abs(evec) - np.abs(v.T)))
@@ -106,8 +105,8 @@ print ( np.mean(np.abs(evec) - np.abs(v.T)))
 -2.7259159635502234e-13
 \end{verbatim}
 
-İki matris farkı çok ufak (\verb!abs! ile mutlak değer kullandık çünkü bazen
-tüm bir kolon diğerinin eksi hali olabiliyor).
+Fark çok ufak (\verb!abs! ile mutlak değer kullandık çünkü bazen tüm bir kolon
+diğerinin eksi hali olabiliyor).
 
 SVD İçin QR
 
@@ -229,4 +228,8 @@ Kaynaklar
     \url{https://gregorygundersen.com/blog/2020/07/17/matmul/}
 
 [10] Bayramli, \url{https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html}
+
+[11] Bayramli, {\em Lineer Cebir Ders 22},
+     \url{https://burakbayramli.github.io/dersblog/linear/linear_22/ders_22.html}
+
 \end{document}

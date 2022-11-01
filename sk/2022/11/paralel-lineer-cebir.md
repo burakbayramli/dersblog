@@ -122,7 +122,7 @@ def process(afile,bfile,N,obj,skip_lines=0):
     file_size = os.path.getsize(afile)
     obj.afile = afile
     obj.B = np.loadtxt(bfile,delimiter=';')
-    cname = "%s/C-%d.csv" % (os.path.dirname(afile), ci)
+    cname = "%s/C-%d.csv" % (os.path.dirname(afile), obj.ci)
     obj.outfile = open(cname, "w")
     
     with open(afile, 'r') as f:
@@ -139,7 +139,7 @@ def process(afile,bfile,N,obj,skip_lines=0):
             chunks.append([beg,end_chunk])
             f.close()
         beg = end_chunk+1
-    c = chunks[ci]
+    c = chunks[obj.ci]
     with open(afile, 'r') as f:
         f.seek(c[0])
         while True:

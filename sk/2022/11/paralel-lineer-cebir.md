@@ -223,7 +223,7 @@ milyondan iki milyona çıkartacak olsak pür hafıza kullanan yaklaşım
 kullanılmaz hale gelir çünkü artık A matrisi tamamen bellege sığmaz.
 Kıyasla azar azar alıp işleyen üstteki yaklaşım banamısın demez, çünkü
 A büyüklüğü ne olursa olsun her seferinde onun sadece tek satırını
-işliyoruz, eh zaten B'yi bellege sığar kabul ettik, o zaman veri ne
+işliyoruz, eh zaten B'yi belleğe sığar kabul ettik, o zaman veri ne
 kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte Büyük Veri
 bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
 
@@ -407,8 +407,10 @@ Kaynaklar
 
 [2] [GeeksforGeeks](https://www.geeksforgeeks.org/strassens-matrix-multiplication/)
 
-[3] Bayramli, [Lineer Cebir Ders 1](https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html)
+[3] Bayramlı, [Lineer Cebir Ders 1](https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html)
 
-[4] Bayramli, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+[4] Bayramlı, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
 
-[5] Bayramli, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
+[5] Bayramlı, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
+
+

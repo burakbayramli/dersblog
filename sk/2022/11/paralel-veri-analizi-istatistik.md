@@ -1,4 +1,4 @@
-# Paralel Veri Analizi, Istatistik
+# Paralel Veri Analizi, İstatistik
 
 Eşzamanlı olarak veri işleme, analizi tekniklerinin temel yaklaşımını
 [2]'de gördük, orada ve bu yazıda kullanacağımız ana yapı şöyle;
@@ -372,5 +372,3 @@ Kaynaklar
 [4] https://en.wikipedia.org/wiki/K-way_merge_algorithm
 
 [5] [Stackoverflow](https://stackoverflow.com/questions/29494594/sorting-data-with-space-contrainsts)
-
-

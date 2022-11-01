@@ -240,8 +240,6 @@ yarattı, bu dosyalar sıralanması yapılmış halde. Alttaki kod bu dosyaları
 okuyarak birleştirecek,
 
 ```python
-
-
 def merge_sorted(file1,file2,outfile):
     fout = open(outfile, "w")
 
@@ -303,12 +301,12 @@ merge_sorted("/tmp/L1.csv","/tmp/L2.csv","/tmp/L-merged.csv")
 Sonuç `/tmp/L-merged.csv` dosyasında bu dosya 2000 satırlık ve
 sıralanmış halde olacaktır.
 
-Not: Kutulama ile her kutu için dört dosya elde ediyoruz demiştik, ve
-üstteki algoritma ile her kutu için parçaları ikiser ikiser
-birleştirebiliyoruz. Acaba dört parçanın dosyasını aynı anda açıp her
-seferinde sıradaki dört değerden minimum olanı almak yine sıralanmış
-bir sonuç yaratır mı? Bu durumda dört dosya bir kerede satır satır
-okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
+Not: İlk yöntemde kutulama ile her kutu için dört dosya elde ediyoruz
+demiştik, ve üstteki algoritma ile her kutu için parçaları ikişer
+ikişer birleştirebiliyoruz. Acaba dört parçanın dosyasını aynı anda
+açıp her seferinde sıradaki dört değerden minimum olanı almak yine
+sıralanmış bir sonuç yaratır mı? Bu durumda dört dosya bir kerede
+satır satır okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
 
 ### Kümeleme (KMeans)
 

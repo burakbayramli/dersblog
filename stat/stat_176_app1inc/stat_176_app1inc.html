@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Azar Azar Istatistik (Incremental Statistics)</h1>
+<h1>Azar Azar İstatistik (Incremental Statistics)</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Azar Azar Istatistik (Incremental Statistics)
+    <title>Azar Azar İstatistik (Incremental Statistics)
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -24,8 +24,61 @@
 </script>
 </head>
 
-<p>Artımsal (Incremental) Varyans Hesabı</p>
-<p>[1]'de gordugumuz varyans formulunu tekrar yazarsak,</p>
+<p>Eldeki bir verinin yaş, boy, kilo gibi kolonlarını özetlemenin yollarından biri
+ortalama. Ortalama hesabının pek çok kütüphanede çağrısı var, mesela
+<code>numpy.mean</code>, ya da Pandas <code>Series.mean</code>.</p>
+<pre><code class="python">import pandas as pd
+from io import StringIO
+
+data = &quot;&quot;&quot;
+Name,Height
+Ali,160
+Veli,170
+Musa,150
+Mustafa,200
+Cem,180
+&quot;&quot;&quot;
+df = pd.read_csv(StringIO(data),sep=',')
+print (df)
+</code></pre>
+
+<pre><code>      Name  Height
+0      Ali     160
+1     Veli     170
+2     Musa     150
+3  Mustafa     200
+4      Cem     180
+</code></pre>
+
+<p>Ortalamayı alırsak</p>
+<pre><code class="python">df['Height'].mean()
+</code></pre>
+
+<pre><code>Out[1]: 172.0
+</code></pre>
+
+<p>Eldeki $x_i$ verisi için klasik ortalama hesabı $\bar{x}$ basit, tüm değerleri
+topla, ve değer sayısına bol,</p>
+<p>$$
+\bar{x} = \frac{1}{n} \sum _{i=1}^{n} x_i
+$$</p>
+<p>Kod ile</p>
+<pre><code class="python">print (np.array(df.Height))
+mean = df.Height.sum() / len(df)
+print ('ortalama',mean)
+</code></pre>
+
+<pre><code>[160 170 150 200 180]
+ortalama 172.0
+</code></pre>
+
+<p>Fakat dikkat; hesabı yapmak için tüm verileri toplamak gerekti, elde çok fazla
+veri olsaydı bu toplamın çok büyük rakamlara erişmesi mümkündür, bu da taşma,
+veri hataları ortaya çıkartabilir. Ortalamayı azar azar hesaplamak mümkün müdür
+acaba? Ortalama fazla büyümez, ayrıca paralel işletim açısından azar azar azar
+işletim daha ölçeklenebilir bir yaklaşımdır. </p>
+<p>Artımsal (İncremental) Varyans Hesabı (Alternatif Yöntem)</p>
+<p>[1]'de gördüğümüz varyans formülünü tekrar yazarsak,</p>
 <p>$$ = \sum _{i=1}^{n} y_i^2 - \frac{1}{n} \bigg( \sum _{i=1}^{n} y_i \bigg)^2 $$</p>
 <p>(5) formülünü $x$ kullanarak bir daha yazalım,</p>
 <p>$$ 
@@ -43,10 +96,10 @@ errors) hataları ortaya çıkmaya başlıyor. Eğer varyans küçük ise bu aş
 büyük sayılardaki tüm basamaklar birbirini iptal eder, geriye hiçbir şey
 kalmaz. Bu hatalardan uzak durmak için varyansı farklı bir artımsal
 yöntemle hesaplamak istiyoruz.</p>
-<p>Youngs ve Cramer'in yöntemine göre [3, sf. 69] bu hesap şöyle
-yapılabilir. $T_{ij}$, $M_{ij}$ ve $S_{ij}$,  veri noktaları $x_i$ $x_j$
-arasındaki verileri kapsayacak şekilde sırasıyla toplam, ortalama ve
-verinin karesinin toplamı olsun, </p>
+<p>Youngs ve Cramer'in yöntemine göre [2, sf. 69] bu hesap şöyle
+yapılabilir. $T_{ij}$, $M_{ij}$ ve $S_{ij}$, veri noktaları $x_i$ $x_j$
+arasındaki verileri kapsayacak şekilde sırasıyla toplam, ortalama ve verinin
+karesinin toplamı olsun,</p>
 <p>$$ 
 T_{ij} = \sum _{k=i}^{j} x_k , \quad<br />
 M_{ij} = \frac{1}{(j-1+1)}, \quad
@@ -113,3 +166,6 @@ YC = 8.25 Standart =  8.25
 
 <p>Kaynaklar</p>
 <p>[1] Bayramli, <em>Istatistik, Beklenti, Varyans, Kovaryans ve Korelasyon</em></p>
+<p>[2] Weihs, <em>Foundations of Statistical Algorithms With References to R Packages</em></p>
+<p>[3] Nested Software, <em>Calculating a Moving Average on Streaming Data</em>,
+    <a href="https://nestedsoftware.com/2018/03/20/calculating-a-moving-average-on-streaming-data-5a7k.22879.html">https://nestedsoftware.com/2018/03/20/calculating-a-moving-average-on-streaming-data-5a7k.22879.html</a></p>

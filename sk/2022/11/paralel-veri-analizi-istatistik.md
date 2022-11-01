@@ -127,9 +127,9 @@ mesela id=1000 kimliği B=0 içinde, id=72000 kimliği ikinci kutu içinde,
 ve eğer her kutunun dosyası kendi içinde sıralanmış ise, yapıştırılmış
 yeni dosyanin kendiliğinden sıralanmış hale geleceği garantidir.
 
-Tek problem olabilecek su'dur; her kutu icin ustteki ornekte dort tane
-parcayi hafizaya getirdik, ve orada siraladik. Ya bu siralama icin
-hafiza yeterli olmazsa?
+Tek pürüz şurada ortaya çıkabilir; her kutu için üstteki örnekte dört
+tane parçayı hafızaya getirdik, ve orada sıraladık. Ya bu sıralama
+için hafıza yeterli olmazsa?
 
 Bu durumda az hafıza ile diskteki dosyaları satır satır birleştirmenin
 bir yolu alttadır.

@@ -382,7 +382,7 @@ print ((Cf1-Cf2).sum())
 İki matris birbirine çok yakın; demek ki satırsal paralel yöntem
 işledi.
 
-### SVD
+### Eşsiz Değerler Ayrıştırması (Singular Value Decomposition, SVD)
 
 Üstteki parçalar kodlanmışsa onları kullanarak SVD hesaplamak
 kolaydır.  Önce bir A matrisi alındığında A'A hesaplanır, ardından

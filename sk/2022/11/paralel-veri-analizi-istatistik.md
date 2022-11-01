@@ -151,10 +151,10 @@ halde olmasını nasıl garantileriz? Alttaki algoritma ile;
 * Bir döngü içinde her ikisinin sıradaki en küçük parçasına bak (zaten
   sıralanmış dosyalar için bu en üstteki satır)
 
-* Bu iki öğe arasından en ufak olanını al, yeni listeye ekle, tekrarla
+* Bu iki öğe arasından en ufak olanını al, yeni listeye ekle, öğesi alınan dosyanın sonraki satırına geç, tekrarla
 
-Listeler farklı boylarda olabilir, bir liste öncekinden önce biterse
-önemli değil, kalan listeyi olduğu gibi yeni listeye ekle.
+* Listeler farklı boylarda olabilir, bir liste öncekinden önce biterse
+  önemli değil, kalan listeyi olduğu gibi yeni listeye ekle.
 
 Altta bu işlemleri gösteren bir örnek görüyoruz.
 

@@ -1,4 +1,4 @@
-# Paralel Veri Analizi Istatistik
+# Paralel Veri Analizi, Istatistik
 
 Eşzamanlı olarak veri işleme, analizi tekniklerinin temel yaklaşımını
 [2]'de gördük, orada ve bu yazıda kullanacağımız ana yapı şöyle;

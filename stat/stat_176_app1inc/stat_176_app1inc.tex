@@ -42,8 +42,8 @@ df['Height'].mean()
 Out[1]: 172.0
 \end{verbatim}
 
-Eldeki $x_i$ verisi için klasik ortalama hesabı $\bar{x}$ basit, tüm değerleri
-topla, ve değer sayısına bol,
+Matematiksl olarak eldeki $x_i$ verisi için klasik ortalama hesabı $\bar{x}$
+basit, tüm değerleri topla, ve değer sayısına böl,
 
 $$
 \bar{x} = \frac{1}{n} \sum _{i=1}^{n} x_i
@@ -64,12 +64,76 @@ ortalama 172.0
 
 Fakat dikkat; hesabı yapmak için tüm verileri toplamak gerekti, elde çok fazla
 veri olsaydı bu toplamın çok büyük rakamlara erişmesi mümkündür, bu da taşma,
-veri hataları ortaya çıkartabilir. Ortalamayı azar azar hesaplamak mümkün müdür
-acaba? Ortalama fazla büyümez, ayrıca paralel işletim açısından azar azar azar
-işletim daha ölçeklenebilir bir yaklaşımdır. 
+veri hataları ortaya çıkartabilir.
 
+Ortalamayı azar azar hesaplamak mümkün müdür acaba? O ana kadar bakılan verinin
+ortalaması fazla büyümez, ayrıca paralel işletim açısından azar azar azar
+işletim daha ölçeklenebilir bir yaklaşımdır. Bu tür bir hesap için matematikte
+biraz değişim yapmak lazım [3].
 
+Üstteki toplam formülünde ilk $n-1$ toplamını ayıralım, 
 
+$$
+\bar{x} = \frac{1}{n} \left( \sum _{i=1}^{n-1} x_i + x_i \right)
+\mlabel{1}
+$$
+
+İki üstteki $\bar{x}$ formülü ilk $n$ verisinin ortalaması demiştik,
+o zaman ilk $n-1$ verisinin ortalaması doğal olarak
+
+$$
+\bar{x}_{n-1}  = \frac{\sum_{i=1}^{n} x_i}{n-1} 
+$$
+
+Tekrar düzenlersek,
+
+$$
+\sum_{i=1}^{n} x_i  = (n-1) \bar{x}_{n-1}  
+$$
+
+Bu formülü (1)'e sokalım,
+
+$$
+\bar{x} = \bar{x}_n = \frac{1}{n} \left( (n-1) \bar{x}_{n-1} + x_n \right)
+$$
+
+Sag tarafi acalim,
+
+$$
+\bar{x}_n = \frac{n \bar{x}_{n-1} - \bar{x}_{n-1} + x_n}{n}
+$$
+
+$$
+\bar{x}_n = \frac{n \bar{x}_{n-1}}{n} + \frac{x_n - \bar{x}_{n-1}}{n}
+$$
+
+Ilk terimdeki $n$'ler iptal olur,
+
+$$
+\bar{x}_n = \bar{x}_{n-1} + \frac{x_n - \bar{x}_{n-1}}{n}
+$$
+
+Yani bir sonraki ortalama hesabı için eldeki yeni veri $x_n$'den o ana kadar
+elde olan ortalamayı çıkartıp $n$'ye bölüp bu sonucu önceki ortalamaya
+ekleyebiliriz. Böylece sürekli daha ufak sayılarla uğraşıyoruz, patlama
+olmuyor ayrıca elde sürekli bir ortalama hesabı oluyor. 
+
+\begin{minted}[fontsize=\footnotesize]{python}
+barx = 160 # ilk degeri ilk ortalama olarak kullan
+for n,xn in enumerate(np.array(df.Height)):
+   barx = barx + (xn - barx) / (n+1)
+   print (xn, barx)   
+\end{minted}
+
+\begin{verbatim}
+160 160.0
+170 165.0
+150 160.0
+200 170.0
+180 172.0
+\end{verbatim}
+
+Üstte görülen 172 değerine ulaştık.
 
 Artımsal (İncremental) Varyans Hesabı (Alternatif Yöntem)
 

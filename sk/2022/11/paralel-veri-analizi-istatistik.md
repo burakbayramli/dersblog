@@ -144,7 +144,7 @@ yapılmalı.
 2'inci yöntem ile dosyanın ufak parçalarını yine hafızada sıralarız,
 diske yazarız, sonra bir süreç o parçaları disk bazlı (satır satır)
 okuyarak birleştirir. Sıralanmış parçaların birleşmiş ve hala sıralı
-halde olmasını nasıl garantileriz? Bir algoritma,
+halde olmasını nasıl garantileriz? Alttaki algoritma ile;
 
 * Her iki parçanın başına git
 

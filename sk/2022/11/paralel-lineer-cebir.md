@@ -316,7 +316,7 @@ Paralel versiyon üstteki kodun ruhunu takip edecek, her eşzamanlı
 süreç yine (kendi parçası içinde) satırları gezecek, her satır kendisi
 ile dış çarpıma tabi tutulacak, sonuç matrisleri her eşzamanlı süreç
 içinde toplanacak. Paralel durumda ayrıca ek olarak tüm süreçler
-işlemini bitirdikten sonra her sürecin toplam matrisi alinip bir daha
+işlemini bitirdikten sonra her sürecin toplam matrisi alınıp bir daha
 birbiri ile toplanacak, ve nihai matrisi elde edilecek.
 
 Kodlamaya gelirsek, veri yaratalım,
@@ -412,5 +412,8 @@ Kaynaklar
 [4] Bayramlı, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
 
 [5] Bayramlı, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
+
+
+
 
 

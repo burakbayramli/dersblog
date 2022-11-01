@@ -47,6 +47,7 @@ basit, tüm değerleri topla, ve değer sayısına böl,
 
 $$
 \bar{x} = \frac{1}{n} \sum _{i=1}^{n} x_i
+\mlabel{2}
 $$
 
 Kod ile
@@ -67,19 +68,18 @@ veri olsaydı bu toplamın çok büyük rakamlara erişmesi mümkündür, bu da 
 veri hataları ortaya çıkartabilir.
 
 Ortalamayı azar azar hesaplamak mümkün müdür acaba? O ana kadar bakılan verinin
-ortalaması fazla büyümez, ayrıca paralel işletim açısından azar azar azar
-işletim daha ölçeklenebilir bir yaklaşımdır. Bu tür bir hesap için matematikte
-biraz değişim yapmak lazım [3].
-
-Üstteki toplam formülünde ilk $n-1$ toplamını ayıralım, 
+ortalaması fazla büyümez, ayrıca paralel işletim açısından azar azar işletim
+daha ölçeklenebilir bir yaklaşımdır. Bu tür bir hesap için matematikte biraz
+değişim yapmak lazım [3]. Üstteki toplam formülünde ilk $n-1$ toplamını
+ayıralım,
 
 $$
 \bar{x} = \frac{1}{n} \left( \sum _{i=1}^{n-1} x_i + x_i \right)
 \mlabel{1}
 $$
 
-İki üstteki $\bar{x}$ formülü ilk $n$ verisinin ortalaması demiştik,
-o zaman ilk $n-1$ verisinin ortalaması doğal olarak
+(2)'de görülen $\bar{x}$ formülü ilk $n$ verisinin ortalaması demiştik, o zaman
+ilk $n-1$ verisinin ortalaması doğal olarak
 
 $$
 \bar{x}_{n-1}  = \frac{\sum_{i=1}^{n} x_i}{n-1} 
@@ -97,7 +97,7 @@ $$
 \bar{x} = \bar{x}_n = \frac{1}{n} \left( (n-1) \bar{x}_{n-1} + x_n \right)
 $$
 
-Sag tarafi acalim,
+Sağ tarafı açalım,
 
 $$
 \bar{x}_n = \frac{n \bar{x}_{n-1} - \bar{x}_{n-1} + x_n}{n}
@@ -107,7 +107,7 @@ $$
 \bar{x}_n = \frac{n \bar{x}_{n-1}}{n} + \frac{x_n - \bar{x}_{n-1}}{n}
 $$
 
-Ilk terimdeki $n$'ler iptal olur,
+İlk terimdeki $n$'ler iptal olur,
 
 $$
 \bar{x}_n = \bar{x}_{n-1} + \frac{x_n - \bar{x}_{n-1}}{n}
@@ -115,8 +115,8 @@ $$
 
 Yani bir sonraki ortalama hesabı için eldeki yeni veri $x_n$'den o ana kadar
 elde olan ortalamayı çıkartıp $n$'ye bölüp bu sonucu önceki ortalamaya
-ekleyebiliriz. Böylece sürekli daha ufak sayılarla uğraşıyoruz, patlama
-olmuyor ayrıca elde sürekli bir ortalama hesabı oluyor. 
+ekliyoruz. Böylece sürekli daha ufak sayılarla uğraşıyoruz, patlama olmuyor
+ayrıca elde sürekli bir ortalama hesabı oluyor.
 
 \begin{minted}[fontsize=\footnotesize]{python}
 barx = 160 # ilk degeri ilk ortalama olarak kullan
@@ -137,11 +137,7 @@ for n,xn in enumerate(np.array(df.Height)):
 
 Artımsal (İncremental) Varyans Hesabı (Alternatif Yöntem)
 
-[1]'de gördüğümüz varyans formülünü tekrar yazarsak,
-
-$$ = \sum _{i=1}^{n} y_i^2 - \frac{1}{n} \bigg( \sum _{i=1}^{n} y_i \bigg)^2 $$
-
-(5) formülünü $x$ kullanarak bir daha yazalım,
+[1]'de gördüğümüz varyans formülünü $x$ kullanarak tekrar yazarsak,
 
 $$ 
 S = \sum _{i=1}^{n} x_i^2 - \frac{1}{n} \bigg( \sum _{i=1}^{n} x_i \bigg)^2  
@@ -251,7 +247,7 @@ YC = 8.25 Standart =  8.25
 
 Kaynaklar
 
-[1] Bayramli, {\em Istatistik, Beklenti, Varyans, Kovaryans ve Korelasyon}
+[1] Bayramlı, {\em Istatistik, Beklenti, Varyans, Kovaryans ve Korelasyon}
 
 [2] Weihs, {\em Foundations of Statistical Algorithms With References to R Packages}
 

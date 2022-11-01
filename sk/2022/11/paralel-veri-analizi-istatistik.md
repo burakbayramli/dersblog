@@ -308,6 +308,36 @@ açıp her seferinde sıradaki dört değerden minimum olanı almak yine
 sıralanmış bir sonuç yaratır mı? Bu durumda dört dosya bir kerede
 satır satır okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
 
+### Istatistik
+
+```python
+import random, pandas as pd
+N = 10000
+height = [int(random.uniform(150,190)) for i in range(N)]
+d = {"id": range(N), "height": height}
+df = pd.DataFrame(d)
+df.to_csv('/tmp/height.csv',index=None,header=None)    
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ### Kümeleme (KMeans)
 
 Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl

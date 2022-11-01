@@ -24,7 +24,6 @@ def process(file_name,N,hookobj):
         f.close()
         hookobj.post()
         
-
 def create_sort_synthetic(N):
     M = len(string.ascii_letters)
     ids = [int(np.abs(np.random.randn()*100000)) for i in range(N)]
@@ -55,4 +54,3 @@ def create_two_sorted_synthetic(N1,N2):
     df = df.sort_values('id')
     df.to_csv('/tmp/L2.csv',index=None,header=None)    
 
-   

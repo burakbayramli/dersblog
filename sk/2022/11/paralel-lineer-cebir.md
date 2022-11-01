@@ -212,7 +212,7 @@ Oldukça yakın. Farklılıklar ufak yuvarlama farklılıkları, ya da
 verinin her iki yöntem için de okunup yazılırkenki kaybedilebilecek
 noktadan sonraki bazı değerleri sebebiyle olabilir.
 
-Pür bellek durumunda tüm çarpım `numpy` ile yapılırken çekirdekleri
+Pür bellek durumunda çarpım `numpy` ile yapılırken çekirdekleri
 gözledik, tüm çekirdekler kullanılıyordu, kullanıcı yorumlarına
 bakılırsa bazı Python ve `numpy` versiyonlarında paralellik
 vardır. Demek ki bizim eşzamanlı kodlama `numpy` eşzamanlı kodlamasını

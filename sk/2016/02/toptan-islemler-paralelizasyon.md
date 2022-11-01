@@ -233,11 +233,10 @@ dış obje verelim, orada
 ```python
 import os
 
-def process(file_name,ci,N,hookobj):
+def process(file_name,N,hookobj):
     file_size = os.path.getsize(file_name)
     beg = 0
     chunks = []
-    hookobj.ci = ci
     for i in range(N):
         with open(file_name, 'r') as f:
             s = int((file_size / N)*(i+1))
@@ -247,7 +246,7 @@ def process(file_name,ci,N,hookobj):
             chunks.append([beg,end_chunk])
             f.close()
         beg = end_chunk+1
-    c = chunks[ci]
+    c = chunks[obj.ci]
     with open(file_name, 'r') as f:
         f.seek(c[0])
         while True:
@@ -265,8 +264,9 @@ tüm iç listeyi ekrana bassın.
 
 ```python
 class SimpleJob:
-    def __init__(self):
+    def __init__(self,ci):
         self.res = []
+	self.ci = ci
     def exec(self,line):
         tok = line.split(',')
         self.res.append(tok)
@@ -274,7 +274,7 @@ class SimpleJob:
         print (self.res)
 
 # iki parca icinden ilkini isle
-process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob())
+process(file_name='in2.csv', N=2, hookobj = SimpleJob(ci=0))
 ```
 
 ```text
@@ -283,7 +283,7 @@ process(file_name='in2.csv', ci=0, N=2, hookobj = SimpleJob())
 
 ```python
 # iki parca icinden ikincisini isle
-process(file_name='in2.csv', ci=1, N=2, hookobj = SimpleJob())
+process(file_name='in2.csv', N=2, hookobj = SimpleJob(ci=1))
 ```
 
 ```text
@@ -303,8 +303,8 @@ Demo amaçlı olarak her parçayı şimdi ayrı bir Thread üzerinde işletelim,
 ```python
 import threading
 
-thread1 = threading.Thread(target=process, args=('in2.csv', 0, 2, SimpleJob()))
-thread2 = threading.Thread(target=process, args=('in2.csv', 1, 2, SimpleJob()))
+thread1 = threading.Thread(target=process, args=('in2.csv', 2, SimpleJob(0)))
+thread2 = threading.Thread(target=process, args=('in2.csv', 2, SimpleJob(1)))
 
 thread1.start()
 thread2.start()
@@ -320,8 +320,8 @@ Eğer Thread yerine farklı süreçlerde [2] işlem yapılsın istersek,
 ```python
 from multiprocessing import Process
 
-p1 = Process(target=process, args=('in2.csv', 0, 2, SimpleJob()))
-p1 = Process(target=process, args=('in2.csv', 1, 2, SimpleJob()))
+p1 = Process(target=process, args=('in2.csv', 2, SimpleJob(0)))
+p1 = Process(target=process, args=('in2.csv', 2, SimpleJob(1)))
 p1.start()
 p2.start()
 ```

@@ -384,7 +384,7 @@ işledi.
 
 ### SVD
 
-Üstteki parçaları anladıysak onları kullanarak SVD hesaplamak
+Üstteki parçalar kodlanmışsa onları kullanarak SVD hesaplamak
 kolaydır.  Önce bir A matrisi alındığında A'A hesaplanır, ardından
 [5]'teki matematiği kullanarak V vektörünü elde ederiz, ve onu A ile
 çarparak U elde ederiz. A büyük bir matris, matris çarpımlarını başta
@@ -412,8 +412,3 @@ Kaynaklar
 [4] Bayramlı, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
 
 [5] Bayramlı, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
-
-
-
-
-

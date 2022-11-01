@@ -228,6 +228,81 @@ küçük ise onun satırı, o dönüşte, çıktıya yazılır, o dosya üzerind
 biri bitene kadar bu devam eder, sonra kalan dosyanın satırları direk
 çıktıya yazılır.
 
+Kod üzerinde görelim. Önce örnek veri yaratılır, 
+
+```python
+import util
+util.create_two_sorted_synthetic(1000,1000)
+```
+
+Bu çağrı 1000 satırlık `L1.csv` ve `L1.csv` adında iki tane dosya
+yarattı, bu dosyalar sıralanması yapılmış halde. Alttaki kod bu dosyaları
+okuyarak birleştirecek,
+
+```python
+
+
+def merge_sorted(file1,file2,outfile):
+    fout = open(outfile, "w")
+
+    f1 = open(file1, 'r'); f2 = open(file2, 'r')
+    s1 = int(os.path.getsize(file1)); s2 = int(os.path.getsize(file2))
+    print (s1,s2)
+        
+    # her iki dosyadan ilk satirlari al
+    l1 = f1.readline(); toks1 = l1.strip().split(',')
+    l2 = f2.readline(); toks2 = l2.strip().split(',')
+
+    # her iki dosya icin arada bir yigit tabakasi kullanmak iyi
+    # olur, 'dosya bitisi' algilanmasi problemli, en iyisi yigit
+    # bitisine bakmak
+    stack1 = []; stack2 = []
+    stack1.append((l1,toks1)); stack2.append((l2,toks2))
+
+    # yigitlardan herhangi biri bitene kadar dongu
+    while len(stack1)>0 and len(stack2)>0:
+        # iki yigitin ilk ogelerine bak
+        l1,toks1 = stack1[-1]; l2,toks2 = stack2[-1]
+        # hangisi daha ufaksa onu yaz
+        if int(toks1[0]) < int(toks2[0]):
+            fout.write(l1)
+            stack1.pop()
+            if f1.tell() < s1:
+                l1 = f1.readline(); toks1 = l1.strip().split(',')
+                stack1.append((l1,toks1))
+        else:            
+            fout.write(l2)
+            stack2.pop()
+            if f2.tell() < s2:
+                l2 = f2.readline(); toks2 = l2.strip().split(',')
+                stack2.append((l2,toks2))
+
+    # yigitlari bosalt
+    if len(stack1)>0:
+        l1,toks1 = stack1[-1]
+        fout.write(l1)
+    if len(stack2)>0:
+        l2,toks2 = stack2[-1]
+        fout.write(l2)
+
+    # bitmeyen dosyayi oldugu gibi ciktiya yaz
+    while f1.tell() < s1:
+        fout.write(f1.readline())
+        fout.flush()
+    while f2.tell() < s2:
+        fout.write(f2.readline())
+        fout.flush()        
+                           
+    fout.close()
+```
+
+```python
+merge_sorted("/tmp/L1.csv","/tmp/L2.csv","/tmp/L-merged.csv")
+```
+
+Sonuç `/tmp/L-merged.csv` dosyasında bu dosya 2000 satırlık ve
+sıralanmış halde olacaktır.
+
 Not: Kutulama ile her kutu için dört dosya elde ediyoruz demiştik, ve
 üstteki algoritma ile her kutu için parçaları ikiser ikiser
 birleştirebiliyoruz. Acaba dört parçanın dosyasını aynı anda açıp her

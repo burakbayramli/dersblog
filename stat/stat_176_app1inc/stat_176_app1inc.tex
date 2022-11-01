@@ -1,0 +1,123 @@
+\documentclass[12pt,fleqn]{article}\usepackage{../../common}
+\begin{document}
+Azar Azar Istatistik (Incremental Statistics)
+
+Artımsal (Incremental) Varyans Hesabı
+
+[1]'de gordugumuz varyans formulunu tekrar yazarsak,
+
+$$ = \sum _{i=1}^{n} y_i^2 - \frac{1}{n} \bigg( \sum _{i=1}^{n} y_i \bigg)^2 $$
+
+(5) formülünü $x$ kullanarak bir daha yazalım,
+
+$$ 
+S = \sum _{i=1}^{n} x_i^2 - \frac{1}{n} \bigg( \sum _{i=1}^{n} x_i \bigg)^2  
+$$
+
+Bu formülü her yeni veri geldikçe eldeki mevcut varyansı ``güncelleme''
+amaçlı olarak tekrar düzenleyebilirdik, böylece veri üzerinden bir kez
+geçmekle kalmayıp en son bakılan veriye göre en son varyansı
+hesaplayabilmiş olurduk. Ortalama için mesela her yeni veri bir toplama
+eklenebilir, ayrıca kaç veri noktası görüldüğü hatırlanır, ve o andaki en
+son ortalama en son toplam bölü bu en son sayıdır. 
+
+Fakat varyans için (5)'in bir problemi var, $\sum x_i^2$ ve $(\sum x_i)^2$
+sayıları uygulamalarda aşırı büyüyorlar, ve yuvarlama hataları (rounding
+errors) hataları ortaya çıkmaya başlıyor. Eğer varyans küçük ise bu aşırı
+büyük sayılardaki tüm basamaklar birbirini iptal eder, geriye hiçbir şey
+kalmaz. Bu hatalardan uzak durmak için varyansı farklı bir artımsal
+yöntemle hesaplamak istiyoruz.
+
+Youngs ve Cramer'in yöntemine göre [3, sf. 69] bu hesap şöyle
+yapılabilir. $T_{ij}$, $M_{ij}$ ve $S_{ij}$,  veri noktaları $x_i$ $x_j$
+arasındaki verileri kapsayacak şekilde sırasıyla toplam, ortalama ve
+verinin karesinin toplamı olsun, 
+
+$$ 
+T_{ij} = \sum _{k=i}^{j} x_k , \quad  
+M_{ij} = \frac{1}{(j-1+1)}, \quad
+S_{ij} = \sum _{k=i}^{j} (x_k - M_{ij})^2
+$$
+
+Güncelleme formülleri şunlardır, 
+
+$$ T_{1,j} = T_{i,j-1} + x_j$$
+
+$$ S_{1,j} = S_{i,j-1} + \frac{1}{j(j-1)} (jx_j - T_{1,j})^2  $$
+
+ki $T_{1,1} = x_1$ ve $S_{1,1}=0$ olacak şekilde.
+
+İspat
+
+$$ 
+\sum _{k=1}^{j} \bigg( x_k - \frac{1}{j} T_{1j} \bigg) = 
+\sum _{k=1}^{j} \bigg( x_k - \frac{1}{j} (T_{1,j-1}+x_j)  \bigg)^2
+$$
+
+$$ = \sum _{k=1}^{j} \bigg(
+\bigg(x_k - \frac{1}{j-1}T_{1,j-1} \bigg) + 
+\bigg( \frac{1}{j(j-1)} T_{1,j-1} - \frac{1}{j} x_j\bigg) 
+\bigg)^2
+$$
+
+çünkü $\frac{1}{j} = \frac{1}{j-1}-\frac{1}{j(j-1)}$
+
+
+$$
+= \sum _{k=1}^{j-1} \bigg( x_k - \frac{1}{j-1} T_{1,j-1} \bigg)^2  
+ \bigg( x_j - \frac{1}{j-1} T_{1,j-1} \bigg)^2 +
+$$
+$$
+2 \sum _{k=1}^{j}  \bigg( x_k - \frac{1}{j-1} T_{1,j-1} \bigg)
+\bigg( \frac{1}{j(j-1)} T_{1,j-1} - \frac{1}{j} x_j \bigg) +
+$$
+$$
+j \bigg( \frac{1}{j(j-1)} T_{1,j-1} - \frac{1}{j} x_j \bigg) 
+$$
+
+$$ 
+= \sum _{k=1}^{j-1} \bigg( x_k - \frac{1}{j-1} T_{1,j-1} \bigg)^2 + 
+\bigg( x_j - \frac{1}{j-1} T_{1,j-1} \bigg)^2 \bigg( 1-\frac{2}{j} \bigg) + 
+j \bigg( \frac{1}{j(j-1)} T_{1,j-1} - \frac{1}{j}x_j \bigg)^2
+$$
+
+çünkü $\sum _{k=1}^{j-1} (x_k-\frac{1}{j-1} T_{1,j-1} )=0$
+
+$$ 
+= S_{1,j-1}  + \bigg( x_j - \frac{1}{j-1} (T_{1j}-x_j) \bigg) ^2
+\bigg( 1-\frac{2}{j}+\frac{1}{j}\bigg)
+$$
+
+$$ = S_{1,j-1} + \frac{1}{(j-1)^2} (jx_j - T_{1j})^2 \frac{j-1}{j} $$
+
+Bu algoritma (5) algoritmasından daha stabil. Kod üzerinde görelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+def incremental_mean_and_var(x, last_sum, last_var, j):
+    new_sum = last_sum + x
+    new_var = last_var + (1./(j*(j-1))) * (j*x - new_sum)**2 
+    return new_sum, new_var
+
+N = 10
+arr = np.array(range(N)) # basit veri, 0..N-1 arasi sayilar
+print arr
+last_sum = arr[0]; last_var = 0.
+for j in range(2,N+1):
+    last_sum,last_var = incremental_mean_and_var(arr[j-1], last_sum, last_var, j)
+
+print 'YC =', last_var / N, 'Standart = ', arr.var()
+print last_sum, arr.sum()
+\end{minted}
+
+\begin{verbatim}
+[0 1 2 3 4 5 6 7 8 9]
+YC = 8.25 Standart =  8.25
+45 45
+\end{verbatim}
+
+
+Kaynaklar
+
+[1] Bayramli, {\em Istatistik, Beklenti, Varyans, Kovaryans ve Korelasyon}
+
+\end{document}

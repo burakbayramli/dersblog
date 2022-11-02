@@ -2,6 +2,8 @@
 \begin{document}
 Azar Azar İstatistik (Incremental Statistics)
 
+Artımsal Ortalama (Mean)
+
 Eldeki bir verinin yaş, boy, kilo gibi kolonlarını özetlemenin yollarından biri
 ortalama. Ortalama hesabının pek çok kütüphanede çağrısı var, mesela
 \verb!numpy.mean!, ya da Pandas \verb!Series.mean!.
@@ -138,7 +140,52 @@ for n,xn in enumerate(np.array(df.Height)):
 
 Üstte görülen 172 değerine ulaştık.
 
-Artımsal (İncremental) Varyans Hesabı (Alternatif Yöntem)
+Artımsal Standart Sapma (Incremental Standard Devation)
+
+Varyans (standard sapmanın karesi) formülü ile başlayalım.
+
+$$
+s^2 = \frac{ \sum_{i=1}^{n} (x_i - \bar{x}_n )^2 }{n-1}
+$$
+
+Her iki tarafı $n-1$ ile çarpalım,
+
+$$
+(n-1)s^2 =  \sum_{i=1}^{n} (x_i - \bar{x}_n )^2 
+$$
+
+Sağdaki değeri $d_n^2$ diye tanımlayalım, bu cebirde ilerlerken bize
+faydalı olacak.
+
+$$
+d_n^2 =  \sum_{i=1}^{n} (x_i - \bar{x}_n )^2 
+$$
+
+Şimdi sağ tarafı açalım,
+
+$$
+d_n^2 = \sum_{i=1}^{n} ( x_i^2 - 2x_i\bar{x}_n + \bar{x}_n^2
+$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Artımsal Ortalama ve Varyans Hesabı (Youngs ve Cramer Yöntemi)
 
 [1]'de gördüğümüz varyans formülünü $x$ kullanarak tekrar yazarsak,
 
@@ -256,5 +303,8 @@ Kaynaklar
 
 [3] Nested Software, {\em Calculating a Moving Average on Streaming Data},
     \url{https://nestedsoftware.com/2018/03/20/calculating-a-moving-average-on-streaming-data-5a7k.22879.html}
+
+[4] Nested Software, {\em Calculating Standard Deviation on Streaming Data},
+    \url{https://nestedsoftware.com/2018/03/27/calculating-standard-deviation-on-streaming-data-253l.23919.html}
 
 \end{document}

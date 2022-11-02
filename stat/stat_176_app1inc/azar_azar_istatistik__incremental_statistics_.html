@@ -24,6 +24,7 @@
 </script>
 </head>
 
+<p>Artımsal Ortalama (Mean)</p>
 <p>Eldeki bir verinin yaş, boy, kilo gibi kolonlarını özetlemenin yollarından biri
 ortalama. Ortalama hesabının pek çok kütüphanede çağrısı var, mesela
 <code>numpy.mean</code>, ya da Pandas <code>Series.mean</code>.</p>
@@ -130,7 +131,25 @@ for n,xn in enumerate(np.array(df.Height)):
 </code></pre>
 
 <p>Üstte görülen 172 değerine ulaştık.</p>
-<p>Artımsal (İncremental) Varyans Hesabı (Alternatif Yöntem)</p>
+<p>Artımsal Standart Sapma (Incremental Standard Devation)</p>
+<p>Varyans (standard sapmanın karesi) formülü ile başlayalım.</p>
+<p>$$
+s^2 = \frac{ \sum_{i=1}^{n} (x_i - \bar{x}_n )^2 }{n-1}
+$$</p>
+<p>Her iki tarafı $n-1$ ile çarpalım,</p>
+<p>$$
+(n-1)s^2 =  \sum_{i=1}^{n} (x_i - \bar{x}_n )^2 
+$$</p>
+<p>Sağdaki değeri $d_n^2$ diye tanımlayalım, bu cebirde ilerlerken bize
+faydalı olacak.</p>
+<p>$$
+d_n^2 =  \sum_{i=1}^{n} (x_i - \bar{x}_n )^2 
+$$</p>
+<p>Şimdi sağ tarafı açalım,</p>
+<p>$$
+d_n^2 = \sum_{i=1}^{n} ( x_i^2 - 2x_i\bar{x}_n + \bar{x}_n^2
+$$</p>
+<p>Artımsal Ortalama ve Varyans Hesabı (Youngs ve Cramer Yöntemi)</p>
 <p>[1]'de gördüğümüz varyans formülünü $x$ kullanarak tekrar yazarsak,</p>
 <p>$$ 
 S = \sum _{i=1}^{n} x_i^2 - \frac{1}{n} \bigg( \sum _{i=1}^{n} x_i \bigg)^2<br />
@@ -220,3 +239,5 @@ YC = 8.25 Standart =  8.25
 <p>[2] Weihs, <em>Foundations of Statistical Algorithms With References to R Packages</em></p>
 <p>[3] Nested Software, <em>Calculating a Moving Average on Streaming Data</em>,
     <a href="https://nestedsoftware.com/2018/03/20/calculating-a-moving-average-on-streaming-data-5a7k.22879.html">https://nestedsoftware.com/2018/03/20/calculating-a-moving-average-on-streaming-data-5a7k.22879.html</a></p>
+<p>[4] Nested Software, <em>Calculating Standard Deviation on Streaming Data</em>,
+    <a href="https://nestedsoftware.com/2018/03/27/calculating-standard-deviation-on-streaming-data-253l.23919.html">https://nestedsoftware.com/2018/03/27/calculating-standard-deviation-on-streaming-data-253l.23919.html</a></p>

@@ -2,146 +2,6 @@
 \begin{document}
 Beklenti, Varyans, Kovaryans ve Korelasyon
 
-Özellik İşleme, Seçme, Veri İncelemesi
-
-Medyan ve Yüzdelikler (Percentile)
-
-Üstteki hesapların çoğu sayıları toplayıp, bölmek üzerinden yapıldı. Medyan
-ve diğer yüzdeliklerin hesabı (ki medyan 50. yüzdeliğe tekabül eder) için
-eldeki tüm değerleri "sıraya dizmemiz" ve sonra 50. yüzdelik için
-ortadakine bakmamız gerekiyor. Mesela eğer ilk 5. yüzdeliği arıyorsak ve
-elimizde 80 tane değer var ise, baştan 4. sayıya / vektör hücresine / öğeye
-bakmamız gerekiyor. Eğer 100 eleman var ise, 5. sayıya bakmamız gerekiyor,
-vs.
-
-Bu sıraya dizme işlemi kritik. Kıyasla ortalama hesabı hangi sırada olursa
-olsun, sayıları birbirine topluyor ve sonra bölüyor. Zaten ortalama ve
-sapmanın istatistikte daha çok kullanılmasının tarihi sebebi de aslında bu;
-bilgisayar öncesi çağda sayıları sıralamak (sorting) zor bir işti. Bu
-sebeple hangi sırada olursa olsun, toplayıp, bölerek hesaplanabilecek
-özetler daha makbuldü. Fakat artık sıralama işlemi kolay, ve veri setleri
-her zaman tek tepeli, simetrik olmayabiliyor. Örnek veri seti olarak ünlü
-\verb!dellstore2! tabanındaki satış miktarları kullanırsak,
-
-\begin{minted}[fontsize=\footnotesize]{python}
-print np.mean(data)
-\end{minted}
-
-\begin{verbatim}
-213.948899167
-\end{verbatim}
-
-\begin{minted}[fontsize=\footnotesize]{python}
-print np.median(data)
-\end{minted}
-
-\begin{verbatim}
-214.06
-\end{verbatim}
-
-\begin{minted}[fontsize=\footnotesize]{python}
-print np.std(data)
-\end{minted}
-
-\begin{verbatim}
-125.118481954
-\end{verbatim}
-
-\begin{minted}[fontsize=\footnotesize]{python}
-  print np.mean(data)+2*np.std(data)
-\end{minted}
-
-\begin{verbatim}
-464.185863074
-\end{verbatim}
-
-\begin{minted}[fontsize=\footnotesize]{python}
-print np.percentile(data, 95)
-\end{minted}
-
-\begin{verbatim}
-410.4115
-\end{verbatim}
-
-Görüldüğü gibi üç nokta hesabı için ortalamadan iki sapma ötesini
-kullanırsak, 464.18, fakat 95. yüzdeliği kullanırsak 410.41 elde
-ediyoruz. Niye? Sebep ortalamanın kendisi hesaplanırken çok üç
-değerlerin toplama dahil edilmiş olması ve bu durum, ortalamanın
-kendisini daha büyük seviyeye doğru itiyor. Yüzdelik hesabı ise sadece
-sayıları sıralayıp belli bazı elemanları otomatik olarak üç nokta
-olarak addediyor.
-
-Box Whisker Grafikleri
-
-Tek boyutlu bir verinin dağılımını görmek için Box ve Whisker grafikleri
-faydalı araçlardır; medyan (median), dağılımın genişliğini ve sıradışı
-noktaları (outliers) açık şekilde gösterirler. İsim nereden geliyor? Box
-yani kutu, dağılımın ağırlığının nerede olduğunu gösterir, medyanın
-sağındada ve solunda olmak üzere iki çeyreğin arasındaki kısımdır, kutu
-olarak resmedilir. Whiskers kedilerin bıyıklarına verilen isimdir, zaten
-grafikte birazcık bıyık gibi duruyorlar. Bu uzantılar medyan noktasından
-her iki yana kutunun iki katı kadar uzatılır sonra verideki "ondan az olan
-en büyük" noktaya kadar geri çekilir. Tüm bunların dışında kalan veri ise
-teker teker nokta olarak grafikte basılır. Bunlar sıradışı (outlier)
-oldukları için daha az olacakları tahmin edilir.
-
-BW grafikleri iki veriyi dağılımsal olarak karşılaştırmak için
-
-içeren Quintus Curtius Snodgrass veri setinin değişik olduğunu
-ispatlamak için bir sürü hesap yapmışlardır, bir sürü matematiksel
-işleme girmişlerdir, fakat basit bir BW grafiği iki setin farklılığını
-hemen gösterir.
-
-BW grafikleri iki veriyi dağılımsal olarak karşılaştırmak için
-birebirdir. Mesela Larsen and Marx adlı araştırmacılar çok az veri
-içeren Quintus Curtius Snodgrass veri setinin değişik olduğunu
-ispatlamak için bir sürü hesap yapmışlardır, bir sürü matematiksel
-işleme girmişlerdir, fakat basit bir BW grafiği iki setin farklılığını
-hemen gösterir.
-
-Python üzerinde basit bir BW grafiği 
-
-\begin{minted}[fontsize=\footnotesize]{python}
-spread= rand(50) * 100
-center = ones(25) * 50
-flier_high = rand(10) * 100 + 100
-flier_low = rand(10) * -100
-data =concatenate((spread, center, flier_high, flier_low), 0)
-plt.boxplot(data)
-plt.savefig('stat_feat_01.png')
-\end{minted}
-
-\includegraphics[height=6cm]{stat_feat_01.png}
-
-Bir diğer örnek Glass veri seti üzerinde
-
-\begin{minted}[fontsize=\footnotesize]{python}
-data = loadtxt("glass.data",delimiter=",")
-head = data[data[:,10]==7]
-tableware = data[data[:,10]==6]
-containers = data[data[:,10]==5]
-
-print head[:,1]
-
-data =(containers[:,1], tableware[:,1], head[:,1])
-
-plt.yticks([1, 2, 3], ['containers', 'tableware', 'head'])
-
-plt.boxplot(data,0,'rs',0,0.75)
-plt.savefig('stat_feat_02.png')
-\end{minted}
-
-\begin{verbatim}
-[ 1.51131  1.51838  1.52315  1.52247  1.52365  1.51613  1.51602  1.51623
-  1.51719  1.51683  1.51545  1.51556  1.51727  1.51531  1.51609  1.51508
-  1.51653  1.51514  1.51658  1.51617  1.51732  1.51645  1.51831  1.5164
-  1.51623  1.51685  1.52065  1.51651  1.51711]
-\end{verbatim}
-
-\includegraphics[height=6cm]{stat_feat_02.png}
-
-Beklenti ve varyans
-
 Beklenti (Expectation) 
 
 Bu değer, dağılım $f(x)$'in tek sayılık bir özetidir. Yani beklenti hesabına
@@ -1002,6 +862,141 @@ print (matthews_corrcoef(a[:,0], a[:,1]))
 0.541553390893
 \end{verbatim}
 
+Medyan ve Yüzdelikler (Percentile)
+
+Üstteki hesapların çoğu sayıları toplayıp, bölmek üzerinden yapıldı. Medyan
+ve diğer yüzdeliklerin hesabı (ki medyan 50. yüzdeliğe tekabül eder) için
+eldeki tüm değerleri "sıraya dizmemiz" ve sonra 50. yüzdelik için
+ortadakine bakmamız gerekiyor. Mesela eğer ilk 5. yüzdeliği arıyorsak ve
+elimizde 80 tane değer var ise, baştan 4. sayıya / vektör hücresine / öğeye
+bakmamız gerekiyor. Eğer 100 eleman var ise, 5. sayıya bakmamız gerekiyor,
+vs.
+
+Bu sıraya dizme işlemi kritik. Kıyasla ortalama hesabı hangi sırada olursa
+olsun, sayıları birbirine topluyor ve sonra bölüyor. Zaten ortalama ve
+sapmanın istatistikte daha çok kullanılmasının tarihi sebebi de aslında bu;
+bilgisayar öncesi çağda sayıları sıralamak (sorting) zor bir işti. Bu
+sebeple hangi sırada olursa olsun, toplayıp, bölerek hesaplanabilecek
+özetler daha makbuldü. Fakat artık sıralama işlemi kolay, ve veri setleri
+her zaman tek tepeli, simetrik olmayabiliyor. Örnek veri seti olarak ünlü
+\verb!dellstore2! tabanındaki satış miktarları kullanırsak,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print np.mean(data)
+\end{minted}
+
+\begin{verbatim}
+213.948899167
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print np.median(data)
+\end{minted}
+
+\begin{verbatim}
+214.06
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print np.std(data)
+\end{minted}
+
+\begin{verbatim}
+125.118481954
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+  print np.mean(data)+2*np.std(data)
+\end{minted}
+
+\begin{verbatim}
+464.185863074
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print np.percentile(data, 95)
+\end{minted}
+
+\begin{verbatim}
+410.4115
+\end{verbatim}
+
+Görüldüğü gibi üç nokta hesabı için ortalamadan iki sapma ötesini
+kullanırsak, 464.18, fakat 95. yüzdeliği kullanırsak 410.41 elde
+ediyoruz. Niye? Sebep ortalamanın kendisi hesaplanırken çok üç
+değerlerin toplama dahil edilmiş olması ve bu durum, ortalamanın
+kendisini daha büyük seviyeye doğru itiyor. Yüzdelik hesabı ise sadece
+sayıları sıralayıp belli bazı elemanları otomatik olarak üç nokta
+olarak addediyor.
+
+Box Whisker Grafikleri
+
+Tek boyutlu bir verinin dağılımını görmek için Box ve Whisker grafikleri
+faydalı araçlardır; medyan (median), dağılımın genişliğini ve sıradışı
+noktaları (outliers) açık şekilde gösterirler. İsim nereden geliyor? Box
+yani kutu, dağılımın ağırlığının nerede olduğunu gösterir, medyanın
+sağındada ve solunda olmak üzere iki çeyreğin arasındaki kısımdır, kutu
+olarak resmedilir. Whiskers kedilerin bıyıklarına verilen isimdir, zaten
+grafikte birazcık bıyık gibi duruyorlar. Bu uzantılar medyan noktasından
+her iki yana kutunun iki katı kadar uzatılır sonra verideki "ondan az olan
+en büyük" noktaya kadar geri çekilir. Tüm bunların dışında kalan veri ise
+teker teker nokta olarak grafikte basılır. Bunlar sıradışı (outlier)
+oldukları için daha az olacakları tahmin edilir.
+
+BW grafikleri iki veriyi dağılımsal olarak karşılaştırmak için
+
+içeren Quintus Curtius Snodgrass veri setinin değişik olduğunu
+ispatlamak için bir sürü hesap yapmışlardır, bir sürü matematiksel
+işleme girmişlerdir, fakat basit bir BW grafiği iki setin farklılığını
+hemen gösterir.
+
+BW grafikleri iki veriyi dağılımsal olarak karşılaştırmak için
+birebirdir. Mesela Larsen and Marx adlı araştırmacılar çok az veri
+içeren Quintus Curtius Snodgrass veri setinin değişik olduğunu
+ispatlamak için bir sürü hesap yapmışlardır, bir sürü matematiksel
+işleme girmişlerdir, fakat basit bir BW grafiği iki setin farklılığını
+hemen gösterir.
+
+Python üzerinde basit bir BW grafiği 
+
+\begin{minted}[fontsize=\footnotesize]{python}
+spread= rand(50) * 100
+center = ones(25) * 50
+flier_high = rand(10) * 100 + 100
+flier_low = rand(10) * -100
+data =concatenate((spread, center, flier_high, flier_low), 0)
+plt.boxplot(data)
+plt.savefig('stat_feat_01.png')
+\end{minted}
+
+\includegraphics[height=6cm]{stat_feat_01.png}
+
+Bir diğer örnek Glass veri seti üzerinde
+
+\begin{minted}[fontsize=\footnotesize]{python}
+data = loadtxt("glass.data",delimiter=",")
+head = data[data[:,10]==7]
+tableware = data[data[:,10]==6]
+containers = data[data[:,10]==5]
+
+print head[:,1]
+
+data =(containers[:,1], tableware[:,1], head[:,1])
+
+plt.yticks([1, 2, 3], ['containers', 'tableware', 'head'])
+
+plt.boxplot(data,0,'rs',0,0.75)
+plt.savefig('stat_feat_02.png')
+\end{minted}
+
+\begin{verbatim}
+[ 1.51131  1.51838  1.52315  1.52247  1.52365  1.51613  1.51602  1.51623
+  1.51719  1.51683  1.51545  1.51556  1.51727  1.51531  1.51609  1.51508
+  1.51653  1.51514  1.51658  1.51617  1.51732  1.51645  1.51831  1.5164
+  1.51623  1.51685  1.52065  1.51651  1.51711]
+\end{verbatim}
+
+\includegraphics[height=6cm]{stat_feat_02.png}
 
 Kaynaklar
 

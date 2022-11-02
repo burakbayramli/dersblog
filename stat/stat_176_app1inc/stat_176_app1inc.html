@@ -263,6 +263,29 @@ $$</p>
 <p>$$
 s_n = \sqrt{\frac{d_n^2}{n-1}}
 $$</p>
+<pre><code class="python">dns = 0; barx = 160
+for n,xn in enumerate(np.array(df.Height)):
+   barxprev = barx
+   barx = barx + (xn - barx) / (n+1)
+   dns = dns + (xn - barx)*(xn-barxprev)
+   print (xn, dns/n)
+</code></pre>
+
+<pre><code>160 nan
+170 50.0
+150 100.0
+200 466.6666666666667
+180 370.0
+</code></pre>
+
+<p>Eğer paket çağrısı ile hesaplarsak, </p>
+<pre><code class="python">print (df.Height.var())   
+</code></pre>
+
+<pre><code>370.0
+</code></pre>
+
+<p>Aynı sonucu elde ettik. </p>
 <p>Artımsal Ortalama ve Varyans Hesabı (Youngs ve Cramer Yöntemi)</p>
 <p>[1]'de gördüğümüz varyans formülünü $x$ kullanarak tekrar yazarsak,</p>
 <p>$$ 

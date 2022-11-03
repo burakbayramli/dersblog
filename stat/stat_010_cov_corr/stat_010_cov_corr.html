@@ -679,6 +679,26 @@ değerlerin toplama dahil edilmiş olması ve bu durum, ortalamanın
 kendisini daha büyük seviyeye doğru itiyor. Yüzdelik hesabı ise sadece
 sayıları sıralayıp belli bazı elemanları otomatik olarak üç nokta
 olarak addediyor.</p>
+<p>Grupların Ortalamalarını ve Varyanslarını Birleştirmek</p>
+<p>Bazen elimizde bir verinin farklı parçaları üzerinde hesaplanmış ortalama,
+varyans sonucu olabilir, ve bu hesapları bu parçaların toplamı için
+birleştirmemiz gerekebilir. Belki paralel süreçler var, verinin parçaları
+üzerinde eşzamanlı çalışıyorlar, bir ortalama, varyans hesaplıyorlar,
+ve nihai sonucun bu alt sonuçlar üzerinden raporlanması lazım [3].</p>
+<p>İşlenen veri setinin tamamı, birleşmiş (pooled) veri $D = { x_1, x_2,.., x_N}$ 
+olsun, ki $N$ veri noktası sayısı. Bu verinin ortalaması $a = (x_1 + x_2 + .. + x_N) / N$, 
+varyansı $v = ((x_1 - a)^2 + (x_2 - a)^2 + ... + (x_N - a)^2 ) / N$.<br />
+Standart sapma tabii ki $\sigma_N = \sqrt{v}$.</p>
+<p>Veriyi ayrı işledik diyelim, veri şu şekilde ayrıldı $D_1 = { x_1, x_2,..,x_j}$,
+$D_2 = { x_{j+1}, x_{j+2},..,x_{j+k}}$, $D_3 = { x_{j+k+1}, x_{j+k+2},..,x_{j+k+m}}$.
+Yani her veri grubunun büyüklüğü sırasıyla $j,k,m$ ve toplam veri noktaları
+$n = j+k+m$.</p>
+<p>$D_P$'nin ortalaması $a_P = \frac{1}{n} \sum _{i=1}^{n} x_i$. Her grup $D_1,D_2,D_3$'un
+ortalaması $a_1,a_2,a_3$ benzer şekilde bulunabilir. Bu durumda "ortalamaların
+ortalaması", yani nihai ortalama $a_P$ şöyle bulunabilir,</p>
+<p>$$
+a_P = (j a_1 + k a_2 + m a_3 ) / n
+$$</p>
 <p>Box Whisker Grafikleri</p>
 <p>Tek boyutlu bir verinin dağılımını görmek için Box ve Whisker grafikleri
 faydalı araçlardır; medyan (median), dağılımın genişliğini ve sıradışı
@@ -739,6 +759,8 @@ plt.savefig('stat_feat_02.png')
 <p>Kaynaklar</p>
 <p>[1] Ross, <em>Introduction to Probability and Statistics for Engineers, 3rd Edition</em></p>
 <p>[2] Wasserman, <em>All of Statistics</em></p>
+<p>[3] Rudmin, <em>Calculating the Exact Pooled Variance</em>,
+    <a href="https://arxiv.org/abs/1007.1012">https://arxiv.org/abs/1007.1012</a></p>
 <p>[4] Boughorbel, <em>Optimal classifier for imbalanced data using Matthews Correlation Coefficient metric</em>, <a href="http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0177678&type=printable">http://journals.plos.org/plosone/article/file?id=10.1371/journal.pone.0177678&amp;type=printable</a></p>
 <p>[5] Cross Validated, <em>Relation between the phi, Matthews and Pearson correlation coefficients?</em>, <a href="https://stats.stackexchange.com/questions/59343/relation-between-the-phi-matthews-and-pearson-correlation-coefficients">https://stats.stackexchange.com/questions/59343/relation-between-the-phi-matthews-and-pearson-correlation-coefficients</a></p>
 <p>[6] Bayramli, Diferansiyel Denklemler, <em>Ters Trigonometrik Formüller</em></p>

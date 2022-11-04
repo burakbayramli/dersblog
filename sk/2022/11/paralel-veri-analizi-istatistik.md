@@ -316,16 +316,17 @@ N = 10000
 height = [int(random.uniform(150,190)) for i in range(N)]
 d = {"id": range(N), "height": height}
 df = pd.DataFrame(d)
+df.iloc[int(N/2):-1] += 30 # ikinci kismi biraz suni buyutelim
 df.to_csv('/tmp/height.csv',index=None,header=None)
 print ('ortalama', np.round(df.height.mean(),2))
 ```
 
 ```text
-ortalama 169.52
+ortalama 184.4
 ```
 
 ```python
-import os, numpy as np, util
+import os, numpy as np, util, json
 
 class StatJob:
     def __init__(self,ci):
@@ -336,18 +337,22 @@ class StatJob:
     def exec(self,line):
         toks = line.strip().split(',')
         xn = float(toks[1])
+        aiprev = self.ai
         self.ai = self.ai + (xn - self.ai) / (self.n+1)
+        self.vi = self.vi + (xn - self.ai)*(xn-aiprev)
+        self.n = self.n + 1
+	
     def post(self):
         # diske yaz
-        print (self.ai)
-        #self.fout.close()
+        res = {"N": self.n, "ai": self.ai, "vi": self.vi}
+        fout = open("/tmp/height-%d.txt" % self.ci, "w")
+        fout.write(json.dumps(res, indent=4))
+        fout.close()
 
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(0))
+util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(1))
 ```
 
-```text
-173.0
-```
 
 
 

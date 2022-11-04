@@ -310,12 +310,14 @@ satır satır okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
 
 ### İstatistik
 
-Bir dosyanin parçaları üzerinde ortalama ve varyans hesabını da
-paralel şekilde satırsal ve parça parça yapabiliriz. Bu tür
-paralelliğin işleyebilmesi için önce satırsal, artımsal şekilde ortalama,
-ve varyans hesaplayabilen matematik lazım. Bu matematiği [7]'de işledik.
-Oradaki örnekte çok ufak veri gösterildi, biz şimdi bunu dosya bazlı,
-daha büyük şekilde işleyebilmeyi göreceğiz. 
+Bir dosyanın parçaları üzerinde ortalama ve varyans hesabını da
+paralel şekilde satırsal, parça parça yapabiliriz. Bu tür paralelliğin
+işleyebilmesi için önce satırsal, artımsal şekilde ortalama, ve
+varyans hesaplayabilen bir matematik lazım. O matematiği [7]'de
+işledik. Oradaki örnekte çok ufak veri gösterildi, alttaki örnekte
+dosya bazlı, daha büyük verileri işleyebilmeyi göreceğiz.
+
+![](paralel-veri-analizi-istatistik_01.png)
 
 Örnek veri yaratalım, insanların boyunu kaydettiğimizi farzediyoruz,
 veri 150 cm ve 190 cm arası rasgele sayılardan seçildi, ortalamanın da
@@ -337,9 +339,9 @@ ortalama 169.5
 varyans 133.29
 ```
 
-Veri `/tmp/height.csv` içinde, şimdi bu veriyi parçalara ayırıp her
-grup için ortalama ve varyansı hesaplattıracağız. Yine [2] altyapısını
-kullanarak,
+Verinin tamamı `/tmp/height.csv` içinde, şimdi bu veriyi parçalara
+ayırıp her grup için ortalama ve varyansı artımsal
+hesaplattıracağız. Yine [2] altyapısını kullanarak,
 
 
 ```python
@@ -370,7 +372,7 @@ util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(0))
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(1))
 ```
 
-Bu noktada iki tane dosya uretilmis olmali,
+Bu noktada iki tane dosya üretilmiş olmalı,
 
 ```python
 ! ls /tmp/height-*
@@ -381,7 +383,7 @@ Bu noktada iki tane dosya uretilmis olmali,
 /tmp/height-1.txt
 ```
 
-Bu dosyalarda parcalar hakkinda gerekli veriler var,
+Sonuç dosyaları içinde parçalar hakkında gerekli veriler var,
 
 ```python
 h1 = json.loads(open("/tmp/height-0.txt").read())
@@ -395,9 +397,11 @@ print (h2)
 {'N': 4938, 'ai': 169.52632644795497, 'vi': 134.17721295297002}
 ```
 
-Şimdi bu parçaları birleştirme nihai bir ortalama ve varyans oluşturmaya
-gelelim. Birleştirme için de ayrı bir matematik gerekiyor, [6] yazısında
-o konuyu işledik,
+Şimdi bu parçaları birleştirmeye, ve nihai bir ortalama ve varyans
+oluşturmaya gelelim.
+
+Birleştirme için de ayrı bir matematik gerekiyor, [6] yazısında o
+konuyu işledik,
 
 
 ```python

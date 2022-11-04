@@ -316,15 +316,18 @@ N = 10000
 height = [int(random.uniform(150,190)) for i in range(N)]
 d = {"id": range(N), "height": height}
 df = pd.DataFrame(d)
-df.iloc[int(N/2):-1] += 30 # ikinci kismi biraz suni buyutelim
 df.to_csv('/tmp/height.csv',index=None,header=None)
 print ('ortalama', np.round(df.height.mean(),2))
 print ('varyans', np.round(df.height.var(),2))
+print ('v1',df.head(5064).height.var())
+print ('v2',df.tail(4936).height.var())
 ```
 
 ```text
-ortalama 184.25
-varyans 356.69
+ortalama 169.51
+varyans 134.4
+v1 133.75149935457782
+v2 135.06825223037248
 ```
 
 ```python
@@ -353,24 +356,26 @@ class StatJob:
 
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(0))
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(1))
-```
 
-```python
 h1 = json.loads(open("/tmp/height-0.txt").read())
 h2 = json.loads(open("/tmp/height-1.txt").read())
+print (h1)
+print (h2)
 n1,n2 = h1['N'], h2['N']
 m1,m2 = h1['ai'], h2['ai']
 v1,v2 = h1['vi'], h2['vi']
 ap = (n1*m1 + n2*m2) / (n1+n2) 
 mean_of_var = (n1*v1 + n2*v2) / (n1+n2) 
 var_of_means = (n1*(m1-ap)**2 + n2*(m2-ap)**2 ) / (n1+n2)
-print ('ortalama',ap)
-print ('varyans', mean_of_var + var_of_means)
+print ('ortalama',np.round(ap,2))
+print ('varyans', np.round(mean_of_var + var_of_means,2))
 ```
 
 ```text
-ortalama 184.24809999999985
-varyans 356.6505463899996
+{'N': 5062, 'ai': 169.3856183326746, 'vi': 133.7691175453613}
+{'N': 4938, 'ai': 169.64135277440238, 'vi': 134.99429642840536}
+ortalama 169.51
+varyans 134.39
 ```
 
 

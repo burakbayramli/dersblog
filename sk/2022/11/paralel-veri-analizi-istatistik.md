@@ -310,6 +310,17 @@ satır satır okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
 
 ### İstatistik
 
+Bir dosyanin parçaları üzerinde ortalama ve varyans hesabını da
+paralel şekilde satırsal ve parça parça yapabiliriz. Bu tür
+paralelliğin işleyebilmesi için önce satırsal, artımsal şekilde ortalama,
+ve varyans hesaplayabilen matematik lazım. Bu matematiği [7]'de işledik.
+Oradaki örnekte çok ufak veri gösterildi, biz şimdi bunu dosya bazlı,
+daha büyük şekilde işleyebilmeyi göreceğiz. 
+
+Örnek veri yaratalım, insanların boyunu kaydettiğimizi farzediyoruz,
+veri 150 cm ve 190 cm arası rasgele sayılardan seçildi, ortalamanın da
+o aralığa düşmesini bekleriz. 
+
 ```python
 import random, pandas as pd
 N = 10000
@@ -318,13 +329,17 @@ d = {"id": range(N), "height": height}
 df = pd.DataFrame(d)
 df.to_csv('/tmp/height.csv',index=None,header=None)
 print ('ortalama', np.round(df.height.mean(),2))
-print ('varyans', np.round(df.height.var(),2))
+print ('varyans', np.round(df.height.var(ddof=0),2))
 ```
 
 ```text
-ortalama 169.44
-varyans 133.48
+ortalama 169.5
+varyans 133.29
 ```
+
+Veri `/tmp/height.csv` içinde, şimdi bu veriyi parçalara ayırıp her
+grup için ortalama ve varyansı hesaplattıracağız. Yine [2] altyapısını
+kullanarak,
 
 
 ```python
@@ -353,43 +368,61 @@ class StatJob:
 
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(0))
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(1))
+```
 
+Bu noktada iki tane dosya uretilmis olmali,
+
+```python
+! ls /tmp/height-*
+```
+
+```text
+/tmp/height-0.txt
+/tmp/height-1.txt
+```
+
+Bu dosyalarda parcalar hakkinda gerekli veriler var,
+
+```python
 h1 = json.loads(open("/tmp/height-0.txt").read())
 h2 = json.loads(open("/tmp/height-1.txt").read())
 print (h1)
 print (h2)
+```
+
+```text
+{'N': 5062, 'ai': 169.48143026471752, 'vi': 132.43021620799738}
+{'N': 4938, 'ai': 169.52632644795497, 'vi': 134.17721295297002}
+```
+
+Şimdi bu parçaları birleştirme nihai bir ortalama ve varyans oluşturmaya
+gelelim. Birleştirme için de ayrı bir matematik gerekiyor, [6] yazısında
+o konuyu işledik,
+
+
+```python
 n1,n2 = h1['N'], h2['N']
 m1,m2 = h1['ai'], h2['ai']
 v1,v2 = h1['vi'], h2['vi']
 ap = (n1*m1 + n2*m2) / (n1+n2) 
 mean_of_var = (n1*v1 + n2*v2) / (n1+n2) 
 var_of_means = (n1*(m1-ap)**2 + n2*(m2-ap)**2 ) / (n1+n2)
-print ('ortalama',ap)
-print ('varyans', mean_of_var + var_of_means)
-print ('\n')
 df = pd.read_csv("/tmp/height.csv",header=None,names=['id','height'])
 print ('grup 1',df.head(n1).height.mean(), df.head(n1).height.var(ddof=0))
 print ('grup 2',df.tail(n2).height.mean(), df.tail(n2).height.var(ddof=0))
+print ('ortalama',ap)
+print ('varyans', mean_of_var + var_of_means)
 ```
 
 ```text
-{'N': 5062, 'ai': 169.48143026471777, 'vi': 132.306154572281}
-{'N': 4938, 'ai': 169.3900364520045, 'vi': 134.64698051709942}
-ortalama 169.43629999999996
-varyans 133.46414231000017
-
-
-grup 1 169.48143026471752 132.3061545722804
-grup 2 169.39003645200486 134.64698051709976
+grup 1 169.48143026471752 132.43021620799752
+grup 2 169.52632644795463 134.17721295297002
+ortalama 169.50360000000018
+varyans 133.29338703999994
 ```
 
-
-
-
-
-
-
-
+Birleştirilmiş değerlerin ilk başta bulunan toplam ortalama ve
+varyans ile aynı olduğunu görüyoruz. 
 
 ### Kümeleme (KMeans)
 
@@ -453,3 +486,8 @@ Kaynaklar
 [4] https://en.wikipedia.org/wiki/K-way_merge_algorithm
 
 [5] [Stackoverflow](https://stackoverflow.com/questions/29494594/sorting-data-with-space-contrainsts)
+
+[7] [Azar Azar İstatistik (Incremental Statistics) Temeli](https://burakbayramli.github.io/dersblog/stat/stat_176_app1inc/azar_azar_istatistik__incremental_statistics_.html)
+
+[6] [Grupların Ortalamalarını ve Varyanslarını Birleştirmek](https://burakbayramli.github.io/dersblog/stat/stat_010_cov_corr/beklenti_varyans_kovaryans_ve_korelasyon.html#group)
+

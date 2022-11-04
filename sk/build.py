@@ -6,9 +6,25 @@ TARGET_DIR = "/home/burak/Documents/dersblog/sk"
 if __name__ == "__main__": 
  
     if len(sys.argv) < 2:
-        print ("options: html | years ")
+        print ("options: html | pdf | years ")
         exit()
-                        
+
+    retpath = os.getcwd()
+    if sys.argv[1] == 'pdf':
+        files = glob.glob("**/**/*.md")
+        files = sorted(files)
+        for i,file in enumerate(files):
+            f = os.path.basename(file).replace(".md",".pdf")
+            dir = os.path.dirname(file)
+            f = "/tmp/sk/%04d-%s" % (i,f)
+            os.chdir(dir)
+            cmd = "pandoc %s -o %s" % (os.path.basename(file), f)
+            if not os.path.isfile(f): 
+                print (cmd)                
+                os.system(cmd)
+            os.chdir(retpath)
+
+                
     if sys.argv[1] == 'html':
 
         shutil.copy("_config.yml","/home/burak/Documents/dersblog")

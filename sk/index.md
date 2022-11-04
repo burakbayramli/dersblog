@@ -35,6 +35,8 @@
 
 [Github Depoları](https://github.com/burakbayramli)
 
+[Blog İçeriği PDF Olarak](https://drive.google.com/uc?export=view&id=1Yq6ovajFbXFWurbiFNhXOl0iN5NlkKtE)
+
 [Tüm Matematik Içeriği](https://burakbayramli.github.io/dersblog/)
 
 [Teknik Terimler Sözlüğü](https://burakbayramli.github.io/dersblog/algs/dict/teknik_terimler_sozlugu.html)

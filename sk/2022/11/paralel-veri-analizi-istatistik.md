@@ -319,16 +319,13 @@ df = pd.DataFrame(d)
 df.to_csv('/tmp/height.csv',index=None,header=None)
 print ('ortalama', np.round(df.height.mean(),2))
 print ('varyans', np.round(df.height.var(),2))
-print ('v1',df.head(5064).height.var())
-print ('v2',df.tail(4936).height.var())
 ```
 
 ```text
-ortalama 169.51
-varyans 134.4
-v1 133.75149935457782
-v2 135.06825223037248
+ortalama 169.44
+varyans 133.48
 ```
+
 
 ```python
 import os, numpy as np, util, json
@@ -367,15 +364,23 @@ v1,v2 = h1['vi'], h2['vi']
 ap = (n1*m1 + n2*m2) / (n1+n2) 
 mean_of_var = (n1*v1 + n2*v2) / (n1+n2) 
 var_of_means = (n1*(m1-ap)**2 + n2*(m2-ap)**2 ) / (n1+n2)
-print ('ortalama',np.round(ap,2))
-print ('varyans', np.round(mean_of_var + var_of_means,2))
+print ('ortalama',ap)
+print ('varyans', mean_of_var + var_of_means)
+print ('\n')
+df = pd.read_csv("/tmp/height.csv",header=None,names=['id','height'])
+print ('grup 1',df.head(n1).height.mean(), df.head(n1).height.var(ddof=0))
+print ('grup 2',df.tail(n2).height.mean(), df.tail(n2).height.var(ddof=0))
 ```
 
 ```text
-{'N': 5062, 'ai': 169.3856183326746, 'vi': 133.7691175453613}
-{'N': 4938, 'ai': 169.64135277440238, 'vi': 134.99429642840536}
-ortalama 169.51
-varyans 134.39
+{'N': 5062, 'ai': 169.48143026471777, 'vi': 132.306154572281}
+{'N': 4938, 'ai': 169.3900364520045, 'vi': 134.64698051709942}
+ortalama 169.43629999999996
+varyans 133.46414231000017
+
+
+grup 1 169.48143026471752 132.3061545722804
+grup 2 169.39003645200486 134.64698051709976
 ```
 
 

@@ -332,12 +332,6 @@ df.to_csv('/tmp/height.csv',index=None,header=None)
 
 
 
-
-
-
-
-
-
 ### Kümeleme (KMeans)
 
 Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl

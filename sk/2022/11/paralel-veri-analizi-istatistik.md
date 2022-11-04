@@ -308,7 +308,7 @@ açıp her seferinde sıradaki dört değerden minimum olanı almak yine
 sıralanmış bir sonuç yaratır mı? Bu durumda dört dosya bir kerede
 satır satır okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.
 
-### Istatistik
+### İstatistik
 
 ```python
 import random, pandas as pd
@@ -319,10 +319,12 @@ df = pd.DataFrame(d)
 df.iloc[int(N/2):-1] += 30 # ikinci kismi biraz suni buyutelim
 df.to_csv('/tmp/height.csv',index=None,header=None)
 print ('ortalama', np.round(df.height.mean(),2))
+print ('varyans', np.round(df.height.var(),2))
 ```
 
 ```text
-ortalama 184.4
+ortalama 184.25
+varyans 356.69
 ```
 
 ```python
@@ -344,7 +346,7 @@ class StatJob:
 	
     def post(self):
         # diske yaz
-        res = {"N": self.n, "ai": self.ai, "vi": self.vi}
+        res = {"N": self.n, "ai": self.ai, "vi": self.vi / self.n}
         fout = open("/tmp/height-%d.txt" % self.ci, "w")
         fout.write(json.dumps(res, indent=4))
         fout.close()
@@ -353,8 +355,23 @@ util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(0))
 util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(1))
 ```
 
+```python
+h1 = json.loads(open("/tmp/height-0.txt").read())
+h2 = json.loads(open("/tmp/height-1.txt").read())
+n1,n2 = h1['N'], h2['N']
+m1,m2 = h1['ai'], h2['ai']
+v1,v2 = h1['vi'], h2['vi']
+ap = (n1*m1 + n2*m2) / (n1+n2) 
+mean_of_var = (n1*v1 + n2*v2) / (n1+n2) 
+var_of_means = (n1*(m1-ap)**2 + n2*(m2-ap)**2 ) / (n1+n2)
+print ('ortalama',ap)
+print ('varyans', mean_of_var + var_of_means)
+```
 
-
+```text
+ortalama 184.24809999999985
+varyans 356.6505463899996
+```
 
 
 

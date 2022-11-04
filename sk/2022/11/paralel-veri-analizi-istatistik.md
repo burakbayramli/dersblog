@@ -316,11 +316,38 @@ N = 10000
 height = [int(random.uniform(150,190)) for i in range(N)]
 d = {"id": range(N), "height": height}
 df = pd.DataFrame(d)
-df.to_csv('/tmp/height.csv',index=None,header=None)    
+df.to_csv('/tmp/height.csv',index=None,header=None)
+print ('ortalama', np.round(df.height.mean(),2))
 ```
 
+```text
+ortalama 169.52
+```
 
+```python
+import os, numpy as np, util
 
+class StatJob:
+    def __init__(self,ci):
+        self.n = 0
+        self.ci = ci
+        self.ai = 0 # grup ortalamasi
+        self.vi = 0 # grup varyansi
+    def exec(self,line):
+        toks = line.strip().split(',')
+        xn = float(toks[1])
+        self.ai = self.ai + (xn - self.ai) / (self.n+1)
+    def post(self):
+        # diske yaz
+        print (self.ai)
+        #self.fout.close()
+
+util.process(file_name='/tmp/height.csv', N=2, hookobj = StatJob(0))
+```
+
+```text
+173.0
+```
 
 
 

@@ -95,10 +95,10 @@ class BucketJob:
 
 # altta seri islem var ama her kutu icin 4 paralel surec baslatilabilir
 for B in range(4):
-    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,0))
-    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,1))
-    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,2))
-    util.process(file_name='/home/burak/Downloads/input.csv', N=4, hookobj = BucketJob(B,3))        
+    util.process(file_name='/tmp/input.csv', N=4, hookobj = BucketJob(B,0))
+    util.process(file_name='/tmp/input.csv', N=4, hookobj = BucketJob(B,1))
+    util.process(file_name='/tmp/input.csv', N=4, hookobj = BucketJob(B,2))
+    util.process(file_name='/tmp/input.csv', N=4, hookobj = BucketJob(B,3))        
 ```
 
 Şimdi her kutu için parçaları hafızaya getir, Pandas üzerinden hafızada sırala,

@@ -9,8 +9,8 @@ if __name__ == "__main__":
         print ("options: html | pdf | years ")
         exit()
 
-    retpath = os.getcwd()
     if sys.argv[1] == 'pdf':
+        retpath = os.getcwd()
         files = glob.glob("**/**/*.md")
         files = sorted(files)
         for i,file in enumerate(files):

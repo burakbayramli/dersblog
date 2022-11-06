@@ -25,6 +25,30 @@ print (os.path.exists("/tmp/filan1"))
 True
 ```
 
+Tüm dosya isminden (dizin artı dosya ismi) sadece dizin bölümünü çıkartmak
+için,
+
+```python
+import os
+
+file = "/vs/vs/dir1/dir2/file1.txt"
+os.path.dirname(file)
+```
+
+```text
+Out[1]: '/vs/vs/dir1/dir2'
+```
+
+Eğer sadece dosya ismini çekip çıkartmak istersek,
+
+```python
+os.path.basename(file)
+```
+
+```text
+Out[1]: 'file1.txt'
+```
+
 Dizini altındaki tüm dosyalarla beraber silmek
 
 ```python

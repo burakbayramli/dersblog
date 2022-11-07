@@ -140,9 +140,9 @@ bir yolu alttadır.
 Yöntem 2
 
 Bu yöntem bize daha az hafıza ile daha büyük dosyaları tek makinada
-sıralama şansı veriyor. Paralellik hala var, fakat son birleştirme
-aşaması her ne kadar disk yoğunluklu olsa da tek bir makinada
-yapılmalı. 
+sıralama şansı veriyor. Paralellik hala olabilir, fakat son
+birleştirme aşaması her ne kadar disk yoğunluklu olsa da tek bir
+makinada yapılmalı.
 
 2'inci yöntem ile dosyanın ufak parçalarını yine hafızada sıralarız,
 diske yazarız, sonra bir süreç o parçaları disk bazlı (satır satır)

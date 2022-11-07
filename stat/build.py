@@ -21,4 +21,3 @@ elif sys.argv[1] == 'tex':
     file = glob.glob('stat_*.tex')
     os.system("pdflatex -shell-escape %s" % file[0])
     
-    

@@ -3,7 +3,7 @@
 Eşzamanlı olarak veri işleme, analizi tekniklerinin temel yaklaşımını
 [2]'de gördük, orada ve bu yazıda kullanacağımız ana yapı şöyle;
 İşlenecek çok büyük bir CSV dosyası var, her çekirdek (birden fazla
-ise) her makina by dosyaya direk erişebilir, paralel işlemler bu
+ise) her makina veri dosyasına direk erişebilir, paralel işlemler bu
 dosyanın farklı kısımlarını aynı anda işleyebilmek üzerinden
 gerçekleşecektir. Tercihimiz her zaman satır satır mesafe katedebilen
 algoritmalardır, yani verinin tek bir satırına bakarak bir bir

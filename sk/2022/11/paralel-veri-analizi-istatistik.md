@@ -27,9 +27,9 @@ Yöntem 1
   parçaları alırız, hafızada birleştiriz, hafızada sıralarız, ve o
   kutu için diske yazarız.
 
-- Bu bitince sıralanmış tüm kutuların sıralanış dosyalarını alt alta
-  ekleriz / yapıştırırız (basit Unix `cat` ile), ve sıralanmış nihai
-  dosya elde edilir.
+- Bu bitince sıralanmış tüm kutuların dosyalarını alt alta ekleriz /
+  yapıştırırız (basit Unix `cat` ile), ve sıralanmış nihai dosya elde
+  edilir.
 
 Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
 kimlik (id) kolonu, iki tane isim, adres için metinsel iki kolon.

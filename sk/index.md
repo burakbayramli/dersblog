@@ -3,6 +3,8 @@
 
 ## En Son
 
+7/11 - [Paralel Veri Analizi, Istatistik](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-veri-analizi-istatistik.html)
+
 4/11 - [Tensorflow](https://burakbayramli.github.io/dersblog/sk/2022/10/tensorflow.html)
 
 31/10 - [Paralel Lineer Cebir](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html)
@@ -10,8 +12,6 @@
 26/10 - [Paralel, Satır Bazlı Dosya İşlemek](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon.html#csv)
 
 24/10 - [PCA ile Koentegrasyon](https://burakbayramli.github.io/dersblog/tser/tser_030_coint/koentegrasyon__cointegration_.html#pca)
-
-7/10 - [Tekrar Başlatılabilirlik (Restartability)](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon.html#restart)
 
 ## Konular, Referans
 

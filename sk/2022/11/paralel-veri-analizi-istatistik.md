@@ -452,7 +452,8 @@ Bir algoritma şöyle olabilir;
   okunabilir.
 
 - Her süreç elindeki verinin her noktasının hangi merkeze yakın
-  olduğunu saptar.
+  olduğunu saptar. Bu sonuçlar yeni bir dosyaya yazılabilir, bu dosya
+  her süreç tarafından okunabilmelidir).
 
 - Ardından başa dönülür, biraz önce yapılan üyelik atamasına göre yeni
   küme merkezleri hesaplanır. Bu yeni merkezler `C-0-0`, `C-0-1` gibi

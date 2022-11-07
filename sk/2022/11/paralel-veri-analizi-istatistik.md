@@ -477,8 +477,8 @@ her sürecin işlediği parçada her kümeden değer olabilir. Her geçişte
 işlem paralel olur, fakat bir takip edici script o geçiş bitince bir
 sonraki geçişi hazırlamakla sorumludur, her süreçten gelen merkezlerin
 ortalaması, bir sonraki geçişin başlatılması bir script'in
-sorumluluğundadır. Bu işlemler ağır işlemler değildir bu sebeple seri
-işlemelerinde problem yoktur.
+sorumluluğundadır. Ortalama, bekleme, birleştirme işlemleri ağır
+işlemler değildir, bu sebeple seri işlemelerinde problem yoktur.
 
 Kaynaklar
 

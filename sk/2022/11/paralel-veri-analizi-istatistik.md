@@ -29,7 +29,10 @@ Yöntem 1
 
 - Bu bitince sıralanmış tüm kutuların dosyalarını alt alta ekleriz /
   yapıştırırız (basit Unix `cat` ile), ve sıralanmış nihai dosya elde
-  edilir.
+  edilir. Bu işler çünkü kutuları kendi aralarında 1,2,3,.. diye
+  sıralıyoruz, biliyoruz ki 1'inci kutu içindeki id 2'inci kutudakilerden
+  muhakkak daha küçük. Eh her kutu içindeki öğelerde sıralı olduğuna göre
+  yapıştırılmış nihai sonuç ta kendiliğinden sıralanmış halde olacaktır.
 
 Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
 kimlik (id) kolonu, iki tane isim, adres için metinsel iki kolon.

@@ -304,6 +304,10 @@ merge_sorted("/tmp/L1.csv","/tmp/L2.csv","/tmp/L-merged.csv")
 Sonuç `/tmp/L-merged.csv` dosyasında bu dosya 2000 satırlık ve
 sıralanmış halde olacaktır.
 
+Dört tane sıralanmış parçayı nasıl sıralardık? 1 ile 2 birleştirilip A
+yaratılabilir, 3 ve 4 ile B. Sonra A ve B birleştirilir, C elde
+edilir.
+
 Not: İlk yöntemde kutulama ile her kutu için dört dosya elde ediyoruz
 demiştik, ve üstteki algoritma ile her kutu için parçaları ikişer
 ikişer birleştirebiliyoruz. Acaba dört parçanın dosyasını aynı anda

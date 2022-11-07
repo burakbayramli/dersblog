@@ -482,7 +482,7 @@ işlemler değildir, bu sebeple seri işlemelerinde problem yoktur.
 
 Kaynaklar
 
-[1] [Paralel KMeans, Hadoop](2013/10/paralel-kmeans-hadoop.html)
+[1] [Paralel KMeans, Hadoop](../../2013/10/paralel-kmeans-hadoop.html)
 
 [2] Bayramli, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
 

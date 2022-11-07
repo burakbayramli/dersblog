@@ -19,9 +19,9 @@ Yöntem 1
   N=4 için, kimliklerden 0 ile 250 arası 1'inci kutuya, 251 ile 500
   arası 2'inci kutuya vb gibi gitmeli.
 
-- İlk tarama mesela 4 paralel süreç 4 kutu üzerinden 16 tane dosya
-  yaratır.  Dikkat: her kutu için, mesela kutu=1, dort tane paralel
-  süreç verinin tamamında 1'inci kutuya düşen verileri bulup çıkartır.
+- İlk tarama örnek 4 paralel süreç, 4 kutu üzerinden 16 tane dosya
+  yaratır. Yani her süreç tüm kutulara düşen verileri bulmak
+  zorundadır.
 
 - Ardından paralel olarak yine her kutu için, o kutuya ait olan tüm
   parçaları alırız, hafızada birleştiriz, hafızada sıralarız, ve o

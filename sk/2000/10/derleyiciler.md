@@ -21,6 +21,3 @@ sisteminizde bulunabilir.  Kaynak kod ise Java, C++ gibi dillerden
 komutlar içeren bir dosyadan ibarettir.
 
 
-
-
-

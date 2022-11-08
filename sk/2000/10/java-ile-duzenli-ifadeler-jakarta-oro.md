@@ -96,10 +96,3 @@ Perl5Util yardimci = new Perl5Util();
 
 bellekteDosya = yardimci.substitute(degistir, bellekteDosya);
 ```
-
-
-
-
-
-
-

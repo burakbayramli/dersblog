@@ -39,8 +39,3 @@ yaptık. BERBER içinde aynı sey geçerli.  Anladığınız gibi kodlama
 metodumuzun, hem kodlayan hem de ters-kodlayan program tarafından
 bilinmesi gerekiyor. Aynı metodu kullanırlar ise, iki program da
 bilgileri küçültüp büyültebilirler.
-
-
-
-
-

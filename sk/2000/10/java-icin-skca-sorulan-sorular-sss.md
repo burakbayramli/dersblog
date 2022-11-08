@@ -85,17 +85,15 @@ degildir.
 JSP-Tomcat-Java kullanirken, Türkçe karakter sorunu oluyor. Ne yapmak
 lazim?
 
-JSP ya da Servlet'in javax.servlet.http.HttpServletResponse nesnesinin
-setContentType(java.lang.String type) metodunu da kullanabilirsiniz:
-request.setContentType("text/html;charset=ISO-8859-9"); Daha güzel bir
-yöntem ayni nesnenin setLocale() metodunu kullanmaktir:
-request.setLocale(new java.util.Locale("tr", "TR")); Eger HTML (ve
-HTML içeren JSP) dosyalarinin kodunu degistirerek ayni sonucu yaratmak
-isterseniz, baslarina su ibareyi eklemek gerekir: `<head><meta
-content="text/html;charset=ISO-8859-9"
-http-equiv="Content-Type"></head>`
+JSP ya da Servlet'in `javax.servlet.http.HttpServletResponse`
+nesnesinin setContentType(java.lang.String type) metodunu da
+kullanabilirsiniz: `request.setContentType("text/html;charset=ISO-8859-9");`
 
+Daha güzel bir yöntem ayni nesnenin `setLocale()` metodunu kullanmaktir:
+`request.setLocale(new java.util.Locale("tr", "TR"));`
 
+Eger HTML (ve HTML içeren JSP) dosyalarinin kodunu degistirerek ayni
+sonucu yaratmak isterseniz, baslarina su ibareyi eklemek gerekir:
 
-
+`<head><meta content="text/html;charset=ISO-8859-9" http-equiv="Content-Type"></head>`
 

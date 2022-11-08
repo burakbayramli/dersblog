@@ -113,48 +113,13 @@ Aynı işlemi paralel, ve satır satır yaklaşımı ile yapalım, alttaki kod
 [4]'teki altyapıyı kullanmıştır,
 
 ```python
-from multiprocessing import Process
-from timeit import default_timer as timer
-from datetime import timedelta
-import os, numpy as np
-
-def process(afile,bfile,N,obj,skip_lines=0):
-    file_size = os.path.getsize(afile)
-    obj.afile = afile
-    obj.B = np.loadtxt(bfile,delimiter=';')
-    cname = "%s/C-%d.csv" % (os.path.dirname(afile), obj.ci)
-    obj.outfile = open(cname, "w")
-    
-    with open(afile, 'r') as f:
-        for j in range(skip_lines): f.readline()
-        beg = f.tell()
-        f.close()
-    chunks = []
-    for i in range(N):
-        with open(afile, 'r') as f:
-            s = int((file_size / N)*(i+1))
-            f.seek(s)
-            f.readline()
-            end_chunk = f.tell()-1
-            chunks.append([beg,end_chunk])
-            f.close()
-        beg = end_chunk+1
-    c = chunks[obj.ci]
-    with open(afile, 'r') as f:
-        f.seek(c[0])
-        while True:
-            line = f.readline()
-            obj.exec(line) # process the line
-            if f.tell() > c[1]: break
-        f.close()
-        obj.post()
-
 class MultJob:
-    def __init__(self,ci):
+    def __init__(self,ci,bfile):
         self.afile = ""
-        self.B = "" 
+        self.B = np.loadtxt(bfile,delimiter=';')
         self.ci = ci
-        self.outfile = None 
+        cname = "%s/C-%d.csv" % (os.path.dirname(afile), self.ci)
+        self.outfile = open(cname, "w")        
     def exec(self,line):        
         vec = np.array([np.float(x) for x in line.strip().split(";")])
         vec = np.reshape(vec, (len(vec),1))
@@ -165,7 +130,7 @@ class MultJob:
         self.outfile.flush()
     def post(self):
         self.outfile.close()
-        
+                
 dir = '/tmp'
 afile = dir + "/" + "A.csv"
 bfile = dir + "/" + "B.csv"
@@ -173,7 +138,7 @@ bfile = dir + "/" + "B.csv"
 start = timer()
    
 N = 4 # kac paralel islem var
-ps = [Process(target=process,args=(afile, bfile, N, MultJob(i))) for i in range(N)]
+ps = [Process(target=process,args=(afile, N, MultJob(i,bfile))) for i in range(N)]
 for p in ps: p.start()
 for p in ps: p.join()
 end = timer()

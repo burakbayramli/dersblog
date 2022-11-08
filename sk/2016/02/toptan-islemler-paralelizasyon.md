@@ -347,7 +347,7 @@ ayarlanırsa faydalı olur [4].
 
 Not: Eğer girdi dosyalarının başında kolon isimleri var ise, bu
 satırları atlamak gerekir. Bu tür dosyalar için bir satır atlama
-kodunu `lineproc` fonksiyonuna ekleyebiliriz. Bir `skip` parametresi
+kodunu `process` fonksiyonuna ekleyebiliriz. Bir `skip` parametresi
 kaç satır atlayacağımızı alır, ve üstteki koddaki `beg=0` yerine
 
 ```python

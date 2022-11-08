@@ -345,6 +345,21 @@ Parçalar farklı makinalarda da işleyebilir, bu durumda scriptleme
 işlerinin kolay yapılabilmesi için şifresiz `ssh` girişi her makinada
 ayarlanırsa faydalı olur [4].
 
+Not: Eğer girdi dosyalarının başında kolon isimleri var ise, bu
+satırları atlamak gerekir. Bu tür dosyalar için bir satır atlama
+kodunu `lineproc` fonksiyonuna ekleyebiliriz. Bir `skip` parametresi
+kaç satır atlayacağımızı alır, ve üstteki koddaki `beg=0` yerine
+
+```python
+with open(file_name, 'r') as f:
+    for j in range(skip): f.readline()
+    beg = f.tell()
+    f.close()
+```
+
+ifadesi eklenebilir. Böylece her işlemci süreç `skip` kadar satırı o dosya
+için atlaması gerektiğini bilir ve başlangıç doğru noktaya getirilmiş olur.
+
 <a name='restart'/>
 
 ### Tekrar Başlatılabilirlik (Restartability)

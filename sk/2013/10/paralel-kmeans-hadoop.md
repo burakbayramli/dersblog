@@ -236,3 +236,6 @@ merkezleri alıp, ham veri üzerinde kırmızı nokta olarak gösteriyoruz.
 veriyi 20-30 makinaya dağıtarak parça parça işleyip kümelemeniz
 mümkündür. Endüstride son zamanlarda habire duyulan Büyük Veri (Big
 Data) olayı işte bu.
+
+![](../../2022/11/kmeans.gif)
+

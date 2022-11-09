@@ -437,15 +437,15 @@ varyans ile aynı olduğunu görüyoruz.
 
 ### Kümeleme (KMeans)
 
-Daha önce [1] yazısında bu işi eşle/indirge, Hadoop ortamında nasıl
-yapacağımızı gördük. Eğer [2]'deki yöntemi kullanmak istiyorsak, yani
-altyapı bir veriyi herhangi bir kritere göre (çoğunlukla basit bloklar
-üzerinden) bölmek ve her bölüm üzerinde ayrı bir süreç işletmek
-istiyorsak (indirgeme mimarisi kullanmadan), paralel KMeans
-algoritması şöyle kodlanabilir. [2]'de bahsettiğimiz gibi takip
-ettiğimiz yaklaşım hiçbir şey paylaşma (share nothing)
-yaklaşımı. Süreç işe başladığında kendi veri parçasını bilir, ve diğer
-süreçlerle iletişimde bulunmaz.
+K-Means algoritma detayları [7]'de. Daha önce [1] yazısında bu işi
+eşle/indirge, Hadoop ortamında nasıl yapacağımızı gördük. Eğer
+[2]'deki yöntemi kullanmak istiyorsak, yani altyapı bir veriyi
+herhangi bir kritere göre (çoğunlukla basit bloklar üzerinden) bölmek
+ve her bölüm üzerinde ayrı bir süreç işletmek istiyorsak (indirgeme
+mimarisi kullanmadan), paralel KMeans algoritması şöyle
+kodlanabilir. [2]'de bahsettiğimiz gibi takip ettiğimiz yaklaşım
+hiçbir şey paylaşma (share nothing) yaklaşımı. Süreç işe başladığında
+kendi veri parçasını bilir, ve diğer süreçlerle iletişimde bulunmaz.
 
 Fakat unutmayalım, KMeans özyineli (recursive) bir algoritmadir,
 verinin üzerinden tek bir geçiş (single pass) yeterli değildir. Veri
@@ -502,4 +502,6 @@ Kaynaklar
 [7] [Azar Azar İstatistik (Incremental Statistics) Temeli](https://burakbayramli.github.io/dersblog/stat/stat_176_app1inc/azar_azar_istatistik__incremental_statistics_.html)
 
 [6] [Grupların Ortalamalarını ve Varyanslarını Birleştirmek](https://burakbayramli.github.io/dersblog/stat/stat_010_cov_corr/beklenti_varyans_kovaryans_ve_korelasyon.html#group)
+
+[7] [K-Means Kümeleme Metodu](https://burakbayramli.github.io/dersblog/algs/algs_080_kmeans/kmeans_kumeleme_metodu.html)
 

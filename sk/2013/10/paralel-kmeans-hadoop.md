@@ -1,25 +1,28 @@
 # Paralel KMeans, Hadoop
 
-K-Means algoritmasını nasıl paralel şekilde işletiriz? Özellikle Hadoop gibi bir
-Eşle-İndirge (Map-Reduce) ortamını düşünelim. Veri çok büyük ölçekte olabilir ve
-bu veriler birden fazla makinaya bölünecektir. Eşle-İndirge kavramında eşleme
-safhasında "anahtar üretiriz", ve sonra indirgeme safhasında Hadoop sistemi öyle
-kurmuştur ki aynı anahtarlarlar tek bir makinaya gönderilir, ve bu nihai aşamada
+K-Means algoritmasını [1] nasıl paralel şekilde işletiriz? Özellikle
+Hadoop gibi bir Eşle-İndirge (Map-Reduce) ortamını düşünelim. Veri çok
+büyük ölçekte olabilir ve bu veriler birden fazla makinaya
+bölünecektir. Eşle-İndirge kavramında eşleme safhasında "anahtar
+üretiriz", ve sonra indirgeme safhasında Hadoop sistemi öyle kurmuştur
+ki aynı anahtarlarlar tek bir makinaya gönderilir, ve bu nihai aşamada
 artık anahtar bazında indirgeme (özetleme) yapılır.
 
-Paralel K-Means için anahtar nedir? Anahtar, mesela küme olabilir. Yani
-küme 1, küme 2 gibi küme işaretleri / sayıları anahtar olarak
-kullanılabilirler.
+Paralel K-Means için anahtar nedir? Anahtar, mesela küme
+olabilir. Yani küme 1, küme 2 gibi küme işaretleri / sayıları anahtar
+olarak kullanılabilirler.
 
 Peki anahtar ile eşlenecek "değer" nedir?
 
-Öyle bir değer arıyoruz ki üst üste konulabilecek bir şey olmalı, Eİ sisteminin
-kuvveti burada, anahtarlar farklı noktalarda üretilebiliyor, sonra tek noktada
-üst üste konuyor, o zaman değerler öyle üretilmeli ki bu üst üste koyma,
-özetleme işlemi yapılabilsin. Üst üste konabilecek şey, her veri noktası için, o
-veri noktasının ait olduğu küme üzerinden toplama işlemidir. 10.20, 20.5 veri
-noktasına bakıyorum, bu nokta o anda elde olan küme merkezlerinden 6'ya en
-yakın, 10.20, 20.5 verisi ile bir 6 anahtarı yayınlarım.
+Öyle bir değer arıyoruz ki üst üste konulabilecek bir şey olmalı, Eİ
+sisteminin kuvveti burada, anahtarlar farklı noktalarda
+üretilebiliyor, sonra tek noktada üst üste konuyor, o zaman değerler
+öyle üretilmeli ki bu üst üste koyma, özetleme işlemi
+yapılabilsin. Üst üste konabilecek şey, her veri noktası için, o veri
+noktasının ait olduğu küme üzerinden toplama işlemidir. 10.20, 20.5
+veri noktasına bakıyorum, bu nokta o anda elde olan küme
+merkezlerinden 6'ya en yakın, 10.20, 20.5 verisi ile bir 6 anahtarı
+yayınlarım.
 
 Tabii burada tavuk/yumurta problemi var, küme merkezlerini arıyorum,
 ama anahtar üretimi için küme merkezi lazım. Bu nasıl olacak?  O zaman
@@ -29,14 +32,14 @@ makinaların erişebileceği bir yerde olmalı. Biz bu veriyi
 makina ortamında bilinen bir dizinde (mesela /tmp), çok makinalı
 ortamda ise HDFS üzerinde herkesin erişebileceği bir yerde olmalı.
 
-Toplamaya gelelim: Normal K-Means'i hatırlarsak, her nokta için o noktaya
-en yakın kümeyi buluyordu ve sonra, atama işlemi bitince, her kümenin
-altındaki noktaları toparlayıp onların ortalamasını alarak yeni küme
-merkezini hesaplıyordu. Paralel ortamda ortalama işlemi üst üste
-konabilecek bir şey, çünkü toplama üst üste konabilecek bir işlem, ve /
-yani farklı makinalarda küme-nokta, eşlemelerini üretirsek, indirgeme
-aşamasında o anahtar için tüm değerleri toplayıp nokta sayısına böleriz ve
-yeni küme merkezini elde ederiz.
+Toplamaya gelelim: Normal K-Means'i hatırlarsak, her nokta için o
+noktaya en yakın kümeyi buluyordu ve sonra, atama işlemi bitince, her
+kümenin altındaki noktaları toparlayıp onların ortalamasını alarak
+yeni küme merkezini hesaplıyordu. Paralel ortamda ortalama işlemi üst
+üste konabilecek bir şey, çünkü toplama üst üste konabilecek bir
+işlem, ve / yani farklı makinalarda küme-nokta, eşlemelerini
+üretirsek, indirgeme aşamasında o anahtar için tüm değerleri toplayıp
+nokta sayısına böleriz ve yeni küme merkezini elde ederiz.
 
 ![](kmeans-diag.png)
 
@@ -233,9 +236,13 @@ K-Means işini bitirdikten sonra elde edilen sonuçları
 okuyabiliriz. Nihai küme merkezleri `/tmp/centers.csv` içinde. Bu
 merkezleri alıp, ham veri üzerinde kırmızı nokta olarak gösteriyoruz.
 
-veriyi 20-30 makinaya dağıtarak parça parça işleyip kümelemeniz
+Veriyi 20-30 makinaya dağıtarak parça parça işleyip kümelemeniz
 mümkündür. Endüstride son zamanlarda habire duyulan Büyük Veri (Big
 Data) olayı işte bu.
 
 ![](../../2022/11/kmeans.gif)
+
+Kaynaklar
+
+[1] [K-Means Kümeleme Metodu](https://burakbayramli.github.io/dersblog/algs/algs_080_kmeans/kmeans_kumeleme_metodu.html)
 

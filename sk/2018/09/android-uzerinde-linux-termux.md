@@ -21,12 +21,12 @@ indirilebilecek bir uygulama Termux.
 Termux'a bir "app" demek basit kaçar aslında, daha çok bir başlangıç
 kabuğu denebilir, Termux bize telefon içinde bir komut satırı verir,
 bu satırda apt install ya da pkg install ile ek uygulamaları Ubuntu'da
-olduğu gibi kurarız. Mesela apt-install python gibi. Termux'u yazanlar
+olduğu gibi kurarız. Mesela apt-install python gibi. Termux'u yazanlar
 bir sürü Linux bazlı programı bu şekilde Android için hazır hale
 getirmişler. Liste tüm programları kapsamıyor, ama şaşırtıcı derecede
-faydalı programlar var. C++ icin clang, ya da Tex icin texlive hatta
+faydalı programlar var. C++ icin clang, ya da Tex icin texlive hatta
 emacs! Ben denedim, yeterince buyuk ekran var ise cep telefon üzerinde
-emacs rahatca kullaniliyor. Tabii Samsung bu baglamda DevX sistemi ile
+emacs rahatca kullaniliyor. Tabii Samsung bu baglamda DevX sistemi ile
 / gibi dışarıdan bir Bluetooth klavyesi bağlayıp görüntüyü bir büyük
 ekrana yansıtacak türden kullanım dusunuyor, ki bu tür kullanım başta
 değindiğimiz pür cep telefon bazlı geliştirmedir.
@@ -41,8 +41,8 @@ bazılarımızı şaşırtabilir. Fakat işliyor.
 
 Sanal ortama girince burada pip install ile ipython, numpy, scipy
 kurabiliriz. Bazı paketlerde sorun çıkabilir, mesela zmq için bizde
-bir sorun çıktı ki bu sorun jupyter ile de yasanabilir, once pgk
-install libzmq libzmq-dev python-dev libcrypt-dev kurulur. Ardından,
+bir sorun çıktı ki bu sorun jupyter ile de yasanabilir, once pgk
+install libzmq libzmq-dev python-dev libcrypt-dev kurulur. Ardından,
 eğer zmq import edilmesi problem veriyorsa, komut satırına çıkıp ana
 dizinde bir .bash_profile dosyası yaratıp onun içine alttakini
 yazarız,
@@ -60,14 +60,14 @@ agg` yazmak lazim, komut satirindan cikip tekrar girin, sonra
 
 `LDFLAGS=" -lm -lcompiler_rt -lpython" pip install cython pandas matplotlib`
 
-Eger Python 2 ortami icin kurulum yapiliyorsa ustteki  -lpython2.7 yapilabilir.
+Eger Python 2 ortami icin kurulum yapiliyorsa ustteki  -lpython2.7 yapilabilir.
 
 Geri Surum Paket
 
 "Dışarısı" ile Dosya Paylaşmak
 
 Termux kendi izole alanında işliyor. Eğer Android ana dizinlerine
-Termux komut satırından erişmek istersek,  `termux-setup-storage`
+Termux komut satırından erişmek istersek,  `termux-setup-storage`
 deriz, izin isteyen diyalog kutusu gelince ona 'allow (izin ver)'
 deriz. Artık ana dizinde bir `storage` adlı bir alt dizin olacak, bu
 alt dizine bakınca içinde downloads, movies, music gibi Anroid'in
@@ -160,7 +160,7 @@ LDFLAGS="-L/system/lib/" CFLAGS="-I/data/data/com.termux/files/usr/include/" pip
 h5py
 
 Keras'in modellerini kaydettigi h5 formati icin `pkg
-install libhdf5-dev` ve `pip install h5py`.
+install libhdf5-dev` ve `pip install h5py`.
 
 Samsung
 

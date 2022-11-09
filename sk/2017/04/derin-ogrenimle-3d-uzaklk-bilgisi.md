@@ -1,6 +1,6 @@
 # Derin Öğrenimle 3D Uzaklık Bilgisi, Görüntü Bölümleri Bulmak
 
-DO ile dış dünyadaki objelerin derinliğini, tek kamera kullanarak
+DO ile dış dünyadaki objelerin derinliğini, tek kamera kullanarak
 ayrıca kameranın hareketini hesaplayabilen bir ağ yapısı surada
 paylaşılmış. Yazarlardan biri David Lowe: bu araştırmacı DO'dan önce
 de yapay görüş alanında ünlüydü, görüntülerden özellik çıkartmak
@@ -20,7 +20,7 @@ uyduruyoruz, y'ler etiket ya da hedef verileri oluyorlar. DO'lar model
 uydurmayı çok boyutlu ve çok daha esnek şekilde yapabiliyorlar.
 
 Denetimsizlik icin etiket üretimi perspektif geometri kullanarak
-yapılıyor. Perspektif geometride  bir imajdan diğerine geçerken mesela
+yapılıyor. Perspektif geometride  bir imajdan diğerine geçerken mesela
 kamera duruşunun nasıl değiştiğini biliyorsak 1. imajı yamultup
 (warping) 2. imaja çevirebiliriz, ya da ters yönde ters yamultma ile
 geriye gidebiliriz. Bunu biliyoruz. Arkadaşlar iki ağ yapısı
@@ -30,10 +30,10 @@ imaj kullanılarak mevcut resimdeki derinlik tahmin edilmeye
 uğraşılıyor. Sonra her iki ağın çıktısı kullanılarak önceki imaja
 doğru ters yamultma yapıyorsunuz, eğer yamultma iyi olmadıysa önceki
 imaja uymayacaktır tabii ki ve bu "hata" bir gradyan inişle her iki ağ
-üzerinde düzeltme amaçlı kullanılabilir. Geriye doğru yamultma
+üzerinde düzeltme amaçlı kullanılabilir. Geriye doğru yamultma
 işleminin türevi alınabilir halde olması için özen gösterilmiş ki DO
 ile eğitim yapılabilsin. Fikir müthiş. Yani perspektif geometri
-üzerinden verinin kendisi dolaylı denetimli eğitim sağlamış oluyor. 
+üzerinden verinin kendisi dolaylı denetimli eğitim sağlamış oluyor. 
 
 Egitim KITTI adli bir veri seti üzerinde yapılmış. KITTI saatlerce bir
 arabanın yolda giderken kamerasından kaydedilmiş görüntülerini içerir.
@@ -46,7 +46,7 @@ DO için Tensorflow kullanılmış, kurmak için
 
 sudo pip install tensorflow==1.1
 
-Eğitilmiş modeli models/download_model.sh ile indirebiliyoruz. Biz modeli modeli test ettik, şu imaj üzerinde, 
+Eğitilmiş modeli models/download_model.sh ile indirebiliyoruz. Biz modeli modeli test ettik, şu imaj üzerinde, 
 
 ```python
 from __future__ import division
@@ -83,9 +83,9 @@ saver = tf.train.Saver([var for var in tf.trainable_variables()])
 
 with tf.Session() as sess:
 
-    saver.restore(sess, ckpt_file)
+    saver.restore(sess, ckpt_file)
 
-    pred = sfm.inference(I[None,:,:,:], sess, mode=mode))
+    pred = sfm.inference(I[None,:,:,:], sess, mode=mode))
 
 p = pred['depth'][0,:,:,0]
 
@@ -97,13 +97,13 @@ plt.savefig('out2.png')
 Sonuç
 
 Daha aydınlık pikseller daha yakın demek. Ortadaki engel açık şekilde
-görülüyor. Metre olarak biz bazı seçilmiş pikselleri kontrol ettik, 
+görülüyor. Metre olarak biz bazı seçilmiş pikselleri kontrol ettik, 
 
 Çoğu piksel iyi, alt soldaki daha iyi olabilirdi. Muhakkak bu
 yaklaşımda ilerlemeler olacaktır, ayrıca zaten üstteki türden
 resimleri kullanarak eğitim yapılsa sonuçlar daha iyi
 olabilirdi. Yapılan az buz iş değil; tek resme bakılarak tüm
-piksellerin derinlik bilgisini bulmak! 
+piksellerin derinlik bilgisini bulmak! 
 
 Peki birkaç resme bakarak (video mesela) o resimlerdeki tüm objeleri
 üç boyutta bulmak, takip etmek amacında neredeyiz? Bu bağlamda daha
@@ -117,7 +117,7 @@ giriyorlar. Bir digeri imaj parçalarının doğru filtre ile eşleşmesi
 lazım, bu eşleşmeyi direk yapan yaklaşım var, olasılıksal yapan
 yaklaşım var (imaj parçası 'tüm' filtrelere verilir, ama her filtrenin
 bir hipoteze bağlı olma olasılığı vardır). Filtrelemede iyi bilinen
-bir diğer  numara aynı ölçümün (bu durumda 2D imaj parçası) iki farklı
+bir diğer  numara aynı ölçümün (bu durumda 2D imaj parçası) iki farklı
 filtreye verilmesi, mesela bir filtre objenin sola doğru gitmesi, bir
 diğeri üzerimize doğru gelmesi. Hangi filtre / hipotezin artığı /
 hatası daha az ise, o baskın haldedir, ve onun hipotezi kabul
@@ -125,19 +125,19 @@ edilir. Ama arka planda olan filtreye hala ölçüm geçilmeye devam
 edilir. Tüm bu işlemlerin pür DO yaklaşımı ile yapılması çok zor.
 
 Pür 2D imaj bölmesinden bahsetmişken, bu alanda DO ile bir diğer
-ilerleme SegNet. 
+ilerleme SegNet. 
 
 http://mi.eng.cam.ac.uk/projects/segnet/
 
 SegNet anlamsal (semantic) bölme yapıyor, bir görüntüde yol, araba,
-direk gibi temel bölümleri bulup onları etiketliyor. 
+direk gibi temel bölümleri bulup onları etiketliyor. 
 
-Microsoft'un COCO veri setini kullanarak (denetimli) şekilde resimde DO ile obje bulma çok ilerledi. COCO verisi etiketli, bol veri var, bir imajdaki objenin nerede olduğunu Amazon'un Mekanik Türk servisi üzerinden gerçek insanlara etiket verdirerek kaydetmişler. Bu yer  bir "maske" üzerinden DO'ya veriliyor, ayrıca ham imaj verisi de sağlanıyor. Bu veriyi kullanan ağ yapısı mesela DeepMask var.
+Microsoft'un COCO veri setini kullanarak (denetimli) şekilde resimde DO ile obje bulma çok ilerledi. COCO verisi etiketli, bol veri var, bir imajdaki objenin nerede olduğunu Amazon'un Mekanik Türk servisi üzerinden gerçek insanlara etiket verdirerek kaydetmişler. Bu yer  bir "maske" üzerinden DO'ya veriliyor, ayrıca ham imaj verisi de sağlanıyor. Bu veriyi kullanan ağ yapısı mesela DeepMask var.
 
 Yaklaşımlar DO etrafında bir "yan sanayi" ya da "paylaşma kültürü"
 oluşmaya başladı. Zaten makalelerin neredeyse hepsi artık açık bir
 ortam olan arXiv'de yayınlanıyor (para ile makale servisi yapan
-şirketler üzerinden değil),  ve DO özelinde ağların kendisi paylaşılıp
+şirketler üzerinden değil),  ve DO özelinde ağların kendisi paylaşılıp
 direk olduğu gibi kullanılıyor. Mesela obje bulma, görüntü işleme
 yapan DO'lar imajın tamamını sınıflama amaçlı hazırlanmış VGG-16
 modelini baz alıyorlar. Ve sadece ağ yapısını değil, eğitilmiş ağın

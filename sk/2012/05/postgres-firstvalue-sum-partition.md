@@ -8,6 +8,7 @@ oldugu gibi birakip onlara ek bilgi eklenebilmesini saglar. Akla
 gelebilecek her seyi bir pencereye yayabilirsiniz. min teknigini
 gorduk, ama su da mumkun,
 
+```
 select 
 o.orderid, 
 o.customerid,
@@ -16,26 +17,38 @@ sum(o.totalamount) over (partition by o.customerid ) as sum,
 o.orderdate
 from orders o
 order by customerid
+```
 
 Burada ayni musterinin (aynilik kriteri customerid) siparis tutarlari toplaniyor ve bu musterinin tum satirlarina yayiliyor. Ustteki sorguyu isletin, ve id = 13 icin
 
 
- orderid | customerid | totalamount |  sum   | orderdate  
+```
+ orderid | customerid | totalamount |  sum   | orderdate  
 ---------+------------+-------------+--------+------------
-     379 |         13 |      246.21 | 336.39 | 2004-01-14
-    9447 |         13 |       90.18 | 336.39 | 2004-10-10
+     379 |         13 |      246.21 | 336.39 | 2004-01-14
+    9447 |         13 |       90.18 | 336.39 | 2004-10-10
+```
 
-sonucunu goreceksiniz. Toplam tekrarlanmis.Satirlarin toplami yerine, aynen ilk siparis tarihi ornegine benzer sekilde "o grubun ilk satirindaki herhangi bir kolonun degerini" de yayabiliriz. Bunun icin first_value() cagrisi OVER .. PARTITION ile beraber kullanilir,
+sonucunu goreceksiniz. Toplam tekrarlanmis.Satirlarin toplami yerine,
+aynen ilk siparis tarihi ornegine benzer sekilde "o grubun ilk
+satirindaki herhangi bir kolonun degerini" de yayabiliriz. Bunun icin
+`first_value()` cagrisi `OVER .. PARTITION` ile beraber kullanilir,
 
-select o.orderid, first_value(o.orderid) over (partition by o.customerid order by o.orderdate) as first_order_id,o.customerid,o.totalamountfrom orders oorder by customerid
+```
+select o.orderid, first_value(o.orderid) over (partition by
+o.customerid order by o.orderdate) as
+first_order_id,o.customerid,o.totalamountfrom orders oorder by
+customerid
+```
 
 Sonuc
 
-
- orderid | first_order_id | customerid | totalamount 
+```
+ orderid | first_order_id | customerid | totalamount 
 ---------+----------------+------------+-------------
-     379 |            379 |         13 |      246.21
-    9447 |            379 |         13 |       90.18
+     379 |            379 |         13 |      246.21
+    9447 |            379 |         13 |       90.18
+```
 
 Musteri 13'un ilk siparisi id 379, sonraki 9447. Biz first_value ile
 379'u aldik, first_order_id uzerinden otekine "yaydik". first_value

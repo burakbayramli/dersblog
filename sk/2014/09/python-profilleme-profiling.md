@@ -11,13 +11,13 @@ import time
 
 @profile
 def f():
-    for i in range(100): print i
-    g()
-   def g():
-    time.sleep(1)
+    for i in range(100): print i
+    g()
+   def g():
+    time.sleep(1)
 
 if __name__ == "__main__":
-    f()
+    f()
 ```
 
 Komut satirinda
@@ -28,7 +28,34 @@ python -m kernprof -l -v test.py > /tmp/prof1.txt
 
 Sonuc 
 
-Line #      Hits         Time  Per Hit   % Time  Line Contents==============================================================     3                                           @profile     4                                                5                                           def f():     6       101          233      2.3      0.0      for i in range(100): print i     7         1      1001139 1001139.0    100.0      g() 
+```
+Line #
+      Hits
+         Time
+  Per Hit
+   % Time
+  Line Contents==============================================================
+     3
+                                           @profile
+     4
+                                          
+     5
+                                          
+def f():
+     6
+       101
+          233
+      2.3
+      0.0
+     
+for i in range(100): print i
+     7
+         1
+      1001139 1001139.0
+    100.0
+      g()
+ 
+```
 
 Sonuca bakarsak zamanin yuzde yuzunun g() icinde gecirildigini
 goruyoruz. Bu normal cunku icinde sleep ibaresi var! Hits bu satirin
@@ -37,7 +64,7 @@ gecirildigini gosterir. Per hit satirin her isletildiginde ne kadar
 zaman harcandigini belirtir. Yuzde ise tum isletim icinde bu satirda
 yuzde kac zaman harcandigini belirtir.
 
-Not: Eger  ustteki kodu python test.py olarak isletirseniz @profile
+Not: Eger  ustteki kodu python test.py olarak isletirseniz @profile
 dekoratorunun import edilmedigi hakkinda sikayet gelecektir.
 
 Bir diger yontem, (sudo pip install profilehooks yaptiktan sonra),

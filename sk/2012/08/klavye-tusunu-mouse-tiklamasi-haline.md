@@ -24,16 +24,16 @@ mouse tıklaması yapabilecek.
 
 Ek bir pürüz, sistem uykudan (suspend) uyandıktan sonra ortaya çıkıyor
 - üstteki ayarlar kayboluyor. Bu ayarların uyanma sonrası işlemesi
-için, mesela  /etc/pm/sleep.d/99_remap adında bir dosyayı sudo ile
+için, mesela  /etc/pm/sleep.d/99_remap adında bir dosyayı sudo ile
 yaratın, üzerinde chmod +x yapın, ve içine
 
 ```
 #!/bin/sh
 case "$1" in
-        thaw|resume)
-                DISPLAY=:0.0 ; export DISPLAY
-                su - [KULLANICI] -c /dizin/ismi/script.sh
-                ;;esac
+        thaw|resume)
+                DISPLAY=:0.0 ; export DISPLAY
+                su - [KULLANICI] -c /dizin/ismi/script.sh
+                ;;esac
 ```
 
 komutlarını yazın, [KULLANIÇİ] sizin Ünix kullanıcı isminiz

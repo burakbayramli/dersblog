@@ -4,10 +4,10 @@ Bir Unix servis makinasına giriş yaptık, uzun süreli bir süreç
 (process) isletmek istiyoruz, ama giriş yapılan komut satırını açık
 bırakmak istemiyoruz (dizüstü kapatılacak, kalkılıp gidilecek, vs).
 
-İlk seçim komutu arka plana atarak (background process) olarak işletmek, 
+İlk seçim komutu arka plana atarak (background process) olarak işletmek, 
 
 ```
-nohup sh komut.sh > /bir/log/dizini/log.out & 
+nohup sh komut.sh > /bir/log/dizini/log.out & 
 ```
 
 `&` işareti ile süreç arka plana atıldı, çıktılar log dosyasına gidiyor.
@@ -28,7 +28,7 @@ Bu oturumlar makinadan çıkılsa bile açık dururlar, kıyasla ssh, telnet
 ile giriş yaptığımızda yeni bir komut ortamına gireriz, çıkınca da
 ortam bitirilir, tmux durumunda komut ortamı sürekli açık
 kalır. Üstteki komut bizi bir pencereye götürür, orada uzun sürecek
-işlemi başlatabiliriz, ve işlem devam ederken 
+işlemi başlatabiliriz, ve işlem devam ederken 
 
 ```
 CTRL-b d
@@ -41,7 +41,7 @@ makinaya tekrar ssh ile girince
 tmux list-sessions
 ```
 
-ile oturumlari listeleyebiliriz. Mesela "0" oturumu var, 
+ile oturumlari listeleyebiliriz. Mesela "0" oturumu var, 
 
 ```
 tmux attach -t 0

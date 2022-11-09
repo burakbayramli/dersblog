@@ -7,14 +7,14 @@ paket Dask.
 Dask kutuphanesi Pandas, Numpy paketlerindeki DataFrame, matris
 işlemlerine benzer arayüzler sağliyor, ve bu veri yapıları üzerindeki
 işlemleri basit şekilde paralel işletilmesini sağlıyor. Fakat daha
-basit bağlamda pür Python işlemlerini de paralelleştirmek kolay. İlk
+basit bağlamda pür Python işlemlerini de paralelleştirmek kolay. İlk
 önce tek makinadaki birden fazla çekirdeğe dağılım yapabilecek kodu
 görelim, bu en temel kullanım. Ama yine de faydalı, artık Amazon AWS,
 ya da Google bulut servislerinde ucuz şekilde 20-30 çekirdekli tek
 makina başlatmak mümkün. Bu çok zaman alabilecek doğal parallelliği
 olan bir işlemi 30 kat hızlı işletebiliriz demektir!
 
-Kurmak icin pip install dask.
+Kurmak icin pip install dask.
 
 Şöyle bir kod düşünelim,
 
@@ -22,12 +22,12 @@ from time import sleep
 
 ```python
 def inc(x):
-    sleep(1)
-    return x + 1
+    sleep(1)
+    return x + 1
 
 def add(x, y):
-    sleep(1)
-    return x + y
+    sleep(1)
+    return x + y
 ```
 
 ```
@@ -82,8 +82,8 @@ karekökunu alıp ikinci bir liste üretme islemi yapalim,
 import time
 L = range(30)
 def f(x):
-    time.sleep(0.1)
-    return np.sqrt(x)
+    time.sleep(0.1)
+    return np.sqrt(x)
 results = []
 %time for x in L: results.append(f(x))
 ```
@@ -100,14 +100,14 @@ Bu kod seri işledi ve 3 saniye aldı. Parallellik için listedeki her
 import time
 L = range(30)
 def f(x):
-    time.sleep(0.1)
-    return np.sqrt(x)
+    time.sleep(0.1)
+    return np.sqrt(x)
 results = []
 for x in L:
-    y = dask.delayed(f)(x)
-    results.append(y)
+    y = dask.delayed(f)(x)
+    results.append(y)
 
-%time results = dask.compute(*results)  # call compute after you have collected many delayed calls
+%time results = dask.compute(*results)  # call compute after you have collected many delayed calls
 ```
 
 ```
@@ -154,11 +154,4 @@ http://dask.pydata.org/en/latest/delayed-best-practices.html
 https://github.com/dask/dask-tutorial
 
 https://gist.github.com/mrocklin/d009e5d4a1f49ecdb433107f3d72c7f3#file-pygotham-dataframes-ipynb
-
-
-
-
-
-
-
 

@@ -19,7 +19,7 @@ ise iki, üç hatta birden fazla girdiyi işleyebilecek türden bir kod
 olmalıdır. Fakat zaten kelime sayma problemin özünde zaten bu vardır,
 herşey ayrı ayrı, parça parça toplanabilir, bir İndirgeyici iki
 eşlenmiş dosya alıyor diyelim, biri A: 1, A: 1, B: 1, diğeri A: 1,
-B:1; bunları A: 3, B: 2 olarak indirgeyebilir / birleştirebiliriz. 
+B:1; bunları A: 3, B: 2 olarak indirgeyebilir / birleştirebiliriz. 
 Diğer makinalarda başkaları başka veriler almıştır, onlar kendi
 çaplarında kendi birleştirimlerini yapmaktadırlar. İndirgeme ve yük
 dağıtım birimi anahtardır, indirgeme safhasında mesela A anahtarı tek
@@ -132,9 +132,9 @@ dfs -ls /user/hduser/patent
 ```
 Found 2 items
 
--rw-r--r--   1 hduser supergroup ...  /user/hduser/patent/apat63_99.txt
+-rw-r--r--   1 hduser supergroup ...  /user/hduser/patent/apat63_99.txt
 
--rw-r--r--   1 hduser supergroup ...   /user/hduser/patent/apat63_99_sampled.txt
+-rw-r--r--   1 hduser supergroup ...   /user/hduser/patent/apat63_99_sampled.txt
 ```
 
 ```
@@ -157,7 +157,7 @@ yapacak program aşağıda.
 
 import os,sys
 
-os.environ['MPLCONFIGDIR']='/tmp' 
+os.environ['MPLCONFIGDIR']='/tmp' 
 
 import pandas as pd
 
@@ -192,9 +192,9 @@ ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop \
 
 jar \$HOME/Downloads/hadoop*/contrib/streaming/hadoop-*streaming*.jar\
 
--input patent/apat63_99_sampled.txt  -output output  \
+-input patent/apat63_99_sampled.txt  -output output  \
 
--mapper /tmp/mapper.py -numReduceTasks 0 
+-mapper /tmp/mapper.py -numReduceTasks 0 
 
 
 Deleted hdfs://localhost:54310/user/hduser/output
@@ -213,21 +213,21 @@ packageJobJar: [/app/hadoop/tmp/hadoop-unjar2555196345671652661/] [] /tmp/stream
 
 13/02/24 16:30:27 INFO streaming.StreamJob: To kill this job, run:
 
-13/02/24 16:30:27 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241611_0012
+13/02/24 16:30:27 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241611_0012
 
 13/02/24 16:30:27 INFO streaming.StreamJob: Tracking URL: http://localhost:50030/jobdetails.jsp?jobid=job_201302241611_0012
 
-13/02/24 16:30:28 INFO streaming.StreamJob:  map 0%  reduce 0%
+13/02/24 16:30:28 INFO streaming.StreamJob:  map 0%  reduce 0%
 
-13/02/24 16:30:43 INFO streaming.StreamJob:  map 100%  reduce 0%
+13/02/24 16:30:43 INFO streaming.StreamJob:  map 100%  reduce 0%
 
-13/02/24 16:30:49 INFO streaming.StreamJob:  map 100%  reduce 100%
+13/02/24 16:30:49 INFO streaming.StreamJob:  map 100%  reduce 100%
 
 13/02/24 16:30:49 INFO streaming.StreamJob: Job complete: job_201302241611_0012
 
 13/02/24 16:30:49 INFO streaming.StreamJob: Output: output
 
-ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop dfs  -copyToLocal output /tmp/
+ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop dfs  -copyToLocal output /tmp/
 
 head -20 /tmp/output/part-00000
 
@@ -283,13 +283,13 @@ dfs -rmr /user/hduser/output
 
 !ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop \
 
- jar /home/hduser/Downloads/hadoop*/contrib/streaming/hadoop-*streaming*.jar \
+ jar /home/hduser/Downloads/hadoop*/contrib/streaming/hadoop-*streaming*.jar \
 
- -input patent/apat63_99_sampled.txt  -output output \
+ -input patent/apat63_99_sampled.txt  -output output \
 
- -mapper /tmp/mapper.py -reducer org.apache.hadoop.mapred.lib.IdentityReducer \
+ -mapper /tmp/mapper.py -reducer org.apache.hadoop.mapred.lib.IdentityReducer \
 
--numReduceTasks 1 
+-numReduceTasks 1 
 
 Deleted hdfs://localhost:54310/user/hduser/output
 
@@ -307,17 +307,17 @@ packageJobJar: [/app/hadoop/tmp/hadoop-unjar2314287838929839696/] [] /tmp/stream
 
 13/02/24 18:03:14 INFO streaming.StreamJob: To kill this job, run:
 
-13/02/24 18:03:14 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241759_0004
+13/02/24 18:03:14 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241759_0004
 
 13/02/24 18:03:14 INFO streaming.StreamJob: Tracking URL: http://localhost:50030/jobdetails.jsp?jobid=job_201302241759_0004
 
-13/02/24 18:03:15 INFO streaming.StreamJob:  map 0%  reduce 0%
+13/02/24 18:03:15 INFO streaming.StreamJob:  map 0%  reduce 0%
 
-13/02/24 18:03:28 INFO streaming.StreamJob:  map 50%  reduce 0%
+13/02/24 18:03:28 INFO streaming.StreamJob:  map 50%  reduce 0%
 
-13/02/24 18:03:31 INFO streaming.StreamJob:  map 100%  reduce 0%
+13/02/24 18:03:31 INFO streaming.StreamJob:  map 100%  reduce 0%
 
-13/02/24 18:03:40 INFO streaming.StreamJob:  map 100%  reduce 100%
+13/02/24 18:03:40 INFO streaming.StreamJob:  map 100%  reduce 100%
 
 13/02/24 18:03:46 INFO streaming.StreamJob: Job complete: job_201302241759_0004
 
@@ -327,7 +327,7 @@ ssh localhost -l hduser rm -rf /tmp/output
 
 ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop \
 
-dfs  -copyToLocal output /tmp/
+dfs  -copyToLocal output /tmp/
 
 head -10 /tmp/output/part-00000
 
@@ -355,14 +355,14 @@ US 11.0
 Üstteki sonuçta anahtarların sıralanmış olduğunu görüyoruz.
 
 Şimdi bir indirgeyici (reducer) ekleyelim. Bu indirgeyici ülke
-bazındaki veriler üzerinen ortalama alacak. 
+bazındaki veriler üzerinen ortalama alacak. 
 
 ```
 #!/usr/bin/python
 
 import os,sys
 
-os.environ['MPLCONFIGDIR']='/tmp' 
+os.environ['MPLCONFIGDIR']='/tmp' 
 
 import pandas as pd
 
@@ -399,7 +399,7 @@ YU 5.75
 ZA 11.170212765957446
 ```
 
-Bu kodu hduser'in bulabileceği bir yere koyuyoruz. 
+Bu kodu hduser'in bulabileceği bir yere koyuyoruz. 
 
 ```
 cp reducer.py /tmp/
@@ -416,9 +416,9 @@ ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop \
 
 jar \$HOME/Downloads/hadoop*/contrib/streaming/hadoop-*streaming*.jar\
 
--input patent/apat63_99_sampled.txt  -output output \
+-input patent/apat63_99_sampled.txt  -output output \
 
- -mapper /tmp/mapper.py -reducer /tmp/reducer.py -numReduceTasks 1 
+ -mapper /tmp/mapper.py -reducer /tmp/reducer.py -numReduceTasks 1 
 
 Deleted hdfs://localhost:54310/user/hduser/output
 
@@ -436,17 +436,17 @@ packageJobJar: [/app/hadoop/tmp/hadoop-unjar3358838375062006941/] [] /tmp/stream
 
 13/02/24 20:33:10 INFO streaming.StreamJob: To kill this job, run:
 
-13/02/24 20:33:10 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241759_0005
+13/02/24 20:33:10 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241759_0005
 
 13/02/24 20:33:10 INFO streaming.StreamJob: Tracking URL: http://localhost:50030/jobdetails.jsp?jobid=job_201302241759_0005
 
-13/02/24 20:33:11 INFO streaming.StreamJob:  map 0%  reduce 0%
+13/02/24 20:33:11 INFO streaming.StreamJob:  map 0%  reduce 0%
 
-13/02/24 20:33:23 INFO streaming.StreamJob:  map 50%  reduce 0%
+13/02/24 20:33:23 INFO streaming.StreamJob:  map 50%  reduce 0%
 
-13/02/24 20:33:26 INFO streaming.StreamJob:  map 100%  reduce 0%
+13/02/24 20:33:26 INFO streaming.StreamJob:  map 100%  reduce 0%
 
-13/02/24 20:33:35 INFO streaming.StreamJob:  map 100%  reduce 100%
+13/02/24 20:33:35 INFO streaming.StreamJob:  map 100%  reduce 100%
 
 13/02/24 20:33:42 INFO streaming.StreamJob: Job complete: job_201302241759_0005
 
@@ -456,7 +456,7 @@ ssh localhost -l hduser rm -rf /tmp/output
 
 ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop \
 
-dfs  -copyToLocal output /tmp/
+dfs  -copyToLocal output /tmp/
 ```
 
 Ve sonuç altta olduğu gibi
@@ -496,13 +496,13 @@ ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop \
 
 dfs -rmr /user/hduser/output
 
-ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop  jar \
+ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop  jar \
 
- /home/hduser/Downloads/hadoop*/contrib/streaming/hadoop-*streaming*.jar  \
+ /home/hduser/Downloads/hadoop*/contrib/streaming/hadoop-*streaming*.jar  \
 
--input patent/apat63_99.txt  -output output  -mapper /tmp/mapper.py \
+-input patent/apat63_99.txt  -output output  -mapper /tmp/mapper.py \
 
--reducer /tmp/reducer.py -numReduceTasks 1 
+-reducer /tmp/reducer.py -numReduceTasks 1 
 
 Deleted hdfs://localhost:54310/user/hduser/output
 
@@ -520,21 +520,21 @@ packageJobJar: [/app/hadoop/tmp/hadoop-unjar938213738183646678/] [] /tmp/streamj
 
 13/02/24 23:50:12 INFO streaming.StreamJob: To kill this job, run:
 
-13/02/24 23:50:12 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241759_0006
+13/02/24 23:50:12 INFO streaming.StreamJob: /home/hduser/Downloads/hadoop-1.0.4/libexec/../bin/hadoop job  -Dmapred.job.tracker=localhost:54311 -kill job_201302241759_0006
 
 13/02/24 23:50:12 INFO streaming.StreamJob: Tracking URL: http://localhost:50030/jobdetails.jsp?jobid=job_201302241759_0006
 
-13/02/24 23:50:13 INFO streaming.StreamJob:  map 0%  reduce 0%
+13/02/24 23:50:13 INFO streaming.StreamJob:  map 0%  reduce 0%
 
-13/02/24 23:50:28 INFO streaming.StreamJob:  map 50%  reduce 0%
+13/02/24 23:50:28 INFO streaming.StreamJob:  map 50%  reduce 0%
 
-13/02/24 23:50:40 INFO streaming.StreamJob:  map 75%  reduce 8%
+13/02/24 23:50:40 INFO streaming.StreamJob:  map 75%  reduce 8%
 
-13/02/24 23:50:52 INFO streaming.StreamJob:  map 100%  reduce 8%
+13/02/24 23:50:52 INFO streaming.StreamJob:  map 100%  reduce 8%
 
-13/02/24 23:50:55 INFO streaming.StreamJob:  map 100%  reduce 25%
+13/02/24 23:50:55 INFO streaming.StreamJob:  map 100%  reduce 25%
 
-13/02/24 23:51:04 INFO streaming.StreamJob:  map 100%  reduce 100%
+13/02/24 23:51:04 INFO streaming.StreamJob:  map 100%  reduce 100%
 
 13/02/24 23:51:17 INFO streaming.StreamJob: Job complete: job_201302241759_0006
 
@@ -542,7 +542,7 @@ packageJobJar: [/app/hadoop/tmp/hadoop-unjar938213738183646678/] [] /tmp/streamj
 
 ssh localhost -l hduser rm -rf /tmp/output
 
-ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop dfs  \
+ssh localhost -l hduser /home/hduser/Downloads/hadoop*/bin/hadoop dfs  \
 
 -copyToLocal output /tmp/
 
@@ -575,5 +575,8 @@ Referans, Kaynaklar
 [MrJob](../../2013/08/mrjob.html)
 
 [Paralel KMeans, Hadoop](https://burakbayramli.github.io/dersblog/algs/algs_085_kmeans_mr/paralel_kmeans_hadoop.html)
+
+
+
 
 

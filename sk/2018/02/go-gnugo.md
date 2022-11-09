@@ -26,12 +26,6 @@ gnugo.clear_board()
 
 res = gnugo.genmove(gtp.WHITE)
 print 'res', res
-gnugo.showboard()       
+gnugo.showboard()       
 ```
-
-
-
-
-
-
 

@@ -29,7 +29,7 @@ kullanıcı
 ```
 git add *
 git commit -m 'vs'
-git push origin master 
+git push origin master 
 ```
 
 ile son kodu göndermektedir, ve gerektiğinde son kodları almak için
@@ -137,7 +137,7 @@ Geliştirme için master'dan dallanarak mesela bir dev (geliştirme) dalı
 kullanabiliriz, bu daldan her programcı kendisi için ayrı bir dal da
 yaratabilir, bu onlara kalmış. Fakat kodcular arası entegrasyon için
 dev dalı kullanılır. Çakışmalar vs var ise bu dalda çözülür, master a
-göndermeden önce entegrasyon testleri bu dal  üzerinden
+göndermeden önce entegrasyon testleri bu dal  üzerinden
 işletilir. Eğer sonuç iyi bulunursa buradan master'a birleştirme
 (merge) yapılır. Önemli nokta şudur: artık kimse master dalı üzerinde
 geliştirme yapmaz. Ana master dalı artık commit edilen bir şey değil,

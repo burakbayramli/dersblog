@@ -1,13 +1,12 @@
 # Keras
 
+Arka planda TensorFlow ya da Theano kullanabilen bir yapay sinir ağı
+paketi Keras. Python için yazılmıştır ve YSA kodlamasını çok
+rahatlatır. En basit program (arka planda theano motoru kullanılması
+şart değil, çoğunlukla Tensorflow kullanılır, bu durumda üstten
+2. satıra gerek yoktur)
 
-Keras
-
-
-
-
-Arka planda TensorFlow ya da Theano kullanabilen bir yapay sinir ağı paketi Keras. Python için yazılmıştır ve YSA kodlamasını çok rahatlatır. En basit program (arka planda theano motoru kullanılması şart değil, çoğunlukla Tensorflow kullanılır, bu durumda üstten 2. satıra gerek yoktur)
-
+```
 from __future__ import print_function
 import os; os.environ['KERAS_BACKEND'] = 'theano'
 import keras
@@ -46,29 +45,34 @@ model.add(Dense(num_classes, activation='softmax'))
 model.summary()
 
 model.compile(loss='categorical_crossentropy',
-              optimizer=RMSprop(),
-              metrics=['accuracy'])
+              optimizer=RMSprop(),
+              metrics=['accuracy'])
 
 history = model.fit(x_train, y_train,
-                    batch_size=batch_size,
-                    epochs=epochs,
-                    verbose=1,
-                    validation_data=(x_test, y_test))
+                    batch_size=batch_size,
+                    epochs=epochs,
+                    verbose=1,
+                    validation_data=(x_test, y_test))
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
 print('Test accuracy:', score[1])
-
+```
 
 Model kaydetmek
 
 Egitilmis bir modeli kaydetmek icin
 
+```
 model.save("model.h5")
+```
 
-Model model.h5 altinda kaydedilmis olacak. Yuklemek icin ustte goruldugu gibi model tanimi yapildiktan sonra (bu sart, YSA ag yapisi bilinmeli ki ona gore agirliklar yuklenebilsin),
+Model model.h5 altinda kaydedilmis olacak. Yuklemek icin ustte
+goruldugu gibi model tanimi yapildiktan sonra (bu sart, YSA ag yapisi
+bilinmeli ki ona gore agirliklar yuklenebilsin),
 
+```
 model.load("model.h5")
-
+```
 
 
 

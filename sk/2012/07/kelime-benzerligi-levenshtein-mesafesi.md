@@ -25,42 +25,42 @@ Pur Python ile
 
 ```
 def printMatrix(m):
-    print ' '
-    for line in m:
-        spTupel = ()
-        breite = len(line)
-        for column in line:
-            spTupel = spTupel + (column, )
-        print "%3i"*breite % spTupel
+    print ' '
+    for line in m:
+        spTupel = ()
+        breite = len(line)
+        for column in line:
+            spTupel = spTupel + (column, )
+        print "%3i"*breite % spTupel
 
 def levenshtein(s1, s2):
-  l1 = len(s1)  l2 = len(s2)
-  matrix = [range(l1 + 1)] * (l2 + 1)
-  for zz in range(l2 + 1):
-    matrix[zz] = range(zz,zz + l1 + 1)
-  for zz in range(0,l2):
-    for sz in range(0,l1):
-      if s1[sz] == s2[zz]:
-        matrix[zz+1][sz+1] = min(matrix[zz+1][sz] + 1, matrix[zz][sz+1] + 1, matrix[zz][sz]) 
-     else:
-        matrix[zz+1][sz+1] = min(matrix[zz+1][sz] + 1, matrix[zz][sz+1] + 1, matrix[zz][sz] + 1)
-  print "That's the Levenshtein-Matrix:"
-  printMatrix(matrix)
-  return matrix[l2][l1]if __name__ == "__main__":
-    s1 = "pizza"
-    s2 = "pioazza"
-   
-    distance = levenshtein(s1, s2)
-   
-   
-    print 'The Levenshtein-Distance of ',s1, ' and ', s2, ' is ', distance
-    s1 = "hamburger"    s2 = "haemmurger"
-   
-    distance = levenshtein(s1, s2)
-   
-   
-    print 'The Levenshtein-Distance of ',s1, ' and ', s2, ' is ', distance
-    
+  l1 = len(s1)  l2 = len(s2)
+  matrix = [range(l1 + 1)] * (l2 + 1)
+  for zz in range(l2 + 1):
+    matrix[zz] = range(zz,zz + l1 + 1)
+  for zz in range(0,l2):
+    for sz in range(0,l1):
+      if s1[sz] == s2[zz]:
+        matrix[zz+1][sz+1] = min(matrix[zz+1][sz] + 1, matrix[zz][sz+1] + 1, matrix[zz][sz]) 
+     else:
+        matrix[zz+1][sz+1] = min(matrix[zz+1][sz] + 1, matrix[zz][sz+1] + 1, matrix[zz][sz] + 1)
+  print "That's the Levenshtein-Matrix:"
+  printMatrix(matrix)
+  return matrix[l2][l1]if __name__ == "__main__":
+    s1 = "pizza"
+    s2 = "pioazza"
+   
+    distance = levenshtein(s1, s2)
+   
+   
+    print 'The Levenshtein-Distance of ',s1, ' and ', s2, ' is ', distance
+    s1 = "hamburger"    s2 = "haemmurger"
+   
+    distance = levenshtein(s1, s2)
+   
+   
+    print 'The Levenshtein-Distance of ',s1, ' and ', s2, ' is ', distance
+    
 ```
 
 

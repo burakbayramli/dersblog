@@ -5,7 +5,7 @@ toplantisinda duyduk. Prezentasyon Meetup.com uzerinden organize
 edilen toplantilardan biriydi, bu tur ufak birliktelikler, ozellikle
 Web uzerinden, cok rahat yapilabiliyor. Bir sirketten oda, digerinden
 yiyecek, icecek destegi alininca is tamam - meetup.com kayitlari
-hallediyor, ve toplanti basliyor. 
+hallediyor, ve toplanti basliyor. 
 
 Buyuk Veri Berlin toplantisinda konuk Peter Wang'dir, Wang unlu Python
 bilimsel hesap kutuphanesi Scipy, Numpy'i yazan Enthought'tan bilinen
@@ -34,7 +34,7 @@ var. Birkac turlu SVD kodlanmis, SVD'nin ek kullanici bilgilerini
 kullanmasini saglayan SVD++ mesela (ki kazanan BellKor takimi bu
 yaklasimi kullandi, ve Netflix'in de tavsiye sisteminde algoritmayi
 kullandigini biliyoruz), ya da SVD'ye zaman bilincini ekleyen Timed
-SVD++  eklenmis , RBM (restricted boltzman machines) mevcut, ve daha
+SVD++  eklenmis , RBM (restricted boltzman machines) mevcut, ve daha
 az bilinen CLIMF yaklasimi. Bu algoritmalarin kullanimi oldukca basit,
 indirilip
 
@@ -54,7 +54,7 @@ ile kucuk veri seti indirilir, ki bu dosyalar text dosyalari, icinde her satirda
 formatinda veriler bulunabiliyor. Isletmek icin
 
 ```
-[GRAPHCHI]/toolkits/collaborative_filtering/svd --training=smallnetflix_mm  --validation=smallnetflix_mme --nsv=3 --nv=10 --max_iter=10 --quiet=1 --tol=1e-1
+[GRAPHCHI]/toolkits/collaborative_filtering/svd --training=smallnetflix_mm  --validation=smallnetflix_mme --nsv=3 --nv=10 --max_iter=10 --quiet=1 --tol=1e-1
 ```
 
 Bu kod mevcut dizin icinde U,V matrislerini temsil eden iki dosya

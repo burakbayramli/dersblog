@@ -6,7 +6,7 @@ kullanılabilir.
 
 Docker ile paylaşmak istediğimiz herhangi bir programı artık ona
 gereken tüm işletim sistemi destek programları ile beraber paketleyip
-sunabiliriz. Bir servis için filanca python paketleri gerekiyor 
+sunabiliriz. Bir servis için filanca python paketleri gerekiyor 
 bunları python paket listesiyle sunabilirdik. Ya peki apt-get ile
 kurulması gereken yan programlar, hatta yan dosyalar, diğer büyük
 programlar da varsa? Docker tüm bunları paketleyebilir.
@@ -24,6 +24,7 @@ paylaşabilirdik.
 
 https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
 
+```
 sudo apt install apt-transport-https ca-certificates curl software-properties-common
 
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
@@ -37,43 +38,58 @@ apt-cache policy docker-ce
 sudo apt install docker-ce
 
 docker --version
+```
 
 isliyor olmali (basa her zaman sudo koymak gerekebilir). Basit kontrol
 
+```
 docker run hello-world
+```
 
 Altta bir web servisi isletmenin yolu
 
+```
 docker run -d -p 80:80 --name webserver nginx
+```
 
 Tarayıcı ile localhost ziyaret edince orada bir servis işlediğini
 göreceksiniz! Alttaki komut mevcut sanal makinaları / kapları
 (container) gösterir,
 
+```
 docker container ls
+```
 
 Sanal makinayi durdurmak icin
 
+```
 docker container stop webserver
+```
 
 Silmek
 
+```
 docker container rm webserver
 docker image rm nginx
+```
 
 Simdi Mac uzerinde Ubuntu kuralim. Docker sitesinde onceden
 hazirlanmis bir Ubuntu kurulumu var,
 
+```
 docker run -it --name ubuntu ubuntu:xenial bash
 
 docker exec -it ubuntu bash
+```
 
 Bu komut bizi işleyen bir Ubuntu içine taşır! Bu izole bir sanal
 makina, orada yapılan hiçbir şeyin "dış" sisteme etkisi yok.
 
 Sistem icinde
 
+```
 apt-get update
+```
 
 Sonra mesela C derleyicisi kurabiliriz,
 
@@ -81,28 +97,38 @@ Mesela apt-get install gcc
 
 Python kuralim,
 
+```
 apt-get install python python-pip python3 python3-pip
+```
 
 Ubuntu versiyon
 
+```
 cat /etc/*release
+```
 
 16.04 dedi.
 
 Kopyalama (Dışarıdan içeri)
 
-MacOS'ten sanal makina Ubuntu'ya dosya kopyalamak icin, docker
+MacOS'ten sanal makina Ubuntu'ya dosya kopyalamak icin, docker
 container ls ile listelenen container id (kimlik) alinir, ve
 
+```
 docker cp [YEREL DOSYA] [CONTAINER KIMLIK]:/
+```
 
 Mevcut imajlari listelemek,
 
+```
 docker image ls
+```
 
 Silmek icin
 
+```
 docker image rm [IMAGE ID]
+```
 
 Eğer hata gelirse (container [ID] hala silinmemiş diye) docker
 container rm ile container silinir, sonra image silinir.
@@ -111,8 +137,9 @@ container rm ile container silinir, sonra image silinir.
 girip orada komutlar işlettik. Acaba tek bir komutla üstteki her
 programı kurduramaz mıyız? Dockerfile yaklaşımı ile evet.
 
-Bir Dockerfile icinde alttakileri yazalim,
+Bir Dockerfile icinde alttakileri yazalim,
 
+````
 FROM ubuntu:16.04
 RUN apt-get update
 RUN apt-get install -y python python-pip
@@ -120,26 +147,35 @@ RUN apt-get install -y python3 python3-pip
 RUN pip install virtualenv
 RUN virtualenv -p /usr/bin/python2 pyenv2
 RUN /bin/bash -c "source /pyenv2/bin/activate && pip install ipython pandas && deactivate"
+```
 
-apt-get komutuna -y vererek y/n sorusuna otomatik y cevap vermis
+apt-get komutuna -y vererek y/n sorusuna otomatik y cevap vermis
 oluyoruz, bunu yapmazsak apt-get soru sorup cevap bekliyor, biz
 otomatik kurulum yaptigimiz icin bu takilmayi istemiyoruz.
 
 Simdi imaji yaratalim,
 
+```
 docker build -t ubuntu_image .
+```
 
 Bu kadar. Listeleyelim,
 
+```
 docker image ls
+```
 
-REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
-ubuntu_image        latest              cf7c904f9a65        47 seconds ago      675MB
-ubuntu              16.04               b9e15a5d1e1a        7 days ago          115MB
+```
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+ubuntu_image        latest              cf7c904f9a65        47 seconds ago      675MB
+ubuntu              16.04               b9e15a5d1e1a        7 days ago          115MB
+```
 
 Simdi sanal makinaya girelim,
 
+```
 docker run -it --name ubuntu2 ubuntu_image bash
+```
 
 Kurduğumuz tüm programların hazır bizi beklediğini göreceğiz.
 

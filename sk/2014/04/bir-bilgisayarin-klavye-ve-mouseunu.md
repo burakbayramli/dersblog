@@ -17,7 +17,7 @@ ise bir bilgisayarin sadece kontrollerini bir digerine
 aktariyoruz. Yani hala buyuk bilgisayarin buyuk ekranina bakiyoruz,
 ama klavye ve fare hareketleri dizustu makinasindan geliyor.
 
-Bu alanda en iyi bilinen arac Synergy. Kurmak icin  
+Bu alanda en iyi bilinen arac Synergy. Kurmak icin  
 
 ```
 synergy-foss.org/download/?alt

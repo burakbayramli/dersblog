@@ -11,7 +11,7 @@ bir şekilde kullanılabilmeye başlandı.
 Yeni ve çok hızlı işleyen bir başka yaklaşım YOLO. Kısaltma "sadece
 bir kere bakarız (you only look once)" cümlesinden türetilmiş,
 söylenmek istenen insanların tek bir karedeki görüntüde olan objeleri
-hızlı bir şekilde bir bakışta bulabilmesi. YOLO'nun amacı bu hıza
+hızlı bir şekilde bir bakışta bulabilmesi. YOLO'nun amacı bu hıza
 erişmek.
 
 https://pjreddie.com/darknet/yolo/
@@ -23,7 +23,7 @@ tüm obje tipleri, yerleri hakkında global bir karar verilebilir.
 
 ![](Screenshot%2Bfrom%2B2017-10-30%2B11-06-26.png)
 
-Yöntem aslında basit: tüm görüntü önce S x S parçaya bölünür  (S=7
+Yöntem aslında basit: tüm görüntü önce S x S parçaya bölünür  (S=7
 diyelim). Şimdi eğitim verisi hazırlanırken çerçevesi bilinen objeler
 alınır, ve 7x7 parçaların bu obje çerçeveleri / kutularının içine
 düşüp düşmediğine göre eğitim verisinde etiket hazırlanır.
@@ -98,9 +98,9 @@ Başka TF kodları da Github'da var.. YOLO C++ ile yazılmış, bu arkadaşlar T
 
 Bağlantılar
 
-http://machinethink.net/blog/object-detection-with-yolo/ - bilgilendirici bir yazı
+http://machinethink.net/blog/object-detection-with-yolo/ - bilgilendirici bir yazı
 
-https://youtu.be/NM6lrxy0bxs - YOLO tasarımcısının video'su
+https://youtu.be/NM6lrxy0bxs - YOLO tasarımcısının video'su
 
 https://youtu.be/Cgxsv1riJhI - bir diger YOLO ustasindan video
 

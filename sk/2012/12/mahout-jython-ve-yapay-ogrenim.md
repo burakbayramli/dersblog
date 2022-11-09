@@ -62,32 +62,32 @@ from org.apache.mahout.cf.taste.recommender import *
 from org.apache.mahout.cf.taste.similarity import *
 from java.io import *from java.util import *
 class GenericRecommenderBuilder(RecommenderBuilder):
-    def __init__(self):
-        pass
-    def buildRecommender(self, model):
-        similarity = PearsonCorrelationSimilarity(model)
-        neighborhood = NearestNUserNeighborhood(2, similarity, model)
-        return GenericUserBasedRecommender(model, neighborhood, similarity)
+    def __init__(self):
+        pass
+    def buildRecommender(self, model):
+        similarity = PearsonCorrelationSimilarity(model)
+        neighborhood = NearestNUserNeighborhood(2, similarity, model)
+        return GenericUserBasedRecommender(model, neighborhood, similarity)
 
 class SlopeOneRecommenderBuilder(RecommenderBuilder):
-    def __init__(self):
-        pass    def buildRecommender(self, model):
-        similarity = PearsonCorrelationSimilarity(model)
-        neighborhood = NearestNUserNeighborhood(2, similarity, model)
-        return SlopeOneRecommender(model)def main():
-    RandomUtils.useTestSeed()    model = FileDataModel(File("intro.csv"))
-    builder = GenericRecommenderBuilder()
-    print 'Starting run at %s' % datetime.now()
-    for builder in [GenericRecommenderBuilder(), SlopeOneRecommenderBuilder()]:
-        print 'Starting evaluations of recommender created using %s at %s...' % (builder, datetime.now())
-        for evaluator in [AverageAbsoluteDifferenceRecommenderEvaluator(), RMSRecommenderEvaluator()]:
-            print 'Evaluating recommender using %s at %s...' % (evaluator, datetime.now())
-            score = evaluator.evaluate(builder, None, model, 0.7, 1.0)
-            print 'Score evaluated by %s=%.2f' % (evaluator, score)
-    print 'Ending run at %s' % datetime.now()
+    def __init__(self):
+        pass    def buildRecommender(self, model):
+        similarity = PearsonCorrelationSimilarity(model)
+        neighborhood = NearestNUserNeighborhood(2, similarity, model)
+        return SlopeOneRecommender(model)def main():
+    RandomUtils.useTestSeed()    model = FileDataModel(File("intro.csv"))
+    builder = GenericRecommenderBuilder()
+    print 'Starting run at %s' % datetime.now()
+    for builder in [GenericRecommenderBuilder(), SlopeOneRecommenderBuilder()]:
+        print 'Starting evaluations of recommender created using %s at %s...' % (builder, datetime.now())
+        for evaluator in [AverageAbsoluteDifferenceRecommenderEvaluator(), RMSRecommenderEvaluator()]:
+            print 'Evaluating recommender using %s at %s...' % (evaluator, datetime.now())
+            score = evaluator.evaluate(builder, None, model, 0.7, 1.0)
+            print 'Score evaluated by %s=%.2f' % (evaluator, score)
+    print 'Ending run at %s' % datetime.now()
 
 if __name__ == '__main__':
-    main()
+    main()
 ```
 
 Bu kod intro.csv adli bir dosyaya ihtiyac duyar. Bu ornek veri

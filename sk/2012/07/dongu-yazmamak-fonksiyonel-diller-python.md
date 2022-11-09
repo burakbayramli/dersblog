@@ -13,7 +13,7 @@ yazacağız. İlk yaklaşım hemen
 
 ```
 for w1 in words:
-   for  w2 in words:
+   for  w2 in words:
 ```
 
 diye bir döngü yazar. Bu çok yavaş işler çünkü döngülerin kendisi
@@ -43,7 +43,7 @@ words = np.array(['filan', 'fisman', 'sisman', 'paspas'])
 (dim,) = words.shape
 f = lambda (x,y): leven.distance(x,y)
 res=np.fromiter(itertools.imap(f, itertools.product(words, words)),
-                dtype=np.uint8)
+                dtype=np.uint8)
 A = np.reshape(res,(dim,dim))
 ```
 

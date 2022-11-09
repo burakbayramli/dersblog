@@ -34,40 +34,40 @@ Biz yine de JS ile eğiten bir program görelim, basit bir lineer regresyon örn
 Önce bir geliştirme "ortamı" hazırlayalım. HTML ve Javascript bazlı
 çalışacağız, bir html dosyası olacak, kodları ayrı js dosyasında yazıp
 HTML'den dahil ederiz, sayfayı F5 ile tekrar yükletince kod tamamen
-işler halde olsun.  Çıktıları göstermek için bir fonksiyon yazalım,
+işler halde olsun.  Çıktıları göstermek için bir fonksiyon yazalım,
 çıktıyı HTML div öğesi içine yazsın. Ayrıca dosyaları Flask üzerinden
-servis edelim, statik dosyaları bile, ki bunlar /static/ URL'i altında
+servis edelim, statik dosyaları bile, ki bunlar /static/ URL'i altında
 olsunlar, bunun sebebi ileride bir modeli TensorFlow.js'e yüklettirmek
 gerektiğinde bu dosyanın http üzerinden servis edilmesi gerektiği. O
 yüzden baştan bir (mikro)servis ortamında ise başlayalım.
 
 ```
 <html>
-  <head>
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.3/dist/tf.min.js"> </script>
-    <script src="/static/test.js"></script>
-  </head>
-  <body>
-    <div id="output">
-    </div>
-  </body>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.13.3/dist/tf.min.js"> </script>
+    <script src="/static/test.js"></script>
+  </head>
+  <body>
+    <div id="output">
+    </div>
+  </body>
 </html>
 ```
 
 Eğer İnternet bağlantısı olmadan yerel Web uygulaması servis edilmek
 istenirse, üstteki tf.min.js dosyası wget ile indirilir, /static/
-altına konur, o zaman 
+altına konur, o zaman 
 
 ```
 <html>
-  <head>
-    <script src="/static/tf.min.js"> </script>
-    <script src="/static/test1.js"></script>
-  </head>
-  <body>
-    <div id="output">
-    </div>
-  </body>
+  <head>
+    <script src="/static/tf.min.js"> </script>
+    <script src="/static/test1.js"></script>
+  </head>
+  <body>
+    <div id="output">
+    </div>
+  </body>
 </html>
 ```
 
@@ -75,7 +75,7 @@ Javascript kodlari test1.js icinde
 
 ```
 function dprint(s) {
-  document.getElementById("output").innerHTML += s + "<br/>";
+  document.getElementById("output").innerHTML += s + "<br/>";
 }
 
 const model = tf.sequential();
@@ -87,13 +87,13 @@ const xs = tf.tensor2d([1, 2, 3, 4], [4, 1]);
 const ys = tf.tensor2d([1, 3, 5, 7], [4, 1]);
 
 model.fit(xs, ys).then(() => {
-  res = (model.predict(tf.tensor2d([5], [1, 1])));
-  dprint(res);
+  res = (model.predict(tf.tensor2d([5], [1, 1])));
+  dprint(res);
 });
 ```
 
 Bir model eğitiyoruz, sonra test verisini tahmin için modele
-soruyoruz. HTML sayfasını ziyaret edince 
+soruyoruz. HTML sayfasını ziyaret edince 
 
 ```
 Tensor
@@ -112,7 +112,7 @@ paketi lazım.
 
 `pip install tensorflowjs`
 
-ile kurulur (Collab ortamında hücre içinde başa ünlem konur). Eğitim kodu içinde 
+ile kurulur (Collab ortamında hücre içinde başa ünlem konur). Eğitim kodu içinde 
 
 ```
 import tensorflowjs as tfjs
@@ -154,7 +154,7 @@ tahmin için sorarız. Bakalım Keras MNİST modeli ne diyecek?
 
 ```
 function dprint(s) {
-  document.getElementById("output").innerHTML += s + "<br/>";
+  document.getElementById("output").innerHTML += s + "<br/>";
 }
 
 const test1 = tf.tensor2d([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -277,12 +277,12 @@ const test3 = tf.tensor2d([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 0, 0, 0, 0, 0, 0], [1, 784]);
 
 tf.loadModel('http://localhost:5000/static/model.json').then(model => {
-  res = (model.predict(test1));
-  dprint (res);
-  res = (model.predict(test2));
-  dprint (res);
-  res = (model.predict(test3));
-  dprint (res);
+  res = (model.predict(test1));
+  dprint (res);
+  res = (model.predict(test2));
+  dprint (res);
+  res = (model.predict(test3));
+  dprint (res);
 });
 ```
 
@@ -296,4 +296,7 @@ Tensor
 ```
 
 Görüldüğü gibi doğru bit 1 halinde, sırasıyla 7., 6. ve 0. bitler.
+
+
+
 

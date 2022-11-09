@@ -32,39 +32,39 @@ sehirler = ['bursa','istanbul','afyon','rize','ordu','antalya']
 base_dir = '/tmp'
 
 def get_hava(sehir):
-    url = "http://www.mgm.gov.tr/tahmin/il-ve-ilceler.aspx?m=%s" % sehir
-    response = requests.get(url)
-    response_body = response.content
-    regex = "sondrm.*?renkMax.*?(\d+).*?C</em>"
-    res = re.findall(regex, response_body, re.DOTALL)
-    return res
+    url = "http://www.mgm.gov.tr/tahmin/il-ve-ilceler.aspx?m=%s" % sehir
+    response = requests.get(url)
+    response_body = response.content
+    regex = "sondrm.*?renkMax.*?(\d+).*?C</em>"
+    res = re.findall(regex, response_body, re.DOTALL)
+    return res
 
 def chunks(l, n):
-    for i in xrange(0, len(l), n):
-        yield l[i:i+n]
+    for i in xrange(0, len(l), n):
+        yield l[i:i+n]
 
 def process(liste):
-    for sehir in liste:
-        # bu sehir alinmis, devam et
-        f = base_dir + "/" + sehir
-        if os.path.isfile(f): continue
-        # alinmamis, indir
-        hava = get_hava(sehir)[0]
-        fout = open(f, "w")
-        fout.write(str(hava))
-        print sehir, hava
-        fout.close()
+    for sehir in liste:
+        # bu sehir alinmis, devam et
+        f = base_dir + "/" + sehir
+        if os.path.isfile(f): continue
+        # alinmamis, indir
+        hava = get_hava(sehir)[0]
+        fout = open(f, "w")
+        fout.write(str(hava))
+        print sehir, hava
+        fout.close()
 
 if __name__ == "__main__":
 
-    nth = int(sys.argv[1])
-    n_pieces = int(sys.argv[2])
+    nth = int(sys.argv[1])
+    n_pieces = int(sys.argv[2])
 
-    # bu takla lazim cunku chunks her parca icindeki
-    # oge sayisini baz aliyor
-    elems =  int(len(sehirler) / n_pieces)
-    liste = list(chunks(sehirler, elems))
-    process(liste[nth])
+    # bu takla lazim cunku chunks her parca icindeki
+    # oge sayisini baz aliyor
+    elems =  int(len(sehirler) / n_pieces)
+    liste = list(chunks(sehirler, elems))
+    process(liste[nth])
 ```
 
 Artık
@@ -86,7 +86,7 @@ afyon 19
 ```
 
 gelir. Şimdi /tmp altına gidip afyon dosyasını silelim, ve tekrar
-işletelim. Sadece o şehrin indirildiğini göreceğiz.  Böylelikle
+işletelim. Sadece o şehrin indirildiğini göreceğiz.  Böylelikle
 paralelizasyon, çöküşten kurtulma gibi problemlerin hepsini çözmüş
 oluyoruz.
 
@@ -94,12 +94,12 @@ Eğer bu iki paralel programı dand takibinde başlatmak isterek, bir
 hava.conf dosyası yaratırız, içinde
 
 ```
-hava0: 
-   exec: python hava.py 0 2
-   restart: forever
-hava1: 
-   exec: python hava.py 1 2
-   restart: forever
+hava0: 
+   exec: python hava.py 0 2
+   restart: forever
+hava1: 
+   exec: python hava.py 1 2
+   restart: forever
 ```
 
 ve işletmek için
@@ -114,7 +114,10 @@ Not:
 
 Örnekte meteoroloji sitesinin tüm HTML'i içinden sadece sıcaklık
 verisini çekip çıkarttık; yani bir Web kazıma (scraping) işlemi
-yaptık.  Kazıma güzel bir isim, sanki duvardan boya kazıyormuş gibi,
+yaptık.  Kazıma güzel bir isim, sanki duvardan boya kazıyormuş gibi,
 HTML'i kazıyıp içindeki veriyi ortaya çıkartıyoruz. Bu işlem için
 düzenli ifadeler (regular expression, regex) kullandık. Tüm yazılım
 mühendislerine öğrenmelerini şiddetle tavsiye ettiğimiz bir teknik.
+
+
+

@@ -3,7 +3,7 @@
 Postgresql tabaninda timestamp tipindeki iki tarih (kolonu) arasindaki
 farki hemen eksi (-) isareti kullanarak hesaplamak mumkundur. Bu
 yapildigi zaman sonuc gayet detayli bir sekilde 'su kadar yil, su
-kadar gun, .. ' gibi bir tanimi iceren bir sonuctur.  Yani en basit
+kadar gun, .. ' gibi bir tanimi iceren bir sonuctur.  Yani en basit
 ornek soyle:
 
 ```
@@ -16,7 +16,7 @@ bolum yaparak istedigimiz sayiya cevirmemiz gerekli. Mesela gun
 istiyorsak,
 
 ```
-select cast(extract('epoch' from tarih1::timestamp - tarih2::timestamp) as numeric) / 60 / 60 / 24 
+select cast(extract('epoch' from tarih1::timestamp - tarih2::timestamp) as numeric) / 60 / 60 / 24 
 from .. 
 ```
 

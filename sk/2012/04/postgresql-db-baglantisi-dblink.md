@@ -57,12 +57,12 @@ print "create table %s as (" % [TABLO]
 print "SELECT * FROM "
 print "dblink('host=localhost user=postgres password=postgres dbname=[KAYNAK TABAN]', " % countryprint "'SELECT * FROM %s') " % tableprint "as t1"print "("i = 0list = list(schema)l = len(list)-1
 for line in list:
-    if i < l:
-        print "%s %s, " % (line[0], line[1])
-    else:
-        print "%s %s " % (line[0], line[1])
-    i+=1
-    print "));\n"
+    if i < l:
+        print "%s %s, " % (line[0], line[1])
+    else:
+        print "%s %s " % (line[0], line[1])
+    i+=1
+    print "));\n"
 ```
 
 script'i hedef tablo icin gereken create table as (select ...)

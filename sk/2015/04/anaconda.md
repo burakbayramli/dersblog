@@ -78,7 +78,7 @@ conda create -n py3k python=3
 
 Artik `source activate py3k` ile Python 3 ortamina girilebilir ve python
 script.py ile Python 3 script'leri isletilebilir. Bir diger secenek,
- ki bunun icin source yapmaya gerek yok,
+ ki bunun icin source yapmaya gerek yok,
 
 [HOME]/anaconda/envs/py3k/bin/python
 
@@ -86,7 +86,7 @@ ile direk Python 3 yorumlayicisini cagirmak.
 
 PYMACS ICIN ONEMLI NOT
 
-Eger Emacs icinden Pymacs kullaniyorsaniz dikkat,  Pymacs
+Eger Emacs icinden Pymacs kullaniyorsaniz dikkat,  Pymacs
 /usr/bin/python kullaniyor, bunu pymacs.el icinde degistirebilirsiniz,
 623. satirda
 
@@ -104,6 +104,3 @@ kullanin ve python setup.py build; python setup.py install.
 
 Ama en iyisi belki de Emacs'ı komut satırından, bir conda çevresine
 girdikten sonra isletmek.
-
-
-

@@ -7,7 +7,7 @@ yontem var, birisi Kivy "isletici" bir programi kurmak, bu isletici
 programin kendi apk'si var, ya Google Play'den ya da Kivy sitesinden
 bu apk indirilebilir.
 
-Bu isletici programi telefonda baslatinca program dizin sisteminde 
+Bu isletici programi telefonda baslatinca program dizin sisteminde 
 /storage/emulated/0/kivy adli bir dizine bakacak, ve altinda gordugu
 tum alt dizinleri Kivy programlari olarak kabul edecek. Bir Kivy
 programinin olusturulmasi cok kolay, iki dosya yeterli. Biri
@@ -26,7 +26,7 @@ from kivy.app
 import App
 from kivy.uix.button import Button
 
-class TestApp(App):    def build(self):        return Button(text='Hello World')
+class TestApp(App):    def build(self):        return Button(text='Hello World')
 
 TestApp().run()
 ```
@@ -49,19 +49,19 @@ from kivy.app import App
 from kivy.uix.button import Button
 
 def callback(instance):
-    print('The button <%s> is being pressed' % instance.text)
-    fout = open("/sdcard/Download/kivy-out.txt","aw")
-    fout.write("filan falan fisman\n")
-    fout.close()
+    print('The button <%s> is being pressed' % instance.text)
+    fout = open("/sdcard/Download/kivy-out.txt","aw")
+    fout.write("filan falan fisman\n")
+    fout.close()
 
 
 class TestApp(App):
-    def build(self):
-        btn1 = Button(text='Hello World')
-        btn1 = Button(text='Hello world 1')
-        btn1.bind(on_press=callback)
-        return btn1
-        
+    def build(self):
+        btn1 = Button(text='Hello World')
+        btn1 = Button(text='Hello world 1')
+        btn1.bind(on_press=callback)
+        return btn1
+        
 TestApp().run()
 ```
 
@@ -87,10 +87,10 @@ projeleri olan buildozer ve python-for-android gibi cozumler var. Bu
 projelerden python-for-android ile, anladigimiz kadariyla (daha
 kullanmadik) numpy, PIL, opencv gibi yerli kodlari APK icine dahil
 etmek mumun. Tek problem python-for-android sadece Linux uzerinde
-isliyor.  Fakat Kivy, VirtualBox uzerinden isletilebilecek ve icinde
+isliyor.  Fakat Kivy, VirtualBox uzerinden isletilebilecek ve icinde
 gerekli tum araclar onceden kurulmus bir sanal makina imajini
 sitesinden paylasiyor. Ya bu, ya da kendimiz Ubuntu kurarak
-python-for-android'i kullanabiliriz. 
+python-for-android'i kullanabiliriz. 
 
 
 

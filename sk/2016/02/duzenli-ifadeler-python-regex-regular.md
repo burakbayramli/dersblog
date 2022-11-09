@@ -71,7 +71,7 @@ degil ['<H1>', '</H1>']
 
 Karakterlerin kendisi yerine onları temsil eden "joker" semboller de
 kullanılabilir. Nokta karakteri "ne olursa olsun" anlamına gelir,
-mesela 1. metin üzerinde 'a' ile başlasın '4' ile bitsin, arada ne
+mesela 1. metin üzerinde 'a' ile başlasın '4' ile bitsin, arada ne
 olursa olsun diyorsak,
 
 ```
@@ -97,7 +97,7 @@ print re.findall("[a-z]+",s3)
 
 Bir Kalıp İçindeki Daha Ufak Kalıbı Çıkartmak
 
-Bazen aradığımız bir kalıp daha büyük bir kalıp içindedir,  HTML
+Bazen aradığımız bir kalıp daha büyük bir kalıp içindedir,  HTML
 kazıma (scraping) yaparken bu tür ihtiyaç çok ortaya çıkar, diyelim ki
 döküman içinde 222.444.222.111'ye benzeyen yani noktalarla ayrılmış
 sayılar grubu pek çok yerde var, ama biz bunlardan sadece <tr>
@@ -136,14 +136,14 @@ Tüm Veriye Bakmak
 Şimdiye kadar gördüğümüz tüm teknikler satır bazında işler; eğer bir
 dosyayi açıp satır satır işliyorsak bu problem değil. Fakat bazen bir
 satırda başlayıp diğer bir satırda biten kalıpları bulmamız
-gerekebilir. Mesela 444 ile başlayıp 5555 ile biten bir  kalıp farklı
+gerekebilir. Mesela 444 ile başlayıp 5555 ile biten bir  kalıp farklı
 satırlarda ise ne yapacağız? Alttaki veride yeni satır (newline) \n
 işaretine dikkat, bu karakter bir dosya içinde bir satırın sonunda
 mevcuttur.
 
 ```
 s5 = "xxxxxx xxxxxxxxxxx 44444 xxxxx\n" + \
-     "555555 xxxxx"
+     "555555 xxxxx"
 print re.findall("4+.*?5+", s5)
 
 []
@@ -189,7 +189,7 @@ içi doldurulur. Bu komut
 ```
 
 sonucunu verir, baştaki boş kelime kısmini filter ile çıkartabiliriz,
-mesela filter(None, res) gibi.
+mesela filter(None, res) gibi.
 
 Metin Değiştirmek
 
@@ -223,9 +223,9 @@ Tek Karakter Uyumu
 
 Tekrarlar
 
-`*`  0 ya da daha fazla
-`+`  1 ya da daha fazla
-`?`  1 ya da hiç
+`*`  0 ya da daha fazla
+`+`  1 ya da daha fazla
+`?`  1 ya da hiç
 `{n}` n kere
 `{n,}` en az ne kere
 `{n,m}` en az ne kere, ama m'den fazla değil
@@ -268,7 +268,7 @@ işareti olarak kullanıldığı için önündeki "" ile işaretlenmiştir.
 a c Uymaz. Çünkü dizinin içinde hiç "a" ve ardindan gelen "" yok.
 
 a.*b Uyar Çünkü dizide ``a ve aralarında birşeyler ve sonra b'' var!
-``.''  (nokta) meta-karakteri herhangi bir karaktere uyar; ardından
+``.''  (nokta) meta-karakteri herhangi bir karaktere uyar; ardından
 gelen ``*'' ile birlikte (yâni .*!) birşeyler olarak okunabilir.
 
 d.*a Uyar Çünkü "birşey" anlamındaki noktanın ardından gelen "*"
@@ -277,7 +277,7 @@ meta-karakteri sıfır veya daha fazla herhangi birşey anlamındadır.
 d.+a Uyar Çünkü "birşey" anlamındaki noktanın ardından gelen
 meta-karakter bir +! ; Yâni bir veya daha fazla "herhangi birşey"
 
-da? Uyar  Çünkü dizide "d" ve ardından bir veya sıfır tane "a" gelen
+da? Uyar Çünkü dizide "d" ve ardından bir veya sıfır tane "a" gelen
 alt dizi var.
 
 Eski Anlatım

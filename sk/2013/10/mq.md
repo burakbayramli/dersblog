@@ -17,16 +17,33 @@ sudo apt-get install libzmq-dev uuid-dev python-zmq
 Not: Eger ustteki yeterli olmazsa (mesela bir assertion error
 gelirse), kaynaklardan derlemek gerekebilir, libzmq Github'dan kaynak
 indirilir, ./autogen.sh, ./configure, make ve sudo make install
-gerekebilir. 
+gerekebilir. 
 
 TCP kullanan noktadan-noktaya transfer ornegi
 
 ```
 # alici 
-import sys, time, zmqcontext = zmq.Context()receiver = context.socket(zmq.PULL)receiver.bind("tcp://*:10000")arr = []while True:    data = receiver.recv()    if data == "start":        print time.time()        continue    arr.append(data)    if data == "end":        print time.time()        print len(arr)        continue
+import sys, time, zmqcontext = zmq.Context()
+receiver = context.socket(zmq.PULL)receiver.bind("tcp://*:10000")
+arr = []while True:
+    data = receiver.recv()
+    if data == "start":
+        print time.time()
+        continue
+    arr.append(data)
+    if data == "end":
+        print time.time()
+        print len(arr)
+        continue
 
 # gonderen
-import zmq, timecontext = zmq.Context()sender = context.socket(zmq.PUSH)sender.connect("tcp://localhost:10000") sender.send("start")for i in range(100000):    sender.send("01234567890123456789")sender.send("end")
+import zmq, timecontext = zmq.Context()
+sender = context.socket(zmq.PUSH)
+sender.connect("tcp://localhost:10000")
+sender.send("start")
+for i in range(100000):
+    sender.send("01234567890123456789")
+sender.send("end")
 ```
 
 Eger gonderici baska bir makinada ise localhost yerine o makina ismi
@@ -39,10 +56,20 @@ kullanmak mecburi)
 ```
 # alici 
 import zmqcontext = zmq.Context()socket = context.socket(zmq.SUB)
-socket.connect('epgm://wlan0;239.192.1.1:5000')socket.setsockopt(zmq.SUBSCRIBE, "10001")while True:    data = socket.recv()    print data
+socket.connect('epgm://wlan0;239.192.1.1:5000')
+socket.setsockopt(zmq.SUBSCRIBE, "10001")
+while True:
+    data = socket.recv()
+    print data
 
 # gonderici
-import zmq, timecontext = zmq.Context()socket = context.socket(zmq.PUB)socket.connect('epgm://wlan0;239.192.1.1:5000') while True:    socket.send("10001 kjashfkjasdf")    time.sleep(1)
+import zmq, time
+context = zmq.Context()
+socket = context.socket(zmq.PUB)
+socket.connect('epgm://wlan0;239.192.1.1:5000')
+while True:
+    socket.send("10001 kjashfkjasdf")
+    time.sleep(1)
 ```
 
 Ornek pgm icin ayni, egpm yerine gpm kullanilir. Yanliz o pgm icin her

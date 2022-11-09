@@ -12,7 +12,7 @@ de yaptırabilirdik, yani sayı kısıtlaması da mümkündür.
 Bu teknolojinin çok kullanışlı olduğu yerler var, mesela Web
 sunucuları içinde servise gelen her istek için bir Thread
 yaratılabilir, ya da Telekom şirketlerinde gelen bağlantılar ayrı
-Thread'ler üzerinden halledilebilir, vs.  Diğer yandan, Thread'lerin
+Thread'ler üzerinden halledilebilir, vs.  Diğer yandan, Thread'lerin
 idaresi, takibi süreçlere göre daha zor; başlatılan bir Thread
 dışarıdan durdurulamaz, onları işletim sistemi bazında "dışarıdan"
 izleyecek araçlar standart değildir. Kıyasla süreçler Unix'in
@@ -42,7 +42,7 @@ işlemekte olan programın tüm diğer bölümlerine bakabilecek olmaları -
 ki bu sebepten dolayıdır ki Thread bazlı hataları ayıklamanın çok saç
 baş yoldurucu olduğu hep söylenir; hatayı düzeltmek için onu
 tekrarlamak (duplicate) istiyorsunuz mesela ama Thread'lerin kafasına
-estiği zaman hata çıkıyor, esmediği zaman çıkmıyor!  Bu mümkün çünkü
+estiği zaman hata çıkıyor, esmediği zaman çıkmıyor!  Bu mümkün çünkü
 Thread'lerin işleme sırası için bir kural yok, eğer bir şekilde, hangi
 sırada belli olmadığı şekilde Thread'ler bir noktayı bozmuş ise, bu
 durumu tekrar ortaya çıkartmak çok zor olacaktır. Süreçlerin

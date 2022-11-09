@@ -5,22 +5,22 @@ kaynaklar var, mesela Altuğ Altıntaş'ın kitabı,
 
 http://www.kitapyurdu.com/kitap/java-programlama-dili-ve-yazilim-tasarimi/53209.html
 
-İki tane bedava PDF temelli kitap, ki kuruluşu, temel dili Windows seviyesinde gösteriyorlar, 
+İki tane bedava PDF temelli kitap, ki kuruluşu, temel dili Windows seviyesinde gösteriyorlar, 
 
 http://web.cs.hacettepe.edu.tr/~bbm102/misc/java_notes_by_oa.pdf
 
 http://turhancoban.com/kitap/JAVA%20B%C4%B0LG%C4%B0SAYAR%20D%C4%B0L%C4%B0YLE%20PROGRAMLAMA.pdf
 
-Bizim tavsiyemiz her türlü geliştirmenin Ubuntu Linux üzerinde yapılması. Java kurmak için 
+Bizim tavsiyemiz her türlü geliştirmenin Ubuntu Linux üzerinde yapılması. Java kurmak için 
 
 sudo apt-get install openjdk-8-jre
 
-En basit derleme şekli komut satırında, bir script içinden javac kullanmak. Aynı dizinde olan bir Test.java için
+En basit derleme şekli komut satırında, bir script içinden javac kullanmak. Aynı dizinde olan bir Test.java için
 
 ```
 export CP=/bir/dizin/lib1.jar:.
 
-javac -classpath $CP Test.java 
+javac -classpath $CP Test.java 
 
 java -classpath $CP Test
 ```
@@ -33,23 +33,23 @@ listeye ekleriz. Test.java içinde
 ```
 import java.util.ArrayList;
 
-public class Test 
+public class Test 
 
 {
 
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception{
 
-        System.out.println("Hello World");
+        System.out.println("Hello World");
 
-        ArrayList<String> l = new ArrayList<String>();
+        ArrayList<String> l = new ArrayList<String>();
 
-        l.add("1");
+        l.add("1");
 
-        l.add("2");
+        l.add("2");
 
-        System.out.println("Bir liste "+l );
+        System.out.println("Bir liste "+l );
 
-    }
+    }
 
 }
 ```
@@ -61,18 +61,18 @@ dizinde bir .class dosyası da yaratılmış olmalı.
 Eğer paket sistemi kullanıyor olsaydık, mesela üstteki kod
 sample/src/com/vs/Test.java içinde olsaydı ve ilk satırında package
 com.vs; ibaresi olsaydı, o zaman kod bir com.vs paketinde demektir,
-derlemek ve işletmek için 
+derlemek ve işletmek için 
 
 ```
 export CP=/bir/dizin/lib1.jar:./sample/src
 
-javac -classpath $CP ./sample/src/com/vs/Test.java 
+javac -classpath $CP ./sample/src/com/vs/Test.java 
 
 java -classpath $CP com.vs.Test
 ```
 
 gerekirdi. Üsttekiler çok basit derlemeler için (ama bilmek faydalı),
-daha çetrefil derlemeler için Ant var. 
+daha çetrefil derlemeler için Ant var. 
 
 ```
 sudo apt-get install ant
@@ -80,88 +80,88 @@ sudo apt-get install ant
 
 ile kurulur. Proje dizini sample altında yine src olsun ve bir de lib
 dizini var. Üstteki proje yapısını derlemek için bir build.xml
-projenin en üst seviyesine konur ve icinde, 
+projenin en üst seviyesine konur ve icinde, 
 
 ```
 <project name="sample" default="dist" basedir=".">
 
-  <property name="src" location="src"/>
+  <property name="src" location="src"/>
 
-  <property name="build" location="build"/>
+  <property name="build" location="build"/>
 
-  <property name="dist" location="bin"/>
+  <property name="dist" location="bin"/>
 
-  <target name="init">
+  <target name="init">
 
-    <tstamp/>
+    <tstamp/>
 
-    <mkdir dir="${build}"/>
+    <mkdir dir="${build}"/>
 
-  </target>
+  </target>
 
-  <path id="build.classpath">
+  <path id="build.classpath">
 
-    <fileset dir="lib">
+    <fileset dir="lib">
 
-      <include name="**/*.jar"/>
+      <include name="**/*.jar"/>
 
-    </fileset>
+    </fileset>
 
-  </path>
+  </path>
 
-  <path id="compile.classpath">
+  <path id="compile.classpath">
 
-    <pathelement location ="${build}"/>
+    <pathelement location ="${build}"/>
 
-    <fileset dir="lib">
+    <fileset dir="lib">
 
-      <include name="**/*.jar"/>
+      <include name="**/*.jar"/>
 
-    </fileset>
+    </fileset>
 
-  </path>
+  </path>
 
-  <target name="compile" depends="init"
+  <target name="compile" depends="init"
 
-        description="compile the source">
+        description="compile the source">
 
-    <javac destdir="${build}">
+    <javac destdir="${build}">
 
-      <src path="${src}"/>
+      <src path="${src}"/>
 
-    <classpath refid="build.classpath"/>
+    <classpath refid="build.classpath"/>
 
-  </javac>
+  </javac>
 
-  </target>
+  </target>
 
-  <target name="dist" depends="compile" description="generate the distribution">
+  <target name="dist" depends="compile" description="generate the distribution">
 
-    <mkdir dir="${dist}"/>
+    <mkdir dir="${dist}"/>
 
-    <jar jarfile="${dist}/sample.jar" basedir="${build}"/>
+    <jar jarfile="${dist}/sample.jar" basedir="${build}"/>
 
-  </target>
+  </target>
 
-    <target name="test" depends="compile">
+    <target name="test" depends="compile">
 
-      <java fork="yes" classname="com.vs.Test" failonerror="true">
+      <java fork="yes" classname="com.vs.Test" failonerror="true">
 
-        <classpath refid="compile.classpath"/>
+        <classpath refid="compile.classpath"/>
 
-      </java>
+      </java>
 
-  </target>
+  </target>
 
-  <target name="clean"
+  <target name="clean"
 
-        description="clean up">
+        description="clean up">
 
-    <delete dir="${build}"/>
+    <delete dir="${build}"/>
 
-    <delete dir="${dist}"/>
+    <delete dir="${dist}"/>
 
-  </target>
+  </target>
 
 </project>
 ```
@@ -173,10 +173,5 @@ jar'imizi kendi projelerine dahil edebilirler). Ayrıca pek çok
 CLASSPATH ayarı Ant tarafında otomatik olarak yapıldı.
 
 Ant, derleme, vs. ile ilgili bazı ek bilgiler bizim kitabın ek
-bölümünde bulunabilir. 
-
-
-
-
-
+bölümünde bulunabilir. 
 

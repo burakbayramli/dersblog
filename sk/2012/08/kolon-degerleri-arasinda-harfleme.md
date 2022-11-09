@@ -19,9 +19,9 @@ Test etmek icin
 
 Sonuc
 
- levenshtein 
+ levenshtein 
 -------------
-           1
+           1
 (1 row)
 
 Yani elma ve alma arasindaki fark 1 'degisimdir'. Levenshtein uzakligi
@@ -37,13 +37,13 @@ diger satirla yanyana gelmis olur, yani tum mumkun kombinasyonlari
 elde ederiz. Yeni ANSI SQL icinde bunu ozellikle belirtmek gerekiyor,
 bunun icin cross join adli komut var.
 
-select adres, sub1.adresfrom tablocross join ( select adres from
-tablo ...) as sub1 where levenshtein(adres, sub1.adres) between 1 and
+select adres, sub1.adresfrom tablocross join ( select adres from
+tablo ...) as sub1 where levenshtein(adres, sub1.adres) between 1 and
 3...
 
 Bu komutla arasinda 1 ila 3 fark olan adresleri bulmus olacagiz. 0
 uzakligi kullanmadik, bu iki adresin ayni olmasi demek olurdu. Onlarla
 ilgilenmiyoruz. 3'ten fazla uzaklik ise herhalde o adresin hakikaten
-degisik bir fiziki adres oldugu anlamina gelirdi. 
+degisik bir fiziki adres oldugu anlamina gelirdi. 
 
 

@@ -66,7 +66,7 @@ make.sh
 
 ```
 #!/bin/sh
-gcc -shared -o testmod.so -g `pkg-config opencv --cflags --libs glib-2.0` -I/usr/include/python2.5 -lpython2.5  testmod.c
+gcc -shared -o testmod.so -g `pkg-config opencv --cflags --libs glib-2.0` -I/usr/include/python2.5 -lpython2.5  testmod.c
 ```
 
 
@@ -77,9 +77,9 @@ testmod.c
 
 /*
 
- * Function to be called from Python
+ * Function to be called from Python
 
- */
+ */
 
 static PyObject* py_myFunction(PyObject* self, PyObject* args)
 
@@ -95,9 +95,9 @@ static PyObject* py_myFunction(PyObject* self, PyObject* args)
 
 /*
 
- * Another function to be called from Python
+ * Another function to be called from Python
 
- */
+ */
 
 static PyObject* py_myOtherFunction(PyObject* self, PyObject* args)
 
@@ -115,9 +115,9 @@ static PyObject* py_myOtherFunction(PyObject* self, PyObject* args)
 
 /*
 
- * Bind Python function names to our C functions
+ * Bind Python function names to our C functions
 
- */
+ */
 
 static PyMethodDef myModule_methods[] = {
 
@@ -133,9 +133,9 @@ static PyMethodDef myModule_methods[] = {
 
 /*
 
- * Python calls this to let us initialize our module
+ * Python calls this to let us initialize our module
 
- */
+ */
 
 void inittestmod()
 

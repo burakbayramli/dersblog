@@ -2,7 +2,7 @@
 
 Metin bazlı dokümanlar üzerinde dil işleme yapmayı kolaylaştıran bir
 kütüphane Python NLTK - isim İngilizce doğal dil işlemi araç
-çantasından (natural language toolkit)  geliyor. Özellikle yapay
+çantasından (natural language toolkit)  geliyor. Özellikle yapay
 öğrenim algoritmaları işlemeden dil metinleri üzerinde önişleme
 (preprocessing) için faydalı. Bu algoritmaların çoğu bir dokümanı bir
 "kelime çuvalı (bag-of-words)" olarak temsil eder (çuval kelimesi çok
@@ -55,18 +55,18 @@ tokens = [i for i in tokens if i not in string.punctuation]
 
 Kök bulmak (stemming) denen bir işlem mesela fiillerden çekimi
 çıkartır, böylece "yüzmek (swimming)" fiilinin tüm çekimleri aynı
-yüzme eylemine eşlenir. Bu çok faydalı bir özellik. 
+yüzme eylemine eşlenir. Bu çok faydalı bir özellik. 
 
 ```python
 stemmer = nltk.stem.porter.PorterStemmer()
 
 def stem_tokens(tokens):
 
-    return [stemmer.stem(item) for item in tokens]
+    return [stemmer.stem(item) for item in tokens]
 
-    
+    
 
-tokens = stem_tokens(tokens)    
+tokens = stem_tokens(tokens)    
 ```
 
 Sonuc
@@ -75,7 +75,7 @@ Sonuc
 [u'the', u'swimmer', u'like', u'swim', u'so', u'he', u'swim']
 ```
 
-Kelime Çiftleri (Bigrams)
+Kelime Çiftleri (Bigrams)
 
 Bir dokümanda arka arkaya gelen ikili, üçlü, vs. kelime dizilerine
 bakmak o dokümanı anlamak için çok faydalı oluyor, mesela açık

@@ -6,7 +6,7 @@ bahsetmemek olmaz, once buraya nasil geldigimize bakalim.
 Hadoop'un en onde gelen kullanim alanlarindan biri log dosyasi
 islemek[ti]. Ozellikle populer olan Web siteleri asiri seviyelerde log
 dosyasi uretiyordu (her kullanici tiklamasi), ama Hadoop oncesinde bu
-veriyi basit / olcekli  bir sekilde isleyebilecek bir ortam yoktu. Log
+veriyi basit / olcekli  bir sekilde isleyebilecek bir ortam yoktu. Log
 analizi yapmak isteyenler koca koca Sun, Oracle makinalari alip
 bunlara veri yuklemeye ugrasiyorlardi, ozel kodlar, ozel paketlerle bu
 veriler incelenmeye ugrasiliyordu. 2002'de boyle bir projede bizzat
@@ -51,7 +51,7 @@ kadar kolay ki, simdiye kadar niye yapmadik turunden bir serzeniste
 var bu soylemin icinde. Tabii altyapi (framework) mevcudiyeti cok
 onemliydi.. Hadoop'un bazi isleri kolaylastirmasi, bir suru
 algoritmanin bu altyapiya gecirilebilecegini farketmesi yonunde
-insanlari tesvik etti. 
+insanlari tesvik etti. 
 
 Ve bugune geliyoruz: veri analizini akim islemesi (stream processing)
 olarak gormeye alisilinca, "niye bu isi habire diske yazipi diskten

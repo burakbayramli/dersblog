@@ -10,9 +10,9 @@ assert topla(2,3)==5
 ```
 
 kodu yazılabilir; assert ifadesi eğer beklenen şart oluştuysa hiçbir
-şey yapmaz, olmazsa hata verir. Bir kodun mantığını bu sekilde test
+şey yapmaz, olmazsa hata verir. Bir kodun mantığını bu sekilde test
 edebiliriz, cunku eger kodda hata varsa, bekledigimiz sonuc
-verilmez. Eger ustteki + isareti - olsaydi, bir AssertionError
+verilmez. Eger ustteki + isareti - olsaydi, bir AssertionError
 verilirdi.
 
 İhtiyacı olan her şeyi kendi içinde barındıran kodlar için bu tür
@@ -24,15 +24,15 @@ edilmesi gereken husus şudur; taklit, ya da gerçek kodlarından birini
 atıp diğerini kullanabilmeliyiz, tasarım temiz bir şekilde olmalı.
 
 Diyelim ki o andaki sistem zamanını alıp hangi günde olduğumuza bakan
-bir kod var.  Kod eğer o anki gün iş günü ise (Pazartesi-Cuma arası)
+bir kod var.  Kod eğer o anki gün iş günü ise (Pazartesi-Cuma arası)
 verilen bir değere 200 ekliyor, yoksa 100 ekliyor ve döndürüyor..
 
 ```python
 import datetime
 def f(val):
-    t = datetime.datetime.now()
-    if t.weekday()==6 or t.weekday()==7: return val+100
-    else: return val+200
+    t = datetime.datetime.now()
+    if t.weekday()==6 or t.weekday()==7: return val+100
+    else: return val+200
 
 print f(50)
 ```
@@ -44,7 +44,7 @@ Sonuc
 ```
 
 Üstteki sonuç geldi çünkü bugün (yazının yazıldığı gün) Cumartesi. Bu
-kodu birim testinden geçirmek için ne yapmalı?  Bir test kodu yazarız,
+kodu birim testinden geçirmek için ne yapmalı?  Bir test kodu yazarız,
 o f()'i çağırır sonucu kontrol ederiz bu çok basit fakat kod her
 işlediğine değişik bir günde olabiliriz, kodun sürekli hafta sonu
 işletilmesi garanti değil, o zaman beklediğimiz cevap ile verilen
@@ -54,20 +54,20 @@ senaryoyu da test etmemiz lazım, hafta sonu olması, hafta içi olması,
 vs. bunlari testlerimiz kontrol edebilmeli.
 
 Taklitleme burada ise yarar. Fakat test edilen kodun tasarımını öyle
-yapmalıyız ki dış sisteme bizim sağladığımız bir aracı üzerinden
+yapmalıyız ki dış sisteme bizim sağladığımız bir aracı üzerinden
 bağlanılsın.
 
 ```python
 import datetime
 
 def system_time():
-    return datetime.datetime.now()
-    
+    return datetime.datetime.now()
+    
 def f(val,timer=system_time):
-    t = timer()
-    if t.weekday()==6 or t.weekday()==7: return val+100
-    else: return val+200
-    
+    t = timer()
+    if t.weekday()==6 or t.weekday()==7: return val+100
+    else: return val+200
+    
 print f(50)
 ```
 
@@ -77,7 +77,7 @@ Sonuc
 150
 ```
 
-Dikkat, f() çağrısına parametre olarak bir fonksiyon geçiyoruz, Python
+Dikkat, f() çağrısına parametre olarak bir fonksiyon geçiyoruz, Python
 ile fonksiyonları parametre gibi geçmek mümkün, ki f() çağrısı kendi
 içinde sistem zamanını okumak için bu dışarından verilen fonksiyonu
 kullanmalı. Üstteki örnekte f()'e gerçek sistem zamanını okuyan
@@ -90,8 +90,8 @@ aynen olduğu isleyecek.
 
 ```python
 def mock_1():
-    return datetime.datetime(2016, 5, 26)
-    
+    return datetime.datetime(2016, 5, 26)
+    
 print f(50,mock_1)
 ```
 
@@ -115,8 +115,8 @@ yazarız,
 
 ```python
 def mock_2():
-    return datetime.datetime(2016, 5, 29)
-    
+    return datetime.datetime(2016, 5, 29)
+    
 print f(50,mock_2)
 ```
 
@@ -144,13 +144,13 @@ assert f(50,mock_1) == 3883
 
 ```
 ---------------------------------------------------------------------------
-AssertionError                            Traceback (most recent call last)
+AssertionError                            Traceback (most recent call last)
  in ()
-      1 
-      2 
+      1 
+      2 
 ----> 3 assert f(50,mock_1) == 38838
 
-AssertionError: 
+AssertionError: 
 ```
 
 Sonucunu görürdük.
@@ -169,16 +169,16 @@ import unittest
 
 class TestBizimClass(unittest.TestCase):
 
- def test_metot1(self):
-     ...
-     self.assertFalse ( .. )
-             
- def test_metot2(self):
-     ...
-     self.assertFalse ( .. )
-             
+ def test_metot1(self):
+     ...
+     self.assertFalse ( .. )
+             
+ def test_metot2(self):
+     ...
+     self.assertFalse ( .. )
+             
 if __name__ == '__main__':
- unittest.main()
+ unittest.main()
 ```
 
 Bu script isletilince unittest.main() cagrisi her iki test metotunu

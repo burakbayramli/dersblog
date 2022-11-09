@@ -28,12 +28,12 @@ parametreleri kullanarak bir temsili resim ortaya çıkartmış. Üstteki
 durum için parametreler
 
 ```
-[ 0.02585672 -0.17299761  0.030009    0.29081285]
+[ 0.02585672 -0.17299761  0.030009    0.29081285]
 ```
 
 Parametrelerin ne olduğunun detayı şurada. Soldan 3. çubuğun duruş
-açısı, -45 ile +45 arasında, artı açılar sağa doğru yatik demek,
-eksiler sola doğru. 
+açısı, -45 ile +45 arasında, artı açılar sağa doğru yatik demek,
+eksiler sola doğru. 
 
 Eğer çubuğu dengede tutmayı öğrenmek istersek step ile alt kısmı sağa
 ya da sola kaydırabiliriz, çubuk sola düşecek gibi olsa mesela sola
@@ -45,7 +45,7 @@ biter, o zaman çubuk "düşmüş" demektir. Ekran dışına çıkmak aynı
 şekilde oyunu bitirir.
 
 CartPole kontrol problemlerini anlamak açısından faydalı bir
-örnek.  Kontrol Mühendisliği'nde bu tür durumlar yoğun şekilde
+örnek.  Kontrol Mühendisliği'nde bu tür durumlar yoğun şekilde
 görülür.
 
 Her gözlenen parametrenin kabul edilir değer aralıklarını ekrana basalım,

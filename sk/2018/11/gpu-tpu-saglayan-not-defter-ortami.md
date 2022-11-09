@@ -3,7 +3,7 @@
 Derin Öğrenme için GPU kullanmak isteyenler fakat bulut servisinde
 sıfırdan yeni makina yaratmak istemeyenlere Google Collab ilginç
 gelebilir. Collab servisi bir tür "Google Drive üzerinden
-başlatılabilen  jupyter not defter / çekirdek servisi". Bir önemli
+başlatılabilen  jupyter not defter / çekirdek servisi". Bir önemli
 özelliği arka planda, jupyter çekirdeğinin GPU ve hatta Google'ın
 TPU'larını kullanabilmesi. Sanki GPU'su, Python'u kurulmuş bir
 makinada oturuyoruz, o makinada jupyter hazır, bize tek kalan yeni bir
@@ -25,7 +25,7 @@ kurulmamış paketi kurar. Tabii kurulum geçicidir, yarın GC'de aynı not
 defterine girince tekrar aynı kurumu yapmak gerekir.
 
 Peki GC benim özel Google Drive'imda duran dosyalarıma erisebilir
-mi? Bu mumkun. Bir hücrede
+mi? Bu mumkun. Bir hücrede
 
 ```python
 from google.colab import drive
@@ -39,7 +39,7 @@ not defterine dönüyoruz, şimdi aynı hücrede bir girdi kutusu var, o
 kutuya yazıyoruz. Kontrol yapılıyor ve artık üst seviye GD dizininiz
 ne ise, mesela benim için My Drive, oraya artık /content/gdrive ile
 erişmek mümkün. Yani My Drive/benim/dizin/dosya.txt erişimi lazımsa,
-not defterindeki Python kodu /content/gdrive/benim/dizin/dosya.txt ile
+not defterindeki Python kodu /content/gdrive/benim/dizin/dosya.txt ile
 o dosyaya erişilebilir.
 
 Bu arada üstte belirtilen dizine dosya yazmak ta mümkün; mesela bir
@@ -53,7 +53,7 @@ zeka için tasarlanmış bir ciptir.
 
 Not defteri ortamı okkalı bir ortam. Hafıza vs bağlamında pek bir
 sınırlamaya raslamadım. Fakat GPU hafızası biraz sınırlanmış olabilir,
-ama orada da ayarlarla oynayarak büyütme mümkün olabilir. 
+ama orada da ayarlarla oynayarak büyütme mümkün olabilir. 
 
 ![](collab.png)
 

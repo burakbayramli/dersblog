@@ -16,7 +16,7 @@ paket dhtmlxcombo adinda bir pakettir. Bu paket, duz HTML temelli olan
 select'i alip onu combolastiriyor, ya da sadece bos bir <div> blogunu
 da alip combo haline getirebiliyor.
 
-Bu kutuphaneyi kullanarak yazdigimiz ornek kodlari altta bulabilirsiniz. Onemli noktalardan biri combo'nun asagi gosteren ok imajini bulabilmesi icin <script> tagi icinde window.dhx_globalImgPath="/imaj/dizin/ismi"; ile ok imajinin yerini vermeniz. test.html icinde bunu gorebilirsiniz.
+Bu kutuphaneyi kullanarak yazdigimiz ornek kodlari altta bulabilirsiniz. Onemli noktalardan biri combo'nun asagi gosteren ok imajini bulabilmesi icin <script> tagi icinde window.dhx_globalImgPath="/imaj/dizin/ismi"; ile ok imajinin yerini vermeniz. test.html icinde bunu gorebilirsiniz.
 
 Dosyalar
 
@@ -27,102 +27,102 @@ dhtmlxcombo.css
 
 ```
 .dhx_combo_img{
-    position:absolute;
-    top:0px;
-    right:0px;
-    width:17px;
-    height:20px;
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:17px;
+    height:20px;
 }
 
 .dhx_combo_option_img{
-    position:relative;
-    top:1px;
-    margin-left:2px;
-    left:0px;
-    width:18px; height:18px;
+    position:relative;
+    top:1px;
+    margin-left:2px;
+    left:0px;
+    width:18px; height:18px;
 }
 .dhx_combo_input{
-    color:#333333;
-    font-family: Arial;
-    font-size: 9pt;
-    border:0px;
-    padding:2px 2px 2px 2px;
-    position:absolute;
-    top:0px;
+    color:#333333;
+    font-family: Arial;
+    font-size: 9pt;
+    border:0px;
+    padding:2px 2px 2px 2px;
+    position:absolute;
+    top:0px;
 }
 .dhx_combo_box{
-    position:relative;
-    text-align:left;
-    border:1px solid #C3BBB6;
-    height:20px;
-    _height:22px;
-    overflow:hidden;
-    background-color: white;
+    position:relative;
+    text-align:left;
+    border:1px solid #C3BBB6;
+    height:20px;
+    _height:22px;
+    overflow:hidden;
+    background-color: white;
 }
 
 .dhx_combo_list{
-    position:absolute;
-    z-index:230;
-    overflow-y:auto;
-    overflow-x:hidden;
-    border:1px solid black;
-    height:100px;
-    font-family: Arial;
-    font-size: 9pt;
-    background-color: white;
+    position:absolute;
+    z-index:230;
+    overflow-y:auto;
+    overflow-x:hidden;
+    border:1px solid black;
+    height:100px;
+    font-family: Arial;
+    font-size: 9pt;
+    background-color: white;
 }
 
 
 .dhx_combo_list div{
-    cursor:default;
-    padding:2px 2px 2px 2px;
+    cursor:default;
+    padding:2px 2px 2px 2px;
 }
 .dhx_selected_option{
-    background-color:navy;
-    color:white;
+    background-color:navy;
+    color:white;
 }
 
 
 .dhx_combo_img_rtl{
-    position:absolute;
-    top:0px;
-    left:1px;
-    width:17px;
-    height:20px;
+    position:absolute;
+    top:0px;
+    left:1px;
+    width:17px;
+    height:20px;
 }
 .dhx_combo_option_img_rtl{
-    float:right;
-    margin-right :0px;
-    width:18px; height:18px;
+    float:right;
+    margin-right :0px;
+    width:18px; height:18px;
 }
 
 .dhx_combo_list_rtl{
-    direction: rtl;
-    unicode-bidi : bidi-override;
-    position:absolute;
-    z-index:230;
-    overflow-y:auto;
-    overflow-x:hidden;
-    border:1px solid black;
-    height:100px;
-    font-family: Arial;
-    font-size: 9pt;
-    background-color: white;
+    direction: rtl;
+    unicode-bidi : bidi-override;
+    position:absolute;
+    z-index:230;
+    overflow-y:auto;
+    overflow-x:hidden;
+    border:1px solid black;
+    height:100px;
+    font-family: Arial;
+    font-size: 9pt;
+    background-color: white;
 }
 .dhx_combo_list_rtl div{
-    direction: rtl;
-    unicode-bidi : bidi-override;
+    direction: rtl;
+    unicode-bidi : bidi-override;
 }
 .dhx_combo_list_rtl div div{
-    float :right !important;
-    cursor:default;
-    padding:2px 2px 2px 2px;
+    float :right !important;
+    cursor:default;
+    padding:2px 2px 2px 2px;
 }
 .dhx_combo_list_rtl div img{
-    float :right !important;
+    float :right !important;
 }
 .dhx_combo_list_rtl div input{
-    float :right !important;
+    float :right !important;
 }
 ```
 
@@ -133,42 +133,42 @@ test.html
 ```
 <html>
 
-  <head>
+  <head>
 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-    <script  src="dhtmlxcommon.js"></script>
+    <script  src="dhtmlxcommon.js"></script>
 
-    <script  src="dhtmlxcombo.js"></script>
+    <script  src="dhtmlxcombo.js"></script>
 
-    <link rel="STYLESHEET" type="text/css" href="dhtmlxcombo.css">
+    <link rel="STYLESHEET" type="text/css" href="dhtmlxcombo.css">
 
-    <script>
+    <script>
 
-      window.dhx_globalImgPath="/home/burak/";
+      window.dhx_globalImgPath="/home/burak/";
 
-    </script>
+    </script>
 
-  </head>
-
-
-
-  <body>
+  </head>
 
 
 
-    <div id="combo_zone2" style="width:200px; height:30px;"></div>
-
-    <script>
-
-      var z=new dhtmlXCombo("combo_zone2","alfa3",200);
-
-      z.addOption([[1,1111],[2,2222],[3,3333],[4,4444],[5,5555]]);
-
-    </script>
+  <body>
 
 
-  </body>
+
+    <div id="combo_zone2" style="width:200px; height:30px;"></div>
+
+    <script>
+
+      var z=new dhtmlXCombo("combo_zone2","alfa3",200);
+
+      z.addOption([[1,1111],[2,2222],[3,3333],[4,4444],[5,5555]]);
+
+    </script>
+
+
+  </body>
 
 
 </html>

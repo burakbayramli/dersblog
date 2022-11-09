@@ -16,14 +16,14 @@ numarasini kullanmamiz lazim. Dikkat, burada PARTITION komutu yok.
 Fakat aklimiza ilk gelen basit kodlamayi yaparsak
 
 ```
-select 
+select 
 
 date_trunc('month',orderdate),
 
 sum(count(distinct(customerid)))
    over (order by date_trunc('month',orderdate))
 
-from orders group by date_trunc('month',orderdate) 
+from orders group by date_trunc('month',orderdate) 
 ```
 
 dogru sonucu almadigimizi goreceksiniz. Sebep farkli aylardaki
@@ -34,22 +34,16 @@ yaptigi siparisin ay kismi kullanilabilir. Ornek
 
 
 ```
-SELECT  OrderDate,SUM(COUNT(DISTINCT customerid)) OVER (ORDER BY OrderDate)FROM
-    (
-  
- SELECT CustomerID,
-        DATE_TRUNC('MONTH', MIN(OrderDate)) AS OrderDate
-        FROM
-    orders
-        GROUP BY CustomerID) AS ordersGROUP BY OrderDate
+SELECT  OrderDate,SUM(COUNT(DISTINCT customerid)) OVER (ORDER BY OrderDate)FROM
+    (
+  
+ SELECT CustomerID,
+        DATE_TRUNC('MONTH', MIN(OrderDate)) AS OrderDate
+        FROM
+    orders
+        GROUP BY CustomerID) AS ordersGROUP BY OrderDate
 ```
 
 Goruldugu gibi min(..) ile customerid icin mumkun olabilecek en erken
 tarih alinmis. Bu kod toplami duzeltecektir.
-
-
-
-
-
-
 

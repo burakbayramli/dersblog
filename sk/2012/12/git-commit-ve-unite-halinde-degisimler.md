@@ -2,11 +2,23 @@
 
 Diyelim ki bir Git deposundaki kodlarinizda calisiyorsunuz, degisiklik
 yaptiniz. Bu kodlari nasil depoya geri koymak gerekir?Once dizin
-icinde git status yapin. 
+icinde git status yapin. 
 
 ```
-# On branch master# Changes not staged for commit:#
-   (use "git add/rm ..." to update what will be committed)#   (use "git checkout -- ..." to discard changes in working directory)##    modified:   README#    modified:   build.py## Untracked files:#   (use "git add ..." to include in what will be committed)##    mining/dosya.py
+# On branch master# Changes not staged for commit:
+#
+   (use "git add/rm ..." to update what will be committed)
+#
+   (use "git checkout -- ..." to discard changes in working directory)
+##
+    modified:
+   README#
+    modified:
+   build.py
+## Untracked files:#
+   (use "git add ..." to include in what will be committed)
+##
+    mining/dosya.py
 #
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
@@ -23,8 +35,14 @@ istediklerimizi git add ile secerek commit icin
 hazirlayabiliriz. Mesela README dosyasinda bunu yapmis olsak, tekrar
 git status deyince
 
-# Changes to be committed:#   (use "git reset HEAD ..." to unstage)##    modified:   README
-#    ...
+```
+# Changes to be committed:#
+   (use "git reset HEAD ..." to unstage)##
+    modified:
+   README
+#
+    ...
+```
 
 gozukecek.
 
@@ -44,9 +62,4 @@ okunabilirligi, takip edilebilirligi, bakilabilirligi acisindan).
 Eger bir commit oncesi yapilan her degisikliklerin tamami tek bir
 uniteye aitse, o zaman basit bir sekilde git add -u ile tum bu
 degisiklikleri otomatik olarak ekleyebiliriz.
-
-
-
-
-
 

@@ -160,22 +160,22 @@ sudo pip install ecmwf-api-client
 
 Burada "Register" ile kullanici bilgileri, email, vs. verilip
 kaydolunur. Bir aktivasyon email'i sonra bir tane daha email geliyor,
-ve kayit bitiyor.  Login yapilir. Simdi API'ye erismek icin anahtar
+ve kayit bitiyor.  Login yapilir. Simdi API'ye erismek icin anahtar
 lazim,
 
 https://api.ecmwf.int/v1/key/
 
-Burada gosterilen 
+Burada gosterilen 
 
 ```
 {
-    "url"   : "https://api.ecmwf.int/v1",
-    "key"   : "[ANAHTAR]",
-    "email" : "[email]"
+    "url"   : "https://api.ecmwf.int/v1",
+    "key"   : "[ANAHTAR]",
+    "email" : "[email]"
 }
 ```
 
-formundaki anahtar $HOME/.ecmwfapirc dosyasina yazilir. 
+formundaki anahtar $HOME/.ecmwfapirc dosyasina yazilir. 
 
 Verilere erismeden once veri turune gore bazi lisans sayfalarinda bir
 lisans kabuluna "evet" demek gerekiyor, mesela alttaki tur bir script
@@ -188,19 +188,19 @@ server = ECMWFDataServer()
 
 server.retrieve({
 
-    'dataset' : "tigge",
-    'step'    : "24/to/120/by/24",
-    'number'  : "all",
-    'levtype' : "sl",
-    'date'    : "20071001/to/20071003",
-    'time'    : "00/12",
-    'origin'  : "all",
-    'type'    : "pf",
-    'param'   : "tp",
-    'area'    : "70/-130/30/-60",
-    'grid'    : "2/2",
-    'target'  : "data.grib"
-    })
+    'dataset' : "tigge",
+    'step'    : "24/to/120/by/24",
+    'number'  : "all",
+    'levtype' : "sl",
+    'date'    : "20071001/to/20071003",
+    'time'    : "00/12",
+    'origin'  : "all",
+    'type'    : "pf",
+    'param'   : "tp",
+    'area'    : "70/-130/30/-60",
+    'grid'    : "2/2",
+    'target'  : "data.grib"
+    })
 ```
 
 [5] lisansına evet demiş olmak lazım. Bir tane daha [6].

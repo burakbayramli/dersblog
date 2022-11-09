@@ -22,7 +22,7 @@ en "başarılı" olacak ayarları öğrenebilir.
 Oyunlara dönelim, simülasyon ortamlarından OpenAI Gym üzerinden
 
 ```
-sudo pip install  gym[atari]
+sudo pip install  gym[atari]
 ```
 
 ile ünlü oyun Pong ortamı kurulur. Oyundan gelen pikseller matris
@@ -55,11 +55,11 @@ env.reset()
 for i in range(20): obs, reward, done, info = env.step(0)
 
 while True:
-    obs, reward, done, info = env.step(random.choice([0,1,2,3,4,5]))
-    if np.abs(reward) > 0.0: break
-    im = Image.fromarray(obs)
-    im.save('out.png')
-    time.sleep(0.4) # zaman arasi
+    obs, reward, done, info = env.step(random.choice([0,1,2,3,4,5]))
+    if np.abs(reward) > 0.0: break
+    im = Image.fromarray(obs)
+    im.save('out.png')
+    time.sleep(0.4) # zaman arasi
 ```
 
 Imaj kaydi yerine direk ekranda gostermek icin env.render() cagrisi da
@@ -80,7 +80,7 @@ Detaylar için şu blog güzel.
 Alınan imaj üzerinde bazı önişlemler mümkün, mesela en üstteki skor
 bölümü oyun için gerekli mi? Bunlar kırpılabilir. Ayrıca renk gerekli
 olmayabilir, 3 renk kanalı 1 kanala iner. Küçültme yapılarak
-210x160 boyutu mesela 80x80'e indirilebilir. Bir diğer önişlem şu:
+210x160 boyutu mesela 80x80'e indirilebilir. Bir diğer önişlem şu:
 Karpathy (üstteki bağlantı) ardı ardına gelen iki oyun karesinin
 farkını alıyor, böylece hareket bilgisini yakalamak istemiş
 herhalde. Alternatif bir yaklaşım Stanford Üniversite'sindeki RL
@@ -103,38 +103,38 @@ import gym
 from collections import deque
 
 def greyscale(state):
-    state = np.reshape(state, [210, 160, 3]).astype(np.float32)
-    state = state[:, :, 0] * 0.299 + state[:, :, 1] * 0.587 + state[:, :, 2] * 0.114
-    state = state[35:195]  # crop
-    state = state[::2,::2] # downsample by factor of 2
-    state = state[:, :, np.newaxis]
-    return state.astype(np.uint8)
+    state = np.reshape(state, [210, 160, 3]).astype(np.float32)
+    state = state[:, :, 0] * 0.299 + state[:, :, 1] * 0.587 + state[:, :, 2] * 0.114
+    state = state[35:195]  # crop
+    state = state[::2,::2] # downsample by factor of 2
+    state = state[:, :, np.newaxis]
+    return state.astype(np.uint8)
 
 class MaxAndSkipEnv(gym.Wrapper):
-    def __init__(self, env=None, skip=4):
-        super(MaxAndSkipEnv, self).__init__(env)
-        self._obs_buffer = deque(maxlen=2)
-        self._skip       = skip
+    def __init__(self, env=None, skip=4):
+        super(MaxAndSkipEnv, self).__init__(env)
+        self._obs_buffer = deque(maxlen=2)
+        self._skip       = skip
 
-    def _step(self, action):
-        total_reward = 0.0
-        done = None
-        for _ in range(self._skip):
-            obs, reward, done, info = self.env.step(action)
-            self._obs_buffer.append(obs)
-            total_reward += reward
-            if done:
-                break
+    def _step(self, action):
+        total_reward = 0.0
+        done = None
+        for _ in range(self._skip):
+            obs, reward, done, info = self.env.step(action)
+            self._obs_buffer.append(obs)
+            total_reward += reward
+            if done:
+                break
 
-        max_frame = np.max(np.stack(self._obs_buffer), axis=0)
+        max_frame = np.max(np.stack(self._obs_buffer), axis=0)
  max_frame = greyscale(max_frame)
-        return max_frame, total_reward, done, info
+        return max_frame, total_reward, done, info
 
-    def _reset(self):
-        self._obs_buffer.clear()
-        obs = self.env.reset()
-        self._obs_buffer.append(obs)
-        return obs
+    def _reset(self):
+        self._obs_buffer.clear()
+        obs = self.env.reset()
+        self._obs_buffer.append(obs)
+        return obs
 ```
 
 Kullanmak için tek bir imaj basalım
@@ -174,15 +174,4 @@ for _ in range(500):
 ```
 
 ortami gorebiliriz. 
-
-
-
-
-
-
-
-
-
-
-
 

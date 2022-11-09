@@ -1,7 +1,7 @@
 # Ubuntu, Nautilus, Dosya / Dizin Uzerinde Islem Yapmak
 
 Ubuntu masaustu dizin gezme programi (explorer) Nautilus'u
-kullanirken, eger  icinde olunan bir dizin, dosya uzerinde islem
+kullanirken, eger  icinde olunan bir dizin, dosya uzerinde islem
 yapmak istersek, bir gorsel kisayol tanimlayabiliriz. Nautilus
 yapisina gore $HOME/.gnome2/nautilus-scripts altina atilan her script,
 mouse'ta sag tiklama yapilinca menude Scripts altinda cikar. Mesela

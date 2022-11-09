@@ -10,7 +10,7 @@ uzerinde kurmak lazim.
 ```
 wget http://ardownload.adobe.com/pub/adobe/reader/unix/9.x/9.5.1/enu/AdbeRdr9.5.1-1_i386linux_enu.deb
 
-sudo dpkg -i --force-architecture AdbeRdr9.5.1-1_i386linux_enu.deb 
+sudo dpkg -i --force-architecture AdbeRdr9.5.1-1_i386linux_enu.deb 
 
 sudo apt-get install -f 
 

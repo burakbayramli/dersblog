@@ -17,7 +17,7 @@ video'yu baslatiriz, ayni anda Android cep telefonunda Voice Recorder
 aracini baslatiriz. Benim yaklasimim ana video'dan 5-10 saniye kadar
 izlemek, video dondurmak (pause), izledigim / duydugum konusmayi
 aklimda tercume edip aninda VR ile mikrofonda kaydetmek. Yani baska
-hicbir on hazirlik yapmadan direk  kaydi yapmak. Gayet basit. Tabii
+hicbir on hazirlik yapmadan direk  kaydi yapmak. Gayet basit. Tabii
 video / kayit donduruldugunda dusunmek icin bol vakit var, ve bu
 izle-tercume-kaydet islemini 5 dakikalik buyuk bloklara ayiriyorum,
 boylece aralarda mola vermek, hata ihtimalini azaltmak kolaylassin. VR
@@ -30,9 +30,9 @@ tercume kayit edildi. VR kayitlari m4a formatinda dosyalar, bu
 dosyalari alip dizustune getiririz, v1.m4a, v2.m4a,.. olsun,
 
 ```
-ffmpeg  -i v1.m4a  v1.mp3
-ffmpeg  -i v2.m4a  v3.mp3
-ffmpeg  -i v3.m4a  v4.mp3
+ffmpeg  -i v1.m4a  v1.mp3
+ffmpeg  -i v2.m4a  v3.mp3
+ffmpeg  -i v3.m4a  v4.mp3
 ```
 
 diye mp3 formatina ceviririz. Bu dosyalari birlestirip tek bir dosya
@@ -49,7 +49,7 @@ mp3 yapalim,
 ffmpeg -i video_en.webm -i voice.mp3 -map 0:v -map 1:a -c:v copy -c:a libvorbis -ac 2 -shortest video_tr.webm
 ```
 
-Artik video_tr.webm icinde seslendirilmis video var.
+Artik video_tr.webm icinde seslendirilmis video var.
 
 
 

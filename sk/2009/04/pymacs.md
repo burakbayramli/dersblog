@@ -36,7 +36,7 @@ diğer EL dosyaları ile birlikte tuttuğunuzu varsayalım. O zaman .emacs
 çağrısı yüklemek için yeterli. Bu kod içinde neler olsun?
 
 ```
-from Pymacs import lispdef test():    lisp.message("i am here")
+from Pymacs import lispdef test():    lisp.message("i am here")
 ```
 
 Gördüğünüz üzere lisp objesi üzerinde Emacs metotları var;
@@ -55,7 +55,7 @@ sonra modülü tekrar yüklemek. Bizim .emacs dosyamız şu anda şöyle
 (defun reload-pyjde()
   (interactive)
   (if (buffer-live-p (get-buffer "*Pymacs*" ))
-  (kill-buffer (get-buffer         "*Pymacs*")))
+  (kill-buffer (get-buffer         "*Pymacs*")))
   (pymacs-load "/usr/share/emacs/22.2/site-lisp/pyjde"))
   (defun test-me()(interactive)(pyjde-test))
   (global-set-key [f5] 'test-me)

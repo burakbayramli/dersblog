@@ -114,8 +114,8 @@ cebire uygun şekilde veriliyor. Mesela,
 
 ```python
 a = np.array([[1,1,1],
-              [2,2,2],
-              [3,3,3]])
+              [2,2,2],
+              [3,3,3]])
 print a[:,1], a[:,1].shape
 ```
 
@@ -134,8 +134,8 @@ print b[:,1], b[:,1].shape
 
 ```
 [[1]
- [2]
- [3]] (3, 1)
+ [2]
+ [3]] (3, 1)
 ```
 
 Yani (3,1) boyutunda bir matris parçası geldi. Bu farklılık yanlış
@@ -146,7 +146,7 @@ print np.dot(a[:,1],np.ones((3,3))*2)
 ```
 
 ```
-[ 12.  12.  12.]
+[ 12.  12.  12.]
 ```
 
 sonucunu verir. Aslında bu çarpım yapılamamalıydı çünkü (3,1) boyutu
@@ -182,7 +182,7 @@ matematiksel hesapları gerektirdiği için o dünyada fonsiyonel
 çağrıların matematiksel fonksiyon olarak görme hem kodda hem tasarıda
 işlerin temiz olmasını sağlar. Mesela bir Numpy vektörünün tüm
 öğelerini toplamak için for x in vec: sum += x gibi bir döngü
- yazmayız, direk sum(vec) çağrısı yaparız. Numpy tüm öğeler üzerinde
+ yazmayız, direk sum(vec) çağrısı yaparız. Numpy tüm öğeler üzerinde
 işleyecek bir metot sağlamıştır.
 
 Eğer kendi yazdığımız bir fonksiyonun bu şekilde işlemesini
@@ -195,11 +195,11 @@ float içerikli yeni bir matris ortaya çıkacak.
 ```python
 import numpy as np
 
-def f(arg): 
-    if "." in arg: 
-        return np.float(arg)   
-    else: 
-        return 0
+def f(arg): 
+    if "." in arg: 
+        return np.float(arg)   
+    else: 
+        return 0
 
 data = np.array(['elma','armut','23.42','99.9'])
 f = np.vectorize(f,otypes=[np.float])
@@ -209,7 +209,7 @@ print f(data)
 Sonuc
 
 ```
-[  0.     0.    23.42  99.9 ]
+[  0.     0.    23.42  99.9 ]
 ```
 
 Matris Gezmek
@@ -222,7 +222,7 @@ istersek, np.ndenümerate tavsiye edilir.
 A = [[1,2],[3,4]]
 
 for i val in np.ndenumerate(A):
-   print i, "deger", val
+   print i, "deger", val
 ```
 
 Ek bazı ilerlemeler:
@@ -243,7 +243,7 @@ import numpy as np
 A = [[1,2],[3,4]]
 
 for (x,y), val in np.ndenumerate(A):
-   print x, y, "deger", val
+   print x, y, "deger", val
 ```
 
 Burada x,y'a i içinde olan x ve y kordinat değerleri taşınıyor olacak.
@@ -274,7 +274,7 @@ print (np.einsum('ij,ji->i',np.dot(rs.T,R),rs))
 ```
 
 ```
-[[ 18  128]]
+[[ 18  128]]
 ```
 
 Iki Dizini Ust Uste Dizmek

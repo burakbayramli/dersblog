@@ -1,6 +1,6 @@
 # sqlite, Basit, Hızlı Diske Değer Yazma Okuma
 
-Bir Python uygulaması için  basit, hızlı bir şekilde diske
+Bir Python uygulaması için  basit, hızlı bir şekilde diske
 yazılabilen, ve istendiği zaman anahtar bazlı, tüm dosyayı hafızaya
 getirmeden hızlı şekilde okunabilen bir yapıya ihtiyaç vardı. Çözüm
 için önce Python'un sözlük (dictionary) yapısının diske yazılmasına
@@ -56,7 +56,7 @@ Taban tek bir dosya, hangisi olacağını biz tanımladık, gayet basit.
 /tmp/mydb.db dosyasına bakalım. Bu dosya içinde yaratılan farklı
 isimleri göreceğiz. Dosya büyüklüğünü kontrol etmek ise yaramayabilir
 çünkü sqlite taban dosyasını her yazimda degil, belli aralıklarla
-büyütüyor. 
+büyütüyor. 
 
 Arada satır sayısını alttaki ile kontrol edebiliriz,
 
@@ -68,7 +68,7 @@ print (cursor.fetchone())
 
 Taban iş bitince `db.close` ile kapatılır. Fakat düzgün kapatılmasa
 bile commit ile yazılanlar kaybolmayacaktır, yani süreç çökse, tekrar
-tabana dönsek en son yazdığımız satırı orada bulacağız. 
+tabana dönsek en son yazdığımız satırı orada bulacağız. 
 
 Bu tüm ihtiyaçları karşılıyor, farklı bir süreçte işleyen büyük bir
 taban değil, kurulmasına bile gerek yok zaten Python sürümünde var,

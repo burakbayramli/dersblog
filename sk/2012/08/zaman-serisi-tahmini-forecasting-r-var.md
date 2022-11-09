@@ -47,7 +47,7 @@ Sonra R'ye girilir
 Simdi su R kodu kullanilabilir
 
 ```
-library("vars")file = "predict-1.csv"a <- read.csv(file, header = TRUE, sep = ",", na.strings="")impute.med <- function(x) {    z <- median(x, na.rm = TRUE)    x[is.na(x)] <- z    return(x)}a2 <- sapply(a, function(x){    if(is.numeric(x) & any(is.na(x))){            impute.med(x)        } else {            x        }    })out <- VAR(a2, p = 2, type = "const")out.prd <- predict(out, n.ahead = 30, ci = 0.95)
+library("vars")file = "predict-1.csv"a <- read.csv(file, header = TRUE, sep = ",", na.strings="")impute.med <- function(x) {    z <- median(x, na.rm = TRUE)    x[is.na(x)] <- z    return(x)}a2 <- sapply(a, function(x){    if(is.numeric(x) & any(is.na(x))){            impute.med(x)        } else {            x        }    })out <- VAR(a2, p = 2, type = "const")out.prd <- predict(out, n.ahead = 30, ci = 0.95)
 ```
 
 Bunu Python'dan cagirmak icin rpy2 kullaniriz,
@@ -62,7 +62,7 @@ code = ''.join(f.readlines())
 result = rpy2.robjects.r(code)
 res = [['gdp','cons']]
 for i in range(30):
-    res.append([str(result[0][0][i]),str(result[0][1][i]) ] )
+    res.append([str(result[0][0][i]),str(result[0][1][i]) ] )
 res = np.array(res)
 np.savetxt('predict-2.csv',res,delimiter=",",fmt='%s')
 ```
@@ -83,13 +83,13 @@ import numpy as np
 import statsmodels.api as sm
 from statsmodels.tsa.api
 import VAR
-  def pad(data):
-    bad_indexes = np.isnan(data)
-    good_indexes = np.logical_not(bad_indexes)
-    good_data = data[good_indexes]
-    interpolated = np.interp(bad_indexes.nonzero()[0], good_indexes.nonzero()[0], good_data)
-    data[bad_indexes] = interpolated
-    return datadata = np.genfromtxt("predict-1.csv", skip_header=1, delimiter=',')
+  def pad(data):
+    bad_indexes = np.isnan(data)
+    good_indexes = np.logical_not(bad_indexes)
+    good_data = data[good_indexes]
+    interpolated = np.interp(bad_indexes.nonzero()[0], good_indexes.nonzero()[0], good_data)
+    data[bad_indexes] = interpolated
+    return datadata = np.genfromtxt("predict-1.csv", skip_header=1, delimiter=',')
 data = np.apply_along_axis(pad, 0, data)
 model = VAR(data)
 res = model.fit(2)

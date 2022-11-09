@@ -1,7 +1,7 @@
 # htlatex ve minted, make4ht
 
 
-TeX dosyalarindan HTML uretmek icin 
+TeX dosyalarindan HTML uretmek icin 
 
 ```
 htlatex dosya.tex
@@ -10,20 +10,20 @@ htlatex dosya.tex
 ifadesi kullanilir. Kurulu degilse
 
 ```
-sudo apt-get install  tex4ht-common
+sudo apt-get install  tex4ht-common
 ```
 
 Fakat icinde minted paketine referans olan tex dosyalarinda problem
 cikabilir; "-shell-escape secenegi kullanilmamis" hatasi verilecek,
-fakat bu secenek eklense bile problem devam ediyor. 
+fakat bu secenek eklense bile problem devam ediyor. 
 
-Cozum, 
+Cozum, 
 
 ```
 htlatex dosya.tex "dosya" "" "" -shell-escape
 ```
 
-kullanimi, bunun icin ayrica dosya.cfg ayni dizinde olmali, icerigi 
+kullanimi, bunun icin ayrica dosya.cfg ayni dizinde olmali, icerigi 
 
 ```
 \Preamble{xhtml}
@@ -40,7 +40,7 @@ cikartabiliyor. Her seyi utf-8 bazli yapmak istiyorsak make4ht
 programi daha kullanisli olabilir,
 
 ```
-make4ht -u dosya.tex -s 
+make4ht -u dosya.tex -s 
 ```
 
 

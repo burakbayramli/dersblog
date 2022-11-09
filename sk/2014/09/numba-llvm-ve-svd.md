@@ -28,11 +28,11 @@ isletilebilir. Eger @jit(nopython=True) secilirse bu hizli yerel mod
 demektir, bu durumda Python API cagrilari yapilamaz, nopython=False
 ile obje moduna gireriz.
 
-Ogrendigimiz bazi dersler (Numba 0.13.2 uzerinden edinilen bilgiler):  
+Ogrendigimiz bazi dersler (Numba 0.13.2 uzerinden edinilen bilgiler):  
 
 Projemizde ogrendik ki obje modu digerine nazaran cok daha yavastir,
 yerel mod tavsiye edilir. Yerel modda sadece temel tipler ve Numpy
-matrisleri  / vektorleri kullanilabilir.
+matrisleri  / vektorleri kullanilabilir.
 
 Bazen bir dongude kullandiginiz bir degiskeni tekrar mesela baska bir
 dongude kullanamiyorsunuz (bir acaiplik aslinda, bir hata dogal
@@ -67,14 +67,14 @@ from scipy.sparse import coo_matrix, lil_matrix
 
 @jit
 def sum(A_rows, A_cols, A_data):
-    res = 0.
-    for j in range(len(A_data)):
-        u = A_rows[j]
-        i = A_cols[j]
-        res += A_data[j]
-    return resA = lil_matrix([[3,4,5,5],
-                [5,4,5,0],
-                [0,0,0,0]])
+    res = 0.
+    for j in range(len(A_data)):
+        u = A_rows[j]
+        i = A_cols[j]
+        res += A_data[j]
+    return resA = lil_matrix([[3,4,5,5],
+                [5,4,5,0],
+                [0,0,0,0]])
 
 print AA = coo_matrix(A)
 print sum(A.row, A.col, A.data.astype(np.float32))
@@ -109,38 +109,38 @@ from numba import jit
 
 @jit(nopython=True)
 def pred(u, i, P, Q):
-    dot = 0.
-    for f in range(P.shape[1]):
-        dot += P[u, f] * Q[i, f]
-    return dot
+    dot = 0.
+    for f in range(P.shape[1]):
+        dot += P[u, f] * Q[i, f]
+    return dot
 
 @jit
 def sgd_mult(rows, cols, vals, P, Q, gam, rlam):
-    q = np.empty(Q.shape[1]).astype(np.float32)
-    p = np.empty(P.shape[1]).astype(np.float32)
-    for j in range(len(vals)):
-        u = rows[j]
-        i = cols[j]
-        value = vals[j]
-        dev = value - pred(u, i, P, Q)
-        for r in range(Q.shape[1]):
-            q[r] = gam * (P[u, r]* dev - rlam*Q[i, r])
-            p[r] = gam * (Q[i, r]* dev - rlam*P[u, r])
-        for l in range(Q.shape[1]):
-            Q[i, l] += q[l]
-            P[u, l] += p[l]def svds(A, k, it=20, rlam=0.1, gam=0.1):
-    P = 1./k * np.random.randn(A.shape[0], k).astype(np.float32)
-    Q = 1./k * np.random.randn(A.shape[1], k).astype(np.float32)
-    for it in range(it):
-        sgd_mult(A.row, A.col, A.data.astype(np.float32), P, Q, gam, rlam)
-    return P, Q.T@jit(nopython=True)def rmse(rows, cols, vals, P, Q):
-    dev = 0.
-    for j in range(len(vals)):
-        u = rows[j]
-        i = cols[j]
-        val = vals[j]
-        dev += (val - pred(u, i, P, Q))**2
-    return np.sqrt(dev/len(rows))
+    q = np.empty(Q.shape[1]).astype(np.float32)
+    p = np.empty(P.shape[1]).astype(np.float32)
+    for j in range(len(vals)):
+        u = rows[j]
+        i = cols[j]
+        value = vals[j]
+        dev = value - pred(u, i, P, Q)
+        for r in range(Q.shape[1]):
+            q[r] = gam * (P[u, r]* dev - rlam*Q[i, r])
+            p[r] = gam * (Q[i, r]* dev - rlam*P[u, r])
+        for l in range(Q.shape[1]):
+            Q[i, l] += q[l]
+            P[u, l] += p[l]def svds(A, k, it=20, rlam=0.1, gam=0.1):
+    P = 1./k * np.random.randn(A.shape[0], k).astype(np.float32)
+    Q = 1./k * np.random.randn(A.shape[1], k).astype(np.float32)
+    for it in range(it):
+        sgd_mult(A.row, A.col, A.data.astype(np.float32), P, Q, gam, rlam)
+    return P, Q.T@jit(nopython=True)def rmse(rows, cols, vals, P, Q):
+    dev = 0.
+    for j in range(len(vals)):
+        u = rows[j]
+        i = cols[j]
+        val = vals[j]
+        dev += (val - pred(u, i, P, Q))**2
+    return np.sqrt(dev/len(rows))
 ```
 
 

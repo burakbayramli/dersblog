@@ -1,18 +1,19 @@
 # emacs-ipython
 
-
-emacs-ipython
-
-
-
-
-Emacs'te LaTeX modundan direk iPython kodu isletip sonucu metin / grafik olarak alip yine LaTeX icinde gosterebilen Emacs eklentisi emacs-ipython'u ayri bir proje olarak yayinladik. Indirin ve icindeki ipython-md.py ve ipython-tex.py dosyalarini bir yere koyun.
+Emacs'te LaTeX modundan direk iPython kodu isletip sonucu metin /
+grafik olarak alip yine LaTeX icinde gosterebilen Emacs eklentisi
+emacs-ipython'u ayri bir proje olarak yayinladik. Indirin ve
+icindeki ipython-md.py ve ipython-tex.py dosyalarini bir yere koyun.
 
 Kurmak icin once bir sanal ortam yaratin, Python 2, 3 farketmez.
 
-pip ile mock, ipython, matplotlib kurulmali. Matplotlib icin
-~/.config/matplotlib/matplotlibrc icinde backend : TxAgg, ya da agg,
-ya da GTKAgg ya da TkAgg yazmak gerekebilir.
+pip ile mock, ipython, matplotlib kurulmali.
+
+Matplotlib icin ~/.config/matplotlib/matplotlibrc icinde
+
+backend : TxAgg
+
+ya da agg, ya da GTKAgg ya da TkAgg yazmak gerekebilir.
 
 http://sayilarvekuramlar.blogspot.com/2018/08/virtualenv-python-izole-sanal-calsma.html
 
@@ -26,17 +27,10 @@ Acip python setup.py install ile kurun
 
 emacs.el icinde
 
+```
 (load-file "[PYMACS DIZIN]/pymacs.el")
 
-
-
 (require 'tempo)
-
-
-
-
-
-
 
 
 (autoload 'pymacs-apply "pymacs")
@@ -55,21 +49,21 @@ emacs.el icinde
 
 (defun reload-pymacs()
 
-  (interactive)
+  (interactive)
 
-  (if (buffer-live-p (get-buffer "*Pymacs*" ))
+  (if (buffer-live-p (get-buffer "*Pymacs*" ))
 
-      (kill-buffer (get-buffer "*Pymacs*")))
+      (kill-buffer (get-buffer "*Pymacs*")))
 
-  (message (buffer-file-name (current-buffer)))
+  (message (buffer-file-name (current-buffer)))
 
-  ;;
+  ;;
 
-  ;; load tex or md mode based on the extension
+  ;; load tex or md mode based on the extension
 
-  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "tex")
+  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "tex")
 
-      (progn 
+      (progn 
 
  (pymacs-load "[DIZIN]/ipython-tex")
 
@@ -77,25 +71,25 @@ emacs.el icinde
 
  (global-set-key [f5] 'ipython-tex-complete-py)
 
- (tempo-define-template 
+ (tempo-define-template 
 
-  "tex-listings-python" 
+  "tex-listings-python" 
 
   '("\\begin{minted}[fontsize=\\footnotesize]{python}\n"
 
-    (s)
+    (s)
 
-    "\n\\end{minted}\n"
+    "\n\\end{minted}\n"
 
-    )
+    )
 
   "") 
 
  ))
 
-  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "md")
+  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "md")
 
-      (progn 
+      (progn 
 
  (pymacs-load "[DIZIN]/ipython-md")
 
@@ -103,32 +97,31 @@ emacs.el icinde
 
  (global-set-key [f5] 'ipython-md-complete-py)
 
- (tempo-define-template 
+ (tempo-define-template 
 
-  "tex-listings-python" 
+  "tex-listings-python" 
 
   '("```python\n"
 
-    (s)
+    (s)
 
-    "\n```\n"
+    "\n```\n"
 
-    )
+    )
 
   "") 
 
  ))
 
-  )
+  )
 
+```
 
+Emacs'i source ile sanal ortama girdikten sonra baslatin cunku sadece
+bu sekilde artik dogru python islemcisi bulunabilir.
 
-
-Emacs'i source ile sanal ortama girdikten sonra baslatin cunku sadece bu sekilde artik dogru python islemcisi bulunabilir.
-
-
-
-Artik herhangi bir md, tex dosyasinda M-x reload-pymacs deyince eklenti yuklenecektir. 
+Artik herhangi bir md, tex dosyasinda M-x reload-pymacs deyince
+eklenti yuklenecektir. 
 
 
 

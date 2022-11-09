@@ -26,11 +26,11 @@ f.close()
 ```
 
 Dikkat: pickle objeleri kendine özel ikisel bir formatta yazar ve
-versiyonlar arası uyumsuzluk problemi çıkabilir.  Paketlerarası
+versiyonlar arası uyumsuzluk problemi çıkabilir.  Paketlerarası
 versiyon, ya da Python 2 ve 3 arası uyumsuzluklar görülebilir. Bu
 sebeple eğer mümkün ise pickle'ları çok kullanmamak en iyisi.
 
-Numpy Matrisini, Sıkıştırarak  ve String Olarak Yazmak
+Numpy Matrisini, Sıkıştırarak  ve String Olarak Yazmak
 
 Bir Numpy matrisi cetrefil bir objedir aslinda. Onu Sıkıştırarak bir
 metin haline dondurebilir miyiz? Bu lazim olabilir cunku ikisel
@@ -41,7 +41,7 @@ durumlarda zlib ve base64 kodlamasi kullanilabilir.
 ```python
 import numpy as np, zlib
 
-a1 = np.eye(3) 
+a1 = np.eye(3) 
 a1[0,1] = 3.4423423423423
 # liste yap, onu string yap, sonra kodla
 a2 = list(a1.reshape(9))
@@ -63,11 +63,11 @@ print d3.shape
 ```
 
 ```
-[[1.         3.44234234 0.        ]
+[[1.         3.44234234 0.        ]
 
- [0.         1.         0.        ]
+ [0.         1.         0.        ]
 
- [0.         0.         1.        ]]
+ [0.         0.         1.        ]]
 
 [1.0, 3.4423423423423, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
 
@@ -77,11 +77,11 @@ kodlama eJyLNtQz0FEw1jMxMTKGIx0FA5AomDCEs1DEYgE2uQqF
 
 [1.0, 3.4423423423423, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0]
 
-[[1.         3.44234234 0.        ]
+[[1.         3.44234234 0.        ]
 
- [0.         1.         0.        ]
+ [0.         1.         0.        ]
 
- [0.         0.         1.        ]]
+ [0.         0.         1.        ]]
 
 (3, 3)
 ```

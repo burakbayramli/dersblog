@@ -1,2 +1,2 @@
-pdflatex -shell-escape mrsvd2.tex
+pdflatex -shell-escape mrsvd.tex
 

@@ -55,6 +55,15 @@ pikselllik boşluk ile)
 convert -bordercolor White -border 2x20 dosya_*.jpg -append out.jpg
 ```
 
+Yanyana (horizontally) birleştirmek için `-append` yerine `+append`
+
+```
+convert -bordercolor White -border 2x20 dosya_*.jpg +append out.jpg
+```
+
+
+
+
 Diyelim ki iki sayfası tek bir kağıtta yatay basılmış bir dokümanı
 scan etmek istiyoruz. Scanımage ile tiff çıktıları aldıktan sonra,
 imajı çevirmek için

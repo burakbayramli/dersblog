@@ -45,7 +45,7 @@ köse referanslı olmak üzere `100,100` noktasından başlayarak sadece
 1000 genişliğinde 600 yükseliğinde bölgeyi almak için
 
 ```
-convert -extract 1000x600+100+000 dosya.jpg sonuc.jpg
+convert -extract 1000x600+100+000 dosya.jpg sonuc.jpg
 ```
 
 Pek çok görüntü dosyasını üst üste birleştirmek için (arada 20
@@ -77,7 +77,7 @@ seçin. Eğer imaj yeterince net değilse, netleştirmek (sharpening) için
 şu komut
 
 ```
-convert ... -unsharp 1.5x1.2+1.0+0.10  [dosya1.tiff] [dosya2.tiff]
+convert ... -unsharp 1.5x1.2+1.0+0.10  [dosya1.tiff] [dosya2.tiff]
 ```
 
 Rotate ve unsharp işleri tek bir satırda aynı anda yapılabilir.

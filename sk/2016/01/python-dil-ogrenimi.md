@@ -8,7 +8,10 @@ Python öğreten bazı video dersleri
 
 [YouTube](https://www.youtube.com/watch?v=CF8C5gOZaws&list=PLP6Cnd5VHAi5M0NvHDfsQaokaw_4kPAEu)
 
-Ustteki dokümanda kuruluş bilgileri var. Temel kurulum icin python.org sitesinden baslanabilir. Alternatif kurulum icin Anaconda başlıklı bir makale. Nihai amaç komut satırından python komutunu verince yorumlayıcıya erisebilir halde olmak.
+Ustteki dokümanda kuruluş bilgileri var. Temel kurulum icin python.org
+sitesinden baslanabilir. Alternatif kurulum icin Anaconda başlıklı bir
+makale. Nihai amaç komut satırından python komutunu verince
+yorumlayıcıya erisebilir halde olmak.
 
 Komut satırı nedir? Windows üzerindeyseniz `Start | All Programs |
 Accessories | Command Prompt` ile başlatılır. Terminal usulü metin
@@ -71,6 +74,3 @@ yazılarımız altta,
 [Scipy Sparse (Seyrek Matrisler)](../../2016/04/scipy-seyrek-matrisler-sparse-matrices.html)
 
 [Pandas](../../2016/08/pandas.html)
-
-
-

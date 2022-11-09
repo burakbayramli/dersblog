@@ -1,7 +1,7 @@
 # Zaman Serilerinde Tepe Noktası Bulmak (Peak Detection)
 
 Matlab / Octave kullananlar zaman serisi tepe noktası
-analizinde peakutils adlı bir aracı kullanıyorlar. Bu kod Python'a
+analizinde peakutils adlı bir aracı kullanıyorlar. Bu kod Python'a
 taşınmış,
 
 https://github.com/atjacobs/PeakUtils

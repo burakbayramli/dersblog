@@ -1,6 +1,5 @@
 # Vagrant
 
-
 Linux ya da MacOS uzerinde bir sanal OS isletmek icin Vagrant. 
 
 vagrantup.com
@@ -60,7 +59,7 @@ Ubuntu uzerinde apt-get install x11-utils isletilir.
 
 Dis (host) makinanin dosyalarina erismek icin sanal makina icinde
 /vagrant/ dizinini kullanabilirsiniz. Bu dizin bizi icinde Vagrantfile
-olan dizine goturecektir. 
+olan dizine goturecektir. 
 
 
 

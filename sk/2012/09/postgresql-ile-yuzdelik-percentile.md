@@ -23,7 +23,7 @@ edebiliriz), o zaman
 
 ```
 select max(totalamount) AS max_var
-from(  select totalamount, ntile(20) over (order by totalamount)
+from(  select totalamount, ntile(20) over (order by totalamount)
 as cume from orders) as tmp where cume = 19
 ```
 

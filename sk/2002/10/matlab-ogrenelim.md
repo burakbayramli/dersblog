@@ -3,7 +3,7 @@
 Bkz Python Öğrenelim yazısı. 
 
 Artık Matlab yerine Python tavsiye ediyoruz; tüm matematik
-icerigimiz bu yeni dile geçirildi. Python açık kaynak, bedava, ve
+icerigimiz bu yeni dile geçirildi. Python açık kaynak, bedava, ve
 hesapsal bilimde artık daha çok kullanılıyor, öğrenciler için
 üniversite sonrası iş bulmak için daha isabetli olur.
 

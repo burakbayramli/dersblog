@@ -197,7 +197,7 @@ grep -E -o ".{700}dropbox" dosya.txt
 Programın sonuçlarını hem ekrana basmak aynı anda bir log dosyasına yazmak
 
 ```
-sh script.sh  2>&1 | tee out.log
+sh script.sh  2>&1 | tee out.log
 ```
 
 Buyuk Dosyalar

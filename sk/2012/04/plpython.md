@@ -46,7 +46,7 @@ plpython fonksiyonu ile "aynı dizine koymak" tekniği ise
 yaramaz. Yardımcı kodu bir paket haline getirmek gerekiyordu, yani
 kodun her süreç, her Ünix kullanıcısı tarafından bulunabilecek merkezi
 (ya da sanal ortama) bir yere koyulması gerekiyordu. Paketleme
-yazısı surada.
+yazısı surada.
 
 Python bazlı PG kayıtlı işlemleri her türlü Python paketini import
 edebilirler. Yani select üzerinde çağırdığınız bir işlem arka planda

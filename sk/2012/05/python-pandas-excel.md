@@ -43,7 +43,7 @@ gibi.
 
 Paketin bazı eksikleri sadece yazmaya yönelik olması, bir hücrenin
 mevcut durumunu okuyup bir şeyler eklemek imkansız. Okuma için diğer
-paket xlrd kullanılıyor, o zaman da ta  en baştan bir xls dosyası
+paket xlrd kullanılıyor, o zaman da ta  en baştan bir xls dosyası
 açmış oluyorsunuz, ve başka bir ortamda / mod içinde oluyorsunuz.Excel
 üreten kodlarda içerik dinamik olduğu zaman kör bir şekilde veriyi
 uygun yere atmakla uğraşırız, birkaç kolonu satırı kapsayacak stil

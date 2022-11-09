@@ -193,7 +193,7 @@ bu anahtar gizli, ve her kullanıcı tarafından okunamaması lâzım.
 Hata şöyle:
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 Permissions 0644 for '/cygdrive/h/.ssh/id_rsa' are too open.

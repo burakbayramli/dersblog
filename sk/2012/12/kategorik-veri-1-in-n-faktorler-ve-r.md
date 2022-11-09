@@ -45,9 +45,9 @@ gosterttik.
 Sonuc
 
 ```
-DesignInfo(['gender[F]', 'gender[M]', 'season[T.SPRING]', 'season[T.SUMMER]', 'season[T.WINTER]', 'creditcardtype[T.c2]', 'creditcardtype[T.c3]', 'creditcardtype[T.c4]', 'creditcardtype[T.c5]', 'month', 'netamount', 'cat_freq'],  ....
+DesignInfo(['gender[F]', 'gender[M]', 'season[T.SPRING]', 'season[T.SUMMER]', 'season[T.WINTER]', 'creditcardtype[T.c2]', 'creditcardtype[T.c3]', 'creditcardtype[T.c4]', 'creditcardtype[T.c5]', 'month', 'netamount', 'cat_freq'],  ....
 
-[  0.     1.     0.     0.     0.     0.     0.     0.     0.    11.     5.08   1.  ]
+[  0.     1.     0.     0.     0.     0.     0.     0.     0.    11.     5.08   1.  ]
 ```
 
 gibi bir cikti goreceksiniz, yani faktor kolonlari 1-in-n formatina
@@ -57,7 +57,7 @@ yaz mevsimi icin apayri bir kolon vardir,ve ona tekabul eden 0/1
 degeri olacaktir.
 
 Bu yeni matrisle istediginiz yapay ogrenim rutinini
-cagirabilirsiniz. Matris Numpy formatiyla uyumludur. 
+cagirabilirsiniz. Matris Numpy formatiyla uyumludur. 
 
 
 

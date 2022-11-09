@@ -4,7 +4,7 @@
 
 SSH kullanarak Unix makinalarına giriş yapabiliyoruz, dosya
 kopyalayabiliyoruz. Bu program arka planda açık / kapalı anahtar çifti
-kullanıyor, ve yani bir anahtarla şifrelenen  mesaj bir diğeri ile
+kullanıyor, ve yani bir anahtarla şifrelenen  mesaj bir diğeri ile
 açılabiliyor, eğer mesajın benden geldiğine birini ikna etmek
 istiyorsam o mesajı göndermeden önce gizli anahtarımla şifrelerim,
 benim açık anahtarım herkes tarafından bilinir, mesajı alan açık
@@ -22,15 +22,15 @@ id_rsa dosyaları) başka şeylerle uğraşmasak olmaz mı?
 Bu mümkün. Önce id_rsa bir pem formatına çevirilmeli,
 
 ```
-openssl rsa -in ~/.ssh/id_rsa -pubout  > ~/.ssh/id_rsa.pub.pem
+openssl rsa -in ~/.ssh/id_rsa -pubout  > ~/.ssh/id_rsa.pub.pem
 ```
 
 Şimdi açık anahtarımı kullanarak mesaj şifreleyim, message.txt içinde
 mesajım olsun,
 
 ```
-cat message.txt  | openssl rsautl \
-      -encrypt -pubin -inkey ~/.ssh/id_rsa.pub.pem  > encryptedMessage.txt
+cat message.txt  | openssl rsautl \
+      -encrypt -pubin -inkey ~/.ssh/id_rsa.pub.pem  > encryptedMessage.txt
 ```
 
 Ve şifrelenmiş mesajı kapalı anahtarla açayım
@@ -42,8 +42,8 @@ cat encryptedMessage.txt | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa
 Ters yönden, kapalı anahtarla şifreleyim
 
 ```
-cat message.txt  | openssl rsautl \
-    -sign -inkey ~/.ssh/id_rsa  > encryptedMessage.txt
+cat message.txt  | openssl rsautl \
+    -sign -inkey ~/.ssh/id_rsa  > encryptedMessage.txt
 ```
 
 Ve açmak icin

@@ -2,7 +2,7 @@
 
 HTML Ders Notları
 
-LaTeX ile yazılmış olan ders notları make4ht ile HTML'e çevirildi, ve
+LaTeX ile yazılmış olan ders notları make4ht ile HTML'e çevirildi, ve
 alttaki adresten servis ediliyor.
 
 https://burakbayramli.github.io/dersblog

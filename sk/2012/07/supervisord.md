@@ -29,7 +29,15 @@ komutu ile örnek bir ayar dosyası ürettirebilirsiniz.
 Bir ornek
 
 ```
-[supervisord]logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)logfile_maxbytes=50MB        ; (max main logfile bytes b4 rotation;default 50MB)logfile_backups=10           ; (num of main logfile rotation backups;default 10)loglevel=info                ; (log level;default info; others: debug,warn,trace)pidfile=/tmp/supervisord.pid ; (supervisord pidfile;default supervisord.pid)nodaemon=false[program:mytest]command=python -u /home/burak/data/scripts/test_supervisord.pyautorestart=trueuser=postgresredirect_stderr=truestdout_logfile=/tmp/test_supervisord.log
+[supervisord]logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)logfile_maxbytes=50MB
+        ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=10
+           ; (num of main logfile rotation backups;default 10)
+loglevel=info
+                ; (log level;default info; others: debug,warn,trace)
+pidfile=/tmp/supervisord.pid ;
+(supervisord pidfile;default supervisord.pid)nodaemon=false[program:mytest]
+command=python -u /home/burak/data/scripts/test_supervisord.pyautorestart=trueuser=postgresredirect_stderr=truestdout_logfile=/tmp/test_supervisord.log
 ```
 
 Bir mytest adında programı başlatıp kontrol ettiriyoruz, log dosyasını

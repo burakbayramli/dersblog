@@ -69,7 +69,7 @@ Postgres'den veri çekip veri yüklemenin en hızlı yollarından biri CSV
 temelli. Veri almak için
 
 ```
-psql [taban ismi]  -h [makina] -p [port] -U [kullanici] -c "COPY (SELECT * from [tablo] where [sart]) TO stdout " > [csv dosya ismi]
+psql [taban ismi]  -h [makina] -p [port] -U [kullanici] -c "COPY (SELECT * from [tablo] where [sart]) TO stdout " > [csv dosya ismi]
 ```
 
 Ya da sql dosyasi icinde
@@ -84,10 +84,10 @@ gibi bir kullanim olabilir. Dikkat: bu durumda komut postgres kullanicisi tarafi
 copy( .. SELECT .. ) TO STDOUT with CSV HEADER > /tmp/out
 ```
 
-ta kullanilabilir.  Ama en iyisi herhalde
+ta kullanilabilir.  Ama en iyisi herhalde
 
 ```
-psql [taban]  -h [makina] -p [port] -U [kullanici] -c "COPY (`cat komut.sql`) TO stdout with delimiter ',' CSV HEADER "  > /tmp/out
+psql [taban]  -h [makina] -p [port] -U [kullanici] -c "COPY (`cat komut.sql`) TO stdout with delimiter ',' CSV HEADER "  > /tmp/out
 ```
 
 Bu komut uzaktaki bir taban üzerinde bir SQL dosyası işletilir ve
@@ -95,7 +95,7 @@ Bu komut uzaktaki bir taban üzerinde bir SQL dosyası işletilir ve
 adlı bir dosya içinde
 
 ```
-psql taban  -h localhost -p 5432 -U postgres  -c "COPY (`cat $1`) TO stdout with delimiter ',' CSV HEADER "
+psql taban  -h localhost -p 5432 -U postgres  -c "COPY (`cat $1`) TO stdout with delimiter ',' CSV HEADER "
 ```
 
 kullanırız, ve `run_csv.sh dosya.sql > out`

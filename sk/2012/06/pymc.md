@@ -12,7 +12,7 @@ Kaynak kodlar
 http://pypi.python.org/pypi/pymc#downloads
 
 ```
-python setup.py  build
+python setup.py  build
 sudo python setup.py install
 ```
 

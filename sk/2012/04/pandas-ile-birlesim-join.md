@@ -19,8 +19,8 @@ from pandas import *
 
 csv1 = read_csv("dosya1.csv")
 csv2 = read_csv("dosya2.csv")
-res =  merge(csv1, csv2, left_on='plz', right_on='zip', how='inner')
-res.to_csv("sonuc.csv",  sep='\t')
+res =  merge(csv1, csv2, left_on='plz', right_on='zip', how='inner')
+res.to_csv("sonuc.csv",  sep='\t')
 ```
 
 

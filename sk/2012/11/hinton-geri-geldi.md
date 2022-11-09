@@ -8,7 +8,7 @@ Makinalari (Restricted Boltzman Machines -RBM) alaninda ilerlemeler
 yapmis; ve en son DL tekniginde ust uste konulan RBM'ler arasinda bir
 hiyerarsi olusturarak ses ve goruntu tanimada ciddi ilerlemeler
 kaydetmeyi basardi. Bu bulus etrafinda bayagi gurultu kopuyor bu
-gunlerde, acaba evrensel ogrenme algoritmasi  bu mu? gibi
+gunlerde, acaba evrensel ogrenme algoritmasi  bu mu? gibi
 dusunceler.. DL, tamamen paralel sekilde kullanilmaya acik, Hinton'a
 gore ne kadar fazla donanim, ne kadar fazla paralellik eklenirse DL o
 kadar daha iyi isleyecektir.
@@ -24,7 +24,7 @@ yazdilar..
 
 Diger yonde bir gorus surada.
 
-Derini  Ogrenim'i Hinton burada anlatiyor
+Derin  Ogrenim'i Hinton burada anlatiyor
 
 
 

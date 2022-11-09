@@ -29,7 +29,7 @@ kodlarını Internet'ten almak yeterliyse, şu şekilde bir HTML yeterli,
 
 Eğer kurmak istiyorsak alttakiler. 
 
-Kurmak icin GH'dan kod alinir, 
+Kurmak icin GH'dan kod alinir, 
 
 https://github.com/mathjax/MathJax
 
@@ -62,7 +62,7 @@ icinde
 <body>
 
 <p>
-Eğer $a \ne 0$ olursa  \(ax^2 + bx + c = 0\) denkleminin çözümü iki tanedir
+Eğer $a \ne 0$ olursa  \(ax^2 + bx + c = 0\) denkleminin çözümü iki tanedir
 ve bunlar $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
 </p>
 
@@ -77,6 +77,6 @@ Bu dosya tarayıcıda gösterilince
 MathJax yaklaşımı güzel çünkü ek bir "üretme komutu"na gerek duymuyor
 - kod HTML içinde, bildiğimiz LaTeX olarak kalıyor, servis tarafında
 neredeyse hiç işlem yapılmıyor, sayfayı görmek isteyen kişinin
-bilgisayarı gerekli işlemi yaparak formülü görüyor. 
+bilgisayarı gerekli işlemi yaparak formülü görüyor. 
 
 

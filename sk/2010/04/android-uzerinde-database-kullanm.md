@@ -51,6 +51,7 @@ Activity içinden işleme sokmak. Bu noktadan sonra helper objesi bizim
 veri tabanına olan bağlantımızdır, bu referans üzerinden istediğimiz
 DB çağrılarını yapabiliriz.
 
+```
 public class DataSQLHelper extends SQLiteOpenHelper {
 
  private static final String DATABASE_NAME = "[DB ISMI]";
@@ -94,31 +95,79 @@ public class Demo extends Activity {
  }
  ..
 }
+```
 
-DataSQLHelper.onCreate metodunda CREATE TABLE komutları kodlanacak. Bu komutlar Android tarafından eğer veri tabanı mevcut değilse, işletilir. Activity DataSQLHelper objesini yarattığı zaman, o obje üzerinde tanımlanan int DATABASE_VERSION sayısını bir kenara kaydediyor. Eğer bu rakamı sonraki sürümlerde kod içinde değiştirirseniz, Android tarafından çağrılacak onUpgrade() altında koyacağınız ALTER TABLE komutları devreye sokulabiliyor, böylece database şemanızı bir versiyondan sonrakine otomatik olarak geçirtebilirsiniz. onUprade metoduna (mevcut) eski versiyon ve en son versiyon geçilecektir (Android altyapısı tarafından), ve bu rakamlar uzerinde if..else irdelemeleri kullanarak o geçişe uygun şema değişimi yapmak mümkün olacaktır. Eğer '1' versiyonundan '2' versiyonuna geçiyorsam, şu ALTER komutlarını işlet, yoksa şunları işlet, vs. şeklinde. 
+DataSQLHelper.onCreate metodunda CREATE TABLE komutları kodlanacak. Bu
+komutlar Android tarafından eğer veri tabanı mevcut değilse,
+işletilir. Activity DataSQLHelper objesini yarattığı zaman, o obje
+üzerinde tanımlanan int DATABASE_VERSION sayısını bir kenara
+kaydediyor. Eğer bu rakamı sonraki sürümlerde kod içinde
+değiştirirseniz, Android tarafından çağrılacak onUpgrade() altında
+koyacağınız ALTER TABLE komutları devreye sokulabiliyor, böylece
+database şemanızı bir versiyondan sonrakine otomatik olarak
+geçirtebilirsiniz. onUprade metoduna (mevcut) eski versiyon ve en son
+versiyon geçilecektir (Android altyapısı tarafından), ve bu rakamlar
+uzerinde if..else irdelemeleri kullanarak o geçişe uygun şema değişimi
+yapmak mümkün olacaktır. Eğer '1' versiyonundan '2' versiyonuna
+geçiyorsam, şu ALTER komutlarını işlet, yoksa şunları işlet,
+vs. şeklinde.
 
-Üstteki örnek kodlar [4] her işletildiğinde, otomatik olarak yaratılacak tabloya bir satır veri yazılacak ve aynı anda ekranda önceden yazılmış veriler ekranda gösterilecek. Versiyon değişimini test etmek için versiyonu 1 rakamindan 2'ye geçirelim, ve programı derleyip tekrar emulatöre gonderelim. Mevcut tabloya yeni bir kolon eklendiğini göreceğiz. 
+Üstteki örnek kodlar [4] her işletildiğinde, otomatik olarak
+yaratılacak tabloya bir satır veri yazılacak ve aynı anda ekranda
+önceden yazılmış veriler ekranda gösterilecek. Versiyon değişimini
+test etmek için versiyonu 1 rakamindan 2'ye geçirelim, ve programı
+derleyip tekrar emulatöre gonderelim. Mevcut tabloya yeni bir kolon
+eklendiğini göreceğiz.
 
 Sqlite 3 icin geçerli veri tipleri şurada [5] bulunabilir.
 
 API
 
-Veri tabanina erişimin Google'ın kendi arayüzleri üzerinden olduğunu söylemiştik. Arayüzlerden en çok kullanılacak olanlar SQLiteDatabase ve Cursor objeleri olacak. Bir INSERT, UPDATE komutu işletmek için SQLiteDatabase üzerindeki execSQL(..) çağrısı kullanilabilir, bu çağrıya String olarak bir DDL komutu, yani INSERT, UPDATE gibi arka plandaki Sqlite tabanı için anlamlı komutlar verilebilir. Ayrıca execSQL'e verilen SQL komutu içinde sabit veri gömmek yerine aynen JDBC'de oldugu gibi değer olarak soru işareti '?' karakteri kullanılabiliyor, ve bu soru işaretlerinin içinin nasıl doldurulacağı execSQL'a geçilebilecek ikinci bir Object[] parametresi ile tanımlanabiliyor. Soru işaretlerinin sırası, değerlerin Object[] içindeki yerlerine birebir uymalı. 
+Veri tabanina erişimin Google'ın kendi arayüzleri üzerinden olduğunu
+söylemiştik. Arayüzlerden en çok kullanılacak olanlar SQLiteDatabase
+ve Cursor objeleri olacak. Bir INSERT, UPDATE komutu işletmek için
+SQLiteDatabase üzerindeki execSQL(..) çağrısı kullanilabilir, bu
+çağrıya String olarak bir DDL komutu, yani INSERT, UPDATE gibi arka
+plandaki Sqlite tabanı için anlamlı komutlar verilebilir. Ayrıca
+execSQL'e verilen SQL komutu içinde sabit veri gömmek yerine aynen
+JDBC'de oldugu gibi değer olarak soru işareti '?' karakteri
+kullanılabiliyor, ve bu soru işaretlerinin içinin nasıl doldurulacağı
+execSQL'a geçilebilecek ikinci bir Object[] parametresi ile
+tanımlanabiliyor. Soru işaretlerinin sırası, değerlerin Object[]
+içindeki yerlerine birebir uymalı.
 
-Veri okuma amaçlı olarak rawQuery çağrısı yapılabilir, aynı şekilde SQL komutu ve parametreleri (gerekiyorsa, yoksa null) geçilerek, ve SELECT komutu içeren bu cağrıdan, okuma amaçlı olarak bir Cursor objesi geri döndürülür. Cursor, 
+Veri okuma amaçlı olarak rawQuery çağrısı yapılabilir, aynı şekilde
+SQL komutu ve parametreleri (gerekiyorsa, yoksa null) geçilerek, ve
+SELECT komutu içeren bu cağrıdan, okuma amaçlı olarak bir Cursor
+objesi geri döndürülür. Cursor,
 
+```
 while (cursor.isLast()) {
 cursor.moveToNext();
 String val1 = cursor.getString(0);
 int val2 = cursor.getInt(1);
  ..
 }
+```
 
-şeklinde gezilebilir. getString, getInt çağrılarına geçilen sıfır temelli indeks değeri, SELECT komutunda listelenen kolon isimlerinin sırasına tekabul ediyor olmalı. Daha fazla detay icin [6] dökumanına danışılabilir.
+şeklinde gezilebilir. getString, getInt çağrılarına geçilen sıfır
+temelli indeks değeri, SELECT komutunda listelenen kolon isimlerinin
+sırasına tekabul ediyor olmalı. Daha fazla detay icin [6] dökumanına
+danışılabilir.
 
 Veri Tabanı Yaratmak - Statik ve Büyük Çapta Veri
 
-Biraz önceki kullanım, ufak çapta veri tanımlaması, depolaması icin uygun. Fakat çok büyük çapta veriyi, uygulama başlamadan hızlı bir şekilde hazır etmek istiyorsak, o zaman bir Sqlite tabanını olduğu gibi telefona göndermenin yollarını aramamız lazim. Muhakkak helper onCreate() içinde DDL komutlarını uyguladıktan sonra, Internet'teki, ya da res/raw dizinindeki [7] APK içinde paketlenmiş bir düz dosyayı açarak, satır satır okuyup tabana INSERT ile yazabiliriz. Fakat bu tür işlemler kapasitesi sınırlı mobil ortamda çok uzun zaman alacaktır. Tipik kullanıcı uygulamayı ilk başlattığında saniyeler sonra onun hazır olmasını bekler, dakikalar sürecek bir hazırlık evresi uygun olmaz. 
+Biraz önceki kullanım, ufak çapta veri tanımlaması, depolaması icin
+uygun. Fakat çok büyük çapta veriyi, uygulama başlamadan hızlı bir
+şekilde hazır etmek istiyorsak, o zaman bir Sqlite tabanını olduğu
+gibi telefona göndermenin yollarını aramamız lazim. Muhakkak helper
+onCreate() içinde DDL komutlarını uyguladıktan sonra, Internet'teki,
+ya da res/raw dizinindeki [7] APK içinde paketlenmiş bir düz dosyayı
+açarak, satır satır okuyup tabana INSERT ile yazabiliriz. Fakat bu tür
+işlemler kapasitesi sınırlı mobil ortamda çok uzun zaman
+alacaktır. Tipik kullanıcı uygulamayı ilk başlattığında saniyeler
+sonra onun hazır olmasını bekler, dakikalar sürecek bir hazırlık
+evresi uygun olmaz.
 
 Sqlite için database bir dosyadan ibarettir, ve bu dosyayı gerekli
 yere (/data/data altındaki dizine yani) kopyalamak o tabanı hazır hale
@@ -161,10 +210,38 @@ gerekli değil, çünkü taban dosyasını olduğu gibi kopyalıyoruz.
 
 Birim Testleri
 
-Taban büyük ya da küçük olsun, eger geliştirme makinamızda Android DB çağrılarını test etmek istiyorsak bu çağrıları taklitlememiz (mock) lazım. Eğer telefon üzerinde JDBC kullanıyor olsaydık, taklitlemek kolay olurdu, test kodları telefon yerine dışarıdakı bir tabanı açardı (test kodlari bu tür bir bağlantıyı işlem kodlarına verirdi) ve malum Connection, Statement, ResultSet kullanımları olduğu gibi işlerdi. Fakat Android SQL durumunda özel API'leri taklitlemek gerekiyor. Buradaki okurlar için iyi haber şu: Biz kendi projemiz icin bu taklitlemeyi gerçekleştirdik, ve buradan paylaşıyoruz. Şu [9] zip dosyası içinde SQLiteDatabase, SQLException, ve Cursor kodları arka planda JDBC üzerinden bir Sqlite tabanına bağlanıp iş yapacak şekilde tekrar yazıldı, böylece işlem mantığının dünyadan haberi olmayacak, onlar kendini mobil platformda zannedecek ama aslında taklit kodları işletiyor olacaklar. Sqlite JDBC jar kodları şuradan [10] indirilebilir. 
+Taban büyük ya da küçük olsun, eger geliştirme makinamızda Android DB
+çağrılarını test etmek istiyorsak bu çağrıları taklitlememiz (mock)
+lazım. Eğer telefon üzerinde JDBC kullanıyor olsaydık, taklitlemek
+kolay olurdu, test kodları telefon yerine dışarıdakı bir tabanı açardı
+(test kodlari bu tür bir bağlantıyı işlem kodlarına verirdi) ve malum
+Connection, Statement, ResultSet kullanımları olduğu gibi
+işlerdi. Fakat Android SQL durumunda özel API'leri taklitlemek
+gerekiyor. Buradaki okurlar için iyi haber şu: Biz kendi projemiz icin
+bu taklitlemeyi gerçekleştirdik, ve buradan paylaşıyoruz. Şu [9] zip
+dosyası içinde SQLiteDatabase, SQLException, ve Cursor kodları arka
+planda JDBC üzerinden bir Sqlite tabanına bağlanıp iş yapacak şekilde
+tekrar yazıldı, böylece işlem mantığının dünyadan haberi olmayacak,
+onlar kendini mobil platformda zannedecek ama aslında taklit kodları
+işletiyor olacaklar. Sqlite JDBC jar kodları şuradan [10]
+indirilebilir.
 
-Tekniğin işlemesi için derlemek sürecinde, kod bazında taklit kodları işlem kodlarından ayırmak, bu kodları src/ dizininden bağımsız, onunla aynı seviyede "test" adlı bir başka dizine koymamız gerekti. Böylece emulatöre (ya da telefona) kod gönderirken test dizini normal derleme komutları tarafından derlenmeyeceği için (Ant ve Eclipse sadece src dizinine göre hazırlanmış), taklit kodları emulatöre gitmemiş olacak. Geliştirme, test ortamında ise taklit kodların cağrılması için src ve test dizinlerini bizim eklerimizle aynı anda derleriz, ve istediğimiz çağrımlar Android kodları yerine bizim kodlara gider. Aynı zip dosyasindaki [9] build-add.xml icinde Ant ortamında bunun tekniği mevcut: test-compile hedefi görüldüğü gibi iki kaynağı eşit seviyeden alarak derliyor ve sonuç class dosyalarını bin/ altına koyuyor. Eclipse gibi IDE kullanıcıları benzer derleme eklerini yapmanın yolunu bulacaktır. Test kodları ise şuna benzeyecek: 
+Tekniğin işlemesi için derlemek sürecinde, kod bazında taklit kodları
+işlem kodlarından ayırmak, bu kodları src/ dizininden bağımsız, onunla
+aynı seviyede "test" adlı bir başka dizine koymamız gerekti. Böylece
+emulatöre (ya da telefona) kod gönderirken test dizini normal derleme
+komutları tarafından derlenmeyeceği için (Ant ve Eclipse sadece src
+dizinine göre hazırlanmış), taklit kodları emulatöre gitmemiş
+olacak. Geliştirme, test ortamında ise taklit kodların cağrılması için
+src ve test dizinlerini bizim eklerimizle aynı anda derleriz, ve
+istediğimiz çağrımlar Android kodları yerine bizim kodlara gider. Aynı
+zip dosyasindaki [9] build-add.xml icinde Ant ortamında bunun tekniği
+mevcut: test-compile hedefi görüldüğü gibi iki kaynağı eşit seviyeden
+alarak derliyor ve sonuç class dosyalarını bin/ altına
+koyuyor. Eclipse gibi IDE kullanıcıları benzer derleme eklerini
+yapmanın yolunu bulacaktır. Test kodları ise şuna benzeyecek:
 
+```
 public TestEdilenClass {
  DatabaseHelper helper;
  public TestEdilenClass(DatabaseHelper helper) {
@@ -189,26 +266,45 @@ public class TestAlg {
    alg.method1();
  }
 }
+```
 
-Görüldüğü gibi normal bir class (taklit edilmemiş) olan DatabaseHelper'ı yaratıp onun uzerinde taklit edilmiş olan SQLiteDatabase objesini set ediyoruz. Böylece DatabaseHelper Android ortamında normal veri tabanı çağrıları yaptığını zannederken aslında bizim taklit kodları çağırıyor, çünkü Helper class execSQL gibi çağrıları db referansı üzerinden yapıyor. Bu kadar. 
-Not: JDBC kodlarının semantiği (cağrılış şekli) ve Android SQL kodlarının farkları sebebiyle cursor üzerinde moveToNext() öncesi sadece bir kere isLast() çağrılması gerekiyor. Eğer işlem mantığımızda isLast birkaç kere çağrılacaksa, bu birim testlerimizi bozabilir, bu değeri bir boolean icinde depolayıp cağrımı teke indirmemiz lazım. Bu pek önemli bir nokta değil aslında, çünkü tipik kullanım bunu gerektirmeyecektir. 
+Görüldüğü gibi normal bir class (taklit edilmemiş) olan
+DatabaseHelper'ı yaratıp onun uzerinde taklit edilmiş olan
+SQLiteDatabase objesini set ediyoruz. Böylece DatabaseHelper Android
+ortamında normal veri tabanı çağrıları yaptığını zannederken aslında
+bizim taklit kodları çağırıyor, çünkü Helper class execSQL gibi
+çağrıları db referansı üzerinden yapıyor. Bu kadar.
 
-Bu yazi ilk kez Java Dergisi 2008 Mayis ayi'nda mobil bolumunde yayinlanmisti.
+Not: JDBC kodlarının semantiği (cağrılış şekli) ve Android SQL
+kodlarının farkları sebebiyle cursor üzerinde moveToNext() öncesi
+sadece bir kere isLast() çağrılması gerekiyor. Eğer işlem mantığımızda
+isLast birkaç kere çağrılacaksa, bu birim testlerimizi bozabilir, bu
+değeri bir boolean icinde depolayıp cağrımı teke indirmemiz lazım. Bu
+pek önemli bir nokta değil aslında, çünkü tipik kullanım bunu
+gerektirmeyecektir.
+
+Bu yazi ilk kez Java Dergisi 2008 Mayis ayi'nda mobil bolumunde
+yayinlanmisti.
 
 Kaynaklar 
 
 [1] Well-Known Users of SQLite, http://www.sqlite.org/famous.html 
+
 [2] Android Gelistirme Ortami | Sayilar ve Kuramlar Blog, http://sayilarvekuramlar.blogspot.com/2009/12/android-kurulumu.html 
+
 [3] Android Debug Bridge | Android Developers, http://developer.android.com/guide/developing/tools/adb.html
+
 [5] Datatypes In SQLite Version 3, http://www.sqlite.org/datatype3.html 
+
 [6] Data Storage | Android Developers, http://developer.android.com/guide/topics/data/data-storage.html 
+
 [7] Android ve Statik Dosyalari Okumak  | Sayilar ve Kuramlar Blog, http://sayilarvekuramlar.blogspot.com/2009/12/android-ve-statik-dosyalari-okumak.html 
+
 [8] InputStreamChain | Paranoid Engineering Blog, http://paranoid-engineering.blogspot.com/2008/11/inputstreamchain.html
+
 [10] SqliteJDBC, http://www.zentus.com/sqlitejdbc/ 
+
 [11] Catalina Creek Blog, Placing a prepopulated sqlite database in an Android app, http://www.catalinacreek.com/blog/Placing_a_prepopulated_sqlite_database_in_an_Android_app 
+
 [12] Android Examples - SQL Demo, http://marakana.com/forums/android/android_examples/55.html 
-
-
-
-
 

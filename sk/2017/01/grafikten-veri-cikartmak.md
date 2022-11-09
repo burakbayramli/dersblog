@@ -15,7 +15,7 @@ https://en.wikipedia.org/wiki/File:Extinction_intensity.svg
 PGM'e cevirelim
 
 ```
-convert -crop 495x245+29+54 -resize 900x400 Extinction_intensity.svg  extinct.pgm
+convert -crop 495x245+29+54 -resize 900x400 Extinction_intensity.svg  extinct.pgm
 ```
 
 Imaj isleme kodu

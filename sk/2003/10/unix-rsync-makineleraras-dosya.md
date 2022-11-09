@@ -59,7 +59,7 @@ yoktur. Sadece -av ile rsync kullanmanız yeterli, mesela:
 
 
 ```
-rsync -av  /cygdrive/c/Arsiv /cygdrive/f/Arsiv
+rsync -av  /cygdrive/c/Arsiv /cygdrive/f/Arsiv
 ```
 
 Bu komut `c:` disk üzerindeki Arsiv dizinini `f:` adlı diske

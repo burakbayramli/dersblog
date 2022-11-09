@@ -2,7 +2,7 @@
 
 ### Mesafe hesabı yapmak
 
-İki enlem, boylam kordinatı arasında mesafe hesabı için geopy kullanılabilir.
+İki enlem, boylam kordinatı arasında mesafe hesabı için geopy kullanılabilir.
 
 ```python
 import geopy.distance

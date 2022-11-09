@@ -11,7 +11,7 @@ birbiriyle kordinasyonunu ayarlamak gerekli.
 Bir yaklaşım her paralel süreç işlemek istedikleri kayıtı "kitlemeye"
 uğraşabilirler, önce gelen kitler, sonrakiler başarısız olup sonraki
 kayıdı kitlemeye uğraşırlar, vs. Bu yaklaşımı Kurumsal Java kitabında
-işlemiştik.  Bu tabii daha farklı bir dünyaydı, Oracle, satır bazlı
+işlemiştik. Bu tabii daha farklı bir dünyaydı, Oracle, satır bazlı
 kilitler, vs. Artık anahtar/değer tabanları dünyasındayız, Mongo ile
 bir kaydın anahtar üzerinden statüsünü kontrol etmek çok hızlı. Diğer
 yaklaşımın da faydalı olacağı yerler olabilir muhakkak. Faydalardan
@@ -37,14 +37,18 @@ devam" özelliği zamandan tasarruf sağlar.
 eğer parçalı işlem mantığını kodlayacaksak, şöyle bir komut satırı
 arayuzu düşünebiliriz,
 
+```
 python isle.py 0 4
+```
 
 Bu komut script'e veriyi 4 parçaya böldürüp 0. parçayı (çünkü
 kullandığımız dil 0-indis bazlı) işlemeye başlar. Unix ortamında
 sonuna & koyarak script'i arka planda işletmeye başlatabilirdik,
 ardından
 
+```
 python isle.py 1 4 &
+```
 
 ile hemen bir diğer parça üzerinde de işlem başlatırdık. Dikkat:
 parçaya bölmek için "işlenecek şeyler" listesi hazırladık, bu liste
@@ -476,7 +480,7 @@ Bir takipçi tarafından, paralel şekilde program işletiliyorsa, artık print 
 ```
 fmt = '%(asctime)s - %(message)s - %(pathname)s'
 fout = '/tmp/hava-%d.log' % int(sys.argv[1])
-logging.basicConfig(filename=fout, level=logging.DEBUG, format=fmt)  
+logging.basicConfig(filename=fout, level=logging.DEBUG, format=fmt)  
 ```
 
 Artık logging.debug(...) ile yazılan her mesaj o sürecin kendisine ait

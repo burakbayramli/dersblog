@@ -75,7 +75,7 @@ LANG="en_US.UTF-8"LANGUAGE="en_US:en"LC_NUMERIC="en_US.UTF-8"LC_TIME="en_US.UTF-
 
 yazilir. Tekrar sisteme girildiginde problem duzelmis olacaktir.
 
-Eger alt-tab ile pencereler arasi gecis yapilamadigini farkederseniz,  
+Eger alt-tab ile pencereler arasi gecis yapilamadigini farkederseniz,  
 
 sudo apt-get install compiz compizconfig-settings-manager
 
@@ -86,7 +86,7 @@ oradan Window Management ve Application Switcher secilir.
 Pek cok kez Ubuntu kurduktan sonra bazi paketlerin surekli kurdugumuzu farkettik, gelistirme, analitik, veri isleme icin gerekli bu paketler sunlar (sudo apt-get ile)
 
 ```
-build-essential emacs python-dev python-setuptools  python-numpy python-scipy python-matplotlib ipython-notebook texlive emacs-goodies-el preview-latex dvipng openjdk-7-jdk  libavformat-dev ffmpeg postgresql-contrib octave octave-image recoll libatlas-base-dev liblapack-dev gfortran python-sympy r-base-dev r-base python-rpy2 imagemagick gimp python-qt4 pdftk pdfjam gsl-bin xkbset python-pip nautilus-open-terminal nautilus-open-terminal python-markdown python-jinja2 wvdial mplayer vlc xkbset git cmake chromium-browser calibre
+build-essential emacs python-dev python-setuptools  python-numpy python-scipy python-matplotlib ipython-notebook texlive emacs-goodies-el preview-latex dvipng openjdk-7-jdk  libavformat-dev ffmpeg postgresql-contrib octave octave-image recoll libatlas-base-dev liblapack-dev gfortran python-sympy r-base-dev r-base python-rpy2 imagemagick gimp python-qt4 pdftk pdfjam gsl-bin xkbset python-pip nautilus-open-terminal nautilus-open-terminal python-markdown python-jinja2 wvdial mplayer vlc xkbset git cmake chromium-browser calibre
 
 texlive-latex-extra [very large]
 
@@ -204,12 +204,6 @@ Bu yaziya eklemeler olacak.
 
 Kaynaklar
 
-[1] http://askubuntu.com/questions/153016/apport-gpu-error-intel-py-crash 
+[1] http://askubuntu.com/questions/153016/apport-gpu-error-intel-py-crash 
 
-[2]  Eger Windows'u silmiyorsaniz, o zaman bolum (partition) araci size bir ekranda diski tekrar bolmeniz ve yeni Unix disk bolume yaratmaniz icin yardim eder. Fakat bir problem bu ekran hangi tarafin Win hangi tarafin Unix oldugunu acikca soylemiyor. Soldaki kisim Windows. 
-
-
-
-
-
-
+[2]  Eger Windows'u silmiyorsaniz, o zaman bolum (partition) araci size bir ekranda diski tekrar bolmeniz ve yeni Unix disk bolume yaratmaniz icin yardim eder. Fakat bir problem bu ekran hangi tarafin Win hangi tarafin Unix oldugunu acikca soylemiyor. Soldaki kisim Windows. 

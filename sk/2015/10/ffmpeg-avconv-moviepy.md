@@ -67,7 +67,7 @@ sekilde tutmak, 440 yuksekliginde, genislik izafi, kalite 23 (en
 kaliteli 0)
 
 ```
-ffmpeg -i input.mkv -vf scale=-1:440 -crf 23  output.avi
+ffmpeg -i input.mkv -vf scale=-1:440 -crf 23  output.avi
 ```
 
 Format degisimi (ornekte mp4'den avi), video'nun bir kismini cekip cikartmak, mesela 100. saniyeden baslayarak 20 saniyelik kisim,
@@ -79,7 +79,7 @@ ffmpeg -i vid1.mp4 -ss 100 -t 20 -acodec copy -vcodec copy vid2.avi
 Üstteki işlemi daha hızlı yapmak için mp4 formatına değişim ve alttaki ekler gerekebilir
 
 ```
- ... -b:v 2500 -c:v mpeg4 ....
+ ... -b:v 2500 -c:v mpeg4 ....
 ```
 
 Video'yu numaralı JPG imaj dosyaları haline getirmek
@@ -88,7 +88,7 @@ Video'yu numaralı JPG imaj dosyaları haline getirmek
 ffmpeg -i vid.avi -vcodec mjpeg %05d.jpg
 ```
 
-Diğer bazlı ffmpeg komutları.. Mesela bir görüntüyü  çevirmek için
+Diğer bazlı ffmpeg komutları.. Mesela bir görüntüyü  çevirmek için
 
 ```
 ffmpeg.exe -i dosya.mp4 -vf "transpose=2" sonuc.mp4
@@ -121,14 +121,14 @@ ffmpeg -i dosya2.mp4 -q:v 1 -filter:v scale=500:-1 -f mpegts dosya2.ts
 Sonra birlestirmek icin
 
 ```
-ffmpeg -i "concat:dosya1.ts|dosya2.ts|..."  -c copy sonuc.mp4
+ffmpeg -i "concat:dosya1.ts|dosya2.ts|..."  -c copy sonuc.mp4
 ```
 
 Eger Windows'da bir mp4 cikmiyorsa, bir cevrim sekli de soyle,
 
 ```
-ffmpeg -i dosya.mp4 -r 30  -codec:v mpeg4 -flags:v +qscale \
-  -global_quality:v 0 -codec:a libmp3lame dosya.avi 
+ffmpeg -i dosya.mp4 -r 30  -codec:v mpeg4 -flags:v +qscale \
+  -global_quality:v 0 -codec:a libmp3lame dosya.avi 
 ```
 
 mencoder

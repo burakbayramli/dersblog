@@ -18,7 +18,7 @@ if __name__ == "__main__":
             dir = os.path.dirname(file)
             f = "/tmp/sk/%04d-%s" % (i,f)
             os.chdir(dir)
-            cmd = "pandoc %s -o %s" % (os.path.basename(file), f)
+            cmd = "pandoc %s -fmarkdown-implicit_figures -o %s" % (os.path.basename(file), f)
             if not os.path.isfile(f): 
                 print (cmd)                
                 os.system(cmd)

@@ -11,8 +11,8 @@ sudo pip install mrjob
 `/home/hduser` altında `.mrjob.conf` adında bir dosya yaratın ve içine sunu yazın
 
 ```
-runners:  hadoop:
-    hadoop_home: [HADOOP DIZINI] 
+runners:  hadoop:
+    hadoop_home: [HADOOP DIZINI] 
 ```
 
 Mrjob ile eşleme / indirgeme komutları ayrı script olarak değil, tek
@@ -23,13 +23,13 @@ from mrjob.job import MRJob
 import re
 WORD_RE = re.compile(r"[\w']+")
 class MRWordFreqCount(MRJob):
-    def mapper(self, _, line):
-        for word in WORD_RE.findall(line):
-            yield (word.lower(), 1)
-    def reducer(self, word, counts):
-        yield (word, sum(counts))
+    def mapper(self, _, line):
+        for word in WORD_RE.findall(line):
+            yield (word.lower(), 1)
+    def reducer(self, word, counts):
+        yield (word, sum(counts))
 if __name__ == '__main__':
-    MRWordFreqCount.run()
+    MRWordFreqCount.run()
 ```
 
 Test amaçlı tek başına işletmek için (Hadoop olmadan)
@@ -41,7 +41,7 @@ python words.py words.csv
 Hadoop ile (once dosyayi kopyalayalim)
 
 ```
-hadoop dfs -copyFromLocal words.csv  /user/
+hadoop dfs -copyFromLocal words.csv  /user/
 ```
 
 ```
@@ -85,7 +85,7 @@ iletişim için
 from mrjob.protocol import PickleProtocol
 ..
 class BizimMR(MRJob):
-    INTERNAL_PROTOCOL = PickleProtocol
+    INTERNAL_PROTOCOL = PickleProtocol
 ```
 
 seçimi yeterli. 
@@ -133,15 +133,15 @@ hatta Eİ basamaklarına ek basamaklar ekleyebiliriz. İsim değişikliği:
 
 ```
 def steps(self):
-    return [self.mr(mapper=self.xxx, reducer=self.yyy)]
+    return [self.mr(mapper=self.xxx, reducer=self.yyy)]
 ```
 
 Ek basamaklar
 
 ```
 def steps(self):
-    return [self.mr(mapper=self.mapper,reducer=self.reducer),
-            self.mr(reducer=self.reduce_final)]
+    return [self.mr(mapper=self.mapper,reducer=self.reducer),
+            self.mr(reducer=self.reduce_final)]
 ```
 
 Bu durumda reducer'in ürettiği anahtarlar bir sonraki reduce_final'a

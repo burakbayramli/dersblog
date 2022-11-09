@@ -15,10 +15,10 @@ surer. Script edelim,
 ```
 import os
 for i in range(255):
-    cmd = "ping -c 1 192.168.2.%d > /tmp/out" % i
-        os.system(cmd)
-    if " 0% packet loss" in open("/tmp/out").read():
-        print i, "Found"
+    cmd = "ping -c 1 192.168.2.%d > /tmp/out" % i
+        os.system(cmd)
+    if " 0% packet loss" in open("/tmp/out").read():
+        print i, "Found"
 ```
 
 Secenek -c 1 kullanildi, sadece bir kere ping edilmesi icin (yoksa 3

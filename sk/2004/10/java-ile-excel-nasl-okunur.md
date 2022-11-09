@@ -1,6 +1,11 @@
 # Java İle Excel Nasıl Okunur?
 
-Bir Excel dosyasını herhangi bir veri tabanına yüklemeniz gerekebilir. Müşteriniz, belki de bazı verileri Excel üzerinden  girmekte, ya da Excel dosyaları başka bir veri ortamından sizin ortamınıza aktarma yapmak için bir aracı format olarak kullanılmaktadır. Her iki durum için de, Java dili ile Excel .xls dosyasında istediğiniz hücreye erişmeniz gerekecektir.    
+Bir Excel dosyasını herhangi bir veri tabanına yüklemeniz
+gerekebilir. Müşteriniz, belki de bazı verileri Excel üzerinden
+girmekte, ya da Excel dosyaları başka bir veri ortamından sizin
+ortamınıza aktarma yapmak için bir aracı format olarak
+kullanılmaktadır. Her iki durum için de, Java dili ile Excel .xls
+dosyasında istediğiniz hücreye erişmeniz gerekecektir.
 
 Excel çalışma kitapları (workbook) birçok çalışma sayfasından
 (worksheet) oluşmaktadır. Her sayfa iki boyutlu bir tabloyu içerir. Bu
@@ -11,7 +16,7 @@ Java Excel API
 Yukarıda anlatılan türden bir erişimi sağlamak için Java Excel API
 biçilmiş kafandır.
   
-Isletmek icin jxl.jar lazim. 
+Isletmek icin jxl.jar lazim.
   
 Örnek Kullanım 
     
@@ -67,7 +72,7 @@ import jxl.*;
 
 public class ExcelTablo
 {
-    public String hucre(int i, int j) throws Exception{
+    public String hucre(int i, int j) throws Exception{
  String encoding = "ISO-8859-9";
 
  WorkbookSettings settings = new WorkbookSettings();
@@ -81,9 +86,9 @@ public class ExcelTablo
  byte tampon[] = stringa1.getBytes(encoding);
 
  return new String(tampon);
-    }
-    
-    public static void main (String args[] ) throws Exception {
+    }
+    
+    public static void main (String args[] ) throws Exception {
  String encoding = "ISO-8859-9";
  
  WorkbookSettings settings = new WorkbookSettings();
@@ -101,7 +106,7 @@ public class ExcelTablo
  
  out.write(tampon);
  out.close(); 
-    }
+  }
 }
 ```
 

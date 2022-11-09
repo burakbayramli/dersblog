@@ -5,7 +5,7 @@ olarak sürekli tekrarlanan rutin temizlik hareketlerini modülerize
 hale getirmek için Python with kullanılabilir. Standart örnek
 
 ```python
-with open('/tmp/workfile', 'r') as f:    read_data = f.read()
+with open('/tmp/workfile', 'r') as f:    read_data = f.read()
 ```
 
 Örnekteki with şunları yapar; kod bloğuna girmeden önce dosya açılir,
@@ -18,10 +18,10 @@ from contextlibimport contextmanager
 
 @contextmanager
 def tag(name):
-    print "<%s>" % name
-    yield
-    print "</%s>" % namewith tag("h1"):
-    print "foo"
+    print "<%s>" % name
+    yield
+    print "</%s>" % namewith tag("h1"):
+    print "foo"
 ```
 
 Burada tag komutunun with ile nasil kullanilabilir hale getirildigini
@@ -33,15 +33,15 @@ komutlar isletilir, yukaridaki ornekte print komutu. Bir ornek daha
 from contextlib import contextmanagerimport os
 
 @contextmanagerdef working_directory(path):
-    current_dir = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(current_dir)
+    current_dir = os.getcwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(current_dir)
 
 with working_directory("data/stuff"):
-    # data/stuff icinde bir seyler yap
+    # data/stuff icinde bir seyler yap
 ```
 
 Örnekte working_directory with ile çağrıldığı zaman parametre olarak
@@ -52,7 +52,7 @@ sırasında istisna (Exception) olsa / atılsa bile bu işin yapılmasını
 garantiler (open kodlamasında da herhalde benzer işler yapılıyor,
 açılmış dosyayı kapatmak için).
 
-Kısaca with ile kullanılan bloklar  "çevresinde" hep olacak / beraber
+Kısaca with ile kullanılan bloklar  "çevresinde" hep olacak / beraber
 olmasını istediğimiz kod parçalarını biraraya koyabiliriz.
 
 http://docs.python.org/2/tutorial/inputoutput.html

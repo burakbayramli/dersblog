@@ -203,7 +203,7 @@ print (content)
 
 Imaj
 
-Eger imaj  toplamak istiyorsak, mesela Bing'den alttaki kod faydali,
+Eger imaj toplamak istiyorsak, mesela Bing'den alttaki kod faydali,
 
 [console.py](console.py)
 

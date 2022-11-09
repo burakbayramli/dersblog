@@ -43,9 +43,4 @@ kullanilabilir. Mesela:s = "Burada bir float deger var: %3.2f" %
 
 Bu formatlamaya gore float degerini noktadan sonra sadece 2 basamak
 olacak sekilde ayarladik. O zaman sonuc:Burada bir float degenr var:
-3.43olacaktir.
-
-
-
-
-
+3.43 olacaktir.

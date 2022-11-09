@@ -46,10 +46,10 @@ import pygeoip, os
 import pandas as pd
 gi = pygeoip.GeoIP('[DIZIN]/GeoLiteCity.dat')
 def ip_loc(x):
-    rec = gi.record_by_addr(x)
-    lat = rec['latitude']
-    lon = rec['longitude']
-    return pd.Series([lat, lon], index=['latitude','longitude'])
+    rec = gi.record_by_addr(x)
+    lat = rec['latitude']
+    lon = rec['longitude']
+    return pd.Series([lat, lon], index=['latitude','longitude'])
 
 df = pd.DataFrame({'ip': ['212.174.157.30','212.174.157.30','212.174.157.30']})
 df[['latitude','longitude']] = df['ip'].apply(ip_loc)
@@ -59,8 +59,8 @@ print df
 Buradan gelen sonuc
 
 ```
-ip  latitude  longitude0  212.174.157.30   40.6667       40.41 
-212.174.157.30   40.6667       40.42  212.174.157.30   40.6667      
+ip  latitude  longitude0  212.174.157.30   40.6667       40.41 
+212.174.157.30   40.6667       40.42  212.174.157.30   40.6667      
 40.4
 ```
 

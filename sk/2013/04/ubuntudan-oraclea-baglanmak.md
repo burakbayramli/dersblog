@@ -67,8 +67,9 @@ Eger Python icinden baglanmak istersek,
 
 http://tshepang.net/accessing-oracle-db-using-python-in-debian
 
-cxOracle lazim, mesela 64 bit Python 2.7 Oracle 11 icin CentOS 5 x86_64 RPM (Oracle 11g, Python 2.7)
-  baglantisina tiklanir. Indikten sonra
+cxOracle lazim, mesela 64 bit Python 2.7 Oracle 11 icin CentOS 5
+x86_64 RPM (Oracle 11g, Python 2.7) baglantisina tiklanir. Indikten
+sonra
 
 ```
 sudo alien --install cx_Oracle-5.1.2-11g-py27-1.x86_64.rpm

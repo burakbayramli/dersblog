@@ -18,8 +18,8 @@ Ornek kod
 import MySQLdb, os, sys
 
 conn= MySQLdb.connect(host='makina',
-                      port=3306,user='user', passwd='sifre',
-                      db='test')
+                      port=3306,user='user', passwd='sifre',
+                      db='test')
 ```
 
 Bir Pandas dataframe'i alarak veri tabanina yazmak muthis kolay:

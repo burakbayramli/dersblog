@@ -44,7 +44,7 @@ make.bat adlı script, Test.java adlı dosyayı derleyip, otomatik olarak
 make.bat
 
 ```
-set CLASSPATH=.\lib\composer.jar;.\lib\jt400.jar;.\lib\jt400Micro.jar;.\lib\jt400Native.jar;.\lib\jt400Proxy.jar;.\lib\jt400Servlet.jar;.\lib\jui400.jar;.\lib\outputwriters.jar;.\lib\reportwriter.jar;.\lib\tes.jar;.\lib\uitools.jar;.\lib\util400.jar;.\lib\pg72jdbc2.jar;. 
+set CLASSPATH=.\lib\composer.jar;.\lib\jt400.jar;.\lib\jt400Micro.jar;.\lib\jt400Native.jar;.\lib\jt400Proxy.jar;.\lib\jt400Servlet.jar;.\lib\jui400.jar;.\lib\outputwriters.jar;.\lib\reportwriter.jar;.\lib\tes.jar;.\lib\uitools.jar;.\lib\util400.jar;.\lib\pg72jdbc2.jar;. 
 rem C:\Progra~1\j2sdk_nb\j2sdk1.4.2\bin\javac -classpath %CLASSPATH% TransferStok.java
 rem C:\Progra~1\j2sdk_nb\j2sdk1.4.2\bin\java -classpath %CLASSPATH% TransferStok
 C:\Progra~1\j2sdk_nb\j2sdk1.4.2\bin\javac -classpath %CLASSPATH% Test.java
@@ -70,48 +70,44 @@ import java.util.*;
 import java.net.*;
 import com.ibm.as400.access.*;
 
-
 public class Test
-
 {
 
+    /**
 
+     * @ejb.interface-method view-type = "remote'
 
-    /**
+     */
 
-     * @ejb.interface-method view-type = "remote'
+    private static boolean debug = true;
 
-     */
+    protected static String sysName;
 
-    private static boolean debug = true;
+    protected static String kullaniciNO;
 
-    protected static String sysName;
+    protected static String pw;
 
-    protected static String kullaniciNO;
+    protected static AS400 sys;
 
-    protected static String pw;
+    protected static Connection baglanti = null;
 
-    protected static AS400 sys;
+    protected static ResultSet rs;
 
-    protected static Connection baglanti = null;
+    protected static ResultSetMetaData rsmd;
 
-    protected static ResultSet rs;
+    protected static int kolonSayisi = 0;
 
-    protected static ResultSetMetaData rsmd;
+    
 
-    protected static int kolonSayisi = 0;
+    /**
 
-    
+     * @ejb.interface-method view-type = "remote'
 
-    /**
+     */
 
-     * @ejb.interface-method view-type = "remote'
+    public static void main(String arg[]) throws Exception
 
-     */
-
-    public static void main(String arg[]) throws Exception
-
-    {
+    {
 
  boolean rc;
 
@@ -119,27 +115,27 @@ public class Test
 
  try {
 
-     // JDBC surucusunu kayit ettir..
+     // JDBC surucusunu kayit ettir..
 
-     try {
+     try {
 
  DriverManager.registerDriver
 
-     (new com.ibm.as400.access.AS400JDBCDriver());
+     (new com.ibm.as400.access.AS400JDBCDriver());
 
-     }
+     }
 
-     catch(Exception e) {
+     catch(Exception e) {
 
  System.out.println("JDBC Surucusu bulunamadi");
 
-     }
+     }
 
  }
 
  catch(Exception e) {
 
-     e.printStackTrace();
+     e.printStackTrace();
 
  }
 
@@ -151,7 +147,7 @@ public class Test
 
  if (!rc) {
 
-     System.out.println("Hata, properties dosyasini okurken hata cikti.");
+     System.out.println("Hata, properties dosyasini okurken hata cikti.");
 
  }
 
@@ -159,21 +155,21 @@ public class Test
 
  try {
 
-      
+      
 
-     // AS/400'e baglan
+     // AS/400'e baglan
 
-     sys = new AS400(sysName, kullaniciNO, pw);
+     sys = new AS400(sysName, kullaniciNO, pw);
 
-     sys.setGuiAvailable(false);
+     sys.setGuiAvailable(false);
 
-      
+      
 
  }
 
  catch(Exception e) {
 
-     e.printStackTrace();
+     e.printStackTrace();
 
  }
 
@@ -181,21 +177,21 @@ public class Test
 
  try {
 
-     baglanti = DriverManager.getConnection( "jdbc:as400://" +
+     baglanti = DriverManager.getConnection( "jdbc:as400://" +
 
-     sysName + "/" +
+     sysName + "/" +
 
-     "MYPOP", // herhangi bir isim
+     "MYPOP", // herhangi bir isim
 
-     kullaniciNO,
+     kullaniciNO,
 
-     pw );
+     pw );
 
  }
 
  catch(Exception e) {
 
-     System.out.println("JDBC baglantisini yaparken hata cikti");
+     System.out.println("JDBC baglantisini yaparken hata cikti");
 
  }
 
@@ -209,17 +205,17 @@ public class Test
 
 
 
-    }
+    }
 
 
 
-    /**
+    /**
 
-     * @ejb.interface-method view-type = "remote'
+     * @ejb.interface-method view-type = "remote'
 
-     */
+     */
 
-    private static void tabloyuOku() throws Exception{
+    private static void tabloyuOku() throws Exception{
 
 
 
@@ -229,11 +225,11 @@ public class Test
 
  String sql =
 
-     "SELECT * FROM TESTDATA.LTRAN WHERE TRYCMP >= 200301 " +
+     "SELECT * FROM TESTDATA.LTRAN WHERE TRYCMP >= 200301 " +
 
-     "AND TRYCMP < 200401";
+     "AND TRYCMP < 200401";
 
-    
+    
 
  System.out.println(sql);
 
@@ -249,29 +245,29 @@ public class Test
 
  System.out.println("\n\n" + kolonSayisi + " kolon var");
 
-    
+    
 
  while (rs.next()) {
 
-     satiriGoster();
+     satiriGoster();
 
  }
 
 
 
- baglanti.close();      
+ baglanti.close();      
 
-    }
+    }
 
 
 
-    /**
+    /**
 
-     * @ejb.interface-method view-type = "remote'
+     * @ejb.interface-method view-type = "remote'
 
-     */
+     */
 
-    private static void satirSay() throws Exception{
+    private static void satirSay() throws Exception{
 
 
 
@@ -285,25 +281,25 @@ public class Test
 
  while (rs.next()) {
 
-     System.out.println(rs.getString(1));
+     System.out.println(rs.getString(1));
 
  }
 
 
 
- baglanti.close();      
+ baglanti.close();      
 
-    }
+    }
 
 
 
-    /**
+    /**
 
-     * @ejb.interface-method view-type = "remote'
+     * @ejb.interface-method view-type = "remote'
 
-     */
+     */
 
-    private static void durumGoster() throws Exception{
+    private static void durumGoster() throws Exception{
 
 
 
@@ -317,27 +313,27 @@ public class Test
 
  while (rs.next()) {
 
-     System.out.println(rs.getString(1));
+     System.out.println(rs.getString(1));
 
  }
 
 
 
- baglanti.close();      
+ baglanti.close();      
 
-    }
+    }
 
 
 
-    /**
+    /**
 
-     * @ejb.interface-method view-type = "remote'
+     * @ejb.interface-method view-type = "remote'
 
-     */
+     */
 
-    private static void satiriGoster() throws IOException
+    private static void satiriGoster() throws IOException
 
-    {
+    {
 
  System.out.println("");
 
@@ -345,31 +341,31 @@ public class Test
 
  for (int i = 1; i <= kolonSayisi; i++) {
 
-     String kolonVerisi = null;
+     String kolonVerisi = null;
 
 
 
-     try {
+     try {
 
  kolonVerisi = rs.getString(i);
 
-     }
+     }
 
-     catch (Exception e) { System.out.println("metin alirken hata cikti"); }
+     catch (Exception e) { System.out.println("metin alirken hata cikti"); }
 
 
 
-     if (kolonVerisi == null)
+     if (kolonVerisi == null)
 
  kolonVerisi = " ";
 
 
 
-     System.out.print("<<");
+     System.out.print("<<");
 
-     System.out.print(kolonVerisi);
+     System.out.print(kolonVerisi);
 
-     System.out.print(">> ");
+     System.out.print(">> ");
 
  }
 
@@ -377,77 +373,77 @@ public class Test
 
  System.out.println("\n----------------------------------------------");
 
-    }
+    }
 
-    
+    
 
-    /**
+    /**
 
-     * @ejb.interface-method view-type = "remote'
+     * @ejb.interface-method view-type = "remote'
 
-     */
+     */
 
-    private static boolean kur()
+    private static boolean kur()
 
-    {
+    {
 
- try  {
+ try  {
 
-     ResourceBundle rb = ResourceBundle.getBundle("baglanti");
-
-
+     ResourceBundle rb = ResourceBundle.getBundle("baglanti");
 
 
 
-     String sistem = rb.getString("AS400.SISTEM");
+
+
+     String sistem = rb.getString("AS400.SISTEM");
 
 
 
-     if (sistem != null) {
+     if (sistem != null) {
 
  sysName = sistem;
 
-     }
+     }
 
-     else {
+     else {
 
  System.out.println
 
-     ("Hata, sistem ismini properties dosyasindan alamadik");
+     ("Hata, sistem ismini properties dosyasindan alamadik");
 
  return false;
 
-     }
+     }
 
 
 
-     String sifre = rb.getString("AS400.SIFRE");
+     String sifre = rb.getString("AS400.SIFRE");
 
 
 
-     if (sifre != null) {
+     if (sifre != null) {
 
  pw = sifre;
 
-     }
+     }
 
-     else {
+     else {
 
  System.out.println
 
-     ("Hata, sifreyi properties dosyasindan alamadik");
+     ("Hata, sifreyi properties dosyasindan alamadik");
 
  return false;
 
-     }
+     }
 
 
 
-     kullaniciNO = rb.getString("AS400.KULLANICINO");
+     kullaniciNO = rb.getString("AS400.KULLANICINO");
 
 
 
-     return true;
+     return true;
 
 
 
@@ -455,7 +451,7 @@ public class Test
 
  catch (Exception e)
 
-     {
+     {
 
  System.out.println("Hata, properties dosyasini yukleyemedik");
 
@@ -463,9 +459,9 @@ public class Test
 
  return false;
 
-     }
+     }
 
-    }
+    }
 
 
 

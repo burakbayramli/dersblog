@@ -72,21 +72,21 @@ import csv
 
 def get_row(cols):
 
-    with open("in.csv", 'r') as csvfile:
+    with open("in.csv", 'r') as csvfile:
 
-        rd = csv.reader(csvfile)
+        rd = csv.reader(csvfile)
 
-        headers = {k: v for v, k in enumerate(next(rd))}
+        headers = {k: v for v, k in enumerate(next(rd))}
 
-        for row in rd:
+        for row in rd:
 
-            label = float(row[headers['y']])
+            label = float(row[headers['y']])
 
-            # sadece istenen kolonlari al
+            # sadece istenen kolonlari al
 
-            rrow = [row[headers[x]] for x in headers if x in cols]
+            rrow = [row[headers[x]] for x in headers if x in cols]
 
-            yield rrow, label
+            yield rrow, label
 ```
 
 Bu akıllı fonksiyon aynen bir class gibi yaratılıyor, sonra
@@ -97,7 +97,7 @@ geziciyi oluşturabiliriz, sonra ondan bir satır isteyebiliriz,
 ```python
 getter = get_row(['x1','x2'])
 
-Y,x = getter.next() 
+Y,x = getter.next() 
 
 print Y,x
 ```
@@ -113,16 +113,16 @@ print Y,x
 gidip kahve içebiliriz, geri geldiğimizde
 
 ```python
-Y,x = getter.next() 
+Y,x = getter.next() 
 
 print Y,x
 
-Y,x = getter.next() 
+Y,x = getter.next() 
 
 print Y,x
 ```
 
-çağrıları bize iki yeni satır verir. 
+çağrıları bize iki yeni satır verir. 
 
 
 ```
@@ -133,13 +133,13 @@ print Y,x
 
 Elimizdeki fonksiyon göstergecini başka birini versek o next() çağırsa
 o da aynı yerden devam ederdi. Ama biz tekrar başa dönmek istiyoruz,
-problem değil, yeni bir gezici fonksiyon yaratırız, 
+problem değil, yeni bir gezici fonksiyon yaratırız, 
 
 
 ```python
 getter = get_row(['x1','x2'])
 
-Y,x = getter.next() 
+Y,x = getter.next() 
 
 print Y,x
 ```
@@ -159,7 +159,7 @@ aşaması sayılabilir, ondan sonra bir döngüye girilip daha az mıktarda
 kod sürekli işlenip yield ile dönülecektir. Üstteki örnekte dosyanın
 açılması, başlık kolonların okunması, vs gibi işlemlerin hepsi bu
 başlangıç aşamasında. Bir gezici fonksiyonu ismiyle ve istenen
-parametreleri ile yarattığımız zaman bu hazırlık kodları işleyecek. 
+parametreleri ile yarattığımız zaman bu hazırlık kodları işleyecek. 
 
 Kaynaklar
 

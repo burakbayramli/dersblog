@@ -17,7 +17,7 @@ tarafi yercekim etkisi sonrasi.
 KineticsKit kurmak icin baglanti:
 http://kineticskit.sourceforge.net. Buradan zip indirilir, acilir ve
 
-sudo mv  KineticsKit /usr/lib/python2.7/dist-packages/
+sudo mv KineticsKit /usr/lib/python2.7/dist-packages/
 
 ile gereken yere kopyalanir, setup.py secenegi vermemisler, yani
 kurulumu elle yapmak gerekiyor. Ustteki simulasyon icin

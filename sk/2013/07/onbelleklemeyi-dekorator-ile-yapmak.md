@@ -6,7 +6,7 @@ kare almakla yükümlü bir fonksiyonumuz var diyelim (altta ise yaramaz
 bir değişken dummy ekledik, bazı püf noktaları gösterebilmek için),
 
 ```
-def kare(dummy, a):    return a*a
+def kare(dummy, a):    return a*a
 ```
 
 Bu fonksiyonu
@@ -28,12 +28,12 @@ benzerdi:
 
 ```
 cache = {}def kare(dummy, a):
-    if not a in cache: cache[a] = a*a
-    return cache[a]
+    if not a in cache: cache[a] = a*a
+    return cache[a]
 ```
 
 Değişken cache bir Python dictionary'dir ve onbelleğimiz onun
-üzerinde  duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek
+üzerinde  duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek
 objesi alanen ortada, ayrıca ıf gibi çok ciddi bir ibareyi koda
 sokuşturmak zorunda kaldık :) Genellikle bu ifade önemli bir işlem
 mantığı var ise kullanılır - en azından kod okunabilirliği açısından
@@ -50,16 +50,16 @@ fonksiyon üzerinde '@' ile tanımlanan bir şeydir, başka bir eke
 ihtiyaç yoktur. O zaman (önce dekoratörün kendisi)
 
 ```
-def cache(function):  memo = {}
-  def wrapper(*args):
-    if args[1] in memo:
-      print "cache hit"
-      return memo[args[1]]
-    else:
-      print "cache miss"
-      rv = function(*args)
-      memo[args[1]] = rv
-      return rv  return wrapper
+def cache(function):  memo = {}
+  def wrapper(*args):
+    if args[1] in memo:
+      print "cache hit"
+      return memo[args[1]]
+    else:
+      print "cache miss"
+      rv = function(*args)
+      memo[args[1]] = rv
+      return rv  return wrapper
 ```
 
 Üstteki kod ana kodunuzdan ayrı bir yerde, bir dosyada durabilir
@@ -67,7 +67,7 @@ mesela, sadece bir kere yazılır zaten, ve kullanılması gerektiği zaman
 şu ibare yeterlidir,
 
 ```
-@cachedef kare(dummy, a):    return a*a
+@cachedef kare(dummy, a):    return a*a
 ```
 
 Görüldüğü gibi gayet temiz. Onbellek kodu hiç etrafta gözükmüyor, bu
@@ -86,10 +86,10 @@ Diyelim ki mevcut bir kod parcasi var,
 
 ```
 import randomclass Foo:
-    def f(self,x):
-        x = random.random()
-        return xo = Foo()
-    
+    def f(self,x):
+        x = random.random()
+        return xo = Foo()
+    
 ```
 
 Biz bu kodun `f()` çağrısını "yakalayıp" ona ek bir şeyler yaptırtmak
@@ -101,11 +101,11 @@ yapamayız. Bu durumda başka bir seçenek sudur,
 
 ```
 def decorated_f(fn):
-    def new_f(*args, **kwargs):
-        res = fn(*args, **kwargs)
-        setattr(args[0], "was", res)
-        return res
-    return new_f
+    def new_f(*args, **kwargs):
+        res = fn(*args, **kwargs)
+        setattr(args[0], "was", res)
+        return res
+    return new_f
 Foo.f = decorated_f(Foo.f)
 ```
 

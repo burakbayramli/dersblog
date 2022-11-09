@@ -25,7 +25,7 @@ $ ssh-keygen -t rsa -P ""
 $ cat $HOME/.ssh/id_rsa.pub >> $HOME/.ssh/authorized_keys
 ```
 
-Dikkat: Ustteki komutlari hduser icin ayni sekilde isletmek lazim.  
+Dikkat: Ustteki komutlari hduser icin ayni sekilde isletmek lazim.  
 
 Eger ssh localhost ile baglanti olmazsa, belki SSH servisi
 kurulmamistir, onu kurariz,
@@ -51,7 +51,7 @@ unalias fs &> /dev/null
 alias fs="hadoop fs"
 unalias hls &> /dev/null
 alias hls="fs -ls"lzohead () {
-    hadoop fs -cat $1 | lzop -dc | head -1000 | less}
+    hadoop fs -cat $1 | lzop -dc | head -1000 | less}
 export PATH=$PATH:$HADOOP_HOME/bin
 ```
 
@@ -59,14 +59,14 @@ Simdi [HADOOP DIZINI]/conf/hadoop-env.sh icinde
 
 ```
 # The java implementation to use.
-  Required.
+  Required.
 export JAVA_HOME=[JAVA HOME]
 ```
 
 yapin. JAVA_HOME ne ise ustte onu veririz, which java ile bu dizini
 bulabilirsiniz, bazen bu komut bir sembolik baglanti (symlink) verir,
 ls -al ile bu baglantilari izleyerek gercek adrese
-ulasabilirsiniz. Eger Java JDK kurulmamissa, 
+ulasabilirsiniz. Eger Java JDK kurulmamissa, 
 
 ```
 sudo apt-get install openjdk-6-jdk
@@ -82,33 +82,33 @@ sudo chown hduser:hadoop /app/hadoop/tmp
 conf/core-site.xml icinde
 
 ```
-  <property>
-    <name>hadoop.tmp.dir</name>
-    <value>/app/hadoop/tmp</value>
-    <description>A base for other temporary directories.</description>
-  </property>
-  <property>
-    <name>fs.default.name</name>
-    <value>hdfs://localhost:54310</value>
-    <description>The name of the default file system.
-  A URI whose
-    scheme and authority determine the FileSystem implementation.
-  The
-    uri's scheme determines the config property (fs.SCHEME.impl) naming
-    the FileSystem implementation class.
-  The uri's authority is used to
-    determine the host, port, etc. for a filesystem.</description>
-  </property>
+  <property>
+    <name>hadoop.tmp.dir</name>
+    <value>/app/hadoop/tmp</value>
+    <description>A base for other temporary directories.</description>
+  </property>
+  <property>
+    <name>fs.default.name</name>
+    <value>hdfs://localhost:54310</value>
+    <description>The name of the default file system.
+  A URI whose
+    scheme and authority determine the FileSystem implementation.
+  The
+    uri's scheme determines the config property (fs.SCHEME.impl) naming
+    the FileSystem implementation class.
+  The uri's authority is used to
+    determine the host, port, etc. for a filesystem.</description>
+  </property>
 ```
 
 conf/mapred-site.xml icinde
 
 ```
-<property>  <name>mapred.job.tracker</name>
-  <value>localhost:54311</value>
-  <description>The host and port that the MapReduce job tracker runs  at.
-  If "local", then jobs are run in-process as a single map  and reduce task.
-  </description>
+<property>  <name>mapred.job.tracker</name>
+  <value>localhost:54311</value>
+  <description>The host and port that the MapReduce job tracker runs  at.
+  If "local", then jobs are run in-process as a single map  and reduce task.
+  </description>
 </property>
 ```
 
@@ -116,12 +116,12 @@ conf/hdf-site.xml icinde
 
 ```
 <property>
-  <name>dfs.replication</name>
-  <value>1</value>
-  <description>Default block replication.
-  The actual number of replications can be specified when the file is created.
-  The default is used if replication is not specified in create time.
-  </description></property>
+  <name>dfs.replication</name>
+  <value>1</value>
+  <description>Default block replication.
+  The actual number of replications can be specified when the file is created.
+  The default is used if replication is not specified in create time.
+  </description></property>
 ```
 
 Simdi hduser olarak sunu isletin
@@ -132,7 +132,7 @@ Simdi hduser olarak sunu isletin
 
 Simdi kendi kullaniciniz icinden Hadoop kurulus dizinine gidin, ve
 chmod a+w ile bu dizine herkes icin okuma hakki verin, boylece hduser
-oraya yazabilsin. 
+oraya yazabilsin. 
 
 Bu komut daha once tanimlanan /app//hadoop altinda gereken dizinleri formatlayacak.
 
@@ -160,15 +160,10 @@ komutu
 listesini dondurmeli.
 
 Eger tek makina uzerinde birden fazla cekirdek (core) uzerinde islem
-yapmak istiyorsak mapred-site.xml dosyasi icindeki  mapred.map.tasks
+yapmak istiyorsak mapred-site.xml dosyasi icindeki  mapred.map.tasks
 ayari kullanilabilir, buraya 4-5 gibi bir sayi gerekiyor. Ayrica
 mapred.tasktracker.map.tasks.maximum ayari var, ki bu da eszamanli
 olarak isleyen islemlerin (task) en fazla ne kadar olabilecegini
 belirtleyen bir ust sinir, bir onceki ayar ile kismen
 ilintili. Birinci ayardaki sayi bu ust sinir sayisindan fazla
 olamiyor.
-
-
-
-
-

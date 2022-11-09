@@ -6,14 +6,14 @@ bash script.sh olarak isletmek gerekli. Mesela
 
 ```
 set -m # Enable Job Controlfor (( i = 0; i < $2; i++ ))do
-    cmd="baz komut "
-    cmd+=" ";cmd+=$2;cmd+=" ";cmd+=$i
-    if [ $1 == "secim1" ]; then
-        xterm -hold -e $cmd &
-    fi
-    if [ $1 == "secim2" ]; then
-        $cmd &
-    fidonewaitecho "hepsi tamam"
+    cmd="baz komut "
+    cmd+=" ";cmd+=$2;cmd+=" ";cmd+=$i
+    if [ $1 == "secim1" ]; then
+        xterm -hold -e $cmd &
+    fi
+    if [ $1 == "secim2" ]; then
+        $cmd &
+    fidonewaitecho "hepsi tamam"
 ...
 ```
 

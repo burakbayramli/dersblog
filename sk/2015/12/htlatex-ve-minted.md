@@ -48,10 +48,3 @@ Kaynak
 
 http://tex.stackexchange.com/questions/225763/latex-to-html-using-htlatex-background-problem
 
-
-
-
-
-
-
-

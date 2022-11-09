@@ -22,7 +22,7 @@ istenen analiz yapilir. Ayrica shell icinde direk hata ayiklayici
 guzel ozelligi vardir. Neyse,
 
 ```
-$ ipython 
+$ ipython 
 ```
 
 ile baslatinca shell'e girilir (yuzde isaretini shell isareti gibi
@@ -41,7 +41,7 @@ yaziliyormus gibi isletilebilir, Unix shell'deki "kaynaktan isletme
 gibi. Matplotlib ile daha entegre sekilde baslatmak icin
 
 ```
-ipython --pylab 
+ipython --pylab 
 ```
 
 o zaman ayrica matplotlib import etmeye gerek kalmaz, plot komutu
@@ -49,7 +49,7 @@ aninda cizimi yapar, normalde bilindigi gibi plt.show() sonrasi normal
 Python script blok edecekti.
 
 ```
-% reset 
+% reset 
 ```
 
 ile hafiza icerigi temizlenir, soru sorulmadan bu is yapilsin istersek
@@ -60,7 +60,7 @@ ile hafiza icerigi temizlenir, soru sorulmadan bu is yapilsin istersek
 
 Not Defteri
 
-Bir dizi ipython islemini  tarayici icinden yapabilmek, ve hem kodsal,
+Bir dizi ipython islemini  tarayici icinden yapabilmek, ve hem kodsal,
 hem de prezentasyon amaciyla bunlari paylasmak icin ipython "not
 defteri" uygulamasi ilginc. Kurmak icin sudo apt-get install
 ipython-notebook. Baslatmak icin
@@ -96,7 +96,7 @@ ile her seyi isletebiliriz.
 Not defteri icinde LaTeX kullanmak mumkundur. Kod yazilan hucrede iken
 solda "Markdown" secerseniz, yazdiklarini metin olarak kabul edilir ve
 iki $ $ isareti arasindaki her sey LaTeX komutu olarak algilanir, ve
-Shift + Enter sonrasi aninda grafiksel olarak gosterilir.  Bu tek
+Shift + Enter sonrasi aninda grafiksel olarak gosterilir.  Bu tek
 kelimeyle muthis bir ozellik, bilimsel hatta egitimsel icerik paylasma
 konusunda cok faydali. Bu teknolojiyle interaktif bilimsel kitaplar
 yazilabilir, gidisat o yonde.

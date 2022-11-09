@@ -34,7 +34,7 @@ rm /tmp/*.tga
 
 rm /tmp/*.jpg
 
-LD_PRELOAD=`pwd`/glcapture.so ./demo.exe 
+LD_PRELOAD=`pwd`/glcapture.so ./demo.exe 
 ```
 
 glcapture.c
@@ -44,15 +44,15 @@ glcapture.c
 ```
 /*
 
- * Use something like this:
+ * Use something like this:
 
- *
+ *
 
- * gcc -shared -fPIC -o glcapture.so glcapture.c -ldl
+ * gcc -shared -fPIC -o glcapture.so glcapture.c -ldl
 
- * LD_PRELOAD=`pwd`/glcapture.so ./demo
+ * LD_PRELOAD=`pwd`/glcapture.so ./demo
 
- */
+ */
 
 
 
@@ -94,53 +94,53 @@ void glXSwapBuffers( Display *dpy, GLXDrawable drawable )
 
 {
 
-  printf("swap\n");
+  printf("swap\n");
 
-  void (*real_swap)(Display*, GLXDrawable);
+  void (*real_swap)(Display*, GLXDrawable);
 
-  real_swap = (void(*)(Display*, GLXDrawable))dlsym(RTLD_NEXT, "glXSwapBuffers");
-
-
-
-  FILE *ppm;
-
-  char filename[256];
-
-  glReadPixels(0, 0, WIDTH, HEIGHT, GL_BGR, GL_UNSIGNED_BYTE, buf);
+  real_swap = (void(*)(Display*, GLXDrawable))dlsym(RTLD_NEXT, "glXSwapBuffers");
 
 
 
-  sprintf(filename, "/tmp/frame%05u.tga", frameno++);
+  FILE *ppm;
 
-  ppm = fopen(filename, "w");
+  char filename[256];
 
-  fwrite("\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00", 12, 1, ppm);
-
-  {
-
-    unsigned short w = WIDTH;
-
-    fwrite(&w, 2, 1, ppm);
-
-  }
-
-  {
-
-    unsigned short h = HEIGHT;
-
-    fwrite(&h, 2, 1, ppm);
-
-  }
-
-  fwrite("\x18\x00", 2, 1, ppm);
-
-  fwrite(buf, WIDTH*HEIGHT*3, 1, ppm);
-
-  fclose(ppm);
+  glReadPixels(0, 0, WIDTH, HEIGHT, GL_BGR, GL_UNSIGNED_BYTE, buf);
 
 
 
-  real_swap(dpy, drawable);
+  sprintf(filename, "/tmp/frame%05u.tga", frameno++);
+
+  ppm = fopen(filename, "w");
+
+  fwrite("\x00\x00\x02\x00\x00\x00\x00\x00\x00\x00\x00\x00", 12, 1, ppm);
+
+  {
+
+    unsigned short w = WIDTH;
+
+    fwrite(&w, 2, 1, ppm);
+
+  }
+
+  {
+
+    unsigned short h = HEIGHT;
+
+    fwrite(&h, 2, 1, ppm);
+
+  }
+
+  fwrite("\x18\x00", 2, 1, ppm);
+
+  fwrite(buf, WIDTH*HEIGHT*3, 1, ppm);
+
+  fclose(ppm);
+
+
+
+  real_swap(dpy, drawable);
 
 }
 
@@ -150,13 +150,13 @@ int gettimeofday(struct timeval *tv, struct timezone *tz)
 
 {
 
-  printf("gettimeofday frame %u\n", frameno);
+  printf("gettimeofday frame %u\n", frameno);
 
-  //tv->tv_sec = frameno / FPS;
+  //tv->tv_sec = frameno / FPS;
 
-  //tv->tv_usec = ((double)(frameno % FPS) / FPS) * 1000000;
+  //tv->tv_usec = ((double)(frameno % FPS) / FPS) * 1000000;
 
-  return 0;
+  return 0;
 
 }
 
@@ -166,11 +166,11 @@ int clock_gettime(clockid_t clk_id, struct timespec *tp)
 
 {
 
-  //tp->tv_sec = frameno / FPS;
+  //tp->tv_sec = frameno / FPS;
 
-  //tp->tv_nsec = ((double)(frameno % FPS) / FPS) * 1e9;
+  //tp->tv_nsec = ((double)(frameno % FPS) / FPS) * 1e9;
 
-  return 0;
+  return 0;
 
 }
 ```
@@ -234,21 +234,21 @@ static float materialColor[8][4] =
 
 {
 
-  {0.8, 0.8, 0.8, 1.0},
+  {0.8, 0.8, 0.8, 1.0},
 
-  {0.8, 0.0, 0.0, 1.0},
+  {0.8, 0.0, 0.0, 1.0},
 
-  {0.0, 0.8, 0.0, 1.0},
+  {0.0, 0.8, 0.0, 1.0},
 
-  {0.0, 0.0, 0.8, 1.0},
+  {0.0, 0.0, 0.8, 1.0},
 
-  {0.0, 0.8, 0.8, 1.0},
+  {0.0, 0.8, 0.8, 1.0},
 
-  {0.8, 0.0, 0.8, 1.0},
+  {0.8, 0.0, 0.8, 1.0},
 
-  {0.8, 0.8, 0.0, 1.0},
+  {0.8, 0.8, 0.0, 1.0},
 
-  {0.0, 0.0, 0.0, 0.6},
+  {0.0, 0.0, 0.0, 0.6},
 
 };
 
@@ -304,37 +304,37 @@ static unsigned char shadowPattern[128] =
 
 {
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,  /* 50% Grey */
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,  /* 50% Grey */
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55,
 
-  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55
+  0xaa, 0xaa, 0xaa, 0xaa, 0x55, 0x55, 0x55, 0x55
 
 };
 
@@ -344,37 +344,37 @@ static unsigned char sgiPattern[128] =
 
 {
 
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,  /* SGI Logo */
+  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,  /* SGI Logo */
 
-  0xff, 0xbd, 0xff, 0x83, 0xff, 0x5a, 0xff, 0xef,
+  0xff, 0xbd, 0xff, 0x83, 0xff, 0x5a, 0xff, 0xef,
 
-  0xfe, 0xdb, 0x7f, 0xef, 0xfd, 0xdb, 0xbf, 0xef,
+  0xfe, 0xdb, 0x7f, 0xef, 0xfd, 0xdb, 0xbf, 0xef,
 
-  0xfb, 0xdb, 0xdf, 0xef, 0xf7, 0xdb, 0xef, 0xef,
+  0xfb, 0xdb, 0xdf, 0xef, 0xf7, 0xdb, 0xef, 0xef,
 
-  0xfb, 0xdb, 0xdf, 0xef, 0xfd, 0xdb, 0xbf, 0x83,
+  0xfb, 0xdb, 0xdf, 0xef, 0xfd, 0xdb, 0xbf, 0x83,
 
-  0xce, 0xdb, 0x73, 0xff, 0xb7, 0x5a, 0xed, 0xff,
+  0xce, 0xdb, 0x73, 0xff, 0xb7, 0x5a, 0xed, 0xff,
 
-  0xbb, 0xdb, 0xdd, 0xc7, 0xbd, 0xdb, 0xbd, 0xbb,
+  0xbb, 0xdb, 0xdd, 0xc7, 0xbd, 0xdb, 0xbd, 0xbb,
 
-  0xbe, 0xbd, 0x7d, 0xbb, 0xbf, 0x7e, 0xfd, 0xb3,
+  0xbe, 0xbd, 0x7d, 0xbb, 0xbf, 0x7e, 0xfd, 0xb3,
 
-  0xbe, 0xe7, 0x7d, 0xbf, 0xbd, 0xdb, 0xbd, 0xbf,
+  0xbe, 0xe7, 0x7d, 0xbf, 0xbd, 0xdb, 0xbd, 0xbf,
 
-  0xbb, 0xbd, 0xdd, 0xbb, 0xb7, 0x7e, 0xed, 0xc7,
+  0xbb, 0xbd, 0xdd, 0xbb, 0xb7, 0x7e, 0xed, 0xc7,
 
-  0xce, 0xdb, 0x73, 0xff, 0xfd, 0xdb, 0xbf, 0xff,
+  0xce, 0xdb, 0x73, 0xff, 0xfd, 0xdb, 0xbf, 0xff,
 
-  0xfb, 0xdb, 0xdf, 0x87, 0xf7, 0xdb, 0xef, 0xfb,
+  0xfb, 0xdb, 0xdf, 0x87, 0xf7, 0xdb, 0xef, 0xfb,
 
-  0xf7, 0xdb, 0xef, 0xfb, 0xfb, 0xdb, 0xdf, 0xfb,
+  0xf7, 0xdb, 0xef, 0xfb, 0xfb, 0xdb, 0xdf, 0xfb,
 
-  0xfd, 0xdb, 0xbf, 0xc7, 0xfe, 0xdb, 0x7f, 0xbf,
+  0xfd, 0xdb, 0xbf, 0xc7, 0xfe, 0xdb, 0x7f, 0xbf,
 
-  0xff, 0x5a, 0xff, 0xbf, 0xff, 0xbd, 0xff, 0xc3,
+  0xff, 0x5a, 0xff, 0xbf, 0xff, 0xbd, 0xff, 0xc3,
 
-  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
+  0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff
 
 };
 
@@ -384,75 +384,75 @@ static float cube_vertexes[6][4][4] =
 
 {
 
-  {
+  {
 
-    {-1.0, -1.0, -1.0, 1.0},
+    {-1.0, -1.0, -1.0, 1.0},
 
-    {-1.0, -1.0, 1.0, 1.0},
+    {-1.0, -1.0, 1.0, 1.0},
 
-    {-1.0, 1.0, 1.0, 1.0},
+    {-1.0, 1.0, 1.0, 1.0},
 
-    {-1.0, 1.0, -1.0, 1.0}},
-
-
-
-  {
-
-    {1.0, 1.0, 1.0, 1.0},
-
-    {1.0, -1.0, 1.0, 1.0},
-
-    {1.0, -1.0, -1.0, 1.0},
-
-    {1.0, 1.0, -1.0, 1.0}},
+    {-1.0, 1.0, -1.0, 1.0}},
 
 
 
-  {
+  {
 
-    {-1.0, -1.0, -1.0, 1.0},
+    {1.0, 1.0, 1.0, 1.0},
 
-    {1.0, -1.0, -1.0, 1.0},
+    {1.0, -1.0, 1.0, 1.0},
 
-    {1.0, -1.0, 1.0, 1.0},
+    {1.0, -1.0, -1.0, 1.0},
 
-    {-1.0, -1.0, 1.0, 1.0}},
-
-
-
-  {
-
-    {1.0, 1.0, 1.0, 1.0},
-
-    {1.0, 1.0, -1.0, 1.0},
-
-    {-1.0, 1.0, -1.0, 1.0},
-
-    {-1.0, 1.0, 1.0, 1.0}},
+    {1.0, 1.0, -1.0, 1.0}},
 
 
 
-  {
+  {
 
-    {-1.0, -1.0, -1.0, 1.0},
+    {-1.0, -1.0, -1.0, 1.0},
 
-    {-1.0, 1.0, -1.0, 1.0},
+    {1.0, -1.0, -1.0, 1.0},
 
-    {1.0, 1.0, -1.0, 1.0},
+    {1.0, -1.0, 1.0, 1.0},
 
-    {1.0, -1.0, -1.0, 1.0}},
+    {-1.0, -1.0, 1.0, 1.0}},
 
 
 
-  {
+  {
 
-    {1.0, 1.0, 1.0, 1.0},
+    {1.0, 1.0, 1.0, 1.0},
 
-    {-1.0, 1.0, 1.0, 1.0},
+    {1.0, 1.0, -1.0, 1.0},
 
-    {-1.0, -1.0, 1.0, 1.0},
+    {-1.0, 1.0, -1.0, 1.0},
 
-    {1.0, -1.0, 1.0, 1.0}}
+    {-1.0, 1.0, 1.0, 1.0}},
+
+
+
+  {
+
+    {-1.0, -1.0, -1.0, 1.0},
+
+    {-1.0, 1.0, -1.0, 1.0},
+
+    {1.0, 1.0, -1.0, 1.0},
+
+    {1.0, -1.0, -1.0, 1.0}},
+
+
+
+  {
+
+    {1.0, 1.0, 1.0, 1.0},
+
+    {-1.0, 1.0, 1.0, 1.0},
+
+    {-1.0, -1.0, 1.0, 1.0},
+
+    {1.0, -1.0, 1.0, 1.0}}
 
 };
 
@@ -462,17 +462,17 @@ static float cube_normals[6][4] =
 
 {
 
-  {-1.0, 0.0, 0.0, 0.0},
+  {-1.0, 0.0, 0.0, 0.0},
 
-  {1.0, 0.0, 0.0, 0.0},
+  {1.0, 0.0, 0.0, 0.0},
 
-  {0.0, -1.0, 0.0, 0.0},
+  {0.0, -1.0, 0.0, 0.0},
 
-  {0.0, 1.0, 0.0, 0.0},
+  {0.0, 1.0, 0.0, 0.0},
 
-  {0.0, 0.0, -1.0, 0.0},
+  {0.0, 0.0, -1.0, 0.0},
 
-  {0.0, 0.0, 1.0, 0.0}
+  {0.0, 0.0, 1.0, 0.0}
 
 };
 
@@ -484,43 +484,43 @@ usage(void)
 
 {
 
-  printf("\n");
+  printf("\n");
 
-  printf("usage: scube [options]\n");
+  printf("usage: scube [options]\n");
 
-  printf("\n");
+  printf("\n");
 
-  printf("    display a spinning cube and its shadow\n");
+  printf("    display a spinning cube and its shadow\n");
 
-  printf("\n");
+  printf("\n");
 
-  printf("  Options:\n");
+  printf("  Options:\n");
 
-  printf("    -geometry  window size and location\n");
+  printf("    -geometry  window size and location\n");
 
-  printf("    -c         toggle color index mode\n");
+  printf("    -c         toggle color index mode\n");
 
-  printf("    -l         toggle lighting\n");
+  printf("    -l         toggle lighting\n");
 
-  printf("    -f         toggle fog\n");
+  printf("    -f         toggle fog\n");
 
-  printf("    -db        toggle double buffering\n");
+  printf("    -db        toggle double buffering\n");
 
-  printf("    -logo      toggle sgi logo for the shadow pattern\n");
+  printf("    -logo      toggle sgi logo for the shadow pattern\n");
 
-  printf("    -quads     toggle use of GL_QUADS to draw the checkerboard\n");
+  printf("    -quads     toggle use of GL_QUADS to draw the checkerboard\n");
 
-  printf("\n");
+  printf("\n");
 
-#ifndef EXIT_FAILURE    /* should be defined by ANSI C
+#ifndef EXIT_FAILURE    /* should be defined by ANSI C
 
-                            */
+                            */
 
 #define EXIT_FAILURE 1
 
 #endif
 
-  exit(EXIT_FAILURE);
+  exit(EXIT_FAILURE);
 
 }
 
@@ -532,63 +532,63 @@ buildColormap(void)
 
 {
 
-  if (useRGB) {
+  if (useRGB) {
 
-    return;
+    return;
 
-  } else {
+  } else {
 
-    int mapSize = 1 << glutGet(GLUT_WINDOW_BUFFER_SIZE);
+    int mapSize = 1 << glutGet(GLUT_WINDOW_BUFFER_SIZE);
 
-    int rampSize = mapSize / 8;
+    int rampSize = mapSize / 8;
 
-    int entry;
+    int entry;
 
-    int i;
-
-
-
-    for (entry = 0; entry < mapSize; ++entry) {
-
-      int hue = entry / rampSize;
-
-      GLfloat val = (entry % rampSize) * (1.0 / (rampSize - 1));
-
-      GLfloat red, green, blue;
+    int i;
 
 
 
-      red = (hue == 0 || hue == 1 || hue == 5 || hue == 6) ? val : 0;
+    for (entry = 0; entry < mapSize; ++entry) {
 
-      green = (hue == 0 || hue == 2 || hue == 4 || hue == 6) ? val : 0;
+      int hue = entry / rampSize;
 
-      blue = (hue == 0 || hue == 3 || hue == 4 || hue == 5) ? val : 0;
+      GLfloat val = (entry % rampSize) * (1.0 / (rampSize - 1));
 
-
-
-      glutSetColor(entry, red, green, blue);
-
-    }
+      GLfloat red, green, blue;
 
 
 
-    for (i = 0; i < 8; ++i) {
+      red = (hue == 0 || hue == 1 || hue == 5 || hue == 6) ? val : 0;
 
-      materialColor[i][0] = i * rampSize + 0.2 * (rampSize - 1);
+      green = (hue == 0 || hue == 2 || hue == 4 || hue == 6) ? val : 0;
 
-      materialColor[i][1] = i * rampSize + 0.8 * (rampSize - 1);
-
-      materialColor[i][2] = i * rampSize + 1.0 * (rampSize - 1);
-
-      materialColor[i][3] = 0.0;
-
-    }
+      blue = (hue == 0 || hue == 3 || hue == 4 || hue == 5) ? val : 0;
 
 
 
-    fogIndex[0] = -0.2 * (rampSize - 1);
+      glutSetColor(entry, red, green, blue);
 
-  }
+    }
+
+
+
+    for (i = 0; i < 8; ++i) {
+
+      materialColor[i][0] = i * rampSize + 0.2 * (rampSize - 1);
+
+      materialColor[i][1] = i * rampSize + 0.8 * (rampSize - 1);
+
+      materialColor[i][2] = i * rampSize + 1.0 * (rampSize - 1);
+
+      materialColor[i][3] = 0.0;
+
+    }
+
+
+
+    fogIndex[0] = -0.2 * (rampSize - 1);
+
+  }
 
 }
 
@@ -600,35 +600,35 @@ setColor(int c)
 
 {
 
-  if (useLighting) {
+  if (useLighting) {
 
-    if (useRGB) {
+    if (useRGB) {
 
-      glMaterialfv(GL_FRONT_AND_BACK,
+      glMaterialfv(GL_FRONT_AND_BACK,
 
-        GL_AMBIENT_AND_DIFFUSE, &materialColor[c][0]);
+        GL_AMBIENT_AND_DIFFUSE, &materialColor[c][0]);
 
-    } else {
+    } else {
 
-      glMaterialfv(GL_FRONT_AND_BACK,
+      glMaterialfv(GL_FRONT_AND_BACK,
 
-        GL_COLOR_INDEXES, &materialColor[c][0]);
+        GL_COLOR_INDEXES, &materialColor[c][0]);
 
-    }
+    }
 
-  } else {
+  } else {
 
-    if (useRGB) {
+    if (useRGB) {
 
-      glColor4fv(&materialColor[c][0]);
+      glColor4fv(&materialColor[c][0]);
 
-    } else {
+    } else {
 
-      glIndexf(materialColor[c][1]);
+      glIndexf(materialColor[c][1]);
 
-    }
+    }
 
-  }
+  }
 
 }
 
@@ -640,31 +640,31 @@ drawCube(int color)
 
 {
 
-  int i;
+  int i;
 
 
 
-  setColor(color);
+  setColor(color);
 
 
 
-  for (i = 0; i < 6; ++i) {
+  for (i = 0; i < 6; ++i) {
 
-    glNormal3fv(&cube_normals[i][0]);
+    glNormal3fv(&cube_normals[i][0]);
 
-    glBegin(GL_POLYGON);
+    glBegin(GL_POLYGON);
 
-    glVertex4fv(&cube_vertexes[i][0][0]);
+    glVertex4fv(&cube_vertexes[i][0][0]);
 
-    glVertex4fv(&cube_vertexes[i][1][0]);
+    glVertex4fv(&cube_vertexes[i][1][0]);
 
-    glVertex4fv(&cube_vertexes[i][2][0]);
+    glVertex4fv(&cube_vertexes[i][2][0]);
 
-    glVertex4fv(&cube_vertexes[i][3][0]);
+    glVertex4fv(&cube_vertexes[i][3][0]);
 
-    glEnd();
+    glEnd();
 
-  }
+  }
 
 }
 
@@ -676,145 +676,145 @@ drawCheck(int w, int h, int evenColor, int oddColor)
 
 {
 
-  static int initialized = 0;
+  static int initialized = 0;
 
-  static int usedLighting = 0;
+  static int usedLighting = 0;
 
-  static GLuint checklist = 0;
+  static GLuint checklist = 0;
 
 
 
-  if (!initialized || (usedLighting != useLighting)) {
+  if (!initialized || (usedLighting != useLighting)) {
 
-    static float square_normal[4] =
+    static float square_normal[4] =
 
-    {0.0, 0.0, 1.0, 0.0};
+    {0.0, 0.0, 1.0, 0.0};
 
-    static float square[4][4];
+    static float square[4][4];
 
-    int i, j;
+    int i, j;
 
 
 
-    if (!checklist) {
+    if (!checklist) {
 
-      checklist = glGenLists(1);
+      checklist = glGenLists(1);
 
-    }
+    }
 
-    glNewList(checklist, GL_COMPILE_AND_EXECUTE);
+    glNewList(checklist, GL_COMPILE_AND_EXECUTE);
 
 
 
-    if (useQuads) {
+    if (useQuads) {
 
-      glNormal3fv(square_normal);
+      glNormal3fv(square_normal);
 
-      glBegin(GL_QUADS);
+      glBegin(GL_QUADS);
 
-    }
+    }
 
-    for (j = 0; j < h; ++j) {
+    for (j = 0; j < h; ++j) {
 
-      for (i = 0; i < w; ++i) {
+      for (i = 0; i < w; ++i) {
 
-        square[0][0] = -1.0 + 2.0 / w * i;
+        square[0][0] = -1.0 + 2.0 / w * i;
 
-        square[0][1] = -1.0 + 2.0 / h * (j + 1);
+        square[0][1] = -1.0 + 2.0 / h * (j + 1);
 
-        square[0][2] = 0.0;
+        square[0][2] = 0.0;
 
-        square[0][3] = 1.0;
+        square[0][3] = 1.0;
 
 
 
-        square[1][0] = -1.0 + 2.0 / w * i;
+        square[1][0] = -1.0 + 2.0 / w * i;
 
-        square[1][1] = -1.0 + 2.0 / h * j;
+        square[1][1] = -1.0 + 2.0 / h * j;
 
-        square[1][2] = 0.0;
+        square[1][2] = 0.0;
 
-        square[1][3] = 1.0;
+        square[1][3] = 1.0;
 
 
 
-        square[2][0] = -1.0 + 2.0 / w * (i + 1);
+        square[2][0] = -1.0 + 2.0 / w * (i + 1);
 
-        square[2][1] = -1.0 + 2.0 / h * j;
+        square[2][1] = -1.0 + 2.0 / h * j;
 
-        square[2][2] = 0.0;
+        square[2][2] = 0.0;
 
-        square[2][3] = 1.0;
+        square[2][3] = 1.0;
 
 
 
-        square[3][0] = -1.0 + 2.0 / w * (i + 1);
+        square[3][0] = -1.0 + 2.0 / w * (i + 1);
 
-        square[3][1] = -1.0 + 2.0 / h * (j + 1);
+        square[3][1] = -1.0 + 2.0 / h * (j + 1);
 
-        square[3][2] = 0.0;
+        square[3][2] = 0.0;
 
-        square[3][3] = 1.0;
+        square[3][3] = 1.0;
 
 
 
-        if (i & 1 ^ j & 1) {
+        if (i & 1 ^ j & 1) {
 
-          setColor(oddColor);
+          setColor(oddColor);
 
-        } else {
+        } else {
 
-          setColor(evenColor);
+          setColor(evenColor);
 
-        }
+        }
 
 
 
-        if (!useQuads) {
+        if (!useQuads) {
 
-          glBegin(GL_POLYGON);
+          glBegin(GL_POLYGON);
 
-        }
+        }
 
-        glVertex4fv(&square[0][0]);
+        glVertex4fv(&square[0][0]);
 
-        glVertex4fv(&square[1][0]);
+        glVertex4fv(&square[1][0]);
 
-        glVertex4fv(&square[2][0]);
+        glVertex4fv(&square[2][0]);
 
-        glVertex4fv(&square[3][0]);
+        glVertex4fv(&square[3][0]);
 
-        if (!useQuads) {
+        if (!useQuads) {
 
-          glEnd();
+          glEnd();
 
-        }
+        }
 
-      }
+      }
 
-    }
+    }
 
 
 
-    if (useQuads) {
+    if (useQuads) {
 
-      glEnd();
+      glEnd();
 
-    }
+    }
 
-    glEndList();
+    glEndList();
 
 
 
-    initialized = 1;
+    initialized = 1;
 
-    usedLighting = useLighting;
+    usedLighting = useLighting;
 
-  } else {
+  } else {
 
-    glCallList(checklist);
+    glCallList(checklist);
 
-  }
+  }
 
 }
 
@@ -826,63 +826,63 @@ myShadowMatrix(float ground[4], float light[4])
 
 {
 
-  float dot;
+  float dot;
 
-  float shadowMat[4][4];
-
-
-
-  dot = ground[0] * light[0] +
-
-    ground[1] * light[1] +
-
-    ground[2] * light[2] +
-
-    ground[3] * light[3];
+  float shadowMat[4][4];
 
 
 
-  shadowMat[0][0] = dot - light[0] * ground[0];
+  dot = ground[0] * light[0] +
 
-  shadowMat[1][0] = 0.0 - light[0] * ground[1];
+    ground[1] * light[1] +
 
-  shadowMat[2][0] = 0.0 - light[0] * ground[2];
+    ground[2] * light[2] +
 
-  shadowMat[3][0] = 0.0 - light[0] * ground[3];
-
-
-
-  shadowMat[0][1] = 0.0 - light[1] * ground[0];
-
-  shadowMat[1][1] = dot - light[1] * ground[1];
-
-  shadowMat[2][1] = 0.0 - light[1] * ground[2];
-
-  shadowMat[3][1] = 0.0 - light[1] * ground[3];
+    ground[3] * light[3];
 
 
 
-  shadowMat[0][2] = 0.0 - light[2] * ground[0];
+  shadowMat[0][0] = dot - light[0] * ground[0];
 
-  shadowMat[1][2] = 0.0 - light[2] * ground[1];
+  shadowMat[1][0] = 0.0 - light[0] * ground[1];
 
-  shadowMat[2][2] = dot - light[2] * ground[2];
+  shadowMat[2][0] = 0.0 - light[0] * ground[2];
 
-  shadowMat[3][2] = 0.0 - light[2] * ground[3];
-
-
-
-  shadowMat[0][3] = 0.0 - light[3] * ground[0];
-
-  shadowMat[1][3] = 0.0 - light[3] * ground[1];
-
-  shadowMat[2][3] = 0.0 - light[3] * ground[2];
-
-  shadowMat[3][3] = dot - light[3] * ground[3];
+  shadowMat[3][0] = 0.0 - light[0] * ground[3];
 
 
 
-  glMultMatrixf((const GLfloat *) shadowMat);
+  shadowMat[0][1] = 0.0 - light[1] * ground[0];
+
+  shadowMat[1][1] = dot - light[1] * ground[1];
+
+  shadowMat[2][1] = 0.0 - light[1] * ground[2];
+
+  shadowMat[3][1] = 0.0 - light[1] * ground[3];
+
+
+
+  shadowMat[0][2] = 0.0 - light[2] * ground[0];
+
+  shadowMat[1][2] = 0.0 - light[2] * ground[1];
+
+  shadowMat[2][2] = dot - light[2] * ground[2];
+
+  shadowMat[3][2] = 0.0 - light[2] * ground[3];
+
+
+
+  shadowMat[0][3] = 0.0 - light[3] * ground[0];
+
+  shadowMat[1][3] = 0.0 - light[3] * ground[1];
+
+  shadowMat[2][3] = 0.0 - light[3] * ground[2];
+
+  shadowMat[3][3] = dot - light[3] * ground[3];
+
+
+
+  glMultMatrixf((const GLfloat *) shadowMat);
 
 }
 
@@ -904,15 +904,15 @@ idle(void)
 
 {
 
-  tick++;
+  tick++;
 
-  if (tick >= 120) {
+  if (tick >= 120) {
 
-    tick = 0;
+    tick = 0;
 
-  }
+  }
 
-  glutPostRedisplay();
+  glutPostRedisplay();
 
 }
 
@@ -926,75 +926,75 @@ keyboard(unsigned char ch, int x, int y)
 
 {
 
-  switch (ch) {
+  switch (ch) {
 
-  case 27:             /* escape */
+  case 27:             /* escape */
 
-    exit(0);
+    exit(0);
 
-    break;
+    break;
 
-  case 'L':
+  case 'L':
 
-  case 'l':
+  case 'l':
 
-    useLighting = !useLighting;
+    useLighting = !useLighting;
 
-    useLighting ? glEnable(GL_LIGHTING) :
+    useLighting ? glEnable(GL_LIGHTING) :
 
-      glDisable(GL_LIGHTING);
+      glDisable(GL_LIGHTING);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case 'F':
+  case 'F':
 
-  case 'f':
+  case 'f':
 
-    useFog = !useFog;
+    useFog = !useFog;
 
-    useFog ? glEnable(GL_FOG) : glDisable(GL_FOG);
+    useFog ? glEnable(GL_FOG) : glDisable(GL_FOG);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case '1':
+  case '1':
 
-    glFogf(GL_FOG_MODE, GL_LINEAR);
+    glFogf(GL_FOG_MODE, GL_LINEAR);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case '2':
+  case '2':
 
-    glFogf(GL_FOG_MODE, GL_EXP);
+    glFogf(GL_FOG_MODE, GL_EXP);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case '3':
+  case '3':
 
-    glFogf(GL_FOG_MODE, GL_EXP2);
+    glFogf(GL_FOG_MODE, GL_EXP2);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case ' ':
+  case ' ':
 
-    if (!moving) {
+    if (!moving) {
 
-      idle();
+      idle();
 
-      glutPostRedisplay();
+      glutPostRedisplay();
 
-    }
+    }
 
-  }
+  }
 
 }
 
@@ -1006,145 +1006,145 @@ display(void)
 
 {
 
-  GLfloat cubeXform[4][4];
+  GLfloat cubeXform[4][4];
 
 
 
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
 
-  glPushMatrix();
+  glPushMatrix();
 
-  glTranslatef(0.0, -1.5, 0.0);
+  glTranslatef(0.0, -1.5, 0.0);
 
-  glRotatef(-90.0, 1, 0, 0);
+  glRotatef(-90.0, 1, 0, 0);
 
-  glScalef(2.0, 2.0, 2.0);
+  glScalef(2.0, 2.0, 2.0);
 
 
 
-  drawCheck(6, 6, BLUE, YELLOW);  /* draw ground */
+  drawCheck(6, 6, BLUE, YELLOW);  /* draw ground */
 
-  glPopMatrix();
+  glPopMatrix();
 
 
 
-  glPushMatrix();
+  glPushMatrix();
 
-  glTranslatef(0.0, 0.0, -0.9);
+  glTranslatef(0.0, 0.0, -0.9);
 
-  glScalef(2.0, 2.0, 2.0);
+  glScalef(2.0, 2.0, 2.0);
 
 
 
-  drawCheck(6, 6, BLUE, YELLOW);  /* draw back */
+  drawCheck(6, 6, BLUE, YELLOW);  /* draw back */
 
-  glPopMatrix();
+  glPopMatrix();
 
 
 
-  glPushMatrix();
+  glPushMatrix();
 
-  glTranslatef(0.0, 0.2, 0.0);
+  glTranslatef(0.0, 0.2, 0.0);
 
-  glScalef(0.3, 0.3, 0.3);
+  glScalef(0.3, 0.3, 0.3);
 
-  glRotatef((360.0 / (30 * 1)) * tick, 1, 0, 0);
+  glRotatef((360.0 / (30 * 1)) * tick, 1, 0, 0);
 
-  glRotatef((360.0 / (30 * 2)) * tick, 0, 1, 0);
+  glRotatef((360.0 / (30 * 2)) * tick, 0, 1, 0);
 
-  glRotatef((360.0 / (30 * 4)) * tick, 0, 0, 1);
+  glRotatef((360.0 / (30 * 4)) * tick, 0, 0, 1);
 
-  glScalef(1.0, 2.0, 1.0);
+  glScalef(1.0, 2.0, 1.0);
 
-  glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat *) cubeXform);
+  glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat *) cubeXform);
 
 
 
-  drawCube(RED);        /* draw cube */
+  drawCube(RED);        /* draw cube */
 
-  glPopMatrix();
+  glPopMatrix();
 
 
 
-  glDepthMask(GL_FALSE);
+  glDepthMask(GL_FALSE);
 
-  if (useRGB) {
+  if (useRGB) {
 
-    glEnable(GL_BLEND);
+    glEnable(GL_BLEND);
 
-  } else {
+  } else {
 
-    glEnable(GL_POLYGON_STIPPLE);
+    glEnable(GL_POLYGON_STIPPLE);
 
-  }
+  }
 
-  if (useFog) {
+  if (useFog) {
 
-    glDisable(GL_FOG);
+    glDisable(GL_FOG);
 
-  }
+  }
 
-  glPushMatrix();
+  glPushMatrix();
 
-  myShadowMatrix(groundPlane, lightPos);
+  myShadowMatrix(groundPlane, lightPos);
 
-  glTranslatef(0.0, 0.0, 2.0);
+  glTranslatef(0.0, 0.0, 2.0);
 
-  glMultMatrixf((const GLfloat *) cubeXform);
+  glMultMatrixf((const GLfloat *) cubeXform);
 
 
 
-  drawCube(BLACK);      /* draw ground shadow */
+  drawCube(BLACK);      /* draw ground shadow */
 
-  glPopMatrix();
+  glPopMatrix();
 
 
 
-  glPushMatrix();
+  glPushMatrix();
 
-  myShadowMatrix(backPlane, lightPos);
+  myShadowMatrix(backPlane, lightPos);
 
-  glTranslatef(0.0, 0.0, 2.0);
+  glTranslatef(0.0, 0.0, 2.0);
 
-  glMultMatrixf((const GLfloat *) cubeXform);
+  glMultMatrixf((const GLfloat *) cubeXform);
 
 
 
-  drawCube(BLACK);      /* draw back shadow */
+  drawCube(BLACK);      /* draw back shadow */
 
-  glPopMatrix();
+  glPopMatrix();
 
 
 
-  glDepthMask(GL_TRUE);
+  glDepthMask(GL_TRUE);
 
-  if (useRGB) {
+  if (useRGB) {
 
-    glDisable(GL_BLEND);
+    glDisable(GL_BLEND);
 
-  } else {
+  } else {
 
-    glDisable(GL_POLYGON_STIPPLE);
+    glDisable(GL_POLYGON_STIPPLE);
 
-  }
+  }
 
-  if (useFog) {
+  if (useFog) {
 
-    glEnable(GL_FOG);
+    glEnable(GL_FOG);
 
-  }
+  }
 
-  if (useDB) {
+  if (useDB) {
 
-    glutSwapBuffers();
+    glutSwapBuffers();
 
-  } else {
+  } else {
 
-    glFlush();
+    glFlush();
 
-  }
+  }
 
 }
 
@@ -1156,9 +1156,9 @@ fog_select(int fog)
 
 {
 
-  glFogf(GL_FOG_MODE, fog);
+  glFogf(GL_FOG_MODE, fog);
 
-  glutPostRedisplay();
+  glutPostRedisplay();
 
 }
 
@@ -1170,53 +1170,53 @@ menu_select(int mode)
 
 {
 
-  switch (mode) {
+  switch (mode) {
 
-  case 1:
+  case 1:
 
-    moving = 1;
+    moving = 1;
 
-    glutIdleFunc(idle);
+    glutIdleFunc(idle);
 
-    break;
+    break;
 
-  case 2:
+  case 2:
 
-    moving = 0;
+    moving = 0;
 
-    glutIdleFunc(NULL);
+    glutIdleFunc(NULL);
 
-    break;
+    break;
 
-  case 3:
+  case 3:
 
-    useFog = !useFog;
+    useFog = !useFog;
 
-    useFog ? glEnable(GL_FOG) : glDisable(GL_FOG);
+    useFog ? glEnable(GL_FOG) : glDisable(GL_FOG);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case 4:
+  case 4:
 
-    useLighting = !useLighting;
+    useLighting = !useLighting;
 
-    useLighting ? glEnable(GL_LIGHTING) :
+    useLighting ? glEnable(GL_LIGHTING) :
 
-      glDisable(GL_LIGHTING);
+      glDisable(GL_LIGHTING);
 
-    glutPostRedisplay();
+    glutPostRedisplay();
 
-    break;
+    break;
 
-  case 5:
+  case 5:
 
-    exit(0);
+    exit(0);
 
-    break;
+    break;
 
-  }
+  }
 
 }
 
@@ -1228,19 +1228,19 @@ visible(int state)
 
 {
 
-  if (state == GLUT_VISIBLE) {
+  if (state == GLUT_VISIBLE) {
 
-    if (moving)
+    if (moving)
 
-      glutIdleFunc(idle);
+      glutIdleFunc(idle);
 
-  } else {
+  } else {
 
-    if (moving)
+    if (moving)
 
-      glutIdleFunc(NULL);
+      glutIdleFunc(NULL);
 
-  }
+  }
 
 }
 
@@ -1252,249 +1252,249 @@ main(int argc, char **argv)
 
 {
 
-  int width = 640, height = 480;
+  int width = 640, height = 480;
 
-  int i;
+  int i;
 
-  char *name;
+  char *name;
 
-  int fog_menu;
+  int fog_menu;
 
 
 
-  glutInitWindowSize(width, height);
+  glutInitWindowSize(width, height);
 
-  glutInit(&argc, argv);
+  glutInit(&argc, argv);
 
-  /* process commmand line args */
+  /* process commmand line args */
 
-  for (i = 1; i < argc; ++i) {
+  for (i = 1; i < argc; ++i) {
 
-    if (!strcmp("-c", argv[i])) {
+    if (!strcmp("-c", argv[i])) {
 
-      useRGB = !useRGB;
+      useRGB = !useRGB;
 
-    } else if (!strcmp("-l", argv[i])) {
+    } else if (!strcmp("-l", argv[i])) {
 
-      useLighting = !useLighting;
+      useLighting = !useLighting;
 
-    } else if (!strcmp("-f", argv[i])) {
+    } else if (!strcmp("-f", argv[i])) {
 
-      useFog = !useFog;
+      useFog = !useFog;
 
-    } else if (!strcmp("-db", argv[i])) {
+    } else if (!strcmp("-db", argv[i])) {
 
-      useDB = !useDB;
+      useDB = !useDB;
 
-    } else if (!strcmp("-logo", argv[i])) {
+    } else if (!strcmp("-logo", argv[i])) {
 
-      useLogo = !useLogo;
+      useLogo = !useLogo;
 
-    } else if (!strcmp("-quads", argv[i])) {
+    } else if (!strcmp("-quads", argv[i])) {
 
-      useQuads = !useQuads;
+      useQuads = !useQuads;
 
-    } else {
+    } else {
 
-      usage();
+      usage();
 
-    }
+    }
 
-  }
+  }
 
 
 
-  /* choose visual */
+  /* choose visual */
 
-  if (useRGB) {
+  if (useRGB) {
 
-    if (useDB) {
+    if (useDB) {
 
-      glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+      glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-      name = windowNameRGBDB;
+      name = windowNameRGBDB;
 
-    } else {
+    } else {
 
-      glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
+      glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_DEPTH);
 
-      name = windowNameRGB;
+      name = windowNameRGB;
 
-    }
+    }
 
-  } else {
+  } else {
 
-    if (useDB) {
+    if (useDB) {
 
-      glutInitDisplayMode(GLUT_DOUBLE | GLUT_INDEX | GLUT_DEPTH);
+      glutInitDisplayMode(GLUT_DOUBLE | GLUT_INDEX | GLUT_DEPTH);
 
-      name = windowNameIndexDB;
+      name = windowNameIndexDB;
 
-    } else {
+    } else {
 
-      glutInitDisplayMode(GLUT_SINGLE | GLUT_INDEX | GLUT_DEPTH);
+      glutInitDisplayMode(GLUT_SINGLE | GLUT_INDEX | GLUT_DEPTH);
 
-      name = windowNameIndex;
+      name = windowNameIndex;
 
-    }
+    }
 
-  }
+  }
 
 
 
-  glutCreateWindow(name);
+  glutCreateWindow(name);
 
 
 
-  buildColormap();
+  buildColormap();
 
 
 
-  glutKeyboardFunc(keyboard);
+  glutKeyboardFunc(keyboard);
 
-  glutDisplayFunc(display);
+  glutDisplayFunc(display);
 
-  glutVisibilityFunc(visible);
+  glutVisibilityFunc(visible);
 
 
 
-  fog_menu = glutCreateMenu(fog_select);
+  fog_menu = glutCreateMenu(fog_select);
 
-  glutAddMenuEntry("Linear fog", GL_LINEAR);
+  glutAddMenuEntry("Linear fog", GL_LINEAR);
 
-  glutAddMenuEntry("Exp fog", GL_EXP);
+  glutAddMenuEntry("Exp fog", GL_EXP);
 
-  glutAddMenuEntry("Exp^2 fog", GL_EXP2);
+  glutAddMenuEntry("Exp^2 fog", GL_EXP2);
 
 
 
-  glutCreateMenu(menu_select);
+  glutCreateMenu(menu_select);
 
-  glutAddMenuEntry("Start motion", 1);
+  glutAddMenuEntry("Start motion", 1);
 
-  glutAddMenuEntry("Stop motion", 2);
+  glutAddMenuEntry("Stop motion", 2);
 
-  glutAddMenuEntry("Toggle fog", 3);
+  glutAddMenuEntry("Toggle fog", 3);
 
-  glutAddMenuEntry("Toggle lighting", 4);
+  glutAddMenuEntry("Toggle lighting", 4);
 
-  glutAddSubMenu("Fog type", fog_menu);
+  glutAddSubMenu("Fog type", fog_menu);
 
-  glutAddMenuEntry("Quit", 5);
+  glutAddMenuEntry("Quit", 5);
 
-  glutAttachMenu(GLUT_RIGHT_BUTTON);
+  glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 
 
-  /* setup context */
+  /* setup context */
 
-  glMatrixMode(GL_PROJECTION);
+  glMatrixMode(GL_PROJECTION);
 
-  glLoadIdentity();
+  glLoadIdentity();
 
-  glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 3.0);
+  glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 3.0);
 
 
 
-  glMatrixMode(GL_MODELVIEW);
+  glMatrixMode(GL_MODELVIEW);
 
-  glLoadIdentity();
+  glLoadIdentity();
 
-  glTranslatef(0.0, 0.0, -2.0);
+  glTranslatef(0.0, 0.0, -2.0);
 
 
 
-  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST);
 
 
 
-  if (useLighting) {
+  if (useLighting) {
 
-    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHTING);
 
-  }
+  }
 
-  glEnable(GL_LIGHT0);
+  glEnable(GL_LIGHT0);
 
-  glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
+  glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
 
-  glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmb);
 
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, lightDiff);
 
-  glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
 
 #if 0
 
-  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
+  glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, lightDir);
 
-  glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 80);
+  glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 80);
 
-  glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 25);
+  glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, 25);
 
 #endif
 
 
 
-  glEnable(GL_NORMALIZE);
+  glEnable(GL_NORMALIZE);
 
 
 
-  if (useFog) {
+  if (useFog) {
 
-    glEnable(GL_FOG);
+    glEnable(GL_FOG);
 
-  }
+  }
 
-  glFogfv(GL_FOG_COLOR, fogColor);
+  glFogfv(GL_FOG_COLOR, fogColor);
 
-  glFogfv(GL_FOG_INDEX, fogIndex);
+  glFogfv(GL_FOG_INDEX, fogIndex);
 
-  glFogf(GL_FOG_MODE, GL_EXP);
+  glFogf(GL_FOG_MODE, GL_EXP);
 
-  glFogf(GL_FOG_DENSITY, 0.5);
+  glFogf(GL_FOG_DENSITY, 0.5);
 
-  glFogf(GL_FOG_START, 1.0);
+  glFogf(GL_FOG_START, 1.0);
 
-  glFogf(GL_FOG_END, 3.0);
-
-
-
-  glEnable(GL_CULL_FACE);
-
-  glCullFace(GL_BACK);
+  glFogf(GL_FOG_END, 3.0);
 
 
 
-  glShadeModel(GL_SMOOTH);
+  glEnable(GL_CULL_FACE);
+
+  glCullFace(GL_BACK);
 
 
 
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-  if (useLogo) {
-
-    glPolygonStipple((const GLubyte *) sgiPattern);
-
-  } else {
-
-    glPolygonStipple((const GLubyte *) shadowPattern);
-
-  }
+  glShadeModel(GL_SMOOTH);
 
 
 
-  glClearColor(0.0, 0.0, 0.0, 1);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-  glClearIndex(0);
+  if (useLogo) {
 
-  glClearDepth(1);
+    glPolygonStipple((const GLubyte *) sgiPattern);
+
+  } else {
+
+    glPolygonStipple((const GLubyte *) shadowPattern);
+
+  }
 
 
 
-  glutMainLoop();
+  glClearColor(0.0, 0.0, 0.0, 1);
 
-  return 0;             /* ANSI C requires main to return int. */
+  glClearIndex(0);
+
+  glClearDepth(1);
+
+
+
+  glutMainLoop();
+
+  return 0;             /* ANSI C requires main to return int. */
 
 }
 

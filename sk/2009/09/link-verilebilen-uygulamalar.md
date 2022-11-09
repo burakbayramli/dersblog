@@ -19,20 +19,23 @@ sayfasi  ile bir  yorum  gosteriyoruz. Bu  sayfayi linklenebilir  hale
 getirmek  icin   CommentsHandler  class'imizda  bir   get/set  ikilisi
 eklememiz  lazim. ID  selectedCommentId olsun  mesela. Bu  ID ile  bir
 yorumun yuklenmesi load() metodunda  olsun. Simdi pages.xml dosyasinda
-<page    view-id="/view.xhtml"   ...    >   <param    name="commentId"
-value="#{commentsHandler.selectedCommentId}"/>                 <action
-execute="#{commentsHandler.load}"/></page>tanimi yapalim.  Boylece bir
-yoruma,   view.xhtml   sayfasina   nasil   gelirsek   gelelim,   URL'e
-baktigimizda  commentId=.... seklinde  kimligin  artik URL'in  parcasi
-haline  geldigini gorecegiz.  Seam  otomatik olarak  selectedCommentId
-degiskeninin  URL  uzerindeki  commentId  degerine  eslenmesini  idare
-edecektir.  Bu idare  iki  yonludur, iki  degerden  biri degisirse  bu
-degisi otekine  otomatik olarak yansitilir. Daha  sonra action execute
-ile  belirttigimiz  metot  cagirilacaktir   ve  bu  metot  biraz  once
-selectedCommentId'ye   eslenmis  bilgiyi   kullanarak  veri   tabanina
-baglanarak gerekli objeyi oradan alabilir.
 
+```
+<page    view-id="/view.xhtml"   ...    >
+  <param    name="commentId" value="#{commentsHandler.selectedCommentId}"/>
+  <action execute="#{commentsHandler.load}"/>
+</page>
+```
 
+tanimi yapalim.  Boylece bir yoruma, view.xhtml sayfasina nasil
+gelirsek gelelim, URL'e baktigimizda `commentId=..` seklinde kimligin
+artik URL'in parcasi haline geldigini gorecegiz.  Seam otomatik olarak
+selectedCommentId degiskeninin URL uzerindeki commentId degerine
+eslenmesini idare edecektir.  Bu idare iki yonludur, iki degerden biri
+degisirse bu degisi otekine otomatik olarak yansitilir. Daha sonra
+action execute ile belirttigimiz metot cagirilacaktir ve bu metot
+biraz once `selectedCommentId` ye eslenmis bilgiyi kullanarak veri
+tabanina baglanarak gerekli objeyi oradan alabilir.
 
 
 

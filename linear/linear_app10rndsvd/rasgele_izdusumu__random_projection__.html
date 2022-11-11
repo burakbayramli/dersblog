@@ -1,0 +1,182 @@
+<p><a href="..">Yukarı</a></p>
+<h1>Rasgele İzdüşümü (Random Projection)</h1>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Rasgele İzdüşümü (Random Projection) 
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+<script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+</script>
+</head>
+
+<p>Eğer ana matrisimiz $A$'nin çok fazla kolonu var ise bunu bir şekilde azaltmanın
+yollarını arayabiliriz. [1,6]'ya göre bunu yapmanın yollarından biri rasgele
+izdüşüm hesabıdır. İlk önce $n \times k$ boyutunda bir Gaussian rasgele matris
+$\Omega$ üretiriz. Ardından</p>
+<p>$$ Y = A\Omega $$</p>
+<p>hesaplanır. </p>
+<p>İzdüşümü yapılmış matrisın iş mesafelerini muhafaza ettiği ispatlanmıştır,
+sayısal olarak kontrol etmek istersek,</p>
+<pre><code class="python">import numpy.linalg as lin
+import pandas as pd
+from scipy.spatial.distance import cdist
+t = 'euclid'
+k = 7
+df = pd.read_csv(&quot;../linear_app10rndsvd/w1.dat&quot;,sep=';',header=None)
+A = np.array(df)[:,1:]
+print (A.shape)
+d1 = cdist(A,A,metric=t)
+d1 = d1 / np.sum(d1)
+print (np.mean(d1),d1.shape)
+
+# izdusumu yap
+Y = np.dot(A, np.random.normal(0,1,(A.shape[1],k)))
+# yeni matrisin ic mesafeleri nedir
+d2 = cdist(Y,Y,metric=t)
+d2 = d2 / np.sum(d2)
+print (np.mean(d2),d2.shape)
+
+# onceki mesafeler ile fark ortalamasi
+print (np.mean(np.abs(d1-d2)))
+</code></pre>
+
+<pre><code>(71, 30)
+0.00019837333862328903 (71, 71)
+0.00019837333862328903 (71, 71)
+7.264191067984383e-06
+</code></pre>
+
+<p>Demek ki satırlar arası mesafeler muhafaza edildi. Birazdan işlenecek SVD
+yöntemi de aynı şekilde boyut azaltma yapabilir, altta rasgele izdüşümü
+SVD'ye yardım etmesi için işleyeceğiz, fakat aslında rasgele izdüşümü SVD
+yerine de kullanılabilir. </p>
+<p>SVD</p>
+<p>Daha önce gördüğümüz $Y$ üzerinde QR ayrıştırması yaparız, ve elde edilen $Q$
+ile</p>
+<p>$$ B = Q^T A $$</p>
+<p>hesabını da yapabiliriz ve $B$ üzerinde SVD ayrıştırması hesaplanabilir,</p>
+<p>$$ B = \hat{U}\Sigma V^T $$</p>
+<p>ve</p>
+<p>$$ U = Q\hat{U} $$</p>
+<p>matrisini hesaplarız. Ana fikir şuradan geliyor,</p>
+<p>$$ A = QQ^TA $$</p>
+<p>ki bu standart bir cebir numarası olurdu, $Q$ yerine rasgele
+izdüşumdan gelen yaklaşıksal $Q$'yu kullanabiliriz, o zaman</p>
+<p>$$ A \approx \tilde{Q}\tilde{Q}^TA $$</p>
+<p>olacaktır. Yani izdüşümden gelen $Q,R$ gerçek versiyona yakın. Üstteki
+çarpımda $R$ yerine $B$ harfi kullanıyoruz, ki $B = \tilde{Q}^T A$
+oluyor, yani</p>
+<p>$$ A \approx \tilde{Q}B $$</p>
+<p>ya da </p>
+<p>$$ B \approx \tilde{Q}^T A $$</p>
+<p>O zaman İstatistik notlarımız altındaki [5] yazısında olduğu gibi $B$'nin
+SVD'sini alarak yaklaşıksal bir $U$ elde etmek mümkün olacaktır.</p>
+<p>Bu yaklaşıksal metot işler çünkü noktaları yaklaşıksal bir altuzaya
+yansıttıktan sonra elde edilen yeni noktaların arasındaki mesafelerin
+fazla bozulmadan muhafaza edildiği söylenir, daha detaylı söylemek
+gerekirse, n-boyutlu verileri $O(\log n / \epsilon^2)$ boyutundaki bir
+rasgele altuzaya yansıtmak, pozitif olasılıkla, yeni noktaların
+arasındaki mesafeleri sadece $1 \pm \epsilon$ ölçüsünde değiştirir
+[2]. $Y$'nin, $A$'nin "menzilini" iyi temsil ettiği de söylenir.</p>
+<p>Test olarak şuradaki [3] veri seti üzerinde görelim:</p>
+<pre><code class="python">import numpy.random as rand
+import numpy.linalg as lin
+import pandas as pd
+
+k = 7 # izdusum uzayinin boyutlari
+df = pd.read_csv(&quot;w1.dat&quot;,sep=';',header=None)
+A = np.array(df)[:,1:]
+
+print &quot;A&quot;,A.shape
+
+rand.seed(1000)
+
+Omega = rand.randn(A.shape[1],k)
+
+Y = np.dot(A, Omega) 
+
+print &quot;Y&quot;, Y.shape
+
+Q, R = lin.qr(Y) 
+
+# niye devrigi ile is yaptigimizi altta anlatiyoruz
+BT = np.dot(A.T, Q)
+
+print &quot;Q&quot;, Q.shape
+print &quot;BT&quot;, BT.shape
+
+x, x, V = lin.svd(BT)
+
+print 'V', V.shape
+
+Uhat = V.T # cunku B=USV', B'=VSU' U of B icin V' lazim
+
+print &quot;Uhat&quot;, Uhat.shape
+
+U = np.dot(Q, Uhat) 
+
+print &quot;U&quot;, U.shape
+
+plt.plot(U[:,0],U[:,1],'r+')
+
+plt.hold(True)
+
+# gercek SVD ile karsilastir
+
+U, Sigma, V = lin.svd(A);
+plt.plot(U[:,0],-U[:,1],'bx')
+plt.savefig('rnd_1.png')
+</code></pre>
+
+<pre><code>A (71, 30)
+Y (71, 7)
+Q (71, 7)
+BT (30, 7)
+V (7, 7)
+Uhat (7, 7)
+U (71, 7)
+</code></pre>
+
+<p><img alt="" src="rnd_1.png" /></p>
+<p>Mavi noktalar $A$ üzerinde "gerçek" SVD sonucu, kırmızılar yansıtma
+sonrası elde edilen $U$. Sonuçlar çok iyi. </p>
+<p>$B$ yerine $B^T$</p>
+<p>Kodlama açısından, ya da büyük veri bağlamında başka amaçlar [4] için
+$B = Q^T A$ yerine $B^T = A^T Q$ hesabı yapmak istenilebilir. Niye?
+Çünkü çıktı olarak $n \times k$ matrisi istiyor olabiliriz, $k \times
+n$ matrisi istemiyoruz, yani çok olanın satırlar olmasını istiyoruz,
+kolonlar olmasını istemiyoruz.</p>
+<p>O zaman, elde edilen $B^T$ işe, $B$ üzerinde değil $B^T$ üzerinde SVD
+alacağız demektir, bu da sonuçları birazcık değiştirir, yani</p>
+<p>$$ B = U\Sigma V^T $$</p>
+<p>$$ B^T = V\Sigma U^T $$</p>
+<p>haline gelir. Yani $B$'nin $U$'sunu elde etmek için $B^T$'nin SVD'si
+sonrasında ele geçen sonuçta $(U_{BT}^T)^T$ yapmak gerekir. Her şeyin
+hafızada yapıldığı durumda bu fark yaratmaz, fakat "ilerisi için", yani
+eşle / indirge ortamları için akılda tutmak faydalı olur.</p>
+<p>Kaynaklar</p>
+<p>[1] Halko, N., <em>Randomized methods for computing low-rank approximations of matrices</em></p>
+<p>[2] Gupta, A., Dasgupta, S., <em>An Elementary Proof of a Theorem of Johnson and Lindenstrauss</em></p>
+<p>[3] UCI Machine Learning Repository, 
+    <em>Breast Cancer Data Set</em>, 
+    <a href="archive.ics.uci.edu/ml/datasets/Breast+Cancer">archive.ics.uci.edu/ml/datasets/Breast+Cancer</a></p>
+<p>[4] Bayramlı, <em>SVD Factorization for Tall-and-Fat Matrices on Map/Reduce Architectures</em>, 
+    <a href="arxiv.org/abs/1310.4664">arxiv.org/abs/1310.4664</a></p>
+<p>[5] Bayramli, <em>Paralel Matris Çarpımı, Ax, QR ve SVD</em> </p>
+<p>[6] Lu, <em>On Low Dimensional Random Projections and Similarity Search</em>,
+    <a href="https://www.researchgate.net/publication/221615011_On_Low_Dimensional_Random_Projections_and_Similarity_Search">https://www.researchgate.net/publication/221615011_On_Low_Dimensional_Random_Projections_and_Similarity_Search</a></p>

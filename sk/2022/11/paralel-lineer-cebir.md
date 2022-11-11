@@ -307,6 +307,9 @@ print (A.shape)
 (71, 30)
 ```
 
+Üstteki kodun tüm B'yi hafızada tutmasına gerek yok, bir döngü içinde
+her seferinde k boyutlu bir vektörü hafızada yaratıyor.
+
 ### A Devriği Çarpı A
 
 A'A çarpımı lineer cebir, istatistikte faydalı olabilecek bir işlem;

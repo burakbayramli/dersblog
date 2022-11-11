@@ -1,19 +1,63 @@
 \documentclass[12pt,fleqn]{article}\usepackage{../../common}
 \begin{document}
-Rasgele İzdüşümü (Random Projection) ile SVD
+Rasgele İzdüşümü (Random Projection) 
 
-Eğer ana matrisimiz $A$'nin çok fazla kolonu var ise bunu bir şekilde
-azaltmanın yollarını arayabiliriz. [1]'e göre bunu yapmanın
-yollarından biri rasgele izdüşüm hesabıdır. İlk önce $n \times k$
-boyutunda bir Gaussian rasgele matris $\Omega$ üretiriz. Ardından
+Eğer ana matrisimiz $A$'nin çok fazla kolonu var ise bunu bir şekilde azaltmanın
+yollarını arayabiliriz. [1,6]'ya göre bunu yapmanın yollarından biri rasgele
+izdüşüm hesabıdır. İlk önce $n \times k$ boyutunda bir Gaussian rasgele matris
+$\Omega$ üretiriz. Ardından
 
 $$ Y = A\Omega $$
 
-hesaplanır. Bu $Y$ üzerinde QR ayrıştırması yaparız, ve elde edilen $Q$ ile
+hesaplanır. 
+
+İzdüşümü yapılmış matrisın iş mesafelerini muhafaza ettiği ispatlanmıştır,
+sayısal olarak kontrol etmek istersek,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import numpy.linalg as lin
+import pandas as pd
+from scipy.spatial.distance import cdist
+t = 'euclid'
+k = 7
+df = pd.read_csv("../linear_app10rndsvd/w1.dat",sep=';',header=None)
+A = np.array(df)[:,1:]
+print (A.shape)
+d1 = cdist(A,A,metric=t)
+d1 = d1 / np.sum(d1)
+print (np.mean(d1),d1.shape)
+
+# izdusumu yap
+Y = np.dot(A, np.random.normal(0,1,(A.shape[1],k)))
+# yeni matrisin ic mesafeleri nedir
+d2 = cdist(Y,Y,metric=t)
+d2 = d2 / np.sum(d2)
+print (np.mean(d2),d2.shape)
+
+# onceki mesafeler ile fark ortalamasi
+print (np.mean(np.abs(d1-d2)))
+\end{minted}
+
+\begin{verbatim}
+(71, 30)
+0.00019837333862328903 (71, 71)
+0.00019837333862328903 (71, 71)
+7.264191067984383e-06
+\end{verbatim}
+
+Demek ki satırlar arası mesafeler muhafaza edildi. Birazdan işlenecek SVD
+yöntemi de aynı şekilde boyut azaltma yapabilir, altta rasgele izdüşümü
+SVD'ye yardım etmesi için işleyeceğiz, fakat aslında rasgele izdüşümü SVD
+yerine de kullanılabilir. 
+
+SVD
+
+Daha önce gördüğümüz $Y$ üzerinde QR ayrıştırması yaparız, ve elde edilen $Q$
+ile
 
 $$ B = Q^T A $$
 
-hesabını yaparız. Ardından bu matris üzerinde SVD ayrıştırması yaparız,
+hesabını da yapabiliriz ve $B$ üzerinde SVD ayrıştırması hesaplanabilir,
 
 $$ B = \hat{U}\Sigma V^T $$
 
@@ -152,5 +196,8 @@ Kaynaklar
     \url{arxiv.org/abs/1310.4664}
 
 [5] Bayramli, {\em Paralel Matris Çarpımı, Ax, QR ve SVD} 
+
+[6] Lu, {\em On Low Dimensional Random Projections and Similarity Search},
+    \url{https://www.researchgate.net/publication/221615011_On_Low_Dimensional_Random_Projections_and_Similarity_Search}
 
 \end{document}

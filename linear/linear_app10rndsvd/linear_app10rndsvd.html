@@ -1,9 +1,9 @@
 <p><a href="..">Yukarı</a></p>
-<h1>Rasgele İzdüşümü (Random Projection) ile SVD</h1>
+<h1>Rasgele İzdüşümü (Random Projection)</h1>
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Rasgele İzdüşümü (Random Projection) ile SVD
+    <title>Rasgele İzdüşümü (Random Projection) 
 </title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/x-mathjax-config">
@@ -24,14 +24,52 @@
 </script>
 </head>
 
-<p>Eğer ana matrisimiz $A$'nin çok fazla kolonu var ise bunu bir şekilde
-azaltmanın yollarını arayabiliriz. [1]'e göre bunu yapmanın
-yollarından biri rasgele izdüşüm hesabıdır. İlk önce $n \times k$
-boyutunda bir Gaussian rasgele matris $\Omega$ üretiriz. Ardından</p>
+<p>Eğer ana matrisimiz $A$'nin çok fazla kolonu var ise bunu bir şekilde azaltmanın
+yollarını arayabiliriz. [1,6]'ya göre bunu yapmanın yollarından biri rasgele
+izdüşüm hesabıdır. İlk önce $n \times k$ boyutunda bir Gaussian rasgele matris
+$\Omega$ üretiriz. Ardından</p>
 <p>$$ Y = A\Omega $$</p>
-<p>hesaplanır. Bu $Y$ üzerinde QR ayrıştırması yaparız, ve elde edilen $Q$ ile</p>
+<p>hesaplanır. </p>
+<p>İzdüşümü yapılmış matrisın iş mesafelerini muhafaza ettiği ispatlanmıştır,
+sayısal olarak kontrol etmek istersek,</p>
+<pre><code class="python">import numpy.linalg as lin
+import pandas as pd
+from scipy.spatial.distance import cdist
+t = 'euclid'
+k = 7
+df = pd.read_csv(&quot;../linear_app10rndsvd/w1.dat&quot;,sep=';',header=None)
+A = np.array(df)[:,1:]
+print (A.shape)
+d1 = cdist(A,A,metric=t)
+d1 = d1 / np.sum(d1)
+print (np.mean(d1),d1.shape)
+
+# izdusumu yap
+Y = np.dot(A, np.random.normal(0,1,(A.shape[1],k)))
+# yeni matrisin ic mesafeleri nedir
+d2 = cdist(Y,Y,metric=t)
+d2 = d2 / np.sum(d2)
+print (np.mean(d2),d2.shape)
+
+# onceki mesafeler ile fark ortalamasi
+print (np.mean(np.abs(d1-d2)))
+</code></pre>
+
+<pre><code>(71, 30)
+0.00019837333862328903 (71, 71)
+0.00019837333862328903 (71, 71)
+7.264191067984383e-06
+</code></pre>
+
+<p>Demek ki satırlar arası mesafeler muhafaza edildi. Birazdan işlenecek SVD
+yöntemi de aynı şekilde boyut azaltma yapabilir, altta rasgele izdüşümü
+SVD'ye yardım etmesi için işleyeceğiz, fakat aslında rasgele izdüşümü SVD
+yerine de kullanılabilir. </p>
+<p>SVD</p>
+<p>Daha önce gördüğümüz $Y$ üzerinde QR ayrıştırması yaparız, ve elde edilen $Q$
+ile</p>
 <p>$$ B = Q^T A $$</p>
-<p>hesabını yaparız. Ardından bu matris üzerinde SVD ayrıştırması yaparız,</p>
+<p>hesabını da yapabiliriz ve $B$ üzerinde SVD ayrıştırması hesaplanabilir,</p>
 <p>$$ B = \hat{U}\Sigma V^T $$</p>
 <p>ve</p>
 <p>$$ U = Q\hat{U} $$</p>
@@ -140,3 +178,5 @@ eşle / indirge ortamları için akılda tutmak faydalı olur.</p>
 <p>[4] Bayramlı, <em>SVD Factorization for Tall-and-Fat Matrices on Map/Reduce Architectures</em>, 
     <a href="arxiv.org/abs/1310.4664">arxiv.org/abs/1310.4664</a></p>
 <p>[5] Bayramli, <em>Paralel Matris Çarpımı, Ax, QR ve SVD</em> </p>
+<p>[6] Lu, <em>On Low Dimensional Random Projections and Similarity Search</em>,
+    <a href="https://www.researchgate.net/publication/221615011_On_Low_Dimensional_Random_Projections_and_Similarity_Search">https://www.researchgate.net/publication/221615011_On_Low_Dimensional_Random_Projections_and_Similarity_Search</a></p>

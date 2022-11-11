@@ -192,7 +192,122 @@ işliyoruz, eh zaten B'yi belleğe sığar kabul ettik, o zaman veri ne
 kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte Büyük Veri
 bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
 
-### A Devriği Çarpı A 
+<a name='random'/>
+
+### Rasgele Matris Çarpımı
+
+Bir matrisin boyutlarını azaltmak için bir teknik onu sıfır merkezli
+ve 1 varyanslı Gaussian dağılımından gelen rasgele sayılarla dolu bir
+matris ile çarpmaktır. A matrisi m x n ise bir rasgele matris Omega
+yaratabiliriz, n x k boyutunda, ve Y = A Omega sonucundaki m x k
+matrisinin satırlararası mesafeleri muhafaza edilmiş olur. Ornegi
+[6]'da goruluyor.
+
+Paralel işlem bağlamında, ve üstteki çarpım tekniğinden devam etmek
+gerekirse, bir kolaylaştırma amaçlı olarak B hafızaya alınabilir
+demiştik. Şimdi işleri biraz zorlaştıralım, rasgele izdüşümü yapacağız
+ama diyelim n o kadar büyük ki bir n x k matrisi bile *hafızada tutulamıyor*.
+
+Burada rasgele matris çarpımlarının avantajlı bir tarafı bize yardım
+eder, rasgele matris üretici kodları hep yarı-rasgele sayı üretici
+(pseudonumber) kullanırlar, bu üreticilerin bir algoritmasi var, bu
+algoritma basit toplama, mod, gibi işlemler kullanır bu sebeple sabit
+zamanda O(1) hızında çalışır. O zaman doğru yaklaşımla rasgele matrisi
+satır satır anında yaratabiliriz.
+
+Tabii dikkat etmek lazim, rasgele B matrisi dedik ama bu matris tabii
+ki her A satırı için *aynı* rasgele matris olmalı. O zaman her A
+satırı ile işimiz bittiğinde rasgele sayı üreticini,
+`np.random.seed()` ile tohumunu biz dışardan tanımlarsak, o zaman aynı
+rasgele sayıların B için satır satır tekrar baştan yaratılmasını
+sağlayabiliriz. Böylece
+
+- Tüm B matrisini hafızada tutmaya gerek yok
+
+- Her seferinde aynı rasgele B satırını aynı şekilde elde etmemiz
+  mümkün çünkü B üretmeden önce tohumu başa döndürüyoruz.
+
+Ufak örnek bir kod üzerinde görelim, ufak bir A kullandık fakat onun
+üzerinde satır satır gezerek, büyük ölçekte olanları gösterebiliriz.
+
+```python
+A = np.array(range(0,20)).reshape(5,4)
+k = 3
+res = []
+for i in range(A.shape[0]):
+    s = np.zeros(k)
+    row = (A[i, :])
+    np.random.seed(0)
+    for elem in row: s += elem*np.random.normal(0,1,k) # B satirlari
+    res.append(s)
+Y = np.array(res)
+print (Y)
+```
+
+```text
+[[ 5.37286554  1.99697429  3.17910494]
+ [26.8353954  11.03858053  8.58916398]
+ [48.29792526 20.08018678 13.99922301]
+ [69.76045512 29.12179302 19.40928205]
+ [91.22298497 38.16339927 24.81934109]]
+```
+
+İzdüşümü yapılmış yeni matris budur. Paralel kodu yazalım,
+
+```python
+import os, numpy as np, util
+
+class RandomProjJob:
+    def __init__(self,ci):
+        self.ci = ci
+        self.k = 7
+        self.outfile = open("/tmp/Y-%d.csv" % self.ci, "w")        
+    def exec(self,line):
+        s = np.zeros(self.k)
+        toks = line.strip().split(';')
+        row = np.array([np.float(x) for x in toks[1:]])
+        np.random.seed(0) 
+        for elem in row: s += elem*np.random.normal(0,1,self.k) 
+        s = ";".join(map(str, s))
+        self.outfile.write(s)
+        self.outfile.write("\n")
+        self.outfile.flush()
+        
+    def post(self):
+        self.outfile.close()
+
+infile = '../../../linear/linear_app10rndsvd/w1.dat'
+util.process(file_name=infile, N=2, hookobj = RandomProjJob(0))
+util.process(file_name=infile, N=2, hookobj = RandomProjJob(1))
+```
+
+```python
+! cat /tmp/Y-* > /tmp/Y.csv
+```
+
+```python
+Y = np.loadtxt("/tmp/Y.csv",delimiter=';')
+print (Y.shape)
+```
+
+```text
+(71, 7)
+```
+
+Orijinal veriye bakarsak,
+
+```python
+import pandas as pd
+df = pd.read_csv(infile,sep=';',header=None)
+A = np.array(df)[:,1:]
+print (A.shape)
+```
+
+```text
+(71, 30)
+```
+
+### A Devriği Çarpı A
 
 A'A çarpımı lineer cebir, istatistikte faydalı olabilecek bir işlem;
 özellikle "uzun boylu, zayıf" A matrisleri için, yani çok sayıda
@@ -377,3 +492,6 @@ Kaynaklar
 [4] Bayramlı, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
 
 [5] Bayramlı, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
+
+[6] Bayramli, [Rasgele İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/linear/linear_app10rndsvd/rasgele_izdusumu__random_projection__.html)
+

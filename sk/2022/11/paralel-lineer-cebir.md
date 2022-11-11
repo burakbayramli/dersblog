@@ -308,7 +308,7 @@ print (A.shape)
 ```
 
 Üstteki kodun tüm B'yi hafızada tutmasına gerek yok, bir döngü içinde
-her seferinde k boyutlu bir vektörü hafızada yaratıyor.
+her seferinde sadece k boyutlu bir vektörü hafızada yaratıyor.
 
 ### A Devriği Çarpı A
 

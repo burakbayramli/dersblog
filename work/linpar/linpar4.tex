@@ -20,7 +20,7 @@
 
 \fancyhead[LO]{SVD Factorization for Tall-and-Fat Matrices on Parallel Architectures}
   
-\title{SVD Factorization for Tall-and-Fat Matrices on Paralel Architectures}
+\title{SVD Factorization for Tall-and-Fat Matrices on Parallel Architectures}
 
 \author{
   Burak Bayramlı \\
@@ -128,7 +128,7 @@ print (s)
 
 \subsubsection{Multiplication}
 
-Now we need to handle the case of large $n$. We propose reducing the size of $A$
+How do we handle the case of large $n$? We propose reducing the size of $A$
 through random projection obtaining an approximation. This approximation works
 for the reason that projecting points to a random subspace preserves distances
 between points, or in detail, projecting the n-point subset onto a random
@@ -186,6 +186,32 @@ print (a*B)
 In this paper we assumed matrix $B$, in dimensions $n \times k$, can be brought
 into memory completely. The operation as seen above will be computed for each
 row of $A$ and the results will be summed.
+
+\subsection{Virtual Random $B$ Multiplication}
+
+The multiplication shown previously was a general-purpose approach, which can be
+used to multiply $A$ with any $B$. A straighforward improvement to the general
+purpose algoritm is that rows of $B$ could also be read incrementally.
+
+For the case of random projection we can take this improvement one step
+further. For random projection the only requirement for $B$ is its rows are
+generated from normal $N(0,1)$ distribution. Since we know pseudonumber
+generation is deterministic running in constant time, we could regenerate rows
+of $B$ as needed without keeping a large $B$ in memory. We simply need to make
+sure the {\em same} random $B$ rows are used each time, we can easily guarantee
+that by setting the same seed value on the generator for each new row of $A$. In
+simple Python code,
+
+\begin{verbatim}
+A = np.array(range(0,20)).reshape(5,4)
+Y = []; k = 2 # reduction dimension
+for i in range(A.shape[0]):
+    np.random.seed(0)
+    s = np.zeros(k)
+    for e in A[i, :]: s += e*np.random.normal(0,1,k)
+    Y.append(s)
+Y = np.array(Y)
+\end{verbatim}
 
 \section{Implementation}
 
@@ -300,6 +326,38 @@ class MultJob:
         self.outfile.close()
 \end{verbatim}
 
+\subsection{Random Projection}
+
+\begin{verbatim}
+class RandomProjJob:
+    def __init__(self,ci):
+        self.ci = ci
+        self.k = 7
+        self.outfile = open("/tmp/Y-%d.csv" % self.ci, "w")        
+    def exec(self,line):
+        s = np.zeros(self.k)
+        toks = line.strip().split(';')
+        row = np.array([np.float(x) for x in toks[1:]])
+        # degisik veri parcalari degisik rasgele matrisler uretsin
+        np.random.seed(0) 
+        for elem in row: s += elem*np.random.normal(0,1,self.k) 
+        s = ";".join(map(str, s))
+        self.outfile.write(s)
+        self.outfile.write("\n")
+        self.outfile.flush()
+        
+    def post(self):
+        self.outfile.close()
+\end{verbatim}
+
+\section{Conclusion}
+
+We demonstrated easy-to-scale parallelization approach that can be used on
+different types of linear algebra problems. A final note here is that the random
+projection technique, though presented as helping SVD, can also be used in place
+of SVD \cite{lu} as preserving distances between projected rows is useful for
+any similarity calculation method typically using cosine or Euclidian methods.
+
 
 %Bibliography
 \bibliographystyle{unsrt}  
@@ -329,7 +387,11 @@ Zadeh, \emph{CME 323: Distributed Algorithms and Optimization, Lecture 17},
 \bibitem{agrawal}
 Agrawal, \emph{Matrix Multiplication: Inner Product, Outer Product and Systolic Array},
 \url{https://www.adityaagrawal.net/blog/architecture/matrix_multiplication}
-  
+
+\bibitem{lu}
+Lu, \emph{On Low Dimensional Random Projections and Similarity Search},
+    \url{https://www.researchgate.net/publication/221615011_On_Low_Dimensional_Random_Projections_and_Similarity_Search}
+
 \end{thebibliography}
 
 \end{document}

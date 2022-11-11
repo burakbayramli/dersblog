@@ -22,3 +22,8 @@ class RandomProjJob:
 
 util.process(file_name='../../../linear/linear_app10rndsvd/w1.dat', N=2, hookobj = RandomProjJob(0))
 util.process(file_name='../../../linear/linear_app10rndsvd/w1.dat', N=2, hookobj = RandomProjJob(1))
+
+
+
+
+

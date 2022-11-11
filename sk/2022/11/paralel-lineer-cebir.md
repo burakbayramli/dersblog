@@ -310,6 +310,28 @@ print (A.shape)
 Üstteki kodun tüm B'yi hafızada tutmasına gerek yok, bir döngü içinde
 her seferinde sadece k boyutlu bir vektörü hafızada yaratıyor.
 
+Satırlararası mesafeler,
+
+```python
+from scipy.spatial.distance import cdist
+
+d1 = cdist(A,A,metric='euclid')
+d1 = d1 / np.sum(d1)
+d2 = cdist(Y,Y,metric='euclid')
+d2 = d2 / np.sum(d2)
+print (np.mean(d1),d1.shape)
+print (np.mean(d2),d2.shape)
+print (np.mean(np.abs(d1-d2)))
+```
+
+```text
+0.00019837333862328903 (71, 71)
+0.00019837333862328903 (71, 71)
+4.013403527124087e-06
+```
+
+Mesafeler muhafaza edilmişe benziyor.
+
 ### A Devriği Çarpı A
 
 A'A çarpımı lineer cebir, istatistikte faydalı olabilecek bir işlem;

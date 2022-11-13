@@ -208,7 +208,8 @@ fout.close()
 
 Kaynaklar
 
-[1] Grouplens, {\em MovieLens Latest Datasets},
-    \url{https://grouplens.org/datasets/movielens/latest/}
+[1] [Grouplens](https://grouplens.org/datasets/movielens/latest),
+    MovieLens Latest Datasets
+    
 
 

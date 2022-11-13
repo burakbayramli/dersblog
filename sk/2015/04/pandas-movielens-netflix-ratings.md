@@ -211,5 +211,5 @@ Kaynaklar
 [1] [Grouplens](https://grouplens.org/datasets/movielens/latest),
     MovieLens Latest Datasets
     
-
+[2] McKinney, W., Python for Data Analysis
 

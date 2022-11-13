@@ -34,5 +34,7 @@
 
 [Agaclar Ile Oge Kodlamasi (Categorical Embedding)](11/agaclar-ile-oge-kodlamasi-categorical.html)
 
+[Paralel Lojistik Regresyon, Eşle/İndirge](12/lojistik-regresion-map-reduce.html)
+
 [Python ve Komut Satırına Erişmek, Popen](12/popen-python-ve-komut-satirina-erismek.html)
 

@@ -39,5 +39,5 @@ Mesafeler elde edildikten sonra isin araba kullanma kismi, gaz,
 direksiyon kontrolu daha kolay hale gelir, o kisim artik elle
 kodlanmis bazi kurallarla bile halledilebilir.
 
-![](Screenshot%2Bfrom%2B2017-09-20%2B09-06-59.png)
+![](car1.png)
 

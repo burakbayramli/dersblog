@@ -37,7 +37,9 @@ sudo -i -u postgres
 
 ile oteki kullaniciya girilir,
 
+```
 psql -d gis -c 'CREATE EXTENSION postgis; CREATE EXTENSION hstore;'
+```
 
 Simdi
 
@@ -45,7 +47,7 @@ Simdi
 osm2pgsql berlin-latest.osm.bz2 --slim
 ```
 
-Tabana bakariz, psql -d gis, komut satirinda \dt
+Tabana bakariz, `psql -d gis`, komut satirinda `\dt`
 
 ```
 planet_osm_line 

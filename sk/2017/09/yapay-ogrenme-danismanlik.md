@@ -23,19 +23,19 @@ sinir agi yaklasimi, ve derin sekilde genisletmek mumkun.
 
 Peki YO sirketlerin ne isine yarar? Yapay sinir aglari bilindigi
 evrensel yaklasiklayici (universal approximator), herhangi bir
-foksiyon f(\theta)'yi sadece girdi ve ciktilarina bakarak yaklasik
+foksiyon `f(\theta)` yi sadece girdi ve ciktilarina bakarak yaklasik
 sekilde temsil edebiliyor. Bir anlamda geriye muhendislik yapiyor. Ek
 olarak derin ogrenme ile ne kadar cok cok veri varsa bu geriye
-muhendislik o kadar iyi oluyor. 
+muhendislik o kadar iyi oluyor.
 
 Tipik bir sirketin her tarafi fonksiyonlarla dolu; mesela
 "musterilerim sadik degil vs sayida musteri beni her ay
 terkediyor". Burada bir fonksiyon var, musteri kisisel, aksiyon
 verisini gir, fonksiyon "terkedecek" diye evet / hayir olasiligi
 versin. Bu fonksiyon tabii ki bilinmiyor, eger sosyoloji, psikoloij
-alaninda uzman matematiksel modelciye sorsak, belki bu f(\theta)'yi
+alaninda uzman matematiksel modelciye sorsak, belki bu `f(\theta)` yi
 bulurlar, ama o kadar modelci bulunamaz, zaten bilim o kadar
-ilerlememis olabilir. Daha hizli sonuc  girdi / ciktilari verip geriye
+ilerlememis olabilir. Daha hizli sonuc girdi / ciktilari verip geriye
 muhendislik, YSA ile f'i bulmak (musteri sadakati icin su arkadas
 aynen bunu yapmis). Yaklasim ayrica esnek, musteri sadakati f bulmak
 icin kullanilan benzer metot, is makinasinin ne zaman bozulacagini

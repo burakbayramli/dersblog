@@ -66,7 +66,10 @@ bulutu üzerinden tam işlevli Web servisi sunmak mümkün olur.
 
 Disk Eklemek
 
-Bir makinayi yaratirken ek disk eklemeyi secebiliriz, bu diskin olcegini de istedigimiz gibi ayarlariz. Eger disk icerigi bos (blank) olsun dediysek, o zaman SSH ile giris yaptiktan sonra diski formatlamiz gerekir. Suradan,
+Bir makinayi yaratirken ek disk eklemeyi secebiliriz, bu diskin
+olcegini de istedigimiz gibi ayarlariz. Eger disk icerigi bos (blank)
+olsun dediysek, o zaman SSH ile giris yaptiktan sonra diski
+formatlamiz gerekir. Suradan,
 
 ```
 sudo lsblk
@@ -77,12 +80,11 @@ ile disklerin nerede olduguna bakariz, diyelim
 ```
 NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
 sda      8:0    0   10G  0 disk
-└─sda1   8:1    0   10G  0 part /
+|-sda1   8:1    0   10G  0 part /
 sdb      8:16   0  200G  0 disk
 ```
 
-cevabi geldi, ben 200 GB'lik disk eklemistim, sdb
-altindaymis. Formatlarim, 
+cevabi geldi, ben 200 GB'lik disk eklemistim, sdb altindaymis. Formatlarim,
 
 ```
 sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/
@@ -95,7 +97,7 @@ yaratirim, /mnt/hd2, ve
 sudo mount -o discard,defaults /dev/sdb /mnt/hd2
 ```
 
-![](Screenshot%2Bfrom%2B2017-03-24%2B14-15-53.png)
+![](bulut1.png)
 
-![](Screenshot%2Bfrom%2B2017-03-24%2B14-22-47.png)
+![](bulut2.png)
 

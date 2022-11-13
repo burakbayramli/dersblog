@@ -34,27 +34,32 @@ yaratırsak, idaresi daha rahat olur. Bu veri tabanının ismi itracker
 olsun.  createdb itracker Diğer yazımızda tarif edilen admin
 kullanıcısı, bu veri tabanı için de geçerli olacak.  Şimdi,
 
+```
 ITRACKERDIZINI\sql\postgres\install\create_itracker_core.sql
+```
 
 adlı dosyayı, psql itracker ile komut satırına girdikten sonra \i
 create_itracker_core.sql kullanarak işletin.  Güzel. Şimdi JBoss
 dizininize girin, ve ITracker için gerekli olan veri kaynak dosyasını
-yaratın. itracker-ds.xml adını verebileceğiniz bu dosyayı
-JBOSSDIZINI/server/default/deploy altına bırakın. İçeriği şöyle
+yaratın. `itracker-ds.xml` adını verebileceğiniz bu dosyayı
+`JBOSSDIZINI/server/default/deploy` altına bırakın. İçeriği şöyle
 olabilir (jndi-name mutlaka ITrackerDS olmalı)
-ITrackerDSjdbc:postgresql://localhost:5432/itrackerorg.postgresql.Driveradmin
-Şimdi, JBOSSDIZINI/server/default/conf/standardjbosscmp-jdbc.xml
+
+```
+ITrackerDS jdbc:postgresql://localhost:5432/itrackerorg.postgresql.Driver
+admin
+```
+
+Şimdi, `JBOSSDIZINI/server/default/conf/standardjbosscmp-jdbc.xml`
 dosyasını açın.
 
 Default datasource'u değiştirmeniz gerekecek. DefaultDB kelimesi
-yerine şöyle olsun: ... java:/ITrackerDS...  En son olarak
-
-ITRACKER/docs/itrackerApplication.properties
-
-dosyasını JBOSSDIZINI/server/default/conf altına koyarsanız, herşey
+yerine şöyle olsun: `... java:/ITrackerDS...`  En son olarak
+`ITRACKER/docs/itrackerApplication.properties` dosyasını
+`JBOSSDIZINI/server/default/conf` altına koyarsanız, herşey
 tamamlanacak.
 
-JBoss'u başlattıktan sonra, http://makinaismi:port/itracker
+JBoss'u başlattıktan sonra, `http://makinaismi:port/itracker`
 ... adresinden programı kullanmaya başlayabilirsiniz. Program otomatik
 olarak ilk kullanıcıyı yaratıyor, kullanıcı: admin, şifre: admin ile
 programa girip projeniz için gerekli bilgileri girmeye

@@ -93,26 +93,27 @@ geri bölü işaretinin biraz bolca kullanılmış olduğu belki dikkatinizi
 kelimelerin metin olarak kullanılma zorunluluğunda ortaya
 çıkmaktadır. Bu gibi durumlarda, geri bölü işareti ile düzenli ifade
 motoruna "bu karakter, düzenli ifade komutu değil normak bir karakter"
-mesajı vermekteyiz.  Gene 8. satırda, (.*?)  kullanımına dikkatinizi
+mesajı vermekteyiz.  Gene 8. satırda, `(.*?)`  kullanımına dikkatinizi
 çekerim. Perl'de her düzenli ifade komutu, parantez içine
 alınabilir. Alındığı zaman, ve bu ifade metin parçası ile uyuştuğu
 zaman (matching), parantez içindeki uyan kısım, diğer Perl
-satırlarında düzenli ifade komut sırasına göre $1, $2, $3, .. ile
+satırlarında düzenli ifade komut sırasına göre `$1, $2, $3, ..` ile
 erişilebilir. Örneğimizde sadece bir tane () kullanımı olduğuna göre,
-sadece $1 kullanarak uyan metin parcasına erişebiliriz.  8. satırda
-kullanılan düzenli ifadenin detayına inmek gerekirse, nokta '.'
-işareti düzenli ifade dilinde 'herhangi bir karakter demektir. Bu
-herhangi bir karakterden birçok kere (* işareti) görmek
-istiyoruz. Peki sondaki soru işareti ne için? Onun görevi şudur:
-Mesela "ali ali veli ali veli ali" içinde "ali (.*)\s" tarasak elimize
-ne sonuç gelir?  "ali veli " diyorsanız yanıldınız. Gelecek sonuç,
-"ali veli ali veli " olacaktır. Çünkü, olağan (default) olarak düzenli
-ifadeler açgözlü uyum yaparlar. Verdiğiniz ifadenin uyabileceği kadar
-çok kelimeyi toplarlar ve döndürürler. Soru işareti tokgözlü uyum yap
-demektir, yani "ali veli " sonucunu görmek istiyorsak, "ali (.*?)\s"
-düzenli ifadesini kullanmamız gerekirdi.
+sadece `$1` kullanarak uyan metin parcasına erişebiliriz.
 
-9. satırda, uyumun başarısı if() ile algılanmış olmalı ki, aradığımız
+8. satırda kullanılan düzenli ifadenin detayına inmek gerekirse, nokta
+`'.'` işareti düzenli ifade dilinde 'herhangi bir karakter
+demektir. Bu herhangi bir karakterden birçok kere (* işareti) görmek
+istiyoruz. Peki sondaki soru işareti ne için? Onun görevi şudur:
+Mesela `"ali ali veli ali veli ali"` içinde `"ali (.*)\s"` tarasak
+elimize ne sonuç gelir?  `"ali veli "` diyorsanız yanıldınız. Gelecek
+sonuç, "ali veli ali veli " olacaktır. Çünkü, olağan (default) olarak
+düzenli ifadeler açgözlü uyum yaparlar. Verdiğiniz ifadenin
+uyabileceği kadar çok kelimeyi toplarlar ve döndürürler. Soru işareti
+tokgözlü uyum yap demektir, yani `"ali veli "` sonucunu görmek
+istiyorsak, `"ali (.*?)\s"` düzenli ifadesini kullanmamız gerekirdi.
+
+9. satırda, uyumun başarısı `if()` ile algılanmış olmalı ki, aradığımız
 kod parçasını bu satırda bulduğumuzu farzediyoruz. Ve hemen, print OUT
 ile, yazmak için açtığımız dosya içine değiştirdiğimiz SQL ibaresini
 atıyoruz. $1 kullanımını işte burada görmekteyiz. Yani yaptığımız,
@@ -131,8 +132,8 @@ gibi yazmak için PRINT OUT ifadesi yeterlidir.  15. ve 16. satırlarda,
 sıradaki okunan ve yazılan dosya ile işimiz bitmiş, bu iki dosyayı da
 kapatıyoruz.  20. satırda, bütün dosyalar ile işimiz bitmiş, ve
 kapanış mesajı veriyoruz.  Bütün bunlardan sonra, işlem yaptığınız
-/test/dizin/conf dizinine giderek, bir altındaki degisen/ altdizinine
-bakın, dosyaların değişmiş halini burada göreceksiniz.
+`/test/dizin/conf` dizinine giderek, bir altındaki degisen/
+altdizinine bakın, dosyaların değişmiş halini burada göreceksiniz.
 
 
 Fakat Java gibi bir dilde çoğu zaman, "mantıki anlamda" bir satır,

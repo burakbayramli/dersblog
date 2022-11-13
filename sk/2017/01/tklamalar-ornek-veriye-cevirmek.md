@@ -42,7 +42,7 @@ df.to_csv("out.csv",index=None)
 Program tıklamaları hafızada biriktirerek tutar, ve program
 kapatıldığında veriyi `out.csv` dosyasına yazar.
 
-![](Screenshot%2Bfrom%2B2017-01-06%2B11-19-29.png)
+![](tikla01.png)
 
 Anahtar kelimeler: click, onclick, sample data, ornek veri, uretmek
 

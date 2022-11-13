@@ -136,8 +136,8 @@ Tüm Veriye Bakmak
 Şimdiye kadar gördüğümüz tüm teknikler satır bazında işler; eğer bir
 dosyayi açıp satır satır işliyorsak bu problem değil. Fakat bazen bir
 satırda başlayıp diğer bir satırda biten kalıpları bulmamız
-gerekebilir. Mesela 444 ile başlayıp 5555 ile biten bir  kalıp farklı
-satırlarda ise ne yapacağız? Alttaki veride yeni satır (newline) \n
+gerekebilir. Mesela 444 ile başlayıp 5555 ile biten bir kalıp farklı
+satırlarda ise ne yapacağız? Alttaki veride yeni satır (newline) `\n`
 işaretine dikkat, bu karakter bir dosya içinde bir satırın sonunda
 mevcuttur.
 

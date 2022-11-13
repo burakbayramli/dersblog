@@ -46,9 +46,9 @@ ve Linux ortamları için geliştirme kodları bulacaksınız. Bu kodlar,
 sıkıştrılmış şekilde tar yada zip ortamında gelecek. Bu dosyaları
 açıp, sabit disk üzerine kurun. Nereye kurduğunuz önemli değil.
 Kurulduktan sonra, bazı 'ortam değişkenlerini' tanımlamanız
-gerekiyor. Windows ortamında iseniz, Settings | Control Panel
-üzerinden Environment Variables seçeneğine gelin. Buradan, PATH
-değişkeni için c:\lejos\bin; ekleyin, ve RCXTTY değişkeni için USB
+gerekiyor. Windows ortamında iseniz, `Settings | Control Panel`
+üzerinden `Environment Variables` seçeneğine gelin. Buradan, `PATH`
+değişkeni için `c:\lejos\bin;` ekleyin, ve RCXTTY değişkeni için USB
 yazın.  Ayrıca Java geliştirme ortamınız olması lâzım. Bunun için
 ekteki baglantidan alabilirsiniz.  Bu işlemler bittikten sonra, komut
 satırına gelin ve şu komutu işletin.  lejosfirmdl İşlem sonunda Lego

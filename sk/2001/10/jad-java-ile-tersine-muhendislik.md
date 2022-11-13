@@ -38,10 +38,11 @@ yazılır.
 [Google'dan bulup indirin] 
     
 Şimdi, mesela örnek olarak, bütün bir .class dizinini Java'ya
-çevirelim. c:\jdk1.3.1_04\jre\rt.jar içindeki kodların kaynağını hiç
+çevirelim. `c:\jdk1.3.1_04\jre\rt.jar` içindeki kodların kaynağını hiç
 merak ettiniz mi? Görelim bari.
 
-İlk önce, bu jar dosyasını alıp, geçici bir dizine bırakalım. Geçici dizin ismi c:\gecici olsun..Şimdi     
+İlk önce, bu jar dosyasını alıp, geçici bir dizine bırakalım. Geçici
+dizin ismi `c:\gecici` olsun..Şimdi
 
 ```  
 > cd c:\gecici
@@ -63,18 +64,18 @@ göreceğiz!
 
 Komut satırında, eğer geçici dizininiz içindeyseniz, aşağıdaki komutu
 işletin. Ayrıca, dosyaları düzgün şekilde birarada tutmak için,
-C:\gecici altından mesela c:\gecici\class\ altına kopyalayın. Ve,
+`C:\gecici` altından mesela `c:\gecici\class` altına kopyalayın. Ve,
 
 ```  
 > cd c:\gecici
 > jad -o -r -sjava -dkaynak class/**/*.class
 ```
   
-..ile JAD'i özyineli bir şekilde işletmiş olduk. C:\gecici\kaynak
+..ile JAD'i özyineli bir şekilde işletmiş olduk. `C:\gecici\kaynak`
 dizini altında, Sun'ın yazdığı Java kodlarının kaynaklarını
 görebilirsiniz. Mesela, şu çok kullandığımız String nesnesi,
-C:\gecici\kaynak\java\lang\String.java altında.. Daha birçok Java
-karakterinin kaynağı artık C:\gecici\kaynak\ altında.
+`C:\gecici\kaynak\java\lang\String.java` altında.. Daha birçok Java
+karakterinin kaynağı artık `C:\gecici\kaynak` altında.
 
 
 

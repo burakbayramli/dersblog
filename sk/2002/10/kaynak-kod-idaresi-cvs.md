@@ -10,8 +10,7 @@ anda BeniDuzelt.java kayıdını değiştiriyorsa, hangisinin sürümü en
 için önce bir depo yaratmak gerekir. Bu depo, bütün kaynak kodun
 saklandığı yer olur. Programcılar, bu depodan dosyaları kendi
 ortamlarına indirirler. Dosya üzerinde ekleme, çıkarma işini kendi
-ortamlarında yaparlar. İşleri bitince KKI sistemine "geri"
-verirler.
+ortamlarında yaparlar. İşleri bitince KKI sistemine "geri" verirler.
 
 KKİ sistemi, eğer "aynı anda" iki kişinin değistirdiği bir dosya
 varolduğunu bulursa, değişim "carpışması" olduğunu haber verir. Bu
@@ -34,15 +33,26 @@ Bu durumda, en yeni sürümü depodan alıp, kendi dosyan ile
 sizin şahsi dosyanızda oluyor.  $ cvs -q co -P BeniDegistir.c Bu
 komuttan sonra, elinizde şöyle bir kayıt gececek..
 
-#include #include int main(int argc, char **argv){ init_arayici();
-ara(); if (argc != 1) { fprintf(stderr, "tc: Hic Oge Gondermeye Gerek
-Yok.\n"); exit(1); } if (nerr == 0) KodYarat(); else fprintf(stderr,
-"Kod Yaratilmadi.\n");<<<<<<< nerr ="=">>>>>>> 1.6} <<<<<<< ve ="=">
+```
+#include 
+
+int main(int argc, char **argv){
+   init_arayici();
+   ara();
+   if (argc != 1) {
+      fprintf(stderr, "tc: Hic Oge Gondermeye Gerek Yok.\n");
+      exit(1);
+   }
+   if (nerr == 0)
+     KodYarat();
+   else
+      fprintf(stderr, "Kod Yaratilmadi.\n");<<<<<<< nerr ="=">>>>>>> 1.6} <<<<<<< ve ="=">
 ======= ve >>>>>>>
+```
 
 1.6 arasına gelenler depoda sizden önce yapılan değişiklikler.  Bu
 birlesmiş dosyaya bakarak, sizin eklemenizin geçerli olup olmadığına
-bakın, ve dosyayı son haline getirin. ==== işaretlerini çıkartarak
+bakın, ve dosyayı son haline getirin. `====` işaretlerini çıkartarak
 tabii. Bunu yaparken öteki programcıya soru sormanız
 gerekebilir. İletişim çok önemli.. Bundan sonra, en son formu bulup,
 şu komutu tekrar işletmeniz gerekir.  cvs commit BeniDegistir.c Fakat

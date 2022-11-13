@@ -46,5 +46,5 @@ Sonra bu kod içine istediğimiz ekleri yaparız, mesela MathJax için
 `<head>` içine eklenir, bundan sonra Markdown dosyamızda iki `$$` arası formüller
 gösterilecektir. 
 
-![](Screenshot%2Bfrom%2B2017-10-24%2B13-49-15.png)
+![](html01.png)
 

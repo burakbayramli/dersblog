@@ -21,14 +21,14 @@ sırada ufak bir kutu içine düşen piksellere bakmak), ya da obje yeri
 hakkında teklif üretmek (r-cnn) gerekli değil. Tüm kare ve o karedeki
 tüm obje tipleri, yerleri hakkında global bir karar verilebilir.
 
-![](Screenshot%2Bfrom%2B2017-10-30%2B11-06-26.png)
+![](yolo1.png)
 
 Yöntem aslında basit: tüm görüntü önce S x S parçaya bölünür  (S=7
 diyelim). Şimdi eğitim verisi hazırlanırken çerçevesi bilinen objeler
 alınır, ve 7x7 parçaların bu obje çerçeveleri / kutularının içine
 düşüp düşmediğine göre eğitim verisinde etiket hazırlanır.
 
-![](Screenshot%2Bfrom%2B2017-10-31%2B13-23-29.png)
+![](yolo2.png)
 
 Her tek görüntü için bir etiket yukarıdaki gibi bir tensor. Eğer
 eğitim verisinde bir kutucuk bir obje çerçevesi merkezine düşüyorsa, o
@@ -104,7 +104,7 @@ https://youtu.be/NM6lrxy0bxs - YOLO tasarımcısının video'su
 
 https://youtu.be/Cgxsv1riJhI - bir diger YOLO ustasindan video
 
-![](Screenshot%2Bfrom%2BYou%2BOnly%2BLook%2BOnce%2B-%2BUnified%252C%2BReal-Time%2BObject%2BDetection-NM6lrxy0bxs.webm.png)
+![](yolo3.png)
 
 ![](stoppred.png)
 

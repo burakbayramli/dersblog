@@ -16,7 +16,7 @@ if __name__ == "__main__":
         for i,file in enumerate(files):
             f = os.path.basename(file).replace(".md",".pdf")
             dir = os.path.dirname(file)
-            f = "/tmp/sk/%04d-%s" % (i,f)
+            f = "/mnt/3d1ece2f-6539-411b-bac2-589d57201626/home/burak/Downloads/skpdf/%04d-%s" % (i,f)
             os.chdir(dir)
             cmd = "pandoc %s -fmarkdown-implicit_figures -o %s" % (os.path.basename(file), f)
             if not os.path.isfile(f): 

@@ -72,7 +72,7 @@ ve bunlar $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
 
 Bu dosya tarayıcıda gösterilince
 
-![](Screenshot%2Bfrom%2B2017-11-06%2B08-47-52.png)
+![](mathj01.png)
 
 MathJax yaklaşımı güzel çünkü ek bir "üretme komutu"na gerek duymuyor
 - kod HTML içinde, bildiğimiz LaTeX olarak kalıyor, servis tarafında

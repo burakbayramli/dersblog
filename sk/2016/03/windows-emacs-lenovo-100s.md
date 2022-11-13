@@ -42,7 +42,16 @@ farkli gelistirme ortami olarak kurulur. Bunun icin
 conda create --name=py3k python=3
 ```
 
-Kurulus bitince ne zaman Python 3 isletmek istersek activate py3k deriz, komut satiri ona gore degisir, ve artik python cagrisi Python 3 olur. Eger activate ile ugrasmak istemiyorsak where python ile Python 3 yorumlayicisinin nerede oldugunu ogrenebiliriz, genellikle [HOME]\Anaconda2\envs\py3k\python altindadir, bu isler kodu direk cagrirsak activate'e gerek yok. Not: Paket kurulumu farkli, onun icin activate lazim; ayrica paket kurulumlarini activate sonrasi conda install [paket] ile Python 3 icin ayri yapmak lazim, Python 2 icin kurulan bir paket Python 3 tarafindan gorulemez. Ama paket kurulumlari bitince ardindan kod isletimi icin activate gereksiz.
+Kurulus bitince ne zaman Python 3 isletmek istersek activate py3k
+deriz, komut satiri ona gore degisir, ve artik python cagrisi Python 3
+olur. Eger activate ile ugrasmak istemiyorsak where python ile Python
+3 yorumlayicisinin nerede oldugunu ogrenebiliriz, genellikle
+`[HOME]\Anaconda2\envs\py3k\python` altindadir, bu isler kodu direk
+cagrirsak activate'e gerek yok. Not: Paket kurulumu farkli, onun icin
+activate lazim; ayrica paket kurulumlarini activate sonrasi conda
+install [paket] ile Python 3 icin ayri yapmak lazim, Python 2 icin
+kurulan bir paket Python 3 tarafindan gorulemez. Ama paket kurulumlari
+bitince ardindan kod isletimi icin activate gereksiz.
 
 BitTorrent
 

@@ -63,7 +63,7 @@ Bu ornekte q,I sabit degerlerdi, onlari da sembol olarak
 tanimladik. Sonuc:
 
 ```
-log(I⋅x - q)
+log(I x - q)
 ```
 
 ![](heat.png)

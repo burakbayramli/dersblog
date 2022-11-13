@@ -1,10 +1,13 @@
 # Grep + Cygwin + Emacs ile Dosya İçinde Kelime Arama
 
 Birçok dosya içinde, belli bir metni aramak için, Unix üzerinde   
-  
+
+```
 find . -name '*.java' -exec grep -n 'aranankelime' \;
- 
- .. gibi bir ifade kullabiliyoruz. Windows üzerinde de bazı görsel seçenekler mevcut.   
+```
+
+ .. gibi bir ifade kullabiliyoruz. Windows üzerinde de bazı görsel
+seçenekler mevcut.
   
 Programcıların ellerin sürekli klavye üzerinde olarak kodlaması daha
 isabetli olduğu için, metin arama gibi monoton işlerin Emacs aracılığı
@@ -28,16 +31,20 @@ dizini altına bırakabilirsiniz.
 Bu yapıldıktan sonra, Emacs'e grep-find komutunu cygwin üzerinden
 işletmesini bildirmek için, .emacs ayartanım dosyasında şu ibareleri
 ekleyin.
-    
+
+```
 (setenv "PATH" (concat "c:/cygwin/bin;" (getenv "PATH")))
 (setq exec-path (cons "c:/cygwin/bin/" exec-path))
 (require 'cygwin-mount)
 (cygwin-mount-activate)
-  
+```
+
 Ek olarak grep-find komutunu, meselâ Control-c Control-g ikilisine
 bağlamak için aşağıdaki ayarları yapın.
 
+```
 (global-set-key "\C-c\C-g" 'grep-find)  
+```
 
 Evet. Artık Emacs'i tekrar başlattıktan sonra, metinyazar programını
 terketmeden istediğiniz arama işlemini yapabilirsiniz. Ikidebir fare

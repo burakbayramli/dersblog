@@ -20,10 +20,11 @@ dosya var. Orada
 [yeni paket].sty
 ```
 
-Ekleri yapilir. Artik \usepackage ile bu paketi kullanabilirsiniz.
+Ekleri yapilir. Artik `\usepackage` ile bu paketi kullanabilirsiniz.
 
 Tabii tum bunlari kolaylastiracak bir script soyle,
 
+```
 import ospkgs = ['paket1','paket2']
 fout = open("/tmp/ls-R","w")
 fout.write("% ls-R -- filename database for kpathsea; do not change this line.")
@@ -40,7 +41,7 @@ for x in pkgs:
     os.system("cp %s.sty /usr/local/share/texmf/tex/latex/%s/" % (x,x) )
     os.system("cp %s.tex /usr/local/share/texmf/tex/latex/%s/" % (x,x) )
 fout.close()os.system("cp /tmp/ls-R /usr/local/share/texmf/" )
-``
+```
 
 
 Bu script ayni dizin icinde gerekli sty dosyalarinin oldugunu

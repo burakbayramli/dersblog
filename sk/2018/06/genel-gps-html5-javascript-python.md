@@ -1,4 +1,4 @@
-# Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python
+°# Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python
 
 ### Mesafe hesabı yapmak
 
@@ -70,8 +70,8 @@ print ( lowleft )
 ```
 
 ```text
-45.090707°N, 043.281808°E
-32.450607°N, 026.747624°E
+45.090707 N, 043.281808 E
+32.450607 N, 026.747624 E
 ```
 
 Örnekte Anadolu ortasından başlayıp 45 derece kuzeydoğuya ve 225
@@ -163,7 +163,7 @@ print (p.isenclosedBy(b))
 
 ### DMS ve Ondalik Formatlar Gecisi
 
-Bazen `000° 00′ 05.31″W` ve `51° 28′ 40.12″ N` şeklinde enlem ve
+Bazen `000  00' 05.31''W` ve `51  28' 40.12'' N` şeklinde enlem ve
 boylam verisi görebiliriz. Bu format yeri saat, dakika, saniye
 üzerinden göstermektedir. Çevirmek için `pygeodesy` içinde gerekli
 fonksiyonlar var,
@@ -171,7 +171,7 @@ fonksiyonlar var,
 ```python
 from pygeodesy import parse3llh, fstr
 
-x = parse3llh('000° 00′ 05.31″W, 51° 28′ 40.12″ N')
+x = parse3llh('000  00' 05.31''W, 51  28' 40.12'' N')
 print (fstr(x, prec=6))
 ```
 

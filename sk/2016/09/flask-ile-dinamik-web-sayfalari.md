@@ -118,24 +118,7 @@ Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
 ile bir işlem yapılıyor, sonuçlar aynı sayfada gösteriliyor, bir arama
 fonksiyonu mesela;
 
-Sayfa
-
-{% highlight html%}
-{% raw %}
-<h1>Arama</h1>
-
-<form action="/submit_search" method="post">
-  
-  <input type="text" name="search"/>
-  <br/><br/>  
-  <input type="submit">
-</form>
-
-{{ results }}
-
-{% endraw %}
-{% endhighlight %}
-
+[Sayfa](sayfa1.txt)
 
 Sonuçlar bir `results` adındaki bir liste içinde olacak bu liste olduğu
 gibi ekrana basılacak. Servis tarafı,
@@ -165,17 +148,7 @@ satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
 gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
 teker erisebilirdi mesela,
 
-{% highlight html%}
-{% raw %}
-
-{% for x in results %}
-  <p>
-  Bu ilk oge {{x[0]}}, ikinci oge {{x[1]}}  
-  </p>
-{% endfor %}
-
-{% endraw %}
-{% endhighlight %}
+[Sayfa](sayfa2.txt)
 
 gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. 
 
@@ -219,9 +192,9 @@ erisiriz.
 
 Herhangi Python bazlı bir yazılımı dış dünyaya (servis olarak) açmak
 için en basit seçeneklerden biri HTTP servisi üzerinden JSON iledir,
-ayrıca bizi mantıklı ÜRL'ler kullanmaya teşvik eden REST yaklaşımı iyi
+ayrıca bizi mantıklı URL'ler kullanmaya teşvik eden REST yaklaşımı iyi
 olur. En alt seviyede web servisi olarak mikro servis Flask
-olabilir. Flask'in güzel bir özelliği mantıklı ÜRL ile Python
+olabilir. Flask'in güzel bir özelliği mantıklı URL ile Python
 fonksiyonu ilişkisini etiket (annotation) ile halledebilmesi.
 
 ```python
@@ -246,8 +219,12 @@ Başlatırız,
 `python main.py`
 
 Ve test için localhost:8080 ziyaret edilir. Merhaba mesajı
-görülür. Sonra curl ile `curl -H "Content-Type: application/json" -d
-'{"liste":[3,2,1]}' \http://localhost:8080/test/url`
+görülür. Sonra curl ile
+
+```
+curl -H "Content-Type: application/json" -d '{"liste":[3,2,1]}'
+  http://localhost:8080/test/url`
+```
 
 ozel URL'e JSON gonderilir. Kodun tek yaptigi listeyi alip siralamak,
 yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.
@@ -276,7 +253,6 @@ def upload_file():
       fbook =  "/dizin/" + f.filename
       f.save(fbook)     
       return 'file uploaded successfully'
-
 ```
 
 ### Başlatma Numaraları

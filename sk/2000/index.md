@@ -1,5 +1,7 @@
 # 2000
 
+[](00/cover.html)
+
 [Akamai Nedir](10/akamai-nedir.html)
 
 [Arama Motorlarina Yardimci Olun](10/arama-motorlarina-yardimci-olun.html)

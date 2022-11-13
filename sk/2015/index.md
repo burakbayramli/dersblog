@@ -16,6 +16,8 @@
 
 [Python 3, Ubuntu, Anaconda](04/anaconda.html)
 
+[Netflix / Movielens Film Verisi](04/pandas-movielens-netflix-ratings.html)
+
 [Ubuntu 14](04/ubuntu-14.html)
 
 [Vagrant](04/vagrant.html)

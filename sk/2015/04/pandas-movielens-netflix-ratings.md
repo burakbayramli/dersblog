@@ -6,11 +6,11 @@ Pivotlama
 
 Örnek olarak film isimleri ve o filmlere verilmiş beğeni notlarını
 taşıyan bir veri tabanını işleyeceğiz. Verimiz üç ayrı dosyaya
-yayılmış halde. Üç tabloyu alttaki şekilde, \verb!merge! komutu
+yayılmış halde. Üç tabloyu alttaki şekilde, `merge` komutu
 ile birleştiriyoruz - Pandas otomatik olarak ortak kolon ismini
 bulacak ve onun üzerinden birleştirimi yapacak.
 
-\begin{minted}[fontsize=\footnotesize]{python}
+```python
 import pandas as pd, zipfile
 unames = ['user_id', 'gender', 'age', 'occupation', 'zip']
 rnames = ['user_id', 'movie_id', 'rating', 'timestamp']
@@ -20,7 +20,7 @@ with zipfile.ZipFile('ml1m.zip', 'r') as z:
     ratings = pd.read_table(z.open('ratings.dat'), sep='::', header=None,names=rnames)
     movies = pd.read_table(z.open('movies.dat'), sep='::', header=None,names=mnames)
 data = pd.merge(pd.merge(ratings, users), movies)
-\end{minted}
+```
 
 Eğer erkeklerin en çok sevdiği ama kadınların en az sevdiği (ve
 hanımlar için tam tersi olan) filmleri bulmak istiyorsak, bu işlemi
@@ -51,13 +51,13 @@ tanımlanabilir), ve böylece pivotlama gerçekleşmiş olur.
 Bizim pivot için cinsiyet kolona yayılacak, film ismi satıra
 yayılacak. Kesişim ise not ortalaması (rating mean) olacak.
 
-\begin{minted}[fontsize=\footnotesize]{python}
+```python
 mean_ratings = data.pivot_table('rating', rows='title', cols='gender',
                                 aggfunc='mean')
 print mean_ratings[:5]
-\end{minted}
+```
 
-\begin{verbatim}
+```
 gender                                F         M
 title                                            
 $1,000,000 Duck (1971)         3.375000  2.761905
@@ -65,60 +65,59 @@ $1,000,000 Duck (1971)         3.375000  2.761905
 'Til There Was You (1997)      2.675676  2.733333
 'burbs, The (1989)             2.793478  2.962085
 ...And Justice for All (1979)  3.828571  3.689024
-\end{verbatim}
+```
 
 Daha fazla ilerlemeden ufak bir ek işlem daha yapalım, 250'den daha az
 not almış olan filmleri eleyelim.
 
-\begin{minted}[fontsize=\footnotesize]{python}
+```python
 ratings_by_title = data.groupby('title').size()
 active_titles = ratings_by_title.index[ratings_by_title >= 250]
 print active_titles[:10]
-\end{minted}
+```
 
-\begin{verbatim}
+```
 Index([u''burbs, The (1989)', u'10 Things I Hate About You (1999)', u'101 Dalmatians (1961)', u'101 Dalmatians (1996)', u'12 Angry Men (1957)', u'13th Warrior, The (1999)', u'2 Days in the Valley (1996)', u'20,000 Leagues Under the Sea (1954)', u'2001: A Space Odyssey (1968)', u'2010 (1984)'], dtype=object)
-\end{verbatim}
+```
 
-Yapılan harekete dikkat: \verb!ratings_by_title.index! üzerinde bir boolean
-filtreleme yaptık, yani \verb![True, False..., True]!  gibi bir
-filtreleyiciyi \verb!Index! {\em objesi} üzerinde kullandık. Bu niye
-işledi? Çünkü \verb!.index! çağrısı da sonuçta bir dizindir, ve dizinler
-üzerinde istenen boolean filtrelemesi yapılabilir (her iki taraf ta aynı
+Yapılan harekete dikkat: `ratings_by_title.index` üzerinde bir boolean
+filtreleme yaptık, yani `[True, False..., True]` gibi bir
+filtreleyiciyi `Index` *objesi* üzerinde kullandık. Bu niye işledi?
+Çünkü `.index` çağrısı da sonuçta bir dizindir, ve dizinler üzerinde
+istenen boolean filtrelemesi yapılabilir (her iki taraf ta aynı
 boyutta olduğu sürece).
 
 Devam edelim, şimdi ortalama notları üstteki yeni Index'e göre
-azaltalım (ve \verb!.ix! kullanacağız, çünkü Index objesi
-satırlar üzerinde işlem yapar ve \verb!.ix! çağrısı satırlara
-erişmek için kullanılır), ve hanımların en çok sevdiği filmlere
-bakalım,
+azaltalım (ve `.ix` kullanacağız, çünkü Index objesi satırlar üzerinde
+işlem yapar ve `.ix` çağrısı satırlara erişmek için kullanılır), ve
+hanımların en çok sevdiği filmlere bakalım,
 
-\begin{minted}[fontsize=\footnotesize]{python}
+```python
 mean_ratings = mean_ratings.ix[active_titles]
 top_female_ratings = mean_ratings.sort_index(by='F', ascending=False)
 print top_female_ratings[:4]
-\end{minted}
+```
 
-\begin{verbatim}
+```
 gender                                                         F         M
 title                                                                     
 Close Shave, A (1995)                                   4.644444  4.473795
 Wrong Trousers, The (1993)                              4.588235  4.478261
 Sunset Blvd. (a.k.a. Sunset Boulevard) (1950)           4.572650  4.464589
 Wallace & Gromit: The Best of Aardman Animation (1996)  4.563107  4.385075
-\end{verbatim}
+```
 
 Baylara pek tanıdık gelmeyen bir liste. Şimdi erkekler ve hanımlar
 beğeni farkını hesaplayalım ve en büyük farklar en üstte olacak
 şekilde sıralama (sort) yapalım,
 
-\begin{minted}[fontsize=\footnotesize]{python}
+```python
 mean_ratings['diff'] = mean_ratings['M'] - mean_ratings['F']
 sorted_by_diff = mean_ratings.sort_index(by='diff')
 print sorted_by_diff[:6] 
-\end{minted}
+```
 
-\begin{verbatim}
+```
 gender                            F         M      diff
 title                                                  
 Dirty Dancing (1987)       3.790378  2.959596 -0.830782
@@ -127,17 +126,17 @@ Grease (1978)              3.975265  3.367041 -0.608224
 Little Women (1994)        3.870588  3.321739 -0.548849
 Steel Magnolias (1989)     3.901734  3.365957 -0.535777
 Anastasia (1997)           3.800000  3.281609 -0.518391
-\end{verbatim}
+```
 
 {\em Dirty Dancing}, {\em Grease} gibi romantik filmler üstte çıktı. Şimdi
 listeyi ters çevirelim ve en alta bakalım, orada bayların en çok
 hanımların en az sevdiği filmler olmalı,
 
-\begin{minted}[fontsize=\footnotesize]{python}
+```python
 print sorted_by_diff[::-1][:15]
-\end{minted}
+```
 
-\begin{verbatim}
+```
 gender                                         F         M      diff
 title                                                               
 Good, The Bad and The Ugly, The (1966)  3.494949  4.221300  0.726351
@@ -155,7 +154,7 @@ Animal House (1978)                     3.628906  4.167192  0.538286
 Exorcist, The (1973)                    3.537634  4.067239  0.529605
 Fright Night (1985)                     2.973684  3.500000  0.526316
 Barb Wire (1996)                        1.585366  2.100386  0.515020
-\end{verbatim}
+```
 
 Burada da {\em Good, The Bad and The Ugly} gibi kovboy filmleri, ve buna
 benzer vurdulu kırdılı filmler ya da enseye tokat türünden 
@@ -164,6 +163,48 @@ bir analiz oldu. :)
 
 Yapay Öğrenim geniş bir alandır, ama regresyon, sınıflama gibi işlemlerden
 önce hala yapılabilecek ilginç ve önemli, üstteki gibi veri analizler var.
+
+Seyrek Matris
+
+Movielens verisini seyrek matris formuna dondumek icin basit bir kod
+
+```python
+from scipy.sparse import csr_matrix
+d = "/tmp" # verinin oldugu dizin
+ratings = pd.read_csv(d + "/ratings.csv")
+utility_csr = csr_matrix((ratings.rating, (ratings.userId , ratings.movieId)))
+```
+
+JSON
+
+Bir diger seyrek sayilabileek format her satirda ayri kullanici icin o
+kullanicinin begeni raporunu JSON olarak vermek. Boylece kisi bazi veri
+satir satir okunabilir ve her satir uzerinde `json.loads` isletilerek
+veri Python sozlugune cevirilebilir.
+
+```python
+import json, csv
+
+fin = d + "/ratings.csv"
+fout = d + "/ratings-json.csv"
+curruser = 0
+row_dict = {}
+fout = open(fout, "w")
+with open(fin) as csvfile:   
+    rd = csv.reader(csvfile,delimiter=',')
+    headers = {k: v for v, k in enumerate(next(rd))}
+    for row in rd:
+        if row[headers['userId']] != curruser:
+            fout.write(str(curruser) + "|")
+            fout.write(json.dumps(row_dict))
+            fout.write("\n")
+            fout.flush()
+            curruser = row[headers['userId']]
+            row_dict = {}       
+        row_dict[int(row[headers['movieId']])] = float(row[headers['rating']])
+fout.close()
+```
+
 
 Kaynaklar
 

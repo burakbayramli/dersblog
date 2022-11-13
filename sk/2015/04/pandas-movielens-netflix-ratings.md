@@ -1,8 +1,6 @@
 # Netflix / Movielens Film Verisi
 
-Önce veriyi incelemek için pivot tekniğini görelim,
-
-Pivotlama
+Önce veriyi [3] incelemek için pivot tekniğini görelim,
 
 Örnek olarak film isimleri ve o filmlere verilmiş beğeni notlarını
 taşıyan bir veri tabanını işleyeceğiz. Verimiz üç ayrı dosyaya
@@ -212,4 +210,6 @@ Kaynaklar
     MovieLens Latest Datasets
     
 [2] McKinney, W., Python for Data Analysis
+
+[3] [Movielens 1M Veri](https://drive.google.com/uc?export=view&id=1AfnThq72GCP2NkJk_w5nGFqTZjl7lPTA)
 

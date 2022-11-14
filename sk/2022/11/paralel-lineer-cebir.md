@@ -58,6 +58,7 @@ a = np.array([[1,2,3]]).T
 B = np.array([[3,4,5],[1,1,1],[2,2,2]])
 print (a); print (B)
 print (a*B)
+print ((a*B).sum(axis=0))
 ```
 
 ```text
@@ -70,12 +71,26 @@ print (a*B)
 [[3 4 5]
  [2 2 2]
  [6 6 6]]
+[11 12 13]
 ```
 
-Dikkat `*` kullanıldı, `numpy.dot` değil.
+Dikkat `*` kullanıldı, `numpy.dot` değil. Çarpım sonucu elde edilen
+matrisin tüm satırlarının toplamı yine `numpy` üzerinden, basit bir
+`sum(axis=0)` ile hesaplanabilir.
 
-Çarpım sonucu elde edilen matrisin tüm satırlarının toplamı yine
-`numpy` üzerinden, basit bir `sum(axis=0)` ile hesaplanabilir.
+Tabii eklemek gerekir ki üstte tarif edilenler aslında `numpy.dot` işleminin
+ta kendisidir,
+
+```python
+print (np.dot(a.T,B))
+```
+
+```text
+[[11 12 13]]
+```
+
+Olan işlemleri teker teker göstermek için detaylı bir anlatıma girdik, ama
+B'nin hafızada olduğu durum için klasik matris çarpımı da işleyecektir.
 
 Şimdi örnek veriyi üretelim. Bunlar rasgele matrisler olacak. 
 

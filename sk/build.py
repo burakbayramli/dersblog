@@ -24,6 +24,8 @@ if __name__ == "__main__":
                 os.system(cmd)
             os.chdir(retpath)
 
+    if sys.argv[1] == 'pdfunite':
+        os.system("pdfunite /opt/Downloads/skpdf/*.pdf ~/Downloads/sk-blog-all.pdf")
                 
     if sys.argv[1] == 'html':
 

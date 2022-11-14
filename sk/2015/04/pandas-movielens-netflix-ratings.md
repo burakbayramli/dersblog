@@ -126,7 +126,7 @@ Steel Magnolias (1989)     3.901734  3.365957 -0.535777
 Anastasia (1997)           3.800000  3.281609 -0.518391
 ```
 
-{\em Dirty Dancing}, {\em Grease} gibi romantik filmler üstte çıktı. Şimdi
+*Dirty Dancing*, *Grease* gibi romantik filmler üstte çıktı. Şimdi
 listeyi ters çevirelim ve en alta bakalım, orada bayların en çok
 hanımların en az sevdiği filmler olmalı,
 
@@ -154,10 +154,10 @@ Fright Night (1985)                     2.973684  3.500000  0.526316
 Barb Wire (1996)                        1.585366  2.100386  0.515020
 ```
 
-Burada da {\em Good, The Bad and The Ugly} gibi kovboy filmleri, ve buna
-benzer vurdulu kırdılı filmler ya da enseye tokat türünden 
-{\em Aptal ve Daha Aptal (Dumb and Dumber)} gibi filmler çıktı. İlginç 
-bir analiz oldu. :)
+Burada da *Good, The Bad and The Ugly* gibi kovboy filmleri, ve buna
+benzer vurdulu kırdılı filmler ya da enseye tokat türünden *Aptal ve
+Daha Aptal* (Dumb and Dumber) gibi filmler çıktı. İlginç bir analiz
+oldu!
 
 Yapay Öğrenim geniş bir alandır, ama regresyon, sınıflama gibi işlemlerden
 önce hala yapılabilecek ilginç ve önemli, üstteki gibi veri analizler var.

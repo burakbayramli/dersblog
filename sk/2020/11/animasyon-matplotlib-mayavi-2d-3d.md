@@ -13,9 +13,29 @@ kütüphaneler kullanmak gerekmiyor.
 
 Matplotlib
 
-Sistem ileri doğru işletilirken bir indis `i` ile hangi karede, hangi
-zaman diliminde olduğumuzu biliyorsak, bunu kullanarak, belli dilimlerde
-(mesela her 5'inci dilim) çıktıyı alıp diske yazabiliriz,
+En basit 3 boyutlu parçacık grafiği,
+
+```python
+N = 100
+c1 = np.random.multivariate_normal(np.array([-3,-3,-3]), np.eye(3), size=N)
+c2 = np.random.multivariate_normal(np.array([3,3,3]), np.eye(3), size=N)
+c = np.vstack((c1,c2))
+
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+fig=plt.figure()
+ax=Axes3D(fig)
+ax.plot(c[:, 0], c[:, 1], c[:, 2],'.')
+plt.savefig('mayavi6.png')
+```
+
+![](mayavi6.png)
+
+Animasyon bağlamında sistem ileri doğru işletilirken bir indis `i` ile
+hangi karede, hangi zaman diliminde olduğumuzu biliyorsak, bunu
+kullanarak, belli dilimlerde (mesela her 5'inci dilim) çıktıyı alıp
+diske yazabiliriz,
 
 ```
 for i in ..
@@ -70,12 +90,28 @@ Kurmak icin
 pip install pyqt5 mayavi
 ```
 
-Birkac tane top cizelim,
+En basit örnek üzerinde görelim, 
 
 ```python
 from mayavi import mlab
 mlab.options.offscreen = True
+
+N = 100
+c1 = np.random.multivariate_normal(np.array([-3,-3,-3]), np.eye(3), size=N)
+c2 = np.random.multivariate_normal(np.array([3,3,3]), np.eye(3), size=N)
+c = np.vstack((c1,c2))
+
+fig = mlab.figure(fgcolor=(0., 0., 0.), bgcolor=(1, 1, 1), size=(640, 360))
+r = np.ones(2*N)*0.2
+color=(0.2, 0.4, 0.5)
+mlab.points3d(c[:, 0], c[:, 1], c[:, 2], r, color=color,
+              colormap = 'gnuplot', scale_factor=1, figure=fig)
+mlab.outline()
+mlab.view(azimuth=00, elevation=80, focalpoint=[1, 1, 1], distance=30.0, figure=fig)
+mlab.savefig(filename='mayavi7.png')
 ```
+
+Farklı boyutlarda,
 
 ```python
 mlab.figure(fgcolor=(0., 0., 0.), bgcolor=(1, 1, 1))

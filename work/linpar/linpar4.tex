@@ -78,13 +78,13 @@ $$
 
 The righthand side has reduced to an eigenvector calculation. Therefore by
 computing $A^TA$ we are computing $V \Sigma^2 V^T $ on which we can run
-eigenvector calculation to obtain the $V$ vector. The approach can be more more
+eigenvector calculation to obtain the $V$ vector. The approach can be more
 optimal because if $A$ is $m \times n$ where $n << m$, therefore $A^TA$
 dimensions has to be $n \times n$ a much smaller matrix that can fit in memory.
-Therefore the SVD calculation of a large $A$ is reduced eigenvector calculation
-of a smaller $A^TA$.
+This way SVD calculation of a large $A$ is reduced eigenvector calculation of a
+smaller $A^TA$.
 
-Calculating $U$ can be done as follows,
+Calculating $U$ is done as follows,
 
 $$
 A = U \Sigma V^T \to U = A V \Sigma^{-1}
@@ -93,7 +93,7 @@ $$
 \subsubsection{Incremental $A^T A$}
 
 We have reduced incremental, parallel computation of SVD to parallel computation
-of $A^T A$. That problem can be solved by noticing $A^T A$ is easily computed
+of $A^T A$ which, in turn, can be pursued by noticing $A^T A$ is easily computed
 through the outer product of $i$'th row of the matrix, $A_{i}$ with itself, and
 summing the results.
 
@@ -101,8 +101,8 @@ $$
 A^T A = \sum_{i} A_i \times A_i
 $$
 
-Summation is commutative, therefore outer products from each machine / node, per
-row can be added together, no matter the order, first at each node as a
+Summation is commutative, therefore outer products from each parallel process,
+per row, can be added together, no matter the order, first at each node as a
 local sum, than as a global sum once the processing of each node is finished.
 
 Simple Python code demonstration,
@@ -217,7 +217,7 @@ Y = np.array(Y)
 
 Big Data became possible largely thanks to Map-Reduce architectures which
 represent splitting (mapping) and grouping (reducing) concepts logically and
-present them the only interface for a programmer to worry about, while in the
+expose them as the only interface for a programmer to worry about, while in the
 background directing data pieces produced by mapping and reducing to appropiate
 seperate nodes to achieve concurrency. A sample process is seen in
 Figure~\ref{fig:mapreduce1},
@@ -230,9 +230,9 @@ Figure~\ref{fig:mapreduce1},
 \end{figure}
 
 Our proposal is a simpler, so-called Split-Process architecture. Each process
-has access to a large file, is able to skip ahead to any row of that file,
-distribution is done on the basis of processing a pre-decided subset of all
-data. 
+has access to the large input file, is able to skip ahead to any row of that
+file, distribution is done on the basis of processing a pre-decided subsets of
+that data.
 
 \begin{figure}[h]
   \centering
@@ -250,8 +250,8 @@ Here we present the main processor of the code, called \verb!split_process!
 which can determine line beginning and end points in terms of seek byte
 locations of a given file, and by inspecting the \verb!workobj.ci! will
 jump ahead toward the chunk and start reading the file line by line, and
-feed them into \verb!workobj.exec!. In an object-oriented design each
-\verb!workobj! will know how to handle an input line, will either accumulate
+feed them into \verb!workobj.exec!. In an object-oriented design will allow each
+\verb!workobj! to know how to handle an input line, will either accumulate
 results from it or write an output itself to another file.
 
 \begin{verbatim}
@@ -286,7 +286,7 @@ The results, if they can be accumulated in memory, can be kept on
 \verb!split_process! will call \verb!workobj.post! which can handle disk output,
 cleaning up operations.
 
-The job classes for $A^T A$, $AB$ are given below.
+The job classes for $A^T A$, $AB$ and random projection are given below.
 
 \subsection{Calculation of $A^T A$}
 

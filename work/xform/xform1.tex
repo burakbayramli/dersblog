@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage{PRIMEarxiv}
+\usepackage[utf8]{inputenc} % allow utf-8 input
+\usepackage[T1]{fontenc}    % use 8-bit T1 fonts
+\usepackage{palatino,eulervm}
+\usepackage{hyperref}       % hyperlinks
+\usepackage{url}            % simple URL typesetting
+\usepackage{booktabs}       % professional-quality tables
+\usepackage{amsfonts}       % blackboard math symbols
+\usepackage{nicefrac}       % compact symbols for 1/2, etc.
+\usepackage{microtype}      % microtypography
+\usepackage{lipsum}
+\usepackage{fancyhdr}       % header
+\usepackage{graphicx}       % graphics
+\graphicspath{{media/}}     % organize your images and other figures under media/ folder
+
+\pagestyle{fancy}
+\thispagestyle{empty}
+\rhead{ \textit{ }} 
+  
+\title{Kalman Filters and Homography: Utilizing the Matrix $A$}
+
+\author{
+  Burak Bayramlı \\
+  İstanbul, Turkey\\
+  \texttt{burakbayramli.github.io} 
+}
+
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Many problems in Computer Vision can be reduced to either working around a known
+transform, or given a model for the transform computing the inverse problem of
+the transform itself. We will look at two way of working with the matrix $A$ and
+see how transforms are at the root of image processing and vision problems.
+\end{abstract}
+
+
+% keywords can be removed
+\keywords{Homography \and Kalman Filters \and Computer Vision}
+
+\section{Introduction}
+
+\section{Kalman Filters}
+
+
+
+\section{Direct Linear Transform}
+
+
+$$ 
+\left[\begin{array}{r} x' \\ y' \\ 1 \end{array}\right]
+\left[\begin{array}{rrr}
+a_1 & a_2 & t_x \\ a_3 & a_4 & t_y \\ 0 & 0 & 1
+\end{array}\right]
+\left[\begin{array}{r} x \\ y \\ 1 \end{array}\right]
+$$
+
+
+$$ 
+x' = \left[\begin{array}{rr} A & t \\ 0 & 1 \end{array}\right] x
+$$
+
+
+$$ 
+\left[\begin{array}{r} x' \\ y' \\ 1 \end{array}\right]
+\left[\begin{array}{rrr}
+s\cos(\theta) & -s\sin(\theta) & t_x \\ 
+s\sin(\theta) & s\cos(\theta) & t_y \\ 
+0 & 0 & 1
+\end{array}\right]
+\left[\begin{array}{r} x \\ y \\ 1 \end{array}\right]
+$$
+
+
+$$ 
+x' = \left[\begin{array}{rr}
+sR & t \\ 0 & 1
+\end{array}\right] x
+$$
+
+
+$$ 
+\left[\begin{array}{rrrrrrrrr}
+-x_1 & -y_1 & -1 & 0 & 0 & 0 & x_1x_1' & y_1x_1' & x_1' \\
+0 & 0 & 0 & -x_1 & -y_1 & -1 & x_1y_1' & y_1y_1' & y_1' \\
+-x_2 & -y_2 & -1 & 0 & 0 & 0 & x_2x_2' & y_2x_2' & x_2' \\
+0 & 0 & 0 & -x_2 & -y_2 & -1 & x_2y_2' & y_2y_2' & y_2' \\
+ &  \vdots &  &  \vdots &  & \vdots &  &  \vdots & 
+\end{array}\right]
+\left[\begin{array}{r}
+h_1 \\ h_2 \\ h_3 \\ h_4 \\ h_5 \\ h_6 \\ h_7 \\ h_8 \\ h_9 
+\end{array}\right] = 0
+$$
+
+\bibliographystyle{unsrt}  
+
+\begin{thebibliography}{1}
+\end{thebibliography}
+
+\end{document}

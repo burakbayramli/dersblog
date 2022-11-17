@@ -24,43 +24,43 @@
 </script>
 </head>
 
-<p>Sona yaklasirken 4'uncu seviye bukulme denklemleri (4th order bending equations)
-ve oge matrisleri konusunu biraz daha genisletmek istiyorum, hala sonlu ogeler
-(FEM) dunyasindayiz, oge matrisleri FEM yaklasiminin ogeleri ve tam
-matrisler.. Hatirlarsak makaskirisin her cubugu $A^T A$'nin bir parcasini
-veriyordu, ve bu parcalar birlestirilerek $K$ olusturuluyordu. Bir cizitte her
-kenar bir satira 1, -1 diye tekabul edecek sekilde bir matris ortaya
-cikartabiliyordu.. Simdi oge matrislerinin FEM ile iliskisini yakindan gormek
-istiyoruz. Bugunku dersin yarisi bu.</p>
+<p>Sona yaklaşırken 4'uncu seviye bükülme denklemleri (4th order bending equations)
+ve öğe matrisleri konusunu biraz daha genişletmek istiyorum, hala sonlu öğeler
+(FEM) dünyasındayız, öğe matrisleri FEM yaklaşımının öğeleri ve tam
+matrisler.. Hatırlarsak makaşkırışın her çubuğu $A^T A$'nin bir parçasını
+veriyordu, ve bu parçalar birleştirilerek $K$ oluşturuluyordu. Bir çizitte her
+kenar bir satıra 1, -1 diye tekabül edecek şekilde bir matris ortaya
+çıkartabiliyordu.. Şimdi öğe matrislerinin FEM ile ilişkisini yakından görmek
+istiyoruz. Bugünkü dersin yarısı bu.</p>
 <p><img alt="" src="compscieng_1_20_01.png" /></p>
-<p>Dersin diger yarisi 4'uncu derece diferansiyel denklemler. Simdiye kadar
-gordugumuz tum diferansiyel denklemler ikinci derece idi, 4'uncu derece onemli
-denklemler var mi diye merak edenler olabilir, evet var. Kiris bukulmesi
-problemi bunlardan biri mesela, ustte insaatlarda kullanilan turden bir kiris
-goruyoruz, resim bir stres analizi programindan alinmis, mavi, yesil, kirmizi
-renkler kiris uygulanan yukun etkilerini gosteriyor, kirmizi en fazla stres olan
-yerler mesela, iste ustteki turden ciktilar 4'uncu derece bukulme denklemini
+<p>Dersin diğer yarısı 4'uncu derece diferansiyel denklemler. Şimdiye kadar
+gördüğümüz tüm diferansiyel denklemler ikinci derece idi, 4'uncu derece önemli
+denklemler var mı diye merak edenler olabilir, evet var. Kırış bükülmesi
+problemi bunlardan biri mesela, üstte inşaatlarda kullanılan türden bir kırış
+görüyoruz, resim bir stres analizi programından alınmış, mavi, yeşil, kırmızı
+renkler kırış uygulanan yükün etkilerini gösteriyor, kırmızı en fazla stres olan
+yerler mesela, işte üstteki türden çıktılar 4'uncu derece bükülme denklemini
 gerektiriyor.</p>
-<p>Bu tur denklemler bizim $A^T C A$ altyapimiza uyuyor mu? Muhakkak oyle,
-birazdan gorecegiz. </p>
-<p>Tek boyuta donus yapalim, analiz edilen cismi parcalara bolecegiz, ve her parca
-bir ogeye tekabul ediyor olacak. Cisim bir buyuk cubuk, kiris olabilir..  Sonlu
-farkliliklar (finite differences) ile size aralari esit olmayan izgara noktalari
-versem ki alttaki resimde mesela $h$ ile $H$ birbirinden farkli olsa, bu FD ile
-bizi bayagi ugrastirirdi, ikinci farkliliktaki -1, 2, -1 satiri yerine biraz
-daha dengesiz degerler elde ederdik, bu izgaranin dengesizligi sebebiyle
-olurdu. FD ile bu durumu ciddi tartmak gerekirdi, FEM ile sistem o dusunme isini
-bizim icin hallediyor, dengesizlikler, oldugu yerlere sistemin yapisi
-sayesinde dogal olarak cozuluyor. </p>
-<p>Basit tek araliga odaklanalim simdi, iki tane sapka fonksiyonumuz olsun, her
+<p>Bu tür denklemler bizim $A^T C A$ altyapımıza uyuyor mu? Muhakkak öyle,
+birazdan göreceğiz. </p>
+<p>Tek boyuta dönüş yapalım, analiz edilen cismi parçalara böleceğiz, ve her parça
+bir öğeye tekabül ediyor olacak. Cisim bir büyük çubuk, kırış olabilir..  Sonlu
+farklılıklar (finite differences) ile size araları eşit olmayan izgara noktaları
+versem ki alttaki resimde mesela $h$ ile $H$ birbirinden farklı olsa, bu FD ile
+bizi bayağı uğraştırırdı, ikinci farklılıktaki -1, 2, -1 satırı yerine biraz
+daha dengesiz değerler elde ederdik, bu izgaranın dengesizliği sebebiyle
+olurdu. FD ile bu durumu ciddi tartmak gerekirdi, FEM ile sistem o düşünme işini
+bizim için hallediyor, dengesizlikler, olduğu yerlere sistemin yapısı
+sayesinde doğal olarak çözülüyor. </p>
+<p>Basit tek aralığa odaklanalım şimdi, iki tane şapka fonksiyonumuz olsun, her
 ikisinin de maksimum seviyesi 1,</p>
 <p><img alt="" src="compscieng_1_20_02.png" /></p>
-<p>Fonksiyonumuz iki secilmis noktada $u_0$ ve $u_1$ degerlerinde, bu degerlerden
-ilki $u_0$ carpi birinci sapkadan geliyor, ayni sekilde ikincisi $u_2$ carpi
-ikinci sapkadan.. $u_0$ ve $u_1$ arasinda ne olur? Fonksiyon</p>
+<p>Fonksiyonumuz iki seçilmiş noktada $u_0$ ve $u_1$ değerlerinde, bu değerlerden
+ilki $u_0$ çarpı birinci şapkadan geliyor, aynı şekilde ikincisi $u_2$ çarpı
+ikinci şapkadan.. $u_0$ ve $u_1$ arasında ne olur? Fonksiyon</p>
 <p>$$
 U(x) = u_0 \phi_0 + u_1 \phi_1
 $$</p>
-<p>Bu bir lineer fonksiyon, alttaki gibi bir cizgi ile gosterilebilir,</p>
+<p>Bu bir lineer fonksiyon, alttaki gibi bir çizgi ile gösterilebilir,</p>
 <p><img alt="" src="compscieng_1_20_03.png" /></p>
 <p>[devam edecek]</p>

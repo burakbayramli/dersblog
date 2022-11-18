@@ -3,7 +3,7 @@
 
 ## En Son
 
-18/11 - [Lineer Cebir, arXiv Makalesi](https://arxiv.org/abs/1310.4664)
+18/11 - [ArXiv Makalesi](https://arxiv.org/abs/1310.4664)
 
 13/11 - [Kasırga Enerji Hesabı (Integrated Kinetic Energy)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_xpp01vec/vektor_alanlari_ve_hesaplar.html)
 

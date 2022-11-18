@@ -16,15 +16,17 @@ if __name__ == "__main__":
         for i,file in enumerate(files):
             f = os.path.basename(file).replace(".md",".pdf")
             dir = os.path.dirname(file)
+            res = re.findall("(\d\d\d\d\/\d\d)",file)[0]
+            i = int(res.replace("/",""))
             f = "/opt/Downloads/skpdf/%04d-%s" % (i,f)
             os.chdir(dir)
-            cmd = "pandoc %s -fmarkdown-implicit_figures -o %s" % (os.path.basename(file), f)
+            cmd = "pandoc %s --latex-engine=xelatex -fmarkdown-implicit_figures -o %s" % (os.path.basename(file),f)
             if not os.path.isfile(f): 
                 print (cmd)                
                 os.system(cmd)
             os.chdir(retpath)
 
-    if sys.argv[1] == 'pdfunite':
+    if sys.argv[1] == 'pdf-unite':
         os.system("pdfunite /opt/Downloads/skpdf/*.pdf ~/Downloads/sk-blog-all.pdf")
                 
     if sys.argv[1] == 'html':

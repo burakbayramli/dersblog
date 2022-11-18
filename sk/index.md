@@ -3,6 +3,8 @@
 
 ## En Son
 
+18/11 - [arXiv Makalesi, Lineer Cebir](https://arxiv.org/abs/1310.4664)
+
 13/11 - [Kasırga Enerji Hesabı (Integrated Kinetic Energy)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_xpp01vec/vektor_alanlari_ve_hesaplar.html)
 
 7/11 - [Paralel Veri Analizi, Istatistik](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-veri-analizi-istatistik.html)
@@ -10,8 +12,6 @@
 4/11 - [Tensorflow](https://burakbayramli.github.io/dersblog/sk/2022/10/tensorflow.html)
 
 31/10 - [Paralel Lineer Cebir](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html)
-
-26/10 - [Paralel, Satır Bazlı Dosya İşlemek](https://burakbayramli.github.io/dersblog/sk/2016/02/toptan-islemler-paralelizasyon.html#csv)
 
 ## Konular, Referans
 

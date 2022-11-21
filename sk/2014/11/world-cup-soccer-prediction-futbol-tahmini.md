@@ -57,19 +57,19 @@ olacaktı, bu modeli bozardı.
 Modelde kullanılacak özellikler:
 
 `is_home`: Takım evinde mi, deplasmanda mı oynuyor. Futbolda bu
-değişkenin çok önemli olduğunu anladık.
+değişkenin çok önemli olduğunu biliyoruz.
 
 `avg_points`: Önceki K maçta kazanılan ortalama puan (galibiyet için
 3, eşitlik için 1, kayıp için 0). 
 
 `avg_goals`: Önceki K maçta atılan averaj gol.
 
-`op_average_göals`: Rakip tarafından son K maçta atılan averaj gol.
+`op_average_goals`: Rakip tarafından son K maçta atılan averaj gol.
 
 `pass_70/80`: Hücum sahasının 30\%-20\%'sinde dakika başına verilen
 başarılı pas.
 
-`op_pass70/80`: Hücum sahasının 30\%-20\%'sinde rakip tarafından
+`op_pass70/80`: Hücum sahasının 30%-20%'sinde rakip tarafından
 verilmiş dakika bazında başarılı paslar.
 
 `expeçted_göals`: Son K maçtaki gol beklentisi, ki bu beklenti atılan

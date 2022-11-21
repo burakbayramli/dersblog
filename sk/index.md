@@ -3,6 +3,8 @@
 
 ## En Son
 
+21/11 - [Dünya Kupası 2014 Tahminleri](2014/11/world-cup-soccer-prediction-futbol-tahmini.html)
+
 18/11 - [ArXiv Makalesi](https://arxiv.org/abs/1310.4664)
 
 13/11 - [Kasırga Enerji Hesabı (Integrated Kinetic Energy)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_xpp01vec/vektor_alanlari_ve_hesaplar.html)
@@ -10,8 +12,6 @@
 7/11 - [Paralel Veri Analizi, Istatistik](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-veri-analizi-istatistik.html)
 
 4/11 - [Tensorflow](https://burakbayramli.github.io/dersblog/sk/2022/10/tensorflow.html)
-
-31/10 - [Paralel Lineer Cebir](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html)
 
 ## Konular, Referans
 

@@ -1470,6 +1470,7 @@ def add_power(data, power_train_data, cols):
                for x in sorted(names.items(), key=(lambda x: x[1]))]
         data['power_%s' % (final_name)] = power_col
     return data
+```
 
 ### features.py
 

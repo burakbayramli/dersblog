@@ -25,7 +25,7 @@ ki bu özellikler yapay öğrenim modeline girilebilsin. Bu özellikler önceki
 K maçın verilerini özetleme amaçlı yaratıldılar, ki bu özelliklere
 dayanarak bir sonraki maçı tahmnin edebilelim.
 
-`world_cup: Veriyi temizlemek ve modeli kurmak için kullanılan
+`world_cup`: Veriyi temizlemek ve modeli kurmak için kullanılan
 yardımcı kodlar.
 
 `power`: Birbiriyle belli sayıda maç yapmış takımların bir ``güç
@@ -46,7 +46,7 @@ history_size = 3
 
 game_summaries = features.get_game_summaries()
 data = features.get_features(history_size)
-``
+```
 
 Bu özellikler, dediğimiz gibi, önceki K maçın özeti. Bu özetlerin çoğu bir
 ortalamadır, ayrıca bu ortalamaların çoğu dakika bazlı çünkü maç zamanını
@@ -1527,6 +1527,8 @@ Kaynaklar
 [2] Google Cloud Platform, {\em Sample iPython notebook with soccer predictions}, \url{https://github.com/GoogleCloudPlatform/ipython-soccer-predictions}
 
 [3] Google, {\em Predicting the World Cup with the Google Cloud Platform}, \url{http://nbviewer.ipython.org/github/GoogleCloudPlatform/ipython-soccer-predictions/blob/master/predict/wc-final.ipynb}
+
+
 
 
 

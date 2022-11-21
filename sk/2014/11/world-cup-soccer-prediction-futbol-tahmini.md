@@ -1522,11 +1522,18 @@ def get_feature_columns(all_cols):
 
 Kaynaklar
 
-[1] Google Cloud Platform Blog, {\em Google Cloud Platform goes 8 for 8 in World Cup predictions}, \url{http://googlecloudplatform.blogspot.de/2014/07/google-cloud-platform-goes-8-for-8-in-soccer-predictions.html}
+[1] Google Cloud Platform Blog,
+    Google Cloud Platform goes 8 for 8 in World Cup predictions,
+    http://googlecloudplatform.blogspot.de/2014/07/google-cloud-platform-goes-8-for-8-in-soccer-predictions.html
 
-[2] Google Cloud Platform, {\em Sample iPython notebook with soccer predictions}, \url{https://github.com/GoogleCloudPlatform/ipython-soccer-predictions}
+[2] Google Cloud Platform,
+    Sample iPython notebook with soccer predictions,
+    https://github.com/GoogleCloudPlatform/ipython-soccer-predictions
 
-[3] Google, {\em Predicting the World Cup with the Google Cloud Platform}, \url{http://nbviewer.ipython.org/github/GoogleCloudPlatform/ipython-soccer-predictions/blob/master/predict/wc-final.ipynb}
+[3] Google, Predicting the World Cup with the Google Cloud Platform,
+    http://nbviewer.ipython.org/github/GoogleCloudPlatform/ipython-soccer-predictions/blob/master/predict/wc-final.ipynb
+
+
 
 
 

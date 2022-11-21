@@ -639,9 +639,9 @@ wc_power_data = power.add_power(wc_data, wc_power_train, power_cols)
 
 wc_results = world_cup.predict_model(power_model, wc_power_data, 
     match_stats.get_non_feature_columns())
-\end{minted}
+```
 
-\begin{verbatim}
+```python
 New season 2013
 New season 2009
 New season 6

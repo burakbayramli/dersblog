@@ -73,7 +73,7 @@ başarılı pas.
 verilmiş dakika bazında başarılı paslar.
 
 `expected_goals`: Son K maçtaki gol beklentisi, ki bu beklenti atılan
-süt ve ve sütün kaleden uzaklığı baz alınarak hesaplanan bir sayı.
+şut ve ve şutun kaleden uzaklığı baz alınarak hesaplanan bir sayı.
 
 `passes`: Dakika başına atılan paslar.
 
@@ -1527,4 +1527,7 @@ Kaynaklar
 [2] Google Cloud Platform, {\em Sample iPython notebook with soccer predictions}, \url{https://github.com/GoogleCloudPlatform/ipython-soccer-predictions}
 
 [3] Google, {\em Predicting the World Cup with the Google Cloud Platform}, \url{http://nbviewer.ipython.org/github/GoogleCloudPlatform/ipython-soccer-predictions/blob/master/predict/wc-final.ipynb}
+
+
+
 

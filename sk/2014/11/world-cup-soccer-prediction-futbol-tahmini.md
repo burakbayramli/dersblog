@@ -755,10 +755,10 @@ hesaptan diğerine değişik çıkabiliyor (ki bazen sonuçlar çok değişik
 olabiliyor). Not: Aslında bu kod değiştirilerek rasgelelik içinden tamamen
 çıkartılabilir (ev ödeviniz!).
 
-16. turu tahmin ederken mesela önceki 3 maçı, çeyrek finaller için önceki
-4, yarıfınaller için 5, ve finaller için önceki 6 maçı kullandık [biz bu
-dokümanda önceki 3 maçı kullandık, `history_size` parametresiyle
-oynayarak değişik sonuçlar kontrol edilebilir].
+16'ıncı turu tahmin ederken mesela önceki 3 maçı, çeyrek finaller için
+önceki 4, yarıfınaller için 5, ve finaller için önceki 6 maçı
+kullandık [biz bu dokümanda önceki 3 maçı kullandık, `history_size`
+parametresiyle oynayarak değişik sonuçlar kontrol edilebilir].
 
 ```python
 pd.set_option('display.max_rows', 5000)

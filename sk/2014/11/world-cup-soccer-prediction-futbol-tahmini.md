@@ -66,7 +66,7 @@ değişkenin çok önemli olduğunu biliyoruz.
 
 `op_average_goals`: Rakip tarafından son K maçta atılan averaj gol.
 
-`pass_70/80`: Hücum sahasının 30\%-20\%'sinde dakika başına verilen
+`pass_70/80`: Hücum sahasının 30%-20%'sinde dakika başına verilen
 başarılı pas.
 
 `op_pass70/80`: Hücum sahasının 30%-20%'sinde rakip tarafından

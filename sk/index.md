@@ -3,7 +3,7 @@
 
 ## En Son
 
-21/11 - [Dünya Kupası 2014 Tahminleri](2014/11/world-cup-soccer-prediction-futbol-tahmini.html)
+21/11 - [Dünya Kupası 2014, Veri Analizi](2014/11/world-cup-soccer-prediction-futbol-tahmini.html)
 
 18/11 - [ArXiv Makalesi](https://arxiv.org/abs/1310.4664)
 

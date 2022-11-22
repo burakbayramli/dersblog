@@ -1,20 +1,20 @@
-# Dünya Kupası 2014 Tahminleri
+# Dünya Kupası 2014, Veri Analizi
 
-Dünya Kupası maçlarını tahmin eden istatistik (yapay öğrenim)
-teknikleri Google mühendisleri tarafından paylaşılmış, kullanılan
-teknik lojistik regresyon. Verinin şekillendirilmesi, veriden özellik
-(feature) yaratmak işin püf noktalarından - veri hangi detay
-seviyesinde (maç seviyesinde mi takım seviyesinde mi) ve hangi
-kolonlar üzerinden modele dahil edilecek?  Görülüyor ki nihai
-regresyon her maç için iki takımı yanyana koyuyor (A takımı öğeleri
-belli kolonlar B öğeleri belli kolonlar) ve 1,0 etiketini tahmine
-uğraşıyor. Öğelerin önemli bir özelliği o ana kadar her iki takımın
-oynadığı önceki N maçın özeti olmaları. Yani A takımı son 3 maçta
-(N=3) maçta dakikada 5 pas atmışsa passes öğesi 5 olacaktır, B takımı
-dakikada 10 atmışsa `op_passes` 10 olacaktır. Böylece lojistik
-regresyona 5'e karşı 10 pas ağırlığı olan bir veri satırı hakkında
-irdeleme yapma imkanı veriyoruz; ve bilinen etikete göre LR gerekli
-ağırlıkları hesaplayarak sonuca erişiyor.
+Daha önceki maç verisine bakarak 2014 Dünya Kupası maçlarını tahmin
+edebilen istatistik (yapay öğrenim) teknikleri Google mühendisleri
+tarafından paylaşıldı, kullanılan teknik lojistik regresyon. Verinin
+şekillendirilmesi, veriden özellik (feature) yaratmak işin püf
+noktalarından - veri hangi detay seviyesinde (maç seviyesinde mi takım
+seviyesinde mi) ve hangi kolonlar üzerinden modele dahil edilecek?
+Görülüyor ki nihai regresyon her maç için iki takımı yanyana koyuyor
+(A takımı öğeleri belli kolonlar B öğeleri belli kolonlar) ve 1,0
+etiketini tahmine uğraşıyor. Öğelerin önemli bir özelliği o ana kadar
+her iki takımın oynadığı önceki N maçın özeti olmaları. Yani A takımı
+son 3 maçta (N=3) maçta dakikada 5 pas atmışsa passes öğesi 5
+olacaktır, B takımı dakikada 10 atmışsa `op_passes` 10
+olacaktır. Böylece lojistik regresyona 5'e karşı 10 pas ağırlığı olan
+bir veri satırı hakkında irdeleme yapma imkanı veriyoruz; ve bilinen
+etikete göre LR gerekli ağırlıkları hesaplayarak sonuca erişiyor.
 
 Projede kullanılan 4 Python dosyası var: 
 

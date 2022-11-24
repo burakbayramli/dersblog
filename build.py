@@ -77,6 +77,7 @@ if __name__ == "__main__":
         print (cmd)
         os.system(cmd)
         shutil.copy(".gitignore", TARGET_DIR)
+        shutil.copy("/home/burak/Documents/Dropbox/bkps/googleb21e08d7627545a2.html", TARGET_DIR)        
         lecs = json.loads(open("lecs.conf").read())
         for topdir in topdirs:
             print ('main',topdir)

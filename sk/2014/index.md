@@ -34,7 +34,7 @@
 
 [Agaclar Ile Oge Kodlamasi (Categorical Embedding)](11/agaclar-ile-oge-kodlamasi-categorical.html)
 
-[Dünya Kupası 2014 Tahminleri](11/world-cup-soccer-prediction-futbol-tahmini.html)
+[Dünya Kupası 2014, Veri Analizi](11/world-cup-soccer-prediction-futbol-tahmini.html)
 
 [Paralel Lojistik Regresyon, Eşle/İndirge](12/lojistik-regresion-map-reduce.html)
 

@@ -11,10 +11,10 @@ uygulamak mümkündür, hatta Google'un BigQuery dili de aynen bunu yapıyor.
 
 Chinook
 
-Bu tabanın sqlite ortamında nasıl kurulacağını [2]'de
-anlattık. Chinook iTunes gibi bir dijital medya satış şirketi için
-hazırlanmış bir taban, verilerin bazıları gerçek iTunes'dan alınmış,
-müşterilerle alakalı kısımları yapay.
+Bu tabanın sqlite ortamında nasıl kurulacağını [2]'de anlattık, nihai
+taban dosyasi için [17]. Chinook iTunes gibi bir dijital medya satış şirketi
+için hazırlanmış bir taban, verilerin bazıları gerçek iTunes'dan
+alınmış, müşterilerle alakalı kısımları yapay.
 
 ![](chinook_er.jpeg)
 
@@ -738,8 +738,5 @@ Referans
 
 [16] [SQL veri analizi nasıl hızlandırılır](../../2001/10/sql-veri-analizi-nasl-hzlandrlr.html)
 
-
-
-
-
+[17] [Chinook.db ZIP](https://drive.google.com/uc?export=view&id=1bbr8y45VXla4wRf_7kJVa0Xj7r8PBTOD)
 

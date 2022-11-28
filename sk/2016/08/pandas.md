@@ -8,7 +8,8 @@ kurduktan sonra, alttaki gibi bir kod Pandas noktalı virgül ile
 ayrılmış dosyayı söylendiği gibi güzelce okudu,
 
 ```python
-import pandas as pd, StringIO
+import pandas as pd, io
+pd.set_option('display.max_columns', None)
 
 s1 = """
 c;d;a;b
@@ -21,8 +22,11 @@ two;2;5;2
 two;3;6;1
 """
 
-df1 = pd.read_csv(StringIO.StringIO(s1),sep=';')
-print df1
+df1 = pd.read_csv(io.StringIO(s1),sep=';')
+print (df1)
+```
+
+```text
      c  d  a  b
 0  one  0  0  7
 1  one  1  1  6
@@ -55,10 +59,10 @@ gibi) ama muhakkak bir indis olur.
 Pandas ile bir kolona erismek istersem bu cok basittir; mesela
 
 ```python
-print df1['b']
+print (df1['b'])
 ```
 
-```
+```text
 0    7
 1    6
 2    5
@@ -88,12 +92,11 @@ c;d;a;b
 2016-01-08;two;3;6;1
 """
 
-df2 = pd.read_csv(StringIO.StringIO(s2),sep=';', parse_dates=True,index_col=0)
-print df2
+df2 = pd.read_csv(io.StringIO(s2),sep=';', parse_dates=True,index_col=0)
+print (df2)
 ```
 
-```
-
+```text
               c  d  a  b
 2016-01-02  one  0  0  7
 2016-01-03  one  1  1  6
@@ -111,11 +114,10 @@ getirsin. Böylece tarihsel olarak büyüktür, küçüktür işlemlerini
 kullanabiliriz,
 
 ```python
-print df2[df2.index > '2016-01-06']
+print (df2[df2.index > '2016-01-06'])
 ```
 
-```
-
+```text
               c  d  a  b
 2016-01-07  two  2  5  2
 2016-01-08  two  3  6  1
@@ -124,28 +126,19 @@ print df2[df2.index > '2016-01-06']
 İndisi sonradan değiştirmek mümkün. Mesela b kolonunu indisi yapalım,
 
 ```python
-print df2.reset_index().set_index('b')
+print (df2.reset_index().set_index('b'))
 ```
 
-```
+```text
        index    c  d  a
-
 b                      
-
 7 2016-01-02  one  0  0
-
 6 2016-01-03  one  1  1
-
 5 2016-01-04  one  2  2
-
 4 2016-01-05  two  0  3
-
 3 2016-01-06  two  1  4
-
 2 2016-01-07  two  2  5
-
 1 2016-01-08  two  3  6
-
 ```
 
 Dikkat `reset_index()` ile mevcut indisi iptal ettik, o indis normal
@@ -159,10 +152,10 @@ var,
 
 ```python
 s1 = pd.Series(['x','y','z'], index=[1,2,3])
-print s1
+print (s1)
 ```
 
-```
+```text
 1    x
 2    y
 3    z
@@ -175,10 +168,10 @@ acaba?
 
 ```python
 df1['s1'] = s1
-print df1
+print (df1)
 ```
 
-```
+```text
      c  d  a  b   s1
 0  one  0  0  7  NaN
 1  one  1  1  6    x
@@ -341,6 +334,58 @@ print df1.apply(lambda x: str(x.c) + ":" + str(x.d), axis=1)
 
 6    two:3
 ```
+
+Sözlük
+
+Bazen bir DataFrame'in indis değerlerini baz alan bir sözlük yaratmak
+isteyebiliriz. Bunun için `to_dict` çağrısı var. Test verisi yaratalım,
+
+```python
+df = pd.DataFrame(np.array(range(20)).reshape(10,2))
+df.columns = ['a','b']
+df = df.set_index('a')
+print (df)
+```
+
+```text
+     b
+a     
+0    1
+2    3
+4    5
+6    7
+8    9
+10  11
+12  13
+14  15
+16  17
+18  19
+```
+
+Eğer `a` bazlı bir sözlük yaratmak istersem,
+
+```python
+d = df.to_dict('index')
+d
+```
+
+```text
+Out[1]: 
+{0: {'b': 1},
+ 2: {'b': 3},
+ 4: {'b': 5},
+ 6: {'b': 7},
+ 8: {'b': 9},
+ 10: {'b': 11},
+ 12: {'b': 13},
+ 14: {'b': 15},
+ 16: {'b': 17},
+ 18: {'b': 19}}
+```
+
+Artık mesela `d[2]['b']` ile 2 indis değerindeki `b` kolon değerine
+erişmiş oluyorum bir bakıma, eğer daha fazla kolon olsaydı onlara da
+benzer şekilde erişim sağlanacaktı. 
 
 Pivot
 

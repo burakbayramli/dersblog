@@ -2,8 +2,8 @@
 
 Pickle
 
-Python pickle servisi herhangi bir nesneyi alip dosyaya yazabilmek
-yetenegine sahip. Bir dictionary objemiz oldugunu dusunelim:
+Python pickle servisi herhangi bir nesneyi alıp dosyaya yazabilmek
+yeteneğine sahip. Bir dictionary objemiz olduğunu düşünelim:
 
 ```python
 dict = {}
@@ -11,14 +11,14 @@ dict['a'] = 33
 dict['b'] = 55
 ```
 
-Bu nesneyi soyle dosyaya yazariz
+Bu nesneyi şöyle dosyaya yazarız
 
 ```python
 import pickle
 pickle.dump(dict, open('dict.pkl', 'wb'))
 ```
 
-Geri okumak icin
+Geri okumak için
 
 ```python
 dict= pickle.load(open("dict.pkl","rb"))
@@ -30,13 +30,36 @@ versiyonlar arası uyumsuzluk problemi çıkabilir.  Paketlerarası
 versiyon, ya da Python 2 ve 3 arası uyumsuzluklar görülebilir. Bu
 sebeple eğer mümkün ise pickle'ları çok kullanmamak en iyisi.
 
-Numpy Matrisini, Sıkıştırarak  ve String Olarak Yazmak
+Pickle kütüphanesi diske yazmak yerine hafızada string bazlı çıktı da
+verebilir.
 
-Bir Numpy matrisi cetrefil bir objedir aslinda. Onu Sıkıştırarak bir
-metin haline dondurebilir miyiz? Bu lazim olabilir cunku ikisel
-(binary) degil bir dosyada, veri tabaninda rahat depolamak icin metin
-formati daha kullanisli olabilir ama hala sıkıştırma gerekmektedir. Bu
-durumlarda zlib ve base64 kodlamasi kullanilabilir.
+```python
+import pickle
+a1 = list(range(10))
+a1b = pickle.dumps(a1)
+print (a1b)
+```
+
+```text
+b'\x80\x03]q\x00(K\x00K\x01K\x02K\x03K\x04K\x05K\x06K\x07K\x08K\te.'
+```
+
+```python
+a2 = pickle.loads(a1b)
+print (a2)
+```
+
+```text
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```
+
+Sıkıştırarak  ve String Olarak Yazmak
+
+Bir Numpy matrisi çetrefil bir objedir aslında. Onu sıkıştırarak bir
+metin haline döndürebilir miyiz? Bu lazım olabilir çünkü ikisel
+(binary) değil bir dosyada, veri tabanında rahat depolamak için metin
+formatı daha kullanışlı olabilir ama hala sıkıştırma gerekmektedir. Bu
+durumlarda zlib ve base64 kodlaması kullanılabilir.
 
 ```python
 import numpy as np, zlib
@@ -131,7 +154,18 @@ Birkaç farklı metin üzerinde aynı kodlama çağrısı işletilince sonda
 hep bir `\n` olduğunu farkedebiliriz.. Bu ek aslında gerekli değil,
 onu çıkartsak ta geriye kodlama bize aynı sonucu verecektir. 
 
+Biraz önceki `pickle` örneği üzerinde,
 
+```python
+import pickle
+a = list(range(10))
+a = base64.encodestring(pickle.dumps(a))
+print (a)
+b = pickle.loads(base64.decodestring(a))
+print (b)
+```
 
-
-
+```text
+b'gANdcQAoSwBLAUsCSwNLBEsFSwZLB0sISwllLg==\n'
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+```

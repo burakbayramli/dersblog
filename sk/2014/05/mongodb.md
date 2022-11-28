@@ -95,13 +95,13 @@ peki yazım nasıl işledi? Eğer yazım sırasında hedef taban ortada yoksa
 MD onu otomatik olarak yaratır! Bu yaklaşım da RDBMS durumundan
 oldukca farklı.
 
-MD tabana asenkron yazımı destekler - eğer üstte safe=True seçeneği
+MD tabana asenkron yazımı destekler - eğer üstte `safe=True` seçeneği
 verilmezse, yazımın sonucu beklenmez, çağrı hemen geri döner. Bu tür
 bir yazım ne zaman gerekli olur? Belki MD loglama için kullanılıyor,
 bu durumda hızlı şekilde bilgiyi yazmak önemli, pek çok diğer kullanım
 da olabilir.
 
-Ayrıca MD insert sırasında mesela w=2 gibi bir seçenek ile, "kopya
+Ayrıca MD `insert` sırasında mesela w=2 gibi bir seçenek ile, "kopya
 kümesi içinde kesinlikle iki makinaya yazım yapılmasını istiyorum"
 gibi bir şart getirebilir. Bu makinalardan biri usta olacak herhalde,
 diğeri de onun kopyasını içeren çıraklardan biri.
@@ -116,7 +116,7 @@ satırından sorgulama yerine, Robomongo iyi bir araç
 
 [http://robomongo.org](http://robomongo.org)
 
-Linux için olan versiyonu indirdik, sudo dpkg -i ile
+Linux için olan versiyonu indirdik, `sudo dpkg -i` ile
 kurulur. Bağlanmak için makina localhost, port olağan port 27017, ve
 olağan (default) taban ise incelenecek taban ismi our. Bağlantı
 kaydedilir ve connect üzerinden tıklanarak taban incelenmeye
@@ -238,6 +238,6 @@ Out[1]: 0
 
 Kaynaklar
 
-[https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04)
+[Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04)
 
 

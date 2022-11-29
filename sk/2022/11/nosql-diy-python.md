@@ -7,7 +7,7 @@ Basit dağıtık çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
   servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur. 
   
 - Her servis ayrı bir Flask süreci işletilir, onun get, set arayüzüne
-  REST APİ üzerinden erişilir.
+  REST API üzerinden erişilir.
   
 - Arka planda Flask paralel değil seri halde çalışır, ve kendi sqlite
   tabanına yazar ve okur, böylece her servisin kendi içindeki çakışma
@@ -37,6 +37,30 @@ kodlama b'gANdcQAoSwBLAUsCSwNLBEsFSwZLB0sISwllLg==\n'
 sonra bu tekrar eden liste ismine sahip tüm satırlar alinip liste
 halinde döndürülebilir.
 
+### Kodlama
+
+```python
+from flask import Flask, url_for, jsonify, request, Response
+import sys
+
+app = Flask(__name__)
+
+@app.before_first_request
+def start_check_db():
+    sno = app.config.get('server_no')
+    print ('server', sno)
+
+@app.route('/get', methods=["PUT", "POST"])
+def get():    
+    data = request.get_json(force=True)   
+    print (data)
+    return jsonify({'result': "2423424"})
+
+if __name__ == "__main__":
+    app.config['server_no'] = sys.argv[1]
+    app.run(host="localhost", port=8080)
+    
+```
 
 
 Kaynaklar

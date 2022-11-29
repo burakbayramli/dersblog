@@ -229,6 +229,15 @@ curl -H "Content-Type: application/json" -d '{"liste":[3,2,1]}'
 ozel URL'e JSON gonderilir. Kodun tek yaptigi listeyi alip siralamak,
 yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.
 
+Ayni cagriyi Python ile de yapabilirdik, mesela
+
+```python
+import requests
+response = requests.post('http://localhost:8080/test/url', json={"liste":[3,2,1]})
+print("Status code: ", response.status_code)
+print(response.json())
+```
+
 ### Dosya Yüklemek (Upload)
 
 Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML

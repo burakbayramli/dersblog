@@ -97,20 +97,25 @@ def set():
     value = data['value']
     c = OnlyOne().conn.cursor()
     c.execute("insert or replace into OBJ (key,value) values (?,?)", [key,value])
+    OnlyOne().conn.commit()
     return jsonify({'result': "OK"})
 
 if __name__ == "__main__":
     app.config['server_no'] = sys.argv[1]
-    app.run(host="localhost", port=8080)   
+    app.run(host="localhost", port=8080)    
 ```
 
-`start_check_db` ile taban yoksa baslangicta yaratilir.
+`start_check_db` ile taban yoksa başlangıçta yaratılır.
 
 Tabana tek bir bağlantı vardır, o bağlantı `OnlyOne` tekil obje
 (singleton) içinde muhafaza ediliyor. Servises şzamanlı erişim
 olmadığı için birden fazla bağlantıya da gerek yok.
 
-REST arayüzüne `curl` ile eriselim,
+Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi
+bir sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
+eklenecektir. 
+
+Şimdi REST arayüzüne `curl` ile erişelim,
 
 ```python
 ! curl -H "Content-Type: application/json" -d '{"key":"test1"}'  http://localhost:8080/get
@@ -121,7 +126,7 @@ REST arayüzüne `curl` ile eriselim,
 ```
 
 ```python
-curl -H "Content-Type: application/json" -d '{"key":"asdjflkajsf"}'  http://localhost:8080/get
+! curl -H "Content-Type: application/json" -d '{"key":"asdjflkajsf"}'  http://localhost:8080/get
 ```
 
 ```text
@@ -133,7 +138,7 @@ curl -H "Content-Type: application/json" -d '{"key":"3333", "value":"value333"}'
 curl -H "Content-Type: application/json" -d '{"key":"3333"}'  http://localhost:8080/get
 ```
 
-### İstemci
+### Python İstemci
 
 Üstteki `curl` bazlı çağrıları pür Python içinde de yapabilirdik,
 
@@ -149,8 +154,8 @@ Status code:  200
 {'result': 'value1'}
 ```
 
-Şimdi REST çağrılarını iki fonksiyon ile sarmalayalım, kullanıcıların
-çağıracağı tek metotlar bunlar olacak.
+Şimdi REST çağrılarını iki ayrı fonksiyon ile sarmalayalım, normal
+durumda kullanıcıların çağıracağı tek metotlar bunlar olacak.
 
 ```python
 import requests, pickle, base64
@@ -174,6 +179,53 @@ o = get("2324")
 print (o)
 ```
 
+```text
+Status code:  200
+Status code:  200
+33333ddddd3
+```
+
+Deger icin basit string gonderdik ama tasarim oyle ki karmasik objelere de
+izin veriyor,
+
+```python
+m = np.random.rand(2,2)
+set("randomId123",m)
+```
+
+```text
+Status code:  200
+```
+
+```python
+o = get("randomId123")
+print (o)
+```
+
+```text
+Status code:  200
+[[0.21365823 0.42896852]
+ [0.31330469 0.03924181]]
+```
+
+Bir Numpy matrisi gonderdik NoSQL taban onu bile tabana yazdi.
+
+Taban içeriğine bakarsak objelerin nasıl yazılmış olduğunu görüyoruz,
+
+```python
+import sqlite3
+c = sqlite3.connect("/opt/Downloads/kvf-0.db" )
+cur = c.cursor()
+res = cur.execute("SELECT key,value FROM OBJ")
+for x in cur.fetchall():
+   print (x)
+```
+
+```text
+('test1', 'value1')
+('2324', 'gANYCwAAADMzMzMzZGRkZGQzcQAu\n')
+('randomId123', 'gANjbnVtcHkuY29yZS5tdWx0aWFycmF5Cl9yZWNvbnN0cnVjdApxAGNudW1weQpuZGFycmF5CnEB\nSwCFcQJDAWJxA4dxBFJxBShLAUsCSwKGcQZjbnVtcHkKZHR5cGUKcQdYAgAAAGY4cQiJiIdxCVJx\nCihLA1gBAAAAPHELTk5OSv////9K/////0sAdHEMYolDIPATky0nWcs//JC9Xzh02z+EpHgZLw3U\nP7ATIoOAF6Q/cQ10cQ5iLg==\n')
+```
 
 
 Kaynaklar

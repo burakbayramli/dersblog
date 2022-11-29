@@ -111,9 +111,12 @@ Tabana tek bir bağlantı vardır, o bağlantı `OnlyOne` tekil obje
 (singleton) içinde muhafaza ediliyor. Servises şzamanlı erişim
 olmadığı için birden fazla bağlantıya da gerek yok.
 
-Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi
-bir sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
-eklenecektir. 
+Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi bir
+sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
+eklenecektir. Bu sayıyı servis tarafında bir makina:port listesi
+içinden birini seçmesi için kullanabilirdik. Bağlanan tarafta mod N
+işletildikten sonra elde edilen sayı aynı listeden bir makina:port
+seçip ona bağlanırdı.
 
 Şimdi REST arayüzüne `curl` ile erişelim,
 
@@ -226,6 +229,37 @@ for x in cur.fetchall():
 ('2324', 'gANYCwAAADMzMzMzZGRkZGQzcQAu\n')
 ('randomId123', 'gANjbnVtcHkuY29yZS5tdWx0aWFycmF5Cl9yZWNvbnN0cnVjdApxAGNudW1weQpuZGFycmF5CnEB\nSwCFcQJDAWJxA4dxBFJxBShLAUsCSwKGcQZjbnVtcHkKZHR5cGUKcQdYAgAAAGY4cQiJiIdxCVJx\nCihLA1gBAAAAPHELTk5OSv////9K/////0sAdHEMYolDIPATky0nWcs//JC9Xzh02z+EpHgZLw3U\nP7ATIoOAF6Q/cQ10cQ5iLg==\n')
 ```
+
+Daha önce bahsettiğimiz gibi birden fazla servise bağlanmak `key` üzerinde
+mod kullanırız, mesela
+
+```python
+N = 3 # bu kadar servis var
+print (hash("test1"))
+print ('servis',hash("test1") % N)
+print ('servis',hash("111122") % N)
+print ('servis',hash("323") % N)
+```
+
+```text
+-663401633428333736
+servis 1
+servis 2
+servis 0
+```
+
+Bu indis değerleri `set` ve `get` içinde kullanılırdı, servise
+bağlantı yapılmadan önce hangi URL kullanılacağını bulmak için. Eğer
+0 alındıysa
+
+http://localhost:8080/get
+
+1 alindiysa
+
+http://localhost:8081/get
+
+bağlantısı yapılıyor olabilir, bu karar değiştirilmiş `get`, `set` üzerinde
+verilecektir.
 
 
 Kaynaklar

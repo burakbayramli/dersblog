@@ -12,30 +12,37 @@ için belli objeleri belli makinalara gönderdiğimizde problem
 Eger tek obje / tek surec bazli calismak istersek, basit dağıtık
 çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
 
-- Yükü karşılıyabilmek için ayrı servisler başlatılır. N tane servis
-  için her anahtar üzerinden i = mod N işletilir, ve o veri için i
-  servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur.
+- Yükü karşılıyabilmek için ayrı servisler başlatılır. Bağlanan taraf
+  istemcide N tane servisten hangisine gidileceğine karar vermek için
+  her anahtar üzerinde i = mod N işletilir, ve cevaba göre o veri için
+  i servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur.
+  Bildiğimiz gibi mod N sonucu N'yi geçemez, ve mod sona geldiğinde
+  başa dönen bir yapıdadır bu şekilde dengeli bir dağıtım yapar.
   
-- Her servis ayrı bir Flask süreci içinde işletilir, taban
-  servislerini Flask REST APİ'si üzerinden dışarı açar, burada get,
-  set çağrıları olacaktır.
+- Her serviste ayrı bir Flask süreci işletilir, taban verisini Flask
+  REST API'si üzerinden dışarı açarız, burada `get`, `set` çağrıları
+  olacaktır, girdi ve sonuç alışveriş JSON üzerinden yapılır.
   
-- Arka planda her Flask süreci içinde paralel değil seri halde
-  çalışılır, ve bu tek süreç kendi sqlite tabanına yazar ve oradan
-  okur, böylece her servisin kendi içindeki çakışma problemleri ortaya
-  çıkmaz.
+- Her Flask süreci içinde seri halde çalışılır (paralel değil), bu
+  seri süreç kendi sqlite tabanına yazar ve oradan okur, böylece her
+  servisin kendi içindeki eşzamanlı olmasından olabilecek çakışma
+  problemleri engellenmiş olur. Servis tarafı basitleşir.
   
-- Bir anahtara tekabül eden herhangi bir obje, ne olursa olsun,
-  yazılıp okunabilmelidir, çünkü objeler `pickle` üzerinden string
-  haline getirilirler, ve arka planda temel depolama sqlite `TEXT`
-  kolonunda yapılabilir, [1]'de bunun örneğini gördük.
+- Bir anahtarla beraber herhangi bir obje, ne olursa olsun, tabana
+  yazılıp okunabilmelidir, objeleri `pickle` üzerinden string haline
+  getirebiliriz, ve arka planda temel depolama sqlite `TEXT` kolonunda
+  olur, [1]'de bunun örneğini gördük.
 
-- Listeleri halletmek kolay; liste ismi, mesela `liste2`, ya da
-  `müşteriler` gibi, sqlite tabanında ayrı bir kolon olarak yazılır,
-  sonra bu tekrar eden liste ismine sahip tüm satırlar alinip liste
-  halinde döndürülebilir.
+- Listeleri kolay; onlar için ayrı bir SQL tablosu gerekir, bir kolonu
+  liste ismi olur, aynı listeyle beraber pek çok obje anahtarı satır
+  olarak yazılabilir, listeyi almak için o isim üzerinde `where`
+  işletiliriz. Sayfalama özelliği SQL LİMİT üzerinden sağlanır, istemci
+  liste içindeki obje anahtarlarını objeye çevirmek için tabana tekrar
+  sorabilir.
 
 ### Servis
+
+Basit bir Flask servisi altta,
 
 ```python
 from flask import Flask, url_for, jsonify, request
@@ -97,8 +104,13 @@ if __name__ == "__main__":
     app.run(host="localhost", port=8080)   
 ```
 
-Böylece bir bizim KVF dediğimiz taban yapısı ortaya çıktı. REST arayüzüne
-`curl` ile eriselim,
+`start_check_db` ile taban yoksa baslangicta yaratilir.
+
+Tabana tek bir bağlantı vardır, o bağlantı `OnlyOne` tekil obje
+(singleton) içinde muhafaza ediliyor. Servises şzamanlı erişim
+olmadığı için birden fazla bağlantıya da gerek yok.
+
+REST arayüzüne `curl` ile eriselim,
 
 ```python
 ! curl -H "Content-Type: application/json" -d '{"key":"test1"}'  http://localhost:8080/get

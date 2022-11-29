@@ -33,12 +33,12 @@ Eger tek obje / tek surec bazli calismak istersek, basit dağıtık
   getirebiliriz, ve arka planda temel depolama sqlite `TEXT` kolonunda
   olur, [1]'de bunun örneğini gördük.
 
-- Listeleri kolay; onlar için ayrı bir SQL tablosu gerekir, bir kolonu
-  liste ismi olur, aynı listeyle beraber pek çok obje anahtarı satır
-  olarak yazılabilir, listeyi almak için o isim üzerinde `where`
-  işletiliriz. Sayfalama özelliği SQL LİMİT üzerinden sağlanır, istemci
-  liste içindeki obje anahtarlarını objeye çevirmek için tabana tekrar
-  sorabilir.
+- Listeleme: onlar için ayrı bir SQL tablosu gerekir, bir kolonda
+  liste ismi, diğerinde obje anahtarı. Liste ismi satırlarda
+  tekrarlanabilir böylece çoka bir ilişki kuruyoruz. Listeyi
+  istemciden almak için o isim üzerinde `where` işletiliriz. Sayfalama
+  özelliği SQL LİMİT üzerinden sağlanır, çağıran tarafta liste obje
+  anahtarlarını objeye çevirmek için servise tekrar sormak gerekecektir.
 
 ### Servis
 

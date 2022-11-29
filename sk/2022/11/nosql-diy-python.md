@@ -1,41 +1,39 @@
 # NoSQL
 
-Basit dağıtık çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
+NoSQL tabanları arka planda ilişkisel veri yapısı (SQL ile erişilen
+türden) gerektirmeden veri depolamayı destekleyen tabanlardır. Bir
+bakıma diske yazılmış Python sözlüğü gibi görülebilirler; tek ihtiyaç
+duydukları bir anahtar ve ona tekabül eden değerdir, ki değer herhangi
+bir obje olabilir. Mimarinin çekici tarafı veri ünitesini tek objeye
+indirdediğimizde dağıtık ortamda çalışmanın kolaylaşması, ölçeklemek
+için belli objeleri belli makinalara gönderdiğimizde problem
+çözülüyor, çünkü ilişkisel bağlantıları takip etmek gerekmiyor.
+
+Eger tek obje / tek surec bazli calismak istersek, basit dağıtık
+çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
 
 - Yükü karşılıyabilmek için ayrı servisler başlatılır. N tane servis
   için her anahtar üzerinden i = mod N işletilir, ve o veri için i
-  servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur. 
+  servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur.
   
-- Her servis ayrı bir Flask süreci işletilir, onun get, set arayüzüne
-  REST API üzerinden erişilir.
+- Her servis ayrı bir Flask süreci içinde işletilir, taban
+  servislerini Flask REST APİ'si üzerinden dışarı açar, burada get,
+  set çağrıları olacaktır.
   
-- Arka planda Flask paralel değil seri halde çalışır, ve kendi sqlite
-  tabanına yazar ve okur, böylece her servisin kendi içindeki çakışma
-  problemleri ile uğraşmaya gerek kalmaz.
+- Arka planda her Flask süreci içinde paralel değil seri halde
+  çalışılır, ve bu tek süreç kendi sqlite tabanına yazar ve oradan
+  okur, böylece her servisin kendi içindeki çakışma problemleri ortaya
+  çıkmaz.
   
-- Bir anahtara tekabül eden herhangi bir obje, ne olursa olsun, yazılıp
-  okunabilir, çünkü objeler `pickle` üzerinden string halne getirilirler.
-
-```python
-import pickle, base64
-a = list(range(10))
-a = base64.encodestring(pickle.dumps(a))
-print ('kodlama',a)
-b = pickle.loads(base64.decodestring(a))
-print (b)
-```
-
-```text
-kodlama b'gANdcQAoSwBLAUsCSwNLBEsFSwZLB0sISwllLg==\n'
-[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-```
-
-Üstteki örnekte kodlama metni tabana yazılacaktır.
+- Bir anahtara tekabül eden herhangi bir obje, ne olursa olsun,
+  yazılıp okunabilmelidir, çünkü objeler `pickle` üzerinden string
+  haline getirilirler, ve arka planda temel depolama sqlite `TEXT`
+  kolonunda yapılabilir, [1]'de bunun örneğini gördük.
 
 - Listeleri halletmek kolay; liste ismi, mesela `liste2`, ya da
-`müşteriler` gibi, sqlite tabanında ayrı bir kolon olarak yazılır,
-sonra bu tekrar eden liste ismine sahip tüm satırlar alinip liste
-halinde döndürülebilir.
+  `müşteriler` gibi, sqlite tabanında ayrı bir kolon olarak yazılır,
+  sonra bu tekrar eden liste ismine sahip tüm satırlar alinip liste
+  halinde döndürülebilir.
 
 ### Servis
 
@@ -99,6 +97,9 @@ if __name__ == "__main__":
     app.run(host="localhost", port=8080)   
 ```
 
+Böylece bir bizim KVF dediğimiz taban yapısı ortaya çıktı. REST arayüzüne
+`curl` ile eriselim,
+
 ```python
 ! curl -H "Content-Type: application/json" -d '{"key":"test1"}'  http://localhost:8080/get
 ```
@@ -109,6 +110,10 @@ if __name__ == "__main__":
 
 ```python
 curl -H "Content-Type: application/json" -d '{"key":"asdjflkajsf"}'  http://localhost:8080/get
+```
+
+```text
+{"result":"None"}
 ```
 
 ```python
@@ -131,6 +136,9 @@ print(response.json())
 Status code:  200
 {'result': 'value1'}
 ```
+
+Şimdi REST çağrılarını iki fonksiyon ile sarmalayalım, kullanıcıların
+çağıracağı tek metotlar bunlar olacak.
 
 ```python
 import requests, pickle, base64
@@ -161,3 +169,6 @@ Kaynaklar
 [1] [Obje String Olarak Kodlamak](../../2010/10/encoding-objeleri-yazip-okumak-pickle-base64.html)
 
 [2] https://flask.palletsprojects.com/en/2.2.x/patterns/sqlite3/
+
+[3] [MongoDB](../../2014/05/mongodb.html)
+

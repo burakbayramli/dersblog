@@ -40,7 +40,7 @@ halinde döndürülebilir.
 ### Kodlama
 
 ```python
-from flask import Flask, url_for, jsonify, request, Response, g
+from flask import Flask, url_for, jsonify, request
 import sys, os, sqlite3
 
 app = Flask(__name__)
@@ -77,21 +77,39 @@ def start_check_db():
 @app.route('/get', methods=["PUT", "POST"])
 def get():    
     data = request.get_json(force=True)   
-    key = data['id']
-    print ('key',key)
+    key = data['key']
     c = OnlyOne().conn.cursor()
     c.execute("SELECT value FROM OBJ WHERE key = ?", [key])
-    res = c.fetchall()
-    print (list(res))
-    return jsonify({'result': "2423424"})
+    res = list(c.fetchall())
+    if len(res)==0: 
+        return jsonify({'result': "None"})
+    return jsonify({'result': res[0][0]})
+
+@app.route('/set', methods=["PUT", "POST"])
+def set():    
+    data = request.get_json(force=True)   
+    key = data['key']
+    value = data['value']
+    c = OnlyOne().conn.cursor()
+    c.execute("insert or replace into OBJ (key,value) values (?,?)", [key,value])
+    return jsonify({'result': "OK"})
 
 if __name__ == "__main__":
     app.config['server_no'] = sys.argv[1]
-    app.run(host="localhost", port=8080)    
+    app.run(host="localhost", port=8080)   
 ```
 
 ```
 curl -H "Content-Type: application/json" -d '{"id":"test1"}'  http://localhost:8080/get
+```
+
+```
+curl -H "Content-Type: application/json" -d '{"key":"asdjflkajsf"}'  http://localhost:8080/get
+```
+
+```
+curl -H "Content-Type: application/json" -d '{"key":"3333", "value":"value333"}'  http://localhost:8080/set
+curl -H "Content-Type: application/json" -d '{"key":"3333"}'  http://localhost:8080/get
 ```
 
 

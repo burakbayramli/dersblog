@@ -45,20 +45,30 @@ import sys, os, sqlite3
 
 app = Flask(__name__)
 
-def get_db():
-    db = getattr(g, '_database', None)
-    sno = app.config.get('server_no')
-    if db is None:
-        db = g._database = sqlite3.connect("/opt/Downloads/kvf-%d.db" % int(sno))
-    return db
+class OnlyOne(object):
+    class __OnlyOne:
+        def __init__(self):
+            self.conn = None
+        def __str__(self):
+            return self.val
+    instance = None
+    def __new__(cls):
+        if not OnlyOne.instance:
+            OnlyOne.instance = OnlyOne.__OnlyOne()
+        return OnlyOne.instance
+    def __getattr__(self, name):
+        return getattr(self.instance, name)
+    def __setattr__(self, name):
+        return setattr(self.instance, name)
 
 @app.before_first_request
 def start_check_db():
     sno = app.config.get('server_no')
     db = "/opt/Downloads/kvf-%d.db" % int(sno)
+    conn = sqlite3.connect(db)
+    OnlyOne().conn = conn
     if not os.path.isfile(db): 
-        conn = sqlite3.connect(db)
-        c = conn.cursor()
+        c = OnlyOne().conn.cursor()
         res = c.execute('''CREATE TABLE OBJ (key TEXT PRIMARY KEY, value TEXT); ''')
         c.execute('''INSERT INTO OBJ(key,value) VALUES(?,?)''', ("test1","value1"))
         conn.commit()    
@@ -69,7 +79,7 @@ def get():
     data = request.get_json(force=True)   
     key = data['id']
     print ('key',key)
-    c = get_db().cursor()
+    c = OnlyOne().conn.cursor()
     c.execute("SELECT value FROM OBJ WHERE key = ?", [key])
     res = c.fetchall()
     print (list(res))
@@ -77,7 +87,7 @@ def get():
 
 if __name__ == "__main__":
     app.config['server_no'] = sys.argv[1]
-    app.run(host="localhost", port=8080)        
+    app.run(host="localhost", port=8080)    
 ```
 
 ```

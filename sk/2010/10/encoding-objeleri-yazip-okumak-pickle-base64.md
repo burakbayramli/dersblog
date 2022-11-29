@@ -157,11 +157,12 @@ onu çıkartsak ta geriye kodlama bize aynı sonucu verecektir.
 Biraz önceki `pickle` örneği üzerinde,
 
 ```python
-import pickle
+import pickle, base64
+
 a = list(range(10))
-a = base64.encodestring(pickle.dumps(a))
+a = base64.encodestring(pickle.dumps(a)).decode()
 print (a)
-b = pickle.loads(base64.decodestring(a))
+b = pickle.loads(base64.decodestring(a.encode('utf-8')))
 print (b)
 ```
 

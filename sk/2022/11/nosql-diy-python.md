@@ -17,7 +17,7 @@ Basit dağıtık çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
   okunabilir, çünkü objeler `pickle` üzerinden string halne getirilirler.
 
 ```python
-import pickle
+import pickle, base64
 a = list(range(10))
 a = base64.encodestring(pickle.dumps(a))
 print ('kodlama',a)
@@ -37,7 +37,7 @@ kodlama b'gANdcQAoSwBLAUsCSwNLBEsFSwZLB0sISwllLg==\n'
 sonra bu tekrar eden liste ismine sahip tüm satırlar alinip liste
 halinde döndürülebilir.
 
-### Kodlama
+### Servis
 
 ```python
 from flask import Flask, url_for, jsonify, request
@@ -99,18 +99,61 @@ if __name__ == "__main__":
     app.run(host="localhost", port=8080)   
 ```
 
-```
-curl -H "Content-Type: application/json" -d '{"id":"test1"}'  http://localhost:8080/get
+```python
+! curl -H "Content-Type: application/json" -d '{"key":"test1"}'  http://localhost:8080/get
 ```
 
+```text
+{"result":"value1"}
 ```
+
+```python
 curl -H "Content-Type: application/json" -d '{"key":"asdjflkajsf"}'  http://localhost:8080/get
 ```
 
-```
+```python
 curl -H "Content-Type: application/json" -d '{"key":"3333", "value":"value333"}'  http://localhost:8080/set
 curl -H "Content-Type: application/json" -d '{"key":"3333"}'  http://localhost:8080/get
 ```
+
+### İstemci
+
+Üstteki `curl` bazlı çağrıları pür Python içinde de yapabilirdik,
+
+```python
+import requests
+response = requests.post('http://localhost:8080/get', json={"key":"test1"})
+print("Status code: ", response.status_code)
+print(response.json())
+```
+
+```text
+Status code:  200
+{'result': 'value1'}
+```
+
+```python
+import requests, pickle, base64
+
+def get(key):
+    response = requests.post('http://localhost:8080/get', json={"key":key})
+    print("Status code: ", response.status_code)
+    res = response.json()
+    res = pickle.loads(base64.decodestring(res['result'].encode('utf-8')))
+    return res
+    
+def set(key,value):
+    value = base64.encodestring(pickle.dumps(value)).decode()
+    response = requests.post('http://localhost:8080/set', json={"key":key,"value":value})
+    print("Status code: ", response.status_code)
+    res = response.json()
+    
+
+set("2324","33333ddddd3")
+o = get("2324")
+print (o)
+```
+
 
 
 Kaynaklar

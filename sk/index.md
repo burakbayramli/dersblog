@@ -3,6 +3,7 @@
 
 ## En Son
 
+30/11 - [NoSQL, Flask Bazlı Anahtar-Değer Tabanı](https://burakbayramli.github.io/dersblog/sk/2022/11/nosql-diy-python.html)
 
 25/11 - [Grupların Ortalamalarını ve Varyanslarını Birleştirmek](https://burakbayramli.github.io/dersblog/stat/stat_010_cov_corr/beklenti_varyans_kovaryans_ve_korelasyon.html#group)
 
@@ -11,8 +12,6 @@
 18/11 - [ArXiv Makalesi](https://arxiv.org/abs/1310.4664)
 
 13/11 - [Kasırga Enerji Hesabı (Integrated Kinetic Energy)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_xpp01vec/vektor_alanlari_ve_hesaplar.html)
-
-7/11 - [Paralel Veri Analizi, Istatistik](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-veri-analizi-istatistik.html)
 
 ## Konular, Referans
 

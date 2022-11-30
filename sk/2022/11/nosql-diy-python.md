@@ -118,8 +118,8 @@ if __name__ == "__main__":
 `start_check_db` ile taban yoksa başlangıçta yaratılır.
 
 Tabana tek bir bağlantı vardır, o bağlantı `OnlyOne` tekil obje
-(singleton) içinde muhafaza ediliyor. Servise eşzamanlı erişim
-olmadığı için birden fazla bağlantıya da gerek yok.
+(singleton) içinde muhafaza ediliyor. Tabana eşzamanlı erişim
+olmadığı için birden fazla bağlantıya da gerek yok. 
 
 Metot `set` içinde `insert or replace into` komutunu kullandık, bu SQL
 çağrısı bir satır varsa onu günceller yoksa yeni satır ekler,
@@ -292,4 +292,7 @@ Kaynaklar
 [2] https://flask.palletsprojects.com/en/2.2.x/patterns/sqlite3/
 
 [3] [MongoDB](../../2014/05/mongodb.html)
+
+
+
 

@@ -112,6 +112,14 @@ Tabana tek bir bağlantı vardır, o bağlantı `OnlyOne` tekil obje
 (singleton) içinde muhafaza ediliyor. Servise eşzamanlı erişim
 olmadığı için birden fazla bağlantıya da gerek yok.
 
+Metot `set` içinde `insert or replace into` komutunu kullandık, bu SQL
+çağrısı bir satır varsa onu günceller yoksa yeni satır ekler,
+İngilizce deyimle insert ve update karışımı olan "upsert" işlemini
+yapar. Bu depolama tarzı da yine hafıza sözlük kullanımını andırıyor,
+aynen bir Python sözlüğünde `d['key'] = 'değer'` çağrısının önceden
+varsa `key` değerlerini ezecek (yoksa ekleyecek) olduğu gibi, taban
+bazlı yaklaşım da bu işlevi taklit ediyor.
+
 Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi bir
 sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
 eklenecektir (böylece aynı makinada bile farklı taban süreçleri

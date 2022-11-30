@@ -28,13 +28,13 @@ mevcuttur. Ve süreçler dilden bağımsızdır. Python, C++, C süreçlerini
 istediğimiz Unix aracı ile takip, kontrol edebiliriz.
 
 Python üzerinde Thread'lerin bir negatif durumu şu; Python
-yorumlayıcısı süreci tek mikroişlemciye / çekirdeğe bağlıdır; bu
-demektir ki süreç içinde yaratılan tüm Thread'ler aynı çekirdekte
-işleyecektir. O zaman eğer başka şeyi bekleyen, ona takılıp kalmış kod
-yok ise, daha fazla Thread yaratmak bir performans ilerlemesi
-sağlamaz. Süreçler ile her sürecin farklı bir çekirdeğe gitme
-olasılığı oldukça yüksektir, Unix bu kaynak bölüştürmesini çok doğal
-bir şekilde yapar.
+yorumlayıcısı süreci tek mikroişlemciye / çekirdeğe bağlıdır (ünlü GIL
+kilidi bu); bu demektir ki süreç içinde yaratılan tüm Thread'ler aynı
+çekirdekte işleyecektir. O zaman eğer başka şeyi bekleyen, ona takılıp
+kalmış kod yok ise, daha fazla Thread yaratmak bir performans
+ilerlemesi sağlamaz. Süreçler ile her sürecin farklı bir çekirdeğe
+gitme olasılığı oldukça yüksektir, Unix bu kaynak bölüştürmesini çok
+doğal bir şekilde yapar.
 
 Hem süreçler, hem de Thread'ler için ek kodlama gerekir, fakat beni
 Thread'ler durumunda hep rahatsız eden şey onların potansiyel olarak

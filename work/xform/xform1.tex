@@ -43,12 +43,34 @@ see how transforms are at the root of image processing and vision problems.
 
 \section{Introduction}
 
-\section{Kalman Filters}
-
-
+As stated by a great teacher of linear algebra identifying the $A$ is crucially
+important in many Applied Mathematics problems \cite{strang} because linear
+transformation is a key abstraction, we know everything when we know what
+happens to a basis. Many applications, from stress analysis to network analysis
+involves the construction of an $A$, i.e. a transformation that takes certain
+inputs and maps them to certain outputs.
 
 \section{Direct Linear Transform}
 
+In computer vision a transform between two 2D pictures that can involve a
+translation, scaling and a rotation is named a homography, and can be stated as
+
+$$ x' = H x$$
+
+where $x,x'$ are flattened 2D image data. In expanded form we have \cite{solem},
+
+$$ 
+\left[\begin{array}{r} x' \\ y' \\ w' \end{array}\right]
+\left[\begin{array}{rrr}
+h_1 & h_2 & h_3 \\
+h_4 & h_5 & h_6 \\
+h_7 & h_8 & h_9 
+\end{array}\right]
+\left[\begin{array}{r} x \\ y \\ w \end{array}\right]
+$$
+
+The use of letter $H$ is the custom, but this transformation in this problem is
+our $A$.
 
 $$ 
 \left[\begin{array}{r} x' \\ y' \\ 1 \end{array}\right]
@@ -57,7 +79,6 @@ a_1 & a_2 & t_x \\ a_3 & a_4 & t_y \\ 0 & 0 & 1
 \end{array}\right]
 \left[\begin{array}{r} x \\ y \\ 1 \end{array}\right]
 $$
-
 
 $$ 
 x' = \left[\begin{array}{rr} A & t \\ 0 & 1 \end{array}\right] x
@@ -95,9 +116,19 @@ h_1 \\ h_2 \\ h_3 \\ h_4 \\ h_5 \\ h_6 \\ h_7 \\ h_8 \\ h_9
 \end{array}\right] = 0
 $$
 
+\section{Kalman Filters}
+
+
 \bibliographystyle{unsrt}  
 
 \begin{thebibliography}{1}
+
+\bibitem{solem}
+Solem, E. \emph{Programming Computer Vision with Python}, 2012
+
+\bibitem{strang}
+Strang, \emph{Too Much Calculus}, \url{http://web.mit.edu/18.06/www/Essays/too-much-calculus.pdf}
+
 \end{thebibliography}
 
 \end{document}

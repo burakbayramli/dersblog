@@ -109,17 +109,18 @@ if __name__ == "__main__":
 `start_check_db` ile taban yoksa başlangıçta yaratılır.
 
 Tabana tek bir bağlantı vardır, o bağlantı `OnlyOne` tekil obje
-(singleton) içinde muhafaza ediliyor. Servises şzamanlı erişim
+(singleton) içinde muhafaza ediliyor. Servise eşzamanlı erişim
 olmadığı için birden fazla bağlantıya da gerek yok.
 
 Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi bir
 sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
-eklenecektir. Bu sayıyı servis tarafında bir makina:port listesi
-içinden birini seçmesi için kullanabilirdik. Bağlanan tarafta mod N
-işletildikten sonra elde edilen sayı aynı listeden bir makina:port
-seçip ona bağlanırdı.
+eklenecektir (böylece aynı makinada bile farklı taban süreçleri
+yanyana işleyebilir). Bu sayıyı servis tarafında bir makina:port
+listesi içinden birini seçmesi için de kullanabiliriz. Bağlanan
+tarafta anahtar üzerinde mod N işletildikten sonra elde edilen sayı
+aynı listeden bir makina:port seçip ona bağlanırdı.
 
-Şimdi REST arayüzüne `curl` ile erişelim,
+Şimdi REST arayüzüne `curl` ile erişelim, mevcut olan `test1` verisine erişim,
 
 ```python
 ! curl -H "Content-Type: application/json" -d '{"key":"test1"}'  http://localhost:8080/get
@@ -129,6 +130,8 @@ seçip ona bağlanırdı.
 {"result":"value1"}
 ```
 
+Olmayan bir anahtara erişim,
+
 ```python
 ! curl -H "Content-Type: application/json" -d '{"key":"asdjflkajsf"}'  http://localhost:8080/get
 ```
@@ -137,6 +140,8 @@ seçip ona bağlanırdı.
 {"result":"None"}
 ```
 
+Bir değeri set edip onun geri almak,
+
 ```python
 curl -H "Content-Type: application/json" -d '{"key":"3333", "value":"value333"}'  http://localhost:8080/set
 curl -H "Content-Type: application/json" -d '{"key":"3333"}'  http://localhost:8080/get
@@ -144,7 +149,8 @@ curl -H "Content-Type: application/json" -d '{"key":"3333"}'  http://localhost:8
 
 ### Python İstemci
 
-Üstteki `curl` bazlı çağrıları pür Python içinde de yapabilirdik,
+Üstteki `curl` tipi ham JSON çağrıları pür Python ile de
+yapabilirdik,
 
 ```python
 import requests
@@ -189,8 +195,8 @@ Status code:  200
 33333ddddd3
 ```
 
-Deger icin basit string gonderdik ama tasarim oyle ki karmasik objelere de
-izin veriyor,
+Üstteki örnekte değer olarak basit string gönderdik ama tasarım öyle
+ki karmaşık objelere de izin veriyor,
 
 ```python
 m = np.random.rand(2,2)
@@ -231,8 +237,8 @@ for x in cur.fetchall():
 ('randomId123', 'gANjbnVtcHkuY29yZS5tdWx0aWFycmF5Cl9yZWNvbnN0cnVjdApxAGNudW1weQpuZGFycmF5CnEB\nSwCFcQJDAWJxA4dxBFJxBShLAUsCSwKGcQZjbnVtcHkKZHR5cGUKcQdYAgAAAGY4cQiJiIdxCVJx\nCihLA1gBAAAAPHELTk5OSv////9K/////0sAdHEMYolDIPATky0nWcs//JC9Xzh02z+EpHgZLw3U\nP7ATIoOAF6Q/cQ10cQ5iLg==\n')
 ```
 
-Daha önce bahsettiğimiz gibi birden fazla servise bağlanmak `key` üzerinde
-mod kullanırız, mesela
+Daha önce bahsettiğimiz gibi birden fazla servise bağlanmak için `key`
+üzerinde mod kullanırız, mesela
 
 ```python
 N = 3 # bu kadar servis var
@@ -251,7 +257,7 @@ servis 0
 
 Bu indis değerleri `set` ve `get` içinde kullanılırdı, servise
 bağlantı yapılmadan önce hangi URL kullanılacağını bulmak için. Eğer
-0 alındıysa
+0 alındıysa mesela,
 
 http://localhost:8080/get
 
@@ -259,9 +265,8 @@ http://localhost:8080/get
 
 http://localhost:8081/get
 
-bağlantısı yapılıyor olabilir, bu karar değiştirilmiş `get`, `set` üzerinde
-verilecektir.
-
+bağlantısı yapılıyor olabilirdi, bu karar değiştirilmiş `get`, `set`
+üzerinde verilecektir. 
 
 Kaynaklar
 

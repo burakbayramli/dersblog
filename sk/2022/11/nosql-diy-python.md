@@ -101,9 +101,18 @@ def set():
     OnlyOne().conn.commit()
     return jsonify({'result': "OK"})
 
+@app.route('/remove', methods=["PUT", "POST"])
+def remove():    
+    data = request.get_json(force=True)   
+    key = data['key']
+    c = OnlyOne().conn.cursor()
+    c.execute("delete from OBJ where key = ?", [key])
+    OnlyOne().conn.commit()
+    return jsonify({'result': "OK"})
+
 if __name__ == "__main__":
     app.config['server_no'] = sys.argv[1]
-    app.run(host="localhost", port=8080)    
+    app.run(host="localhost", port=8080)   
 ```
 
 `start_check_db` ile taban yoksa başlangıçta yaratılır.

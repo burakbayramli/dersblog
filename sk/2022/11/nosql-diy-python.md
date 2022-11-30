@@ -9,36 +9,37 @@ indirdediğimizde dağıtık ortamda çalışmanın kolaylaşması, ölçeklemek
 için belli objeleri belli makinalara gönderdiğimizde problem
 çözülüyor, çünkü ilişkisel bağlantıları takip etmek gerekmiyor.
 
-Eger tek obje / tek surec bazli calismak istersek, basit dağıtık
-çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
+Basit, dağıtık çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
 
 - Yükü karşılıyabilmek için ayrı servisler başlatılır. Bağlanan taraf
   istemcide N tane servisten hangisine gidileceğine karar vermek için
-  her anahtar üzerinde i = mod N işletilir, ve cevaba göre o veri için
-  i servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur.
-  Bildiğimiz gibi mod N sonucu N'yi geçemez, ve mod sona geldiğinde
-  başa dönen bir yapıdadır bu şekilde dengeli bir dağıtım yapar.
+  her anahtar üzerinde i = mod N işletir, ve cevaba göre o veri için i
+  servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur.
+  Bildiğimiz gibi mod N sonucu N'yi geçemez, ve mod belli sayılar
+  arasında gidip gelen, sona geldiğinde başa dönen bir yapıdadır bu
+  şekilde dengeli bir dağıtım yapar.
   
 - Her serviste ayrı bir Flask süreci işletilir, taban verisini Flask
   REST API'si üzerinden dışarı açarız, burada `get`, `set` çağrıları
-  olacaktır, girdi ve sonuç alışveriş JSON üzerinden yapılır.
+  olacaktır. Girdi ve çıktı alış/veriş JSON üzerinden yapılır.
   
-- Her Flask süreci içinde seri halde çalışılır (paralel değil), bu
-  seri süreç kendi sqlite tabanına yazar ve oradan okur, böylece her
-  servisin kendi içindeki eşzamanlı olmasından olabilecek çakışma
-  problemleri engellenmiş olur. Servis tarafı basitleşir.
+- Her Flask süreci kendi içinde seri halde çalışılır (paralel değil),
+  bu seri süreç kendi sqlite tabanına yazar ve oradan okur, böylece
+  her servisin kendi içindeki eşzamanlılık çakışma problemleri
+  engellenmiş olur. Servis tarafı basitleşir.
   
 - Bir anahtarla beraber herhangi bir obje, ne olursa olsun, tabana
-  yazılıp okunabilmelidir, objeleri `pickle` üzerinden string haline
-  getirebiliriz, ve arka planda temel depolama sqlite `TEXT` kolonunda
-  olur, [1]'de bunun örneğini gördük.
+  yazılıp okunabilmelidir, Python objelerini `pickle` üzerinden string
+  haline getirebiliriz, ve arka planda temel depolama sqlite `TEXT`
+  kolonunda olur, [1]'de bunun örneğini gördük.
 
-- Listeleme: onlar için ayrı bir SQL tablosu gerekir, bir kolonda
-  liste ismi, diğerinde obje anahtarı. Liste ismi satırlarda
-  tekrarlanabilir böylece çoka bir ilişki kuruyoruz. Listeyi
-  istemciden almak için o isim üzerinde `where` işletiliriz. Sayfalama
-  özelliği SQL LİMİT üzerinden sağlanır, çağıran tarafta liste obje
-  anahtarlarını objeye çevirmek için servise tekrar sormak gerekecektir.
+- Listeleme: bu özellik için ayrı bir SQL tablosu yaratırız, bir
+  kolonunda liste ismi, diğerinde obje anahtarı olacak şekilde. Liste
+  ismi satırlarda tekrarlanabilir böylece çoka bir ilişki
+  kuruyoruz. Listeyi istemciden almak için o isim üzerinde `where`
+  işletiliriz. Sayfalama özelliği SQL LIMIT üzerinden sağlanır,
+  çağıran tarafta liste obje anahtarlarını objeye çevirmek için
+  servise tekrar sormak gerekecektir.
 
 ### Servis
 

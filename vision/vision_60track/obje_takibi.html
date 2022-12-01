@@ -44,6 +44,7 @@ onları <code>cvDrawChessboardCorners</code> ile onları resimde gösteriyoruz).
 <p>Elimizdeki "gürültülü" ölçümler iki boyutlu noktasal değerler. Gürültülü çünkü
 kamera bize bu imajları aktarırken hata eklemiş olabilir, OpenCV fonksiyonu
 hesabı yaparken hata eklemiş olabilir, bir sürü olasılık var.</p>
+<p>Kalman Fitreleri</p>
 <p>Bu örnekte, ayrıca, ilk kez KF ortamında boyut değişikliği olasılığını net bir
 şekilde görebiliyoruz. Gizli konum bilgisi $x_t$ 3 boyutlu bir nokta, ama
 elimizdeki ölçüm 2 boyutlu bir "yansıma". Yansıma sırasında kaçınılmaz olarak
@@ -94,7 +95,7 @@ tahminini P üzerinden görüntüye yansıtarak bu yüzeyi oluşturduk, böylece
 deneme / yanılma yöntemiyle pek çok P değerini deneyerek, yüzeyin resimde
 görülen masanın sonunda çıkacak şekilde olmasını sağladık. Yansıtma için
 kullanılan $K$ matrisi, yansıtma metotu ve başlangıç imajı altta:</p>
-<p><img alt="" src="tser_kf_02.png" /></p>
+<p><img alt="" src="vision_60track_01.jpg" /></p>
 <pre><code class="python">from numpy import *
 
 K = array([[700., 0., 300.],
@@ -123,7 +124,7 @@ kovaryansıdır, $Q = I \cdot 150 cm$ değerini kullandık, yani oldukça büyü
 kararsızlık değeri kullandık. Sebep başlangıç değeri olan masa ortasını
 seçtik, ve takip edeceğimiz satranç tahtasının nerede olduğunu bilmiyoruz,
 "emin değiliz".  Bu kararsızlığı sayısal olarak programa bildirmiş olduk.</p>
-<pre><code class="python">import sys; sys.path.append('../../tser/tser_kf')
+<pre><code class="python">import sys; sys.path.append('../../tser/tser_083_kf')
 import cv2
 import util
 from kalman_3d import *
@@ -155,10 +156,10 @@ if __name__ == &quot;__main__&quot;:
                             kalman.mu_hat[0], 
                             kalman.mu_hat[1], 
                             kalman.mu_hat[2])
-
+        if i % 10 == 0: 
+            cv2.imwrite('/tmp/kf-out-%d.jpg' % i, gray)
         cv2.imshow('frame',gray)
         cv2.waitKey(20)
-
 
 </code></pre>
 
@@ -166,6 +167,9 @@ if __name__ == &quot;__main__&quot;:
 faydalı, ve hızlı bir yöntem. Bir KF bellekte çok az yer tutar, 3 boyutlu bir
 Gaussian için 3x1 boyutunda bir ortalama vektörü, ve 3x3 boyutunda bir kovaryans
 matrisi yeterlidir, yani 3 + 9 = 12 sayı.</p>
+<p><img alt="" src="kf-out-50.jpg" />
+<img alt="" src="kf-out-70.jpg" /></p>
+<p>Parcaçık Filtreleri (Partıcle Filters)</p>
 <p>Parçacık filtreleri (PF) bir dağılımı ayrıksal olarak temsil
 edebilirler. Diyelim ki tek boyutlu bir dağılımı 100 öğe içeren bir dizin ile
 temsil edebiliriz, o zaman dağılımın değerlerini 100 tane noktada taşımamız
@@ -201,7 +205,7 @@ hataların daha büyük ağırlığa, büyük hataların ise tam tersine sebep o
 çok olan parçacıkların ağırlığı az olanlara göre daha fazla tekrarlanmasını
 istiyoruz. Dikkat: tekrar örnekleme süreci yeni parçacık değerleri yaratmıyor,
 sadece mevcut olanları tekrarlıyor ya da onları atlıyor.</p>
-<pre><code class="python">import sys; sys.path.append('../../tser/tser_pf')
+<pre><code class="python">import sys; sys.path.append('../../tser/tser_085_pf')
 import cv2
 import util
 from PF import *

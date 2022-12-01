@@ -1,4 +1,4 @@
-import sys; sys.path.append('../../tser/tser_kf')
+import sys; sys.path.append('../../tser/tser_083_kf')
 import cv2
 import util
 from kalman_3d import *
@@ -30,8 +30,8 @@ if __name__ == "__main__":
                             kalman.mu_hat[0], 
                             kalman.mu_hat[1], 
                             kalman.mu_hat[2])
-
+        if i % 10 == 0: 
+            cv2.imwrite('/tmp/kf-out-%d.jpg' % i, gray)
         cv2.imshow('frame',gray)
         cv2.waitKey(20)
     
-       

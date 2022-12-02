@@ -61,9 +61,6 @@ Yanyana (horizontally) birleştirmek için `-append` yerine `+append`
 convert -bordercolor White -border 2x20 dosya_*.jpg +append out.jpg
 ```
 
-
-
-
 Diyelim ki iki sayfası tek bir kağıtta yatay basılmış bir dokümanı
 scan etmek istiyoruz. Scanımage ile tiff çıktıları aldıktan sonra,
 imajı çevirmek için
@@ -114,4 +111,9 @@ GİF resmi optimize etmek için
 convert -scale 70% -fuzz 6% +dither -layers Optimize +map in.gif out.gif
 ```
 
+Arka plandaki saydamlık (transparent) durumunu çıkartmak için
+
+``
+convert dosya.png -background white -alpha remove -alpha off out.png
+```
 

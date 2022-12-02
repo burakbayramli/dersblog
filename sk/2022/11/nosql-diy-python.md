@@ -283,7 +283,7 @@ http://localhost:8080/get
 http://localhost:8081/get
 
 bağlantısı yapılıyor olabilirdi, bu karar değiştirilmiş `get`, `set`
-üzerinde verilecektir. 
+üzerinde verilecektir.
 
 Kaynaklar
 

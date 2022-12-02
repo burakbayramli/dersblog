@@ -200,6 +200,11 @@ def set(key,value):
     print("Status code: ", response.status_code)
     res = response.json()
     
+def remove(key):
+    response = requests.post('http://localhost:8080/remove', json={"key":key})
+    print("Status code: ", response.status_code)
+    res = response.json()
+    
 
 set("2324","33333ddddd3")
 o = get("2324")

@@ -10,18 +10,18 @@ tekabül ettiğini tanımlamamız gerekiyor.
 GAE veri tabanı bir anahtar/değer tabanı (key/value store). Bu tür
 tabanlar hakkında birkaç yazı yazdık; bir nevi Hash dictionary'nin
 dağıtık çalışan versiyonu olan bu tabanlar devasa boyutlarda yük olan
-Web ortamların demirbaşı haline geldi. Amazon, Facebook, Friendfeed
-hep benzer yaklaşımları kullanıyorlar.GAE ortamındaki Bigtable
-teknolojisi Google'ın kendi ürünleri için de kullandığı taban (Gmail
-gibi). Bulut kavramının, özellikle Google ortamında olduğu gibi
-idareli ve tanımlı bir ortam için, önemli bir avantaj şudur. Tabana
-yazarsınız, ve işin ölçeklenmesiyle hiç ilgilenmezsiniz. Eğer verinin
-kopyalanması gerekiyorsa (mesela coğrafi lokasyana göre, kullanıcıya
-daha yakın bir makinaya veri yakın olacaksa), taban onu arka planda
+Web ortamların demirbaşı haline geldi. Amazon, Facebook hep benzer
+yaklaşımları kullanıyorlar.GAE ortamındaki Bigtable teknolojisi
+Google'ın kendi ürünleri için de kullandığı taban (Gmail gibi). Bulut
+kavramının, özellikle Google ortamında olduğu gibi idareli ve tanımlı
+bir ortam için, önemli bir avantaj şudur. Tabana yazarsınız, ve işin
+ölçeklenmesiyle hiç ilgilenmezsiniz. Eğer verinin kopyalanması
+gerekiyorsa (mesela coğrafi lokasyana göre, kullanıcıya daha yakın bir
+makinaya veri yakın olacaksa), taban onu arka planda
 yapar. Yedeklemeyi yapar. Ölçeklemeyi yapar. Programcı sadece get(),
 put() komutlarıyla uğraşır.
 
-Veri yuklemeye gelelim. app.yaml dosyasinda
+Veri yüklemeye gelelim. `app.yaml` dosyasında
 
 ```
 handlers:

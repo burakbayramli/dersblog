@@ -181,7 +181,7 @@ Status code:  200
 {'result': 'value1'}
 ```
 
-Şimdi REST çağrılarını iki ayrı fonksiyon ile sarmalayalım, normal
+Şimdi REST çağrılarını üç ayrı fonksiyon ile sarmalayalım, normal
 durumda kullanıcıların çağıracağı tek metotlar bunlar olacak.
 
 ```python

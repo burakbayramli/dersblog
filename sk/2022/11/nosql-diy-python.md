@@ -240,7 +240,7 @@ Status code:  200
  [0.31330469 0.03924181]]
 ```
 
-Bir Numpy matrisi gonderdik NoSQL taban onu bile tabana yazdi.
+Bir Numpy matrisi gonderdik NoSQL onu bile tabana yazdi.
 
 Taban içeriğine bakarsak objelerin nasıl yazılmış olduğunu görüyoruz,
 

@@ -150,11 +150,7 @@ print (d)
 b'bubirkelime'
 ```
 
-Birkaç farklı metin üzerinde aynı kodlama çağrısı işletilince sonda
-hep bir `\n` olduğunu farkedebiliriz.. Bu ek aslında gerekli değil,
-onu çıkartsak ta geriye kodlama bize aynı sonucu verecektir. 
-
-Biraz önceki `pickle` örneği üzerinde,
+Bir örnek daha,
 
 ```python
 import pickle, base64
@@ -170,3 +166,7 @@ print (b)
 b'gANdcQAoSwBLAUsCSwNLBEsFSwZLB0sISwllLg==\n'
 [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
 ```
+
+Sonda hep bir `\n` olduğunu farkedebiliriz.. Bu ek aslında gerekli
+değil, onu çıkartsak ta geriye kodlama bize aynı sonucu verecektir.
+

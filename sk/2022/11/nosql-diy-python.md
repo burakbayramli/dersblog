@@ -259,8 +259,10 @@ for x in cur.fetchall():
 ('randomId123', 'gANjbnVtcHkuY29yZS5tdWx0aWFycmF5Cl9yZWNvbnN0cnVjdApxAGNudW1weQpuZGFycmF5CnEB\nSwCFcQJDAWJxA4dxBFJxBShLAUsCSwKGcQZjbnVtcHkKZHR5cGUKcQdYAgAAAGY4cQiJiIdxCVJx\nCihLA1gBAAAAPHELTk5OSv////9K/////0sAdHEMYolDIPATky0nWcs//JC9Xzh02z+EpHgZLw3U\nP7ATIoOAF6Q/cQ10cQ5iLg==\n')
 ```
 
-Daha önce bahsettiğimiz gibi birden fazla servise bağlanmak için `key`
-üzerinde mod kullanırız, mesela
+Karmaşık bazı string değerleri görüyoruz, bunlar Python objelerinin kodlanmış hali.
+
+Birkaç servisli durumdan bahsedelim; daha önce değinildiği gibi birden
+fazla servise bağlanmak için `key` üzerinde mod kullanabiliriz, mesela
 
 ```python
 N = 3 # bu kadar servis var

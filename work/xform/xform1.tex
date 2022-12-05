@@ -33,8 +33,8 @@
 \begin{abstract}
 Many problems in Computer Vision can be reduced to either working around a known
 transform, or given a model for the transform computing the inverse problem of
-the transform itself. We will look at two way of working with the matrix $A$ and
-see how transforms are at the root of image processing and vision problems.
+the transform itself. We will look at two ways of working with the matrix $A$
+and see how transforms are at the root of image processing and vision problems.
 \end{abstract}
 
 
@@ -70,10 +70,11 @@ h_7 & h_8 & h_9
 \left[\begin{array}{r} x \\ y \\ w \end{array}\right]
 $$
 
-Homogeneous coordinates are used. The use of letter $H$ is the custom, but this
-transformation in this problem is our $A$.
+Homogeneous coordinates are used. The use of letter $H$ is the custom, but the
+transformation above in this problem is our $A$.
 
-A special case of transformation, affine transformation is shown below,
+A special case of transformation, so-called affine transformation is shown
+below,
 
 $$ 
 \left[\begin{array}{r} x' \\ y' \\ 1 \end{array}\right]
@@ -108,7 +109,7 @@ Similarity transformations can include scale changes as well, rotation is
 captured with the cell elements containing $\sin$, $\cos$.
 
 Now we arrive at the reverse problem; how, based on a few matching point between
-two images one  original the other transformed, do we find the homography, the
+two images, one original the other transformed, do we find the homography, the
 transformation that led to the resulting matrix?
 
 We assume the matching points are in the form of $x_i,y_i$ and $x_i',y_i'$.  If
@@ -131,7 +132,7 @@ More matches as data points would allow the expansion of the matrix vertically.
 The reason for representing $x' - Hx = 0$ instead of $x'=Hx$ is we can see the
 former as an optimization problem, even if we can't solve for equality to zero,
 we can attempt to {\em approach} zero, by using a singular value decomposition
-approach.
+method.
 
 A fantastic and simple application of DLT can be demonstrated even without even
 known matches per se between two images, if we want certain section of an image
@@ -161,8 +162,8 @@ plt.imshow(im, cmap=plt.cm.Greys_r)
 \end{verbatim}
 
 Here picked corners of the image area are shown in red. Using the SVD
-calculation shown in the Appendix, I can obtain an $H$. Now we can warp the
-selection using my newly found $H$ and retrieve the full-blown extracted image.
+calculation shown in the Appendix, we can obtain an $H$. Now we can warp the
+selection using the newly found $H$ and retrieve the full-blown extracted image.
 
 \begin{verbatim}
 def warpfcn(x):
@@ -180,9 +181,10 @@ im_g = ndimage.geometric_transform(im,warpfcn,(300,300))
 
 \section{Kalman Filters}
 
-Another domain where we ask ``where is the $A$?'' is filtering. Or to be exact
-in this case we ask where is the $A$ and $H$? Kalman filters use two
-transformations in succession to compute its model.
+Another domain where we ask ``where is the $A$?'' is filtering. But to be exact,
+in this case we are asking where is the $A$ and $H$? Kalman filters use two
+transformations in succession to compute a final model. The Kalman Filter model
+is,
 
 \begin{eqnarray*}
 x_{t+1} = A x_t + Q\\
@@ -208,8 +210,8 @@ We can implement a visual tracking using the approaches outlined above. We move
 a chessboard plane on a flat surface (table) on constant speed toward our camera
 while tracking a single reference point on this image where $x_t$ is the 3D
 location of our chessboard plane. The transition equation of the Kalman filters
-only needed to account for constant velocity, along one axis. Matrix A looked
-like
+only needed to account for constant velocity, along one axis. Matrix $A$ would
+look like,
 
 \begin{eqnarray*}
 A= \left[
@@ -224,7 +226,7 @@ A= \left[
 
 Note that matrix A is 4x4, not 3x3. We used homogenous coordinates to represent
 3D location, which made $x_t$ a 4x1 vector, therefore the transition equation
-captured in A had to be 4x4 so we could multiply it with $x_t$.
+captured in $A$ had to be 4x4 so we could multiply it with $x_t$.
 
 \begin{figure}[h]
   \centering
@@ -232,27 +234,28 @@ captured in A had to be 4x4 so we could multiply it with $x_t$.
 \end{figure}
 
 
-A is the identity matrix I with one difference; its (3,4)'th item is a constant,
-d, that is our displacement. To verify if this $A$ can be used for calculating
-displacement, one could perform a sample multiplication using $x_t =
+$A$ is the identity matrix $I$ with one difference; its (3,4)'th item is a
+constant, $d$, that is our displacement. To verify if this $A$ can be used for
+calculating displacement, one could perform a sample multiplication using $x_t =
 [\begin{array}{cccc}a1 & a2 & a3 & a4 \end{array}]$ and see $Ax_t$, or
 $x_{t+1}$, becomes $[\begin{array}{cccc}a1 & a2 & a3+d & a4\end{array}]$. We can
 see displacement d is added to the z-coordinate, depth. For our testing we
-picked d = -0.5, meaning for each frame chessboard plane moved 0.5 cm toward the
-camera. Each transition for $x_t$ adds to uncertainty, and that is reflected in
-$Q$.
+picked $d = -0.5$, meaning for each frame chessboard plane moved 0.5 cm toward
+the camera. Each transition for $x_t$ adds to uncertainty, and that is reflected
+in $Q$.
 
 Observation equation $y_t$ handles the calculation where a 3D coordinate is
 projected onto 2D (pixel measurements) on screen with added noise. For standard
-pinhole camera model, camera matrix P is responsible for 2D projection. P is
-unique for each camera, and a process called camera calibration can determine
-camera matrix P, and various methods for calibration exist in literature. OpenCV
-library contained a function for calibration which we tested, but we were not
-happy with the results. At the end, we calibrated the camera manually; by simply
-deciding on a 3D real world location (middle point at the end of our flat
-surface / table) and tested various P values while at the same time drawing an
-imaginery chessboard image on screen using this projection matrix P. This was
-repeated until the imaginary board was located at the desired location.
+pinhole camera model, camera matrix $P$ (the $H$ of the KF) is responsible for
+2D projection. $P$ is unique for each camera, and a process called camera
+calibration can determine camera matrix $P$, and various methods for calibration
+exist in literature. OpenCV library contained a function for calibration which
+we tested, but we were not happy with the results. At the end, we calibrated the
+camera manually; by simply deciding on a 3D real world location (middle point at
+the end of our flat surface / table) and tested various $P$ values while at the
+same time drawing an imaginery chessboard image on screen using this projection
+matrix $P$. This was repeated until the imaginary board was located at the
+desired location.
 
 \begin{verbatim}
 import cv2
@@ -288,8 +291,8 @@ if __name__ == "__main__":
         cv2.waitKey(20)    
 \end{verbatim}
 
-The tracking is computed with the code above, this is standard KF tracking.  We
-used a chessboard image was so that \verb!cvFindChessboardCorners!  and
+The tracking is computed with the code above, standard KF tracking. We used a
+chessboard image so that \verb!cvFindChessboardCorners! and
 \verb!cvDrawChessboardCorners! OpenCV functions could be used. Using these two
 methods, a chessboard image can be detected and marked (on screen, real-time)
 with great accuracy and speed. The chessboard image had 9 squares on it, giving

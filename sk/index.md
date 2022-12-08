@@ -3,7 +3,7 @@
 
 ## En Son
 
-8/12 - [arXiv Makalesi, Vision](https://arxiv.org/abs/1006.4910)
+8/12 - [ArXiv Makalesi, Vision](https://arxiv.org/abs/1006.4910)
 
 30/11 - [NoSQL, Flask Bazlı Anahtar-Değer Tabanı](https://burakbayramli.github.io/dersblog/sk/2022/11/nosql-diy-python.html)
 
@@ -46,7 +46,4 @@
 [Sene](year.html)
 
 [Ara](ara.html)
-
-
-
 

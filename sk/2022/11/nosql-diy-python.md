@@ -1,7 +1,7 @@
 # NoSQL
 
 NoSQL tabanları ilişkisel veri yapısı (SQL ile erişilen türden)
-gerektirmeden veri sorgulamayi, eklemeyi destekleyen tabanlardır. Bir
+gerektirmeden veri sorgulamayı, eklemeyi destekleyen tabanlardır. Bir
 bakıma diske yazılmış Python sözlüğü gibi görülebilirler; tek ihtiyaç
 duydukları bir anahtar ve ona tekabül eden değerdir, ki değer herhangi
 bir obje olabilir. Mimarinin çekici tarafı veri ünitesini tek objeye
@@ -296,9 +296,7 @@ Kaynaklar
 
 [1] [Obje String Olarak Kodlamak](../../2010/10/encoding-objeleri-yazip-okumak-pickle-base64.html)
 
-[2] https://flask.palletsprojects.com/en/2.2.x/patterns/sqlite3/
-
-[3] [MongoDB](../../2014/05/mongodb.html)
+[2] [MongoDB](../../2014/05/mongodb.html)
 
 
 

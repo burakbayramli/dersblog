@@ -18,6 +18,9 @@ apt install texlive-latex-extra texlive-latex-recommended texlive-base
 
 Bunlar oldukca buyuk programlar, şimdiden uyaralım.
 
+Kurduktan sonra `pdflatex dosya.tex` ile TeX dosyasindan PDF uretilebilir.
+
+HTML içinde LaTeX komutları kullanmak istiyorsak bkz [1] yazısı.
 
 ### `\equiv`
 
@@ -125,6 +128,7 @@ Sonuç, öncesi solda sonrası sağda olacak şekilde,
 
 ![](latex1.png)
 
+Kaynaklar
 
-
+[1] [MathJax: Web Sayfalarinda Javascript ile Matematik Formülleri](../../2017/11/mathjax-javascript-ile-matematik.html)
 

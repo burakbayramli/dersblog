@@ -2,13 +2,16 @@
 
 Programlama dili ile komut yazarak güzel formatlı doküman üretmenin
 sanatını LaTeX mükemmeleştirdi. Microsoft Word gibi ürünler
-'gördüğünüz elinize geçen sonuçtur' (what you see is what you get)
-sloganı ile yaşarlar, fakat aslında bir doküman, bilgisayardaki pek
-çok şey gibi, bir dil olarak görülebilir ve o şekilde kodlanabilir.
-Özellikle zaten başka amaçlar için kod yazan bizler için bu yaklaşım
-daha çekici olmuştur. Bir bakıma aslında dil-ile-doküman daha
-optimaldir, az sayıda komut ile pek çok farklı şekilde belge
-üretebildiğimize göre yaklaşımın faydası görülür.
+'gördüğünüz elinize geçen sonuçtur' (what you see is what you get,
+WYSIWYG) sloganı ile yaşarlar, fakat aslında bir doküman,
+bilgisayardaki pek çok şey gibi, bir dil olarak görülebilir ve o
+şekilde kodlanabilir.  Özellikle zaten başka amaçlar için kod yazan
+bizler için bu yaklaşım daha çekici olmuştur. WYSİWYG yaklaşımı
+sürekli dökümanın nihai halini grafiksel olarak kullanıcıya göstermeye
+uğraştığı için çok fazla işlemci zamanı harcar, diğer yandan
+dil-ile-doküman yaklaşımının daha optimal olduğu iddia edilebilir, az
+sayıda komut ile pek çok farklı şekilde belge üretebiliriz, ve bu
+komutları basit bir editör ile bir dosyaya girebiliriz.
 
 Kurmak için Ubuntu üzerinde
 

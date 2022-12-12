@@ -4,8 +4,6 @@
 
 [Enerji Hatalari - ebugs](02/enerji-hatalari-ebugs.html)
 
-[LaTeX ile Sozde Program (Pseudocode) ve Matematik Sembolleri](02/latex-ile-sozde-program-pseudocode-ve.html)
-
 [LaTeX](02/latex.html)
 
 [Ingilizce-Turkce Teknik Terimler Sozlugu](02/teknik-terimler-sozlugu.html)

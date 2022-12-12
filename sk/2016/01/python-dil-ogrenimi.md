@@ -49,7 +49,7 @@ yazılarımız altta,
 
 [Tarih Zaman İçin datetime](../../2016/06/datetime.html)
 
-[Objeleri Yazıp Okumak - Pickle, zlib](../../2010/10/objeleri-yazip-okumak-pickle.html)
+[Objeleri Yazıp Okumak - Pickle, zlib](../../2010/10/encoding-objeleri-yazip-okumak-pickle-base64.html)
 
 [Düzenli İfadeler, Python, Regex (Regular Expressions)](../.././2016/02/duzenli-ifadeler-python-regex-regular.html)
 

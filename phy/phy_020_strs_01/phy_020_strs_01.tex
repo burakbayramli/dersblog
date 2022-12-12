@@ -269,18 +269,60 @@ elde ederiz.
 Dersin geri kalanında gerilme konusunu işlerken hep bu nihai formülü baz
 alacağız. Niye?  Çünkü gerilme bir uzunluk değişimidir ve üstteki formül bana
 baştaki ufak fark vektörlerinin nasıl uzunluksal olarak değişime uğradığını
-gösteriyor.
+gösteriyor. Orijinal pozisyondaki değişim $\ud X$ biliniyor, buradan değişim
+sonrasındaki $\ud x$'e geçerek o mesafeyi hesaplayabilirim.
 
 Gradyanlar
 
-Yamulma, değişim (deformation) ve yer değişim gradyanindan bahsettik. Yer
-değişim gradyanı $\nabla u$ bir tensor sonucunu verir, çünkü $u$ bir vektör
-değerli fonksiyondur. $\nabla u$'nun tam tanımı,
+Yamulma, değişim (deformation) ve yer değişim gradyanından bahsettik. Yer
+değişim gradyanı $\nabla u$ bir tensor alan (field) sonucunu verir, çünkü $u$
+bir vektör değerli fonksiyondur. Yer değişim (displacement) gradyanı
+$\nabla u$'nun tam tanımı,
 
 $$
-\nabla u = \frac{\partial u_i}{\partial X_j}
+\renewcommand*{\arraystretch}{2.5}
+\nabla u = \frac{\partial u_i}{\partial X_j} =
+\left[\begin{array}{ccc}
+\dfrac{\partial u_1}{\partial X_1} & \dfrac{\partial u_1}{\partial X_2} & \dfrac{\partial u_1}{\partial X_3} \\
+\dfrac{\partial u_2}{\partial X_1} & \dfrac{\partial u_2}{\partial X_2} & \dfrac{\partial u_2}{\partial X_3} \\
+\dfrac{\partial u_3}{\partial X_1} & \dfrac{\partial u_3}{\partial X_2} & \dfrac{\partial u_3}{\partial X_3} 
+\end{array}\right]
 $$
 
+Yamulma (deformation) gradyanı $F$
+
+$F$'nin formülü $F = I + \nabla u$ ise üstteki matristen hareketle bu basit
+bir hesap,
+
+$$
+F = I + \nabla u = 
+\left[\begin{array}{ccc}
+1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1
+\end{array}\right] + 
+\renewcommand*{\arraystretch}{2.5}
+\left[\begin{array}{ccc}
+\dfrac{\partial u_1}{\partial X_1} & \dfrac{\partial u_1}{\partial X_2} & \dfrac{\partial u_1}{\partial X_3} \\
+\dfrac{\partial u_2}{\partial X_1} & \dfrac{\partial u_2}{\partial X_2} & \dfrac{\partial u_2}{\partial X_3} \\
+\dfrac{\partial u_3}{\partial X_1} & \dfrac{\partial u_3}{\partial X_2} & \dfrac{\partial u_3}{\partial X_3} 
+\end{array}\right]
+$$
+
+Üstteki toplam aslında alttaki kısmi türev matrisine eşittir,
+
+$$
+\renewcommand*{\arraystretch}{2.5}
+F = \left[\begin{array}{ccc}
+\dfrac{\partial x_1}{\partial X_1} & \dfrac{\partial x_1}{\partial X_2} & \dfrac{\partial x_1}{\partial X_3} \\
+\dfrac{\partial x_2}{\partial X_1} & \dfrac{\partial x_2}{\partial X_2} & \dfrac{\partial x_2}{\partial X_3} \\
+\dfrac{\partial x_3}{\partial X_1} & \dfrac{\partial x_3}{\partial X_2} & \dfrac{\partial x_3}{\partial X_3} 
+\end{array}\right] =
+\frac{\partial x_i}{\partial X_j}
+$$
+
+Yani elde ettiğimiz pozisyon fonksiyonunun gradyanidir. Teker teker terimleri
+kontrol edersek üstteki hücrelerdeki terimlerin doğruluğunu görebiliriz.
+
+Şimdi Lagrange (Green) tensörüne gelelim.
 
 
 

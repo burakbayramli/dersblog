@@ -172,10 +172,3 @@ Referans
 [Ayarlarım](https://github.com/burakbayramli/kod/tree/master/site-lisp)
 
 [Unicode, Ascii, Deascii, Python, Emacs](../../2018/07/unicode-ascii-deascii-python-emacs.md)
-
-
-
-
-
-
-

@@ -76,6 +76,26 @@ edilmeli.
 
 Aşırı sükseli, bol kıvrımlı türden harfler için.
 
+### LaTeX ile Sözde Program (Pseudocode) ve Matematik Sembolleri
+
+Eğer TeX dokümanı içinde sözde kod gösterilecekse çoğu zaman şatafatlı
+paketler (mesela algorithmicx, pseudocode, vs gibi) gerekli
+değildir. Bu paketler ufaçık bir program için apayrı başka bir
+programlama dili öğrenmenizi gerektiriyor, for, while, ıf gibi
+komutların o paketlerin istediği şekilde yazılması gerekiyor mesela,
+`\IF`, `\WHILE` gibi..
+
+Düz kod göstermek için kullanılan Listings paketi kullanılabilir, eğer
+bu kod içinde matematik sembolleri gerekiyorsa, mathescape seçeneği
+eklenir, mesela
+
+```
+\begin{lstlisting}[language=Matlab,mathescape]..\end{lstlisting}
+```
+
+gibi, boylece `$$` isaretleri arasinda hala matematik sembolleri mumkun
+olur.
+
 ### Matris İçeriğini Büyütmek
 
 Su sekilde bir matris ufak sekilde cikabilir,

@@ -10,8 +10,6 @@
 
 [TunesViewer, iTunesU](02/tunesviewer-itunesu.html)
 
-[Bulut](03/bulut.html)
-
 [Iklim Verisi](03/iklim-verisi.html)
 
 [Milyonluk Satirlari Birlestirmek](03/milyonluk-satirlari-birlestirmek.html)

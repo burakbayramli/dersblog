@@ -76,7 +76,6 @@ def tex_mathjax_html(texfile, htmlfile, title):
       line = line.replace("\\big\{","\\big\\\\{")
       line = line.replace("\\big\}","\\big\\\\}")
       line = re.sub(r'\\hspace\{(.*?)\}', r'\n', line)
-      line = re.sub(r'\\renewcommand\*\{\\arraystretch\}\{2\.5\}',r'\\renewcommand\*\{\\arraystretch\}\{}',line)
       line = line.replace("\\begin{itemize}","")
       line = line.replace("\\end{itemize}","")
       line = line.replace("\\begin{enumerate}","")
@@ -105,6 +104,8 @@ def tex_mathjax_html(texfile, htmlfile, title):
           fout.write('```\n')          
       elif '\end{document}' in line:
           fout.write("\n")
+      elif 'renewcommand' in line and "arraystretch" in line:
+          pass
       elif '\\inputminted' in line:
          pf = re.findall("inputminted.*?\}\{(.*?)\}",line,re.DOTALL)[0]
          pfcontent = codecs.open(pf).read()

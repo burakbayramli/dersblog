@@ -1,6 +1,8 @@
 # Netflix / Movielens Film Verisi
 
-Önce veriyi [3] incelemek için pivot tekniğini görelim,
+Movielens 1M Verisi [3] 6000 kullanıcı tarafından yaklaşık 4000 tane
+filme verilen not / derece (rating) verisini içeriyor, 1 milyon tane
+not verilmiş. Önce veriyi incelemek için pivot tekniğini görelim,
 
 Örnek olarak film isimleri ve o filmlere verilmiş beğeni notlarını
 taşıyan bir veri tabanını işleyeceğiz. Verimiz üç ayrı dosyaya

@@ -34,8 +34,8 @@ işlemi lazım. İdeal olarak bir kolonu (ya da satırı) diğerinden
 
 Fakat verimiz halen o formatta değil.  Her satır, tek bir film, tek bir
 kişi (cinsiyet) ve tek bir not için kaydedilmiş. Bizim ilgilendiğimiz
-analiz için film bazında cinsiyet verisini {\em yanyana, değişik
-  kolonlarda} görmeliyiz.
+analiz için film bazında cinsiyet verisini *yanyana, değişik kolonlarda*
+görmeliyiz.
 
 Peki nasıl? Cevap pivotlamak.
 

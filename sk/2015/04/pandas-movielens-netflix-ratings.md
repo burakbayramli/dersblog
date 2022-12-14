@@ -165,7 +165,7 @@ Yapay Öğrenim geniş bir alandır, ama regresyon, sınıflama gibi işlemlerde
 
 Seyrek Matris
 
-Movielens verisini seyrek matris formuna dondumek icin basit bir kod
+Movielens verisini seyrek matris formuna döndümek için basit bir kod
 
 ```python
 from scipy.sparse import csr_matrix
@@ -176,10 +176,10 @@ utility_csr = csr_matrix((ratings.rating, (ratings.userId , ratings.movieId)))
 
 JSON
 
-Bir diger seyrek sayilabileek format her satirda ayri kullanici icin o
-kullanicinin begeni raporunu JSON olarak vermek. Boylece kisi bazi veri
-satir satir okunabilir ve her satir uzerinde `json.loads` isletilerek
-veri Python sozlugune cevirilebilir.
+Bir diğer seyrek sayılabileek format her satırda ayrı kullanıcı için o
+kullanıcının beğeni raporunu JSON olarak vermek. Böylece kişi bazı veri
+satır satır okunabilir ve her satır üzerinde `json.loads` işletilerek
+veri Python sözlüğüne çevirilebilir.
 
 ```python
 import json, csv
@@ -213,4 +213,7 @@ Kaynaklar
 [2] McKinney, W., Python for Data Analysis
 
 [3] [Movielens 1M Veri](https://drive.google.com/uc?export=view&id=1AfnThq72GCP2NkJk_w5nGFqTZjl7lPTA)
+
+
+
 

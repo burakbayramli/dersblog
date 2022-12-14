@@ -4,7 +4,8 @@ Movielens 1M Verisi [3] 6000 kullanıcı tarafından yaklaşık 4000 tane
 filme verilen not / derece (rating) verisini içeriyor, 1 milyon tane
 not verilmiş. Örnek olarak film isimleri ve o filmlere verilmiş beğeni
 notlarını taşıyan bir veri tabanını işleyeceğiz. Verimiz üç ayrı
-dosyaya yayılmış halde. Üç tabloyu alttaki şekilde, `merge` komutu ile
+dosyaya yayılmış halde, `users.dat`, `ratings.dat`, ve
+`movies.dat`. Üç tabloyu alttaki şekilde, `merge` komutu ile
 birleştiriyoruz - Pandas otomatik olarak ortak kolon ismini bulacak ve
 onun üzerinden birleştirimi yapacak.
 

@@ -74,7 +74,13 @@ işletilir,
 
 `python xlsx2csv.py dosya.xlsx dosya.csv`
 
-şeklinde.
+şeklinde. Eger ciktida belli bir ayrac (delimiter) tanimlamak
+istersek, mesela `|` isareti olabilir, o zaman
+
+`python xlsx2csv.py -d "|" dosya.xlsx dosya.csv`
+
+komutu kullanilabilir.
+
 
 
 

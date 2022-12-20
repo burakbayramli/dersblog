@@ -4,7 +4,7 @@ Bu proje yapay öğrenim (machine learning) teknikleri kullanarak
 İnternet'teki haber makalelerini kategorize etmeye uğraşır. Günlük,
 yıllık verileri basit CSV dosyaları içinde her satır bir haber olacak
 şekilde paylaşıyorlar [1]. Gösterilen [1] bağlantısına gidince her gün
-için bir zıp dosyası görüyoruz, her gün için dosya ismini hazırlayıp
+için bir zip dosyası görüyoruz, her gün için dosya ismini hazırlayıp
 onu otomatik indiren bir Python script altadır. Örnek olarak 10 Eylül
 2022 günü indirildi,
 
@@ -44,11 +44,12 @@ df.columns = conf_cols
 
 Bu noktada veri Pandas DataFrame objesi halindedir. Daha da
 filtreleyebiliriz, mesela olay kodu 190 ve 194 içeren olaylara
-bakalım. GDELT belgelerine göre bu kodlar saldırı anlamına geliyor, ya
-genel saldırı ya da konvansiyonel silahlarla. Olaylar ayrıca 1'inci
-aktör ve 2'inci aktör olarak ayrılmaya uğraşılmış, bir aktör bir
-diğerine bir etkide bulunuyorsa birinci ve ikinci aktör bunlar oluyor.
-Biz burada Rusya ve Ukrayna olarak filtreleme yapalım,
+bakalım. GDELT belgelerine [2] göre bu kodlar saldırı anlamına
+geliyor, ya genel saldırı ya da konvansiyonel silahlarla. Olaylar
+ayrıca 1'inci aktör ve 2'inci aktör olarak ayrılmaya uğraşılmış, bir
+aktör bir diğerine bir etkide bulunuyorsa birinci ve ikinci aktör
+bunlar oluyor. Birinci Rusya ikinci aktör Ukrayna olarak filtreleme
+yapalım,
 
 ```python
 df2 = df[(df.EventCode==190)|(df.EventCode==195)|(df.EventCode==194)]
@@ -120,4 +121,7 @@ Kaynaklar
 [1] http://data.gdeltproject.org/events/index.html
 
 [2] [GDELT Olay Kodlari - PDF](http://data.gdeltproject.org/documentation/CAMEO.Manual.1.1b3.pdf)
+
+
+
 

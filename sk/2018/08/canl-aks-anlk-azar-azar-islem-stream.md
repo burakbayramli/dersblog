@@ -12,7 +12,7 @@ import csv
 with open('[DOSYA]') as csvfile:
     rd = csv.reader(csvfile,delimiter=' ')
     headers = {k: v for v, k in enumerate(next(rd))}
-    for row in rd: print row[headers['kolon1']]
+    for row in rd: print (row[headers['kolon1']])
 ```
 
 Değişken headers içinde dosyanın ilk satırından alınan kolon isimleri

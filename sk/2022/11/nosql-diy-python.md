@@ -129,6 +129,15 @@ aynen bir Python sözlüğünde `d['key'] = 'değer'` çağrısının önceden
 varsa `key` değerlerini ezecek (yoksa ekleyecek) olduğu gibi, taban
 bazlı yaklaşım da bu işlevi taklit ediyor.
 
+Not: SQL kullanmayan tabanın arka planda bir SQL tabanı SQLite
+kullanıyor olması çelişki gibi durabilir fakat aslında değil; bu
+tabanı sadece basit bir depo olarak kullanıyoruz, ve bunu çok basit
+düz SQL komutları üzerinden yapıyoruz. Unutmayalım SQL sadece ekleme,
+silme gibi "CRUD" operasyonlarından ibaret değil, ilişkisel veriler
+literatürü çok daha kapsamlı. NoSQL dışarıya bu tür ilişkisel bir
+arayüz vermiyor, arka planda da SQL basit depolama amaçlı olarak
+kullanılıyor ve onun ilişkisel özelliklerine de dokunulmuyor.
+
 Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi bir
 sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
 eklenecektir (böylece aynı makinada bile farklı taban süreçleri

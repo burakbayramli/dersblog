@@ -38,6 +38,20 @@ derleyici metot çağrılarını statik olarak çözümlemeye uğraşır, bazı
 diller bu çözümlemeyi işlem anında "dinamik" olarak yapmaya
 uğraşabilir, birinci yöntem daha hızlıdır.
 
+### İlk Kullanım
+
+Ubuntu Linux uzerinde,
+
+```
+curl https://sh.rustup.rs -sSf | sh
+ rustup update
+```
+
+yeterli. Tüm konsolları kapatıp yeni bir tane başlatalım, artık
+`rustc` derleyicisini direk kullanabiliriz. Altta kodu yazılarda
+göstermek için bir fonksiyon yazdık,
+
+
 ```python
 def rcode(infile): print (open(infile).read())
 ```
@@ -80,3 +94,5 @@ Merhaba Dunya!
 [4] https://stackoverflow.com/questions/36136201/how-does-rust-guarantee-memory-safety-and-prevent-segfaults
 
 [5] McNamara, Rust In Action
+
+

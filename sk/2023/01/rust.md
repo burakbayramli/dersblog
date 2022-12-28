@@ -105,8 +105,80 @@ fn main() {
 2
 ```
 
+Fonksiyonun dönüş değeri en son satırda ismi üzerinden belirtiliyor,
+bir döndürme komutu mesela `return` gibi kullanılmamış. Bu durumda
+fonksiyon ortasından değer döndürmek için içinde olunan bloktan bir
+şekilde çıkılmalı, son satıra erişilmeli, oradan dönüş yapılmalı
+herhalde.
 
+### Hafiza Degisken Idaresi
 
+Not: İlerlemeden önce bu yazıda Rust kodu gösteren, derleyen ve işleten
+bir yardımcı kod yazalım,
+
+```python
+import subprocess, os, sys
+
+def rshow_comp_run(infile):
+   print (open(infile).read())
+   file = os.getcwd() + "/" + infile
+   cmd = "rustc -o /tmp/%s %s" % (infile.replace(".rs",".exe"),file)
+   print (cmd)
+   process = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False)
+   (output, _) = process.communicate()
+   res = str(output).split("\\n")
+   for x in res: print (x)
+```
+
+Artik tek cagri ile uc isi birarada yapacagiz.
+
+Değişken idaresine gelelim; Rust'in hafıza hatalarının önüne geçmek
+için getirdiği bir değişiklik sahiplenme özelliği. İlginç bir özellik
+bu, mesela eğer obje üzerinde kopyalama desteği yok ise eşittir
+işareti bir objeyi bir değişkenden diğerine taşır, kopyalamaz,
+referens arttırmaz. Birinden alıp diğerine verir. Bu durum aynı kapsam
+(scope) içinde bile gerçekleşebilir. Mesela,
+
+```python
+rshow_comp_run("rust3.rs")
+```
+
+```text
+
+fn main() {
+    let num1 = 1;
+    let num2 = num1;
+    let s1 = String::from("meep");
+    let s2 = s1;
+    println!("Number num1 is {}", num1);
+    println!("Number num2 is {}", num2);
+    println!("String s1 is {}", s1);
+    println!("String s2 is {}", s2);
+}
+
+rustc -o /tmp/rust3.exe /home/burak/Documents/classnotes/sk/2023/01/rust3.rs
+b'error[E0382]: borrow of moved value: `s1`
+ --> /home/burak/Documents/classnotes/sk/2023/01/rust3.rs:9:33
+  |
+5 |     let s1 = String::from("meep");
+  |         -- move occurs because `s1` has type `String`, which does not implement the `Copy` trait
+6 |     let s2 = s1;
+  |              -- value moved here
+...
+9 |     println!("String s1 is {}", s1);
+  |                                 ^^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to previous error
+
+For more information about this error, try `rustc --explain E0382`.
+'
+```
+
+Burada hata ortaya çıktı çünkü String tipi kopyalama özelliğini kodlamamış,
+ama 1 değerinin tipi tam sayıların bu desteği var, bu sebeple String s1'den
+s2'ye taşındı, taşınınca ilk referans geçersiz hale geldi.
 
 
 [devam edecek]
@@ -120,5 +192,7 @@ fn main() {
 [4] https://stackoverflow.com/questions/36136201/how-does-rust-guarantee-memory-safety-and-prevent-segfaults
 
 [5] McNamara, Rust In Action
+
+[6] Kaihlavirta, Mastering Rust
 
 

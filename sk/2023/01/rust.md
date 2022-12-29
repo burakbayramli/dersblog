@@ -71,7 +71,7 @@ fn main() {
 
 ```
 
-Derleyelim,
+Derleyelip işletelim,
 
 ```python
 ! rustc -o /tmp/rust1.exe rust1.rs

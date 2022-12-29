@@ -25,6 +25,24 @@ print (os.path.exists("/tmp/filan1"))
 True
 ```
 
+Python ile dosya işlemleri yaparken, komut işletirken o anda içinde olunan
+bir dizin var; bu dizini değiştirmek için
+
+```python
+os.chdir("/tmp/filan1")
+```
+
+Artık takip eden işlemler bu dizin içinde yapılacak. Hangi dizinde olduğumuzu
+raporlamak için 
+
+```python
+print (os.getcwd())
+```
+
+```text
+/tmp/filan1
+```
+
 Tüm dosya isminden (dizin artı dosya ismi) sadece dizin bölümünü çıkartmak
 için,
 

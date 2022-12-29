@@ -29,8 +29,9 @@ erişim hatalarına, hatta güvenlik açıklarına sebep olmakdadır. Rust bu
 tür kullanımlarına hafıza erişimine performans kısıtlaması getirmeden,
 ya da erişimi yasaklamadan bir kontrol mekanizması getirmiştir.
 
-Bazı diller az tanım gerektirirler, ve yükü yorumlayıcıya verirler,
-bazı diller güçlü tipleme üzerinden derleyiciye daha çok iş
+Rust ile hızlı işler kod (executable) üretmek mümkündür. Bazı diller
+sözdizimlerinde az tanım gerektirirler, ve yükü yorumlayıcıya
+verirler, bazı diller güçlü tipleme üzerinden derleyiciye daha çok iş
 yaptırırlar (potansiyel hataları önceden bulma, sonuç işler kod için
 optimizasyonlar yapma) ve bu şekilde daha hızlı kod üretmeye
 uğraşırlar. Rust bunlardan ikinci kategoriye daha yakındır. Mesela

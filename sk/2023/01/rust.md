@@ -82,7 +82,10 @@ Derleyelip işletelim,
 Merhaba Dunya!
 ```
 
-Bir fonksiyon yazalım, bir sayı alsın ve ona bir sayı eklesin,
+Görülen program C, C++, ve Java yapısını andırıyor, `main` tanımı var
+mesela, süslü parantez kullanımı mevcut.
+
+Şimdi yeni bir fonksiyon yazalım, bir sayı alsın ve ona bir sayı eklesin,
 
 ```python
 rcode("rust2.rs")

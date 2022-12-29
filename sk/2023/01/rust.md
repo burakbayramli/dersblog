@@ -50,13 +50,15 @@ rustup update
 ```
 
 yeterli. Tüm konsolları kapatıp yeni bir tane başlatalım, artık
-`rustc` derleyicisini direk kullanabiliriz. Altta kodu yazılarda
-göstermek için bir fonksiyon yazdık,
+`rustc` derleyicisini direk kullanabiliriz. Alttaki kod Python, bu
+yazıda sunum amaçlı yazıldı,
 
 
 ```python
 def rcode(infile): print (open(infile).read())
 ```
+
+İlk kodu `rust1.rs` içinde görelim,
 
 ```python
 rcode("rust1.rs")
@@ -68,6 +70,8 @@ fn main() {
 }
 
 ```
+
+Derleyelim,
 
 ```python
 ! rustc -o /tmp/rust1.exe rust1.rs

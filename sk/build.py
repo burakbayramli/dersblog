@@ -41,8 +41,10 @@ if __name__ == "__main__":
         os.system(cmd)
 
     if sys.argv[1] == 'years':
-        for year in range(2000,2023):
+        for year in range(2000,2024):
             if year == 2007: continue
             os.system("echo '# %d\n' > %d/index.md" % (year,year))
             os.system("python -u gen.py %d >> %d/index.md" % (year,year))
 
+    if sys.argv[1] == 'git-change':    
+        os.system('git log --since="7 day ago" --name-only --pretty=format: | sort | uniq')

@@ -36,7 +36,7 @@ optimizasyonlar yapma) ve bu şekilde daha hızlı kod üretmeye
 uğraşırlar. Rust bunlardan ikinci kategoriye daha yakındır. Mesela
 derleyici metot çağrılarını statik olarak çözümlemeye uğraşır, bazı
 diller bu çözümlemeyi işlem anında "dinamik" olarak yapmaya
-uğraşabilir, birinci yöntem daha hızlıdır.
+uğraşabilir, statik yöntem daha hızlıdır.
 
 ### İlk Kullanım
 
@@ -44,7 +44,8 @@ Ubuntu Linux uzerinde,
 
 ```
 curl https://sh.rustup.rs -sSf | sh
- rustup update
+
+rustup update
 ```
 
 yeterli. Tüm konsolları kapatıp yeni bir tane başlatalım, artık

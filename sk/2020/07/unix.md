@@ -202,8 +202,6 @@ Referans
 
 [chmod](chmod.html)
 
-[Unix, Kurumsal Java 2005 Kitabından, PDF](https://github.com/burakbayramli/classnotes/raw/master/sk/2020/07/unix-kj.pdf)
-
 [Unix, Servisleri Nasıl Başlatıyor?](../..//2002/10/unix-servisleri-nasl-baslatyor.html)
 
 [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)
@@ -223,4 +221,8 @@ Referans
 [Dosya Kodlamasi (File Encoding)](../../2020/10/dosya-kodlamasi-encoding.html)
 
 [Dosya İşlemleri, Unix, Python](../../2020/10/python-unix-dosya-islemleri.html)
+
+[Python ve Komut Satırına Erişmek, Popen](../../2014/12/popen-python-ve-komut-satirina-erismek.html)
+
+[Unix, Kurumsal Java 2005 Kitabından, PDF](https://github.com/burakbayramli/classnotes/raw/master/sk/2020/07/unix-kj.pdf)
 

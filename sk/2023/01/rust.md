@@ -156,7 +156,7 @@ sahiplenme özelliği. İlginç bir özellik bu, mesela eğer obje üzerinde
 kopyalama desteği yok ise eşittir işareti bir objeyi bir değişkenden
 diğerine taşır, kopyalamaz, referens arttırmaz. Birinden alıp diğerine
 verir. Bu durum aynı kapsam (scope) içinde bile
-gerçekleşebilir. Mesela,
+gerçekleşebilir. Mesela [6, sf. 113],
 
 ```python
 rshow_comp_run("rust3.rs")
@@ -291,7 +291,67 @@ s is string
 '
 ```
 
+Sahiplenme hataların nasıl önüne geçer? Burada yapılan bir muhasebe
+kontrolü, çift kayıtlı defter tutma yöntemi gibi; eğer bir değişken
+diğerine eşitleniyor ve önceki değişken isminin kullanımı kodların
+yüzde doksanında bir tür hataya yol açıyorsa o zaman kendi kendimizi
+kontrol bağlamında derleyici seviyesinde dile böyle bir kısıtlama
+getirebiliriz. İnsanlar unutabilir, gözden kaçırabilir, dil bu
+eksikleri yakalamak için yardım etmelidir.
+
+Gözden kaçabilecek şeyleri belirtilmiş (explicit) hale getirip
+tanımını zorlama yine benzer bir muhasebe tekniği olabilir. Mesela
+alttaki Python programı çoğunlukla işler, ama bazı durumlarda
+metot bir `Nöne` döndürecektir, 
+
+```python
+from random import random
+class Obje1:
+    def goster(self):
+        print("Merhaba!")
+        
+def rasgeleIsleBozul():
+    if random() > 0.1: # yuzde 90 sansla alttaki isler
+        return Obje1()
+
+while True:
+    o = rasgeleIsleBozul()
+    o.goster()
+```
+
+```text
+Merhaba!
+Merhaba!
+Merhaba!
+Merhaba!
+
+AttributeErrorTraceback (most recent call last)
+<ipython-input-1-94690a78715c> in <module>
+     12 while True:
+     13     o = rasgeleIsleBozul()
+---> 14     o.goster()
+
+AttributeError: 'NoneType' object has no attribute 'goster'
+```
+
+Burada problem Python'un bir dönüş tipi, komutu zorlamaması, bu
+sebeple eğer fonksiyon planlamayan şekilde sona erişip döndüyse
+hesapta olmayan `Nöne` dönüş tipi elde etmemiz. Her seferde bir obje
+bekleyen istemci tarafı bir boş referans elde edince tabii ki
+patlayacaktır. Rust sözdizimi içine dönüş değerini fonksiyonun son
+satırında olmaya zorlayarak bizi bu tür hatalardan koruyabilir. 
+
+
+
+
+
+
+
+
+
 [devam edecek]
+
+### Kaynaklar
 
 [1] https://doc.rust-lang.org/reference/destructors.html
 

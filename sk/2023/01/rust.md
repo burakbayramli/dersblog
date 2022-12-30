@@ -115,7 +115,7 @@ fn main() {
 ```
 
 Fonksiyonun dönüş değeri en son satırda ismi üzerinden belirtiliyor,
-bir döndürme komutu mesela `return` gibi kullanılmamış. Bu durumda
+bir döndürme komutu, mesela `return` gibi, kullanılmamış. Bu durumda
 fonksiyon ortasından değer döndürmek için içinde olunan bloktan bir
 şekilde çıkılmalı, son satıra erişilmeli, oradan dönüş yapılmalı
 herhalde.
@@ -131,15 +131,23 @@ import subprocess, os, sys
 def rshow_comp_run(infile):
    print (open(infile).read())
    file = os.getcwd() + "/" + infile
+   # derle
    cmd = "rustc -o /tmp/%s %s" % (infile.replace(".rs",".exe"),file)
    print (cmd)
    process = subprocess.Popen(cmd.split(" "), stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False)
-   (output, _) = process.communicate()
+   output, err = process.communicate()
+   res = str(output).split("\\n")
+   for x in res: print (x)
+   if "error: aborting" in str(output): return
+   # islet
+   cmd = "/tmp/%s" % infile.replace(".rs",".exe")
+   process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.STDOUT, shell=False)
+   output, err = process.communicate()
    res = str(output).split("\\n")
    for x in res: print (x)
 ```
 
-Artik tek cagri ile uc isi birarada yapacagiz.
+Artık tek çağrı ile üç işi birarada yapacağız.
 
 Değişken idaresine gelelim; Rust'in hafıza hatalarının önüne geçmek
 için getirdiği bir değişiklik sahiplenme özelliği. İlginç bir özellik
@@ -189,6 +197,69 @@ Burada hata ortaya çıktı çünkü String tipi kopyalama özelliğini kodlamam
 ama 1 değerinin tipi tam sayıların bu desteği var, bu sebeple String s1'den
 s2'ye taşındı, taşınınca ilk referans geçersiz hale geldi.
 
+Fonksiyonlara geçilen değişkenler için de aynı durum geçerli; eğer değişkeni
+bir fonksiyona veriyorsam sahiplenme değişiyor, artık kullanamıyorum. 
+
+```python
+rshow_comp_run("rust4.rs")
+```
+
+```text
+fn take_the_s(s: String) {
+}
+fn main() {
+    let s = String::from("string");
+    take_the_s(s);
+    println!("s is {}", s);
+}
+
+rustc -o /tmp/rust4.exe /home/burak/Documents/classnotes/sk/2023/01/rust4.rs
+b'warning: unused variable: `s`
+ --> /home/burak/Documents/classnotes/sk/2023/01/rust4.rs:1:15
+  |
+1 | fn take_the_s(s: String) {
+  |               ^ help: if this is intentional, prefix it with an underscore: `_s`
+  |
+  = note: `#[warn(unused_variables)]` on by default
+
+error[E0382]: borrow of moved value: `s`
+ --> /home/burak/Documents/classnotes/sk/2023/01/rust4.rs:6:25
+  |
+4 |     let s = String::from("string");
+  |         - move occurs because `s` has type `String`, which does not implement the `Copy` trait
+5 |     take_the_s(s);
+  |                - value moved here
+6 |     println!("s is {}", s);
+  |                         ^ value borrowed here after move
+  |
+  = note: this error originates in the macro `$crate::format_args_nl` which comes from the expansion of the macro `println` (in Nightly builds, run with -Z macro-backtrace for more info)
+
+error: aborting due to previous error; 1 warning emitted
+
+For more information about this error, try `rustc --explain E0382`.
+'
+```
+
+```python
+rshow_comp_run("rust5.rs")
+```
+
+```text
+fn take_the_s(s: String) {
+    println!("Fonksiyonda s degeri {}", s);
+}
+fn main() {
+    let s = String::from("string");
+    take_the_s(s.clone());
+    println!("s is {}", s);
+}
+
+rustc -o /tmp/rust5.exe /home/burak/Documents/classnotes/sk/2023/01/rust5.rs
+b''
+b'Fonksiyonda s degeri string
+s is string
+'
+```
 
 [devam edecek]
 

@@ -240,6 +240,9 @@ For more information about this error, try `rustc --explain E0382`.
 '
 ```
 
+Eğer hatadan kurtulmak istiyorsam eldeki String objesini değil onun
+kopyasını verebilirim,
+
 ```python
 rshow_comp_run("rust5.rs")
 ```
@@ -255,6 +258,31 @@ fn main() {
 }
 
 rustc -o /tmp/rust5.exe /home/burak/Documents/classnotes/sk/2023/01/rust5.rs
+b''
+b'Fonksiyonda s degeri string
+s is string
+'
+```
+
+Görüldüğü gibi hata kalmadı. Ya da Rust dilinin tabiriyle bir referans yaratıp
+onu fonksiyona "borç verebilirim", referans yaratma C++ dilindeki kullanıma
+benziyor, bir ve işareti, `&` kullanıyoruz,
+
+```python
+rshow_comp_run("rust6.rs")
+```
+
+```text
+fn take_the_s(s: &String) {
+    println!("Fonksiyonda s degeri {}", s);
+}
+fn main() {
+    let s = String::from("string");
+    take_the_s(&s);
+    println!("s is {}", s);
+}
+
+rustc -o /tmp/rust6.exe /home/burak/Documents/classnotes/sk/2023/01/rust6.rs
 b''
 b'Fonksiyonda s degeri string
 s is string

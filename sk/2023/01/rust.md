@@ -299,10 +299,11 @@ kontrol bağlamında derleyici seviyesinde dile böyle bir kısıtlama
 getirebiliriz. İnsanlar unutabilir, gözden kaçırabilir, dil bu
 eksikleri yakalamak için yardım etmelidir.
 
-Gözden kaçabilecek şeyleri belirtilmiş (explicit) hale getirip
-tanımını zorlama yine benzer bir muhasebe tekniği olabilir. Mesela
-alttaki Python programı çoğunlukla işler, ama bazı durumlarda
-metot bir `Nöne` döndürecektir, 
+Gözden kaçabilecek şeyleri belirtilmiş (explicit) hale getirmek,
+tanımını zorlamak yine benzer bir muhasebe tekniği olabilir. Mesela
+alttaki Python programı çoğunlukla işler, ama bazı durumlarda metot
+bir `None` döndürecektir, bu beklenmeyen durum istemci tarafında pek
+çok hataya yol açabilir.
 
 ```python
 from random import random
@@ -336,15 +337,13 @@ AttributeError: 'NoneType' object has no attribute 'goster'
 
 Burada problem Python'un bir dönüş tipi, komutu zorlamaması, bu
 sebeple eğer fonksiyon planlamayan şekilde sona erişip döndüyse
-hesapta olmayan `Nöne` dönüş tipi elde etmemiz. Her seferde bir obje
-bekleyen istemci tarafı bir boş referans elde edince tabii ki
+hesapta olmayan `None` dönüş tipi elde etmemizdir. Her seferde bir
+obje bekleyen istemci tarafı da boş bir referans elde edince tabii ki
 patlayacaktır. Rust sözdizimi içine dönüş değerini fonksiyonun son
-satırında olmaya zorlayarak bizi bu tür hatalardan koruyabilir. 
-
-
-
-
-
+satırında olmaya zorlayarak bizi bu tür hatalardan koruyabilir.
+Gözümüz alışır, kodlarken hep fonksiyonun son satırına bakarız, Rust
+orada bir tanım yoksa bize derleyici seviyesinde hatırlatabilir,
+muhasebemiz böylece daha çetrefil, sağlam hale gelir.
 
 
 

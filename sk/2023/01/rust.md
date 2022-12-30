@@ -85,6 +85,11 @@ Merhaba Dunya!
 Görülen program C, C++, ve Java yapısını andırıyor, `main` tanımı var
 mesela, süslü parantez kullanımı mevcut.
 
+Rust kodlama, işleyiş açısından C/C++ dillerine benziyor, bir derleme,
+bağlama (linking) ve işler kod (executable) yaratma süreci var, ve
+dilin sözdizimindeki özellikle sayesinde işler kodun optimize edilmesi
+kolaylaşıyor, ve C hızına erişir bir sonuç elde ediyoruz. 
+
 Şimdi yeni bir fonksiyon yazalım, bir sayı alsın ve ona bir sayı eklesin,
 
 ```python
@@ -119,6 +124,11 @@ bir döndürme komutu, mesela `return` gibi, kullanılmamış. Bu durumda
 fonksiyon ortasından değer döndürmek için içinde olunan bloktan bir
 şekilde çıkılmalı, son satıra erişilmeli, oradan dönüş yapılmalı
 herhalde.
+
+Güçlü tipleme (strong typing) kullanımına dikkat; bazen Rust tanım
+yoksa bile bir tipi tahmin edebilir, varsa onu kullanır ama her zaman
+Rust statik tipleme, derleme seviyesinde bir tip bilgisine sahiptir.
+Bu derleme sırasında yapılabilecek optimizasyonlara yardım eder.
 
 ### Hafiza Degisken Idaresi
 

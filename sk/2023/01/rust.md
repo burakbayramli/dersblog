@@ -3,9 +3,10 @@
 Rust diline ilk kez Rust'in Linux 6.1'e dahil edileceğini duyduktan
 sonra [2] dikkat etmeye başladık; şimdiye kadar Linux çekirdek
 seviyesinde sadece tek bir dili destekledi: C. Bir süre önce C++
-dilini dahil etme çabaları hüsrana uğraşmıştı. Eğer çekirdek programcıları,
-ki en alt seviye ve çetrefil türden kodlama ile uğraşıyorlar, bir dili
-sevdilerse burada bu dilde faydalı özellikler olmalıdır.
+dilini dahil etme çabaları hüsrana uğraşmıştı. Eğer çekirdek
+programcıları, ki en temel seviye "makinaya yakın" ve çetrefil türden
+kodlama ile uğraşıyorlar, bir dili sevdilerse burada bu dilde faydalı
+özellikler olmalıdır.
 
 Hakikaten de Rust dilinin pek çok farklı kitleye hitap edebildiğini
 görüyoruz. Evet C, C++ dilleri kendilerini ispat ettiler fakat bunun
@@ -363,7 +364,7 @@ muhasebemiz böylece daha çetrefil, sağlam hale gelir.
 
 [3] Eshwarla, Practical System Programming for Rust Developers
 
-[4] https://stackoverflow.com/questions/36136201/how-does-rust-guarantee-memory-safety-and-prevent-segfaults
+[4] [Stackoverflow](https://stackoverflow.com/questions/36136201/how-does-rust-guarantee-memory-safety-and-prevent-segfaults)
 
 [5] McNamara, Rust In Action
 

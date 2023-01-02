@@ -162,7 +162,7 @@ Artık tek çağrı ile üç işi birarada yapacağız.
 Rust'in hafıza hatalarının önüne geçmek için getirdiği bir değişiklik
 sahiplenme özelliği. İlginç bir özellik bu, mesela eğer obje üzerinde
 kopyalama desteği yok ise eşittir işareti bir objeyi bir değişkenden
-diğerine taşır, kopyalamaz, referens arttırmaz. Birinden alıp diğerine
+diğerine taşır, kopyalamaz, referans arttırmaz. Birinden alıp diğerine
 verir. Bu durum aynı kapsam (scope) içinde bile
 gerçekleşebilir. Mesela [6, sf. 113],
 
@@ -274,9 +274,11 @@ s is string
 '
 ```
 
-Görüldüğü gibi hata kalmadı. Ya da Rust dilinin tabiriyle bir referans yaratıp
-onu fonksiyona "borç verebilirim", referans yaratma C++ dilindeki kullanıma
-benziyor, bir `&` kullanıyoruz,
+Görüldüğü gibi hata kalmadı.
+
+Alternatif olarak Rust dilinin tabiriyle bir referans yaratıp onu
+fonksiyona "borç verebilirim", referans yaratma C++ dilindeki
+kullanıma benziyor, bir `&` kullanıyoruz,
 
 ```python
 rshow_comp_run("rust6.rs")
@@ -366,3 +368,5 @@ muhasebemiz böylece daha çetrefil, sağlam hale gelir.
 [5] McNamara, Rust In Action
 
 [6] Kaihlavirta, Mastering Rust
+
+

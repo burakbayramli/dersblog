@@ -13,10 +13,10 @@ bedeli hafıza erişimindeki güvenlik oldu.  Java, C# gibi üst seviye
 diller hafıza erişiminde güvenlik sağladılar, fakat doğal olarak
 hafızaya direk erişime engel getirdiler, programlama esnekliğine
 kısıtlama getirdiler ve ne zaman devreye gireceği belli olmayan çöp
-toplayıcı (garbage collector) programa istenmeyen anlarda
+toplayıcı (garbage collector) programda istenmeyen anlarda
 duraksamalara, geciktirmelere sebep olduğu için istenmeyen bir
 performans kaybını yanlarında getirmiş oldular [3]. Rust modern, açık
-yazılım bir sistem programlama dilidir, ve üç dünyanin en iyi
+yazılım bir sistem programlama dilidir, ve üç dünyanın en iyi
 özelliklerini taşır; Java'nın değişken tipleme güvenliği, C++'in
 yapısal açıklığı, hızı, verimliliği, ve çöp toplayıcı olmadan hafıza
 erişim güvenliği.
@@ -41,7 +41,7 @@ uğraşabilir, statik yöntem daha hızlıdır.
 
 ### İlk Kullanım
 
-Ubuntu Linux uzerinde,
+Kurmak için Ubuntu Linux uzerinde,
 
 ```
 curl https://sh.rustup.rs -sSf | sh
@@ -368,5 +368,3 @@ muhasebemiz böylece daha çetrefil, sağlam hale gelir.
 [5] McNamara, Rust In Action
 
 [6] Kaihlavirta, Mastering Rust
-
-

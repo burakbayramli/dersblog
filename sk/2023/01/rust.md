@@ -130,8 +130,6 @@ yoksa bile bir tipi tahmin edebilir, varsa onu kullanır ama her zaman
 Rust statik tipleme, derleme seviyesinde bir tip bilgisine sahiptir.
 Bu derleme sırasında yapılabilecek optimizasyonlara yardım eder.
 
-### Hafiza Degisken Idaresi
-
 Not: İlerlemeden önce bu yazıda Rust kodu gösteren, derleyen ve işleten
 bir yardımcı kod yazalım,
 
@@ -159,7 +157,7 @@ def rshow_comp_run(infile):
 
 Artık tek çağrı ile üç işi birarada yapacağız.
 
-### Degiskenler, Kapsamlar (Scope)
+### Değişkenler, Kapsamlar (Scope)
 
 Rust'in hafıza hatalarının önüne geçmek için getirdiği bir değişiklik
 sahiplenme özelliği. İlginç bir özellik bu, mesela eğer obje üzerinde

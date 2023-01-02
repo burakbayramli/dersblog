@@ -355,11 +355,6 @@ Gözümüz alışır, kodlarken hep fonksiyonun son satırına bakarız, Rust
 orada bir tanım yoksa bize derleyici seviyesinde hatırlatabilir,
 muhasebemiz böylece daha çetrefil, sağlam hale gelir.
 
-
-
-
-[devam edecek]
-
 ### Kaynaklar
 
 [1] https://doc.rust-lang.org/reference/destructors.html

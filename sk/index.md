@@ -3,6 +3,8 @@
 
 ## En Son
 
+2/1 - [Rust Programlama Dili](https://burakbayramli.github.io/dersblog/sk/2023/01/rust.html)
+
 21/12 - [Azar Azar İstatistik (Incremental Statistics) Temeli](https://burakbayramli.github.io/dersblog/stat/stat_176_app1inc/azar_azar_istatistik__incremental_statistics_.html)
 
 14/12 - [Netflix / Movielens Film Verisi](https://burakbayramli.github.io/dersblog/sk/2015/04/pandas-movielens-netflix-ratings.html)
@@ -10,8 +12,6 @@
 8/12 - [ArXiv Makalesi, Vision](https://arxiv.org/abs/1006.4910)
 
 30/11 - [NoSQL, Flask Bazlı Anahtar-Değer Tabanı](https://burakbayramli.github.io/dersblog/sk/2022/11/nosql-diy-python.html)
-
-25/11 - [Grupların Ortalamalarını ve Varyanslarını Birleştirmek](https://burakbayramli.github.io/dersblog/stat/stat_010_cov_corr/beklenti_varyans_kovaryans_ve_korelasyon.html#group)
 
 ## Konular, Referans
 

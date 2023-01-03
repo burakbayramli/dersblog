@@ -164,8 +164,7 @@ Rust'in hafıza hatalarının önüne geçmek için getirdiği bir değişiklik
 sahiplenme özelliği. İlginç bir özellik bu, mesela eğer obje üzerinde
 kopyalama desteği yok ise eşittir işareti bir objeyi bir değişkenden
 diğerine taşır, kopyalamaz, referans arttırmaz. Birinden alıp diğerine
-verir. Bu durum aynı kapsam (scope) içinde bile
-gerçekleşebilir. Mesela [6, sf. 113],
+verir. Bu durum aynı kapsam içinde bile gerçekleşebilir. Mesela [6, sf. 113],
 
 ```python
 rshow_comp_run("rust3.rs")

@@ -5,7 +5,7 @@ sonra [2] dikkat etmeye başladık; şimdiye kadar Linux çekirdek
 seviyesinde sadece tek bir dili destekledi: C. Bir süre önce C++
 dilini dahil etme çabaları hüsrana uğraşmıştı. Eğer çekirdek
 programcıları, ki en temel seviye "makinaya yakın" ve çetrefil türden
-kodlama ile uğraşıyorlar, bir dili sevdilerse burada bu dilde faydalı
+kodlama ile uğraşıyorlar, bir dili sevdilerse bu dilde faydalı
 özellikler olmalıdır.
 
 Hakikaten de Rust dilinin pek çok farklı kitleye hitap edebildiğini

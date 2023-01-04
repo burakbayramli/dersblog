@@ -535,3 +535,5 @@ Kaynaklar
 
 [6] Bayramli, [Rasgele İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/linear/linear_app10rndsvd/rasgele_izdusumu__random_projection__.html)
 
+[7] Bayramli, [SVD Factorization for Tall-and-Fat Matrices on Parallel Architectures](https://arxiv.org/abs/1310.4664)
+

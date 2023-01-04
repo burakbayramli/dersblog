@@ -97,9 +97,9 @@ bir yerden, çift sayfaları başka bir yerden almasını söylüyoruz
 
 Kalite Azaltmak, Kucultmek
 
-Bazen icinde cok fazla resim olan PDF dosyalarinin daha hizli
-gostermek icin, kucultmek icin kalitesini azaltmak isteyebiliriz. Eger
-`ghostscript` var ise,
+Bazen içinde çok fazla resim olan PDF dosyalarının daha hızlı
+göstermek için, küçültmek için kalitesini azaltmak isteyebiliriz. Eğer
+`ghoştscript` var ise,
 
 ```
 gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -q -o output.pdf input.pdf

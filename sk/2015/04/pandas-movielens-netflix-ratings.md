@@ -177,7 +177,7 @@ utility_csr = csr_matrix((ratings.rating, (ratings.userId , ratings.movieId)))
 JSON
 
 Bir diğer seyrek sayılabilecek format her satırda ayrı kullanıcı için
-o kullanıcının beğeni raporunu JSON olarak vermek. Böylece kişi bazı
+o kullanıcının beğeni raporunu JSON olarak vermek. Böylece kişi bazlı
 veri satır satır okunabilir ve her satır üzerinde `json.loads`
 işletilerek veri Python sözlüğüne çevirilebilir.
 

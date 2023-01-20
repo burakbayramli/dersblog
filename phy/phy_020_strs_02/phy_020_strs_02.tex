@@ -269,17 +269,18 @@ gibi kalemlerle ilgileniyor olabilirim. Bu kalemlerden ilk ikisi çok basittir.
 mesela, ki insanlar bu kirişin üstünde yürüdüğünde oraya buraya savrulmasınlar
 (saptırma bu hesabı bize verebilir). İşte üstteki türden hesapları yapabilmek
 için Euler-Bernoulli kiriş faraziyesinden yola çıkmak yaygın bir yaklaşımdır.
-Bu faraziyeler nelerdir? 
+Bu önkabuller nelerdir? 
 
 \begin{itemize}
    \item Deformasyonlar ufak: Bu doğal bir varsayım, inşaat mühendisliğinde
      mesela eğer ortada bir deprem yok ise çok büyük şekil değişiklikleri
      beklemeye gerek yok. 
-   \item Kiriş lineer elastik esyonlu maddeden yapılmış: inşaat
-     mühendisliğindeki çelik kirişlerin zaten böyle olduğu farz edilir.     
+   \item Kiriş lineer elastik eşyönlü (isotropic) maddeden yapılmış: inşaat
+     mühendisliğindeki çelik kirişlerin zaten böyle olduğu farz edilir.
    \item Poisson oranı etkileri yoksayılır.
-   \item Düzlem bölümler düzlem kalır. Boyu eninden cok daha fazla olan
-     nesnelerde bu dogrudur, fakat daha ufak parcalarda varsayim tutmayabilir.
+   \item Düzlem bölümler düzlem kalır (plane sections remain plain). Boyu
+     eninden çok daha fazla olan nesnelerde bu doğrudur, fakat daha ufak
+     parçalarda varsayım tutmayabilir.
 \end{itemize}
 
 İç Kuvvetler - Kaykılma ve Bükülme Momenti
@@ -291,7 +292,7 @@ uğraşıyoruz. Üstte birinci resimdeki parçaya bakıyoruz, eksenler yatay $X_
 dikey $X_2$, ve parça yatay $\ud X_1$ genişliğinde, üzerinde dağıtık yük $q$
 var. Unutmayalım bir parçayı kesip çıkartınca onun üzerindeki kuvvetler hayali
 olarak ortaya ``saçılır'', bu saçılma çekiş vektörleri kadar çetrefil değil
-muhakkak (çünkü faraziyelerle pek çok şeyi burada basitleştirdik) ama üç tane
+muhakkak (çünkü önkabullerle pek çok şeyi burada basitleştirdik) ama üç tane
 temel kuvvet olduğunu biliyoruz.
 
 Kuvvetlerden ilki üstteki resimde soldan birinci, normal kuvvet $N$. Bu kuvvet
@@ -331,13 +332,81 @@ işaretli),
 
 \includegraphics[width=15em]{phy_020_strs_02_11.jpg}
 
-Referans nokta gerekli cunku hatirlarsak moment bir nokta etrafindaki
-dondurmeye baglidir, kuvvet donus capina teget olan kuvvettir. O zaman 
+Referans nokta gerekli çünkü hatırlarsak moment bir nokta etrafındaki
+döndürmeye bağlıdır, kuvvet dönüş çapına teğet olan kuvvettir. O zaman 
 
 $$
--M + \left( M + \frac{\ud M}{\ud X_1} \ud X_1 \right) - V \ud X_1 -
-q \ud X_1 \left( \frac{\ud X_1}{2}  \right) = 0
+\sum M_{X_3} = -M + \left( M + \frac{\ud M}{\ud X_1} \ud X_1 \right) -
+V \ud X_1 - q \ud X_1 \left( \frac{\ud X_1}{2}  \right) = 0
 $$
+
+Formüldeki $\ud X_1 / 2$ nereden çıktı? Moment için bir kuvvet uygulama uzaklığı
+lazım, uzaklık için de tek bir noktayı seçmek gerekli; bu sebeple $q$'nun etki
+ettiği bölgedeki kuvveti tek bir noktaya yapılıyormuş gibi farzediyoruz, o
+bölgenin tam ortasına, yani $- \ud X_1 / 2$ noktasına.  Kuvvet büyüklüğü için o
+tüm alana etki eden kuvveti bulmak lazım, $q \ud X_1$.
+
+Devam edelim, $M$ terimleri iptal olur, kalanları tekrar düzenleriz,
+
+$$
+V \ud X_1 + \frac{q}{2} \ud X_1^2 = \frac{\ud M}{\ud X_1} \ud X_1
+$$
+
+Eşitliğin her yerini $\ud X_1$'e bölelim,
+
+$$
+V + \frac{q}{2} \ud X_1 = \frac{\ud M}{\ud X_1} 
+$$
+
+$\ud X_1 \to 0$ iken limiti alırsak, eşitliğin solundaki ikinci terim yokolur,
+
+$$
+V = \frac{\ud M}{\ud X_1} 
+$$
+
+Böylece bir eşitlik daha elde ettim, kaykılma kuvveti $X_1$'e göre momentteki
+değişim oranına eşit. Bir önceki eşitlik yük ve kaykılma, bu eşitlik kaykılma ve
+moment arasında idi. Bu iliskiler Statik (Statics) dersinden geliyor, onlari
+bulmak kolaydi.
+
+Yer değişim (displacement) fonksiyonlarını bulmak biraz daha zor olacak. 
+
+Bir çubuk hayal edelim, iki boyutlu, iki eksen üzerinde, $X_1,X_2$.
+Çubuğun tamamı bir eksen üzerinde olacak, bu örnekte $X_1$.
+
+\includegraphics[width=20em]{phy_020_strs_02_12.jpg}
+
+Sonra çubuğa bir yük bindirilecek ve çubuk bükülecek, sapacak (deflect).  Bizim
+bulmak istediğimiz yer değişim fonksiyonu, $y$ diyelim, bükülme öncesi eksen ile
+bükülme sonrası çubuğun eski ekseninin yeni geldiği yer (kesikli çizgi)
+arasındaki mesafe olacak.
+
+\includegraphics[width=20em]{phy_020_strs_02_13.jpg}
+
+Bu amaçla üstte listelediğimiz dördüncü ``düzlem bölümler düzlem kalır''
+önkabulünü kullanacağız.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 [devam edecek]
@@ -377,9 +446,9 @@ Dikkat edersek $\Delta F$ büyüklüğü düzlemin duruşuna, yani $n$'ye bağl�
 için özellikle $n$ ibaresini $T$ sembolüne ekledik; her değişik $n$ değişik bir
 $T_n$ değerini verebileceği için.
 
-Herhangi bir düzlem kullanabiliriz demiştik, fakat tekrarlanabilirlik, net
-ifade açısından her eksene dik birer düzlem, toplam üç tane kullanmak daha
-iyi olabilir. Mesela $x$ eksenine dik olan bir düzlem altta,
+Herhangi bir düzlem kullanabiliriz demiştik, fakat tekrarlanabilirlik, net ifade
+açısından her eksene dik birer düzlem, toplam üç tane kullanmak daha iyi
+olacak. Örnek $x$ eksenine dik olan bir düzlem altta,
 
 \includegraphics[width=20em]{phy_020_strs_02_app_03.jpg}
 

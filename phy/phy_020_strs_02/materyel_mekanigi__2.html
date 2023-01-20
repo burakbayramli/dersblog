@@ -224,16 +224,17 @@ bir konudur. Bir kiriş bağlamında</p>
 mesela, ki insanlar bu kirişin üstünde yürüdüğünde oraya buraya savrulmasınlar
 (saptırma bu hesabı bize verebilir). İşte üstteki türden hesapları yapabilmek
 için Euler-Bernoulli kiriş faraziyesinden yola çıkmak yaygın bir yaklaşımdır.
-Bu faraziyeler nelerdir? </p>
+Bu önkabuller nelerdir? </p>
 <ul>
 <li>Deformasyonlar ufak: Bu doğal bir varsayım, inşaat mühendisliğinde
      mesela eğer ortada bir deprem yok ise çok büyük şekil değişiklikleri
      beklemeye gerek yok. </li>
-<li>Kiriş lineer elastik esyonlu maddeden yapılmış: inşaat
-     mühendisliğindeki çelik kirişlerin zaten böyle olduğu farz edilir.     </li>
+<li>Kiriş lineer elastik eşyönlü (isotropic) maddeden yapılmış: inşaat
+     mühendisliğindeki çelik kirişlerin zaten böyle olduğu farz edilir.</li>
 <li>Poisson oranı etkileri yoksayılır.</li>
-<li>Düzlem bölümler düzlem kalır. Boyu eninden cok daha fazla olan
-     nesnelerde bu dogrudur, fakat daha ufak parcalarda varsayim tutmayabilir.</li>
+<li>Düzlem bölümler düzlem kalır (plane sections remain plain). Boyu
+     eninden çok daha fazla olan nesnelerde bu doğrudur, fakat daha ufak
+     parçalarda varsayım tutmayabilir.</li>
 </ul>
 <p>İç Kuvvetler - Kaykılma ve Bükülme Momenti</p>
 <p><img alt="" src="phy_020_strs_02_10.jpg" /></p>
@@ -242,7 +243,7 @@ uğraşıyoruz. Üstte birinci resimdeki parçaya bakıyoruz, eksenler yatay $X_
 dikey $X_2$, ve parça yatay $\mathrm{d} X_1$ genişliğinde, üzerinde dağıtık yük $q$
 var. Unutmayalım bir parçayı kesip çıkartınca onun üzerindeki kuvvetler hayali
 olarak ortaya "saçılır", bu saçılma çekiş vektörleri kadar çetrefil değil
-muhakkak (çünkü faraziyelerle pek çok şeyi burada basitleştirdik) ama üç tane
+muhakkak (çünkü önkabullerle pek çok şeyi burada basitleştirdik) ama üç tane
 temel kuvvet olduğunu biliyoruz.</p>
 <p>Kuvvetlerden ilki üstteki resimde soldan birinci, normal kuvvet $N$. Bu kuvvet
 parçanın sol tarafında $N$, sağ tarafında $N$'deki ($X_1$'e göre) değişim çarpı
@@ -270,12 +271,44 @@ kuvveti arasında bir ilişkiyi ortaya çıkarmış oldum. </p>
 için bir nokta seçilmeli, ufak parçanın sağ noktasını baz alıyorum (resimde
 işaretli),</p>
 <p><img alt="" src="phy_020_strs_02_11.jpg" /></p>
-<p>Referans nokta gerekli cunku hatirlarsak moment bir nokta etrafindaki
-dondurmeye baglidir, kuvvet donus capina teget olan kuvvettir. O zaman </p>
+<p>Referans nokta gerekli çünkü hatırlarsak moment bir nokta etrafındaki
+döndürmeye bağlıdır, kuvvet dönüş çapına teğet olan kuvvettir. O zaman </p>
 <p>$$
--M + \left( M + \frac{\mathrm{d} M}{\mathrm{d} X_1} \mathrm{d} X_1 \right) - V \mathrm{d} X_1 -
-q \mathrm{d} X_1 \left( \frac{\mathrm{d} X_1}{2}  \right) = 0
+\sum M_{X_3} = -M + \left( M + \frac{\mathrm{d} M}{\mathrm{d} X_1} \mathrm{d} X_1 \right) -
+V \mathrm{d} X_1 - q \mathrm{d} X_1 \left( \frac{\mathrm{d} X_1}{2}  \right) = 0
 $$</p>
+<p>Formüldeki $\mathrm{d} X_1 / 2$ nereden çıktı? Moment için bir kuvvet uygulama uzaklığı
+lazım, uzaklık için de tek bir noktayı seçmek gerekli; bu sebeple $q$'nun etki
+ettiği bölgedeki kuvveti tek bir noktaya yapılıyormuş gibi farzediyoruz, o
+bölgenin tam ortasına, yani $- \mathrm{d} X_1 / 2$ noktasına.  Kuvvet büyüklüğü için o
+tüm alana etki eden kuvveti bulmak lazım, $q \mathrm{d} X_1$.</p>
+<p>Devam edelim, $M$ terimleri iptal olur, kalanları tekrar düzenleriz,</p>
+<p>$$
+V \mathrm{d} X_1 + \frac{q}{2} \mathrm{d} X_1^2 = \frac{\mathrm{d} M}{\mathrm{d} X_1} \mathrm{d} X_1
+$$</p>
+<p>Eşitliğin her yerini $\mathrm{d} X_1$'e bölelim,</p>
+<p>$$
+V + \frac{q}{2} \mathrm{d} X_1 = \frac{\mathrm{d} M}{\mathrm{d} X_1} 
+$$</p>
+<p>$\mathrm{d} X_1 \to 0$ iken limiti alırsak, eşitliğin solundaki ikinci terim yokolur,</p>
+<p>$$
+V = \frac{\mathrm{d} M}{\mathrm{d} X_1} 
+$$</p>
+<p>Böylece bir eşitlik daha elde ettim, kaykılma kuvveti $X_1$'e göre momentteki
+değişim oranına eşit. Bir önceki eşitlik yük ve kaykılma, bu eşitlik kaykılma ve
+moment arasında idi. Bu iliskiler Statik (Statics) dersinden geliyor, onlari
+bulmak kolaydi.</p>
+<p>Yer değişim (displacement) fonksiyonlarını bulmak biraz daha zor olacak. </p>
+<p>Bir çubuk hayal edelim, iki boyutlu, iki eksen üzerinde, $X_1,X_2$.
+Çubuğun tamamı bir eksen üzerinde olacak, bu örnekte $X_1$.</p>
+<p><img alt="" src="phy_020_strs_02_12.jpg" /></p>
+<p>Sonra çubuğa bir yük bindirilecek ve çubuk bükülecek, sapacak (deflect).  Bizim
+bulmak istediğimiz yer değişim fonksiyonu, $y$ diyelim, bükülme öncesi eksen ile
+bükülme sonrası çubuğun eski ekseninin yeni geldiği yer (kesikli çizgi)
+arasındaki mesafe olacak.</p>
+<p><img alt="" src="phy_020_strs_02_13.jpg" /></p>
+<p>Bu amaçla üstte listelediğimiz dördüncü "düzlem bölümler düzlem kalır"
+önkabulünü kullanacağız.</p>
 <p>[devam edecek]</p>
 <p>Ekler</p>
 <p>Giriş dersinden hatırlarsak kuvvet uygulanan çubuklardaki deformasyon maddenin
@@ -302,9 +335,9 @@ $$</p>
 <p>Dikkat edersek $\Delta F$ büyüklüğü düzlemin duruşuna, yani $n$'ye bağlı olduğu
 için özellikle $n$ ibaresini $T$ sembolüne ekledik; her değişik $n$ değişik bir
 $T_n$ değerini verebileceği için.</p>
-<p>Herhangi bir düzlem kullanabiliriz demiştik, fakat tekrarlanabilirlik, net
-ifade açısından her eksene dik birer düzlem, toplam üç tane kullanmak daha
-iyi olabilir. Mesela $x$ eksenine dik olan bir düzlem altta,</p>
+<p>Herhangi bir düzlem kullanabiliriz demiştik, fakat tekrarlanabilirlik, net ifade
+açısından her eksene dik birer düzlem, toplam üç tane kullanmak daha iyi
+olacak. Örnek $x$ eksenine dik olan bir düzlem altta,</p>
 <p><img alt="" src="phy_020_strs_02_app_03.jpg" /></p>
 <p>Daha önce gördüğümüz $\Delta F$'in üstteki resimde düzleme göre bileşenlerine
 ayıracağız, bunlar $\Delta F_x$, $\Delta F_y$, $\Delta F_z$. Baktığımız alan ise

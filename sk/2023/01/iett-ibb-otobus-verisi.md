@@ -142,7 +142,7 @@ print (df)
 ```
 
 API'de olmayan bir veri çeşidi bir hattın geçtiği tüm durakların
-listesi. Hat üzerinde giden otobüslerin bir anda yakın olduğu duraklar
+listesi. Hat üzerinde giden otobüslerin o anda yakın olduğu duraklar
 canlı olarak paylaşılıyor fakat statik hat verisi yok, önce şu durak
 sonra şu durak gibi..  Bu veriyi belki üstteki çağrıları gün içinde
 birkaç kere işletip, veriyi toplayıp, sonradan birleştirerek elde

@@ -3,7 +3,9 @@
 Moovit [4] benzeri bir uygulamayı nasıl yazarız sorusuna cevap, önce
 İETT baz seyahat verileri gerekli. Gerekli verilerin bazıları İETT APİ
 servisi üzerinden alınabilir. APİ hakkında belgeler [2]'de, örnek kod
-[1]'de.  Baz ÜRL,
+[1]'de.
+
+Baz URL ve başlangıç ayarları,
 
 
 ```python

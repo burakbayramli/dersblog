@@ -214,6 +214,3 @@ Kaynaklar
 
 [3] [Movielens 1M Veri](https://drive.google.com/uc?export=view&id=1AfnThq72GCP2NkJk_w5nGFqTZjl7lPTA)
 
-
-
-

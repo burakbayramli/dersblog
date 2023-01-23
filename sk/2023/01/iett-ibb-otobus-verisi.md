@@ -1,9 +1,9 @@
 # IETT Verileri, SOAP
 
-Moovit benzeri bir uygulamayi nasil yazariz sorusuna cevap, once IETT
-baz seyahat verileri gerekli. Gerekli verilerin bazilari IETT API
-servisi uzerinden alinabilir. API hakkinda belgeler [2]'de, ornek kod
-[1]'de.  Baz URL,
+Moovit [4] benzeri bir uygulamayı nasıl yazarız sorusuna cevap, önce
+İETT baz seyahat verileri gerekli. Gerekli verilerin bazıları İETT APİ
+servisi üzerinden alınabilir. APİ hakkında belgeler [2]'de, örnek kod
+[1]'de.  Baz ÜRL,
 
 
 ```python

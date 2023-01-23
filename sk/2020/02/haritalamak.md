@@ -21,28 +21,7 @@ almıyorsunuz.
 
 Kurmak icin `pip install folium`
 
-```python
-import folium
-
-lat1,lon1 = 43.4521793912598, 25.597125946810632
-lat2,lon2 = 44.572754823623114, 27.250000972553345
-m = folium.Map(location=[lat1,lon1], tiles='Stamen Terrain', zoom_start=7)
-coordinates=[(lat1,lon1),(lat2,lon2)]
-folium.PolyLine(locations=coordinates,weight=2,color = 'blue').add_to(m)
-folium.CircleMarker(location=(lat2,lon2),
-                            fill_color='blue', radius=10, rotation=1.5).add_to(m)
-
-title_html = "<h3>Title</h3>"
-m.get_root().html.add_child(folium.Element(title_html))
-m.save("index.html")
-
-```
-
-![](har7.jpg)
-
-`lat1,lon1` merkezli bir harita çizdik, odak seviyesi 7, ve `lat1,lon1` den
-başlayıp `lat2,lon2` de biten bir çizgi çektik, ve çizgi sonuna ufak bir daire
-koyduk.
+En basit kullanim belli noktalara yuvarlak isaretler koymak,
 
 İşaretler
 
@@ -56,6 +35,7 @@ tooltip = "Click me!"
 folium.Marker(
     [45.3288, -121.6625], popup="<i>Mt. Hood Meadows</i>", tooltip=tooltip
 ).add_to(m)
+m.save("/tmp/index.html")
 ```
 
 Üstteki kodda görülen `popup` içine `a href` ifadesi de konulabilir,
@@ -63,6 +43,40 @@ böylece fare üstünde olunca önce ipucu, ona tıklanınca çıkan bölgede
 tıklanabilir bir URL bağlantısı olacaktır. Biz ayrıca bu bağlantıyı
 `target='_blank' rel='noopener noreferrer'` ile yarattık, böylece
 tıklama bizi tarayıcıda ayrı bir tab'e götürüyor.
+
+Kapalı Alanlar, Poligon
+
+```python
+import folium
+m = folium.Map(location=[lat1,lon1], tiles='Stamen Terrain', zoom_start=7)
+coordinates=[(43,35),(44,27),(45,32)]
+folium.Polygon(locations=coordinates,weight=2,color = 'blue').add_to(m)
+m.save("/tmp/index.html")
+```
+
+![](har8.jpg)
+
+Başlık Eklemek
+
+```python
+import folium
+
+lat1,lon1 = 43.4521793912598, 25.597125946810632
+lat2,lon2 = 44.572754823623114, 27.250000972553345
+m = folium.Map(location=[lat1,lon1], tiles='Stamen Terrain', zoom_start=7)
+folium.CircleMarker(location=(lat2,lon2),
+                            fill_color='blue', radius=10, rotation=1.5).add_to(m)
+
+title_html = "<h3>Title</h3>"
+m.get_root().html.add_child(folium.Element(title_html))
+m.save("/tmp/index.html")
+```
+
+![](har7.jpg)
+
+`lat1,lon1` merkezli bir harita çizdik, odak seviyesi 7, ve `lat1,lon1` den
+başlayıp `lat2,lon2` de biten bir çizgi çektik, ve çizgi sonuna ufak bir daire
+koyduk.
 
 
 Ek bilgiler [5],[6],[7] de bulunabilir,

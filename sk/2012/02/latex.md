@@ -115,7 +115,8 @@ Su sekilde bir matris ufak sekilde cikabilir,
 \end{array}\right]
 ```
 
-İçeriği büyütmek için `\arraystretch` ve `\dfrac` lazım,
+Bölümleri gösterirken LateX font boyunu küçültebiliyor. Büyük font
+kullanmak için `\arraystretch` ve `\dfrac` lazım,
 
 ```
 \renewcommand*{\arraystretch}{2.5}

@@ -106,7 +106,7 @@ print (list(data.keys())[:10])
 ['ABANT GÖLÜ TP', 'GÜVERCİNLİK TP', 'ÇİÇEKLİ TP', 'EFEOĞLU TP', 'BORÇKA KARAGÖL TP', 'KARGALI GÖLCÜK TP', 'DELMECE YAYLASI TP', 'KÜÇÜKELMALI TP', 'SUUÇTU TP', 'AYVALIK ADALARI TP']
 ```
 
-Bunlardan birini secelim, mesela `DELMECE YAYLASI TP`
+Bunlardan birini seçelim, mesela `DELMECE YAYLASI TP`
 
 ```python
 dy = data['DELMECE YAYLASI TP']
@@ -122,11 +122,11 @@ print (dy[:5])
  [40.68959222 31.77169046]]
 ```
 
-Bu şekilde alanı tanımlayan poligonun köşe noktalarını elde ettik. Bu noktaları
-direk grafikleyebiliriz, favori coğrafi paketinizi burada kullanın, şurada [4]
-anlatılan Folium olabilir, basemap olabilir..
+Bu şekilde alanı tanımlayan poligonun köşe noktalarını elde ettik. Bu
+noktaları direk grafikleyebiliriz, favori coğrafi paketi burada
+kullanılır, şurada [4] anlatılan Folium olabilir mesela, ya da basemap..
 
-Eger noktalarin ortasini bulmak istiyorsak su kod isler,
+Eğer noktaların ortasını bulmak istiyorsak şu kod işler,
 
 ```python
 def mid(coords):
@@ -158,6 +158,9 @@ Kaynaklar
     [Link](https://dergipark.org.tr/tr/download/article-file/939738)
 
 [4] [Haritalamak](../../2020/02/haritalamak.html)
+
+
+
 
 
 

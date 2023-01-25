@@ -1,4 +1,4 @@
-f# Haritalamak
+# Haritalamak
 
 ### Folium
 

@@ -145,6 +145,8 @@ Out[1]: (40.69422873080869, 31.779313871773233)
 Üstteki tüm verileri kullanan bir kod [2]'de, çıktısı veriyi içeren
 aynı zip içinde, `trgeo.html`.
 
+![](trgeo.jpg)
+
 Kaynaklar
 
 [1] Veriler, https://drive.google.com/uc?export=view&id=1qM0KPCZz8JlTWoJJ1-FjYYrNzCDGtoGD

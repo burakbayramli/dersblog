@@ -149,7 +149,7 @@ aynı zip içinde, `trgeo.html`.
 
 Kaynaklar
 
-[1] [Veriler]{https://drive.google.com/uc?export=view&id=1qM0KPCZz8JlTWoJJ1-FjYYrNzCDGtoGD}
+[1] [Veriler](https://drive.google.com/uc?export=view&id=1qM0KPCZz8JlTWoJJ1-FjYYrNzCDGtoGD}
 
 [2] [Haritalama Kodu](trgeo.py)
 
@@ -158,4 +158,3 @@ Kaynaklar
     [Link](https://dergipark.org.tr/tr/download/article-file/939738)
 
 [4] [Haritalamak](../../2020/02/haritalamak.html)
-

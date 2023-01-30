@@ -85,6 +85,18 @@ vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makal
 
 ![](n-vector.jpg)
 
+Grafiğe bakarsak yeryüzünde üç noktayı temsil eden A,B,C vektörleri
+bulunmuş bu vektörlerin her biri üç açı üzerinden temsil edilecek, ve
+eğer üç boyuttaki vektörlerin ortalamasını alırsak rahatlıkla M
+vektörünü bulabiliriz, çünkü vektörleri işaretlerinden tutun onların
+kapsamları aritmetiksel işlemler için uygundur. Kıyasla biri -90/+90
+arasında diğeri -180/+180 arasında gidip gelen iki sayının
+aritmetiksel ortalamasının yeryüzünün her noktasında doğru sonucu
+vermesi zordur. Biri ekvatorun az üstünde diğeri az altında olan iki
+noktayı düşünebiliriz mesela..
+
+Kodlama alttaki gibi olabilir,
+
 ```python
 import numpy as np
 import numpy.linalg as lin
@@ -124,7 +136,7 @@ m = average(coords)
 print (m)
 ```
 
-Tabii paket kullanarak daha kolay olabilir,
+Üstteki işlemleri yapan bir paket te var, 
 
 ```python
 from pygeodesy.sphericalNvector import LatLon
@@ -146,7 +158,7 @@ print (mid.lat, mid.lon)
 ### Nokta Bir Alan İçinde mi
 
 Elde köşeleri bilinen bir üçgen, kare ya da dışbükey poligon var
-diyelim, mesela Bermuda Ucgeni! Elimizdeki bir noktanın o alan içine
+diyelim, mesela Bermuda Üçgeni! Elimizdeki bir noktanın o alan içine
 düşüp düşmediğini nereden bileceğiz?  Burada iyi bir yaklaşım
 `pygeodesy` paketi, bu paket üstteki n-vektör yaklaşımını kullanıyor,
 yani sağlam. Bir örnek altta, dörk köşesi verilmiş alan içine `45.1,

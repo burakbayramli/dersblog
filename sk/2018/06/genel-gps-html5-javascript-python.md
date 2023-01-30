@@ -83,7 +83,7 @@ Bir GPS kordinat listesinin orta noktasını bulmak için, su [bağlantıdan](ht
 enlem, boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
 vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makale [1].
 
-![n-vector.jpg]
+![](n-vector.jpg)
 
 ```python
 import numpy as np

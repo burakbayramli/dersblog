@@ -3,7 +3,7 @@
 Bu proje yapay öğrenim (machine learning) teknikleri kullanarak
 İnternet'teki haber makalelerini kategorize etmeye uğraşır. Günlük,
 yıllık verileri basit CSV dosyaları içinde her satır bir haber olacak
-şekilde paylaşıyorlar [1]. Gösterilen [1] bağlantısına gidince her gün
+şekilde paylaşıyorlar. Gösterilen [1] bağlantısına gidince her gün
 için bir zip dosyası görüyoruz, her gün için dosya ismini hazırlayıp
 onu otomatik indiren bir Python script altadır. Örnek olarak 10 Eylül
 2022 günü indirildi,

@@ -35,7 +35,7 @@ print (df[['plaka','il_adi','lat','lon']])
 [81 rows x 4 columns]
 ```
 
-Diger veriler
+Diğer veriler
 
 ```python
 df.columns
@@ -91,9 +91,11 @@ Out[1]:
  '/opt/Downloads/trgeo/millipark/tabiati_koruma_alanlari.json']
 ```
 
-Bu veri dosyalari JSON formatinda, okunduktan sonra basit Python sozlugune
-erisir gibi erisebiliyoruz, buradaki onemli veri park, korunma alanin
-sinirlarini tanimlayan enlem, boylam listesi. 
+Veriler kml formatında [3] makalesi yazarından geliyor; onları json
+formatına çevirmek için zıp içinde `conv.py` kodu var. JSON veri
+dosyaları okunduktan sonra basit Python sözlüğüne erişir gibi
+erisebiliyoruz, buradaki önemli veri park, korunma alanın sınırlarını
+tanımlayan enlem, boylam listesi,
 
 ```python
 f = base + "/millipark/tabiat_parklari.json"

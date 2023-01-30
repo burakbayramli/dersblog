@@ -79,12 +79,11 @@ derece güneybatıya 1000 km adım atınca nereye geldiğimizi görüyoruz.
 
 ### Orta Nokta
 
-Bir GPS kordinat listesinin orta noktasını bulmak için,
+Bir GPS kordinat listesinin orta noktasını bulmak için, su [bağlantıdan](https://www.navlab.net/nvector/#example_7),
+enlem, boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
+vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makale [1].
 
-Su [bağlantıdan](https://www.navlab.net/nvector/#example_7), enlem,
-boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
-vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı
-makale [1].
+![n-vector.jpg]
 
 ```python
 import numpy as np

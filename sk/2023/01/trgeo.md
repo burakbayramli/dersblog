@@ -128,7 +128,7 @@ Bu şekilde alanı tanımlayan poligonun köşe noktalarını elde ettik. Bu
 noktaları direk grafikleyebiliriz, favori coğrafi paketi burada
 kullanılır, şurada [4] anlatılan Folium olabilir mesela, ya da basemap..
 
-Eğer noktaların ortasını bulmak istiyorsak şu kod işler,
+Eğer noktaların ortasını bulmak istiyorsak [5] şu kod,
 
 ```python
 def mid(coords):
@@ -161,8 +161,5 @@ Kaynaklar
 
 [4] [Haritalamak](../../2020/02/haritalamak.html)
 
-
-
-
-
+[5] [Genel Coğrafi Kordinat Kodları](../../2018/06/genel-gps-html5-javascript-python.html)
 

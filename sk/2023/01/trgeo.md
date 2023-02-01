@@ -48,8 +48,8 @@ Index(['plaka', 'il_adi', 'lat', 'lon', 'northeast_lat', 'northeast_lon',
       dtype='object')
 ```
 
-`northeast_`, `southwest_` diye giden kolonlar ilk merkezini tanımlayan
-bir kutunun uçlarını gösteriyor herhalde, bunu kontrol etmedik belki bazıları
+`northeast_`, `southwest_` diye giden kolonlar il merkezini tanımlayan
+bir kutunun uçlarını gösteriyor olmalı, kontrol etmedik belki bazıları
 için faydalı olabilir.
 
 Kamp yerlerini gösteren iki tane dosya var, `kamp/kampyerleri.csv` ve

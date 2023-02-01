@@ -92,10 +92,11 @@ Out[1]:
 ```
 
 Veriler kml formatında [3] makalesi yazarından geliyor; onları json
-formatına çevirmek için zıp içinde `conv.py` kodu var. JSON veri
-dosyaları okunduktan sonra basit Python sözlüğüne erişir gibi
-erisebiliyoruz, buradaki önemli veri park, korunma alanın sınırlarını
-tanımlayan enlem, boylam listesi,
+formatına çevirmek için zip içinde `conv.py` kodu var. Biz bu çevrimi
+yaptık, dosyalar aynı zip içinde. JSON veri dosyaları okunduktan sonra
+basit Python sözlüğüne erişir gibi erişebiliyoruz, buradaki önemli
+veri park, korunma alanın sınırlarını tanımlayan enlem, boylam
+listesi,
 
 ```python
 f = base + "/millipark/tabiat_parklari.json"

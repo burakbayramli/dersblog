@@ -105,7 +105,7 @@ convert video.avi chessb-right/video%03d.png
 convert resim1.jpg resim2.jpg +append output.jpg
 ```
 
-GİF resmi optimize etmek için
+GIF resmi optimize etmek için
 
 ```
 convert -scale 70% -fuzz 6% +dither -layers Optimize +map in.gif out.gif
@@ -116,4 +116,12 @@ Arka plandaki saydamlık (transparent) durumunu çıkartmak için
 ``
 convert dosya.png -background white -alpha remove -alpha off out.png
 ```
+
+Işık seviyesi (brightness) ve farklılık (contrast) değişimi için
+
+```
+convert -brightness-contrast 30x20 in.tif out.tif
+```
+
+Bu örnekte ışık seviyesi 30 farklılık 20 arttırıldı.
 

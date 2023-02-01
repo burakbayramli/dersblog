@@ -1,4 +1,4 @@
-# Yerel Coğrafi Veriler, Parklar, Kamplar
+# Yerel Coğrafi Veriler
 
 Şehir kordinatlar, kamp yerleri, milli park verilerini içeren bazı
 coğrafi veriler [1]'de bulunabilir. Sıkıştırılmış dosya açılmış hali

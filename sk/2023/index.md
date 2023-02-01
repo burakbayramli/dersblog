@@ -6,5 +6,5 @@
 
 [Rust Programlama Dili](01/rust.html)
 
-[Yerel Coğrafi Veriler, Parklar, Kamplar](01/trgeo.html)
+[Yerel Coğrafi Veriler](01/trgeo.html)
 

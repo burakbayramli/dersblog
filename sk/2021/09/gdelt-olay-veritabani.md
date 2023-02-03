@@ -116,7 +116,7 @@ ki GDELT her zaman işlemiyor, ek filtreleme yapmak gerekebilir.
 
 Kaynaklar
 
-[1] http://data.gdeltproject.org/events/index.html
+[1] [GDELT](http://data.gdeltproject.org/events/index.html)
 
 [2] [GDELT Olay Kodlari - PDF](http://data.gdeltproject.org/documentation/CAMEO.Manual.1.1b3.pdf)
 

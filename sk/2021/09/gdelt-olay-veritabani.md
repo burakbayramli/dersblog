@@ -45,11 +45,10 @@ df.columns = conf_cols
 Bu noktada veri Pandas DataFrame objesi halindedir. Daha da
 filtreleyebiliriz, mesela olay kodu 190 ve 194 içeren olaylara
 bakalım. GDELT belgelerine [2] göre bu kodlar saldırı anlamına
-geliyor, ya genel saldırı ya da konvansiyonel silahlarla. Olaylar
-ayrıca 1'inci aktör ve 2'inci aktör olarak ayrılmaya uğraşılmış, bir
-aktör bir diğerine bir etkide bulunuyorsa birinci ve ikinci aktör
-bunlar oluyor. Birinci Rusya ikinci aktör Ukrayna olarak filtreleme
-yapalım,
+geliyor, ya askeri konvansiyonel şekilde genel saldırı. Olaylar ayrıca
+1'inci aktör ve 2'inci aktör olarak ayrılmaya uğraşılmış, bir aktör
+bir diğerine bir etkide bulunuyorsa birinci ve ikinci aktör bunlar
+oluyor. Birinci Rusya ikinci aktör Ukrayna olarak filtreleme yapalım,
 
 ```python
 df2 = df[(df.EventCode==190)|(df.EventCode==195)|(df.EventCode==194)]
@@ -91,7 +90,7 @@ https://katcountry989.com/2022/09/10/russian-rockets-hit-ukraines-kharkiv-killin
 Bağlantıyı ziyaret edince hakikaten bir saldırı haberi olduğuü görüyoruz.
 
 Fakat dikkat: her haber bu şekilde kategorize edilmeyebiliyor. Kullanıcıların
-üstteki bilgiyi başlangıç noktası kabul ederek üstüne ek filtreleme yapmaları
+GDELT verisini başlangıç noktası kabul ederek üstüne ek filtreleme yapmaları
 gerekebilir.
 
 Yanlış bir örnek olarak alttaki makaleye bakalım,
@@ -111,9 +110,8 @@ https://twitchy.com/brettt-3136/2022/09/10/reporter-nevada-gubernatorial-candida
 ```
 
 Bu makaleye bakınca evet içinde saldırı kelimesi geçtiğini görüyoruz
-fakat bu askeri bir saldırı değil, politika bağlamında sözel bir
-çekişme var. Demek ki GDELT her zaman işlemiyor, ek filtreleme yapmak
-gerekebilir.
+fakat bu askeri değil, politika bağlamında sözel bir çekişme var. Demek
+ki GDELT her zaman işlemiyor, ek filtreleme yapmak gerekebilir.
 
 
 Kaynaklar

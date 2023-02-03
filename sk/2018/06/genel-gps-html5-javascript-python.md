@@ -86,14 +86,14 @@ vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makal
 ![](n-vector.jpg)
 
 Grafiğe bakarsak yeryüzünde üç noktayı temsil eden A,B,C vektörleri
-bulunmuş bu vektörlerin her biri üç açı üzerinden temsil edilecek, ve
+bulunmuş bu vektörlerin her biri üç acı üzerinden temsil edilecek, ve
 eğer üç boyuttaki vektörlerin ortalamasını alırsak rahatlıkla M
 vektörünü bulabiliriz, çünkü vektörleri işaretlerinden tutun onların
 kapsamları aritmetiksel işlemler için uygundur. Kıyasla biri -90/+90
 arasında diğeri -180/+180 arasında gidip gelen iki sayının
 aritmetiksel ortalamasının yeryüzünün her noktasında doğru sonucu
-vermesi zordur. Biri ekvatorun az üstünde diğeri az altında olan iki
-noktayı düşünebiliriz mesela..
+vermesi zordur. Biri -90 sınırının bir tarafı diğeri öteki tarafında
+olan iki noktayı düşünebiliriz mesela..
 
 Kodlama alttaki gibi olabilir,
 

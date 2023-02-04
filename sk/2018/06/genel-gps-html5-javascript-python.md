@@ -281,6 +281,46 @@ Sonuc
 olarak çıkacak. İlk değer bir statü değeri, eğer veri işlemede problem
 çıkarsa problem bu şekilde iletilebilir.
 
+### Imajdan Kordinate Toplamak
+
+Diyelim ki elimizde JPG üzerinde bir harita var, üzerinde bir sınır
+gösterilmiş, ve oradan sınır verilerini toplamak istiyoruz. Alttaki
+basit GUİ kodu şunu yapar 1) Parametre olarak geçilen resmi gösterir,
+2) O resim üzerinde yapılacak fare tıklamalarının x,y piksel
+kordinatlarını ekrana basar. Bu sayede çıplak gözle sınıra bakarız,
+üzerine tıklarız, ve kordinatlarını "geriye mühendislik" ile toplamış
+oluruz.
+
+```python
+from PIL import ImageDraw, Image, ImageTk
+import sys, tkinter
+
+window = tkinter.Tk(className="bla")
+image = Image.open(sys.argv[1])
+print ('size',image.size[0],image.size[1])
+
+image = image.resize((int(x), int(y)), Image.ANTIALIAS)
+canvas = tkinter.Canvas(window, width=image.size[0], height=image.size[1])
+canvas.pack()
+image_tk = ImageTk.PhotoImage(image)
+
+canvas.create_image(image.size[0]//2, image.size[1]//2, image=image_tk)
+
+def callback(event):
+    xx = float(event.x) * xratio
+    yy = float(event.y) * yratio    
+    print ("[%d,%d]," % (event.x, event.y))
+
+canvas.bind("<Button-1>", callback)
+tkinter.mainloop()
+```
+
+Gerekli paketi kurmak için `sudo apt ınstall python3-tk` yeterli.
+
+Tabii ek bir adım daha gerekli, piksel kordiatlarını alıp enlem,
+boylama çevirmek; bu hesap için enlem boylamını verdiğimiz birkaça
+piksel kordinatını kullanabiliriz. Bu hesabı okuyucuya bırakıyoruz.
+
 Kaynaklar
 
 [1] Kenneth Gade (2010), A Non-singular Horizontal Position Representation,

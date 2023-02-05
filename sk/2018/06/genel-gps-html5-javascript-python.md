@@ -281,7 +281,7 @@ Sonuc
 olarak çıkacak. İlk değer bir statü değeri, eğer veri işlemede problem
 çıkarsa problem bu şekilde iletilebilir.
 
-### Imajdan Kordinate Toplamak
+### Imajdan Kordinat Toplamak
 
 Diyelim ki elimizde JPG üzerinde bir harita var, üzerinde bir sınır
 gösterilmiş, ve oradan sınır verilerini toplamak istiyoruz. Alttaki
@@ -315,9 +315,20 @@ tkinter.mainloop()
 
 Gerekli paketi kurmak için `sudo apt ınstall python3-tk` yeterli.
 
-Tabii ek bir adım daha gerekli, piksel kordiatlarını alıp enlem,
-boylama çevirmek; bu hesap için enlem boylamını verdiğimiz birkaça
-piksel kordinatını kullanabiliriz. Bu hesabı okuyucuya bırakıyoruz.
+Tabii nihai kordinatlar için ek bir adım daha gerekli, piksel
+değerlerini alıp enlem, boylama çevirmek; bu hesap için enlem
+boylamını bildiğimiz iki piksel değeri yeterli. Alttaki gibi bir kodla
+bu transformasyon yapılabilir. Referans iki kordiate değeri `refc`,
+ona tekabül eden iki piksel x,y değeri `refp` içinde, ve toplanan
+tüm piksel değerleri bir liste olarak `clicks` içinde.
+
+```python
+def platlon(refc, refp, clicks):
+    mlat = (refc[1,0]-refc[0,0]) / (refp[1,1]-refp[0,1])
+    mlon = (refc[1,1]-refc[0,1]) / (refp[1,0]-refp[0,0])
+    cs = [ [ refc[0,0]+(y-refp[0,1])*mlat, refc[0,1]+(x-refp[0,0])*mlon ] for x,y in data ]
+    return cs
+```
 
 Kaynaklar
 

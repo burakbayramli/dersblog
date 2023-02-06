@@ -34,8 +34,3 @@ git push yaparken sifre bile sorulmayacaktir. Not: Bunun islemesi icin
 depoyu bastan https uzerinden degil git@github diye baslayan adresten
 klonlamis olmaniz gerekir.
 
-
-
-
-
-

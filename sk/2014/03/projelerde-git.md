@@ -20,7 +20,7 @@ değişti:
 git diff --name-only HEAD~10
 ```
 
-Git Pull
+### Git Pull
 
 Artık Github çoğu projede kullanılan bir servis, onu baz alan bazı
 tavsiyeleri paylaşmak iyi olur. Tipik bir tür kullanım şöyle olabilir,
@@ -48,7 +48,7 @@ kod biter bitmez hemen almışız, ve onun üzerinde bizimkini yazmışız
 gibi... Bu durumda da çakışmalar görülebilir muhakkak, onlar varsa
 çözülür; Sonra `git push` daha önce yapıldığı gibi yapılır.
 
-Dosyayı Tamamen Silmek
+### Dosyayı Tamamen Silmek
 
 Belki geliştirme dizini içinde geçici dosyalar üretiliyor, ya da şifre
 dosyaları yanlışlıkla commit edilmiş, ya da aşırı büyük dosyalar
@@ -160,7 +160,7 @@ git push origin master
 
 yapilir.
 
-Daha Sofistike Dal Yapilar
+### Daha Sofistike Dal Yapılar
 
 http://nvie.com/posts/a-successful-git-branching-model/
 
@@ -205,7 +205,7 @@ hala aynı kalır; alınan yıldızlar, takipçiler, vs. değişmez.
 ![](Screen-shot-2009-12-24-at-11.32.03.png)
 ![](https://1.bp.blogspot.com/-xg2XAf271oo/U4YPzRKa14I/AAAAAAAABZ0/Zm2o_8Vokhc/s1600/Screen-shot-2009-12-24-at-11.32.03.png)
 
-Başka Kullanıcı İsmi ile Github'da Çalışmak
+### Başka Kullanıcı İsmi ile Github'da Çalışmak
 
 Bazen çoğunlukla kullandığımızdan farklı bir kullanıcı üzerinden iş
 yapmamız gerekebilir. Belki ve ve iş kullanıcıları farklıdır
@@ -232,3 +232,12 @@ ile kodu yollamak istediğinizde ikinci kullanıcı ve şifre
 sorulmayacak. Dikkat url isminde `https` olmaması önemli, o yüzden
 kullanıcı / şifre soruluyor zaten. SSH üzerinden şifresiz commit için
 ayarlanan repo'larda bu url `git@github.com:...` diye gider.
+
+### Belli Bir Tarihe Dönüş
+
+Depo'nun eski tarihteki haline donmek istiyorsak,
+
+```
+git blog - git checkout "`git rev-list master  -n 1 --first-parent --before=2022-06-02`"
+```
+

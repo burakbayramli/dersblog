@@ -281,11 +281,33 @@ Sonuc
 olarak çıkacak. İlk değer bir statü değeri, eğer veri işlemede problem
 çıkarsa problem bu şekilde iletilebilir.
 
+Geocoder
+
+Eğer üstteki yaklaşım fazla çetrefil gibi gözüküyorsa, `geoçoder` adlı
+bir paket var,
+
+```python
+import geocoder
+
+g = geocoder.osm("Plymouth, MN")
+print (g.latlng)
+g = geocoder.osm("Istanbul, Turkey")
+print (g.latlng)
+g = geocoder.osm("Canakkale")
+print (g.latlng)
+```
+
+```text
+[45.0065149, -93.46651]
+[41.0091982, 28.9662187]
+[40.0549886, 26.9278292]
+```
+
 ### Imajdan Kordinat Toplamak
 
 Diyelim ki elimizde JPG üzerinde bir harita var, üzerinde bir sınır
 gösterilmiş, ve oradan sınır verilerini toplamak istiyoruz. Alttaki
-basit GUİ kodu şunu yapar 1) Parametre olarak geçilen resmi gösterir,
+basit GUI kodu şunu yapar 1) Parametre olarak geçilen resmi gösterir,
 2) O resim üzerinde yapılacak fare tıklamalarının x,y piksel
 kordinatlarını ekrana basar. Bu sayede çıplak gözle sınıra bakarız,
 üzerine tıklarız, ve kordinatlarını "geriye mühendislik" ile toplamış

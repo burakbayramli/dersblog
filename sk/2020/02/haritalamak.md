@@ -415,6 +415,4 @@ Kaynaklar
 
 [9] Sileika, Pro Python System Administration
 
-
-
-
+[10] [Yükseklik (Elevation) Verileri](2019/04/elevation.html)

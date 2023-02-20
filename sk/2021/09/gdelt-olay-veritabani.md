@@ -87,7 +87,7 @@ Name: 55914, dtype: object
 https://katcountry989.com/2022/09/10/russian-rockets-hit-ukraines-kharkiv-killing-one-governor/
 ```
 
-Bağlantıyı ziyaret edince hakikaten bir saldırı haberi olduğuü görüyoruz.
+Bağlantıyı ziyaret edince hakikaten bir saldırı haberi olduğunu görüyoruz.
 
 Fakat dikkat: her haber bu şekilde kategorize edilmeyebiliyor. Kullanıcıların
 GDELT verisini başlangıç noktası kabul ederek üstüne ek filtreleme yapmaları
@@ -119,7 +119,3 @@ Kaynaklar
 [1] [GDELT](http://data.gdeltproject.org/events/index.html)
 
 [2] [GDELT Olay Kodlari - PDF](http://data.gdeltproject.org/documentation/CAMEO.Manual.1.1b3.pdf)
-
-
-
-

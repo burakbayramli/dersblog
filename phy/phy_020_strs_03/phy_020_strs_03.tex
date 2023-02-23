@@ -275,8 +275,23 @@ plt.savefig('phy_020_strs_03_05.jpg',quality=30)
 
 \includegraphics[width=20em]{phy_020_strs_03_05.jpg}
 
+\begin{minted}[fontsize=\footnotesize]{python}
+s11f = sym.lambdify([X1,X2], S11,'numpy')
+x = np.linspace(0,L,20)
+y = np.linspace(-h/2,h/2,20)
+xg,yg = np.meshgrid(x,y)
+zg = s11f(xg,yg)
+plt.contourf(xg,yg,zg,cmap='gnuplot2')
+plt.savefig('phy_020_strs_03_06.jpg',quality=30)
+\end{minted}
 
-[devam edecek]
+\includegraphics[width=20em]{phy_020_strs_03_06.jpg}
+
+Yine akla yatkın; grafiğin üst kısımda koyu maviye yakın yerde sıkışma
+(compression) var orada materyel daralma, içe doğru baskı yaşıyor. Alt kısımda
+ise gerginlik var, burada materyel yanlara doğru çekiliyor. Desteklere yakın
+noktalarda alt sol ve sağda sıkışma görüyoruz, onun üstünde gerginlik.
+Bunlar da mantıklı.
 
 Kaynaklar
 

@@ -132,12 +132,14 @@ print (sym.latex(sol))
 <pre><code>y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + C_{3} X_{1}^{2} + C_{4} X_{1}^{3} - \frac{25 X_{1}^{4}}{10240000000000008}
 </code></pre>
 
-<p><code>dsolve</code> çağrısı sıfıra eşitlik faraziyesi ile hareket ediyor, bu sebeple
-üstteki çağrıda diferansiyel denklemin neye eşit olduğunu berlirtmedik.</p>
+<p>Çağrı <code>dsolve</code> sıfıra eşitlik faraziyesi ile hareket ediyor, bu sebeple
+üstteki çağrıda diferansiyel denklemin neye eşit olduğunu berlirtmedik, sıfıra
+eşitlik farz edildi.</p>
 <p>$$
 y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + C_{3} X_{1}^{2} + C_{4} X_{1}^{3} - \frac{25 X_{1}^{4}}{10240000000000008}
 $$</p>
-<p>Çok ufak noktalı sayı [1, Lecture 2]'de 1 bolu büyük bir sayı olarak gösterilmiş,</p>
+<p>$X_1^4$ katsayısı [1, Lecture 2]'de 1 bölü büyük bir sayı olarak gösterilmiş,
+acaba aynı sonuca vardık mı? Kontrol edelim,</p>
 <pre><code class="python">print (1/(25./10240000000000008.))
 </code></pre>
 
@@ -147,8 +149,9 @@ $$</p>
 <p>$$
 y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + \frac{C_{3} X_{1}^{2}}{2} + \frac{C_{4} X_{1}^{3}}{6} - \frac{ X_{1}^{4}}{409600000000000}
 $$</p>
+<p>Vardık.</p>
 <p>Gördüldüğü gibi çözümde 4 tane sabit var, bu sabitler orada çünkü sınır
-şartlarını tanımlamadık. Onlar tanımlanınca sabitler yokolur.</p>
+şartlarını tanımlamadık. Onlar tanımlanınca sabitler yokolacak,</p>
 <pre><code class="python">y1 = y(X1).subs(X1,0)
 y2 = y(X1).subs(X1,L)
 th = y(X1).diff(X1)
@@ -164,6 +167,8 @@ print (sym.latex(sol))
 <p>$$
 y{\left(X_{1} \right)} = - \frac{25 X_{1}^{4}}{10240000000000008} + \frac{12500 X_{1}^{3}}{426666666666667} - \frac{37500000 X_{1}^{2}}{426666666666667}
 $$</p>
+<p>Şimdi kaykılma $V$ ve moment $M$ hesaplanabilir, bu fonksiyonlar $y$'nin farklı
+derecedeki türevlerini içeriyor, </p>
 <pre><code class="python">y = sol.rhs
 V = EI * y.diff(X1,3)
 M = EI * y.diff(X1,2)
@@ -175,7 +180,7 @@ print (M)
 -12.5*X1**2 + 74999.9999999999*X1 - 74999999.9999999
 </code></pre>
 
-<p>Stres ogesini hesaplayabilirim simdi, formulleri (2)'de,</p>
+<p>Stres öğesini hesaplayabilirim şimdi, formülleri (2)'de,</p>
 <pre><code class="python">S11 = -M * X2 / Ig
 print (sym.simplify(S11))
 </code></pre>
@@ -200,9 +205,9 @@ plt.savefig('phy_020_strs_03_03.jpg',quality=30)
 </code></pre>
 
 <p><img alt="" src="phy_020_strs_03_03.jpg" /></p>
-<p>Akla yatkin gozukuyor, ortalara dogru cubugun bukulmesi daha fazla her iki
-yana dogru daha az.</p>
-<p>Kaykilma ve momenti de grafikleyelim,</p>
+<p>Akla yatkın, ortalara doğru çubuğun bükülmesi daha fazla her iki yana doğru daha
+az.</p>
+<p>Kaykılma ve momenti de grafikleyelim,</p>
 <pre><code class="python">v = sym.lambdify(X1, V,'numpy')
 x = np.linspace(0,L,20)
 plt.plot(x,v(x))

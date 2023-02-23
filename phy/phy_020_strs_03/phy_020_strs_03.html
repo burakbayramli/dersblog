@@ -97,6 +97,32 @@ V = E I \frac{\mathrm{d}^3 y}{\mathrm{d} X_1^3}
 $$</p>
 <p>çünkü sonuçta $M,V$ hesapları $y$'nin birer fonksiyonu, elde edilen $M,V$
 sonuçları $X_1$'in fonksiyonları olacak tabii ki.</p>
+<p>3) Oradan hareketle moment ve kaykılma $M,V$ bulunanca stres bileşenlerini
+bulabilirim,</p>
+<p>$$
+\sigma_{11} = -\frac{M X_2}{I}, \quad
+\sigma_{12} = -\frac{VQ}{I b}
+$$</p>
+<pre><code class="python">from sympy import symbols, Eq, Function, dsolve, latex, simplify
+L = 6000
+Em = 20000
+b = 500
+h = 800
+Ig = (b * h**3)/12
+EI = Em * Ig
+q = -25
+X1 = symbols('X1')
+y = Function('y')
+sol = dsolve([Eq(EI*y(X1).diff(X1,4)-q,0)], [y(X1)])
+print (latex(sol[0]))
+</code></pre>
+
+<pre><code>y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + \frac{C_{3} X_{1}^{2}}{2} + \frac{C_{4} X_{1}^{3}}{6} - 2.44140625 \cdot 10^{-15} X_{1}^{4}
+</code></pre>
+
+<p>$$
+y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + \frac{C_{3} X_{1}^{2}}{2} + \frac{C_{4} X_{1}^{3}}{6} - 2.44140625 \cdot 10^{-15} X_{1}^{4}
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,

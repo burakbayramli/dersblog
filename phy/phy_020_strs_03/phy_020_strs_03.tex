@@ -231,15 +231,42 @@ print (S12)
 9.375e-14*(200000.0 - 500*X2)*(25.0*X1 - 74999.9999999999)*(X2/2 + 400.0)
 \end{verbatim}
 
+Yer değişim sonucunu grafikleyelim,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 u = sym.lambdify(X1, y,'numpy')
 x = np.linspace(0,L,20)
 plt.plot(x,u(x))
+plt.title(u'Yer Değişim y')
 plt.savefig('phy_020_strs_03_03.jpg',quality=30)
 \end{minted}
 
 \includegraphics[width=20em]{phy_020_strs_03_03.jpg}
+
+Akla yatkin gozukuyor, ortalara dogru cubugun bukulmesi daha fazla her iki
+yana dogru daha az.
+
+Kaykilma ve momenti de grafikleyelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+v = sym.lambdify(X1, V,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,v(x))
+plt.title(u'Kaykılma, V')
+plt.savefig('phy_020_strs_03_04.jpg',quality=30)
+\end{minted}
+
+\includegraphics[width=20em]{phy_020_strs_03_04.jpg}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+m = sym.lambdify(X1, M,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,m(x))
+plt.title('Moment, M')
+plt.savefig('phy_020_strs_03_05.jpg',quality=30)
+\end{minted}
+
+\includegraphics[width=20em]{phy_020_strs_03_05.jpg}
 
 
 [devam edecek]

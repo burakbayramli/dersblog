@@ -191,13 +191,34 @@ print (S12)
 <pre><code>9.375e-14*(200000.0 - 500*X2)*(25.0*X1 - 74999.9999999999)*(X2/2 + 400.0)
 </code></pre>
 
+<p>Yer değişim sonucunu grafikleyelim,</p>
 <pre><code class="python">u = sym.lambdify(X1, y,'numpy')
 x = np.linspace(0,L,20)
 plt.plot(x,u(x))
+plt.title(u'Yer Değişim y')
 plt.savefig('phy_020_strs_03_03.jpg',quality=30)
 </code></pre>
 
 <p><img alt="" src="phy_020_strs_03_03.jpg" /></p>
+<p>Akla yatkin gozukuyor, ortalara dogru cubugun bukulmesi daha fazla her iki
+yana dogru daha az.</p>
+<p>Kaykilma ve momenti de grafikleyelim,</p>
+<pre><code class="python">v = sym.lambdify(X1, V,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,v(x))
+plt.title(u'Kaykılma, V')
+plt.savefig('phy_020_strs_03_04.jpg',quality=30)
+</code></pre>
+
+<p><img alt="" src="phy_020_strs_03_04.jpg" /></p>
+<pre><code class="python">m = sym.lambdify(X1, M,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,m(x))
+plt.title('Moment, M')
+plt.savefig('phy_020_strs_03_05.jpg',quality=30)
+</code></pre>
+
+<p><img alt="" src="phy_020_strs_03_05.jpg" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,

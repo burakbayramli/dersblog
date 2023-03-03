@@ -3,6 +3,10 @@
 
 ## En Son
 
+3/3 - [Rasgele Matris İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html#random)
+
+20/2 - [Jensen'in Eşitsizliği (Jensen's Inequality)](https://burakbayramli.github.io/dersblog/stat/stat_176_app2/ekler.html#jensen)
+
 20/2 - [Jensen'in Eşitsizliği (Jensen's Inequality)](https://burakbayramli.github.io/dersblog/stat/stat_176_app2/ekler.html#jensen)
 
 20/2 - [GDELT Dünya Olayları Veri Tabanı (Event Database)](https://burakbayramli.github.io/dersblog/sk/2021/09/gdelt-olay-veritabani.html)
@@ -10,8 +14,6 @@
 8/2 - [Tork](https://burakbayramli.github.io/dersblog/phy/phy_005_basics_02/temel_fizik_2_donussel_kuvvet.html#tork)
 
 1/2 - [Yerel Coğrafi Veriler](https://burakbayramli.github.io/dersblog/sk/2023/01/trgeo.html)
-
-23/1 - [IETT Verileri, SOAP](https://burakbayramli.github.io/dersblog/sk/2023/01/iett-ibb-otobus-verisi.html)
 
 ## Konular, Referans
 

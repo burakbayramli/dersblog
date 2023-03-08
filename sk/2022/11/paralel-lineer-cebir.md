@@ -230,7 +230,7 @@ algoritma basit toplama, mod, gibi işlemler kullanır bu sebeple sabit
 zamanda O(1) hızında çalışır. O zaman doğru yaklaşımla rasgele matrisi
 satır satır anında yaratabiliriz.
 
-Tabii dikkat etmek lazim, rasgele B matrisi dedik ama bu matris tabii
+Tabii dikkat etmek lazım, rasgele B matrisi dedik ama bu matris tabii
 ki her A satırı için *aynı* rasgele matris olmalı. O zaman her A
 satırı ile işimiz bittiğinde rasgele sayı üreticini,
 `np.random.seed()` ile tohumunu biz dışardan tanımlarsak, o zaman aynı
@@ -533,7 +533,9 @@ Kaynaklar
 
 [5] Bayramlı, [Paralel Lineer Cebir Temeli](https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html)
 
-[6] Bayramli, [Rasgele İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/linear/linear_app10rndsvd/rasgele_izdusumu__random_projection__.html)
+[6] Bayramlı, [Rasgele İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/linear/linear_app10rndsvd/rasgele_izdusumu__random_projection__.html)
 
 [7] Bayramli, [SVD Factorization for Tall-and-Fat Matrices on Parallel Architectures](https://arxiv.org/abs/1310.4664)
+
+
 

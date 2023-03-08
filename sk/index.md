@@ -13,8 +13,6 @@
 
 8/2 - [Tork](https://burakbayramli.github.io/dersblog/phy/phy_005_basics_02/temel_fizik_2_donussel_kuvvet.html#tork)
 
-1/2 - [Yerel Coğrafi Veriler](https://burakbayramli.github.io/dersblog/sk/2023/01/trgeo.html)
-
 ## Konular, Referans
 
 [Python](2016/01/python-dil-ogrenimi.html)

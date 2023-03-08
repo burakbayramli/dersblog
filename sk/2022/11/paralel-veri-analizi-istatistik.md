@@ -491,7 +491,7 @@ Kaynaklar
 
 [1] [Paralel KMeans, Hadoop](../../2013/10/paralel-kmeans-hadoop.html)
 
-[2] Bayramli, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
+[2] Bayramlı, [Paralel, Satır Bazlı Dosya İşlemek](../../2016/02/toptan-islemler-paralelizasyon.html)
 
 [3] Wikipedia, [External Sorting](https://en.wikipedia.org/wiki/External_sorting)
 
@@ -504,4 +504,6 @@ Kaynaklar
 [6] [Grupların Ortalamalarını ve Varyanslarını Birleştirmek](https://burakbayramli.github.io/dersblog/stat/stat_010_cov_corr/beklenti_varyans_kovaryans_ve_korelasyon.html#group)
 
 [7] [K-Means Kümeleme Metodu](https://burakbayramli.github.io/dersblog/algs/algs_080_kmeans/kmeans_kumeleme_metodu.html)
+
+
 

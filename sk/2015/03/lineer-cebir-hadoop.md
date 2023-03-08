@@ -686,6 +686,8 @@ Sonuçlar fena değil.
 
 Kaynaklar
 
-[1] Bayramli, Lineer Cebir, {\em Rasgele İzdüşümü ile SVD}
+[1] Bayramlı, Lineer Cebir, {\em Rasgele İzdüşümü ile SVD}
 
-[2] Bayramli, Lineer Cebir, {\em Matris Çarpımı, Ders 1}
+[2] Bayramlı, Lineer Cebir, {\em Matris Çarpımı, Ders 1}
+
+

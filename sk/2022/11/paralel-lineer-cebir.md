@@ -535,7 +535,3 @@ Kaynaklar
 
 [7] Bayramlı, [SVD Factorization for Tall-and-Fat Matrices on Parallel Architectures](https://arxiv.org/abs/1310.4664)
 
-
-
-
-

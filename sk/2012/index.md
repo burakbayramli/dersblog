@@ -48,7 +48,7 @@
 
 [Python Profiler](04/python-profiler.html)
 
-[Box ve Whisker Grafikleri](05/box-ve-whisker-grafikleri.html)
+[Box ve Whisker Grafikleri](05/box-ve-whier-grafikleri.html)
 
 [Dropdown Secimi Ile Ayri DIV Gostermek](05/dropdown-secimi-ile-ayri-div-gostermek.html)
 

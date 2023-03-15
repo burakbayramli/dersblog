@@ -22,7 +22,7 @@
 
 [Dosya Şifreleme (File Encryption)](04/dosya-sifreleme-file-encryption.html)
 
-[Disk Temizliği](06/disk-temizligi.html)
+[Disk Temizliği](06/di-temizligi.html)
 
 [GraphHopper: Pür Java ile Haritada Yol Bulmak](06/graphhopper-pur-java-ile-haritada-yol.html)
 

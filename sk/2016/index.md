@@ -32,7 +32,7 @@
 
 [Pandas](08/pandas.html)
 
-[Flask ile Dinamik Web Sayfalari Gelistirmek](09/flask-ile-dinamik-web-sayfalari.html)
+[Flask ile Dinamik Web Sayfalari Gelistirmek](09/fla-ile-dinamik-web-sayfalari.html)
 
 [Numpy](10/numpy.html)
 
@@ -50,7 +50,7 @@
 
 [Gson, Java Objelerini JSON Olarak Yazmak, Okumak](12/gson-objeleri-json-olarak-yazmak-okumak.html)
 
-[Islenmis OSM Verisi Yerel Diskte, osm2pgsql, PostGIS](12/islenmis-osm-verisi-yerel-diskte-osm2po.html)
+[Islenmis OSM Verisi Yerel Diskte, osm2pgsql, PostGIS](12/islenmis-osm-verisi-yerel-dite-osm2po.html)
 
 [OSM, PostGIS, Örnek Sorgular](12/osm-postgis-ornek-sorgular.html)
 

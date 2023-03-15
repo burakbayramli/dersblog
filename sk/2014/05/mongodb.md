@@ -1,15 +1,13 @@
 # MongoDB
 
-MongoDB
-
-Json / doküman bazlı çalışan, SQL desteklemeyen tabanlardan en ünlüsü
-şu anda MongoDB. Mongo birleştirme (join) komutunu desteklemez,
-dokümanlara tekil olarak erişmeyi ya da sorgulamayı destekler, Json
-formatında objeleri tabana alıp verebilir. Sorgulama şöyledir - eğer
-dokümanın Json'ı içinde hazı öğeler set edilmiş, diğerleri edilmemiş
-ise, edilmiş olan ögeler üzerinden bir filtre
-yaratılabiliyor. Büyüktür, küçüktür filtre durumları içinde yine Json
-üzerinden bir sorgulama formatı var.
+Json / doküman bazlı çalışan, SQL desteklemeyen NoSQL denen
+tabanlardan en ünlüsü şu anda MongoDB. Mongo birleştirme (join)
+komutunu desteklemez, dokümanlara tekil olarak erişmeyi ya da
+sorgulamayı destekler, Json formatında objeleri tabana alıp
+verebilir. Sorgulama şöyledir - eğer dokümanın Json'ı içinde hazı
+öğeler set edilmiş, diğerleri edilmemiş ise, edilmiş olan ögeler
+üzerinden bir filtre yaratılabiliyor. Büyüktür, küçüktür filtre
+durumları içinde yine Json üzerinden bir sorgulama formatı var.
 
 Mongo ile "sema değiştirmek" için `ALTER TABLE` gibi bir komuta gerek
 yoktur; yeni bir öğe (kolon) gerekirse, o öğe dokümana eklenir, ve
@@ -235,9 +233,6 @@ stocks.count()
 Out[1]: 0
 ```
 
-
 Kaynaklar
 
 [Digital Ocean](https://www.digitalocean.com/community/tutorials/how-to-install-mongodb-on-ubuntu-16-04)
-
-

@@ -10,7 +10,7 @@
 
 [Derleyiciler](10/derleyiciler.html)
 
-[Dosya Sıkıştırmak Nedir? (Compression)](10/dosya-skstrmak-nedir-compression.html)
+[Dosya Sıkıştırmak Nedir? (Compression)](10/dosya-strmak-nedir-compression.html)
 
 [Extreme Programming Nedir?](10/extreme-programming-nedir.html)
 
@@ -18,15 +18,13 @@
 
 [IP Yönlendirme](10/ip-yonlendirme.html)
 
-[Java İçin Sıkça Sorulan Sorular (SSS)](10/java-icin-skca-sorulan-sorular-sss.html)
+[Java İçin Sıkça Sorulan Sorular (SSS)](10/java-icin-ca-sorulan-sorular-sss.html)
 
 [Java İle Düzenli İfadeler - Jakarta ORO](10/java-ile-duzenli-ifadeler-jakarta-oro.html)
 
 [Java İle Toptan İşlem Kalıbı](10/java-ile-toptan-islem-kalb.html)
 
 [Nesnesel Programlama (Object-Oriented Programming)](10/nesnesel-programlama.html)
-
-[Network, TCP/IP, Internet](10/network.html)
 
 [Organizasyonlarda Teknik Bilgi İletişimi](10/organizasyonlarda-teknik-bilgi.html)
 

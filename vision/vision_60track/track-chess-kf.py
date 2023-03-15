@@ -1,7 +1,7 @@
 import sys; sys.path.append('../../tser/tser_083_kf')
-import cv2
 import util
 from kalman_3d import *
+import cv2
 
 dim = 3
 if __name__ == "__main__":    

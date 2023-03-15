@@ -16,7 +16,7 @@
 
 [Podcast, Ses Kaydını Web Sitesinde Çaldırmak](06/podcast-ses-kaydn-web-sitesinde-caldrmak.html)
 
-[Flask, Kullanıcı Giriş (Login), Şifre, Oturum İdaresi, Flask-User](07/flask-login.html)
+[Flask, Kullanıcı Giriş (Login), Şifre, Oturum İdaresi, Flask-User](07/fla-login.html)
 
 [JAMA - Java ile Matris Islemleri](07/jama-java-ile-matris-islemleri.html)
 

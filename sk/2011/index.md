@@ -34,7 +34,7 @@
 
 [Web Sayfalarından Görünen Metni Kazımak (Scraping)](06/web-sayfalarindan-gorunen-metni-kazimak.html)
 
-[KineticsKit](08/kineticskit.html)
+[KineticsKit](08/kineticit.html)
 
 [Lokal Dosya Arama - recoll](08/lokal-dosya-arama-recoll.html)
 

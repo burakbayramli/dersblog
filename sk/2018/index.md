@@ -8,7 +8,7 @@
 
 [Go Oyunu, GnuGo](02/go-gnugo.html)
 
-[sqlite, Basit, Hızlı Diske Değer Yazma Okuma](03/sqlite-basit-sekilde-hzl-diske-deger-yazma.html)
+[sqlite, Basit, Hızlı Diske Değer Yazma Okuma](03/sqlite-basit-sekilde-hzl-die-deger-yazma.html)
 
 [basemap](06/basemap.html)
 
@@ -22,7 +22,7 @@
 
 [Komut Satırı Seçeneklerini İşlemek (Command Line Option Processing), Python](08/komut-satr-seceneklerini-islemek.html)
 
-[Paralel Python - Dask](08/paralel-python-dask.html)
+[Paralel Python - Dask](08/paralel-python-da.html)
 
 [Spark, PySpark](08/spark-pyspark.html)
 

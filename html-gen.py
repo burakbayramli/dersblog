@@ -233,7 +233,7 @@ def gen_html_cl():
 if __name__ == "__main__":
     
     fr = os.getcwd()
-    to = os.environ['HOME'] + "/Documents/repos/burakbayramli.github.com"
+    to = os.environ['HOME'] + "/Documents/dersblog"
  
     if len(sys.argv) < 2:
       print ("options: all | clean | html ")

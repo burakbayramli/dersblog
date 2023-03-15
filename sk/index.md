@@ -31,8 +31,6 @@
 
 [Nereden Başlarım](2019/01/nereden.html)
 
-[Youtube Kanalım](https://www.youtube.com/channel/UCMAUsgUq5ODy8kMnJlUBUdQ)
-
 [Github Depoları](https://github.com/burakbayramli)
 
 [Blog İçeriği PDF Olarak](https://drive.google.com/uc?export=view&id=1Yq6ovajFbXFWurbiFNhXOl0iN5NlkKtE)

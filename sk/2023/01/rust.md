@@ -88,8 +88,8 @@ mesela, süslü parantez kullanımı mevcut.
 
 Rust kodlama, işleyiş açısından C/C++ dillerine benziyor, bir derleme,
 bağlama (linking) ve işler kod (executable) yaratma süreci var, ve
-dilin sözdizimindeki özellikle sayesinde işler kodun optimize edilmesi
-kolaylaşıyor, ve C hızına erişir bir sonuç elde ediyoruz. 
+dilin sözdizimindeki özellikler sayesinde işler kodun optimize
+edilmesi kolaylaşıyor, ve C hızına erişir bir sonuç elde ediyoruz.
 
 Şimdi yeni bir fonksiyon yazalım, bir sayı alsın ve ona bir sayı eklesin,
 

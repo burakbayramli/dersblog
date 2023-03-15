@@ -1,5 +1,3 @@
-<p><a href="..">Yukarı</a></p>
-<h1>Genel Optimizasyon, Paketler, Autograd</h1>
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,10 +17,26 @@
       });
     });
     </script>
-<script type="text/javascript"
+   <script type="text/javascript"
    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-</script>
-</head>
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1>Genel Optimizasyon, Paketler, Autograd
+</h1>
 
 <p>Otomatik türevin nasıl işlediğini [1] yazısında gördük. Programlama dilinde
 yazılmış, içinde <code>if</code>, <code>case</code>, hatta döngüler bile içerebilen
@@ -91,21 +105,21 @@ olabilir. Yani yapmaya uğraştığımız</p>
 <p>$$
 \min_x f(x)
 $$</p>
-<p>işlemi. Peki minimumu nasıl tanımlarız? Bir nokta $x^*$ global minimize
-edicidir eğer tüm $x$'ler için $f(x^*) \le f(x)$ ise, ki
+<p>işlemi. Peki minimumu nasıl tanımlarız? Bir nokta $x^\ast$ global minimize
+edicidir eğer tüm $x$'ler için $f(x^\ast) \le f(x)$ ise, ki
 $x \in \mathbb{R}^n$, en azından $x$ modelleyeni ilgilendiren tüm küme
 öğeleri için.</p>
 <p>Fakat çoğu zaman bir global $f$'i kullanmak mümkün olmayabilir, fonksiyon
 çok çetrefil, çok boyutlu, bilinmez durumdadır, ve elimizde sadece yerel
 bilgi vardır. Bu durumda üstteki tanımı "bir $N$ bölgesi içinde" olacak
-şekilde değiştiririz ki bölge, $x^*$ etrafındaki, yakınındaki bölgedir.</p>
-<p>Üstteki tanımı okuyunca  $x^*$'in yerel minimum olup olmadığını anlamanın
+şekilde değiştiririz ki bölge, $x^\ast$ etrafındaki, yakınındaki bölgedir.</p>
+<p>Üstteki tanımı okuyunca  $x^\ast$'in yerel minimum olup olmadığını anlamanın
 tek yolunun yakındaki diğer tüm noktalara teker teker bakmak olduğu anlamı
 çıkabilir, fakat eğer $f$ pürüzsüz bir fonksiyon ise yerel minimumu
 doğrulamanın çok daha hızlı bir yöntemi vardır. Hatta ve hatta eğer
-fonksiyon $f$ iki kez türevi alınabilir haldeyse $x^*$'in yerel minimum
-olduğunu ispatlamak daha kolaylaşır, $\nabla f(x^*)$ ve Hessian $\nabla^2
-f(x^*)$'e bakarak bunu yapabiliriz.</p>
+fonksiyon $f$ iki kez türevi alınabilir haldeyse $x^\ast$'in yerel minimum
+olduğunu ispatlamak daha kolaylaşır, $\nabla f(x^\ast)$ ve Hessian $\nabla^2
+f(x^\ast)$'e bakarak bunu yapabiliriz.</p>
 <p>Minimallik için 1. ve 2. derece şartlar var. 1. derece gerekli şart (ama
 yeterli değil) $\nabla f = 0$ olması. Bu standard Calculus'tan bildiğimiz
 bir şey, minimum ya da maksimumda birinci türev sıfırdır. Ama türevin sıfır
@@ -123,30 +137,30 @@ plt.savefig('func_40_autograd_01.png')
 <p><img alt="" src="func_40_autograd_01.png" /></p>
 <p>Bir kritik noktanın yerel maksimum ya da yerel minimum olup olmadığını
 anlamak için fonksiyonun ikinci türevine bakabiliriz. Bir
-$f: \mathbb{R}^n \to \mathbb{R}$ var ve $x^*$ noktasının kritik nokta
-olduğunu düşünelim, yani $\nabla f(x^*) = 0$. Şimdi çok ufak bir $h$ adımı
-için $f(x^* + h)$'a ne olduğuna bakalım. Burada Taylor açılımı
+$f: \mathbb{R}^n \to \mathbb{R}$ var ve $x^\ast$ noktasının kritik nokta
+olduğunu düşünelim, yani $\nabla f(x^\ast) = 0$. Şimdi çok ufak bir $h$ adımı
+için $f(x^\ast + h)$'a ne olduğuna bakalım. Burada Taylor açılımı
 kullanabiliriz [2], </p>
 <p>$$
-f(x + h^*) = 
-f(x^*) + \nabla f(x^*) h + 
-\frac{1}{2} h^T f(x^*) \nabla^2 (x^*) f(x^*) h + 
+f(x + h^\ast) = 
+f(x^\ast) + \nabla f(x^\ast) h + 
+\frac{1}{2} h^T f(x^\ast) \nabla^2 (x^\ast) f(x^\ast) h + 
 O(3)
 $$</p>
-<p>$\nabla^2 (x^*)$ bir matristır içinde $f$'nin ikinci derece türevleri
-vardır [6]. Şimdi, kritik noktada olduğumuz için $\nabla f(x^*) = 0$, ve
+<p>$\nabla^2 (x^\ast)$ bir matristır içinde $f$'nin ikinci derece türevleri
+vardır [6]. Şimdi, kritik noktada olduğumuz için $\nabla f(x^\ast) = 0$, ve
 $O(3)$ terimlerini iptal edersek, üstteki</p>
 <p>$$
-f(x^* + h^*) - f(x^*) = \frac{1}{2} h^T \nabla^2 (x^*)  h + O(3)
+f(x^\ast + h^\ast) - f(x^\ast) = \frac{1}{2} h^T \nabla^2 (x^\ast)  h + O(3)
 $$</p>
 <p>haline gelir. Simdi "bir noktanın mesela yerel maksimum olması" sözünü
-$f(x^* + h^*) - f(x^*) &lt; 0$ ile ifade edebiliriz, çünkü $x^*$ etrafındaki
+$f(x^\ast + h^\ast) - f(x^\ast) &lt; 0$ ile ifade edebiliriz, çünkü $x^\ast$ etrafındaki
 tüm $x$'lerin $f$'in daha az değerlerinden olma şartını aramış oluyoruz
 (adım atılıyor, çıkartma yapılıyor, sonuç sıfırdan küçük). Tabii bu "tüm"
 söylemi yaklaşıksal, o sebeple minimumluk ifadesi <em>yerel</em>.</p>
-<p>Devam edersek $f(x^* + h^*) - f(x^*) &lt; 0$ olması şartı aynı zamanda
-$\frac{1}{2} h^T \nabla^2 (x^*) h &lt; 0$ anlamına gelir, bu da
-$\nabla^2 (x^*)$ negatif kesin demektir. Çünkü $A$ simetrik bir matris
+<p>Devam edersek $f(x^\ast + h^\ast) - f(x^\ast) &lt; 0$ olması şartı aynı zamanda
+$\frac{1}{2} h^T \nabla^2 (x^\ast) h &lt; 0$ anlamına gelir, bu da
+$\nabla^2 (x^\ast )$ negatif kesin demektir. Çünkü $A$ simetrik bir matris
 olduğu zaman</p>
 <p>$x^TAx &lt; 0$ ise matris negatif kesin</p>
 <p>$x^TAx \le 0$ ise matris negatif yarı-kesin (negatif semi-definite)</p>
@@ -369,3 +383,7 @@ print (gradg)
 <p>[6] Bayramlı, Cok Boyutlu Calculus, <em>Vektör Calculus, Kurallar, Matris Türevleri</em></p>
 <p>[7] Watt, <em>Automatic Differentiation</em>, 
     <a href="https://jermwatt.github.io/machine_learning_refined/notes/3_First_order_methods/3_5_Automatic.html">https://jermwatt.github.io/machine_learning_refined/notes/3_First_order_methods/3_5_Automatic.html</a></p>
+        </section>          
+      </div>
+    </body>
+</html>

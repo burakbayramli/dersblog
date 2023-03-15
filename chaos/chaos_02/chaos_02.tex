@@ -24,16 +24,16 @@ nokta var, onu unutmayalım, çünkü o noktadan başlarsam hiçbir yere hareket
 
 Çoğunlukla çizim yapacağız dedik, fakat bir analitik teknik var ki kullanması
 kolay ve oldukça faydalı, tekniğin ismi sabit bir nokta etrafında lineerleştirme
-(linearization around a fixed point). Bu teknikle bir sabit nokta $x^*$
+(linearization around a fixed point). Bu teknikle bir sabit nokta $x^\ast$
 etrafındaki (üst yıldız notasyonunu sabit noktalar için kullanıyorduk
-hatırlarsak) dinamiği incelemek istiyoruz, ki sabit noktalar $f(x^*)=0$ şartını
+hatırlarsak) dinamiği incelemek istiyoruz, ki sabit noktalar $f(x^\ast)=0$ şartını
 yerine getirecek noktalar, çünkü o noktalarda hız sıfır. Lineerleştirmeye göre
 bu noktanın ``yakın komşularına'' bakarız, hemen etrafına yani, ve eğer o
 noktalarda hız artıp bizi noktadan uzaklaşırıyorsa bir büyüme vardır, eğer
 azalma var ise tekrar sabit noktaya döneceğiz demektir, bir çürüme (decay)
 vardır. Tekniği şöyle kullanırız, diyelim ki
 
-$$ x(t) = x^* + \eta(t), \qquad  |\eta| << 1 $$
+$$ x(t) = x^\ast + \eta(t), \qquad  |\eta| << 1 $$
 
 olsun, $\eta$ bir çürüme terimi, ve onun büyüklüğünün, yani mutlak değerinin
 çok küçük olacağını farz ettik ($a<<b$ sembolü $a$ değeri $b$'den çok küçüktür
@@ -42,16 +42,16 @@ bir denklem türetmek ki böylece büyüyor mu çürüyor mu onu görebileyim. �
 $x$'ten hareketle $\dot{x}$ nedir?
 
 $$ 
-\dot{x} = \frac{d}{dt}( x^* + \eta \big) =
-\big( x^* + \eta \big)^{\textbf{.}} = \dot{\eta} 
+\dot{x} = \frac{d}{dt}( x^\ast + \eta \big) =
+\big( x^\ast + \eta \big)^{\textbf{.}} = \dot{\eta} 
 $$
 
 Eşitliğin en sağı ortaya çıktı çünkü sabit noktada değişim sıfır demiştik,
-$\dot{x^*} = 0$, geriye sadece $\dot{\eta}$ kaldı. Diğer yandan $\dot{x}=f(x)$
+$\dot{x^\ast} = 0$, geriye sadece $\dot{\eta}$ kaldı. Diğer yandan $\dot{x}=f(x)$
 olduğu için
 
 $$ 
-\dot{x} = \dot{\eta} = f(x) = f(x^* + \eta) 
+\dot{x} = \dot{\eta} = f(x) = f(x^\ast + \eta) 
 $$
 
 Fakat hala tam ne olduğunu göremiyoruz çünkü $f$ karmaşık bir fonksiyon. Bu
@@ -60,23 +60,23 @@ pürüzsüzdür (smooth) yani herhangi bir $x$ etrafında Taylor serisi
 yaklaşıklaması yapabilirim. 
 
 $$ 
-f(x^* + \eta) = f(x^*) + \eta f'(x^*) + \frac{\eta^2}{2}f''(x^*) + ...
+f(x^\ast + \eta) = f(x^\ast) + \eta f'(x^\ast) + \frac{\eta^2}{2}f''(x^\ast) + ...
 $$
 
 Tabii lineerleştirmeyi herhangi bir nokta etrafında değil sabit nokta etrafında
-yapıyoruz, o zaman $f(x^*)=0$ olduğu için
+yapıyoruz, o zaman $f(x^\ast)=0$ olduğu için
 
 $$ 
-f(x^* + \eta) = \cancelto{0}{f(x^*)} + \eta f'(x^*) +
-\frac{\eta^2}{2}f''(x^*) + ...
+f(x^\ast + \eta) = \cancelto{0}{f(x^\ast)} + \eta f'(x^\ast) +
+\frac{\eta^2}{2}f''(x^\ast) + ...
 $$
 
-$$ f(x^* + \eta) =  \eta f'(x^*) + \frac{\eta^2}{2}f''(x^*) + ...$$
+$$ f(x^\ast + \eta) =  \eta f'(x^\ast) + \frac{\eta^2}{2}f''(x^\ast) + ...$$
 
-Geri kalan formül $\eta$'ya lineer olarak bağlı. Ama hala $f'(x^*)$ var?
+Geri kalan formül $\eta$'ya lineer olarak bağlı. Ama hala $f'(x^\ast)$ var?
 $\eta$'nin çarptığı ibare çetrefilmiş gibi duruyor, ama unutmayalım, o ifade bir
 tek sayı aslında çünkü fonksiyona bir sabit nokta değeri geçiyoruz, ve bir sayı
-elde ediyoruz. $f'(x^*)$ sonuçta $f$'in türevinin $x^*$ noktasındaki değeri
+elde ediyoruz. $f'(x^\ast)$ sonuçta $f$'in türevinin $x^\ast$ noktasındaki değeri
 değil midir? Yani $f$'in sabit noktadaki eğiminden (slope) bahsediyoruz.
 
 \includegraphics[height=4cm]{02_02.png}
@@ -89,25 +89,25 @@ atabiliriz. Lineerleşirmenin arkasında yatan fikir bu, karesel terimlerden
 (quadratic term) kurtulmak.
 
 Fakat kendimize bir daha soralım, $\eta^2$'li terimi $\eta$'li terimle
-kıyaslayarak düşünürsem, atılabileceğinden emin miyim? Evet, eğer $f'(x^*)$
+kıyaslayarak düşünürsem, atılabileceğinden emin miyim? Evet, eğer $f'(x^\ast)$
 sıfır değil ise. Çünkü eğer o ilk terim sıfır olursa yokolur, ve geri kalan tek
 önemli terim $\eta^2$'li terim olur, bu durumda ikinci terimi yok kabul
 edemezdik. Matematiksel olarak derli toplu bunu bir daha ifade edersek, eğer
-$f'(x^*) \ne 0$ ise, ufak $\eta$ için $|f'(x^*) \eta| >> |\frac{\eta^2}{2}
-f''(x^*)|$.
+$f'(x^\ast) \ne 0$ ise, ufak $\eta$ için $|f'(x^\ast) \eta| >> |\frac{\eta^2}{2}
+f''(x^\ast)|$.
 
 Yani $O(\eta^2)$ ifadelerini formülden atarız ($O()$ notasyonu derece (order of)
 demektir, yani iki ve daha büyük dereceli terimlerden bahsediyoruz),
 
-$$ f(x^* + \eta) =  \eta f'(x^*) + \cancel{\frac{\eta^2}{2}f''(x^*)} + \cancel{...}$$
+$$ f(x^\ast + \eta) =  \eta f'(x^\ast) + \cancel{\frac{\eta^2}{2}f''(x^\ast)} + \cancel{...}$$
 
-$$ f(x^* + \eta) = \eta f'(x^*) $$
+$$ f(x^\ast + \eta) = \eta f'(x^\ast) $$
 
-Daha önce demiştik ki $\dot{\eta} = f(x^* + \eta)$, o zaman $x^*$ noktasında,
+Daha önce demiştik ki $\dot{\eta} = f(x^\ast + \eta)$, o zaman $x^\ast$ noktasında,
 
 $$\dot{\eta} = r \cdot \eta$$
 
-lineerizasyonunu elde ediyoruz ki $r=f'(x^*)$. $\dot{\eta} = r \cdot \eta$ sonucu
+lineerizasyonunu elde ediyoruz ki $r=f'(x^\ast)$. $\dot{\eta} = r \cdot \eta$ sonucu
 güzel bir sonuç, çünkü bu ifade özünde basit bir lineer diferansiyel denklem,
 ODE dersinden bize tanıdık gelen bir ifade, $r$'nin pozitif ya da negatif
 olmasına bağlı olarak ya büyüme ya da çürüme ortaya çıkacak. Çözüm,
@@ -116,11 +116,11 @@ $$ \eta = \eta_0 e ^{rt} $$
 
 
 ki bu çözüm $r > 0$ ise büyür, $r < 0$ ise çürür. Üstteki grafikte görüyoruz ki
-eğim yani $f'(x^*)$ sıfırdan büyük o zaman sabit nokta olduğu stabil olmalı, ki
+eğim yani $f'(x^\ast)$ sıfırdan büyük o zaman sabit nokta olduğu stabil olmalı, ki
 hakikaten de böyle. Lineerizasyon tek boyutta böyle. İki ya da daha fazla
 boyutta da lineerizasyon kullanacağız. 
 
-Peki ya daha önce koyduğumuz şart $f'(x^*) \ne 0$ doğru değil ise ne olur? o
+Peki ya daha önce koyduğumuz şart $f'(x^\ast) \ne 0$ doğru değil ise ne olur? o
 zaman lineerizasyondan hiçbir bilgi elde edemiyoruz, yani bu teknik ise
 yaramıyor. Nokta stabil olabilir, yarı stabil olabilir, ya da her iki durumun
 bir karışımı karma bir durum olan yarı-stabilite olabilir. Dört örnek vermek
@@ -132,9 +132,9 @@ $$
 $$ \dot{x} = x^3, \qquad \dot{x} = -x^3 
 $$
 
-sistemlerini düşünelim. $x^*=0$ hepsi için bir sabit nokta. Bunu görmek kolay
+sistemlerini düşünelim. $x^\ast=0$ hepsi için bir sabit nokta. Bunu görmek kolay
 herhalde, eşitliğin sağ tarafına sıfır verince hepsi $\dot{x} = 0$. Şimdi
-$f'(x^*)$ şartını kontrol edersek, hepsi için $f'(x^*) = f'(0) = 0$. Teker teker
+$f'(x^\ast)$ şartını kontrol edersek, hepsi için $f'(x^\ast) = f'(0) = 0$. Teker teker
 neler olduğuna bakalım şimdi, mesela $\dot{x} = x^2$, 
 
 \includegraphics[height=4cm]{02_03.png}
@@ -161,7 +161,7 @@ Tamamen stabil. Fakat buradaki stabillik daha önce gördüğümüzden biraz far
 daha önceki üstel idi, bu tür noktalara doğru üstel bir çürüme olur. Üstteki
 durumdaki çürüme çok daha yavaş olurdu.
 
-Özetle eğer $f'(x^*)=0$ olduğu durumda ne olup bittiğini anlamak istiyorsak,
+Özetle eğer $f'(x^\ast)=0$ olduğu durumda ne olup bittiğini anlamak istiyorsak,
 hemen grafiği çizmek faydalı. Bir alternatif Taylor açılımında daha yüksek
 derecelere bakmak (yani attığımız bazı terileri tutmak) fakat bence bu hala
 yanlış bir yaklaşım. Resimlere bakmak çok daha bilgi verici.
@@ -174,14 +174,14 @@ $$ \dot{x} = rx ( 1 - \frac{x}{K}) $$
 
 ki $x$ nüfus sayısı, $K$ taşıma kapasitesi, $r > 0$.
 
-$x^*=0$, ya da $x^*=k$ olduğu zamanda $\dot{x}=0$ olur. Sabit noktalar
-bunlar. Stabilite için $f'(x^*)$'e bakıyoruz,
+$x^\ast=0$, ya da $x^\ast=k$ olduğu zamanda $\dot{x}=0$ olur. Sabit noktalar
+bunlar. Stabilite için $f'(x^\ast)$'e bakıyoruz,
 
 $$ f'(x) = r - \frac{2rx}{K} $$
 
-$f'(0) = r > 0$. Bu sonuç bize $x^*=0$'in gayrı stabil olduğunu söylüyor. 
+$f'(0) = r > 0$. Bu sonuç bize $x^\ast=0$'in gayrı stabil olduğunu söylüyor. 
 
-$f'(0) = r - \frac{2rK}{K} = -r < 0$, demektir ki $x^*=K$ stabil. 
+$f'(0) = r - \frac{2rK}{K} = -r < 0$, demektir ki $x^\ast=K$ stabil. 
 
 Dikkat: notasyon karışmasın, üstteki $r$ daha önce kullandığımız $r$'den
 farklı.
@@ -311,13 +311,13 @@ Cevap
 
 Çatallaşmaları birkaç figürü arka arkaya çizerek gösterebiliriz, ama tüm bu
 değişimi tek bir figürde göstermeye yarayan diyagramlar var, bunlara çatallaşma
-diyagramı diyoruz. $x^*$ ile $r$ iki eksende olacak şekilde ortaya çıkan
-eğrileri çizeriz. Bizim kontrolümüzdeki $r$'dir, onu değiştirirken $x^*$'e ne
+diyagramı diyoruz. $x^\ast$ ile $r$ iki eksende olacak şekilde ortaya çıkan
+eğrileri çizeriz. Bizim kontrolümüzdeki $r$'dir, onu değiştirirken $x^\ast$'e ne
 olduğunu gözlemleriz (ve grafikleriz).
 
-$$ \dot{x}=0 \Rightarrow r + (x^*)^2 = 0  $$
+$$ \dot{x}=0 \Rightarrow r + (x^\ast)^2 = 0  $$
 
-$$ x^* = \pm \sqrt{-r} $$
+$$ x^\ast = \pm \sqrt{-r} $$
 
 \includegraphics[height=4cm]{02_14.png}
 
@@ -343,7 +343,7 @@ Bu oldukça okkalı, içinde gayrı lineer bir terim var, $\ln$. Bu sistemi $r$'
 bir fonksiyonu olarak incelemek istiyoruz. Önce sabit noktaları bulmak
 istiyoruz, $\dot{x}$'i sıfıra eşitliyoruz,
 
-$$ r + x^* = \ln(1+x^*) $$
+$$ r + x^\ast = \ln(1+x^\ast) $$
 
 Ama şimdi başımız dönmeye başladı, eyvah, bunu $r$'nin fonksiyonu olarak nasıl
 tekrar düzenleyeceğiz? Aslında problemi dersten önce öyle seçtim ki bunu yapmak
@@ -397,7 +397,7 @@ verecek, ki sonra o iki eğimi karşılaştırabilelim. Bu denklemler sayesinde 
 gerekli $r,x$ kombinasyonlarını bulabiliriz. (1) formülünü çözemeyeceğimizi
 biliyoruz, fakat (2)'yi çözmek kolay.
 
-$$ 1 = \frac{1}{1+x}  \Rightarrow x^* = 0 $$
+$$ 1 = \frac{1}{1+x}  \Rightarrow x^\ast = 0 $$
 
 eğer çatallaşması anında.. Bu sonucu (1)'e sokarsak,
 
@@ -445,9 +445,9 @@ tarafını açarsak,
 
 $$ = x(r-x) $$
 
-İki sabit nokta hemen ortaya çıkar, $x^*=0$ her $r$ için sabit noktadır. Öteki
-ise $x^* = r$. Önceki örnekte sabit noktalar ortaya çıkıyor, yokoluyordu, burada
-yokedilemez bir sabit nokta var, $x^*=0$, $r$'yi değiştirerek bu arkadaşı
+İki sabit nokta hemen ortaya çıkar, $x^\ast=0$ her $r$ için sabit noktadır. Öteki
+ise $x^\ast = r$. Önceki örnekte sabit noktalar ortaya çıkıyor, yokoluyordu, burada
+yokedilemez bir sabit nokta var, $x^\ast=0$, $r$'yi değiştirerek bu arkadaşı
 ortadan kaldıramıyoruz.
 
 Doğal bilimlerden örnek düşünmek gerekirse, mesela biyolojik nüfus konusunu
@@ -460,7 +460,7 @@ Lineerizasyona bakalım,
 
 $$ f'(x) = \frac{d}{dx} (rx - x^2) = r - 2x, \quad f'(0) = r$$
 
-Bu demektir ki $x^*=0$ noktası eğer $r<0$ ise stabil, $r>0$ ise gayrı
+Bu demektir ki $x^\ast = 0$ noktası eğer $r<0$ ise stabil, $r>0$ ise gayrı
 stabildir. Diğer nokta $r$'yi kontrol edelim,
 
 $$ f'(r) = r - 2r = -r $$

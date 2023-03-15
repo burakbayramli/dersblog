@@ -44,12 +44,12 @@ kullanılır, herhangi bir konum serisinin olasılığı nedir sorusunun cevabı
 şu formül;
 
 $$ P(X_1=x_1,..,X_T=x_T) = 
-P(X_1=x_1) \prod _{t=2}^{T} P(X_t=x_t | X_{t-1}=x_{t-1})
+P(X_1=x_1) \prod_{t=2}^{T} P(X_t=x_t | X_{t-1}=x_{t-1})
 $$
 
 Üstteki formül bir olurluk (likelihood) hesabı - $L(A)$ diyelim, 
 
-$$ L(A) = P(X_1=x_1) \prod _{ t=2}^{T} a_{x_{t-1},x_t} $$
+$$ L(A) = P(X_1=x_1) \prod_{ t=2}^{T} a_{x_{t-1},x_t} $$
 
 Olurluğun maksimize edilmesi ardından $A$ için bir tahmin edici
 (estimator) hesaplanabilir - detaylar için [2, Ders 6]; $n_{ij}$'yi veri
@@ -130,13 +130,13 @@ serilerini düşünelim, $c$ mümkün gizli konum için $c^T$ tane olur. $T=6$
 için bir vektör $S_1 = \{1,4,2,2,1,4\}$ gibi.. Şimdi görünen herhangi bir
 dizinin olasılığını hesaplayalım,
 
-$$ P(V) = \sum _{r}^{c^n} P(V | S_r) P(S_r) 
+$$ P(V) = \sum_{r}^{c^n} P(V | S_r) P(S_r) 
 \mlabel{1}
 $$
 
 Üstteki formüldeki $P(S_r)$'in açılımını MZ'lerden zaten biliyoruz, 
 
-$$ P(S_r) = \prod _{t=1}^{T}P(X_t|X_{t-1}) $$
+$$ P(S_r) = \prod_{t=1}^{T}P(X_t|X_{t-1}) $$
 
 Yani gizli konum geçişlerine tekabül eden $a_{ij}$'leri bulup onları
 sırasıyla çarpıyoruz. Üstteki $\{1,4,2,2,1,4\}$ örneği için bu
@@ -144,12 +144,12 @@ sırasıyla çarpıyoruz. Üstteki $\{1,4,2,2,1,4\}$ örneği için bu
 
 Ayrıca $P(V|S_r)$'in açılımını da biliyoruz, 
 
-$$ P(V|S_r) = \prod _{t=1}^{T} P(V_t | X_t) $$
+$$ P(V|S_r) = \prod_{t=1}^{T} P(V_t | X_t) $$
 
 Birleştirelim ve (1)'i genişletelim,
 
 $$ 
-P(V) = \sum _{r}^{c^T} \prod _{t=1}^{T} P(V_t | X_t)  P(X_t|X_{t-1}) 
+P(V) = \sum_{r}^{c^T} \prod_{t=1}^{T} P(V_t | X_t)  P(X_t|X_{t-1}) 
 $$
 
 Formül biraz korkutucu duruyor ama aslında söylediği şu: verilen bir
@@ -174,17 +174,20 @@ $\lambda = (A,B)$ için
 
 $$ \alpha_t(i) = P(V_1,V_2,..,V_t, X_t = i; \lambda) $$
 
-Bu gözlenen salım dizisinin sadece bir kısmı üzerinden tanımlanmış bir
-olasılık; tanıma göre zaman indisi 1'den $t$'ye kadar, ve bu en son $t$
-noktasında saklı konum $i$'de olmalı. Özyineli tanımı görmek için
-$\alpha_1(i)$'nin ne olduğuna bakalım, notasyon kısalığı için 
-$\pi_i = P(X_1 = i)$,
+Bu gözlenen salım dizisinin sadece bir kısmı üzerinden tanımlanmış bir olasılık;
+tanıma göre zaman indisi 1'den $t$'ye kadar, ve bu en son $t$ noktasında saklı
+konum $i$'de olmalı. Özyineli tanımı görmek için $\alpha_1(i)$'nin ne olduğuna
+bakalım, notasyon kısalığı için $\pi_i = P(X_1 = i)$,
 
-$$ \alpha_1(i) = \pi_i b_{i,V_1} $$
+$$
+\alpha_1(i) = \pi_i b_{i,V_1}
+$$
 
 Tümevarımsal (induction), özyineli kısım ise şöyle tanımlanır,
 
-$$ \alpha_{t+1}(j) = \bigg[ \sum _{i=1}^{c} \alpha_t(i)a_{ij} \bigg] b_{j,V_{t+1}} $$
+$$
+\alpha_{t+1}(j) = \bigg[  \sum_{i=1}^{c} \alpha_t(i)a_{ij} \bigg] b_{j,V_{t+1}}
+$$
 
 Formülün niye performans ilerlemesi getirdiğini görmek için örnek 1,2,3,4
 gizli konumların tüm permutasyonlarının düşünelim,
@@ -230,8 +233,7 @@ hesabını yapar. Özyineli adım,
 
 $$ \beta_T(i) = 1 $$
 
-$$ \beta_t(i) = \sum _{j=1}^{c} a_{ij}b_{j,V_{t+1}} \beta_{t+1}(j)  $$
-
+$$ \beta_t(i) = \sum_{j=1}^{c} a_{ij}b_{j,V_{t+1}} \beta_{t+1}(j)  $$
 
 Viterbi Algoritması
 
@@ -417,7 +419,7 @@ olarak yazabiliriz, ve
 
 $$  
 = \frac{\alpha_t(i)a_{ij}b_{j,V_{t+1}}\beta_{t+1}(j)  }
-{\sum _{i=1}^{c}\sum _{j=1}^{c} \alpha_t(i)a_{ij}b_{j,V_{t+1}}\beta_{t+1}(j)  }
+{\sum_{i=1}^{c}\sum_{j=1}^{c} \alpha_t(i)a_{ij}b_{j,V_{t+1}}\beta_{t+1}(j)  }
 $$
 
 Bölendeki ifade bölünendeki ifadenin tüm $i,j$ üzerinden alınan toplamının
@@ -428,7 +430,7 @@ $\gamma_t(i)$'yi daha önce $V$'nin verildiği ve $\lambda$ modeli bilindiği
 durumda $t$ anındaki saklı konum $i$'de olmak diye açıklamıştık. O zaman 
 $\gamma_t(i)$ ve $\xi_t(i,j)$ arasında bir ilişki kurabiliriz,
 
-$$ \gamma_t(i) =  \sum _{j=1}^{c} \xi_t(i,j) $$
+$$ \gamma_t(i) =  \sum_{j=1}^{c} \xi_t(i,j) $$
 
 Eğer $\gamma_t(i)$'nin tüm $t$'ler üzerinden toplamını alırsak, bu hesap
 tüm zamanlar için $i$ konumunda olmanın, ya da $i$ konumundan başka
@@ -439,9 +441,9 @@ $\xi_t(i,j)$'nin $t=1,..,T-1$ üzerinden toplamını almak, bize konum $i$ ve
 $j$ arasındaki tüm geçişlerin beklentisini verebilir.
 
 
-$$ \sum _{t=1}^{T-1} \gamma_t(i) = \textrm{ i'den başka bir konuma geçiş beklentisi} $$
+$$ \sum_{t=1}^{T-1} \gamma_t(i) = \textrm{ i'den başka bir konuma geçiş beklentisi} $$
 
-$$ \sum _{t=1}^{T-1} \xi_t(i,j) = \textrm{ i'den j'ye geçiş beklentisi} $$
+$$ \sum_{t=1}^{T-1} \xi_t(i,j) = \textrm{ i'den j'ye geçiş beklentisi} $$
 
 Üstteki formülleri kullanarak HMM'in parametreleri $\lambda = (\pi,A,B)
 $'yi tahminsel hesaplamak mümkündür. 
@@ -454,7 +456,7 @@ $$ \overline{a_{ij}} = \frac{\textrm{i konumundan j konumuna geçiş beklentisi}
 {\textrm{i konumundan başka herhangi bir konuma geçişin beklentisi}}
 $$
 
-$$  = \frac{ \sum _{t=1}^{T-1}\xi_t(i,j) }{ \sum _{t=1}^{T-1} \gamma_t(i) } 
+$$  = \frac{ \sum_{t=1}^{T-1}\xi_t(i,j) }{ \sum_{t=1}^{T-1} \gamma_t(i) } 
 \mlabel{4}
 $$
 
@@ -464,7 +466,7 @@ $$
 {j \textrm{ konumunda olmanın beklentisi} }
  $$
 
-$$ = \frac{\sum _{t=1}^{T-1} \gamma_t(j) 1(V_t=k) }{\sum_{t=1}^{T-1}\gamma_t(j) } 
+$$ = \frac{\sum_{t=1}^{T-1} \gamma_t(j) 1(V_t=k) }{\sum_{t=1}^{T-1}\gamma_t(j) } 
 \mlabel{5}
 $$
 

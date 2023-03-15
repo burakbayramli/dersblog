@@ -57,11 +57,11 @@ göreceğiz. Doğadaki çoğu üstel kanun $2 < \alpha < 3$
 arasındadır. Beklentiyi hesaplayalım,
 
 $$ 
-E[X] = \int _{x_{min}}^{\infty} x p(x) \ud x  = 
-C \int _{x_{min}}^{\infty} x ^{-\alpha + 1} \ud x
+E[X] = \int_{x_{min}}^{\infty} x p(x) \ud x  = 
+C \int_{x_{min}}^{\infty} x ^{-\alpha + 1} \ud x
 $$
 
-$$ = \frac{C}{2-\alpha} \bigg[ x ^{-\alpha+2}  \bigg] _{x_{min}}^{\infty} $$
+$$ = \frac{C}{2-\alpha} \bigg[ x ^{-\alpha+2}  \bigg]_{x_{min}}^{\infty} $$
 
 Bu ifadenin $\alpha \le 2$ için sonsuza gittiğine dikkat edelim,
 bahsettiğimiz gariplik burada... $x_{min}$'in ne olduğunu birazdan göreceğiz.
@@ -134,11 +134,11 @@ sınıra $x_{min}$ diyeceğiz.
 
 Artık normalizasyon sabiti $C$'yi hesaplayabiliriz, 
 
-$$ \int _{x_{min}}^{\infty} C x^{-\alpha} = 1$$
+$$ \int_{x_{min}}^{\infty} C x^{-\alpha} = 1$$
 
-$$ \frac{C}{(-\alpha+1) } \bigg[ x^{-\alpha+1} \bigg] _{x_{min}}^{\infty} = 1$$
+$$ \frac{C}{(-\alpha+1) } \bigg[ x^{-\alpha+1} \bigg]_{x_{min}}^{\infty} = 1$$
 
-$$ \frac{C}{(1-\alpha) } \bigg[ x^{-\alpha+1} \bigg] _{x_{min}}^{\infty} = 1$$
+$$ \frac{C}{(1-\alpha) } \bigg[ x^{-\alpha+1} \bigg]_{x_{min}}^{\infty} = 1$$
 
 Görülebileceği üzere bu formül sadece $\alpha > 1$ için anlamlıdır, diğer
 durumlarda sonsuzluğa gider. Demek ki üstel kanun dağılımı 
@@ -184,17 +184,17 @@ kullanılmaması gerektiği [3, sf. 31]'de bulunabilir.
 Alternatif yöntem şöyle; önce $\alpha$ için hızlı çalışan bir tahmin edici
 mevcut, bunu görelim; Maksimum olurluk üzerinden,
 
-$$ p(x;\alpha) = \prod _{i=1}^{n} \frac{\alpha-1}{x_{min}} \bigg( \frac{x_i}{x_{min}}\bigg)^{-\alpha}  $$
+$$ p(x;\alpha) = \prod_{i=1}^{n} \frac{\alpha-1}{x_{min}} \bigg( \frac{x_i}{x_{min}}\bigg)^{-\alpha}  $$
 
 Maksimum log olurluk,
 
-$$ \ln p(x;\alpha) = \ln \prod _{i=1}^{n} \frac{\alpha-1}{x_{min}} \bigg( \frac{x_i}{x_{min}}\bigg)^{-\alpha}  $$
+$$ \ln p(x;\alpha) = \ln \prod_{i=1}^{n} \frac{\alpha-1}{x_{min}} \bigg( \frac{x_i}{x_{min}}\bigg)^{-\alpha}  $$
 
-$$ = \sum _{i=1}^{n} \ln \frac{\alpha-1}{x_{min}} \bigg( \frac{x_i}{x_{min}}\bigg)^{-\alpha}  $$
+$$ = \sum_{i=1}^{n} \ln \frac{\alpha-1}{x_{min}} \bigg( \frac{x_i}{x_{min}}\bigg)^{-\alpha}  $$
 
-$$ = \sum _{i=1}^{n} \bigg[ \ln (\alpha-1) + \ln x_{min} - \alpha \ln \frac{x_i}{x_{min}} \bigg]   $$
+$$ = \sum_{i=1}^{n} \bigg[ \ln (\alpha-1) + \ln x_{min} - \alpha \ln \frac{x_i}{x_{min}} \bigg]   $$
 
-$$ = n \ln (\alpha-1) + n \ln x_{min} - \alpha \sum _{i=1}^{n}  \ln \frac{x_i}{x_{min}}   $$
+$$ = n \ln (\alpha-1) + n \ln x_{min} - \alpha \sum_{i=1}^{n}  \ln \frac{x_i}{x_{min}}   $$
 
 Maksimum değer için $\alpha$'ya göre türevi alıp sıfıra eşitleriz ve
 çözeriz, $\ln(\alpha-1)$'in türevini hatırlayalım bu arada,
@@ -209,13 +209,13 @@ print sympy.diff(sympy.log(alpha-1))
 1/(alpha - 1)
 \end{verbatim}
 
-$$ =  \frac{n}{(\alpha - 1)} - \sum _{i=1}^{n}  \ln \frac{x_i}{x_{min}}  = 0 $$
+$$ =  \frac{n}{(\alpha - 1)} - \sum_{i=1}^{n}  \ln \frac{x_i}{x_{min}}  = 0 $$
 
-$$  \frac{n}{(\alpha - 1)} = \sum _{i=1}^{n}  \ln \frac{x_i}{x_{min}}   $$
+$$  \frac{n}{(\alpha - 1)} = \sum_{i=1}^{n}  \ln \frac{x_i}{x_{min}}   $$
 
-$$ \frac{(\alpha - 1)}{n} =  \bigg( \sum _{i=1}^{n}  \ln \frac{x_i}{x_{min}} \bigg)^{-1}  $$
+$$ \frac{(\alpha - 1)}{n} =  \bigg( \sum_{i=1}^{n}  \ln \frac{x_i}{x_{min}} \bigg)^{-1}  $$
 
-$$ \hat{\alpha} =  1 + n  \bigg( \sum _{i=1}^{n}  \ln \frac{x_i}{x_{min}} \bigg)^{-1}   $$
+$$ \hat{\alpha} =  1 + n  \bigg( \sum_{i=1}^{n}  \ln \frac{x_i}{x_{min}} \bigg)^{-1}   $$
 
 Fakat tahmin edicinin hesabı için $x_{min}$'i bilmek gerekiyor. Bir
 tavuk-yumurta problemi var, $\hat{\alpha}$ için $x_{min}$ gerekli, ama

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*- 
-import os, sys, re, codecs, shutil, markdown, json
+import os, sys, re, codecs, shutil, markdown, json, markdown2
 
 html_head = '''
 <!DOCTYPE html>
@@ -21,11 +21,33 @@ html_head = '''
       });
     });
     </script>
-<script type="text/javascript"
+   <script type="text/javascript"
    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-</script>
-</head>
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1>[title]</h1>
 '''   
+
+bottom = """
+        </section>          
+      </div>
+    </body>
+</html>
+"""
 
 def tex_mathjax_html(texfile, htmlfile, title):
 
@@ -34,11 +56,10 @@ def tex_mathjax_html(texfile, htmlfile, title):
 
    fin.readline()
    fin.readline()
-   fout.write("[Yukarı](..)\n\n")
-   title = "# " + fin.readline()
-   fout.write(title)
+   title = fin.readline()
+   #fout.write(title)
 
-   head = html_head.replace("[title]",title.replace('# ',''))
+   head = html_head.replace("[title]",title)
    fout.write(head)
 
    for line in fin.readlines():
@@ -125,9 +146,11 @@ def tex_mathjax_html(texfile, htmlfile, title):
    fin = codecs.open("/tmp/out.md",encoding="utf-8")
    fout = codecs.open(htmlfile, mode="w",encoding="utf-8")
    content=fin.read()
+   content = content.replace("@@UUEEE@@","_")
+   content = content.replace("@@RR@@@","^*")
    res = markdown.markdown(content, extensions=['fenced_code'])
-   res = res.replace("@@UUEEE@@","_")
-   res = res.replace("@@RR@@@","^*")
+   #res = markdown2.markdown(content, extras=['fenced-code-blocks'])
+   res = res.replace("<p><!DOCTYPE html>","")
    fout.write(res)
+   fout.write(bottom)   
    fout.close()
-

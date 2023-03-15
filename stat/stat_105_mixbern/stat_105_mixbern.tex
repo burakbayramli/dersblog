@@ -14,7 +14,7 @@ hesaplamamızı mümkün kılmaları.
 Formel olarak bir karışım dağılımı $f$ her biri ayrı bir dağılım olan
 $f_1,f_2,...,f_K$ ile $K$ öğeden oluşan, bir yeni dağılımdır diyoruz, eğer
 
-$$ f(x) = \sum _{k=1}^{K} \lambda_k f_k(x)  $$
+$$ f(x) = \sum_{k=1}^{K} \lambda_k f_k(x)  $$
 
 ise, ve $\lambda_k$ karışım oranları, $\lambda_k > 0, \sum_k \lambda_k =
 1$ olacak şekilde.
@@ -30,11 +30,11 @@ $$ Z \sim Mult(\lambda_1,..,\lambda_k) $$
 
 $f_k(x)$ bir diğer açıdan $f(x|Z=k)$'dir, notasyonel olarak böyle. O zaman,
 
-$$ = \sum _{k=1}^{K} f(x|Z=k)\lambda_k $$
+$$ = \sum_{k=1}^{K} f(x|Z=k)\lambda_k $$
 
-$$ = \sum _{k=1}^{K} f(x|Z=k)P(Z=k)  $$
+$$ = \sum_{k=1}^{K} f(x|Z=k)P(Z=k)  $$
 
-$$ = \sum _{k=1}^{K} f(x,k)  $$
+$$ = \sum_{k=1}^{K} f(x,k)  $$
 
 $$ = f(x)  $$
 
@@ -49,14 +49,14 @@ likelihood) yöntemi. Olurluk eldeki verinin belli dağılım parametreleri
 üzerinden olasılığı, yani ``verinin olasılığı''. Örneklemlerin bağımsız
 olduğundan hareketle $x_1,x_2,...,x_N$ verisi için olurluk,
 
-$$ \prod _{i=1}^{N} f(x_i;\theta) $$
+$$ \prod_{i=1}^{N} f(x_i;\theta) $$
 
 Her zaman olduğu gibi çarpımı toplam haline döndürmek için log alırız, 
 
-$$ \ell(\theta) = \sum _{i=1}^{N} \log f(x_i;\theta) $$
+$$ \ell(\theta) = \sum_{i=1}^{N} \log f(x_i;\theta) $$
 Karışımları da dahil edersek,
 
-$$ = \sum _{i=1}^{N} \log \sum _{k=1}^{K} \lambda_k f(x_i;\theta_k) 
+$$ = \sum_{i=1}^{N} \log \sum_{k=1}^{K} \lambda_k f(x_i;\theta_k) 
 \mlabel{2}
 $$
 
@@ -64,21 +64,21 @@ $$
 yani $j$'inci öğenin parametresine göre bir kısmi türev. 
 
 $$ \frac{\partial \ell}{\partial \theta_j}  = 
-\sum _{i=1}^{N}  \frac{1}{\sum _{k=1}^{K} \lambda_k f(x_i;\theta_k) } 
+\sum_{i=1}^{N}  \frac{1}{\sum_{k=1}^{K} \lambda_k f(x_i;\theta_k) } 
 \lambda_j
 \frac{\partial f(x_i;\theta_j)}{\partial \theta_j}
 $$
 
 Bölüm ve bölene $f(x_i;\theta_j)$ ekleyelim, bu sonucu değiştirmez, 
 
-$$ = \sum _{i=1}^{N}  
-\frac{\lambda_j f(x_i;\theta_j)}{\sum _{k=1}^{K} \lambda_k f(x_i;\theta_k)}
+$$ = \sum_{i=1}^{N}  
+\frac{\lambda_j f(x_i;\theta_j)}{\sum_{k=1}^{K} \lambda_k f(x_i;\theta_k)}
 \frac{1}{f(x_i;\theta_j)}
 \frac{\partial f(x_i;\theta_j)}{\partial \theta_j}
 $$
 
-$$ = \sum _{i=1}^{N}  
-\frac{\lambda_j f(x_i;\theta_j)}{\sum _{k=1}^{K} \lambda_k f(x_i;\theta_k)}
+$$ = \sum_{i=1}^{N}  
+\frac{\lambda_j f(x_i;\theta_j)}{\sum_{k=1}^{K} \lambda_k f(x_i;\theta_k)}
 \frac{\partial \log f(x_i;\theta_j)}{\partial \theta_j}
 $$
 
@@ -94,7 +94,7 @@ maksimize etmek istiyorsak, bu ağırlığı alınmış olurluğu maksimize etme
 gerekli. Bu ağırlığın alındığı kısmı iki üstteki formülden çekip
 çıkartırsak, 
 
-$$ w_{ij} = \frac{\lambda_j f(x_i;\theta_j)}{\sum _{k=1}^{K} \lambda_k f(x_i;\theta_k)} $$
+$$ w_{ij} = \frac{\lambda_j f(x_i;\theta_j)}{\sum_{k=1}^{K} \lambda_k f(x_i;\theta_k)} $$
 
 Bu ağırlık hesabı $i,j$ için yapılacak. Bu noktaya niçin geldik
 hatırlayalım, olurluk üzerinden parametreleri hesaplamak istiyoruz. Fakat
@@ -111,14 +111,14 @@ sonuç $Z=j$'nin $X=x_i$ verildiği, koşullu olasılığıdır,
 
 $$  
  w_{ij} 
-= \frac{\lambda_j f(x_i;\theta_j)}{\sum _{k=1}^{K} \lambda_k f(x_i;\theta_k)} 
+= \frac{\lambda_j f(x_i;\theta_j)}{\sum_{k=1}^{K} \lambda_k f(x_i;\theta_k)} 
 = P(Z=j | X=x_i;\theta)
 \mlabel{1}
 $$
 
 O zaman 
 
-$$ \frac{\partial \ell}{\partial \theta_j}  = \sum _{i=1}^{N}
+$$ \frac{\partial \ell}{\partial \theta_j}  = \sum_{i=1}^{N}
 w_{ij} \frac{\partial \log f(x_i;\theta_j)}{\partial \theta_j}
 $$
 
@@ -154,19 +154,19 @@ yazalım, ayrıca $z_{ik}$ değişkenini katalım, $Z$ değişkeni multinom idi,
 bileşen $k$ için, $Z_i$ ise $i$'inci nokta için
 
 $$  P(X_i = x_i, Z_i=k) =  
-\prod _{k=1}^{K} \big( f(x_i;\theta_k)P(Z_i=k) \big)^{z_{ik}} $$
+\prod_{k=1}^{K} \big( f(x_i;\theta_k)P(Z_i=k) \big)^{z_{ik}} $$
 
 Şimdi log alalım, 
 
-$$  = \sum _{k=1}^{K} z_{ij} \ln \big( f(x_i;\theta_k)P(Z_i=k) \big) $$
+$$  = \sum_{k=1}^{K} z_{ij} \ln \big( f(x_i;\theta_k)P(Z_i=k) \big) $$
 
 Tüm veri noktaları için
 
 $$  \ell(\theta) = 
-\sum _{i=1}^{N} \sum _{k=1}^{K} z_{ij} \ln \big( f(x_i;\theta_k)P(Z_i=k) \big) $$
+\sum_{i=1}^{N} \sum_{k=1}^{K} z_{ij} \ln \big( f(x_i;\theta_k)P(Z_i=k) \big) $$
 
 $$ 
-= \sum _{i=1}^{N} \sum _{k=1}^{K} z_{ik} 
+= \sum_{i=1}^{N} \sum_{k=1}^{K} z_{ik} 
 \big( \ln f(x_i;\theta_j) + \ln(\lambda_j) \big)   
 $$
 
@@ -176,7 +176,7 @@ bilinmeyen küme ataması üzerinden alıyoruz, $\theta_k$,$P(Z_i=k)$ ve $x_i$ s
 olarak kalıyor,
 
 $$ 
-E[l(\theta)] = \sum _{i=1}^{N} \sum _{k=1}^{K} E[z_{ik}]
+E[l(\theta)] = \sum_{i=1}^{N} \sum_{k=1}^{K} E[z_{ik}]
 \big( \ln f(x_i;\theta_j) + \ln(\lambda_j) \big)   
 $$
 
@@ -194,7 +194,7 @@ $$  E[z_{ik}] = w_{ik} $$
 Yani
 
 $$ 
-E[l(\theta)] = \sum _{i=1}^{N} \sum _{k=1}^{K} w_{ik}
+E[l(\theta)] = \sum_{i=1}^{N} \sum_{k=1}^{K} w_{ik}
 \big( \ln f(x_i;\theta_j) + \ln(\lambda_j) \big) 
 \mlabel{4}
 $$
@@ -219,16 +219,16 @@ değeri olsun, $f$ içinde yerine koyunca ve $f$ üzerinde log etki yapınca ça
 yine toplam olur,
 
 $$ 
-= \sum _{i=1}^{N} \sum _{k=1}^{K} w_{ik}
+= \sum_{i=1}^{N} \sum_{k=1}^{K} w_{ik}
 \bigg[ \ln(\lambda_k)  + 
-\sum _{d=1}^{D} \ln \big( \theta_{kd}^{x_{id}} (1-\theta_{kd})^{1-x_{id}} \big)
+\sum_{d=1}^{D} \ln \big( \theta_{kd}^{x_{id}} (1-\theta_{kd})^{1-x_{id}} \big)
 \bigg]
 $$
 
 $$ 
-E[l(\theta)]= \sum _{i=1}^{N} \sum _{k=1}^{K} w_{ik}
+E[l(\theta)]= \sum_{i=1}^{N} \sum_{k=1}^{K} w_{ik}
 \bigg[ \ln(\lambda_k)  + 
-\sum _{d=1}^{D} x_{id} \ln \theta_{kd} + (1-x_{id}) \ln (1-\theta_{kd})
+\sum_{d=1}^{D} x_{id} \ln \theta_{kd} + (1-x_{id}) \ln (1-\theta_{kd})
 \bigg]
 $$
 
@@ -236,14 +236,14 @@ $$
 
 $$ 
 \frac{\partial }{\partial \theta_{kd}} E[l(\theta)] = 
-w_{ik} \sum _{i=1}^{N} 
+w_{ik} \sum_{i=1}^{N} 
 x_{id} \frac{\partial }{\partial \theta_{kd}} (\ln \theta_{kd}) + 
 \frac{\partial }{\partial \theta_{kd}}\big[ (1-x_{id}) \ln (1-\theta_{kd})\big]
 = 0
 $$
 
 $$ 
-\sum _{i=1}^{N}  w_{ik} 
+\sum_{i=1}^{N}  w_{ik} 
 (
 \frac{x_{id}}{\theta_{kd}}  -
 \frac{1-x_{id}}{1-\theta_{kd}}
@@ -251,19 +251,19 @@ $$
 $$
 
 $$ 
-\sum _{i=1}^{N} \frac{w_{ik}  x_{id}}{\theta_{kd}} =
-\sum _{i=1}^{N} \frac{w_{ik}-w_{ik}x_{id}}{1-\theta_{kd}}
+\sum_{i=1}^{N} \frac{w_{ik}  x_{id}}{\theta_{kd}} =
+\sum_{i=1}^{N} \frac{w_{ik}-w_{ik}x_{id}}{1-\theta_{kd}}
 $$
 
 $$ 
-\frac{1}{\theta_{kd}}\sum _{i=1}^N w_{ik}  x_{id} =
-\frac{1}{1-\theta_{kd}}\sum _{i=1}^{N} w_{ik}-w_{ik}x_{id}
+\frac{1}{\theta_{kd}}\sum_{i=1}^N w_{ik}  x_{id} =
+\frac{1}{1-\theta_{kd}}\sum_{i=1}^{N} w_{ik}-w_{ik}x_{id}
 $$
 
 
 $$ 
-\frac{1-\theta_{kd}}{\theta_{kd}}\sum _{i=1}^N w_{ik}  x_{id} =
-\sum _{i=1}^{N} w_{ik}-w_{ik}x_{id}
+\frac{1-\theta_{kd}}{\theta_{kd}}\sum_{i=1}^N w_{ik}  x_{id} =
+\sum_{i=1}^{N} w_{ik}-w_{ik}x_{id}
 $$
 
 
@@ -306,30 +306,30 @@ dönersek, ve kısmi türevi alırsak,
 
 $$ 
 \frac{\partial \ell}{\partial \lambda_j}  = 
-\sum _{i=1}^{N}
-\frac{f(x_i;\theta_j)}{\sum _{k=1}^{K} \lambda_k f(x_i;\theta_k) }
+\sum_{i=1}^{N}
+\frac{f(x_i;\theta_j)}{\sum_{k=1}^{K} \lambda_k f(x_i;\theta_k) }
 =
-\sum _{i=1}^{N}
+\sum_{i=1}^{N}
 \frac{f(x_i;\theta_j)}{f(x_i) }
 $$
 
 O zaman iki üstteki türev su hale gelir, sıfıra da eşitlersek,
 
 $$  
-\sum _{i=1}^{N} \frac{f(x_i;\theta_j)}{f(x_i) } + \alpha = 0
+\sum_{i=1}^{N} \frac{f(x_i;\theta_j)}{f(x_i) } + \alpha = 0
 $$
 
 Biraz düzenleyip iki tarafı da $\lambda_j$ ile çarpalım,
 
 $$
-\sum _{i=1}^{N} \frac{f(x_i;\theta_j) \lambda_j}{f(x_i) } = - \alpha \lambda_j 
+\sum_{i=1}^{N} \frac{f(x_i;\theta_j) \lambda_j}{f(x_i) } = - \alpha \lambda_j 
 $$
 
 Eşitliğin sol tarafında toplam içinde yine (1)'de görülen $w_{ij}$'ye eriştik!
 Yerine koyalım,
 
 $$
-\sum _{i=1}^{N} w_{ij} = - \alpha \lambda_j 
+\sum_{i=1}^{N} w_{ij} = - \alpha \lambda_j 
 \mlabel{3} 
 $$
 
@@ -337,7 +337,7 @@ $$
 tarafa da uygulayalım),
 
 $$
-\sum _{k=1}^{K} \sum _{i=1}^{N} w_{ij} = - \alpha  \sum _{k=1}^{K} \lambda_j
+\sum_{k=1}^{K} \sum_{i=1}^{N} w_{ij} = - \alpha  \sum_{k=1}^{K} \lambda_j
 $$
 
 
@@ -350,7 +350,7 @@ $$
 Üstteki formülü (3) içine koyarsak, ve tekrar düzenlersek,
 
 $$ 
-\lambda_j = \frac{\sum _{i=1}^{N} w_{ij}}{N} 
+\lambda_j = \frac{\sum_{i=1}^{N} w_{ij}}{N} 
 $$
 
 \inputminted[fontsize=\footnotesize]{python}{mixbern.py}

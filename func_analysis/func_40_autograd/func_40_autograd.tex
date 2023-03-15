@@ -84,23 +84,23 @@ $$
 \min_x f(x)
 $$
 
-işlemi. Peki minimumu nasıl tanımlarız? Bir nokta $x^*$ global minimize
-edicidir eğer tüm $x$'ler için $f(x^*) \le f(x)$ ise, ki
+işlemi. Peki minimumu nasıl tanımlarız? Bir nokta $x^\ast$ global minimize
+edicidir eğer tüm $x$'ler için $f(x^\ast) \le f(x)$ ise, ki
 $x \in \mathbb{R}^n$, en azından $x$ modelleyeni ilgilendiren tüm küme
 öğeleri için.
 
 Fakat çoğu zaman bir global $f$'i kullanmak mümkün olmayabilir, fonksiyon
 çok çetrefil, çok boyutlu, bilinmez durumdadır, ve elimizde sadece yerel
 bilgi vardır. Bu durumda üstteki tanımı ``bir $N$ bölgesi içinde'' olacak
-şekilde değiştiririz ki bölge, $x^*$ etrafındaki, yakınındaki bölgedir.
+şekilde değiştiririz ki bölge, $x^\ast$ etrafındaki, yakınındaki bölgedir.
 
-Üstteki tanımı okuyunca  $x^*$'in yerel minimum olup olmadığını anlamanın
+Üstteki tanımı okuyunca  $x^\ast$'in yerel minimum olup olmadığını anlamanın
 tek yolunun yakındaki diğer tüm noktalara teker teker bakmak olduğu anlamı
 çıkabilir, fakat eğer $f$ pürüzsüz bir fonksiyon ise yerel minimumu
 doğrulamanın çok daha hızlı bir yöntemi vardır. Hatta ve hatta eğer
-fonksiyon $f$ iki kez türevi alınabilir haldeyse $x^*$'in yerel minimum
-olduğunu ispatlamak daha kolaylaşır, $\nabla f(x^*)$ ve Hessian $\nabla^2
-f(x^*)$'e bakarak bunu yapabiliriz.
+fonksiyon $f$ iki kez türevi alınabilir haldeyse $x^\ast$'in yerel minimum
+olduğunu ispatlamak daha kolaylaşır, $\nabla f(x^\ast)$ ve Hessian $\nabla^2
+f(x^\ast)$'e bakarak bunu yapabiliriz.
 
 Minimallik için 1. ve 2. derece şartlar var. 1. derece gerekli şart (ama
 yeterli değil) $\nabla f = 0$ olması. Bu standard Calculus'tan bildiğimiz
@@ -122,35 +122,35 @@ plt.savefig('func_40_autograd_01.png')
 
 Bir kritik noktanın yerel maksimum ya da yerel minimum olup olmadığını
 anlamak için fonksiyonun ikinci türevine bakabiliriz. Bir
-$f: \mathbb{R}^n \to \mathbb{R}$ var ve $x^*$ noktasının kritik nokta
-olduğunu düşünelim, yani $\nabla f(x^*) = 0$. Şimdi çok ufak bir $h$ adımı
-için $f(x^* + h)$'a ne olduğuna bakalım. Burada Taylor açılımı
+$f: \mathbb{R}^n \to \mathbb{R}$ var ve $x^\ast$ noktasının kritik nokta
+olduğunu düşünelim, yani $\nabla f(x^\ast) = 0$. Şimdi çok ufak bir $h$ adımı
+için $f(x^\ast + h)$'a ne olduğuna bakalım. Burada Taylor açılımı
 kullanabiliriz [2], 
 
 $$
-f(x + h^*) = 
-f(x^*) + \nabla f(x^*) h + 
-\frac{1}{2} h^T f(x^*) \nabla^2 (x^*) f(x^*) h + 
+f(x + h^\ast) = 
+f(x^\ast) + \nabla f(x^\ast) h + 
+\frac{1}{2} h^T f(x^\ast) \nabla^2 (x^\ast) f(x^\ast) h + 
 O(3)
 $$
 
-$\nabla^2 (x^*)$ bir matristır içinde $f$'nin ikinci derece türevleri
-vardır [6]. Şimdi, kritik noktada olduğumuz için $\nabla f(x^*) = 0$, ve
+$\nabla^2 (x^\ast)$ bir matristır içinde $f$'nin ikinci derece türevleri
+vardır [6]. Şimdi, kritik noktada olduğumuz için $\nabla f(x^\ast) = 0$, ve
 $O(3)$ terimlerini iptal edersek, üstteki
 
 $$
-f(x^* + h^*) - f(x^*) = \frac{1}{2} h^T \nabla^2 (x^*)  h + O(3)
+f(x^\ast + h^\ast) - f(x^\ast) = \frac{1}{2} h^T \nabla^2 (x^\ast)  h + O(3)
 $$
 
 haline gelir. Simdi ``bir noktanın mesela yerel maksimum olması'' sözünü
-$f(x^* + h^*) - f(x^*) < 0$ ile ifade edebiliriz, çünkü $x^*$ etrafındaki
+$f(x^\ast + h^\ast) - f(x^\ast) < 0$ ile ifade edebiliriz, çünkü $x^\ast$ etrafındaki
 tüm $x$'lerin $f$'in daha az değerlerinden olma şartını aramış oluyoruz
 (adım atılıyor, çıkartma yapılıyor, sonuç sıfırdan küçük). Tabii bu ``tüm''
 söylemi yaklaşıksal, o sebeple minimumluk ifadesi {\em yerel}.
 
-Devam edersek $f(x^* + h^*) - f(x^*) < 0$ olması şartı aynı zamanda
-$\frac{1}{2} h^T \nabla^2 (x^*) h < 0$ anlamına gelir, bu da
-$\nabla^2 (x^*)$ negatif kesin demektir. Çünkü $A$ simetrik bir matris
+Devam edersek $f(x^\ast + h^\ast) - f(x^\ast) < 0$ olması şartı aynı zamanda
+$\frac{1}{2} h^T \nabla^2 (x^\ast) h < 0$ anlamına gelir, bu da
+$\nabla^2 (x^\ast )$ negatif kesin demektir. Çünkü $A$ simetrik bir matris
 olduğu zaman
 
 $x^TAx < 0$ ise matris negatif kesin

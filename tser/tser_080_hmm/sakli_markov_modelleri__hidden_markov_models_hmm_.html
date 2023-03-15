@@ -1,5 +1,3 @@
-<p><a href="..">Yukarı</a></p>
-<h1>Saklı Markov Modelleri (Hidden Markov Models -HMM-)</h1>
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,10 +17,26 @@
       });
     });
     </script>
-<script type="text/javascript"
+   <script type="text/javascript"
    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-</script>
-</head>
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1>Saklı Markov Modelleri (Hidden Markov Models -HMM-)
+</h1>
 
 <p>Zaman serilerini temsil etmek için Markov bazlı modeller sıkça
 kullanılır. Genelde istatistiki analiz bağımsız özdeşçe dağılmış (iid)
@@ -57,15 +71,15 @@ $A$ bilinmiyor, o zaman konum dizisinden $A$ matrisini
 kullanılır, herhangi bir konum serisinin olasılığı nedir sorusunun cevabı
 şu formül;</p>
 <p>$$ P(X_1=x_1,..,X_T=x_T) = 
-P(X_1=x_1) \prod _{t=2}^{T} P(X_t=x_t | X_{t-1}=x_{t-1})
+P(X_1=x_1) \prod_{t=2}^{T} P(X_t=x_t | X_{t-1}=x_{t-1})
 $$</p>
 <p>Üstteki formül bir olurluk (likelihood) hesabı - $L(A)$ diyelim, </p>
-<p>$$ L(A) = P(X_1=x_1) \prod _{ t=2}^{T} a_{x_{t-1},x_t} $$</p>
+<p>$$ L(A) = P(X_1=x_1) \prod_{ t=2}^{T} a_{x_{t-1},x_t} $$</p>
 <p>Olurluğun maksimize edilmesi ardından $A$ için bir tahmin edici
 (estimator) hesaplanabilir - detaylar için [2, Ders 6]; $n_{ij}$'yi veri
 serisinde $i$'inci konumdan $j$'ye kaç kere geçildiğinin sayısı olarak
 tanımlarsak, $A$ tahmin edicisi şöyle olur,</p>
-<p>$$ \hat{a}_{ij} = \frac{n_{ij}}{\sum_j n_{ij}}  $$</p>
+<p>$$ \hat{a}<em>{ij} = \frac{n</em>{ij}}{\sum_j n_{ij}}  $$</p>
 <p>Bu hesap akla yatkın (intuitive) bir sonuç, çünkü $i$'den $j$'ye geçiş
 "olasılığını" veriden hesaplamak istiyorsak, veride $i$'den $j$'ye kaç
 kere geçildiğini sayıp, bu sayıyı yine verideki tüm $j$'ye olan geçişlere
@@ -124,19 +138,19 @@ bir saklı konum vektörü, ve bu boyutta olabilecek <em>tüm</em> konum
 serilerini düşünelim, $c$ mümkün gizli konum için $c^T$ tane olur. $T=6$
 için bir vektör $S_1 = {1,4,2,2,1,4}$ gibi.. Şimdi görünen herhangi bir
 dizinin olasılığını hesaplayalım,</p>
-<p>$$ P(V) = \sum _{r}^{c^n} P(V | S_r) P(S_r) 
+<p>$$ P(V) = \sum_{r}^{c^n} P(V | S_r) P(S_r) 
 \qquad (1)
 $$</p>
 <p>Üstteki formüldeki $P(S_r)$'in açılımını MZ'lerden zaten biliyoruz, </p>
-<p>$$ P(S_r) = \prod _{t=1}^{T}P(X_t|X_{t-1}) $$</p>
+<p>$$ P(S_r) = \prod_{t=1}^{T}P(X_t|X_{t-1}) $$</p>
 <p>Yani gizli konum geçişlerine tekabül eden $a_{ij}$'leri bulup onları
 sırasıyla çarpıyoruz. Üstteki ${1,4,2,2,1,4}$ örneği için bu
 çarpım $a_{14}a_{42}a_{22}a_{21}a_{14}$ olurdu. </p>
 <p>Ayrıca $P(V|S_r)$'in açılımını da biliyoruz, </p>
-<p>$$ P(V|S_r) = \prod _{t=1}^{T} P(V_t | X_t) $$</p>
+<p>$$ P(V|S_r) = \prod_{t=1}^{T} P(V_t | X_t) $$</p>
 <p>Birleştirelim ve (1)'i genişletelim,</p>
 <p>$$ 
-P(V) = \sum _{r}^{c^T} \prod _{t=1}^{T} P(V_t | X_t)  P(X_t|X_{t-1}) 
+P(V) = \sum_{r}^{c^T} \prod_{t=1}^{T} P(V_t | X_t)  P(X_t|X_{t-1}) 
 $$</p>
 <p>Formül biraz korkutucu duruyor ama aslında söylediği şu: verilen bir
 $V$'nin olasılığını hesaplamak için tüm mümkün saklı konum dizileri
@@ -155,14 +169,17 @@ P(X_t|X_{t-1}) $için sadece $V_t,X_t,X_{t-1}$ gerekli. O zaman özyineli
 hesap için  yeni bir  değişken tanımlarız, bilinen bir model 
 $\lambda = (A,B)$ için</p>
 <p>$$ \alpha_t(i) = P(V_1,V_2,..,V_t, X_t = i; \lambda) $$</p>
-<p>Bu gözlenen salım dizisinin sadece bir kısmı üzerinden tanımlanmış bir
-olasılık; tanıma göre zaman indisi 1'den $t$'ye kadar, ve bu en son $t$
-noktasında saklı konum $i$'de olmalı. Özyineli tanımı görmek için
-$\alpha_1(i)$'nin ne olduğuna bakalım, notasyon kısalığı için 
-$\pi_i = P(X_1 = i)$,</p>
-<p>$$ \alpha_1(i) = \pi_i b_{i,V_1} $$</p>
+<p>Bu gözlenen salım dizisinin sadece bir kısmı üzerinden tanımlanmış bir olasılık;
+tanıma göre zaman indisi 1'den $t$'ye kadar, ve bu en son $t$ noktasında saklı
+konum $i$'de olmalı. Özyineli tanımı görmek için $\alpha_1(i)$'nin ne olduğuna
+bakalım, notasyon kısalığı için $\pi_i = P(X_1 = i)$,</p>
+<p>$$
+\alpha_1(i) = \pi_i b_{i,V_1}
+$$</p>
 <p>Tümevarımsal (induction), özyineli kısım ise şöyle tanımlanır,</p>
-<p>$$ \alpha_{t+1}(j) = \bigg[ \sum _{i=1}^{c} \alpha_t(i)a_{ij} \bigg] b_{j,V_{t+1}} $$</p>
+<p>$$
+\alpha_{t+1}(j) = \bigg[  \sum_{i=1}^{c} \alpha_t(i)a_{ij} \bigg] b_{j,V_{t+1}}
+$$</p>
 <p>Formülün niye performans ilerlemesi getirdiğini görmek için örnek 1,2,3,4
 gizli konumların tüm permutasyonlarının düşünelim,</p>
 <pre><code class="python">import itertools
@@ -198,7 +215,7 @@ gitmiş oluyoruz.</p>
 koşuluna göre, $t+1$'den en sona kadar olan verili salımların olasılığının
 hesabını yapar. Özyineli adım, </p>
 <p>$$ \beta_T(i) = 1 $$</p>
-<p>$$ \beta_t(i) = \sum _{j=1}^{c} a_{ij}b_{j,V_{t+1}} \beta_{t+1}(j)  $$</p>
+<p>$$ \beta_t(i) = \sum_{j=1}^{c} a_{ij}b_{j,V_{t+1}} \beta_{t+1}(j)  $$</p>
 <p>Viterbi Algoritması</p>
 <p>Bilinen $\lambda$ için verili bir $V$ salımlarına tekabül eden saklı konum
 geçişlerini bulmak için Viterbi algoritması kullanalım. Detaylara girmeden
@@ -347,7 +364,7 @@ olasılığını tanımlamış oluyoruz. Üstteki ifadeyi </p>
 <p>olarak yazabiliriz, ve</p>
 <p>$$<br />
 = \frac{\alpha_t(i)a_{ij}b_{j,V_{t+1}}\beta_{t+1}(j)  }
-{\sum _{i=1}^{c}\sum _{j=1}^{c} \alpha_t(i)a_{ij}b_{j,V_{t+1}}\beta_{t+1}(j)  }
+{\sum_{i=1}^{c}\sum_{j=1}^{c} \alpha_t(i)a_{ij}b_{j,V_{t+1}}\beta_{t+1}(j)  }
 $$</p>
 <p>Bölendeki ifade bölünendeki ifadenin tüm $i,j$ üzerinden alınan toplamının
 geriye sadece $P(V;\lambda)$ bırakacak olmasından ileri geliyor, çünkü (2)'den
@@ -355,7 +372,7 @@ hareketle bölünendeki ifade $P(X_t = i, X_{t+1}= j, V; \lambda) $. </p>
 <p>$\gamma_t(i)$'yi daha önce $V$'nin verildiği ve $\lambda$ modeli bilindiği
 durumda $t$ anındaki saklı konum $i$'de olmak diye açıklamıştık. O zaman 
 $\gamma_t(i)$ ve $\xi_t(i,j)$ arasında bir ilişki kurabiliriz,</p>
-<p>$$ \gamma_t(i) =  \sum _{j=1}^{c} \xi_t(i,j) $$</p>
+<p>$$ \gamma_t(i) =  \sum_{j=1}^{c} \xi_t(i,j) $$</p>
 <p>Eğer $\gamma_t(i)$'nin tüm $t$'ler üzerinden toplamını alırsak, bu hesap
 tüm zamanlar için $i$ konumunda olmanın, ya da $i$ konumundan başka
 herhangi bir konuma geçmiş olmanın beklentisi olarak görülebilir (tabii en
@@ -363,8 +380,8 @@ son zaman indisi $T$'yi bu durumda toplamdan çıkartmak lazım, çünkü o
 noktadan başka bir noktaya geçmek mümkün değil). Aynı şekilde
 $\xi_t(i,j)$'nin $t=1,..,T-1$ üzerinden toplamını almak, bize konum $i$ ve
 $j$ arasındaki tüm geçişlerin beklentisini verebilir.</p>
-<p>$$ \sum _{t=1}^{T-1} \gamma_t(i) = \textrm{ i'den başka bir konuma geçiş beklentisi} $$</p>
-<p>$$ \sum _{t=1}^{T-1} \xi_t(i,j) = \textrm{ i'den j'ye geçiş beklentisi} $$</p>
+<p>$$ \sum_{t=1}^{T-1} \gamma_t(i) = \textrm{ i'den başka bir konuma geçiş beklentisi} $$</p>
+<p>$$ \sum_{t=1}^{T-1} \xi_t(i,j) = \textrm{ i'den j'ye geçiş beklentisi} $$</p>
 <p>Üstteki formülleri kullanarak HMM'in parametreleri $\lambda = (\pi,A,B)
 $'yi tahminsel hesaplamak mümkündür. </p>
 <p>$$ \overline{\pi} = \textrm{t=1 anında i konumunda olma frekansı} = \gamma_1(i)
@@ -373,7 +390,7 @@ $$</p>
 <p>$$ \overline{a_{ij}} = \frac{\textrm{i konumundan j konumuna geçiş beklentisi}}
 {\textrm{i konumundan başka herhangi bir konuma geçişin beklentisi}}
 $$</p>
-<p>$$  = \frac{ \sum _{t=1}^{T-1}\xi_t(i,j) }{ \sum _{t=1}^{T-1} \gamma_t(i) } 
+<p>$$  = \frac{ \sum_{t=1}^{T-1}\xi_t(i,j) }{ \sum_{t=1}^{T-1} \gamma_t(i) } 
 \qquad (4)
 $$</p>
 <p>$$ 
@@ -381,7 +398,7 @@ $$</p>
 \frac{\textrm{j konumunda olup } v_k \textrm{ sembolunu görmüş olmanın beklentisi}}
 {j \textrm{ konumunda olmanın beklentisi} }
  $$</p>
-<p>$$ = \frac{\sum _{t=1}^{T-1} \gamma_t(j) 1(V_t=k) }{\sum_{t=1}^{T-1}\gamma_t(j) } 
+<p>$$ = \frac{\sum_{t=1}^{T-1} \gamma_t(j) 1(V_t=k) }{\sum_{t=1}^{T-1}\gamma_t(j) } 
 \qquad (5)
 $$</p>
 <p>Tüm bunları kullanarak eğitim yaklaşımını şöyle belirleyebiliriz: bir
@@ -566,3 +583,7 @@ Recoognition}</p>
 <p>[4] Zuccini, <em>Hidden Markov Models for Time Series</em></p>
 <p>[5] Bayramlı, Lineer Cebir, <em>Ders 21</em></p>
 <p>[6] Bayramlı, Bilgisayar Bilim, <em>Dinamik Programlama</em></p>
+        </section>          
+      </div>
+    </body>
+</html>

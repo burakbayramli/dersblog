@@ -1,5 +1,3 @@
-<p><a href="..">Yukarı</a></p>
-<h1>Birden Fazla Düz Çizgi Regresyonu, Çizgi Karışım Modeli (Line Mixture Model -LMM-)</h1>
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,10 +17,26 @@
       });
     });
     </script>
-<script type="text/javascript"
+   <script type="text/javascript"
    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-</script>
-</head>
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1>Birden Fazla Düz Çizgi Regresyonu, Çizgi Karışım Modeli (Line Mixture Model -LMM-)
+</h1>
 
 <p>Aynen veriye bir veya birden fazla boyutlu Gaussian karışımlarını
 uydurabildiğimiz gibi birden fazla çizgilerin karışımını da veriye
@@ -54,16 +68,16 @@ eksenindeki uzaklığı olabilir. Böylece lineer regresyon tekniğini aslında
 çok çizgili olacak şekilde genişletmiş oluyoruz. Bu karışım modelin formu
 şöyle,</p>
 <p>$$ 
-L = \prod _{i=1}^{N} \sum _{k=1}^{K} \pi_k N(y_i; f_k(x_i),\sigma_k^2)
+L = \prod_{i=1}^{N} \sum_{k=1}^{K} \pi_k N(y_i; f_k(x_i),\sigma_k^2)
 $$</p>
-<p>$$ \log L = \sum _{i=1}^{N} \log \sum _{k=1}^{K} \pi_k 
+<p>$$ \log L = \sum_{i=1}^{N} \log \sum_{k=1}^{K} \pi_k 
 \frac{1}{\sqrt{2\pi\sigma_k^2}} \exp (-(y_i-f_k(x_i))^2 / 2\sigma_k^2)
 $$</p>
 <p>ki çizgi tanıdık gelecek formül,</p>
 <p>$$ f_k(x_i) = a_kx_i + b_k $$</p>
 <p>$Q$ fonksiyonu,</p>
 <p>$$ 
-Q \propto \sum _{i=1}^{N} \sum _{k=1}^{K} 
+Q \propto \sum_{i=1}^{N} \sum_{k=1}^{K} 
 \bigg[ \log \pi_k - \frac{1}{2} \log (\sigma_k^2) - 
 \frac{(y_i - (a_kx_i + b_k))^2}{2 \sigma_k^2}
 \bigg]\eta_{ik}
@@ -80,26 +94,26 @@ $$</p>
 $$</p>
 <p>$$ 
 \frac{\partial 
-\bigg( Q + \lambda \big( \sum _{k=1}^{K}\pi_k  -1 \big)  \bigg)
+\bigg( Q + \lambda \big( \sum_{k=1}^{K}\pi_k  -1 \big)  \bigg)
 }{\partial \pi_k}  \propto
-\sum _{i=1}^{N} \frac{\eta_{ik}}{\pi_k} + \lambda = 0 \qquad
-\sum _{k=1}^{K} \pi_k = 1
+\sum_{i=1}^{N} \frac{\eta_{ik}}{\pi_k} + \lambda = 0 \qquad
+\sum_{k=1}^{K} \pi_k = 1
 $$</p>
 <p>Tekrar düzenleyip parametreler için çözüm yaparsak,</p>
 <p>$$ 
-\hat{a}_k = \frac{\sum _{i=1}^{N} x_i (y_i-b_k) \eta_{ik}}
+\hat{a}<em>k = \frac{\sum</em>{i=1}^{N} x_i (y_i-b_k) \eta_{ik}}
 {\sum_{i=1}^{N}x_i^2 \eta_{ik}}
 $$</p>
 <p>$$ 
-\hat{b}_k = \frac{\sum _{i=1}^{N} (y_i - a_kx_i) \eta_{ik}}
-{\sum _{i=1}^{N} \eta_{ik}}
+\hat{b}<em>k = \frac{\sum</em>{i=1}^{N} (y_i - a_kx_i) \eta_{ik}}
+{\sum_{i=1}^{N} \eta_{ik}}
 $$</p>
 <p>$$ 
-\hat{\sigma}^2_k = \frac{\sum _{i=1}^{N} (y_i - (a_kx_i+b_k))^2 \eta_{ik}}
-{\sum _{i=1}^{N}\eta_{ik}}
+\hat{\sigma}^2_k = \frac{\sum_{i=1}^{N} (y_i - (a_kx_i+b_k))^2 \eta_{ik}}
+{\sum_{i=1}^{N}\eta_{ik}}
 $$</p>
 <p>$$ 
-\hat{\pi}_k = \frac{1}{N} \sum _{i=1}^{N} \eta_{ik}
+\hat{\pi}<em>k = \frac{1}{N} \sum</em>{i=1}^{N} \eta_{ik}
 $$</p>
 <pre><code class="python">def em_line(x,y,n_components):
     eta = np.random.rand(len(x),n_components)
@@ -170,3 +184,7 @@ gelerek düz "çizgimsi" ama kopuk bir bölgeyi rahatça temsil edebilir.</p>
 <p>Kaynaklar</p>
 <p>[1] Traa, <em>Expectation Maximization - Math and Pictures</em>,
 <a href="http://cal.cs.illinois.edu/~johannes/research/EM%20derivations.pdf">http://cal.cs.illinois.edu/~johannes/research/EM%20derivations.pdf</a></p>
+        </section>          
+      </div>
+    </body>
+</html>

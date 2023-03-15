@@ -207,8 +207,6 @@ işliyoruz, eh zaten B'yi belleğe sığar kabul ettik, o zaman veri ne
 kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte Büyük Veri
 bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.
 
-<a name='random'/>
-
 ### Rasgele Matris Çarpımı
 
 Bir matrisin boyutlarını azaltmak için bir teknik onu sıfır merkezli

@@ -1,0 +1,471 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Haritalamak</h1>
+
+<h3>Folium</h3>
+
+<p>Bu haritalama sistemi ile dünyanın herhangi bir yerini alıp, istenen
+odaklama seviyesinde göstermek, üzerini işaretlemek mümkün, ayrıca
+haritanın üzerinde isteğe göre çizgiler, çemberler vs çizilmesine izin
+veren çağrılar var. Folium arka planda bir Javascript kütüphanesi
+Leaflet kullanır, bu sebeple haritaları HTML olarak kaydediyorsunuz,
+bu HTML içine bakıldığında Leaflet çağrıları orada görülüyor.  Leaflet
+son derece basit, hızlı işleyecek şekilde yazılmış, verisini arka
+planda direk OpenStreetMap dosyalarını okuyarak alıyor, onların
+gerekli yerlerini, hangisini alacağını arka planda
+hallediyor. Programcıya tek kalan harita merkezini, ek bazı görsel
+ayarları yapmak.</p>
+
+<p>Not: Elde edilen HTML haritası etkileşimli (interactive) çalışıyor.
+Büyütme, küçültme, haritayı sağa sola kaydırma bu HTML sayfasında
+kullanıcı tarafından yapılabilir hala. Yani tek ölü bir görüntü dosyası
+almıyorsunuz.</p>
+
+<p>Kurmak icin <code>pip install folium</code></p>
+
+<p>En basit kullanim belli noktalara yuvarlak isaretler koymak,</p>
+
+<p>İşaretler</p>
+
+<p>Harita üzerine konan işaretler içine tıklanabilir URL bağlantıları konabilir.
+Ayrıca bu işaretler fare ile üzerinde durunca bir araç ipucu (tooltip)
+gösterebilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mf">45.372</span><span class="p">,</span> <span class="o">-</span><span class="mf">121.6972</span><span class="p">],</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">tiles</span><span class="o">=</span><span class="s2">&quot;Stamen Terrain&quot;</span><span class="p">)</span>
+<span class="n">tooltip</span> <span class="o">=</span> <span class="s2">&quot;Click me!&quot;</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span>
+    <span class="p">[</span><span class="mf">45.3288</span><span class="p">,</span> <span class="o">-</span><span class="mf">121.6625</span><span class="p">],</span> <span class="n">popup</span><span class="o">=</span><span class="s2">&quot;&lt;i&gt;Mt. Hood Meadows&lt;/i&gt;&quot;</span><span class="p">,</span> <span class="n">tooltip</span><span class="o">=</span><span class="n">tooltip</span>
+<span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/tmp/index.html&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Üstteki kodda görülen <code>popup</code> içine <code>a href</code> ifadesi de konulabilir,
+böylece fare üstünde olunca önce ipucu, ona tıklanınca çıkan bölgede
+tıklanabilir bir URL bağlantısı olacaktır. Biz ayrıca bu bağlantıyı
+<code>target='_blank' rel='noopener noreferrer'</code> ile yarattık, böylece
+tıklama bizi tarayıcıda ayrı bir tab'e götürüyor.</p>
+
+<p>Kapalı Alanlar, Poligon</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon1</span><span class="p">],</span> <span class="n">tiles</span><span class="o">=</span><span class="s1">&#39;Stamen Terrain&#39;</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">coordinates</span><span class="o">=</span><span class="p">[(</span><span class="mi">43</span><span class="p">,</span><span class="mi">35</span><span class="p">),(</span><span class="mi">44</span><span class="p">,</span><span class="mi">27</span><span class="p">),(</span><span class="mi">45</span><span class="p">,</span><span class="mi">32</span><span class="p">)]</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">Polygon</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">coordinates</span><span class="p">,</span><span class="n">weight</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;blue&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/tmp/index.html&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har8.jpg" alt="" /></p>
+
+<p>Başlık Eklemek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+
+<span class="n">lat1</span><span class="p">,</span><span class="n">lon1</span> <span class="o">=</span> <span class="mf">43.4521793912598</span><span class="p">,</span> <span class="mf">25.597125946810632</span>
+<span class="n">lat2</span><span class="p">,</span><span class="n">lon2</span> <span class="o">=</span> <span class="mf">44.572754823623114</span><span class="p">,</span> <span class="mf">27.250000972553345</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon1</span><span class="p">],</span> <span class="n">tiles</span><span class="o">=</span><span class="s1">&#39;Stamen Terrain&#39;</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">CircleMarker</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="n">lat2</span><span class="p">,</span><span class="n">lon2</span><span class="p">),</span>
+                            <span class="n">fill_color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+<span class="n">title_html</span> <span class="o">=</span> <span class="s2">&quot;&lt;h3&gt;Title&lt;/h3&gt;&quot;</span>
+<span class="n">m</span><span class="o">.</span><span class="n">get_root</span><span class="p">()</span><span class="o">.</span><span class="n">html</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">folium</span><span class="o">.</span><span class="n">Element</span><span class="p">(</span><span class="n">title_html</span><span class="p">))</span>
+<span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;/tmp/index.html&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har7.jpg" alt="" /></p>
+
+<p><code>lat1,lon1</code> merkezli bir harita çizdik, odak seviyesi 7, ve <code>lat1,lon1</code> den
+başlayıp <code>lat2,lon2</code> de biten bir çizgi çektik, ve çizgi sonuna ufak bir daire
+koyduk.</p>
+
+<p>Ek bilgiler [5],[6],[7] de bulunabilir,</p>
+
+<h3>Cartopy</h3>
+
+<p>Kullanisli bir paket; fakat isletim sistemi seviyesinde GEOS paketinin
+kurulmasi gerekli, bu bazi barindirilan, idareli bulut sistemlerinde
+problem cikartabilir, cunku bu tur servislerde direk isletim sistemine
+erisim her zaman mumkun olmayabiliyor.</p>
+
+<pre><code>sudo apt install libproj-dev proj-data proj-bin libgeos-dev
+
+pip install cartopy
+
+pip uninstall shapely
+
+pip install shapely --no-binary shapely
+</code></pre>
+
+<p>Dünya haritası üzerinde bir nokta</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_global</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">stock_img</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">42.0</span><span class="p">,</span> <span class="mf">21.53</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;har1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har1.png" alt="" /></p>
+
+<p>Eger daha yakindan gostermek istersek, ilgilendigimiz bolge uzerinden
+bir kutu yaratabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_global</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">stock_img</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">42.0</span><span class="p">,</span> <span class="mf">21.53</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;har3.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har3.png" alt="" /></p>
+
+<p>Ülke ismi bazlı tüm ülkeyi renklendirmek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">cartopy.io.shapereader</span> <span class="k">as</span> <span class="nn">shpreader</span>
+<span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy.feature</span> <span class="k">as</span> <span class="nn">cfeature</span>
+
+<span class="k">def</span> <span class="nf">area</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">iso</span><span class="p">,</span> <span class="n">clr</span><span class="p">)</span> <span class="p">:</span>
+    <span class="n">shp</span> <span class="o">=</span> <span class="n">shpreader</span><span class="o">.</span><span class="n">natural_earth</span><span class="p">(</span><span class="n">resolution</span><span class="o">=</span><span class="s1">&#39;10m&#39;</span><span class="p">,</span><span class="n">category</span><span class="o">=</span><span class="s1">&#39;cultural&#39;</span><span class="p">,</span>
+                                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;admin_0_countries&#39;</span><span class="p">)</span>
+    <span class="n">reader</span> <span class="o">=</span> <span class="n">shpreader</span><span class="o">.</span><span class="n">Reader</span><span class="p">(</span><span class="n">shp</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">records</span><span class="p">()</span> <span class="p">:</span>
+        <span class="k">if</span> <span class="n">n</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;ADM0_A3&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">iso</span><span class="p">:</span> 
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_geometries</span><span class="p">(</span><span class="n">n</span><span class="o">.</span><span class="n">geometry</span><span class="p">,</span> <span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">clr</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="n">ax</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">axes</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">stock_img</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+<span class="n">area</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">&quot;USA&quot;</span><span class="p">,</span> <span class="s2">&quot;red&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;har2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har2.png" alt="" /></p>
+
+<h3>Izgara Yaratmak</h3>
+
+<p>Bir kordinat etrafında belli büyüklükte bir alan üzerinde ızgara
+yaratmak ve bu izgaradaki kordinat noktalarını haritada göstermek için
+ne yaparız? Paket <code>geopy</code> kurulmuş olmalı,</p>
+
+<pre><code>import geopy.distance
+import numpy as np
+
+def goto_from_coord(start, distance, bearing):
+    s = geopy.Point(start[0],start[1])
+    d = geopy.distance.geodesic(kilometers = distance)
+    reached = d.destination(point=s, bearing=bearing)
+    return [reached.latitude, reached.longitude]
+
+lat,lon=40.84343206497589, 29.926342357515754
+
+dist = 60
+res1 = goto_from_coord((lat,lon),dist,45)
+print (res1)
+res2 = goto_from_coord((lat,lon),dist,225)
+print (res2)
+
+lowlat = np.min([res1[0],res2[0]])
+lowlon = np.min([res1[1],res2[1]])
+hilat = np.max([res1[0],res2[0]])
+hilon = np.max([res1[1],res2[1]])
+
+x = np.linspace(lowlon,hilon,7)
+y = np.linspace(lowlat,hilat,7)
+
+xx,yy = np.meshgrid(x,y)
+print (xx.flatten())
+
+import cartopy.crs as ccrs
+import cartopy
+
+fig = plt.figure()
+ax = fig.add_subplot(1, 1, 1, projection=ccrs.PlateCarree())
+ax.set_global()
+ax.stock_img()
+ax.coastlines()
+ax.plot(xx.flatten(), yy.flatten(), 'r.', transform=ccrs.PlateCarree())
+ax.set_extent([28, 31, 40, 42])
+plt.savefig('har4.png')
+</code></pre>
+
+<p><img src="har4.png" alt="" /></p>
+
+<p>Nasıl kodladığımızı açıklayalım, önce merkez noktadan sağ üste (45
+derece yönde) 60 km, ve sol alt yönde (225 derece) aynı uzaklıkta
+birer adım atıyoruz, bu dörtgenin iki ucu. Bu uç noktalardan <code>lingrid</code>
+sonra <code>meshgrid</code> ile ızgarayı oluşturuyoruz. </p>
+
+<p>Oklar, Quiver</p>
+
+<p>Cartopy haritaları üzerinde klasik matplotlib komutlarını hala
+kullanabiliriz, enlem, boylam kordinatları y ve x eksenleri haline
+geliyor, ve gerisi bildiğimiz gibi. Mesela ok çizmek için kullanılan
+<code>quiver</code> hala geçerli, mesela o ızgara noktalarındaki rüzgar yönü
+verisi elimizde olsaydı, bunu harita üzerinde
+grafikleyebilirdik. Altta bu veri <code>sin</code> ve <code>cos</code> üzerinden uyduruk
+şekilde yaratıldı,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_global</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">stock_img</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">coastlines</span><span class="p">()</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yy</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">*</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="mi">28</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">42</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;har5.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har5.png" alt="" /></p>
+
+<p>Eğer ana enlem, boylamları kordinate eksenleri üzerinde görmek
+istersek, basmadan önce</p>
+
+<pre><code>gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels=True, linewidth=0)
+</code></pre>
+
+<p>uygulayabiliriz.</p>
+
+<p>Katmanlar</p>
+
+<p>Üstteki karayı ve denizleri gösteren renklendirme sonradan uygulanan
+bir katmandır. Cartopy bu şekilde pek çok farklı bilgiyi katman olarak
+haritalara uygulayabilir. Mesela yol, sehir bilgileri de birer katman
+olarak alttaki gibi alınabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">cartopy.crs</span> <span class="k">as</span> <span class="nn">ccrs</span>
+<span class="kn">import</span> <span class="nn">cartopy</span>
+<span class="kn">import</span> <span class="nn">cartopy.io.img_tiles</span>
+<span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="o">=</span><span class="mf">40.84343206497589</span><span class="p">,</span> <span class="mf">29.926342357515754</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">imagery</span> <span class="o">=</span> <span class="n">cartopy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">img_tiles</span><span class="o">.</span><span class="n">OSM</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="n">imagery</span><span class="o">.</span><span class="n">crs</span><span class="p">)</span>
+<span class="n">zoom</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_image</span><span class="p">(</span><span class="n">imagery</span><span class="p">,</span> <span class="n">zoom</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">())</span>
+<span class="n">EXT</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_extent</span><span class="p">([</span><span class="n">lon</span><span class="o">-</span><span class="n">EXT</span><span class="p">,</span> <span class="n">lon</span><span class="o">+</span><span class="n">EXT</span><span class="p">,</span> <span class="n">lat</span><span class="o">-</span><span class="n">EXT</span><span class="p">,</span> <span class="n">lat</span><span class="o">+</span><span class="n">EXT</span><span class="p">])</span>
+<span class="n">gl</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">gridlines</span><span class="p">(</span><span class="n">crs</span><span class="o">=</span><span class="n">ccrs</span><span class="o">.</span><span class="n">PlateCarree</span><span class="p">(),</span> <span class="n">draw_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;har6.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="har6.png" alt="" /></p>
+
+<h3>SHP ile Kendimiz Sınır Çizelim</h3>
+
+<p>Bazen Cartopy ve hatta Folium bile uygulamamıza biraz yük
+getirebiliyor, mesela Cartopy kurulumu için arka planda GDAL
+gerekebilir, bu kütüphane arka planda işletim sistemi ek kurulumu
+gerektirir, ve bulut ortamında uygun olmayabilir. Folium hafif olsa da
+arka planda bağlantı gerektiriyor, çünkü zoom yapınca ek bilgiler
+servisten alınıyor.</p>
+
+<p>Eğer bize gayet basit, ülke sınırlarını bir kerede ağ bağlantısı
+olmadan pat diye çizebilecek bir kod gerekiyorsa, bu bilgileri taşıyan
+dosya bazlı veri tabanları kullanabiliriz. PyShp ile SHP bazlı bu
+tabanlara ulaşmak mümkündür. Mesela ülke sınırları [8]'de var,
+<code>TM_WORLD_BORDERS-0.3.zip</code> indirilir, açılır, <code>/tmp</code> altında <code>.shp</code> ve
+<code>.dbf</code> dosyaları olsun (ikisi de lazım),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">shapefile</span>
+<span class="n">sf</span> <span class="o">=</span> <span class="n">shapefile</span><span class="o">.</span><span class="n">Reader</span><span class="p">(</span><span class="s2">&quot;/tmp/TM_WORLD_BORDERS-0.3.shp&quot;</span><span class="p">,</span> <span class="n">encoding</span> <span class="o">=</span> <span class="s2">&quot;ISO8859-1&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Kaç ülke var burada,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">r</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">records</span><span class="p">()</span>
+<span class="n">countries</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">shapes</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">countries</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>246
+</code></pre>
+</div>
+
+<p>Bu ülkelerden indis 2'de olana bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">idx</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">country</span> <span class="o">=</span> <span class="n">countries</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">name</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Record #2: [&#39;AJ&#39;, &#39;AZ&#39;, &#39;AZE&#39;, 31, &#39;Azerbaijan&#39;, 8260, 8352021, 142, 145, 47.395, 40.43]
+</code></pre>
+</div>
+
+<p>Azerbeycan burada.</p>
+
+<p>Peki ülkenin sınırları nerede? </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">points</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>871
+[0, 108, 118, 131, 859]
+</code></pre>
+</div>
+
+<p>Ülke sınır noktaları <code>points</code> ile alınıyor, bir enlem/boylam
+listesidir, kabaca bir polygonun köşe noktalarıdır. Fakat ülkeler
+bazen tek kesintisiz bir parça olmayabiliyor, adalar, ya da diğer
+ülkelerin içinde ufak parçalar vs var ise, bunları farklı poligon
+öbekleri olarak temsil etmek lazım. Üstteki <code>points</code> içinde tüm
+parçalar için noktalar var, hangi öbeğin nerede başlayıp bittiğini
+bilmek gerekiyor sadece, <code>parts</code> içinde bu bilgi var [9]. Mesela
+1'inci parça 0'dan başlayıp 107 indisine (dahil olmak üzere) uzanıyor,
+108 nokta var. Sonraki 108'den başlayıp 117'ye gidiyor, vs.</p>
+
+<p>Bu mantığı bir fonksiyon içine koyalım, ve indis 2 ve indis 4'teki
+ülkeleri grafikleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">plot_country</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;r&#39;</span><span class="p">):</span>
+   <span class="n">country</span> <span class="o">=</span> <span class="n">countries</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+   <span class="n">name</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">name</span><span class="p">)</span>
+   <span class="n">bounds</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">parts</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">country</span><span class="o">.</span><span class="n">points</span><span class="p">)]</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">bounds</span><span class="p">)</span>
+   <span class="k">for</span> <span class="n">previous</span><span class="p">,</span> <span class="n">current</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bounds</span><span class="p">,</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>    
+       <span class="n">geo</span> <span class="o">=</span> <span class="p">[[</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">country</span><span class="o">.</span><span class="n">points</span><span class="p">[</span><span class="n">previous</span><span class="p">:</span><span class="n">current</span><span class="p">]]</span>
+       <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span> <span class="k">continue</span>
+       <span class="n">geo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">geo</span><span class="p">)</span>
+       <span class="k">if</span> <span class="n">geo</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+           <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">geo</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">geo</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">color</span><span class="p">)</span>
+
+<span class="n">plot_country</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">plot_country</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;harita-az-arm.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Record #2: [&#39;AJ&#39;, &#39;AZ&#39;, &#39;AZE&#39;, 31, &#39;Azerbaijan&#39;, 8260, 8352021, 142, 145, 47.395, 40.43]
+[0, 108, 118, 131, 859, 871]
+Record #4: [&#39;AM&#39;, &#39;AM&#39;, &#39;ARM&#39;, 51, &#39;Armenia&#39;, 2820, 3017661, 142, 145, 44.563, 40.534]
+[0, 12, 395, 408, 418]
+</code></pre>
+</div>
+
+<p><img src="harita-az-arm.png" alt="" /></p>
+
+<p>Azerbeycan ve Ermenistan'ı grafiklemiş olduk.</p>
+
+<p>Not: Üstte <code>plot</code> çağrısının çizgisel kullanımına çağrı yapıldı,
+bazılarımızın bildiği gibi <code>plot(10,20,'.')</code> x=10,y=20 kordinatlarına
+bir nokta koyar, ama bir x kordinat ve y kordinat <em>listesi</em> <code>plot</code>
+çağrısına geçilirse, bu tür çağrı verili noktalar arasına düz çizgiler
+çek demektir.</p>
+
+<p>Bir diğer ek, eğer o çizgilerle çevirdiğimiz bölgelerin içini bir
+renkle doldurmak isteseydik, mesela elimizde bir göl için poligon
+noktaları varsa, <code>plt.plot</code> yerine <code>plt.fill</code> kullanırdık, bu
+çağrıya geçilen üçüncü parametre renk ile objenin içi doldurulur.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://rabernat.github.io/research<em>computing</em>2018/maps-with-cartopy.html</p>
+
+<p>[2] https://scitools.org.uk/cartopy/docs/latest/gallery/global_map.html#sphx-glr-gallery-global-map-py</p>
+
+<p>[3] https://github.com/SciTools/cartopy/issues/1303</p>
+
+<p>[4] Renk isimleri - https://matplotlib.org/3.1.0/gallery/color/named_colors.html</p>
+
+<p>[5] https://python-visualization.github.io/folium/quickstart.html</p>
+
+<p>[6] https://stackoverflow.com/questions/39093250/is-it-possible-to-draw-lines-with-arrowheads-in-a-folium-map</p>
+
+<p>[7] https://www.geeksforgeeks.org/stamen-toner-stamen-terrain-and-mapbox-bright-maps-in-python-folium/</p>
+
+<p>[8] https://thematicmapping.org/downloads/world_borders.php</p>
+
+<p>[9] Sileika, Pro Python System Administration</p>
+
+<p>[10] [Yükseklik (Elevation) Verileri](2019/04/elevation.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

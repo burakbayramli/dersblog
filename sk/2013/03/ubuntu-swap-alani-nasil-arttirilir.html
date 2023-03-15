@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu SWAP Alanı Nasıl Arttırılır?</h1>
+
+<p>SWAP alani bellek yetersiz oldugu zaman bellekteki bilginin bir
+kismini belli zamanlarda diske yazilip geri alinabilmesini saglar,
+boylece teorik olarak eldeki disk miktarindan cok daha fazla hafiza
+"varmis gibi" yapabiliriz. Swap kelimesi degis-tokus anlaminda zaten,
+yani hafiza ve disk arasinda bir degis-tokus oluyor. Tabii ki diske
+cok fazla yazmak, oradan fazla bilgi okumak bellege gore daha
+yavastir, vs. Yani bir muhendislik denge (trade-off) durumu.</p>
+
+<p>Ubuntu'nun normal (kurulus aninda tanimlanan) swap buyuklugu bellek
+kadar - eger 4 GB RAM var ise 4 GB swap yaratiliyor. Bunu sonradan
+arttirmak icin, mesela 20 GB buyuklugunde swap icin, once swap'in
+yasayacagi bir yer (dosya) yaratmak lazim.</p>
+
+<pre><code>sudo dd if=/dev/zero of=/swapfile.img bs=1024 count=20M
+</code></pre>
+
+<p>Swap dosyasinin nerede olacagini boylece tanimladik. Bu "yer" cok
+hizli isleyen bir diskin baglanti (mount) noktasi olabilir mesela,
+belki bir solid state disk orada duruyor. Sonra,</p>
+
+<pre><code>sudo mkswap /swapfile.img
+</code></pre>
+
+<p>Simdi sudo gedit <code>/etc/fstab</code> ile dosyaya girilir ve sonuna</p>
+
+<pre><code>/swapfile.img swap swap sw 0 0
+</code></pre>
+
+<p>eklenir. En son</p>
+
+<pre><code>sudo swapon /swapfile.img
+</code></pre>
+
+<p>ile swap aninda aktif hale getilir. /etc/fstab degisimi bilgisayar her
+basladiginda swap'in otomatik olarak aktive edilmesi icin.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

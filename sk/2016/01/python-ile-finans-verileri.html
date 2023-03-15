@@ -1,0 +1,187 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python ile Finans Verileri</h1>
+
+<p>Finans verilerini indirmek, işlemek Python üzerinde iyice
+basitleşti. Veri işleme amaçlı başlatılan Pandas'ın yazarı zaten
+projesini ilk başta zaman serileri / finans verisi işlemek için
+başlattığını söylemişti. Bu yakınlık devam etmiş anlaşılan, şu anda
+Yahoo Finance, Google Finance, hatta makroekonomik veriler için FRED
+bağlantısı var. Hatta birisi opsiyon (option) verisi indirecek kodları
+bile eklemiş - açık yazılımın faydaları. Bazı örnekler altta.</p>
+
+<p>İndeks verisi, mesela Nasdaq için <code>^IXIC</code>, ama paketsiz, kendi işimizi
+kendimiz yapmamız gerekiyor,</p>
+
+<pre><code>import pandas as pd, datetime, time
+from io import BytesIO
+
+end = datetime.datetime.now()
+start=end-datetime.timedelta(days=90)
+start = int(timelib.mktime(start.timetuple()))
+end = int(timelib.mktime(end.timetuple()))
+
+url = "https://query1.finance.yahoo.com/v7/finance/download/^IXIC?period1=" + str(start) + "&amp;period2=" + str(end) + "&amp;interval=1d&amp;events=history&amp;includeAdjustedClose=true"
+r = urllib2.urlopen(url).read()
+file = BytesIO(r)
+df = pd.read_csv(file,index_col='Date')3
+</code></pre>
+
+<p>Aynı şekilde 'FRED' ABD merkez bankası tabanından veri indirilebiliyor. 
+ABD gayrı safi milli hasıla verisi için mesela,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">pandas_datareader</span> <span class="kn">import</span> <span class="n">data</span>
+<span class="kn">import</span> <span class="nn">quandl</span>
+
+<span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="n">start</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="mi">1992</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">end</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">today</span><span class="o">.</span><span class="n">year</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">month</span><span class="p">,</span> <span class="n">today</span><span class="o">.</span><span class="n">day</span><span class="p">)</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GDPC1&#39;</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">DataReader</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="s1">&#39;fred&#39;</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>                GDPC1
+DATE                 
+2021-01-01  19055.655
+2021-04-01  19368.310
+2021-07-01  19478.893
+2021-10-01  19806.290
+</code></pre>
+</div>
+
+<p>Opsiyon</p>
+
+<p>Alttaki url kazınabilir</p>
+
+<p>https://www.nasdaq.com/symbol/aapl/option-chain</p>
+
+<p>Makroekonomik Veriler ve Digerleri</p>
+
+<p>Alttaki örnek ABD/Avro döviz kuru için; işsizlik, enflasyon, vs. gibi
+pek çok veri mümkün. Yanlız Quandl verisi için üye olup bir APİ
+anahtarı almak lazım, o anahtarı alıp <code>auth</code> içine yazınca herşey
+işler. Örnek İngiliz pound ile ABD doları arasında,</p>
+
+<pre><code>import pandas_datareader.data as web
+import quandl, os
+auth = '[QUANDL KODU]'
+df1 = quandl.get("CURRFX/GBPUSD",
+                 returns="pandas",
+                 start_date='2010-01-01',
+                 end_date='2018-01-01',
+                 authtoken=auth)
+</code></pre>
+
+<p>Bilanco, kar, zarar gibi şirket temel verileri için <code>yahoo_fin</code> paketi
+faydalıdır, mesela Amazon şirketinin brüt karı (gross profit) ve
+toplam hasılat (total revenue) verisi için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">yahoo_fin.stock_info</span> <span class="kn">import</span> <span class="n">get_income_statement</span>
+<span class="n">ticker</span> <span class="o">=</span> <span class="s1">&#39;AMZN&#39;</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">get_income_statement</span><span class="p">(</span><span class="n">ticker</span><span class="p">,</span><span class="n">yearly</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;grossProfit&#39;</span><span class="p">,</span><span class="s1">&#39;totalRevenue&#39;</span><span class="p">]])</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">get_income_statement</span><span class="p">(</span><span class="n">ticker</span><span class="p">,</span><span class="n">yearly</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;grossProfit&#39;</span><span class="p">,</span><span class="s1">&#39;totalRevenue&#39;</span><span class="p">]])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Breakdown   grossProfit  totalRevenue
+endDate                              
+2021-03-31  46115000000  108518000000
+2021-06-30  48904000000  113080000000
+2021-09-30  47882000000  110812000000
+2021-12-31  54577000000  137412000000
+Breakdown    grossProfit  totalRevenue
+endDate                               
+2018-12-31   93731000000  232887000000
+2019-12-31  114986000000  280522000000
+2020-12-31  152757000000  386064000000
+2021-12-31  197478000000  469822000000
+</code></pre>
+</div>
+
+<p>Hisse Başına Kâr (Earnings Per Share)</p>
+
+<p>Şirketlerin hisse başına karlılık oranları borsacılar tarafından
+yakından takip edilir, her şirket her çeyrekte belli günlerde bu
+rakamı açıklar ve buna göre senet fiyatları yükselip düşebilir.
+Karlılık o kadar kritiktir ki önceden hakkında bir konsensüs tahmini
+bile yapılır ve bu açıkça bilinir, bu tahmine yaklaşıp yaklaşılmaması
+da senet fiyatını etkiler. Bu veriyi almak için, mesela Walmart
+şirketi için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">yahoo_fin.stock_info</span> <span class="kn">import</span> <span class="n">get_earnings_history</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">res</span> <span class="o">=</span>  <span class="n">get_earnings_history</span><span class="p">(</span><span class="s1">&#39;WMT&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">4</span><span class="p">)[[</span><span class="s1">&#39;startdatetime&#39;</span><span class="p">,</span><span class="s1">&#39;epsestimate&#39;</span><span class="p">,</span><span class="s1">&#39;epsactual&#39;</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+              startdatetime  epsestimate  epsactual
+0  2022-08-16T07:00:00.000Z  1.83        NaN       
+1  2022-05-17T07:02:00.000Z  1.48         1.30     
+2  2022-02-17T07:11:00.000Z  1.50         1.53     
+3  2021-11-16T07:01:00.000Z  1.40         1.45     
+</code></pre>
+</div>
+
+<p>Görüldüğü gibi analist tahmini 1.48 ama birinci çeyrekte karlılık 1.30.
+Tahmine eriselemedi ve Walmart senetleri bunu yazdığımız Mayıs 2022'de
+ağır bir darbe yedi. Ayrıca bir sonraki çeyrek için tahminin yapılmış olduğunu
+görüyoruz, 1.83 diyor. Bakalım ne olacak.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

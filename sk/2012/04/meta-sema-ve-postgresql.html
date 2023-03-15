@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Meta, Sema ve Postgresql</h1>
+
+<p>Tablolar hakkinda sema, meta bilgisi almak istiyorsaniz, ve pg_dump
+komutu problem cikartiyorsa, tablo, kolon, tip bilgisi icin</p>
+
+<pre><code>select column_name,udt_name from information_schema.columns where table_name = '[tablo]'
+  order by ordinal_position
+</code></pre>
+
+<p>gibi bir sorgu gerekli bilgiyi alir. Siralamayi ordinal_position
+uzerinden yapmamiz iyi olur, cunku bu siralama o tablo uzerinde
+"select *" islettigimizde kolonlarin gelecegi sira. Tabandan veri
+cekerken genellikle (basitlik amaciyla) select * kullanildigi icin
+semanin da ayni siralamaya uyacak sekilde alinmasi iyi olur.</p>
+
+<p>Not: information_schema.columns uzerinde baska ilginc kolonlar da var.</p>
+
+<p>Eger indis bilgisi almak istiyorsak,</p>
+
+<pre><code>SELECT tablename, indexdef FROM pg_catalog.pg_indexes
+</code></pre>
+
+<p>Bu sorgu indisi uretmek icin gerekli komutu bile gosterecektir.</p>
+
+<p>Otomatik olarak uzaktaki bir semayi verisiyle indisleriyle beraber
+yerel bir tabana aktarmak icin su script'ler kullanilabilir.</p>
+
+<p>run_csv.sh - uzaktaki makina uzerinde sql isletip ciktiyi bir csv
+olarak kaydeder,</p>
+
+<pre><code>psql [.. uzaktaki makina .. ] -c "COPY ($1) TO stdout with delimiter ',' CSV HEADER "
+</code></pre>
+
+<p>run.sh - yerel taban uzerinde argumanda verilen sql dosyasini isletir</p>
+
+<pre><code>psql [.. yerel ..]  &lt; $1
+</code></pre>
+
+<p>csv_schema.py - sema ciktisini alip sql komutlarina donusturur</p>
+
+<pre><code>import csv, sys
+# argv 1: csv file name
+# argv 2: table name
+schema = csv.reader(open(sys.argv[1], 'rb'), delimiter=',')
+schema.next() # skip header
+print "drop TABLE if exists %s ;" % sys.argv[2]
+print "CREATE TABLE %s (" % sys.argv[2]
+i = 0list = list(schema)
+l = len(list)-1
+for line in list:
+    if i &lt; l:
+        print "%s %s, " % (line[0], line[1])
+    else:
+        print "%s %s " % (line[0], line[1])
+    i+=1
+print ");\n"
+</code></pre>
+
+<p>schema.sh - python script'i kullanarak semayi doker, ve yerel tablo uzerinde isletir. </p>
+
+<p>sh run<em>csv.sh "select column</em>name,udt<em>name from information</em>schema.columns where table<em>name = '[tablo]'" &gt; $LH</em>DATA<em>DIR/$1/[tablo].outpython csv</em>schema.py DATA<em>DIR/$1/[tablo].out [tablo] &gt; $LH</em>DATA<em>DIR/$1/[tablo].sqlsh run.sh DATA</em>DIR/$1/[tablo].sql</p>
+
+<p>dump.sh - tablolarin verisini db dosyalarina kaydeder</p>
+
+<pre><code>sh run_csv.sh "select * from [tablo]" &gt; DATA_DIR/$1/[tablo].db
+</code></pre>
+
+<p>load.sh - db dosyalarini yerel tabloya yukler</p>
+
+<pre><code>psql [..yerel..] -c "COPY [tablo] FROM 'DATA_DIR/$1/[tablo].db' with csv header delimiter ',' ";
+</code></pre>
+
+<p>indexes.sh - indeksleri uzaktaki makinadan alarak yerelde isletir</p>
+
+<pre><code>sh run_csv.sh "SELECT indexdef FROM pg_catalog.pg_indexes where tablename = '[tablo]' " &gt; /tmp/idx
+perl -pi -e 's/\"//sg' /tmp/idx
+perl -pi -e 's/\n/;\n/sg' /tmp/idx
+tail -n+2 /tmp/idx &gt; $LH_DATA_DIR/$1/[tablo]_idx.sql
+sh run.sh $LH_DATA_DIR/$1/[tablo]_idx.sql
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

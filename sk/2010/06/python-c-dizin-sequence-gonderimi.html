@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python -> C Dizin (Sequence) Gonderimi</h1>
+
+<p>Bir Python script icinden C fonksiyonuna dizin gondermek icin</p>
+
+<pre><code>static PyObject* py_dizin(PyObject* self, PyObject* args){
+  PyObject* seq;
+  if(!PyArg_ParseTuple(args, "O", &amp;seq))
+  return 0;
+  seq = PySequence_Fast(seq, "argument must be iterable");
+  int seqlen = PySequence_Fast_GET_SIZE(seq);
+  float* dizin = new VL::float[seqlen];
+  double *dbar = new double[seqlen];
+  for(int i=0; i &lt; seqlen; i++) {
+     PyObject *fitem; PyObject *item = PySequence_Fast_GET_ITEM(seq, i);
+     fitem = PyNumber_Float(item);
+     dizin[i] = PyFloat_AS_DOUBLE(fitem);
+     printf("%f\n",dizin[i]); // ekrana bas Py_DECREF(fitem);
+  }
+Py_DECREF(seq);
+delete[] pic; // is bitince dizin burada silinir
+return Py_BuildValue("d", 0); // geri sifir dondur}Python icinden test
+etmek icin dizin([10.,20.,30.]) gibi bir cagri yapilabilir.
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

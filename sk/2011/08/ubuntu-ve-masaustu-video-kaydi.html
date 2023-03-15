@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu ve Masaustu Goruntu, Video Kaydi</h1>
+
+<p>Ekranda olanları, özellikle belli bir pencerede olanları, video olarak
+kaydetmek için bir yöntem</p>
+
+<pre><code>ffmpeg -video_size 1024x768 -framerate 25 -f x11grab -i :0.0+0,0 -f \
+ pulse -ac 2 -i default output.mkv
+</code></pre>
+
+<p>Bir başkası <code>vokoscreen</code>, <code>apt-get</code> ile kurulur.</p>
+
+<p>Bir diğeri (bu eski) <code>xwininfo</code> programını başlatın. Bu program ok
+işaretini bir artı haline dönüştürecek, ve bu artı işareti hangi diğer
+pencere üzerine getirilirse o pencerenin bilgileri dökülecek. Bizim
+ihtiyacımız olan "Window id" satırının ne söylediği. Burada mesela
+0x4200003 gibi bir sayı var. Bu sayıyı alın ve</p>
+
+<pre><code>recordmydesktop --windowid=0x4200003
+</code></pre>
+
+<p>olarak kayıt işlemini başlatın. İstediğiniz kadar kaydedince Ctrl-C
+ile çıkın, kaydedilen her şey <code>out.ogv</code> adlı bir video dosyasına
+yazılacak. Eğer recordmydesktop kurulu değilse, şu şekilde
+kurulabilir.</p>
+
+<pre><code>sudo apt-get install recordmydesktop zenity
+</code></pre>
+
+<p>Eğer ogv dosyasını animasyonlu gif formatına çevirmek istiyorsak, şu
+komut yeterli</p>
+
+<pre><code>ffmpeg -i out.ogv -loop_output 0 -pix_fmt rgb24 -r 5 -s 250x250 output.gif
+</code></pre>
+
+<p><code>-loop_output</code> gif'in ne kadar tekrar edilecegini kontrol eder, 0
+degeri sonsuza kadar demektir. <code>-r</code> secenegi bir saniye icinde kac kare
+(frame) gosterilecegi.</p>
+
+<p>Tek Görüntü (screenshot)</p>
+
+<p>Eğer masaüstündeki görüntüyü tek imaj olarak (screenshot) almak
+istiyorsak, seçenekler şunlar. PRTSC, yani print screen düğmesi
+kullanılabilir. Bu ise yaramazsa, İmageMagick kurulur (apt-get ınstall
+imagemagick), ve komut satırında şu girilir:</p>
+
+<p>import [dosya.png]</p>
+
+<p>Bu komutun hemen arkasından ekrandaki işaret (cursor) artı işaretine
+dönüşecek. Bu işaret ile hangi pencereye tıklanırsa onun görüntüsü
+dosya.png içine yazılır.</p>
+
+<p>Ya da Applications | Accessories | Take Screenshot programi
+baslatilir.</p>
+
+<p>Python İçinden</p>
+
+<p>Eğer bir Python programı içinde görüntü yaratıyorsak bu yaratılan
+görüntüleri <code>pyglet</code> ile yakalayabiliriz. Kurmak için <code>pip
+install</code>. Kod içinde</p>
+
+<pre><code>buffer = pyglet.image.get_buffer_manager().get_color_buffer()            
+image_data = buffer.get_image_data()
+image_data.save(filename='out.png')
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,133 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Emacs Dış Programları Nasıl İşletir?</h1>
+
+<p>Emacs, değişken bir şekilde eklenti yapılabilmesi, kullanıcıya göre
+değiştirilebilmesi bakımından çok esnek, ve güçlü bir metinyaz
+programıdır. Emacs'in tamamı LISP dili ile kodlanmıştır, ve bu yüzden
+ek uzatmaların kodlaması gene LISP dilinde yapılır.  Örnek olarak,
+Emacs'i şöyle uzatmayı düşünelim.  Bir yazılım projesi dahilinde PVCS
+adında bir Kaynak Kod İdare sistemi kullanıyoruz. Bu KKİ programı ile
+dosya kitleme, dosya değiştirildikten sonra yapılan değişiklikleri
+KKI'ya geri ekleme, kod değişikliklerini idare etmek gibi işlemler
+gerçekleştirebiliyoruz.  Fakat PVCS, ayrı görsel bir program
+kullanmayı gerektiriyor. Ne kadar zor bir iş! Tam en sevdiğimiz
+metinyaz ile dosyayı açmış iken, dosya kitlemek için bu başka öteki
+programa geçmemiz gerektiğini farkediyoruz, çünkü dosya salt okunur
+halde!  Bu dosyayı düzenlerken, Emacs içinden tek bir tuşa basarak
+kitlemeyi otomatik yapsak ne kadar harika olurdu!  Bu yazıda LISP
+dilini kullanarak Emacs'i uzatacağız, ve istediğimiz bu özelliği
+kodlayacağız.</p>
+
+<p>Üzerinde Olduğumuz Dosyanın İsmine Erişmek Emacs'i başlattığınızda
+yapılmasını istediğiniz kodları Unix'te .emacs, Windows'da _emacs
+dosyayısına koymanız lazım. Emacs her başladığında bu dosya içindeki
+LISP kodlarını işletir.  Özel konumuza dönelim: Üzerinde olduğumuz
+dosyayı kitlemek için, bu dosyanın ismini bilmemiz lazım.
+(buffer-file-name) .. işlevini kullanarak bu dosya ismini Emacs'den
+alabilirsiniz. Bahsedilen işlevi test etmek için, herhangi bir dosya
+içine (buffer-file-name) yazın, ve imleci işlevin en sonuna getirip
+<code>\C-x\C-e</code> (Control X sonra Control e) tuşlarına basın. Bu tuşlar
+eval-last-sexp işlemini çağırır, yani son-işlevi-çalıştır komutunu.
+Sonucu Emacs'in alt-boşluk kısmında göreceksiniz.  Evet, artık içinde
+olduğumuz dosyayı biliyoruz. Peki Emacs, işletim sistemine erişip
+nasıl bir dış komutu işletebilir?  Bunun için</p>
+
+<pre><code>(shell-command "isletim sistem komutu")
+</code></pre>
+
+<p>..komutu gerekecek.</p>
+
+<p>Unix örneği olarak, <code>ls -1</code> komutunu, <code>(shell-command "ls -1")</code> olarak
+işletebilirsiniz. <code>\C-x\C-e</code> kullanarak bunu da kontrol edebilirsiniz.</p>
+
+<p>Parçaları Biraraya Koyalım</p>
+
+<pre><code>(defun kki-dosya-kitle()
+"kitleme islevi"
+(interactive)
+(setq komut "c:/Progra~1/PVCS/vm/win32/bin/get -l ")
+(setq komut (concat komut (file-name-nondirectory
+   (buffer-file-name))))(shell-command komut)
+(vc-toggle-read-only))
+(global-set-key "\C-c\C-o" kki-dosya-kitle)
+</code></pre>
+
+<p>Yukarıda yapılanları tarif edelim: Komut değişkeni ile, komut satırına
+geçilecek komutu 'toparlıyoruz'. Ekleye ekleye tamamlıyoruz
+yani. (buffer-file-name) bu bağlamda
+kullanılıyor. (vc-toggle-read-only) ile yaptığımız, salt okunur
+dosyayı, yazılabilir dosyaya çevirmek. Emacs ile bunu yapmak çok
+basittir. Ve en sonda yapılan, yeni yazdığımız kki-dosya-kitle
+işlevini, <code>\C-c\C-o</code> tuşlarına bağlamak! Bu da Emacs'in önemli
+özelliklerinden biridir, istediğiniz işlevi istediğiniz klavye tuşuna
+bağlıyabilirsiniz. Artık <code>\C-c\C-o</code> ne zaman bassanız, üzerinde
+olduğunuz dosya KKİ sisteminden kitlenip, sizin değiştirmenize hazır
+olacak.</p>
+
+<p>KKİ'ya Dosya Geri Vermek</p>
+
+<pre><code>(defun kki-dosya-geri-ver()
+"dosya geri vermek"
+(interactive)
+(setq comments (read-string "Yorum Ekleyin: " ))
+(save-buffer)
+(setq komut "c:/Progra~1/PVCS/vm/win32/bin/put -q -f ")
+(setq komut (concat komut "-m")) ;; pvcs uzerinde yorumlar -m ile ekleniyor
+(setq komut (concat komut " \""))
+(setq komut (concat komut comments))
+(setq komut (concat komut " \""))
+(setq komut (concat komut (file-name-nondirectory
+    (buffer-file-name))))
+    (print komut)(shell-command komut)
+    (vc-toggle-read-only))
+(global-set-key "\C-c\C-i" 'kki-dosya-geri-ver)
+</code></pre>
+
+<p>Not Burada verilen örnekler, PVCS KKİ sistemine göre yazıldı. PVCS,
+piyasadaki 'ortalama' KKİ sistemlerinden biridir. Burada önemli olan,
+fikirleri öğrenmek, yani "Emacs ile dış programlar nasıl işletilir"
+gibi teknikleri anlamaktır; PVCS için kullandığımiz get ve put
+komutlarının karışıklık yaratmaması için bu notu düşmeyi uygun
+buluyoruz.  Örnek config dosyalarını buradan indirebilirsiniz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

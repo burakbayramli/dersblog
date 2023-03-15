@@ -1,0 +1,142 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python 3, Ubuntu, Anaconda</h1>
+
+<p>Basit Python 3</p>
+
+<pre><code>sudo pip install python3-pip python3-numpy python3-scipy
+</code></pre>
+
+<p>gibi komutlarla pek cok Python 3 icin olan paket kurulabilir. Komut
+satirinda "python script.py" yerine "python3 script.py" kullanilinca
+sadece Python 3 icin kurulan paketler isleme konur. Altta Anaconda
+usulu Python 3 kullanmayi da tarif ediyoruz, ama bu yontem herhalde en
+kolay olani. Diger paketler icin (her paket icin Ubuntu apt-get
+pyton3-vsvs hazir edilmemis olabilir)</p>
+
+<pre><code>sudo pip3 install [paket ismi]
+</code></pre>
+
+<p>isletilir.</p>
+
+<p>Anaconda</p>
+
+<p>Continum sirketinin one surdugu yeni python paket sistemi bu. Mevcut
+Python paket sisteminin ciddi kullanicilari bu sistemlerin
+bagimliliklari takip etmekte basarili olamadigindan yakinip dururlardi
+(cok uc nokta ihtiyaclardan bahsediyoruz tabii, bizim simdiye kadar
+sikayetimiz olmadi); Anaconda bu problemlere cevap olarak
+kurgulanmis. Zaten Continuum Enthought sirketinden cikti, Enthought
+sirketi de sayisal Python baglaminda liderlerden biriydi (Numpy'i
+yazan kisi Travis Oliphant Enthought ve simdi Contiuum kurucusu
+mesela).</p>
+
+<p>Anaconda su anda Windows uzerinde dogru durust veri analiz Python
+paketlerini kurabilmek icin neredeyse tek cozum.</p>
+
+<p>Anaconda'nin degisik bazi ozellikleri var, mesela bir python isler
+programi kendi $HOME dizininiz altinda kurulacak
+($HOME/anaconda/bin/python) ve artik olagan Python yorumcunuz bu
+olacak (cunku $PATH'inizde bu dizin en one eklenecek) ve tum Python
+paketleri de sizin kendi ev dizininize gidecek,
+$HOME/anaconda/lib/python2.7 altinda..</p>
+
+<p>Bu sebeple artik Python paket kuruluslari icin sudo kullanimina gerek
+kalmiyor, kisisel kullanim icin conda install yeterli.</p>
+
+<p>Ayrica pip ile paket kurmak isterseniz, Conda'nin pip'i ile bu isi
+yapmaniz lazim, yani $HOME/anaconda/bin/pip ile. Ayni sekilde, sudo
+pip degil pip.</p>
+
+<p>Ubuntu</p>
+
+<p>Kurmak icin</p>
+
+<p>http://continuum.io/downloads</p>
+
+<p>linux 64 bit installer diyen sh dosyasini indir</p>
+
+<pre><code>bash Anaconda-2.2.0-Linux-x86.sh
+</code></pre>
+
+<p>Kurulus sirasinda kurulum dizini sorulacak, islem bittiginde o dizinin
+altindaki bin dizinini PATH'e eklemek lazim, mesela .bashrc icinde</p>
+
+<pre><code>export PATH="[DIZIN]/anaconda3/bin":$PATH
+</code></pre>
+
+<p>Komut satirini kapatip yenisini acariz. Bir de bu bin dizinine girip
+chmod u+x conda ile programi isletilir hale getirmek gerekebilir.</p>
+
+<p>Artik Python 3 icin</p>
+
+<pre><code>conda create -n py3k python=3
+</code></pre>
+
+<p>Artik <code>source activate py3k</code> ile Python 3 ortamina girilebilir ve python
+script.py ile Python 3 script'leri isletilebilir. Bir diger secenek,
+ ki bunun icin source yapmaya gerek yok,</p>
+
+<p>[HOME]/anaconda/envs/py3k/bin/python</p>
+
+<p>ile direk Python 3 yorumlayicisini cagirmak.</p>
+
+<p>PYMACS ICIN ONEMLI NOT</p>
+
+<p>Eger Emacs icinden Pymacs kullaniyorsaniz dikkat,  Pymacs
+/usr/bin/python kullaniyor, bunu pymacs.el icinde degistirebilirsiniz,
+623. satirda</p>
+
+<pre><code>pymacs-python-command
+</code></pre>
+
+<p>yerine</p>
+
+<pre><code>[HOME DIZIN]/anaconda/bin/python
+</code></pre>
+
+<p>kullanin ve python setup.py build; python setup.py install. </p>
+
+<p>Ama en iyisi belki de Emacs'ı komut satırından, bir conda çevresine
+girdikten sonra isletmek.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Dekoratörler, Onbellek Kodlaması, Fonksiyon Değiştirmek</h1>
+
+<p>Bir fonksiyona ya da kod parçasına onbellek kullanımı eklemek kolaydır
+fakat bu tür ekler kodun okunabilirliğini de azaltabilirler. Mesela
+kare almakla yükümlü bir fonksiyonumuz var diyelim (altta ise yaramaz
+bir değişken dummy ekledik, bazı püf noktaları gösterebilmek için),</p>
+
+<pre><code>def kare(dummy, a):    return a*a
+</code></pre>
+
+<p>Bu fonksiyonu</p>
+
+<pre><code>kare("filan", 3)
+</code></pre>
+
+<p>diye çağırıyoruz ve sonuç olarak 9 gelmesini bekliyoruz. </p>
+
+<p>Onbellekleme için, diyelim ki, eğer a değeri önceden görülmüşse, kare
+işlemi sonucunun tekrar hesaplanmasını istemiyoruz, onu onbellekten
+bulup hızlı bir şekilde geri döndürmek tercihimiz (tabii çarpım işlemi
+de çok hızlı işler, ama bu örnek için yavaş olabileceğini hayal
+edelim).</p>
+
+<p>Bu kod uzerinde onbelleklemeyi eski usulle yapsaydik, kod suna
+benzerdi:</p>
+
+<pre><code>cache = {}def kare(dummy, a):
+    if not a in cache: cache[a] = a*a
+    return cache[a]
+</code></pre>
+
+<p>Değişken cache bir Python dictionary'dir ve onbelleğimiz onun
+üzerinde  duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek
+objesi alanen ortada, ayrıca ıf gibi çok ciddi bir ibareyi koda
+sokuşturmak zorunda kaldık :) Genellikle bu ifade önemli bir işlem
+mantığı var ise kullanılır - en azından kod okunabilirliği açısından
+böyle olması daha iyidir.</p>
+
+<p>Peki bu isi daha temiz bir sekilde yapamaz miydik?</p>
+
+<p>Python dekoratör fonksiyonları işte tam burada ise yarar. Bir
+dekoratör bir fonsiyonu "sarmalayabilir (wrap)", ve o fonksiyona giren
+çıkan tüm değerler üzerinde işlem yapabilir, ve onları istediği gibi
+değiştirebilir, bu sayede o fonksiyona "çaktırmadan" ek özellikler
+verebilir. Sözdizim açısından da temiz dururlar, çünkü dekoratör
+fonksiyon üzerinde '@' ile tanımlanan bir şeydir, başka bir eke
+ihtiyaç yoktur. O zaman (önce dekoratörün kendisi)</p>
+
+<pre><code>def cache(function):  memo = {}
+  def wrapper(*args):
+    if args[1] in memo:
+      print "cache hit"
+      return memo[args[1]]
+    else:
+      print "cache miss"
+      rv = function(*args)
+      memo[args[1]] = rv
+      return rv  return wrapper
+</code></pre>
+
+<p>Üstteki kod ana kodunuzdan ayrı bir yerde, bir dosyada durabilir
+mesela, sadece bir kere yazılır zaten, ve kullanılması gerektiği zaman
+şu ibare yeterlidir,</p>
+
+<pre><code>@cachedef kare(dummy, a):    return a*a
+</code></pre>
+
+<p>Görüldüğü gibi gayet temiz. Onbellek kodu hiç etrafta gözükmüyor, bu
+da kod bakımını daha rahatlaştıran bir özellik. Böylece kare
+fonksiyonunu normalde olması gerektiği gibi yazıyoruz, kod onbellek
+olsa da olmasa da aynı şekilde yazılıyor, sadece çarpım için gereken
+işlem mantığını içeriyor.</p>
+
+<p>Not: dummy değişkenini dekoratör içinde istediğimiz herhangi fonksiyon
+argümanı ile iş yapabileceğimizi göstermek için kullandık, args[1] ile
+sadece ikinci argümana baktık mesela.</p>
+
+<p>Koda Ekler Enjekte Etmek</p>
+
+<p>Diyelim ki mevcut bir kod parcasi var,</p>
+
+<pre><code>import randomclass Foo:
+    def f(self,x):
+        x = random.random()
+        return xo = Foo()
+
+</code></pre>
+
+<p>Biz bu kodun <code>f()</code> çağrısını "yakalayıp" ona ek bir şeyler yaptırtmak
+istiyoruz, ve mevcut koda hiç dokunmadan bunu yapmak istiyoruz. Belki
+f() çağrısı bir başka yazılım paketi içinde, vs. Bu fonsiyonu dekore
+ederek bunu yapabiliriz, fakat mevcut fonksiyon koduna dokunmak
+istemediğimiz için metot üstünde @birdekoratör gibi bir kullanım
+yapamayız. Bu durumda başka bir seçenek sudur,</p>
+
+<pre><code>def decorated_f(fn):
+    def new_f(*args, **kwargs):
+        res = fn(*args, **kwargs)
+        setattr(args[0], "was", res)
+        return res
+    return new_f
+Foo.f = decorated_f(Foo.f)
+</code></pre>
+
+<p>Simdi</p>
+
+<pre><code>print "o", o.f(0)
+print "was", o.was
+</code></pre>
+
+<p>Yeni ekleri de işletecek, bu ek Foo üzerinde yeni bir öğe yarattı, ve
+bu öğeye <code>o.was</code> diye erişiyoruz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,234 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Faydalı Unix Komutları</h1>
+
+<p>Süreçleri listelemek,</p>
+
+<pre><code>ps -eaf
+</code></pre>
+
+<p>Listedeki ikinci kolon süreç kimliği (PİD). Onu alıp</p>
+
+<pre><code>kill -9 [PID]
+</code></pre>
+
+<p>ile sureci yokedebiliriz.</p>
+
+<p>Hangi süreç (process) port 8080'i dinliyor?</p>
+
+<pre><code>netstat -n --tcp -p -l |grep ":8080"
+</code></pre>
+
+<p>Sadece bastaki satiri gostermek</p>
+
+<pre><code>head -1 [DOSYA]
+</code></pre>
+
+<p>Bir dosyanin son N satirini atlamak / gostermemek (silme amacli olabillir), mesela son iki satir icin </p>
+
+<pre><code>head -n-2 [DOSYA]
+</code></pre>
+
+<p>Bir dosyanin ilk satirini atlamak icin</p>
+
+<pre><code>tail -n+2 [DOSYA]
+</code></pre>
+
+<p>Bir komut çıktısını text olarak başka bir komut içine gömmek</p>
+
+<p>`` kullanilir. Mesela  </p>
+
+<pre><code>echo "b.txt" &gt; a.txt
+echo "filan" &gt; b.txt
+echo "falan" &gt;&gt; b.txt
+</code></pre>
+
+<p>Yani <code>a.txt</code> içinde <code>b.txt</code> yazıyor, şimdi </p>
+
+<pre><code>wc -l `cat a.txt`
+</code></pre>
+
+<p>dersek, <code>a.txt</code> icindeki <code>b.txt</code> arguman olarak <code>wc</code>'ye verilecek. Ve</p>
+
+<pre><code>2 b.txt
+</code></pre>
+
+<p>sonucu gelecek. Yani burada <code>a.txt</code> degil onun icindeki <code>b.txt</code> <code>wc</code>'ye gecildi.</p>
+
+<p>Eğer bir Ünix script'inizin <code>.başhrç</code> içinde tanımladığınız alias
+(kısayolları) kullanmasını istiyorsanız, bu script'i şöyle işletmeniz
+gerekir:</p>
+
+<pre><code>bash -i [script]
+</code></pre>
+
+<p>Emacs icin benzer durum, <code>M-x compile</code> alias'lari gormuyor. Onun icin</p>
+
+<pre><code>(setq shell-file-name "bash")
+(setq shell-command-switch "-ic")
+</code></pre>
+
+<p>tanımlamak lazım.</p>
+
+<p>Sonsuz kere bir komutu işletmek için, mesela süreç listesini sürekli
+göstermek</p>
+
+<pre><code>while true; do ps -eaf; sleep 2; done
+</code></pre>
+
+<p>Belli satırlar arasındaki satırları çekip çıkartmak, mesela 10 ile 20</p>
+
+<pre><code>sed -n 10,20p [DOSYA]
+</code></pre>
+
+<p>Rasgele satırlar çekip çıkarmak (.005 bir oran, daha fazla satır için
+bu sayı arttırılabilir)</p>
+
+<pre><code>cat [DOSYA] | perl -n -e 'print if (rand() &lt; .005)'
+</code></pre>
+
+<p>Dosya içinde metin aramak (<code>/usr</code> seviyesinden aşağı doğru inerek, tüm
+altdızinlerde, xml soneki taşıyan dosyalarda)</p>
+
+<pre><code>find /usr -name '*.xml' -exec grep -l 'filan' {} \;
+</code></pre>
+
+<p>Dosya içinde kelime değiştirmek (xml sonekli dosyalarda, altdizinlere girmez)</p>
+
+<pre><code>perl -pi -e 's/filan/falan/sg' *.xml
+</code></pre>
+
+<p>Üsttekinden daha iyisi <code>replace.py</code> diye ufak bir Python script yazmak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+<span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;burak&quot;</span><span class="p">,</span><span class="s2">&quot;bayramli&quot;</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Üstteki script'i <code>python replace.py [dosya]</code> şeklinde çağırabiliriz. Bu
+tek dosya üzerinde değişim yapar. Eldeki content üzerinde her türlü
+regex, vs. bazlı işlemleri yapabiliriz. Hatta gerekirse başa, sona
+istediğimiz metni ekleyebiliriz.</p>
+
+<p>Eğer birçok dosya üzerinde üstteki değişimi yapmak istersek,</p>
+
+<pre><code>find .-type f -name "*" -exec python replace.py {} \;
+</code></pre>
+
+<p>Bu tür kullanımda <code>{} \;</code> ile alınan dosyalar teker teker Python'a geçiliyor,
+dosya ismi <code>sys.argv[1]</code> içinde olmak üzere.</p>
+
+<p>Üstteki türden kullanımı daha akıllıca bir <code>grep</code> için de
+kullanabilirdik.  Mesela her dosya içinde çetrefil bir regex üzerinden
+bir arama yapmak istersek bu yapılabilir. Bir kere içinde şu tür
+ifadeler içeren dosyaları aramak gerekmişti, "bir satırda tek başına
+iki dolar işareti, ardındaki satırda tek başına eşittir işareti olan
+tüm dosyalar". Unix'te <code>find</code> ile alttaki koda çağrı yaptım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">res</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;^\$\$\s*</span><span class="se">\n</span><span class="s1">=\s*</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span><span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">(),</span> <span class="n">re</span><span class="o">.</span><span class="n">MULTILINE</span><span class="p">)</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">res</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Dosyayı kullanan program hangisi</p>
+
+<p>lsof [DOSYA]</p>
+
+<p>Bir dizinden başlayarak özyineli (recursive) olarak o dizin altındaki
+en büyük dosyaları listelemek için</p>
+
+<pre><code>du -h | sort -hr | head -20
+</code></pre>
+
+<p>Bir makinadaki tüm donanımları listele (Ubuntu)</p>
+
+<pre><code>lspci
+</code></pre>
+
+<p>Harici sabit diskte bazı dizinlerimin yedeğini tutuyoruz, ve iki yerel
+dizini senkronize etmek için</p>
+
+<pre><code>rsync --delete -r /tmp/dira/ /tmp/dirb
+</code></pre>
+
+<p>Üstteki rsynç komutu kaynak dizini "belirleyici (master)" olarak kabul
+edecektir, ve /tmp/dira içinde olan her şey, yeni dosya, mevcutun
+silinmesi, ekleme işlemi aynen /tmp/dirb'ye yansıtılacaktır. Not: Eğer
+/tmp/dirb FAT32, NTFS gibi Windows temelli bir dosya sistemi ise azar
+azar güncelleme ise yaramaz, tüm dosyalar her seferinde tekrar
+silbaştan yollanır. Bunun sebebi Win temelli dosya sistemlerinin dosya
+sahibi, erişim hakları gibi bilgileri -Unix ile uyumlu- tutmuyor
+olmasıdır.</p>
+
+<p>Bir dosya içinde mesela her "dropbox" kelimesinden önce gelen 700
+karakteri göster</p>
+
+<pre><code>grep -E -o ".{700}dropbox" dosya.txt
+</code></pre>
+
+<p>Programın sonuçlarını hem ekrana basmak aynı anda bir log dosyasına yazmak</p>
+
+<pre><code>sh script.sh  2&gt;&amp;1 | tee out.log
+</code></pre>
+
+<p>Buyuk Dosyalar</p>
+
+<pre><code>sudo du -hx --max-depth=1 .
+</code></pre>
+
+<p>Dizin bazında kullanım raporu verir.</p>
+
+<p>Eğer dosya büyüklüğüne göre sıralı liste istersek (içinde olduğumuz dizinde)</p>
+
+<pre><code>sudo du -hb --max-depth=2 . | sort -n
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

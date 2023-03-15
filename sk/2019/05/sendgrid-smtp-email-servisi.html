@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>SendGrid, SMTP, Email Servisi</h1>
+
+<p>GMail'in SMTP servisi var fakat normal email göndermek için
+kullandığımız servisi bir ticari uygulamadan mail göndermek için
+kullandığımızda bazı problemler çıkabiliyor. Google'ın güvenlik
+kontrolleri kişileri korumak üzere
+<a href="/2012/06/python-ile-mail-gondermek-smtp-gmail.html">yapılmış</a>, bu
+sebeple kişisel mail servisinizi uygulamadan kullanmak istediğimizde
+her adımda zorluk çıkıyor.</p>
+
+<p>Daha iyisi işi sadece uygulamalara hizmet etmek için yazılmış bir
+servis kullanmak. SendGrid böyle bir uygulama.</p>
+
+<p>www.sendgrid.com</p>
+
+<p>Bedava servise kaydoluyoruz, sonra api anahtarı üretiyoruz, bu
+üretilen anahtar şifre, kullanıcı ismi ise <code>apikey</code> oluyor, bu şekilde
+SMTP servisine kavuşuyoruz. Örnek kod</p>
+
+<pre><code>import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
+mail_from = 'Burak Bayramli &lt;....@gmail.com&gt;'
+mail_to = 'Burak Bayramli &lt;...@gmail.com&gt;'
+
+msg = MIMEMultipart()
+msg['From'] = mail_from
+msg['To'] = mail_to
+msg['Subject'] = 'Sending mails with Python'
+mail_body = """
+Hey,
+
+This is a test.
+
+Sevgiler,\nB
+
+"""
+msg.attach(MIMEText(mail_body))
+
+try:
+    server = smtplib.SMTP_SSL('smtp.sendgrid.net', 465)
+    server.ehlo()
+    server.login('apikey', '[anahtar]')
+    server.sendmail(mail_from, mail_to, msg.as_string())
+    server.close()
+    print("mail sent")
+except:
+    print("issue")
+</code></pre>
+
+<p>Sendgrid'in bir entegrasyon kontrol mekanizması var; doğrulama yapmak
+için kendinize bir email atmanızı bekliyor, attıktan sonra (üstteki
+kodla yapılabilir), "Verify"'a tıklıyoruz, Sendgrid sisteminde bu
+mail'i arıyor, varsa entegrasyon tamamlandı diyor.</p>
+
+<p>Bedava servisin günlük kotası yüzlerce email, başlangıç için yeterli
+olur herhalde.</p>
+
+<p>SSL ve TLS için farklı portlar vardır bildiğimiz gibi, üstteki port
+SSL için, TLS için 25 işliyor zannediyorum. Detaylar için Sendgrid
+dokümanlarına bakılabilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://blog.ruanbekker.com/blog/2018/08/21/send-emails-using-python-and-sendgrid-using-smtplib/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

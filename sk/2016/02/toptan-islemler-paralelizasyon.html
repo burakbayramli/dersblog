@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Toptan İşlemler, Paralelizasyon, Tekrar Başlatılabilirlik (Restartability)</h1>
+
+<h3>Paralel İşlem</h3>
+
+<p>IT veri işlemciliğinde çok karşılaşılan bir problem: çok sayıda bir
+grup verinin sırayla işlenmesi. İşlemi paralelize edersek (eldeki her
+çekirdek için bir veya daha fazla süreç başlatarak) aynı anda daha
+fazla veri işleyebiliriz. Fakat paralelize etmeden önce süreçlerin
+birbiriyle kordinasyonunu ayarlamak gerekli.</p>
+
+<p>Bir yaklaşım her paralel süreç işlemek istedikleri kayıtı "kitlemeye"
+uğraşabilirler, önce gelen kitler, sonrakiler başarısız olup sonraki
+kayıdı kitlemeye uğraşırlar, vs. Bu yaklaşımı Kurumsal Java kitabında
+işlemiştik. Bu tabii daha farklı bir dünyaydı, Oracle, satır bazlı
+kilitler, vs. Artık anahtar/değer tabanları dünyasındayız, Mongo ile
+bir kaydın anahtar üzerinden statüsünü kontrol etmek çok hızlı. Diğer
+yaklaşımın da faydalı olacağı yerler olabilir muhakkak. Faydalardan
+biri önceden parça sayısı (bilahere kaç sürecin paralel işleyeceği)
+tanımlamaya gerek yok, ihtiyaca göre yeni bir süreç başlatılır, yeni
+süreç hemen işlenmemiş kayıt / kitleme mekanizmasına dahil olur,
+sıradaki kayıdı alıp işlemeye başlar. Fakat çoğunlukla önceden hangi
+makinada kaç süreç işleyeceği hakkında iyi bir fikrimiz vardır, bu
+durumda külfetli kitleme işlerine girmeye gerek olmayabilir.</p>
+
+<p>Ama en basit olan her paralel sürecin tamamen ayrı bir veri grubu
+üzerinde işlem yapması. Yani elde 100 satır var ise 4 süreç
+başlatırız, her süreç 25 satır üzerinde, diğerlerinden tamamen
+bağımsız bir şekilde iş yapar.</p>
+
+<p>Bir IT problemi daha: kaç süreçli olursa olsun üstte bahsettiğimiz
+işlem bizimle alakalı olmayan bir sebepten dolayı çökebilir. Ardından
+programı tekrar başlatırsak programın o ana kadar işlediği satırları
+atlayıp, işlenmemiş satırlara gitmesini isteriz, bu "kaldığımız yerden
+devam" özelliği zamandan tasarruf sağlar.</p>
+
+<p>Önce 1. probleme bir çözüm bulalım. Bir işleyici script düşünelim,
+eğer parçalı işlem mantığını kodlayacaksak, şöyle bir komut satırı
+arayuzu düşünebiliriz,</p>
+
+<pre><code>python isle.py 0 4
+</code></pre>
+
+<p>Bu komut script'e veriyi 4 parçaya böldürüp 0. parçayı (çünkü
+kullandığımız dil 0-indis bazlı) işlemeye başlar. Unix ortamında
+sonuna &amp; koyarak script'i arka planda işletmeye başlatabilirdik,
+ardından</p>
+
+<pre><code>python isle.py 1 4 &amp;
+</code></pre>
+
+<p>ile hemen bir diğer parça üzerinde de işlem başlatırdık. Dikkat:
+parçaya bölmek için "işlenecek şeyler" listesi hazırladık, bu liste
+her süreçte aynı, o yüzden bir tarafta 1. bir tarafta 2. vs. parçasına
+gidebiliyoruz, çünkü liste aynı liste, ayrı parçalarının birbiriyle
+alakasının olmadığına eminiz.</p>
+
+<p>Bu şekilde devam edip 4 tane aynı anda paralel işleyen süreç
+başlatarak, veriyi 4 kat daha hızlı işleyebilirdik, tabii bunu derken
+işlemi yapan bilgisayarda 4 veya daha fazla mikroişlemci / çekirdek
+olduğunu varsayıyoruz. Ama bu yorumu biraz daha genisletelim; eğer
+yaptığımız işlemler mikroişlemciyi çok meşgul tutan türden değil ise,
+mesela Internet'ten bilgi indirmek (bu durumda network bekleniyor), ya
+da sabit disk işlemleri (bu durumda diskin işini bitirmesini
+bekleniyor, İngilizce "IO-bound" denen durum) bu durumlarda 4 süreç
+için 2 tane mikroişlemci olması bile yeterli olabilir, çünkü daha iyi
+performansın önündeki engel mikroişlemci değil. Fakat paralelizasyon
+hala faydalı çünkü bir süreç network'u beklerken diğeri verinin kendi
+parçası üzerinde ilerleme sağlayabilir.</p>
+
+<p>Ikinci problemin çözümü, mesela işlenecek şeyler bir veri tabanından
+geliyorlarsa, tabanda bir status kolonu yaratmak, ve işlenen veri
+satırında bu statü belirten kolonu o satır için "işlendi" konumuna
+getirmek. Her satır işlenmeden önce bu statüye bakılır, eğer işlenmiş
+ise atlanır.</p>
+
+<p>Statü irdelemesi farklı yollardan olabilir; eldeki 10 senet için
+kapanış fiyatlarını güncel tutmak isteyen bir program varsa "kaldığı
+yerden devam etmek" her senet için eldeki en son tarihten (mesela dün,
+iki gün oncesi, vs) o günün tarihine, yani bugüne kadar olan yeni
+senet fiyatlarını almaktır. Eğer eksişözlük sitesinden 100 tane sayfa
+indirip bu sayfaları HTML olarak bir dizine yazıyorsam, o HTML
+dosyasının dizin içinde olup olmaması bir tür statüdür; eğer orada ise
+o işlem tamamlanmıştır.</p>
+
+<p>Çöküş ardından tekrar başlatım için pek çok Unix bazlı takip edici
+programlar var; mesela supervisord - bizim tercihimiz dand. Bu takip
+edici araçlar sayesinde komut satırından elle biz program
+başlatmıyoruz, takip edici programlarımızı başlatıyor, onları izliyor,
+çökmüs ise tekrar başlatıyor, vs.</p>
+
+<p><a name='csv'/></p>
+
+<p>Paralel, Satır Bazlı Dosya İşlemek</p>
+
+<p>Paralel işlem için işbölümünün nasıl yapılacağını kararlaştırmak
+lazım, burada en kolay yöntem ustte bahsettigimiz gibi veriyi baştan
+parçalara bölerek her sürecin kendi parçası üzerinde çalışmasını
+sağlamak. Her süreç veriyi satır satır okur ve anında işler (böylece
+fazla bellek sarfedilmiş olmaz), ve sonraki satıra geçer.</p>
+
+<p>İkinci soru, bir koordine edici "kalfa" süreç mi iş dağıtsın, yoksa
+her süreç buna kendisi mi karar versin?" İkinci seçenek daha kolay; N
+parça içinden her sürece P parçası üzerinde çalışacağını söyleriz,
+süreç gerekli yere giderek işlemi yapar. Metin bazlı dosya (CSV)
+işlerken parçalar ayrı satırlardır. 10 satırlı bir dosyanin ilk 5
+satırını bir süreç ikinci 5 satırını başka bir süreç işleyebilir.</p>
+
+<p>Basit olan yaklaşımlar daha rahat ölçeklenebilir, bu sebeple üstte
+tarif edilen yaklaşım hiçbir şey paylaşmayan (share nothing)
+mimarisidir, çok büyük olan girdi dosyasına tüm çekirdekler,
+makinaların hızlı erisebileceği farz edilir, işbölümü veri bazlıdır
+tüm süreçler hangi parçanın kendilerinde olduğunu işe başlamadan
+öğrenirler, ardından iletişim olmaz. Böylece işlem sırasında fazla
+makinalararası iletişimle ortaya çıkabilecek hataların önüne geçilir,
+ve kodlama rahatlaşır, işlem hızlanır.</p>
+
+<p>Fakat temel teknik bir problem var, CSV kütüphaneleri satır bazlı
+ileri zıplama yapamaz, bayt bazlı zıplama yaparlar. Mesela 1200
+baytlik dosyanin 125'inci baytina (karakterine) git diyebiliyoruz, ve
+bu hızlı oluyor, fakat bu işlemin herhangi bir satırın başına gitme
+garantisi tabii ki yok. O zaman biraz takla atarak her parça için
+hızla gittiğimiz bayta en yakın satır başına gidebilmemiz lazım,
+böylece oradan satır satır işlem yapabilelim.</p>
+
+<p>Bir dosya üzerinde görelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span><span class="n">cat</span> <span class="n">in2</span><span class="o">.</span><span class="n">csv</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>1,11111111
+2,22222222
+3,33333333
+4,44444444
+5,55555555
+6,66666666
+7,77777777
+8,88888888
+9,99999999
+10,1010101
+11,1111111
+12,1212121
+13,1311313
+14,1414141
+</code></pre>
+</div>
+
+<p>Bu dosyayı 2 parçaya bölelim, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;in2.csv&#39;</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">file_size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;tum =&#39;</span><span class="p">,</span> <span class="n">file_size</span><span class="p">,</span> <span class="s1">&#39;her parca =&#39;</span><span class="p">,</span> <span class="n">file_size</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>tum = 154 her parca = 77.0
+</code></pre>
+</div>
+
+<p>Şimdi <code>seek</code> ile ikinci parçaya gidebiliriz, ve oradan birkac
+karakteri okuyalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">78</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>,8888
+</code></pre>
+</div>
+
+<p><code>8,88888888</code> satırında bir yerlere geldik yani. Ama bize satır başı
+lazım, bir numara yapalım, eğer <code>seek</code> sonrası <code>readline</code> dersek,
+içinde olduğumüz satırı bitirip bir sonrakine geçmiş oluyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="mi">78</span><span class="p">)</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="c1"># bir sonraki satirdayiz simdi</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;bayt noktasi&#39;</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">())</span>
+<span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>9,999
+bayt noktasi 93
+</code></pre>
+</div>
+
+<p>Evet gördüğümüz gibi 8'li satırı geçtik 9'lu satırın başına gelmiş olduk,
+bu bayt olarak 93'uncu karaktermiş.</p>
+
+<p>Bu teknikleri daha organize şekilde bir araya koyabiliriz. Öyle bir
+yardımcı fonksiyon lazim ki,</p>
+
+<ul>
+<li><p>Bir dosya ismi ve parça (chunk) sayısı alınca her parçanın
+<em>satırsal</em> başlangıç bayt noktalarını bir liste olarak hesaplasın.</p></li>
+<li><p>İşleyici kod parça bilincine sahip olsun, bir parçanın satırsal
+başlangıcına atladıktan sonra, o parçanın bitiş noktasından daha
+ileri gitmesin.</p></li>
+</ul>
+
+<p>Bu yardımcıyı daha da süsleyebiliriz, farklı şekillerde kullanabilmek
+için biraz daha genelleştirelim. Mesela "beni arama ben seni ararım"
+tekniği ile yardımcı fonksiyon "çengel çağrılar" üzerinden her satırı
+işlemek için bir dış fonksiyonu çağırabilir, böylece isteğe uygun
+(custom) kodlama kolaylaşır. Parçalara ayırma, zıplama vs işlemleri
+halledildi, fakat her uygulamanın satır işleyişi farklı, orada
+dışarıdan tanımlı tek bir özel fonksiyon bu işleri yapabilir, altyapı
+kodunun her seferinde değişmesine gerek kalmaz. O zaman islemciye bir
+dış obje verelim, orada</p>
+
+<ul>
+<li><p>Her satırın nasıl işleneceği obje üzerindeki <code>exec</code> çağrısı içinde
+tanımlanır, işleyici altyapı her satır için bu kodu çağırır.</p></li>
+<li><p>Dış objenin kendi hafızası vardır, burada her satırın ekleme
+yapabileceği veri yapıları tutulabilir. Mesela her dosya satırındaki
+bilginin işlenmesi bir iç matrisin verisine ek yapabilir, parça
+bitince o matris içindeki birikmiş bilgiyi objeden alabiliriz.</p></li>
+<li><p>Parçanın işlemesi bittikten sonra dış objenin <code>post</code> denebilecek bir
+diğer çengeli çağırılır, burada son rötuşları koyma, temizlik yapma
+vs gibi kodlar olabilir, ne olacağına kullanıcı karar verecektir,
+altyapı çengellerde ne olduğu ile ilgilenmez (altyapı aranmıyor, o
+arıyor).</p></li>
+</ul>
+
+<p>Şöyle bir kod yazabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">hookobj</span><span class="p">):</span>
+    <span class="n">file_size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
+    <span class="n">beg</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">file_size</span> <span class="o">/</span> <span class="n">N</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">end_chunk</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span><span class="o">-</span><span class="mi">1</span>
+            <span class="n">chunks</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">beg</span><span class="p">,</span><span class="n">end_chunk</span><span class="p">])</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">beg</span> <span class="o">=</span> <span class="n">end_chunk</span><span class="o">+</span><span class="mi">1</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">chunks</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">ci</span><span class="p">]</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+            <span class="n">hookobj</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">break</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="n">hookobj</span><span class="o">.</span><span class="n">post</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Dışarıdan tanımlanacak obje şu işlemleri yapsın; <code>exec</code> içinde verilen
+her satırı alıp noktasal bazlı <code>split</code> ile ayırsın, ve bu ufak
+parçaları bir iç listeye eklesin. Tüm işlemler bitince <code>post</code> içinde
+tüm iç listeyi ekrana bassın.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">class</span> <span class="nc">SimpleJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+        <span class="n">tok</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
+
+<span class="c1"># iki parca icinden ilkini isle</span>
+<span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="n">ci</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[&#39;1&#39;, &#39;11111111\n&#39;], [&#39;2&#39;, &#39;22222222\n&#39;], [&#39;3&#39;, &#39;33333333\n&#39;], [&#39;4&#39;, &#39;44444444\n&#39;], [&#39;5&#39;, &#39;55555555\n&#39;], [&#39;6&#39;, &#39;66666666\n&#39;], [&#39;7&#39;, &#39;77777777\n&#39;], [&#39;8&#39;, &#39;88888888\n&#39;]]
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># iki parca icinden ikincisini isle</span>
+<span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="n">ci</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[&#39;9&#39;, &#39;99999999\n&#39;], [&#39;10&#39;, &#39;1010101\n&#39;], [&#39;11&#39;, &#39;1111111\n&#39;], [&#39;12&#39;, &#39;1212121\n&#39;], [&#39;13&#39;, &#39;1311313\n&#39;], [&#39;14&#39;, &#39;1414141\n&#39;]]
+</code></pre>
+</div>
+
+<p>Güzel oldu. Dikkat edersek <code>process</code> çağrısını tek makinadaki farklı
+süreçlerden, hatta tamamen ayrı bir makinadaki bir süreçten
+çağırabilirdik. A makinasında <code>0 3</code>, <code>1 3</code> deriz mesela, B makinasında
+<code>2 3</code>.  Aynı girdi dosyası her makinada olmalı muhakkak ama bu kolay,
+dosya kopyalanır, ya da disk paylaşım teknikleri ile erişim yapılır.
+Parça hesabı, ileri zıplama tekniği her kod içinde ayrı işletilebildiği için
+bir merkezi kordinasyon mekanizmasına ihtiyaç yoktur.</p>
+
+<p>Demo amaçlı olarak her parçayı şimdi ayrı bir Thread üzerinde işletelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">threading</span>
+
+<span class="n">thread1</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+<span class="n">thread2</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+
+<span class="n">thread1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">thread2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[&#39;1&#39;, &#39;11111111\n&#39;], [&#39;2&#39;, &#39;22222222\n&#39;], [&#39;3&#39;, &#39;33333333\n&#39;], [&#39;4&#39;, &#39;44444444\n&#39;], [&#39;5&#39;, &#39;55555555\n&#39;], [&#39;6&#39;, &#39;66666666\n&#39;], [&#39;7&#39;, &#39;77777777\n&#39;], [&#39;8&#39;, &#39;88888888\n&#39;]]
+[[&#39;9&#39;, &#39;99999999\n&#39;], [&#39;10&#39;, &#39;1010101\n&#39;], [&#39;11&#39;, &#39;1111111\n&#39;], [&#39;12&#39;, &#39;1212121\n&#39;], [&#39;13&#39;, &#39;1311313\n&#39;], [&#39;14&#39;, &#39;1414141\n&#39;]]
+</code></pre>
+</div>
+
+<p>Eğer Thread yerine farklı süreçlerde [2] işlem yapılsın istersek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+
+<span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+<span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Sonuç iki üstteki ile aynı olacak. Girdi dosyası ufak olduğu için
+herşey çok hızlı işliyor, ama eğer süreçlerin yaratıldığını
+gözlemlemek istersek, kod içine <code>time.sleep</code> ekleyip işleyiciyi suni
+şekile yavaşlatabiliriz, ve bu arada işletim sisteminde geçip komut
+satırında <code>ps eaf</code> ya da <code>htop</code> ile yaratılan süreçleri görebiliriz.</p>
+
+<p>Altyapı kodu üzerinde bazı süslemeler yapılabilir, mesela <code>split</code> ile
+alınan kolonlara indis yerine isim bazlı erişim yapmak istersek bu
+özelliği altyapı seviyesinde ekleyebiliriz. Ya da dosyanin ilk K
+satırı atlansın istersek bu farklı bir özellik olabilir. </p>
+
+<p>Üstteki kodların en güncel son hali [3]'te olacak.</p>
+
+<p>Parça parça işleme hakkında bir örnek [1]'de bulunabilir.</p>
+
+<p>Parçalar farklı makinalarda da işleyebilir, bu durumda scriptleme
+işlerinin kolay yapılabilmesi için şifresiz <code>ssh</code> girişi her makinada
+ayarlanırsa faydalı olur [4].</p>
+
+<p>Not: Eğer girdi dosyalarının başında kolon isimleri var ise, bu
+satırları atlamak gerekir. Bu tür dosyalar için bir satır atlama
+kodunu <code>process</code> fonksiyonuna ekleyebiliriz. Bir <code>skip</code> parametresi
+kaç satır atlayacağımızı alır, ve üstteki koddaki <code>beg=0</code> yerine</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">skip</span><span class="p">):</span> <span class="n">f</span><span class="o">.</span><span class="n">readline</span><span class="p">()</span>
+    <span class="n">beg</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span>
+    <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>ifadesi eklenebilir. Böylece her işlemci süreç <code>skip</code> kadar satırı o dosya
+için atlaması gerektiğini bilir ve başlangıç doğru noktaya getirilmiş olur.</p>
+
+<p><a name='restart'/></p>
+
+<h3>Tekrar Başlatılabilirlik (Restartability)</h3>
+
+<p>Eğer SQL bazlı veri tabanındaki kayıtları işliyorsam en basit yaklaşım
+işlenen satırlar üzerinde bir statü kolonu koymak, ve süreç
+başladığında 'işlenmemiş satırlar' statüsündeki satırları almak, ve o
+satır işlendikten sonra onu 'işlendi' statüsüne getirmek. Bu yaklaşım
+daha önce bahsedilen 'satır kitleme' yaklaşımıyla uyumlu, ben işlerken
+diğer süreçler bu satırı kitlemeyecek, bir sonraki satıra gidecekler,
+ben o sırada işimi yapacağım. İşim bitince statüyü 'işlendi' haline
+getireceğim, eh zaten kilit bende, ve bu şekilde elimdeki bir sonraki
+satıra bakacağım. Eğer süreci ikinci kez başlatıyorsam ben ya da
+benden sonraki süreç statüyü kitler, ve yine işlenmemiş olan satırları
+alır, ve işe devam eder.</p>
+
+<p>Peki tek süreçli ve mesela CSV bazlı işlem yapıyorsak yaklaşım ne
+olmalı? Mesela <code>in.csv</code> içindeki satırları işleyip bir <code>out.csv</code>
+üreteceğim, bir Web sitesinde sorgulama yapıp yeni bir kolon
+ekleyeceğim belki, ve İnternet bağlantısı düşebilir, pek çok şey
+olabilir, tekrar başlattığımda kaldığım yerden devam etmek istiyorum.</p>
+
+<p>Burada en kolay yaklaşım şudur, eğer girdi verisinde baştan sonra
+doğru artan bir ID, kimlik satırı varsa (ki yoksa biz ekleyebiliriz)
+her süreç başlangıcında çıktıdaki en son işlenmiş kimliği alırız,
+yoksa sıfır kabul ederiz, ve girdide bu son kimlikten büyük olan
+satırları alıp teker teker işleriz.</p>
+
+<p>Bu numaranın Python, CSV bazlı işlemesi için kritik hareketler şunlar,
+işlenen her satır çıktı mesela <code>write</code> yazıldıktan sonra muhakkak
+<code>flush</code> ile diske yazımı zorlanmalı, ve çıktı dosyası (ilk başlatım
+sonrası) her defasında <code>w</code> ile değil <code>a</code> ile açılmalı. Böylece, ilk
+hareketle, süreç patlarsa o yazılan satırı kurtarmış oluruz, ve bir
+sonraki işletim ondan sonraki satıra geçebilir, ikinci hareketle çıktı
+dosyasına ek yapmış oluruz, önceki sonuçları ezmeyiz.</p>
+
+<p>Örnek üzerinde görelim, standart Pandas bazlı satır satır işlemi kalıbı,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;in1.csv&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>1 n1 30
+2 n2 10
+3 n3 33
+4 n4 8
+5 nx 39
+6 nu 57
+7 ne 22
+8 na 12
+9 nn 31
+10 ni 1
+11 n18 2
+</code></pre>
+</div>
+
+<p>Oldukça basmakalıp. Bu tema ile bir script şöyle olabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">ext_proc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="c1"># dis web sitesi baglantisi bu olsun, degil ama</span>
+    <span class="c1"># yapay kodlarla oymus gibi yapalim</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span> <span class="c1"># suni bekleme ekledik</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">()</span> <span class="c1"># rasgele deger dondur</span>
+
+<span class="n">infile</span> <span class="o">=</span> <span class="s2">&quot;in1.csv&quot;</span><span class="p">;</span> <span class="n">outfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/out.csv&quot;</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;init&quot;</span><span class="p">:</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;id,name,value,newval</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    
+
+<span class="n">dfi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span>
+<span class="n">dfo</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dfo</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="c1"># ilk baslatimda cikti bos, onu kontrol et</span>
+    <span class="n">dfi</span> <span class="o">=</span> <span class="n">dfi</span><span class="p">[</span><span class="n">dfi</span><span class="o">.</span><span class="n">id</span> <span class="o">&gt;</span> <span class="n">dfo</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">max</span><span class="p">()]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dfi</span><span class="p">)</span>
+
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">dfi</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">newval</span> <span class="o">=</span> <span class="n">ext_proc</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">],</span><span class="n">newval</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>İlk başlatımda <code>init</code> seçeneği ile işletiriz, böylece <code>out.csv</code> düzgün
+şekilde yaratılır. İşlem olurken programı yarıda keselim, sonra <code>init</code>
+olmadan tekrar başlatalım. Bu başlatımın kalınan yerden devam ettiğini
+göreceğiz, yeni işlenen satırlar çıktının sonuna eklenecek.</p>
+
+<p>Dikkat edersek <code>dfi[dfi.id &gt; dfo.id.max()]</code> filtresi ile girdi verisinin
+çıktı verisindeki en büyük id'den daha büyük olanlarını almış oluyoruz,
+böylece o satırlar işlenmiyor, ve çıktıya sürekli ekler yapılıyor.</p>
+
+<p>Üstte gösterilen yöntemlerden sadece biri. En son işlenen satırın
+kimliğini her satırı işlerken ufak bir dosyaya da yazabilirdik, sonra
+süreç başlangıcında onu okuyup devam kalan yerden devam ederdik. Devam
+etme yöntemi <code>DataFrame</code> filtrelemesi yerine <code>csv</code> paketinde bir sonrakine
+atlama üzerinden olabilirdi, seçenekler muhtelif.</p>
+
+<h3>Loglama</h3>
+
+<p>Bir takipçi tarafından, paralel şekilde program işletiliyorsa, artık print ile ekrana mesaj basmak yeterli değil, loglama gerekli, yani bir log dosyasına çıktıları güzel bir format ile yazmak. Python'da logging kütüphanesi bu işi çok rahat yapar; script başında import logging ile dahil ederiz, ve örneğimiz için alttaki kodu ekleriz,</p>
+
+<pre><code>fmt = '%(asctime)s - %(message)s - %(pathname)s'
+fout = '/tmp/hava-%d.log' % int(sys.argv[1])
+logging.basicConfig(filename=fout, level=logging.DEBUG, format=fmt)  
+</code></pre>
+
+<p>Artık logging.debug(...) ile yazılan her mesaj o sürecin kendisine ait
+log dosyasına yazılacaktır, mesela 0. parça için bu /tmp/hava-0.log
+olacak. Eger mesajlar direk ekrana basilsin istiyorsak filename yerine
+stream=sys.stdout kullanabiliriz.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Hava Verisi Islemek](hava-verisi-islemek.html)</p>
+
+<p>[2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)</p>
+
+<p>[3] [Dand](https://github.com/burakbayramli/kod/tree/master/dand)</p>
+
+<p>[4] [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

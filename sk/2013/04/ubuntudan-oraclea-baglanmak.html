@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu'dan Oracle'a Baglanmak</h1>
+
+<p>Şu sayfadaki tarif takip edilebilir</p>
+
+<p>https://help.ubuntu.com/community/Oracle%20Instant%20Client</p>
+
+<p>Şu adrese girilir ve bağlanan sisteme tekabül eden bağlantı tıklanır</p>
+
+<p>http://www.oracle.com/technetwork/database/features/instant-client/index-097480.html</p>
+
+<p>Bizim için bu Linux x86-64 idi mesela. Buradaki listelenen şeyler
+içinde Basic, SQL*Plus, JDBC Supplement için gösterilen rpm
+indirilir. "Lisans Kabulü" için en üst soldaki radyo düğmesinin
+seçilmiş olması gerekiyor.</p>
+
+<p>Bu noktada Oracle sitesi "üyelik" şartını arar, email, sıfre vs verip
+üyelik yapılır, konfirmasyon email'ine cevap verildikten sonra üstteki
+rpm dosyaları indirilecektir.</p>
+
+<p>Sonra </p>
+
+<pre><code>apt-get install alien
+</code></pre>
+
+<p>kurulur ve</p>
+
+<pre><code>sudo alien -i oracle-instantclient11.2-*
+</code></pre>
+
+<p>ile indirilen dosyalar kurulur. Eğer paylaşılan kütüphane (shared
+library, so) hataları var ise, .başhrç içine</p>
+
+<pre><code>export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/oracle/11.2/client64/lib
+</code></pre>
+
+<p>yazınız. Bir kere <code>sudo ldconfig</code> yapmanız da gerekebilir. Ayrıca</p>
+
+<pre><code>sudo apt-get install libaio1
+</code></pre>
+
+<p>Bundan sonra sqlplus64 isleyecektir. Simdi makina, db isimlerini nasil
+tanimlayacagimiza gelelim.</p>
+
+<pre><code>sudo mkdir /etc/oracle
+</code></pre>
+
+<p>ve bu dizinde</p>
+
+<pre><code>sudo gedit /etc/oracle/tnsnames.ora
+</code></pre>
+
+<p>Bu dosyada db, makina isimleri, ip adresleri yeralir. En son .bashrc icinde</p>
+
+<pre><code>export TNS_ADMIN=/etc/oracle
+</code></pre>
+
+<p>Artık <code>sqlplus64 user@db</code> gibi bir ifade ile bağlantı yapılabilir.</p>
+
+<p>Eger Python icinden baglanmak istersek,</p>
+
+<p>http://tshepang.net/accessing-oracle-db-using-python-in-debian</p>
+
+<p>cxOracle lazim, mesela 64 bit Python 2.7 Oracle 11 icin CentOS 5
+x86_64 RPM (Oracle 11g, Python 2.7) baglantisina tiklanir. Indikten
+sonra</p>
+
+<pre><code>sudo alien --install cx_Oracle-5.1.2-11g-py27-1.x86_64.rpm
+sudo easy_install cx_oracle
+sudo ln -s /usr/lib/python2.7/site-packages/cx_Oracle.so /usr/lib/python2.7/lib-dynloadsudo ln -s /usr/lib/oracle/11.2/client/lib/libnnz11.so /usr/libsudo ln -s /usr/lib/oracle/11.2/client/lib/libclntsh.so.11.1 /usr/lib
+</code></pre>
+
+<p>Kod ornegi</p>
+
+<pre><code>import pandas as pd]
+import pandas.io.sql as sql
+import cx_Oracle as odb
+conn = odb.connect("[kullanici]/[sifre]@[taban]")
+df = sql.read_frame("select .. from", conn)
+</code></pre>
+
+<p>ile Oracle verisi bir Dataframe içine alınmış olur.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

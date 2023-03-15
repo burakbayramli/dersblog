@@ -1,0 +1,145 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Pymacs</h1>
+
+<p>Lisp sürekli kullandığım dillerden biri değil; sadece uzun aralarla
+Emacs editörümü kışiselleştirmek için kullanıyorum ve uzun süre
+geçtikten bazı Lisp numaralarını tekrar öğrenmem gerekiyor. Bir araçı
+birden yerde fazla kullanabilme meraklısı olduğumüz için Lisp'ten
+mümkün olduğu kadar uzak durmaya karar verdik. Bu kararda önemli bir
+faktör, bir editör uzantısı için okkalı kodlama yapmamız gerektiği
+idi... Peki bu iş hangi dilde yapılacaktı?</p>
+
+<p>Bilimsel hesaplama icin zaten Python kullanmaya karar vermistik. Acaba
+Python'u Emacs'i uzatmak/kisisellestirmek icin kullanamaz miyiz?</p>
+
+<p>Editör uzantısı kodlamanın ağır sıklet kısmı için de Perl kullanmayı
+düşünüyorduk, çünkü bir sürü dosya/dizin gezme/işleme gerekecekti,
+fakat bu kullanımda Perl yerine de Python kullanabilirdik. Bir taşla
+iki kuş.</p>
+
+<p>Biraz arama sonucunda Emacs'i Python ile uzatmami saglayacak bir araci
+buldum: Pymacs. Pymacs, tum Emacs lisp fonksiyonlarina bir Python
+script'i icinden ve tum Python modullerine de Emacs icinden
+erisebilmenize izin veriyor. Kurmak icin ya apt-get ile ya da kaynagi
+indirip python setup.py install ile kurabilirsiniz.</p>
+
+<p>https://github.com/pinard/Pymacs</p>
+
+<p>Hemen bir Emacs uzantısı yazalım, mesela pymaçstest.py adında bir
+program yazalım; bu programı /usr/share/emacs/22.2/site-lisp/ altında
+diğer EL dosyaları ile birlikte tuttuğunuzu varsayalım. O zaman .emacs
+ıcinden</p>
+
+<pre><code>(pymacs-load "/usr/share/emacs/22.2/site-lisp/pymacstest")
+</code></pre>
+
+<p>çağrısı yüklemek için yeterli. Bu kod içinde neler olsun?</p>
+
+<pre><code>from Pymacs import lispdef test():    lisp.message("i am here")
+</code></pre>
+
+<p>Gördüğünüz üzere lisp objesi üzerinde Emacs metotları var;
+lisp.message çağrısı elisp içindeki (message "..") çağrısını
+yapıyor. pymaçstest.test çağrısını yapmak artık çocuk oyuncağı, Pymacs
+ışimlendirme kurallarına göre, dosya ismi + "-" + metot ismi
+kullanarak bu çağrı Lisp tarafından yapılabiliyor. Metot ismi demek ki
+pymaçstest-test olacak.</p>
+
+<p>Hızlı geliştirme için bazı numaralar; Python kodu değiştiği zaman
+modülü tekrar yüklettirmek için <em>Pymacs</em> ışımlı buffer'i oldurmek,
+sonra modülü tekrar yüklemek. Bizim .emacs dosyamız şu anda şöyle
+(başka modül ve metot ışimleriyle):</p>
+
+<pre><code>(defun reload-pyjde()
+  (interactive)
+  (if (buffer-live-p (get-buffer "*Pymacs*" ))
+  (kill-buffer (get-buffer         "*Pymacs*")))
+  (pymacs-load "/usr/share/emacs/22.2/site-lisp/pyjde"))
+  (defun test-me()(interactive)(pyjde-test))
+  (global-set-key [f5] 'test-me)
+  (global-set-key [f11] 'reload-pyjde)
+  (reload-pyjde) 
+</code></pre>
+
+<p>Böylece geliştirme sırasında pyjde.py dosyası değiştikçe F11 tuşu ile
+kodu tekrar yükletip F5 ile çağrıyı yapabiliyoruz. Metot test-me()
+daha sonra başka yerlere map edecek, bu tuşa gerek kalmayacak fakat
+durumu anladınız sanıyorum.</p>
+
+<p>Böylece alet çantamızdaki Lisp, Perl'den aynı anda kurtulduk, ayrıca
+hesapsal işler için Python kullanacağız - iki tool gitti, yerine üç iş
+yapan tek tool geldi.</p>
+
+<p>Bazı komutlar:</p>
+
+<p>Üzerinde olduğumüz nokta bir blok içinde, bu bloğa tekabül eden tüm
+metni istiyoruz,</p>
+
+<pre><code>b = lisp.search_forward("[BITIS]")e = lisp.search_backward("[BASLA]")content = lisp.buffer_substring(b, e)
+</code></pre>
+
+<p>Burada Emacs LİSP fonksiyonlarından ikisini kullanmış olduk.</p>
+
+<p>Herhangi bir noktada <em>Messages</em> içinde ve Emacs alt boşluğunda
+gözükebilecek bir metin basmak için</p>
+
+<pre><code>lisp.message("mesaj")
+</code></pre>
+
+<p>İçinde olduğumüz Emacs buffer'in ismi</p>
+
+<pre><code>lisp.buffer_name()
+</code></pre>
+
+<p>Icinde oldugumuz dosyanin ismi</p>
+
+<pre><code>lisp.buffer_file_name()
+</code></pre>
+
+<p>Diyelim ki olduğumuz noktaya bir sürü işlemden sonra dönmek istiyoruz</p>
+
+<pre><code>remember_where = lisp.point()...
+lisp.goto_char(remember_where)
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

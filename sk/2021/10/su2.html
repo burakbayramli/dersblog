@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>SU2</h1>
+
+<p>SU2 aerodinamik simülasyonları için açık kaynak bir programdır. Sıfırdan
+derleyip kullanmak için alttaki tarifi takip edebiliriz.</p>
+
+<p><a href="https://github.com/su2code/SU2/releases/tag/v7.0.2">Kaynak</a></p>
+
+<p>Kaynak kodu indirelim, açalım. İşler program <code>/usr/local/bin</code> altına
+gidecek şekilde kurmak için, dizine girip</p>
+
+<pre><code>./meson.py build --prefix=/usr/local
+
+./ninja -C build install
+</code></pre>
+
+<p>Meson ve ninja yeni bir derleme sistemi (daha önce <code>make</code> ile yapılan işleri
+yapıyor), hızlı işliyor. Derleme sonunda <code>.bashrc</code> içine koymanız tavsiye
+edilen bazı ayarlar var,</p>
+
+<pre><code>export SU2_RUN=/usr/local/bin
+export SU2_HOME=/home/user1/vs/vs/SU2-7.0.2
+export PATH=$PATH:$SU2_RUN
+export PYTHONPATH=$PYTHONPATH:$SU2_RUN
+</code></pre>
+
+<p>gibi olabilir. Bunları <code>.bashrc</code> içine koyalım, komut satırı kapatıp
+tekrar açalım.</p>
+
+<p>Programı kullanmak için bir örnek takip edelim, mesela alttaki [1]
+dersi takip edebiliriz.</p>
+
+<p>Derste gösterilen ayar dosyası (configuration file) ve hesapsal
+izgarayı tanımlayan dosya (mesh file) indirilir. Bu ders türbülanslı
+bir ortamda bir uçak kanadı kesidinin (airfoil) hava akışına nasıl
+tepki vereceğini simüle ediyor. Hava kesidin üzerinden soldan sağa
+doğru 52 m/s hızı civarında akıyor, kesit yere göre 10 derece açıyla
+duruyor (angle of attack -AOA-). Kesitlerin tasarımı öyledir ki
+tasarıma göre bu akış alttan itiş (lift) ve hava direnci (drag)
+oluşturur, eğer itiş yeterince büyükse uçak uçar.</p>
+
+<p>Artık</p>
+
+<pre><code>SU2_CFD turb_naca0012.cfg
+</code></pre>
+
+<p>ile hesabı işletiriz. Döngü sayısı fazlaysa, onu mesela <code>ITER=500</code>
+azaltırız. İşlem bitince <code>surface_flow.vtk</code>, <code>flow.vtk</code>, dosyaları
+üretilmiş olacak.  Bu dosyalar sonuç verilerini içeriyor, onlara
+görsel şekilde bakmak mümkün, <code>paraview</code> programı bunun için.</p>
+
+<pre><code>apt-get update
+
+apt-get install paraview
+
+sudo apt install libcanberra-gtk-module libcanberra-gtk3-module
+</code></pre>
+
+<p>Simdi <code>paraview</code> ile işletiriz, önce <code>surface_flow.vtk</code> açarız,
+<code>Apply</code> düğmesine tıklarız.  Sonra <code>flow.vtk</code> açarız, tekrar
+<code>Apply</code>. Bu alttaki görüntüyü çıkartmalı,</p>
+
+<p><img src="su2_01.png" alt="" /></p>
+
+<p>Bu basınç haritasını gösteriyor, maviye yakın renkler alçak basınç, kırmızıya
+yakın olanlar yüksek basınç. Basınç tabii ki bir itiş kuvvetidir, eğer altta
+daha fazla yüksek basınç varsa kanat kesidi uçmaya daha elverişlidir.</p>
+
+<p>Simülasyonda kullanılan NACA 0012 kanat kesidi standart bir şekli,
+testlerde sürekli kullanılır. Üstte görülen simülasyon iki boyutta,
+istikrarlı (steady) ve türbülansı ortalamayla basitleştirmeye uğraşan
+RANS yaklaşımını kullanmıştır (spesifik olarak Spalart-Allmaras
+türbülans modeli).  Diğer teknik parametreler orijinal ders sayfasında
+bulunabilir.</p>
+
+<p>Basınç Katsayısı (Pressure Coefficient)</p>
+
+<p>Ders [1]'de gösterilen grafik için (10 derece AOA için olan) SU2'ye
+bazı ek veri dosyaları ürettirmek lazım, ayar dosyasında,</p>
+
+<pre><code>OUTPUT_FILES= (RESTART, TECPLOT_ASCII, SURFACE_TECPLOT_ASCII)
+</code></pre>
+
+<p>tanımı bize içinde metinsel çıktı olan <code>surface_flow.dat</code> dosyasını
+verecek. Bu veride 7'inci kolon basınç katsayısı Cp'yi içeriyor, x
+ekseninde 0'inci kolondaki <code>x</code> verisi. Alttaki kodla grafikleyebiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;surface_flow.dat&#39;</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">invert_yaxis</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="mi">6</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;su2_02.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="su2_02.png" alt="" /></p>
+
+<p>Y ekseninin tersine çevirilmesinin sebebi kesidin üst tarafını
+grafiğin üst kısmında görebilmek, ve bakıyoruz ki orada değerler eksi,
+ki Cp tanımına göre alçak basınç orada. Grafik aynı x değeri için iki
+y değeri gösteriyor normal olarak çünkü kesidin alt kısmı ve üst kısmı
+var.</p>
+
+<p>Paralel isletmek icin</p>
+
+<pre><code>parallel_computation.py -f turb_naca0012.cfg -n 4
+</code></pre>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://su2code.github.io/tutorials/Inc<em>Turbulent</em>NACA0012/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

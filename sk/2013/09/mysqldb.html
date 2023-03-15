@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>MySQLdb, Pandas</h1>
+
+<p>Ubuntu uzerinde kurmak icin </p>
+
+<pre><code>sudo pip install pip --upgrade
+
+sudo easy_install -U distribute
+
+sudo apt-get build-dep python-mysqldb
+
+sudo pip install MySQL-python
+</code></pre>
+
+<p>Ornek kod </p>
+
+<pre><code>import MySQLdb, os, sys
+
+conn= MySQLdb.connect(host='makina',
+                      port=3306,user='user', passwd='sifre',
+                      db='test')
+</code></pre>
+
+<p>Bir Pandas dataframe'i alarak veri tabanina yazmak muthis kolay:</p>
+
+<pre><code>pd.io.sql.write_frame(df, "tablo1", conn, flavor='mysql')
+</code></pre>
+
+<p>Ustteki ifade df icindeki dataframe'i alip veri tiplerini ayarlayip
+Mysql'de tablo yaratacak ve veriyi tabloya ekleyecektir. Eger tablo
+mevcut ise ikinci isletim hata verebilir, tablo yokedilip tekrar
+bastan yaratilsin istersek,</p>
+
+<pre><code>pd.io.sql.write_frame(df, "tablo1", conn, flavor='mysql', if_exists='replace')
+</code></pre>
+
+<p>Eger dataframe verisi mevcut tabloya "eklensin" istiyorsak,</p>
+
+<pre><code>pd.io.sql.write_frame(df, "tablo1", conn, flavor='mysql', if_exists='append')
+</code></pre>
+
+<p>Basit bir SQL (DDL usulu, mesela bir DELETE komutu)</p>
+
+<pre><code>sql = "delete from tablo where kolon1 = %d and kolon2 = %d" % (arg1,arg2)
+conn.cursor().execute(sql)
+conn.commit()
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

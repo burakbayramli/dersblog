@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Sayfadan Video Indirme, videolectures.net, rtmpdump</h1>
+
+<p>Komut satiri araclari kullanarak mesela videolectures.net gibi bir
+siteden nasil video indiririz? Once rtmpdump kurmak lazim,</p>
+
+<pre><code>sudo apt-get install rtmpdump
+</code></pre>
+
+<p>Bu aracin hangi adrese isaret edecegini bilmesi lazim. Fakat o gereken
+adres web adresi degil, o web sayfasindan sonra arka planda baglanilan
+baska bir adres. Bu adresi bulmak icin kendi network iletisiminizi
+"takibe" alabilirsiniz, su komutu isletin,</p>
+
+<pre><code>sudo iptables -t nat -A OUTPUT -p tcp --dport 1935 -j REDIRECT &amp;&amp; rtmpsrv
+</code></pre>
+
+<p>Bu bir servis baslatacak ve bekleyecek. Simdi web sayfasina girin,
+mesela</p>
+
+<p>http://videolectures.net/cikm08<em>elkan</em>llmacrf</p>
+
+<p>Sayfaya girilip video baslayinca arkada isleyen servisin ciktisina
+bakin. Buradaki cikti video indirmek icin gerekli rtmpdump komutunu
+listelemis olacaktir.</p>
+
+<p>Servisi Ctrl-C ile durdurun ve rtmpdump isleminizi baslatin. </p>
+
+<p>Eger indirme sirasinda baglanti koparsa, tekrar kalinan yerden
+baslatmak icin komuta -e secenegi eklenebilir.</p>
+
+<p>Not: Eger rtmpdump, hemen iptables ardindan baslamiyorsa, o zaman
+makinanizi reboot edip tekrar deneyebilirsiniz.</p>
+
+<p>Not: videolectures.net gibi siteler mesela bir dersi parca parca
+verebiliyor, bu durumda ana adrese, mesela ikinci parca icin /video/2
+ekini yapmak gerekiyor. Mesela</p>
+
+<p>http://videolectures.net/cikm08<em>elkan</em>llmacrf/video/2</p>
+
+<p>adresi icin su rtmpdump cikti</p>
+
+<pre><code>rtmpdump \-r "rtmp://hydro2.videolectures.net:1935/vod" \-a "vod" \-f "LNX 11,2,202,327" \-W "http://media.videolectures.net/rel.1383672220/common/swf/PlayerViidea.swf" \-p "http://videolectures.net" \-y "mp4:v00e/a3/unhk5n6cclzlkipr25rxyh5i2manetf7.mp4" \-o bir_dosya_ismi.flv
+</code></pre>
+
+<p>Not: rtmpdump bazen bazi bolumleri tekrar tekrar kayit
+edebiliyor. Mesela 1:00 ve 1:05 arasi, 1:05 ve 1:10 arasinda
+tekrarlanabiliyor. Cozum: video'yu goruntulemek icin VLC kullanirsaniz
+bu program otomatik olarak tekrarlanan bolumleri atlamayi biliyor.</p>
+
+<p>Kaynak</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

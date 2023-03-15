@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python, Pandas, Excel</h1>
+
+<h2>Pandas</h2>
+
+<p>Pandas ile CSV dosyası <code>read_csv</code> ile okunur biliyoruz. Excel
+dosyalarını okumak bir o kadar kolay, <code>read_excel</code>. Eger basit bir
+xls dosyasi varsa elimizde bu cagri hemen bir Pandas Dataframe'i
+geri dondurecektir. </p>
+
+<p>Bir püf noktası şu durumda var; eğer Excel dosyası birden fazla
+sayfalardan (sheet) oluşuyorsa, ki her sayfa bildiğimiz gibi ayrı
+birer tablo olabilir, nasıl okuma yapacağız? Bu durumda, mesela
+<code>dosya.xlsx</code> içindeki <code>Sheet1.xls</code> sayfasını okumak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">xls</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">ExcelFile</span><span class="p">(</span><span class="s1">&#39;dosya.xlsx&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">xls</span><span class="p">,</span> <span class="s1">&#39;Sheet1.xls&#39;</span><span class="p">)</span> 
+</code></pre>
+</div>
+
+<p>gerekir.</p>
+
+<h2>İşlem Anında Excel Dosyası Yaratmak</h2>
+
+<p>Gerekli paketler surada listeli:</p>
+
+<p>http://www.python-excel.org/</p>
+
+<p>Biz Excel uretimi icin xlwt kullandik. En basit kod</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">tempfile</span> <span class="kn">import</span> <span class="n">TemporaryFile</span>
+<span class="kn">from</span> <span class="nn">xlwt</span> <span class="kn">import</span> <span class="n">Workbook</span>
+<span class="n">book</span> <span class="o">=</span> <span class="n">Workbook</span><span class="p">()</span>
+<span class="n">sheet1</span> <span class="o">=</span> <span class="n">book</span><span class="o">.</span><span class="n">add_sheet</span><span class="p">(</span><span class="s1">&#39;Sheet 1&#39;</span><span class="p">)</span>
+<span class="n">sheet1</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;A1&#39;</span><span class="p">)</span>
+<span class="n">book</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;simple.xls&#39;</span><span class="p">)</span>
+<span class="n">book</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">TemporaryFile</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<p>0,0 hücresin bir şeyler yazılıp kaydedildi. Stil uygulaması için
+easyxf tavsiye edilir, mesela <code>write(0,0,'vs',easyxf('alignment: horizontal right'))</code>
+gibi.</p>
+
+<p>Paketin bazı eksikleri sadece yazmaya yönelik olması, bir hücrenin
+mevcut durumunu okuyup bir şeyler eklemek imkansız. Okuma için diğer
+paket xlrd kullanılıyor, o zaman da ta  en baştan bir xls dosyası
+açmış oluyorsunuz, ve başka bir ortamda / mod içinde oluyorsunuz.Excel
+üreten kodlarda içerik dinamik olduğu zaman kör bir şekilde veriyi
+uygun yere atmakla uğraşırız, birkaç kolonu satırı kapsayacak stil
+uygulaması (mesela renk, ağırlık -bold-, font büyüklüğü) sonradan
+belli alanlara uygulamak tercihimiz. xlwt ile bunları yapmak zor,
+write ile tekrar aynı hücreye yazdığınızda o hücrenin eski değeri
+eziliyor.</p>
+
+<p>Çözüm <code>write()</code> metotunu kendi write metotumuz sarmalayıp (wrap), bu
+bizim metot içinde global bir stil listesini her yazım için kontrol
+etmek, yani stili sürekli / her <code>x,y</code> değeri için bu listeden
+almak. Bu stil listesi basit bir Python listesi olabilir, yazım
+başlamadan önce hazır olmalıdır, <code>(x1,x2,y1,y2,stil)</code> tüple listesi
+şeklinde, stiller belli bloklar için tanımlandığı için bir dikdörtgen
+içindeler, x1,x2 kullanımı bunun için. Sarmalanan write sürekli
+kendisine verilen x,y'nin hangi stil dikdörtgeninin içine düştüğünü
+kontrol edecek yani.</p>
+
+<h2>Excel, CSV, Python</h2>
+
+<p>İçinde pür text verisi olan Excel dosyasını CSV dosyasına çevirmek
+için iyi bir kod</p>
+
+<p>https://github.com/dilshod/xlsx2csv</p>
+
+<p>Hızlı işliyor, kurmaya bile gerek yok. İndirilen py dosyası direk
+işletilir,</p>
+
+<p><code>python xlsx2csv.py dosya.xlsx dosya.csv</code></p>
+
+<p>şeklinde. Eger ciktida belli bir ayrac (delimiter) tanimlamak
+istersek, mesela <code>|</code> isareti olabilir, o zaman</p>
+
+<p><code>python xlsx2csv.py -d "|" dosya.xlsx dosya.csv</code></p>
+
+<p>komutu kullanilabilir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

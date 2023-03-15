@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Elisp</h1>
+
+<p>Tüm buffer'ı bir değişken içine almak için</p>
+
+<pre><code>(setq cmd (buffer-substring 1 (buffer-size)))
+</code></pre>
+
+<p>Bir buffer'a olan referansı o buffer'ın ismini kullanarak alabilmek
+için;</p>
+
+<pre><code>(get-buffer "*Isim Filan Falan*")
+</code></pre>
+
+<p>Bu buffer'ı öldürmek için</p>
+
+<pre><code>(kill-buffer (get-buffer "*Isim Filan Falan*"))
+</code></pre>
+
+<p>Buffer'ın canlı olup olmadığını kontrol için (ve eğer canlı değilse
+birşeyler yapmak için)</p>
+
+<pre><code>(if (not (buffer-live-p (get-buffer "Isim Filan Falan"))) (progn;; bir
+seyler yap))
+</code></pre>
+
+<p>Buffer içinde olan dosyanın soneksiz hâlini almak için (meselâ
+c:/temp/filan/TT.java üzerinden TT kelimesini çıkartabilmek için)</p>
+
+<pre><code>(setq soneksizDosyaIsmi (file-name-sans-extension
+(file-name-nondirectory buffer-file-name)))
+</code></pre>
+
+<p>Komut satırına elisp içinden bir program işlettirebilmek için</p>
+
+<pre><code>(shell-command "perl c:/dizin/ismi/script.pl")
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

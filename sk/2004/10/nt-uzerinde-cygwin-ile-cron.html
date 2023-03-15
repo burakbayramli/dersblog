@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>NT Üzerinde Cygwin İle Cron</h1>
+
+<p>Cron, zamanlı (planlı) süreç işletabilen faydalı bir Unix
+aracıdır. <code>crontab -e</code> ile değiştirilen planı cron süreci alıp,
+gerekli programları gereken zamanda işletir.  Fakat, eğer bir
+talihsizlik sonucu Windows ortamı üzerinde iş yapmak zorunda kaldı
+iseniz, Unix araçlarını (cron) dahil Cygwin sayesinde
+kullanabilirsiniz. Cygwin üzerinde ls, diff, find gibi tanıdık bütün
+komutları bulacaksınız.</p>
+
+<p>Bir tek komut, cron, problem çıkartacak. Cron'un kontrol kısmı, Unix
+üzerinde arka plan süreci (deamon) olarak çalışıyor, işletim sistemi
+bunu başlarken otomatik olarak başlatıyor. Fakat cygwin Windows
+sistemine sonradan eklendiği için, aynı etkiyi yaratmak için, cron
+programını Windows "servisi" olarak kurmamız gerekecek.</p>
+
+<p><code>cygrunsrv -I cron -p /usr/sbin/cron -a -D</code></p>
+
+<p>Yukarıdaki komutu kullanarak, cron'u servis haline getirebilirsiniz.
+Eğer cygrunsrv yok ise, cygwin kuruluş programı "Admin" dizini
+altından kurun.  Cron, NT servisi olarak kurulduktan sonra diğer
+servisler gibi Services altında gözükecektir.  Crontab içeriği...</p>
+
+<pre><code>$ crontab -e
+
+* * * * * echo "test 123" &gt;&gt; c:/temp/a.out
+
+&gt; ~&gt; ~&gt; :wq (vi altinda kaydet ve kapat demektir)
+</code></pre>
+
+<p><img src="cygwin_cron_1.jpg" alt="" /></p>
+
+<p><img src="cygwin_cron_2.jpg" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

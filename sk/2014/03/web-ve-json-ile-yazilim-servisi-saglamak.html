@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Web ve JSON ile Servis Arayuzu, UWSGI</h1>
+
+<p>Flask islemleri su yazida.</p>
+
+<p>Simdi buyuk olcegi dusunelim. Komut satirindan basit sekilde
+baslatilan Flask olceklenemez. Fakat Flask onunde yuk dagitici olarak
+gorev yapabilecek ve Flask'e rahat entegre olabilen bazi secenekler
+var. Bunlardan biri UWSGI.</p>
+
+<p>http://projects.unbit.it/downloads/</p>
+
+<p>2.0.3 indirin. python setup.py build ve sudo python setup.py install
+ile kurun.</p>
+
+<p>Kullanmak icin main.py olan dizinden,</p>
+
+<pre><code>nohup sudo uwsgi --processes 4 --http :8080 -s /tmp/mysock.sock \ --module main --callable app  --py-autoreload 1 \
+--logto /tmp/main.log  --pidfile /tmp/main.pid \
+&gt; /tmp/cour.log 2&gt; /tmp/cour.err &lt; /dev/null &amp;
+</code></pre>
+
+<p>Ustteki cagri birden fazla surec icinde kodunuzu isletime
+sunar. Erisim noktasi 8080 port'u uzerinden her istek baska bir surece
+gonderilir boylece olceklenme halledilir. Secenek --py-autoreload 1
+ile sureclerden biri cokerse otomatik olarak tekrar baslatilmasini
+soyluyoruz, boylece dayaniklilik acisindan onemli bir avantaj elde
+ediyoruz.</p>
+
+<p>Ayrica --pythonpath  ile ek paket gerekiyorsa onlarin nereden
+yuklenmesi gerektigini set edebiliriz. Bu paketler setup.py build
+install ile kurulabiliyorsa tabii bu secenege gerek yok, ama bazen
+gerekebilir.</p>
+
+<p>Durdurmak icin</p>
+
+<pre><code>uwsgi --stop=/tmp/main.pid 
+
+uwsgitop
+</code></pre>
+
+<p>Unlu Unix top gibi sadece uwwsgi sureclerini izlemek icin bir arac yazilmis,</p>
+
+<p>https://github.com/unbit/uwsgitop</p>
+
+<p>Yanliz uwsgi sureclerini izleyebilmek icin ozel bir sekilde baslatmak
+lazim, secenek  --stats /tmp/stats.socket eklenmeli. Sonra</p>
+
+<pre><code>sudo uwsgitop /tmp/stats.socket
+</code></pre>
+
+<p>ile arac baslatilir.</p>
+
+<p>Not: Bu arada literature gore artik LAMP paketi degismis (ki bu
+harfler Linux, Apache, MySQL, PHP'yi temsil ediyordu), artik LEMP
+olmus. E harfi nginx'i temsil icin kullaniliyor, bilindigi gibi nginx
+"engine x" olarak okunuyor, ve onun E'si A yerine, yani Apache yerini
+almis. Ilginc bir gelisme. Bizim icin de PHP yerine Python var tabii -
+hala P!</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

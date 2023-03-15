@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>GPU, CUDA, PyCuda</h1>
+
+<p>Bilgisayarımızda hesapları yapan işlemci var, bu işlemci son
+zamanlarda çok çekirdekli hale de gelmeye başladı. Fakat
+bilgisayarımızda işlem yapan çok kuvvetli bir parça daha var: grafik
+işlemci (GPU).GPU paralel işlem açısından neredeyse pür mikroişlemci
+kadar kuvvetlidir, hatta bazı açılardan daha hızlıdır, çünkü tarihsel
+sebeplerle parallelliğe daha fazla yatkın olması gerekmiştir. GPU bir
+görüntünün hızla çizilmesi (rendering) için piksel bazında paralelliğe
+gitmek zorundaydı ve NVİDİA şirketinin ürünleri için artık bu normal
+bir operasyondur.</p>
+
+<p>Araştırmacılar bu paralellikten istifade etmeye karar vermişler, ve
+grafiksel olmayan hesap işlemlerini sanki öyleymiş gibi GPU'ya
+sunuyorlar, ve cevabı geri tercüme ediyorlar, böylece GPU'nun hızlı
+paralel işlemci özelliğinden faydalanıyorlar. Pek çok matematiksel
+hesabı bu şekilde yaptıran olmuş, mesela matris çarpımı, PDE çözümü,
+simülasyon.</p>
+
+<p>NVidia şirketi grafik kartlarının GPU'suna erişim için CUDA diye bir
+kütüphane sağlıyor. Onun üstüne PyCUDA ile Python bazlı erişim de
+var. Bazı ülkelerin üniversitelerinde CUDA eğitimini müfredata dahil
+edilmiş. Dikkat: NVidia kartı piyasadaki grafik kartlarından bir
+tanesidir, her laptop üzerinde NVidia olmayabilir (fakat NVidia
+piyasadaki en ünlülerden birisi, bunu da ekleyelim). Şimdilik GPU
+kodlaması için NVidia kartına sahip bir bilgisayar lazım.</p>
+
+<p>Fakat GPU bazlı kodlama oldukca popüler hale geldi ki video kart
+üreticisi NVidia dışarıdan bilgisayara dahil edilebilen ayrı bir ufak
+GPU ünitesi bile yarattı. Ünitenin ismi Jetson kartı.</p>
+
+<p>https://developer.nvidia.com/buy-jetson</p>
+
+<p>Kart üzerinde Ubuntu işleyebiliyor, network aktarıcısı (router) dahil
+edilip hemen ssh ile alete bağlanabiliyorsunuz. Yapay öğrenim ile
+uğraşanlar için müthiş haber GPU üzerinde mevcut 192 çekirdek aşırı
+seviyede paralellik isteyen deep learning yaklaşımı için biçilmiş
+kaftan, ki burada birisi denemiş, ve nasıl yapılabileceği
+anlatılıyor. Blog sahibi Pete Warden imaj üzerinde yapay öğrenim
+algoritmaları kullanma konusunda uzmanlardan biridir, bu iş için
+kurduğu şirketini geçende Google satın aldı. Tabii ki Jetson üzerinde
+direk CUDA kodlaması da yapılabilir.</p>
+
+<p>CUDA</p>
+
+<p>Pek çok türde paralelellik, eşzamanlılaştırma tekniği var. Mesela disk
+bazlı çalışan <a href="../../2014/09/esle-indirge-mimarisi-mapreduce-mr.html">eşle/indirge</a>
+bunlardan biri. Her teknik paralleliği hangi birim üzerinde, nerede,
+ne zaman yaptırdığı bağlamında birbirinden farklı. GPU kodlaması SIMD
+yaklaşımını benimser, SIMD = Single Instruction Multiple Data, yani
+Tek Komut Pek Çok Veri yaklaşımı. SIMD ile bir işlem, ki bu çarpma,
+toplama, vs gibi temel işlemler ya da onların toplamı olan bir hesap
+ünitesi olabilir, birden fazla veri noktası üzerinde aynı anda
+uygulanır. Bu yaklaşımın grafik kartları, grafikleme için nasıl
+faydalı olacağını görmek zor değil, çünkü grafik kartları için veri,
+görüntü pikselleri, ve her piksel üzerinde, resim kare kare
+oluşturulurken tek bir işlemi aynı anda uygulamak faydalı olur. Bu
+işlem transformasyon olabilir, ki aynı matrisi çarpmayı gerektirir,
+işin takip etme (ray tracing) olabilir, vs.</p>
+
+<p>CUDA NVidia'nın kendi kartlarına programcı erişimi sağlayan bir
+arayüzdür. Python üzerinde PyCuda üzerinden erişilebilir. NVidia'nın
+<code>nvcc</code> adlı genişletilmiş C++ derleyicisi aynı şekilde CUDA
+kodlamasına C++ üzerinden izin verir.</p>
+
+<p>Turkiye'de Alım</p>
+
+<p>NVidia grafik kartına sahip bir makina fazla pahalı değil, özellikle
+yıllarca önce bir süperbilgisayar seviyesinde işletim gücüne
+eriştiğimizi düşünürsek. Bir oyun makinası PC ile beraber alınabilir,
+ya da, mesela harici Jetson kartı 70-100 dolar arasında.</p>
+
+<p>GPU Var mı Kontrol</p>
+
+<p>Dizüstü ya da masaüstü bilgisayarında acaba dışarıdan kodlanabilen GPU
+var mı? Kontrol etmenin en kolay yolu Chromium tarayıcısına
+sormak. Tarayıcı bu tür bilgilere sahip çünkü kendisi de mümkün olan
+tüm hızlandırıcıları kullanmak istiyor, neyse tarayıcıya gidip adres
+çubuğunda <code>chrome://gpu</code> yazarsak gösterilen raporda eğer varsa CUDA
+yetenekli kart gösterilecektir.</p>
+
+<p>CUDA ve Collab</p>
+
+<p>Geliştiriciler için bir diğer seçenek Google bulutu üzerinde
+barındırılan not defteri servisi <a href="../../2018/11/gpu-tpu-saglayan-not-defter-ortami.html">Google Collab</a>.
+Bu servis <a href="../../2018/09/jupyter-not-defterleri.html">Jupyter</a>
+teknolojisine İnternet üzerinden erişim sağlıyor denebilir.</p>
+
+<p>Collab'a girip bir not defteri yaratalım, ve menüde <code>Edit | Notebook
+settings</code> seçelim, burada <code>Hardware accelerator</code> seçimi var. Bu seçimi
+<code>GPU</code> haline getirelim. Bu kadar basit! Arka plandaki bir GPU
+havuzundan Google size bir GPU atamış olacaktır.</p>
+
+<p>Dikkat: Jupyter üzerinden GPU kullanımı direk kendi kartımız üzerinden
+kullanıma oranla yavaş olablir. Ama 10/20 kat hızlandırmayı hala
+Google Collab ile deneyimlemek mümkün.</p>
+
+<p><img src="cuda1.jpg" alt="" /></p>
+
+<p>Şimdi <code>pycuda</code> kuralım. Bu işlemi aynı not defterini ilk kez
+açtığımızda her seferinde tekrar yapmamız lazım. Çünkü arka planda
+bize Google tarafından bir makina atanıyor, ve eski makinanın kurulumu
+yokolmuş oluyor, her seferinde yeni bir makinada, yeni bir süreçteyiz.</p>
+
+<pre><code>!pip install pycuda
+</code></pre>
+
+<p>Kurulum bitince artık pycuda çağrıları yapabiliriz. Acaba makinamızda
+ne tür bir GPU var?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pycuda.driver</span> <span class="k">as</span> <span class="nn">drv</span>
+<span class="n">drv</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">drv</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
+    <span class="n">gpu_device</span> <span class="o">=</span> <span class="n">drv</span><span class="o">.</span><span class="n">Device</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Device </span><span class="si">{}</span><span class="s1">: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> <span class="n">i</span><span class="p">,</span> <span class="n">gpu_device</span><span class="o">.</span><span class="n">name</span><span class="p">()</span> <span class="p">))</span>
+    <span class="n">compute_capability</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">.</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">gpu_device</span><span class="o">.</span><span class="n">compute_capability</span><span class="p">()</span> <span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> Compute Capability: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">compute_capability</span><span class="p">))</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1"> Total Memory: </span><span class="si">{}</span><span class="s1"> megabytes&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">gpu_device</span><span class="o">.</span><span class="n">total_memory</span><span class="p">()</span><span class="o">//</span><span class="p">(</span><span class="mi">1024</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<pre><code>Device 0: Tesla T4
+     Compute Capability: 7.5
+     Total Memory: 15079 megabytes
+</code></pre>
+
+<p>Fena bir kart değil, &gt;2500 çekirdeği var.</p>
+
+<p>En basit işlemle başlayalım. Bir vektör üzerindeki sayıları 2 ile çarpalım.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
+
+<span class="n">host_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">device_data</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">to_gpu</span><span class="p">(</span><span class="n">host_data</span><span class="p">)</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">device_data_x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">device_data</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">host_data_x2</span> <span class="o">=</span> <span class="n">device_data_x2</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;GPU </span><span class="si">%0.8f</span><span class="s1"> saniye.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">))</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">host_data_x2_cpu</span> <span class="o">=</span> <span class="n">host_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;CPU </span><span class="si">%0.8f</span><span class="s1"> saniye.&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span><span class="o">-</span><span class="n">t1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>GPU 0.00174046 saniye.
+CPU 0.00841069 saniye.
+</code></pre>
+
+<p>GPU ile CPU arasında 8 kat civarı fark var, 10 milyon tane sayıyı
+ikiye çarpmak için.</p>
+
+<p>Not 1: Jupyter ortamında pycuda kodlarının daha yavaş işlediği
+tecrübelenmiştir, bu hız karşılaştırmasını nihai olarak görmemek
+lazım.</p>
+
+<p>Not 2: pycuda bir kodu ilk işlettiğinde onu bir derleme sürecinden
+geçirir, ama ikinci sefer aynı kodu görünce bunu yapmaz [1]. Bu
+sebeple ikinci, üçüncü, vs. işletim daha hızlı olacaktır.</p>
+
+<p>Kodu incelersek <code>gpuarray.to_gpu</code> ile GPU'ya veriyi gönderdik. Daha
+sonra <code>np.float(2) * device_data</code> ile çarpma işlemi GPU üzerinde
+yapıldı. Tabii arka planda Python bazı tutkallama işi yaptı mesela <code>*</code>
+işlemi büyük ihtimalle belli tipler için üste tanımlı (overloaded), ve
+<code>gpuarray</code> gibi özel tipler söz konusu olunca arka planda GPU üzerinde
+ek işlemler yapılacağı biliniyor. </p>
+
+<p>Yapılan işlem çarpma, ve GPU bu her çarpma işlemini aynı anda, mümkün
+olduğu kadar fazla vektör öğesi üzerinde işletti.</p>
+
+<p>Çekirdek (Kernel) Kod Kullanımı</p>
+
+<p>Daha direk bir yöntemi görelim. Aslında CUDA kodları çekirdek kod
+temelli işler, dışarıdan programcının verdiği bir kod, veri üzerinde
+(mümkün olduğu kadar paralel bir şekilde) işletilir / uygulanır. Bu
+Python'un <code>map</code>, ya da Pandas <code>apply</code> operasyonuna benzer.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">pycuda.elementwise</span> <span class="kn">import</span> <span class="n">ElementwiseKernel</span>
+
+<span class="n">host_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="n">gpu_2x_ker</span> <span class="o">=</span> <span class="n">ElementwiseKernel</span><span class="p">(</span>
+<span class="s2">&quot;float *in, float *out&quot;</span><span class="p">,</span>
+<span class="s2">&quot;out[i] = 2*in[i];&quot;</span><span class="p">,</span>
+<span class="s2">&quot;gpu_2x_ker&quot;</span><span class="p">)</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">host_data_2x</span> <span class="o">=</span>  <span class="n">host_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;CPU: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+<span class="n">device_data</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">to_gpu</span><span class="p">(</span><span class="n">host_data</span><span class="p">)</span>
+<span class="n">device_data_2x</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">device_data</span><span class="p">)</span>
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">gpu_2x_ker</span><span class="p">(</span><span class="n">device_data</span><span class="p">,</span> <span class="n">device_data_2x</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">from_device</span> <span class="o">=</span> <span class="n">device_data_2x</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;GPU: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>CPU: 0.007268
+GPU: 0.079255
+</code></pre>
+
+<p>Üstte <code>ElementwiseKernel</code> objesine üç tane parametre verdik. Bunlardan
+ilki çekirdeğe / fonksiyona verilecek parametreler, bunların ilki
+giriş verisi, ikincisi çıkış verisi, sözdizim C dili sözdizimine
+benziyor dikkat edilirse, C ile <code>*ptr</code> ile tanımlanan değişkene
+<code>ptr[0]</code>, <code>ptr[1]</code>, vs ile erişilebilir, göstergeç aritmetiği
+uygulanabilir. Ayrıca çıkış vektörünün verisini "içeriden" alabilmek
+için <code>gpuarray.empty_like</code> ile onu dışarıda önceden tanımlamamız
+gerekti.. Bu vektöre bir yer açtık, o yerdeki vektörün değerleri GPU
+tarafından dolduruldu.</p>
+
+<p>Metodun ana kodu ikinci parametrede, burada giriş vektör öğesi
+üzerinde hangi işlem yapılıp hangi çıkış öğeye atandığı
+kodlanıyor. İndis <code>i</code> ile vektör öğesine erişiliyor, kod işlediğinde
+her çekirdek eşzamanlı olarak tek bir öğe üzerinde işlem yapacak, buna
+dikkat. GPU parallelliğinin temeli bu.</p>
+
+<p>Bu [1]'den alınan bir giriş kodu tabii, parallelliğin bazı detayları
+arka planda saklanmış, Python için en azından. Mesela kod içinde
+referans edilen <code>i</code> bir iş parçacığı (thread) indisidir, bu indislerin
+eldeki N vektör öğesi için 0 ila N arası değerler olacağına emin
+miyiz? Kodun işleyişi buna bağlı çünkü. Ayrıca N tane ayrı iş
+parçacığı oluşturulacağını biliyor muyuz?</p>
+
+<p>C ile iki vektörü toplayan bir kod suna benzer,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">__global__</span> <span class="kt">void</span> <span class="n">VecAdd</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">C</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+   <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="p">}</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="p">...</span>
+   <span class="n">VecAdd</span><span class="o">&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">);</span>
+   <span class="p">...</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Burada <code>&lt;&lt;&lt;1, N&gt;&gt;&gt;</code> tanımındaki <code>N</code> ile kaç iş parçacığı olacağı
+önceden tanımlandı. Üstteki gibi basit bir Python çağrısı var ise, bu
+tanım arka planda yapılıyor olmalı. Indis 0-N de aynı şekilde
+garantileniyor muhakkak. </p>
+
+<p>Mandelbrot Kümesi</p>
+
+<p>Fraktal resimleri üretmek için Mandelbrot yaklaşımı kullanılabilir,
+[4]'te konunun matematiğinden bahsedilildi. Orada gösterilen
+yaklaşımda her hücre üzerinde teker teker bir hesap yapıldığını
+görüyoruz. Bu hesabı GPU üzerinde eşzamanlı olarak işletmek mümkün.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span> <span class="nn">pycuda.elementwise</span> <span class="kn">import</span> <span class="n">ElementwiseKernel</span>
+
+<span class="n">mandel_ker</span> <span class="o">=</span> <span class="n">ElementwiseKernel</span><span class="p">(</span>
+<span class="s2">&quot;pycuda::complex&lt;float&gt; *lattice, float *mandelbrot_graph, int max_iters, float upper_bound&quot;</span><span class="p">,</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">mandelbrot_graph[i] = 1;</span>
+
+<span class="sd">pycuda::complex&lt;float&gt; c = lattice[i]; </span>
+<span class="sd">pycuda::complex&lt;float&gt; z(0,0);</span>
+
+<span class="sd">for (int j = 0; j &lt; max_iters; j++)</span>
+<span class="sd">{    </span>
+<span class="sd">   z = z*z + c;</span>
+
+<span class="sd">   if(abs(z) &gt; upper_bound) {</span>
+<span class="sd">       mandelbrot_graph[i] = 0;</span>
+<span class="sd">       break;</span>
+<span class="sd">    }</span>
+<span class="sd">}         </span>
+<span class="sd">&quot;&quot;&quot;</span><span class="p">,</span>
+<span class="s2">&quot;mandel_ker&quot;</span><span class="p">)</span>
+
+<span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">real_low</span><span class="p">,</span> <span class="n">real_high</span><span class="p">,</span> <span class="n">imag_low</span><span class="p">,</span> <span class="n">imag_high</span><span class="p">,</span> <span class="n">max_iters</span><span class="p">,</span> <span class="n">upper_bound</span> <span class="o">=</span>  <span class="mi">512</span><span class="p">,</span><span class="mi">512</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">256</span><span class="p">,</span> <span class="mi">2</span>
+
+<span class="n">real_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">real_low</span><span class="p">,</span> <span class="n">real_high</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>
+
+<span class="n">imag_vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span> <span class="n">imag_high</span><span class="p">,</span> <span class="n">imag_low</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span> <span class="o">*</span> <span class="mi">1</span><span class="n">j</span>
+
+<span class="n">mandelbrot_lattice</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real_vals</span> <span class="o">+</span> <span class="n">imag_vals</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">)</span>    
+
+<span class="n">mandelbrot_lattice_gpu</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">to_gpu</span><span class="p">(</span><span class="n">mandelbrot_lattice</span><span class="p">)</span>
+
+<span class="n">mandelbrot_graph_gpu</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="n">mandelbrot_lattice</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">mandel_ker</span><span class="p">(</span> <span class="n">mandelbrot_lattice_gpu</span><span class="p">,</span> <span class="n">mandelbrot_graph_gpu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">max_iters</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="n">upper_bound</span><span class="p">))</span>
+
+<span class="n">mandelbrot_graph</span> <span class="o">=</span> <span class="n">mandelbrot_graph_gpu</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>   
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mandelbrot_graph</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="cuda2.png" alt="" /></p>
+
+<p>x,y değerleri düz birer tek boyutlu vektördü, onları üst üste
+istifleyip tek bir vektör ile GPU'ya gönderdik, böylece birbirine eş
+olan x,y değerleri aynı indis üzerinden GPU içinden erişilir hale
+geldi. Sonra, çekirdek içinde, özyineli döngüye girdik, bu döngü her
+öge için mümkün olduğu kadar farklı GPU çekirdeği üzerinde koşturmayı
+yapacak. Tabii <code>max_iters</code> döngüsü seri, senkron olarak işleyecek
+fakat her x,y hücresinin paralel işlenmesi çok büyük bir ilerleme ve
+hakikaten de Mandelbrot GPU kodu hızlı işliyor.</p>
+
+<p>Üstteki kodda tam tekmilli program ifadeleri kullanabildiğimizi
+görüyoruz, mesela for <code>for</code> döngüsü. Sözdizim C temelli ve hata
+ayıklama süreci biraz uğraştırabilir çok çetrefil denemez.</p>
+
+<p>Bir çekirdek çağrısı işletmenin tek yolu <code>ElementwiseKernel</code> değil,
+aslında o yöntem en kolay olanı. Şimdi işleri biraz daha
+zorlaştıralım, bir çekirdek fonksiyonu yazalım.</p>
+
+<p>Ne zaman bu tür bir fonksiyon yazarsak ondan önce <code>__global__</code>
+kelimesini kullanmamız gerekir. Dönüş tipi hep <code>void</code> olur çünkü
+döndürelecek veriyi zaten çıkış parametresi olarak
+tanımlayacağız. Kodlayacağımız yine vektörü skalar ile çarpmak olacak
+ama bu sefer skaların kendisi bir parametre. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pycuda.autoinit</span><span class="o">,</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">pycuda.driver</span> <span class="k">as</span> <span class="nn">drv</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span> <span class="nn">pycuda.compiler</span> <span class="kn">import</span> <span class="n">SourceModule</span>
+
+<span class="n">ker</span> <span class="o">=</span> <span class="n">SourceModule</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">__global__ void scalar_multiply_kernel(float *outvec, float scalar, float *vec)</span>
+<span class="s2">{</span>
+<span class="s2">     int i = threadIdx.x;</span>
+<span class="s2">     outvec[i] = scalar*vec[i];</span>
+<span class="s2">}</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+
+<span class="n">scalar_multiply_gpu</span> <span class="o">=</span> <span class="n">ker</span><span class="o">.</span><span class="n">get_function</span><span class="p">(</span><span class="s2">&quot;scalar_multiply_kernel&quot;</span><span class="p">)</span>
+
+<span class="n">testvec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">512</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">testvec_gpu</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">to_gpu</span><span class="p">(</span><span class="n">testvec</span><span class="p">)</span>
+<span class="n">outvec_gpu</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">testvec_gpu</span><span class="p">)</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">scalar_multiply_gpu</span><span class="p">(</span> <span class="n">outvec_gpu</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> \
+                     <span class="n">testvec_gpu</span><span class="p">,</span> <span class="n">block</span><span class="o">=</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span>
+             <span class="n">grid</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">outvec_gpu</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;total time to compute on GPU: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Bu kodda bir diğer fark <code>threadIdx.x</code> ile eşzamanlı iş parçacığı
+(thread) kimlik no'sunu çağrı yaparak kendimizin almış olmamız. Burada
+bir soru acaba her ögeye yetecek kadar iş parçacığı (ki onların özgün
+kimlik no'su) mevcut olacak mıdır, çünkü bu kimlik indeks olarak
+vektör öğelerine erişmek için kullanılıyor? Cevap evet,
+<code>scalar_multiply_gpu</code> çağrısına bakarsak orada 512 tane iş parçacığı
+tanımlandı, vektörün büyüklüğü de aynı.</p>
+
+<p>NVCC</p>
+
+<p>Eğer Çollab içinde <code>nvcc</code> işletmek istersek, bunu ünlem ile yapabiliriz,</p>
+
+<pre><code>!nvcc --version
+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2019 NVIDIA Corporation
+Built on Sun_Jul_28_19:07:16_PDT_2019
+Cuda compilation tools, release 10.1, V10.1.243
+</code></pre>
+
+<p>C++ kodu yazıp derlemek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">test</span><span class="p">.</span><span class="n">cpp</span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<span class="c1">//Main function</span>
+<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">Argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">Args</span><span class="p">[]){</span>
+   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;hello collab&quot;</span><span class="p">);</span>
+   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">Writing</span> <span class="n">test</span><span class="p">.</span><span class="n">cpp</span>
+</code></pre>
+</div>
+
+<pre><code>%%script bash
+
+g++ -std=gnu++17 test.cpp -o test
+ls -laX
+./test
+
+total 32
+drwxr-xr-x 1 root root 4096 Dec 21 17:29 sample_data
+-rwxr-xr-x 1 root root 8304 Dec 25 10:05 test
+drwxr-xr-x 1 root root 4096 Dec 25 10:05 .
+drwxr-xr-x 1 root root 4096 Dec 25 10:04 ..
+drwxr-xr-x 1 root root 4096 Dec 21 17:29 .config
+-rw-r--r-- 1 root root  109 Dec 25 10:05 test.cpp
+hello collab
+</code></pre>
+
+<p>Bu derlemek işlemini <code>nvcc</code> ile de yapabilirdik.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Tuomanen, <em>Hands-On GPU Programming with Python and CUDA</em></p>
+
+<p>[2] https://colab.research.google.com/</p>
+
+<p>[3] https://gist.github.com/jfpuget/60e07a82dece69b011bb</p>
+
+<p>[4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos<em>19/ders</em>19.html)</p>
+
+<p>[5] https://developer.nvidia.com/blog/even-easier-introduction-cuda/</p>
+
+<p>[6] [Jetson Nano](nvidia-jetson-nano-2GB-wifi.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

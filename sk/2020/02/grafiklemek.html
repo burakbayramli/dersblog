@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Grafiklemek, Matplotlib, Pandas</h1>
+
+<p>Basit X-Y grafikleri, ikili, üçlü, iki eksenli grafikleri bu yazıda işleyeceğiz.</p>
+
+<p>En basit grafik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_01.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_01.png" alt="" />
+<img src="https://4.bp.blogspot.com/-5IQcs4lswR8/XlywA6moy7I/AAAAAAAAB7M/OjmLdhv1jsoOObkQRUYo1-feZ82C6SsJwCLcBGAsYHQ/s1600/graf_01.png" alt="" /></p>
+
+<p>Önceki metot tüm noktaları birleştiriyor. Eğer birleştirilmesini
+istemesek nokta nokta olarak her veri öğesinin basılmasını istesek
+<code>plot</code> içinde <code>.</code> kullanırdık.  </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_02.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_02.png" alt="" />
+<img src="https://2.bp.blogspot.com/-XMnE4JdEx0M/XlywBM9ctHI/AAAAAAAAB7Q/sR96rsWw_UQO_K_0lGJGgdYsHToObTyjwCLcBGAsYHQ/s1600/graf_02.png" alt="" /></p>
+
+<p>Renkleri de aynı komutta belirtilebiliyoruz. Üstteki <code>r</code> kırmızı (red) için. </p>
+
+<p>Çoğu zaman aynı imajda birden fazla grafik olmasını isteyebiliyoruz,
+karşılaştırma amacıyla, vs. Alt alta iki grafik için çabuk bir şekilde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">x2</span> <span class="o">=</span> <span class="n">x</span><span class="o">+</span><span class="mi">100</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y1</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_03.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_03.png" alt="" />
+<img src="https://4.bp.blogspot.com/-uOJjHO3oy9k/XlywBfPxdqI/AAAAAAAAB7U/rHdlQ54DXj4M0vDrSIedhQpdJu_jwP1xACLcBGAsYHQ/s1600/graf_03.png" alt="" /></p>
+
+<p>Üstteki örnekte x ekseni farklı, çünkü değerlerin skalası farklı o
+şekilde grafiklemek istedik. Fakat bazen de aynı x skalası üzerinden
+farklı grafikler basmak isteyebiliriz, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">y1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y1</span><span class="p">)</span>
+<span class="n">axs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_04.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_04.png" alt="" />
+<img src="https://3.bp.blogspot.com/-_4l65FYhMYc/XlywBimyCqI/AAAAAAAAB7Y/8NDr6ou3YfATocQe8gCZoLaTICcdCDPPQCLcBGAsYHQ/s1600/graf_04.png" alt="" /></p>
+
+<p>Eğer Pandas üzerinden grafikleme yapılıyorsa onun <code>plot(ax=..)</code>
+komutuna dışarıdan <code>axs[0]</code>, <code>axs[1]</code> vs verilebiliyor.</p>
+
+<p>Pandas ile bu arada çoğu grafikleme iyice basit hale geliyor, mesela
+bir <code>DataFrame</code> içinde iki kolon olsun, basmak için direk <code>DataFrame</code>
+üzerinde <code>plot</code> çağırmak yeterli,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">x</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;y1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;y2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_05.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_05.png" alt="" />
+<img src="https://2.bp.blogspot.com/-RI-e3gazHfE/XlywCON7gRI/AAAAAAAAB7c/efk1QbIRZ5YtInRo6qn3RDm0GSbiRcaRgCLcBGAsYHQ/s1600/graf_05.png" alt="" /></p>
+
+<p>Grafikler direk çizildi, her kolon için ayrı grafik olmak üzere,
+renklendirildi, ve kolon isimleri bile grafiğin içine yazıldı!</p>
+
+<p>Eğer üstteki gibi bir grafiği ama y ekseninde farklı skala olacak
+şekilde basmak istesek ne yapardık? Mesela bir grafik sıcaklık, diğeri
+nem miktarı, bunlar farklı skalalarda olabilir ama trendlerini aynı
+grafikte aynı x skalası üzerinden (mesela tarih) görmek faydalı olabilir. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;y1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;y2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">100.0</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">y1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;y1&#39;</span><span class="p">)</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">y2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;y2&#39;</span><span class="p">,</span><span class="n">secondary_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">h1</span><span class="p">,</span> <span class="n">l1</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="n">h2</span><span class="p">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">h1</span><span class="o">+</span><span class="n">h2</span><span class="p">,</span> <span class="n">l1</span><span class="o">+</span><span class="n">l2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_06.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_06.png" alt="" />
+<img src="https://2.bp.blogspot.com/-348G1HJq4_Y/XlywCXh_04I/AAAAAAAAB7g/-X-2yBQ5uRYpRVw8A3wqZtbz7QE8rdyMACLcBGAsYHQ/s1600/graf_06.png" alt="" /></p>
+
+<p>Belli bölgeleri belli x değerleri için tüm y eksen bazında daha farklı
+renkte göstermek isteyebiliriz, mesela finansta ekonomik krizler zaman
+serisi üzerinde bu şekilde gösterilir. Örnek olarak ABD / Britanya
+Pound döviz kuru üzerinde görelim, ve iki krizi zamanını işaretleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;DEXUSUK.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;</span> <span class="s1">&#39;1995-01-01&#39;</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">c</span> <span class="o">=</span> <span class="s1">&#39;gainsboro&#39;</span> <span class="c1"># acik gri rengi</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="s1">&#39;01-03-2001&#39;</span><span class="p">,</span> <span class="s1">&#39;27-10-2001&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="s1">&#39;22-12-2007&#39;</span><span class="p">,</span> <span class="s1">&#39;09-05-2009&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">c</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_07.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_07.png" alt="" />
+<img src="https://1.bp.blogspot.com/-1SOHrKbkg0g/XlywCshJEqI/AAAAAAAAB7k/Su7GXUkcWiEEkps8aO9z8VXe-zG91exNwCLcBGAsYHQ/s1600/graf_07.png" alt="" /></p>
+
+<p><code>add_subplot(222)</code>?</p>
+
+<p>Matplotlib (ve Matlab) ana grafik ekranini bolerek ufak grafikleri bu
+bolumlere koyma yetenegine sahip. Bu orneklere bakarken, belki de 332,
+222 gibi sayilar kullanildigini gormussunuzdur. Mesela</p>
+
+<pre><code>fig = plt.figure()
+ax1 = fig.add_subplot(321,title="baslik")
+ax1.plot(data1)
+</code></pre>
+
+<p>gibi. Burada 321'in anlami sudur: Ana ekran 3 satir ve 2 kolon olmak
+uzere, yani 3x2 olarak bolunecek, ve ustteki grafik 1'inci bolume
+konacak.</p>
+
+<p>1., 2. tabii ki sol ustten baslanip saga dogru gidince artan sayilar,
+yani hucrelerin indisi.</p>
+
+<p>O zaman 321'in 32 kismi diger tum alt grafikler icin
+tekrarlanacak. Yeni grafikler 322, 323, 324, vs gibi gidecekler.</p>
+
+<p>Farkli Bir Kolon Isaretleme Teknigi</p>
+
+<p>Üstteki <code>avxspan</code> ile indeks bazlı aralıkları işaretleyebiliyoruz. Eğer
+herhangi bir kolon bazlı dikey işaretleme yapmak istesek bir diğer yöntem
+<code>fill_between</code> ile.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="p">)</span>
+<span class="n">crisis</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">fill_between</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">crisis</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;graf_08.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="graf_08.png" alt="" /></p>
+
+<p>Böylece <code>crisis</code> (kriz) kolonuna dayanarak eğer orada 1 var ise o alanı
+dikey olarak işaretliyoruz, sıfır ise hiçbir şey gösterilmiyor. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

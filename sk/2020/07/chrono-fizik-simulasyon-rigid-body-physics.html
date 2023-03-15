@@ -1,0 +1,115 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>3D Fizik Simulasyonu, Chrono</h1>
+
+<p>Daha önce 2 boyut için <a href="kati-govde-fizik-simulasyon-rigid-body-physics-pymunk.html">gördüğümüz</a>
+simülasyon yazılımının 3 boyutta karşılığı Chrono. Ubuntu üzerinde derlemek
+için bazı bilgiler,</p>
+
+<p>http://api.projectchrono.org/4.0.0/tutorial<em>install</em>chrono.html</p>
+
+<p>Kurmak için önce</p>
+
+<pre><code>sudo apt-get install libeigen3-dev
+</code></pre>
+
+<p>Eigen sadece header .h dosyaları, derlenen bir şey yok.</p>
+
+<p>Chrono derlemeden önce kurulması gereken Ubuntu programları,</p>
+
+<pre><code>sudo apt-get install libirrlicht-dev swig freeglut3-dev libgl1-mesa-dev libx11-dev
+</code></pre>
+
+<p>Simdi Chrono paketinin kendisine gelelim,</p>
+
+<p>Chrono</p>
+
+<pre><code>git clone https://github.com/projectchrono/chrono.git
+
+cd chrono
+
+mkdir build_dir
+
+cd build_dir
+
+cmake -DENABLE_MODULE_IRRLICHT=TRUE \
+      -DENABLE_MODULE_PYTHON=TRUE \
+      -DENABLE_MODULE_POSTPROCESS=TRUE \
+      -DCMAKE_BUILD_TYPE=Debug ..
+
+make
+</code></pre>
+
+<p>Artık <code>chrono/build_dir/bin</code> altında görülen bir sürü program
+işletilebilir. Mesela</p>
+
+<pre><code>./demo_IRR_bricks
+</code></pre>
+
+<p><img src="chrono.png" alt="" /></p>
+
+<p>Üstteki simülasyon ağır bir topu bir tuğla duvara doğru itiyor. Bu
+itişi farklı kuvvetler ile yapabiliriz, ve fiziksel sonuçlarını
+simülasyon içinde gözleyebiliriz.</p>
+
+<p>Eğer kendi kodladığımız, kendi başına ayrı bir projeyi Chrono
+kullanacak şekilde derlemek istiyorsak, <code>chrono/template_project</code>
+altına gidebiliriz (ya da oradaki kodları herhangi bir yere
+kopyalayıp, vs), ve Chrono'nun <code>/opt/chrono</code> da kurulmuş olduğunu
+varsayalim,</p>
+
+<pre><code>cmake -DCMAKE_BUILD_TYPE=Debug \
+      -DChrono_DIR=/opt/chrono/build_dir/cmake \
+      /opt/chrono/template_project
+</code></pre>
+
+<p>işletiriz. Bu işlem bir <code>Makefile</code> üretmiş olmalı. onu <code>make</code> ile
+derleriz, ve <code>template_project/build/myexe</code> olarak bir işletilebilir
+program üretilmiş olmalı. </p>
+
+<p>Motorlar</p>
+
+<p>Chrono'da pek cok fiziksel kavram var, mesela
+<a href="http://api.projectchrono.org/tutorial_demo_motors.html">motorlar</a>,
+<code>demo_IRR_motors.cpp</code> kodunda bunu gorebiliriz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

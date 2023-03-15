@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>GDELT Dünya Olayları Veri Tabanı (Event Database)</h1>
+
+<p>Bu proje yapay öğrenim (machine learning) teknikleri kullanarak
+İnternet'teki haber makalelerini kategorize etmeye uğraşır. Günlük,
+yıllık verileri basit CSV dosyaları içinde her satır bir haber olacak
+şekilde paylaşıyorlar. Gösterilen [1] bağlantısına gidince her gün
+için bir zip dosyası görüyoruz, her gün için dosya ismini hazırlayıp
+onu otomatik indiren bir Python script altadır. Örnek olarak 10 Eylül
+2022 günü indirildi,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">datetime</span>
+<span class="kn">from</span> <span class="nn">zipfile</span> <span class="kn">import</span> <span class="n">ZipFile</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib2</span>
+
+<span class="n">base_conflict_url</span> <span class="o">=</span> <span class="s2">&quot;http://data.gdeltproject.org/events&quot;</span>
+
+<span class="n">conf_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GlobalEventID&#39;</span><span class="p">,</span> <span class="s1">&#39;Day&#39;</span><span class="p">,</span> <span class="s1">&#39;MonthYear&#39;</span><span class="p">,</span> <span class="s1">&#39;Year&#39;</span><span class="p">,</span> <span class="s1">&#39;FractionDate&#39;</span><span class="p">,</span>\
+       <span class="s1">&#39;Actor1Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1CountryCode&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1KnownGroupCode&#39;</span><span class="p">,</span>\
+       <span class="s1">&#39;Actor1EthnicCode&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Religion1Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Religion2Code&#39;</span><span class="p">,</span>\
+       <span class="s1">&#39;Actor1Type1Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Type2Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Type3Code&#39;</span><span class="p">,</span> \
+       <span class="s1">&#39;Actor2Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Name&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2CountryCode&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2KnownGroupCode&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Actor2EthnicCode&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Religion1Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Religion2Code&#39;</span><span class="p">,</span>
+       <span class="s1">&#39;Actor2Type1Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Type2Code&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Type3Code&#39;</span><span class="p">,</span> \
+       <span class="s1">&#39;IsRootEvent&#39;</span><span class="p">,</span><span class="s1">&#39;EventCode&#39;</span><span class="p">,</span> <span class="s1">&#39;EventBaseCode&#39;</span><span class="p">,</span><span class="s1">&#39;EventRootCode&#39;</span><span class="p">,</span>\
+       <span class="s1">&#39;QuadClass&#39;</span><span class="p">,</span> <span class="s1">&#39;GoldsteinScale&#39;</span><span class="p">,</span><span class="s1">&#39;NumMentions&#39;</span><span class="p">,</span><span class="s1">&#39;NumSources&#39;</span><span class="p">,</span> \
+       <span class="s1">&#39;NumArticles&#39;</span><span class="p">,</span> <span class="s1">&#39;AvgTone&#39;</span><span class="p">,</span><span class="s1">&#39;Actor1Geo_Type&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Geo_FullName&#39;</span><span class="p">,</span>\
+       <span class="s1">&#39;Actor1Geo_CountryCode&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Geo_ADM1Code&#39;</span><span class="p">,</span><span class="s1">&#39;Actor1Geo_Lat&#39;</span><span class="p">,</span> \
+       <span class="s1">&#39;Actor1Geo_Long&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor1Geo_FeatureID&#39;</span><span class="p">,</span><span class="s1">&#39;Actor2Geo_Type&#39;</span><span class="p">,</span> \
+       <span class="s1">&#39;Actor2Geo_FullName&#39;</span><span class="p">,</span><span class="s1">&#39;Actor2Geo_CountryCode&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Geo_ADM1Code&#39;</span><span class="p">,</span>\
+       <span class="s1">&#39;Actor2Geo_Lat&#39;</span><span class="p">,</span> <span class="s1">&#39;Actor2Geo_Long&#39;</span><span class="p">]</span>
+
+<span class="n">sd</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d%02d%02d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">2022</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">base_conflict_url</span> <span class="o">+</span> <span class="s2">&quot;/</span><span class="si">%s</span><span class="s2">.export.CSV.zip&quot;</span> <span class="o">%</span> <span class="n">sd</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+<span class="n">csv</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.export.CSV&quot;</span> <span class="o">%</span> <span class="n">sd</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>    
+<span class="n">url_col</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="mi">57</span><span class="p">]</span>        
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">conf_cols</span><span class="p">))]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">conf_cols</span>
+</code></pre>
+</div>
+
+<p>Bu noktada veri Pandas DataFrame objesi halindedir. Daha da
+filtreleyebiliriz, mesela olay kodu 190 ve 194 içeren olaylara
+bakalım. GDELT belgelerine [2] göre bu kodlar saldırı anlamına
+geliyor, ya askeri konvansiyonel şekilde genel saldırı. Olaylar ayrıca
+1'inci aktör ve 2'inci aktör olarak ayrılmaya uğraşılmış, bir aktör
+bir diğerine bir etkide bulunuyorsa birinci ve ikinci aktör bunlar
+oluyor. Birinci Rusya ikinci aktör Ukrayna olarak filtreleme yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df2</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">EventCode</span><span class="o">==</span><span class="mi">190</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">EventCode</span><span class="o">==</span><span class="mi">195</span><span class="p">)</span><span class="o">|</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">EventCode</span><span class="o">==</span><span class="mi">194</span><span class="p">)]</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[(</span><span class="n">df2</span><span class="o">.</span><span class="n">Actor1Name</span><span class="o">==</span><span class="s1">&#39;RUSSIA&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">Actor2Name</span><span class="o">==</span><span class="s1">&#39;UKRAINE&#39;</span><span class="p">)]</span>
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Actor1Name&#39;</span><span class="p">,</span><span class="s1">&#39;Actor2Name&#39;</span><span class="p">,</span><span class="s1">&#39;Actor2Geo_Lat&#39;</span><span class="p">,</span><span class="s1">&#39;Actor2Geo_Long&#39;</span><span class="p">]</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">df3</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df3</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df3</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>22
+      Actor1Name Actor2Name  Actor2Geo_Lat  Actor2Geo_Long
+51112     RUSSIA    UKRAINE        60.0000        100.0000
+54643     RUSSIA    UKRAINE        46.6558         32.6178
+55912     RUSSIA    UKRAINE        60.0000        100.0000
+55914     RUSSIA    UKRAINE        49.9808         36.2527
+</code></pre>
+</div>
+
+<p>Bazı sonuçlar geldi. Sondan dört tane gösterdik, olay sırasında ikinci
+aktörün nerede olduğunu göstermiş. Hangi haber baz alınarak mesela son
+bilgi toplanmış?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df3</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">55914</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">url_col</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">55914</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Actor1Name         RUSSIA
+Actor2Name        UKRAINE
+Actor2Geo_Lat     49.9808
+Actor2Geo_Long    36.2527
+Name: 55914, dtype: object
+https://katcountry989.com/2022/09/10/russian-rockets-hit-ukraines-kharkiv-killing-one-governor/
+</code></pre>
+</div>
+
+<p>Bağlantıyı ziyaret edince hakikaten bir saldırı haberi olduğunu görüyoruz.</p>
+
+<p>Fakat dikkat: her haber bu şekilde kategorize edilmeyebiliyor. Kullanıcıların
+GDELT verisini başlangıç noktası kabul ederek üstüne ek filtreleme yapmaları
+gerekebilir.</p>
+
+<p>Yanlış bir örnek olarak alttaki makaleye bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">67736</span><span class="p">][</span><span class="n">cols</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">url_col</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">67736</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Actor1Name            NEVADA
+Actor2Name        JOURNALIST
+Actor2Geo_Lat        38.4199
+Actor2Geo_Long      -117.122
+Name: 67736, dtype: object
+https://twitchy.com/brettt-3136/2022/09/10/reporter-nevada-gubernatorial-candidate-refuses-to-denounce-donald-trumps-normalization-of-attacks-on-reporters/
+</code></pre>
+</div>
+
+<p>Bu makaleye bakınca evet içinde saldırı kelimesi geçtiğini görüyoruz
+fakat bu askeri değil, politika bağlamında sözel bir çekişme var. Demek
+ki GDELT her zaman işlemiyor, ek filtreleme yapmak gerekebilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [GDELT](http://data.gdeltproject.org/events/index.html)</p>
+
+<p>[2] [GDELT Olay Kodlari - PDF](http://data.gdeltproject.org/documentation/CAMEO.Manual.1.1b3.pdf)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

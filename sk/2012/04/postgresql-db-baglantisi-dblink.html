@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Postgresql DB Baglantisi (dblink)</h1>
+
+<p>Oracle'daki database bağlantısı (db link) özelliğinin Postgresql'da
+karşılığı nedir? Bilindiği gibi dblink sayesinde yerel tabanımız
+içinde uzaktaki bir tabanının tablolarını sanki yerelmiş gibi
+kullanabiliyoruz. Postgres ile uzak tabanların birleşim (join) için
+kullanılabildiği şüpheli, fakat en azından düz SELECT kullanımı db
+link ile mümkün. Veri ambarı ortamında uzaktaki tabloların kopyasına
+ihtiyacımız var sadece / zaten, sofistike tüm sorgular yerel (olmalı).</p>
+
+<pre><code>sudo apt-get install postgresql-contrib-9.1
+</code></pre>
+
+<p>Sonra psql icinden</p>
+
+<p>Simdi</p>
+
+<pre><code>CREATE EXTENSION dblink;
+</code></pre>
+
+<p>komutu sadece bir seferlik isletilir. Bundan sonra uzaktaki makine uzerineki sorgular su sekilde isletilir ([tablo]'dan sadece name adli bir kolonu aliyoruz)</p>
+
+<pre><code>SELECT name FROM dblink('host=[host] user=[sifre] password=[sifre] dbname=[taban]', 
+'SELECT name FROM [tablo]') 
+as 
+t1(name text)
+</code></pre>
+
+<p>Bu ozelligin begenmedigimiz tarafi kullanici, sifre gibi detaylarin
+sorgu icinde olmasi. Bu detaylar baska bir ayar dosyasinda olsaydi
+daha iyi olurdu. Ayrica "as .." sonrasi sema bilgisini SELECT sonrasi
+bizim vermemiz gerekiyor. Bu bilgi select ile kendiliginden alinsa
+daha iyi olurdu. Veri ambari kodlamasi genellikle db link uzerinden
+CREATE TABLE AS (SELECT ..) gibi bir kullanimla uzaktaki tablolari
+yerel ortama tasir. Ustteki yontemde tanim elle eklendigi icin bu pek
+kullanisli olmaz.</p>
+
+<p>Faydali bir script / metot altta. Baglanti kurmak istenilen (hedef)
+taban, ve tablo icin</p>
+
+<pre><code>select column_name,udt_name from information_schema.columns where
+table_name = '[TABLO]' order by ordinal_position
+</code></pre>
+
+<p>isletilir, cikti bir text dosyasina yazilir. Sonra</p>
+
+<pre><code>import os, csv, sys
+schema = csv.reader(open("/tmp/link.out", 'rb'), delimiter=',')
+schema.next() # skip header
+print "drop table if exists %s ;" % [TABLO]
+print "create table %s as (" % [TABLO]
+print "SELECT * FROM "
+print "dblink('host=localhost user=postgres password=postgres dbname=[KAYNAK TABAN]', " % countryprint "'SELECT * FROM %s') " % tableprint "as t1"print "("i = 0list = list(schema)l = len(list)-1
+for line in list:
+    if i &lt; l:
+        print "%s %s, " % (line[0], line[1])
+    else:
+        print "%s %s " % (line[0], line[1])
+    i+=1
+    print "));\n"
+</code></pre>
+
+<p>script'i hedef tablo icin gereken create table as (select ...)
+ifadesini o tablonun semasina bakarak otomatik olarak uretecektir. Bu
+ifadeyi alip direk DDL olarak kaynak taban uzerinde isletebilirsiniz.</p>
+
+<p>Fakat Postgres uzerinde dblink buyuk veri setleri icin guvenilir
+olmayabiliyor. Biz her nedense hafizanin tukendigini soyleyen "out of
+memory" hatalari almaya basladiktan sonra dblink kullanmaktan
+vazgectik.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

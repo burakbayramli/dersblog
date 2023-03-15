@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Bulut Uzerinde Unix: GCloud</h1>
+
+<p>Bilgisayarı almak, taşımak, üzerinde işletim sistemi kurmak, sonra onu
+İnternet'e açmak için uğraşmak.. Bunlar saç yoldurucu
+olabilir. Amazon, Google gibi şirketler bu alanda uzun süredir servis
+sağlıyorlar. İnternet üzerinde isteğe göre, istenen hacimde, istenen
+işletim sistemini taşıyan bir makinayı yaratmak bulut servisleri ile
+çok kolay. Amazon EC2 sisteminden önce bahsetmiştik. Eğer Amazon'un
+servisi memnun etmiyorsa, Google seçilebilir. İlk hesap açımında $300
+dolarlık hediye de veriyorlar - rekabet güzel şey! Amazon
+müşterilerini kendilerine çekmeye uğraşıyorlar.</p>
+
+<p>Bu yazıda komut satırından SSH ile erişilebilecek servis tarzı bir
+makina yaratmayı işliyoruz.  Google bu servise "hesaplama motoru
+(compute engine -CE-)" diyor. Makina yaratmak için önce hesap açmak
+lazım. </p>
+
+<p>https://cloud.google.com</p>
+
+<p>Kredi kartı, ya da banka bilgileri verildikten sonra (hediye miktarı
+tüketilmeden para alınmayacak tabii) giriş tamamlanır. Ardından Google
+servislerine komut satırı erişimi sağlayan SDK lazım,  </p>
+
+<p>https://cloud.google.com/sdk/</p>
+
+<p>Linux icin </p>
+
+<p>https://cloud.google.com/sdk/docs/quickstart-linux</p>
+
+<p>Indirdikten sonra cd google-cloud-sdk, ve ./install.sh. </p>
+
+<p>Sonra gcloud init ile kurulum tamamlanır, sorulan sorulara evet deyin,
+sisteme girme (login) sorusuna evet deyince tarayıcıya
+aktarılıyorsunuz, google şifresi ile giriş yapınca bağlantı
+kuruluyor. </p>
+
+<p>Yeni makina yaratmak gcloud komut satırı ile olabilir, ama en rahatı
+başta GUI kullanmak. Bir proje yaratılıyor, sonra proje seçiliyor. Ana
+konsoldan "Go to compute engine dashboard" ile CE'ye gidiliyor. Burada</p>
+
+<p>Benim daha önce başlattığım makina burada görülüyor. Yeni makina için
+"create instance" tıklanır, seçenekler hangi tür işletim sistemi
+(bizde Debian), makina donanımı (machine type), belleği, mikroişlemci
+sayısı, vs., makinanın hangi bölgede başlatılması istendiği (zone)
+seçiliyor. Bölge mesela makina ABD'de mi, Asya'da mı, Avrupa'da mı
+başlatılsın? Eğer müşteriye dönük bir uygalama servis edilecekse
+müşteriye yakın makinalar daha iyi olur, cevap hızının optimal olması
+için. </p>
+
+<p>Bu seçimler yapılırken sağ yanda tahmini aylık bedel
+gösteriliyor. Makina yaratıldıktan sonra iki üstteki resimde SSH
+seçeneği var, bu seçenekten "view gcloud command" ile bağlanmak için
+gereken gcloud komut satırı komutu gösteriliyor. Bunu kopyala,
+yapıştır ile yerel makinamizin Unix konsoluna verip, buluttaki
+makinamiza ilk girişi yapabiliriz. </p>
+
+<p>Makinaların ana diski kalıcıdır (persistent), yani makinayı kapatıp
+açınca disk üzerine yazılmış şeyler hatırlanır. Tabii sanal makina
+silinirse, dosyalar da silinecektir. </p>
+
+<p>CE makinalarına statik IP adresi atanması mümkün, yani bu makina
+üzerinde Web servisi (apache gibi) başlatılınca makina o IP üzerinden
+erişilebilir hale gelir. DNS ile isim eşlemesi yapılınca, Google
+bulutu üzerinden tam işlevli Web servisi sunmak mümkün olur.</p>
+
+<p>Disk Eklemek</p>
+
+<p>Bir makinayi yaratirken ek disk eklemeyi secebiliriz, bu diskin
+olcegini de istedigimiz gibi ayarlariz. Eger disk icerigi bos (blank)
+olsun dediysek, o zaman SSH ile giris yaptiktan sonra diski
+formatlamiz gerekir. Suradan,</p>
+
+<pre><code>sudo lsblk
+</code></pre>
+
+<p>ile disklerin nerede olduguna bakariz, diyelim</p>
+
+<pre><code>NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda      8:0    0   10G  0 disk
+|-sda1   8:1    0   10G  0 part /
+sdb      8:16   0  200G  0 disk
+</code></pre>
+
+<p>cevabi geldi, ben 200 GB'lik disk eklemistim, sdb altindaymis. Formatlarim,</p>
+
+<pre><code>sudo mkfs.ext4 -m 0 -F -E lazy_itable_init=0,lazy_journal_init=0,discard /dev/
+</code></pre>
+
+<p>Simdi diski bir dizin uzerinden monte etmek (mount) lazim. Bir dizin
+yaratirim, /mnt/hd2, ve</p>
+
+<pre><code>sudo mount -o discard,defaults /dev/sdb /mnt/hd2
+</code></pre>
+
+<p><img src="bulut1.png" alt="" /></p>
+
+<p><img src="bulut2.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

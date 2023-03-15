@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<p>n# Dinamik Resource Erisimi</p>
+
+<p>Android'de referans bilgilerini bir dosya icinde tutabiliriz; bu
+dosyalara erismek icin onlari res/raw altinda tutuyoruz. Eger
+erisilecek dosya ismi dinamik bir sekilde uretiliyor ise, o zaman
+String tipinden bir sekilde R.java dosyasi icinde static olarak
+tanimli int ogelere eslemena yapmamiz lazim. Bnnun icin Java Reflection
+kullanacagiz:</p>
+
+<pre><code>import java.lang.reflect.Field;
+import java.io.InputStream;
+Field id = R.raw.class.getDeclaredField([string tipinde dinamik oge ismi]);
+R.raw rr = new R.raw();
+int i = id.getInt(rr);
+InputStream in = getResources().openRawResource(i);
+...
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

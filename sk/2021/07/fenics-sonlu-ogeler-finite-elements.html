@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Fenics Kurulum, Sonlu Öğeler Metodu (Finite Elements Method)</h1>
+
+<p>Fenics FEM [1] yaklaşımının hesabı için sunulan bir kütüphanedir. </p>
+
+<p>Kurulum surada [2] tarif ediliyor,</p>
+
+<p>Ubuntu seviyesinde sunlari yapmak lazim,</p>
+
+<pre><code>sudo apt-get install libboost-all-dev petsc-dev
+
+sudo apt-get install --no-install-recommends software-properties-common
+sudo add-apt-repository ppa:fenics-packages/fenics
+sudo apt-get update
+sudo apt-get install --no-install-recommends fenics
+</code></pre>
+
+<p>Şimdi, kurulum bittikten sonra, hala bir problem var, Ubuntu
+seviyesinde yapılan Python Fenics kurulumu sizin izole ortamınız
+içinde görülmeyebilir. <code>/usr/lib/python3/dist-packages</code> altına
+bakarsak mesela orada <code>fenics</code>, <code>ffc</code> gibi paketler var, bunlar izole
+ortamımızda yok. Anlaşılır olabilir, <code>apt-get</code> kurulumu tüm sistem
+için global bir kurulum, ve bu kurulum gidip global Python için
+paketlerini kuruyor. Fakat izole Python ortamları ayrı dizinlerde,
+kendi paketleri ile çalışıyorlar bildiğimiz gibi, en azından
+daha önce yarattığımız bir izole ortam içinde bu yeni paketleri
+bulamayabiliriz.</p>
+
+<p>Sembolik bağlantı ile bunları halledebiliriz. Benim <code>$HOME/Documents/env3/lib/python3.6/site-packages</code>
+ortamı için mesela, ve önce bazı ek hareketler,</p>
+
+<pre><code>pip install pkgconfig
+
+pip install mpi4py
+</code></pre>
+
+<p>Şimdi kendi <code>site-packages</code> dizinimize gidip orada sembolik bağlantıları yaparız,</p>
+
+<pre><code>ln -s /usr/lib/python3/dist-packages/fenics .
+ln -s /usr/lib/python3/dist-packages/dolfin.pth .
+ln -s /usr/lib/python3/dist-packages/fenics_dijitso-2019.2.0.dev0.egg-info .
+ln -s /usr/lib/python3/dist-packages/fenics_dolfin-2019.2.0.dev0.egg-info 
+ln -s /usr/lib/python3/dist-packages/fenics_dolfin-2019.2.0.dev0.egg-info .
+ln -s /usr/lib/python3/dist-packages/fenics_ffc-2019.2.0.dev0.egg-info .
+ln -s /usr/lib/python3/dist-packages/fenics_fiat-2019.2.0.dev0.egg-info .
+ln -s /usr/lib/python3/dist-packages/fenics_ufl-2019.2.0.dev0.egg-info .
+ln -s /usr/lib/python3/dist-packages/ffc .
+</code></pre>
+
+<p>Bu işleyecektir. Alttaki kodlarin çalışması lazım,</p>
+
+<p>Hızlı bir izgara (mesh) yaratmak,</p>
+
+<pre><code>import fenics as fe
+N1 = N2 = 75
+mesh = fe.RectangleMesh(fe.Point(0, 0), fe.Point(1, 1), 10, 10)
+fe.plot(mesh)
+plt.savefig('fenics-mesh.png')
+</code></pre>
+
+<p><img src="fenics-mesh.png" alt="" /></p>
+
+<p>Daha çetrefil bir örnek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">comparison_plot2D</span><span class="p">(</span>
+    <span class="n">u</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span>           
+    <span class="n">value</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>      
+    <span class="n">variation</span><span class="o">=</span><span class="s1">&#39;y&#39;</span><span class="p">,</span>  
+    <span class="n">n</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>          
+    <span class="n">tol</span><span class="o">=</span><span class="mf">1E-8</span><span class="p">,</span>       
+    <span class="n">plottitle</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span>   
+    <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;tmp&#39;</span><span class="p">,</span> 
+    <span class="p">):</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="o">+</span><span class="n">tol</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="n">tol</span><span class="p">,</span> <span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Compute points along specified line:</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([(</span><span class="n">value</span><span class="p">,</span> <span class="n">v_</span><span class="p">)</span>
+                       <span class="k">if</span> <span class="n">variation</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span> <span class="k">else</span> <span class="p">(</span><span class="n">v_</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+                       <span class="k">for</span> <span class="n">v_</span> <span class="ow">in</span> <span class="n">v</span><span class="p">])</span>
+    <span class="n">u_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span> <span class="c1"># eval. Function</span>
+    <span class="n">f_values</span> <span class="o">=</span> <span class="p">[</span><span class="n">f</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">points</span><span class="p">]</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u_values</span><span class="p">,</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">f_values</span><span class="p">,</span> <span class="s1">&#39;b--&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="s1">&#39;f&#39;</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">variation</span> <span class="o">==</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;u, f&#39;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;u, f&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">plottitle</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span> <span class="o">+</span> <span class="s1">&#39;.png&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">fenics</span> <span class="k">as</span> <span class="nn">fe</span>
+<span class="kn">import</span> <span class="nn">sympy</span> <span class="k">as</span> <span class="nn">sym</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">symbols</span><span class="p">(</span><span class="s1">&#39;x[0] x[1]&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">problem</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nx</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">sym</span><span class="o">.</span><span class="n">printing</span><span class="o">.</span><span class="n">ccode</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">RectangleMesh</span><span class="p">(</span>
+        <span class="n">fe</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">fe</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">degree</span> <span class="ow">in</span> <span class="n">degrees</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">degree</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># The P0 element is specified like this in FEniCS</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">FunctionSpace</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="s1">&#39;DG&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The Lagrange Pd family of elements, d=1,2,3,...</span>
+            <span class="n">V</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">FunctionSpace</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+        <span class="n">u</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span>
+        <span class="n">u_error</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">errornorm</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="s1">&#39;L2&#39;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;||u-f||=</span><span class="si">%g</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">u_error</span><span class="p">,</span> <span class="n">degree</span><span class="p">)</span>
+        <span class="n">comparison_plot2D</span><span class="p">(</span>
+            <span class="n">u</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span>
+            <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+            <span class="n">value</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">variation</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span>
+            <span class="n">plottitle</span><span class="o">=</span><span class="s1">&#39;Approximation by P</span><span class="si">%d</span><span class="s1"> elements&#39;</span> <span class="o">%</span> <span class="n">degree</span><span class="p">,</span>
+            <span class="n">filename</span><span class="o">=</span><span class="s1">&#39;approx_fenics_by_P</span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">degree</span><span class="p">,</span>
+            <span class="n">tol</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">)</span>
+        <span class="c1">#fe.plot(u, title=&#39;Approx by P%d&#39; % degree)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">-</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">problem</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">nx</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ny</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p><img src="approx_fenics_by_P0.png" alt="" /></p>
+
+<p><img src="approx_fenics_by_P1.png" alt="" /></p>
+
+<p><img src="approx_fenics_by_P2.png" alt="" /></p>
+
+<p>Ornek</p>
+
+<p>[3, sf. 267]'deki örneği altta görüyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">fenics</span> <span class="k">as</span> <span class="nn">fe</span>
+
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">RectangleMesh</span><span class="p">(</span><span class="n">fe</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">fe</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">V</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">FunctionSpace</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="s1">&#39;Lagrange&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">u</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">TrialFunction</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">TestFunction</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">inner</span><span class="p">(</span><span class="n">fe</span><span class="o">.</span><span class="n">nabla_grad</span><span class="p">(</span><span class="n">u</span><span class="p">),</span> <span class="n">fe</span><span class="o">.</span><span class="n">nabla_grad</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="o">*</span> <span class="n">fe</span><span class="o">.</span><span class="n">dx</span>
+
+<span class="n">f1</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+<span class="n">L1</span> <span class="o">=</span> <span class="n">f1</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">fe</span><span class="o">.</span><span class="n">dx</span>
+
+<span class="n">f2</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Expression</span><span class="p">(</span><span class="s2">&quot;x[0]*x[0] + x[1]*x[1]&quot;</span><span class="p">,</span> <span class="n">degree</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">L2</span> <span class="o">=</span> <span class="n">f2</span> <span class="o">*</span> <span class="n">v</span> <span class="o">*</span> <span class="n">fe</span><span class="o">.</span><span class="n">dx</span>
+
+<span class="n">u0</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Constant</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">u0_boundary</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">on_boundary</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">on_boundary</span>
+
+<span class="n">bc</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">DirichletBC</span><span class="p">(</span><span class="n">V</span><span class="p">,</span> <span class="n">u0</span><span class="p">,</span> <span class="n">u0_boundary</span><span class="p">)</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">assemble</span><span class="p">(</span><span class="n">L1</span><span class="p">)</span>
+<span class="n">bc</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">u_sol1</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+<span class="n">fe</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">u_sol1</span><span class="o">.</span><span class="n">vector</span><span class="p">(),</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">fe</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">u_sol1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fenics-sol1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="fenics-sol1.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">u_sol2</span> <span class="o">=</span> <span class="n">fe</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">V</span><span class="p">)</span>
+<span class="n">fe</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="n">L2</span><span class="p">,</span> <span class="n">u_sol2</span><span class="p">,</span> <span class="n">bc</span><span class="p">)</span>
+<span class="n">fe</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">u_sol2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;fenics-sol2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="fenics-sol2.png" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://burakbayramli.github.io/dersblog/compscieng/compscieng<em>1</em>17/ders_1.17.html</p>
+
+<p>[2] https://fenics.readthedocs.io/en/latest/installation.html</p>
+
+<p>[3] Johansson, {\em Numerical Python}</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

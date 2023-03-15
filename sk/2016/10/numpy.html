@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Numpy</h1>
+
+<p>Matris işlemleri için kullanılan Numpy teknikleri altta. Yazıya ekler olacak</p>
+
+<p>Filtreli Erisim</p>
+
+<p>Numpy dizinleri içeriğine göre filtrelemek isteniyorsa, bunun için öz,
+kısa bir sözdizim var. Diyelim ki şöyle bir dizin var:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p>Bu dizin içindeki 20 değerinden büyük değerleri alıp ekrana basmak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">a</span><span class="p">[</span><span class="n">a</span><span class="o">&gt;</span><span class="mi">20</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>yeterli. Filtre şartlarını birbirine zincirlemek için, mesela 10'dan
+büyük 50'den küçük a elemanları:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">a</span><span class="p">[(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">)]</span>
+</code></pre>
+</div>
+
+<p>Normalde Python "ve" icin "and" kelimesini kullanir, ama burada '&amp;'
+isaretini kullanmislar.</p>
+
+<p>Bir dizin içindeki filtreleme ibareleri, bir dizinden alinip, başka
+bir dizin üzerinde de uygulanabilir. Dizin 'a' üzerindeki filtreleri
+'b' dizinine uygulamak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">110</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">130</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">150</span><span class="p">])</span>
+<span class="nb">print</span> <span class="n">b</span><span class="p">[</span><span class="n">a</span><span class="o">&gt;</span><span class="mi">20</span><span class="p">]</span>
+<span class="nb">print</span> <span class="n">b</span><span class="p">[(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">10</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">50</span><span class="p">)]</span>
+</code></pre>
+</div>
+
+<p>Buradan gelecek sonuç</p>
+
+<pre><code>[130 140 150]
+[120 130 140]
+</code></pre>
+
+<p>İçinde İstenen Sayı ile Başlatmak</p>
+
+<p>Bu iş için özel bir sözdizim yok, ama şu kullanım ile aynı sonuç elde
+edilebilir:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span> <span class="o">*</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Bu komut içinde N x N boyütünde bir matrisi içinde nan değerleri
+olacak şekilde oluşturacaktır. Herhangi başka bir sayı
+kullanılabilirdi.</p>
+
+<p>Boyut Eklemek</p>
+
+<p>Mevcut bir array tipine boyut eklemek için, mesela 4 öğe içeren bir
+vektörü (1,4) boyutunda bir matris yapmak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="nb">print</span> <span class="n">a</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span>
+</code></pre>
+</div>
+
+<p>Erişim indeksi yerine 'None' kullanınca ekstra bir boyut eklenmiş oluyor.</p>
+
+<p>Kopyalayarak Büyütmek</p>
+
+<p>Bir dizini, matrisi belli bir yönde "kopyalayarak büyütmek"
+istiyorsak, resize komutu kullanılabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">])</span>
+<span class="nb">print</span> <span class="n">numpy</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Sonuc</p>
+
+<pre><code>[[3 4 5 6]
+[3 4 5 6]
+[3 4 5 6]
+[3 4 5 6]]
+</code></pre>
+
+<p>Polyfit</p>
+
+<p>from numpy import *</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">array</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">27</span><span class="p">,</span> <span class="mi">38</span><span class="p">])</span>
+<span class="nb">print</span> <span class="n">polyfit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sonuc</p>
+
+<pre><code>[ 8. -4.]
+</code></pre>
+
+<p>Numpy Matrix</p>
+
+<p>Matris kesitleri (slices) üzerinde çok işlem yapıyorsak, numpy.array
+yerine numpy.matrix kullanmak daha iyi olabilir; bu obje, Matlab'deki
+matrix objesi gibi davranıyor, kesitler üzerindeki boyutlar lineer
+cebire uygun şekilde veriliyor. Mesela,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span>
+<span class="nb">print</span> <span class="n">a</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">a</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</code></pre>
+</div>
+
+<pre><code>[1 2 3] (3,)
+</code></pre>
+
+<p>sonucunu verir. Yani 2. kolonu okumak istedik ve bize sadece
+"büyüklüğü 3 olan" bir vektör geri geldi. Halbuki numpy.matrix
+kullansak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">matrix</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">b</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">b</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</code></pre>
+</div>
+
+<pre><code>[[1]
+ [2]
+ [3]] (3, 1)
+</code></pre>
+
+<p>Yani (3,1) boyutunda bir matris parçası geldi. Bu farklılık yanlış
+hesaplara bile yolaçabilir. Mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>[ 12.  12.  12.]
+</code></pre>
+
+<p>sonucunu verir. Aslında bu çarpım yapılamamalıydı çünkü (3,1) boyutu
+ile (3,3) boyutu matris çarpımına sokulamaz. Herhalde np.dot(..)
+kafasına göre 3 büyüklüğünü sağdaki çarpılan (3,3) boyutuna
+uydurulabileceğini farz etti. Aslında bu işlemden hata gelmeliydi,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>ValueError: shapes (3,1) and (3,3) not aligned: 1 (dim 1) != 3 (dim 0)
+</code></pre>
+
+<p>ile olduğu gibi. Yapılabilecek tek çarpım </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>ile yapılacaktı.</p>
+
+<p>Not: Biraz konu dışında ama eğer çarpımın her iki tarafındaki matris
+aynı boyutta ise onları hücre bazında çarpmak için (elementwise
+multiplication) bu iki matrisi numpy.array yapıp * operatörünü
+kullanmak gerekebilir.</p>
+
+<p>Vektorize Etmek</p>
+
+<p>Python kültürü fonksiyonel kodlamaya yakındır, ayrıca Numpy
+matematiksel hesapları gerektirdiği için o dünyada fonsiyonel
+çağrıların matematiksel fonksiyon olarak görme hem kodda hem tasarıda
+işlerin temiz olmasını sağlar. Mesela bir Numpy vektörünün tüm
+öğelerini toplamak için for x in vec: sum += x gibi bir döngü
+ yazmayız, direk sum(vec) çağrısı yaparız. Numpy tüm öğeler üzerinde
+işleyecek bir metot sağlamıştır.</p>
+
+<p>Eğer kendi yazdığımız bir fonksiyonun bu şekilde işlemesini
+istiyorsak, onu "vektorize (vectorize)" edebiliriz. Mesela öyle bir
+matris var ki içinde string öğeleri var, bu öğelerden sayıya
+benzeyenleri float yapacağız, gerisini sıfırlayacağız. Bu işlem
+matrisin her hücresine uygulanacak, ve sonuç olarak aynı boyutta ama
+float içerikli yeni bir matris ortaya çıkacak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">arg</span><span class="p">):</span> 
+    <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">in</span> <span class="n">arg</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>   
+    <span class="k">else</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="mi">0</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="s1">&#39;elma&#39;</span><span class="p">,</span><span class="s1">&#39;armut&#39;</span><span class="p">,</span><span class="s1">&#39;23.42&#39;</span><span class="p">,</span><span class="s1">&#39;99.9&#39;</span><span class="p">])</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">])</span>
+<span class="nb">print</span> <span class="n">f</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sonuc</p>
+
+<pre><code>[  0.     0.    23.42  99.9 ]
+</code></pre>
+
+<p>Matris Gezmek</p>
+
+<p>Numpy matrisi üzerindeki her değere birer birer uğrayıp, aynı anda
+üzerinde olduğumüz indis değerleri ile beraber matris içeriğini görmek
+istersek, np.ndenümerate tavsiye edilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;deger&quot;</span><span class="p">,</span> <span class="n">val</span>
+</code></pre>
+</div>
+
+<p>Ek bazı ilerlemeler:</p>
+
+<p>İndis i içine gelen aslında bir Python tüple; yani bir tür
+liste. Tüple yapısının özelliği onun kolayca içeriğinin tekil
+değişkenlere atanabiliyor olması (unpacking). Fonksiyonlardan birden
+fazla değer geri döndürürken zaten bu özellilten
+faydalanıyoruz. Çağrıyı yapan, çağrının eşitlik tarafında birden fazla
+değişken tanımlayınca o değişkenlere otomatik olarak geri dönülen
+değerler atanmış oluyor.</p>
+
+<p>O zaman indis değerini de anında "paketten çıkartabiliriz":</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">ndenumerate</span><span class="p">(</span><span class="n">A</span><span class="p">):</span>
+   <span class="nb">print</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">&quot;deger&quot;</span><span class="p">,</span> <span class="n">val</span>
+</code></pre>
+</div>
+
+<p>Burada x,y'a i içinde olan x ve y kordinat değerleri taşınıyor olacak.</p>
+
+<p>1xM Çarpı MxM Çarpı Mx1, N Kere</p>
+
+<p>Eğer üstte belirtilen gibi bir çarpımı tek bir kere yapıyor olsaydık
+sonuç 1x1 olurdu. Ya bu işlemi N tane satır için yapmak istersek?
+Aklımıza bir fikir gelir, satırları üst üste koyup bir matris içinde
+verirsem, aynı sonuç alırım! Fakat bu durumda NxM çarpı MxM çarpı MxN
+sonuç NxN olacaktır! Aradığımız sonuçlar sonuç matrisin
+köşegenindedir, evet, bu işlem çok külfetlidir, gereksizdir, ve N
+büyük ise çok yer israf eder. Çözüm üstte belirtilen caprimi N kere
+yapmak. <code>einsum</code> burada ise yarar,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+</code></pre>
+</div>
+
+<pre><code>[[18]]
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">rs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s1">&#39;ij,ji-&gt;i&#39;</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">rs</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">R</span><span class="p">),</span><span class="n">rs</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>[[ 18  128]]
+</code></pre>
+
+<p>Iki Dizini Ust Uste Dizmek</p>
+
+<p>İki dizini üst üste dizmek (staçking) için <code>vstack</code> (dikey) ve <code>hstack</code>
+(yatay) fonksiyonları var. Bu fonksiyonlar ilginç şekillerde
+kullanılabiliyor: Mesela [100,100] 2 boyutlu başlangıç noktasından
+x-kord. ikiser ikiser, y-kord. üçer üçer büyüyecek şekilde 5 tane veri
+noktası üretmek istesek:</p>
+
+<pre><code>x0 = array([100, 100])
+xs = vstack((arange(5)*3, arange(5)*2)).T + x0
+</code></pre>
+
+<p>yeterli. arange(N) O..N-1 arasında sayıları üretir. Bu sayıların
+hepsini 3 ile çarpıyoruz. Sonra aynısını yapıp 2 ile çarpıyoruz. Bu
+iki dizini üst üste "yiğiyoruz", ve .T çağrısı ile devriğini
+(transpose) alıyoruz, böylece [5,2] boyutlu veri noktalarını elde
+ediyoruz. Tüm bunlara x0 başlangıç değerini ekleyince istediğimiz sonuç
+geliyor.</p>
+
+<pre><code>[[100 100][103 102][106 104][109 106][112 108]]
+</code></pre>
+
+<p>Bir dizini "kesmek" icin slice() fonksiyonu var.</p>
+
+<pre><code>a = [1,2,3,4,5,6,7,8,9]
+sl = slice(2,8,2)
+</code></pre>
+
+<p>Üstteki slice tanımı 2. öğe ile 8. öğe (hariç olmak üzere) arasındaki
+tüm elemanları geri getirir. Eğer son 3. parametre "2" verilirsek, bu
+"ikiser ikiser git" anlamına geliyor, yani bir öğe sürekli
+atlanır. print a[sl] çağrısı bize [3, 5, 7] sonucunu döndürecek.Aynı
+çağrı print a[2:8:2] şeklinde de gerçekleştirilebilir. Bazen
+değişkenler kullanılarak slice() objeleri yaratmak gerekebiliyor, bu
+durumlarda slice() çağrısı tercih edilmekte.</p>
+
+<p>Ekler</p>
+
+<p><a href="../../2011/02/meshgrid.html">meshgrid</a></p>
+
+<p><a href="../../2015/10/histogram-numaralari.html">Histogram Numaraları</a></p>
+
+<p><a href="../../2011/04/sympy.html">Sembolik Matematik - Sympy</a></p>
+
+<p><a href="../../2010/11/ubuntu-server-ve-matplotlib.html">Ubuntu Server ve Matplotlib</a></p>
+
+<p><a href="../../2020/02/grafiklemek.html">Grafiklemek, Matplotlib, Pandas</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

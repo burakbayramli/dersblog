@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yerel Coğrafi Veriler</h1>
+
+<p>Şehir kordinatlar, kamp yerleri, milli park verilerini içeren bazı
+coğrafi veriler [1]'de bulunabilir. Sıkıştırılmış dosya açılmış hali
+<code>/opt/Downloads/trgeo</code> diye farzedelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy.sphericalNvector</span> <span class="kn">import</span> <span class="n">LatLon</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">glob</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">base</span> <span class="o">=</span> <span class="s1">&#39;/opt/Downloads/trgeo&#39;</span>
+</code></pre>
+</div>
+
+<p>Önce şehir kordinatlarına bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s1">&#39;/sehirler.csv&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;plaka&#39;</span><span class="p">,</span><span class="s1">&#39;il_adi&#39;</span><span class="p">,</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">]])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>    plaka          il_adi        lat        lon
+0       1           ADANA  37.000000  35.321333
+1       2        ADIYAMAN  37.764167  38.276167
+2       3  AFYONKARAHİSAR  38.763760  30.540340
+3       4            AĞRI  39.721667  43.056667
+4       5          AMASYA  40.650000  35.833333
+..    ...             ...        ...        ...
+76     77          YALOVA  40.650000  29.266667
+77     78         KARABÜK  41.200000  32.633333
+78     79           KİLİS  36.718399  37.121220
+79     80        OSMANİYE  37.068050  36.261589
+80     81           DÜZCE  40.843849  31.156540
+
+[81 rows x 4 columns]
+</code></pre>
+</div>
+
+<p>Diğer veriler</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+Index([&#39;plaka&#39;, &#39;il_adi&#39;, &#39;lat&#39;, &#39;lon&#39;, &#39;northeast_lat&#39;, &#39;northeast_lon&#39;,
+       &#39;southwest_lat&#39;, &#39;southwest_lon&#39;],
+      dtype=&#39;object&#39;)
+</code></pre>
+</div>
+
+<p><code>northeast_</code>, <code>southwest_</code> diye giden kolonlar il merkezini tanımlayan
+bir kutunun uçlarını gösteriyor olmalı, kontrol etmedik belki bazıları
+için faydalı olabilir.</p>
+
+<p>Kamp yerlerini gösteren iki tane dosya var, <code>kamp/kampyerleri.csv</code> ve
+<code>kamp/trkamp.csv</code>. Daha büyük olan birinci dosya. Tek bir satıra
+bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s1">&#39;/kamp/kampyerleri.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Davraz Tepe&#39;</span><span class="p">]</span>
+<span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_string</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">df1</span><span class="p">[</span><span class="s1">&#39;description&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>30.871582 38.0275405
+
+ 12    Egirdir Golu, Isparta ili sinirlarinda yer ala...
+Name: description, dtype: object
+</code></pre>
+</div>
+
+<p>Tabiat Alanlari, Milli Parklar</p>
+
+<p>Bu kategori altinda birkac tane dosya var, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;/millipark/*.json&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+[&#39;/opt/Downloads/trgeo/millipark/milli_parklar.json&#39;,
+ &#39;/opt/Downloads/trgeo/millipark/ozel_cevre_koruma_alanlari.json&#39;,
+ &#39;/opt/Downloads/trgeo/millipark/sulak_alanlar.json&#39;,
+ &#39;/opt/Downloads/trgeo/millipark/tabiat_anitlari.json&#39;,
+ &#39;/opt/Downloads/trgeo/millipark/tabiat_parklari.json&#39;,
+ &#39;/opt/Downloads/trgeo/millipark/yaban_hayati_gelistirme_sahalari.json&#39;,
+ &#39;/opt/Downloads/trgeo/millipark/tabiati_koruma_alanlari.json&#39;]
+</code></pre>
+</div>
+
+<p>Veriler kml formatında [3] makalesi yazarından geliyor; onları json
+formatına çevirmek için zip içinde <code>conv.py</code> kodu var. Biz bu çevrimi
+yaptık, dosyalar aynı zip içinde. JSON veri dosyaları okunduktan sonra
+basit Python sözlüğüne erişir gibi erişebiliyoruz, buradaki önemli
+veri park, korunma alanın sınırlarını tanımlayan enlem, boylam
+listesi,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;/millipark/tabiat_parklari.json&quot;</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fh</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">keys</span><span class="p">())[:</span><span class="mi">10</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[&#39;ABANT GÖLÜ TP&#39;, &#39;GÜVERCİNLİK TP&#39;, &#39;ÇİÇEKLİ TP&#39;, &#39;EFEOĞLU TP&#39;, &#39;BORÇKA KARAGÖL TP&#39;, &#39;KARGALI GÖLCÜK TP&#39;, &#39;DELMECE YAYLASI TP&#39;, &#39;KÜÇÜKELMALI TP&#39;, &#39;SUUÇTU TP&#39;, &#39;AYVALIK ADALARI TP&#39;]
+</code></pre>
+</div>
+
+<p>Bunlardan birini seçelim, mesela <code>DELMECE YAYLASI TP</code></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dy</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;DELMECE YAYLASI TP&#39;</span><span class="p">]</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">dy</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dy</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[40.69293056 31.77253616]
+ [40.69254208 31.77262633]
+ [40.691463   31.7727743 ]
+ [40.6902973  31.77253936]
+ [40.68959222 31.77169046]]
+</code></pre>
+</div>
+
+<p>Bu şekilde alanı tanımlayan poligonun köşe noktalarını elde ettik. Bu
+noktaları direk grafikleyebiliriz, favori coğrafi paketi burada
+kullanılır, şurada [4] anlatılan Folium olabilir mesela, ya da basemap..</p>
+
+<p>Eğer noktaların ortasını bulmak istiyorsak [5] şu kod,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">mid</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">LatLon</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">)</span> <span class="k">for</span> <span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">)</span>
+    <span class="n">nvecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">toNvector</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">b</span><span class="p">])</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="n">nvecs</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">toLatLon</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mid</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span><span class="n">mid</span><span class="o">.</span><span class="n">lon</span>
+
+<span class="n">mid</span><span class="p">(</span><span class="n">dy</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: (40.69422873080869, 31.779313871773233)
+</code></pre>
+</div>
+
+<p>Üstteki tüm verileri kullanan bir kod [2]'de, çıktısı veriyi içeren
+aynı zip içinde, <code>trgeo.html</code>.</p>
+
+<p><img src="trgeo.jpg" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Veriler](https://drive.google.com/uc?export=view&amp;id=1qM0KPCZz8JlTWoJJ1-FjYYrNzCDGtoGD)</p>
+
+<p>[2] [Haritalama Kodu](trgeo.py)</p>
+
+<p>[3] Örücü, Analysis of the Border Change in Beyşehir Lake and Kizildağ
+    National Parks in Terms of Land Cover and Land Use,
+    <a href="https://dergipark.org.tr/tr/download/article-file/939738">Link</a></p>
+
+<p>[4] [Haritalamak](../../2020/02/haritalamak.html)</p>
+
+<p>[5] [Genel Coğrafi Kordinat Kodları](../../2018/06/genel-gps-html5-javascript-python.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

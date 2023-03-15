@@ -1,0 +1,304 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Animasyon, Matplotlib, Mayavi</h1>
+
+<p>Hareketli bilimsel grafikler (hareketli dalga, cisim) için şu an
+tercih edilen yaklaşım bir dinamik sistem içinden "fotoğraf kareleri"
+almak, mesela en basit ortamda Matplotlib ile <code>plt.savefig('')</code>
+kullanarak, ve bu dosyaları ardından İmageMagick <code>convert</code> ile
+birleştirip bir animasyonlu .gif yaratmak. Bu sayede genel
+grafiklemede zaten kullandığımız, bildiğimiz <code>plt.plot</code> çağrılarını
+kullanmış oluyoruz, ve alttaki yöntemlerle gerekli bazı fotoğraf
+karelerini birleştirince bir anımasyon da elde etmiş
+oluyoruz. Animasyon için farklı şekilde çağrılar yapmak, farklı
+kütüphaneler kullanmak gerekmiyor.</p>
+
+<p>Matplotlib</p>
+
+<p>En basit 3 boyutlu parçacık grafiği,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">))</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+
+<span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span><span class="o">=</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;mayavi6.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="mayavi6.png" alt="" /></p>
+
+<p>Animasyon bağlamında sistem ileri doğru işletilirken bir indis <code>i</code> ile
+hangi karede, hangi zaman diliminde olduğumuzu biliyorsak, bunu
+kullanarak, belli dilimlerde (mesela her 5'inci dilim) çıktıyı alıp
+diske yazabiliriz,</p>
+
+<pre><code>for i in ..
+   # hesaplar yap
+   if i%5 == 0:
+      plt.plot(...)
+      ...
+      plt.savefig('out-%02d.png' % i)
+      plt.close('all')
+</code></pre>
+
+<p>Dikkat, eğer <code>close</code> çağrısı olmazsa fazla resim basma ve yoğun grafik
+işlemleri ardindan hafıza tükenebilir.</p>
+
+<p>Bu program işleyince elimizde <code>out-01.png</code>, <code>out-02.png</code>, gibi dosyalar
+olacak. Bu dosyaları basit bir şekilde</p>
+
+<pre><code>convert -delay 20 -loop 0 out*.png out.gif
+</code></pre>
+
+<p>ile birleştirebiliriz. Üstte <code>%02d</code> kullanmış olmamız dosya
+isimlerinde iki basamaklı sayı eklenmesini sağladı, 01, 02 gibi,
+böylece basit yıldız kullanımı dosyaları sıralı bir şekilde
+getirecektir.</p>
+
+<p>Üç Boyutlu Grafikler İçin Mayavi</p>
+
+<p>Simulasyon amaçlı pek çok parçacığı ekranda çizmemiz hareketlerini
+takip etmemiz gerekebilir. Fakat çok hızlı olarak bilinen bir dilden,
+mesela C++'dan bile, OpenGL çağırıp ekranda parçacıkları
+<code>glutSolidSphere</code> ile çizdirmemiz hızlı bir cevap almamız için yeterli
+olmayabilir. Belki arka planda, gözükmeyecek toplar vardır, bunları
+göstermeye gerek var mı?</p>
+
+<p>Bilgisayar grafikleme algoritmalarından (ki bilgisayar oyunlarında
+yaygın şekilde kullanılır) ışın takip etme (ray tracing) burada
+gerekli olabilir, görüntüye bakılma açısından sanal ışınlar hayal edip
+bunların sadece ilk çarpıktıklarını çizmek, arka plana kalanları
+çizmemek bir hızlandırıcı ilerleme olurdu.</p>
+
+<p><img src="mayavi4.png" alt="" /></p>
+
+<p>O zaman teker teker top çiz demek yerine tüm topların kordinatlarını
+bir seferde verip özel bir kütüphanenin görünecek olan objelere karar
+vermesi daha mantıklı olabilir. MayaVi ve onun arka planda kullandığı
+VTK işte bu işi başarıyor.</p>
+
+<p>Kurmak icin</p>
+
+<pre><code>pip install pyqt5 mayavi
+</code></pre>
+
+<p>En basit örnek üzerinde görelim, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">mayavi</span> <span class="kn">import</span> <span class="n">mlab</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">options</span><span class="o">.</span><span class="n">offscreen</span> <span class="o">=</span> <span class="kc">True</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">multivariate_normal</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">c1</span><span class="p">,</span><span class="n">c2</span><span class="p">))</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fgcolor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">640</span><span class="p">,</span> <span class="mi">360</span><span class="p">))</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">N</span><span class="p">)</span><span class="o">*</span><span class="mf">0.2</span>
+<span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span>
+              <span class="n">colormap</span> <span class="o">=</span> <span class="s1">&#39;gnuplot&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">outline</span><span class="p">()</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">azimuth</span><span class="o">=</span><span class="mi">00</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">focalpoint</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">distance</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mayavi7.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Farklı boyutlarda,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fgcolor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">outline</span><span class="p">()</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mayavi1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="mayavi1.png" alt="" /></p>
+
+<p>Şimdi 80,000 tane topu, arka arkaya iki grafikte çizdirelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fgcolor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">80000</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">outline</span><span class="p">()</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mayavi2.png&#39;</span><span class="p">)</span>
+
+<span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">fgcolor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">80000</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">)</span> <span class="o">/</span> <span class="mf">10.</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">outline</span><span class="p">()</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mayavi3.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="mayavi2.png" alt="" />
+<img src="mayavi3.png" alt="" /></p>
+
+<p>Bu iki grafikleme oldukca hızlı şekilde geri döndü. Eğer bir sıvı
+dinamiğini simüle ediyorsak ve milyonlarca parçacık varsa bu perfomans
+belki anlık ekranda göstermek için yeterli olmayabilir, fakat arka
+planda birkaç dakika beklenerek tüm simülasyonun gidişatı belli birkaç
+kare yanyana koyularak kabul edilir bir zaman içinde yaratılabilir.</p>
+
+<p>Kordinat Eksenleri</p>
+
+<p>Eğer <code>outline</code> kullanmak yerine sabit büyüklükte, x,y,z kordinat
+eksenlerini göstermek istersek, bunu teker teker kendimizin yapması
+lazım. Altta orijinde duran her kenarı 2 birim büyüklükte bir küp
+gösteriyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">BS</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="mf">2.0</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">N</span><span class="p">)</span><span class="o">*</span><span class="mf">0.1</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">mlab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figure</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fgcolor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">),</span> <span class="n">bgcolor</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">engine</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="n">c</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">colormap</span> <span class="o">=</span> <span class="s1">&#39;gnuplot&#39;</span><span class="p">,</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">points3d</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">scale_factor</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">BS</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span> <span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="n">BS</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="n">BS</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">mlab</span><span class="o">.</span><span class="n">plot3d</span><span class="p">([</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="n">BS</span><span class="p">,</span><span class="n">BS</span><span class="p">],[</span><span class="mf">0.0</span><span class="p">,</span><span class="n">BS</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">tube_radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="n">mlab</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">azimuth</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">focalpoint</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">distance</span><span class="o">=</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">figure</span><span class="o">=</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="n">mlab</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;mayavi5.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="mayavi5.png" alt="" /></p>
+
+<p>Problemler</p>
+
+<p>Eğer ardı ardına grafik basıyorsak, döngü dışında <code>fig = mlab.figure</code>
+komutu kullanıp, her döngü sonunda <code>mlab.savefig</code> ardından
+<code>mlab.clf()</code> uygulamak hafıza problemlerini çözecektir. </p>
+
+<p>Daha once yazdigimiz kesit seviyeleri yazisini not defteri ortamina
+gecirdik, ve bu yazida kesit seviyeleri diferansiyel denklemi
+hesaplanirken, onun uzerinden yapilan imaj bolumu aninda not defteri
+icinde gosteriliyor. Not defteri icinde animasyon gostermek icin
+kullanilan kalip</p>
+
+<p>Eski bazi yaklasimlar altta bulunabilir</p>
+
+<p>Not Defteri Icinde Animasyon</p>
+
+<pre><code>from IPython.display import clear_output
+f, ax = plt.subplots()
+..
+while True: # bir dongu
+    ...
+    ax.imshow(...)
+    CS = ax.contour(...)
+    clear_output()
+    display(f)
+    ax.cla()
+</code></pre>
+
+<p>Biz <code>ax.imshow</code>, <code>ax.contour</code> kullandık, fakat <code>ax</code> üzerinde pek çok
+grafiksel işlem yapılabilir tabii ki.</p>
+
+<p>Not: iPython not defterinin indirilip yerel, ya da kod işletilmesine
+izin veren bir defter servisi üzerinde işletilmesi lazım.</p>
+
+<p><img src="Screenshotfrom2013-02-01105757.png" alt="" /></p>
+
+<p>Matplotlib, Pylab ve hareketli plot, animasyonlar</p>
+
+<p>Bir kordinat sistemı üzerinde canlı olarak bir hesabın sonucunu
+seyretmek istersek, Pylab için faydalı bir örnek kod altta. Kod arka
+arkaya 10 tane x,y değeri üretiyor, sayılar 0..1 arası, ve eksenlerin
+sabit kalması için set<em>xlim, set</em>ylim çağrılarını yapmak lazım.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">ion</span><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+<span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">random</span><span class="p">()],</span> <span class="p">[</span><span class="n">random</span><span class="p">()],</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">hold</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">draw</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://docs.enthought.com/mayavi/mayavi/mlab.html</p>
+
+<p>[2] https://www.toptal.com/data-science/3d-data-visualization-with-open-source-tools-an-example-using-vtk</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

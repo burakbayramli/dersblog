@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>JSON</h1>
+
+<p>Ayar (config) ya da veriyi hem insan hem makine tarafından okunabilir
+bir formatta paylaşmak istersek JSON kullanabiliriz. JSON bir bakıma
+Python sözlük (dictionary) kavramının dosyaya çevrilmiş hali. Python ile
+sözlük yaratmak hatırlarsak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">mydict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">mydict</span><span class="p">[</span><span class="s1">&#39;anahtar1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;deger1&#39;</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">mydict</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&#39;anahtar1&#39;: &#39;deger1&#39;}
+</code></pre>
+</div>
+
+<p>ile yapılabiliyor. Bu çetrefil sözlükleri metin dosyasından başlayarak
+yaratmak için JSON kullanırız. 90'li yıllarda XML kullanılan yerlerde
+artık hep JSON görüyoruz.</p>
+
+<p>JSON içindeki yapı hiyerarşik olabilir, dosyada direk anahtar bazlı
+tekil değerler, ya da listeler, listeler içinde daha fazla listeler
+olabilir. Altta mesela bir coğrafi veri işleminde kullanılabilecek bir
+örnek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;test.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{
+    &quot;center&quot;: [41, 29],
+    &quot;points&quot;: {
+    &quot;city 1&quot;: [41.1, 29.2],
+    &quot;city 2&quot;: [41.4, 29.8]
+    },
+    &quot;plist&quot;: [[3,3],[5,5],[7,7]],
+    &quot;url1&quot;: &quot;https://www.cnn.com&quot;,
+    &quot;maps&quot;: [
+         &quot;file1.gpx&quot;,
+         &quot;file2.gpx&quot;,
+         &quot;file3.gpx&quot;,
+         &quot;file4.gpx&quot;
+     ]
+
+}
+</code></pre>
+</div>
+
+<p>Harita merkezi <code>center</code>, nokta listeleri <code>points</code> ve onun altında yine anahtar
+bazlı <code>city</code>, <code>city 2</code> diye gidiyor. Erişmek için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">jf</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;test.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">jf</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>dict_keys([&#39;center&#39;, &#39;points&#39;, &#39;plist&#39;, &#39;url1&#39;, &#39;maps&#39;])
+</code></pre>
+</div>
+
+<p>Sözlük demiştik; işte en üst seviyede hakikaten <code>dict_keys</code> ibaresi
+var. Şimdi <code>points</code> noktalarından <code>city 1</code> erişimi yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">jf</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">][</span><span class="s1">&#39;city 1&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[41.1, 29.2]
+</code></pre>
+</div>
+
+<p>Bu hiyerarşik yapı istediğimiz kadar derine gidebilir. İşin güzel tarafı
+tiplemenin otomatik algılanıp doğru Python objesi yaratılması, mesela </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">jf</span><span class="p">[</span><span class="s1">&#39;points&#39;</span><span class="p">][</span><span class="s1">&#39;city 1&#39;</span><span class="p">]))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;class &#39;list&#39;&gt;
+</code></pre>
+</div>
+
+<p>Yani köşeli parantez görünce <code>json</code> paketi bunun liste objesi olduğunu
+anladı. Bu özelliği farklı yerlerde de kullanabiliriz, bazen bir veri
+dosyasında bir metin bazlı bir liste depolanmış olabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">str_liste1</span> <span class="o">=</span> <span class="s1">&#39;[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;]&#39;</span>
+</code></pre>
+</div>
+
+<p>Bu veri belki bir CSV'den Pandas objesi içinde geldi, ya da başka bir
+yerden, pür metin halde.. Bu metni <code>json</code>'a çevirttirebiliriz, ki bu
+yaklaşım <code>eval</code> çağrısından çok daha hızlı ve güvenli işler,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">liste1</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">str_liste1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">liste1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">liste1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[&#39;1&#39;, &#39;2&#39;, &#39;3&#39;]
+&lt;class &#39;list&#39;&gt;
+</code></pre>
+</div>
+
+<p>Not: Programcılar bu paketin ismini 'jey-sin' olarak telafuz eder;
+erkek ismi Jason ile ses benzerliği var, yazanlar herhalde bunu bilerek
+ismi seçtiler.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

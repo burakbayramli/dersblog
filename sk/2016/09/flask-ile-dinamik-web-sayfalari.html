@@ -1,0 +1,334 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Flask ile Dinamik Web Sayfalari Gelistirmek</h1>
+
+<h3>Kuruluş</h3>
+
+<p>Kurmak için sanal ortam kurup oradan,</p>
+
+<pre><code>pip install flask
+</code></pre>
+
+<p>Basit bir Flask uygulaması tek bir Python dosyası içinden servis
+başlatma, Web aksiyonları, tıklama idaresi, diğer sayfalara
+yönlendirme gibi işlemleri halledebilir. Dinamik sayfalar için
+şablonlar (templates) özelliği var, değişken ile belirtilen yerler o
+değişkenlerin değeri dışarıdan verilerek doldurulur.</p>
+
+<p>Ilk main.py</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">index</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;/index.html&#39;</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/location/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">location</span><span class="p">(</span><span class="n">coordinates</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;/location.html&#39;</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="n">coordinates</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Şablonların olağan ayarlara göre <code>templates</code> adında bir alt dizinde
+olduğu kabul edilir.</p>
+
+<p><code>app.debug=True</code> ile servis başlatınca kodda yapılan değişim
+servisin tekrar yüklenmesine sebep olur, bu geliştirme açısından
+faydalı.</p>
+
+<p>Chrome ile sayfa içeriği önbellekte tutuluyor ve kod değiştiği bazen
+farkedilemiyor. Bu sebeple geliştirme için Firefox daha iyi olabilir.
+Ya da Chrome'un güncellemesini CTRL-R ile zorlamak lazım.</p>
+
+<p>Sayfalar</p>
+
+<p>index.html</p>
+
+<pre><code>&lt;html&gt;
+
+  &lt;h3&gt;Benim Uygulamam&lt;/h3&gt;
+
+  &lt;div id="menu1"&gt;
+    &lt;a href="/location/32324"&gt;
+      My Location
+    &lt;/a&gt;
+    &lt;br/&gt;
+    ...
+  &lt;/div&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<p>location.html</p>
+
+<pre><code>&lt;html&gt;
+  &lt;h1&gt;Location at {{ location }}!&lt;/h1&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Flask sevisini baslatmak icin python main.py yeterli. Tarayıcı
+localhost:5000'e yönlendirilince sonuç görülecektir. Ana sayfada
+bağlantıya tıklanınca bu bağlantıdaki url bilgisi Python kodu
+üzerinden sonraki sayfaya aktarılacak, orada işlem yapılıp ikinci
+sayfa dinamik olarak ekrana basılacak.</p>
+
+<p>CSS</p>
+
+<p>Sayfamiza CSS uygulamak istersek, mesela main.css dosyasinda, bu
+dosyayi static alt dizinine koymak lazim (python uzerinden servis
+edilmeyen her sayfa, icerik buraya gider), ve html icinde</p>
+
+<pre><code>&lt;head&gt;
+  &lt;link rel="stylesheet" type="text/css" href="/static/main.css" media="screen" /&gt;
+&lt;/head&gt;
+</code></pre>
+
+<p>gerekli.</p>
+
+<p>HTML</p>
+
+<p>Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
+çıkıyor. Mobilde ekranı dolduran türden görüntü için</p>
+
+<pre><code>&lt;html&gt;
+  &lt;head&gt;
+    ...
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"/&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    ....
+
+&lt;/html&gt;
+</code></pre>
+
+<p><a name='form'/></p>
+
+<h3>Form Verisi</h3>
+
+<p>Örnek olarak bir girdi kutusu düşünelim, o kutuya girilen parametre
+ile bir işlem yapılıyor, sonuçlar aynı sayfada gösteriliyor, bir arama
+fonksiyonu mesela;</p>
+
+<p><a href="sayfa1.txt">Sayfa</a></p>
+
+<p>Sonuçlar bir <code>results</code> adındaki bir liste içinde olacak bu liste olduğu
+gibi ekrana basılacak. Servis tarafı,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/search&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">search</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s1">&#39;/search.html&#39;</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/submit_search&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">submit_search</span><span class="p">():</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Arananan kelime:&quot;</span><span class="p">,</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="p">[</span><span class="s1">&#39;search&#39;</span><span class="p">])</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;sonuc &#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;/search.html&quot;</span><span class="p">,</span><span class="n">results</span><span class="o">=</span><span class="n">results</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Tarayıcıda <code>/search</code> adresine gideriz oradaki forma bilgi yazıp
+tıklayınca girilen veriye <code>request.form['search']</code> ile
+erisebiliyoruz. İki tane sonuç uydurduk üstte, listeye iki öğeli bir
+satır ekledik, ve tüm listeyi sayfaya gönderdik. Sayfa tüm listeyi
+gösterdi ama sayfa seviyesinde listeyi gezip satır ve öğelerine teker
+teker erisebilirdi mesela,</p>
+
+<p><a href="sayfa2.txt">Sayfa</a></p>
+
+<p>gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. </p>
+
+<h3>Hafızada Sonuç, Referans Veri Tutmak</h3>
+
+<p>Flask kodumuzun her tarafindan erisilebilen ve orada olacagindan emin
+olabilecegimiz bir obje istiyorsak, ve bir suru referans belgesine
+bakip (oturum, vs. nedir, ne kadar hafizada tutulur, gibi) duruma ozel
+bir sey ogrenmek istemiyorsak kendimiz bir tekil obje (singleton)
+yaratabiliriz. Bu objenin ayni Python sureci icinde tek olacagindan
+emin oluruz, kodumuzun farkli taraflari arasinda bilgi paylasmak icin
+bu nesneyi kullanabiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">class</span> <span class="nc">OnlyOne</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">__OnlyOne</span><span class="p">:</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">some_results</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span> <span class="c1"># __new__ always a classmethod</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span><span class="p">:</span>
+            <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">OnlyOne</span><span class="o">.</span><span class="n">__OnlyOne</span><span class="p">()</span>
+            <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span><span class="o">.</span><span class="n">edible</span> <span class="o">=</span> <span class="c1"># pandas yuklemesi yap</span>
+        <span class="k">return</span> <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Simdi OnlyOne().db ile erişince ilk başta yükleme yapılıp ardından
+yüklenen taban kullanılacak. Taban dediğimiz basit bir Pandas
+Dataframe objesi. Sonuçları, mesela herhangi bir listelemeden gelecek
+sonuçlar için some<em>results kullanmışız, ona OnlyOne().some</em>results ile
+erisiriz.</p>
+
+<h3>JSON Üretmek</h3>
+
+<p>Herhangi Python bazlı bir yazılımı dış dünyaya (servis olarak) açmak
+için en basit seçeneklerden biri HTTP servisi üzerinden JSON iledir,
+ayrıca bizi mantıklı URL'ler kullanmaya teşvik eden REST yaklaşımı iyi
+olur. En alt seviyede web servisi olarak mikro servis Flask
+olabilir. Flask'in güzel bir özelliği mantıklı URL ile Python
+fonksiyonu ilişkisini etiket (annotation) ile halledebilmesi.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">Response</span>
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">api_root</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s1">&#39;Merhaba&#39;</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/test/url&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">rq</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   
+    <span class="n">articles</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;liste&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;liste&#39;</span><span class="p">:</span> <span class="n">liste</span><span class="p">})</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Başlatırız,</p>
+
+<p><code>python main.py</code></p>
+
+<p>Ve test için localhost:8080 ziyaret edilir. Merhaba mesajı
+görülür. Sonra curl ile</p>
+
+<pre><code>curl -H "Content-Type: application/json" -d '{"liste":[3,2,1]}'
+  http://localhost:8080/test/url`
+</code></pre>
+
+<p>ozel URL'e JSON gonderilir. Kodun tek yaptigi listeyi alip siralamak,
+yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.</p>
+
+<p>Ayni cagriyi Python ile de yapabilirdik, mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080/test/url&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;liste&quot;</span><span class="p">:[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status code: &quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<h3>Dosya Yüklemek (Upload)</h3>
+
+<p>Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML</p>
+
+<pre><code> &lt;form action="/book_uploader" method="POST" enctype = "multipart/form-data"&gt;
+  &lt;p&gt;
+    &lt;input type = "file" name = "file" /&gt;
+  &lt;/p&gt;
+  &lt;input type="submit" value="Gonder"/&gt;
+&lt;/form&gt;
+</code></pre>
+
+<p>Python içinde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/book_uploader&#39;</span><span class="p">,</span> <span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">upload_file</span><span class="p">():</span>
+
+   <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">method</span> <span class="o">==</span> <span class="s1">&#39;POST&#39;</span><span class="p">:</span>
+      <span class="n">f</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">files</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
+      <span class="n">fbook</span> <span class="o">=</span>  <span class="s2">&quot;/dizin/&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">filename</span>
+      <span class="n">f</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">fbook</span><span class="p">)</span>     
+      <span class="k">return</span> <span class="s1">&#39;file uploaded successfully&#39;</span>
+</code></pre>
+</div>
+
+<h3>Başlatma Numaraları</h3>
+
+<p>En basit kullanımla bir <code>app.py</code> içinde olan uygulamayı <code>python
+app.py</code> ile başlatırız. Fakat diyelim ki programları <code>/dizin/dizin</code>
+altında olan <code>env1</code> adında bir virtualenv ortamı içindeyiz, ayrıca
+mesela otomatik başlatım yapmak istiyoruz ve tüm dosya erişimini
+vermek lazım o zaman <code>/dizin/dizin/env1/bin/python /vs1/vs2/app.py</code>
+ile başlatım yapılabilir. <code>env1</code> altındaki python'u kullanınca o
+virtualenv ortamı otomatik olarak aktif hale gelir ve oradaki tüm
+paketler kullanıma girer.</p>
+
+<p>Ya peki Flask başlayınca nereden başlatırsak başlatalım üstünde
+olduğumüz dizinin (current directory) <code>app.py</code> ile aynı lmasını
+istersek? Bu durumda <code>app.py</code> kodunun en başına</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="p">;</span> <span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<p>eklerse başlangıçta ilk yapılan iş kodun olduğu dizine gitmek olacaktır.</p>
+
+<p>Disaridan istemci, tarayici erisimi</p>
+
+<p>Eğer servise dışarıdan erişmek istiyorsak <code>host</code> için o erişilecek IP
+adresini vermemiz gerekir, makinanın adresi <code>ifconfig -a</code> ile
+bakılabilir, ve mesela <code>host="192.168.22.33"</code> gibi bir seçenek
+geçilir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

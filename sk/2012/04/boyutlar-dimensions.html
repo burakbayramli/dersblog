@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Boyutlar (Dimensions)</h1>
+
+<p>Dellstore ambar tasarimindan devam ediyoruz (bkz onceki yazi). Sadece
+posta kodu tanimlamistik, simdi ETL ile zaten aldigimiz kredi kart
+tipi (creditcardtype) ve cinsiyet (gender) uzerinde ek boyutlar
+tanimlayalim. Bunlar da dejenere boyut olabilir. Direk xml dosyasina
+girelim, ve</p>
+
+<pre><code>    &lt;Dimension type="StandardDimension" highCardinality="false" name="creditcardtype"&gt;
+      &lt;Hierarchy name="creditcardtype" hasAll="true"&gt;
+        &lt;Level name="creditcardtype" column="creditcardtype" type="String" uniqueMembers="false"
+                 levelType="Regular" hideMemberIf="Never"&gt;
+        &lt;/Level&gt;
+      &lt;/Hierarchy&gt;
+    &lt;/Dimension&gt;
+    &lt;Dimension type="StandardDimension" highCardinality="false" name="gender"&gt;
+      &lt;Hierarchy name="gender" hasAll="true"&gt;
+        &lt;Level name="gender" column="gender" type="String" uniqueMembers="false"
+
+          levelType="Regular" hideMemberIf="Never"&gt;
+        &lt;/Level&gt;
+      &lt;/Hierarchy&gt;
+    &lt;/Dimension&gt;
+</code></pre>
+
+<p>Yayin sonrasi konsola gidiyoruz, ve mesela posta kodu 29435'e
+bakiyoruz. Bu kod icin + tiklaninca, kredi kart tiplerine gore dagilim
+gosteriliyor, cunku siralama olarak once kod, sonra kart var. Sonra
+cinsiyet uzerindeki + tiklaninca M cikiyor, yani erkek (male)
+musteriler. F cikmadi, demek ki bu kod, ve kart 3 ile alisveris yapan
+hic kadin musteri olmamis. Kart kodu bu arada kredi kart numarasinin
+ilk hanesi ve bilindigi gibi bu hane, 3,4 gibi sayilar Mastercard,
+Visa, vs. gibi kredi kart sirketlerine tekabul ediyorlar.</p>
+
+<p>Peki ya detaya inme sirasini degisik sekilde yapmak isteseydik? O
+zaman sol ust kosedeki ikona yine tikliyoruz,</p>
+
+<p>ve boyutlarin solundaki yukari, asagi ok isaretlerini kullanarak
+siralamayi istedigimiz gibi degistiriyoruz. Mesela her seyi basasagi
+dondurelim, ve konsola donunce farkli siralamanin raporlamayi
+degistirdigini gorelim,</p>
+
+<p><img src="Screenshot+at+2012-04-26+14:28:41.png" alt="" /></p>
+
+<p><img src="Screenshot+at+2012-04-26+14:29:29.png" alt="" /></p>
+
+<p><img src="Screenshot+at+2012-04-26+14:32:42.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

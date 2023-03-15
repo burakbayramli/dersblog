@@ -1,0 +1,101 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Vagrant</h1>
+
+<p>Linux ya da MacOS uzerinde bir sanal OS isletmek icin Vagrant. </p>
+
+<p>vagrantup.com</p>
+
+<p>https://www.virtualbox.org/wiki/Linux_Downloads</p>
+
+<p>sudo dpkg -i ile once virtualbox sonra vagrant deb dosyalari
+kurulur. OSX icin dmg dosyalari ile kurulus yapilir. Ek olarak, eger X
+uygulamalari isletmek gerekirse (yani sanal OS uzerinde X uygulamasi
+isletip sonucu esas OS icinde gormek) OSX ortaminda XQuartz kurmak
+lazim,</p>
+
+<p>http://xquartz.macosforge.org/landing</p>
+
+<p>Simdi</p>
+
+<pre><code>vagrant init ubuntu/trusty64
+
+vagrant up
+</code></pre>
+
+<p>Bu islem, ilk seferde, uzun zaman alir, tum Ubuntu 14.04'u temsil eden
+kurulus dosyasi Internet'ten indiriliyor olacak. Diger OS cesitleri
+Vagrant sitesinden bulunabilir.</p>
+
+<p>Bittikten sonra ustteki komutlar ardindan dizin icinde bir Vagrantfile
+olur. X icin Vagrantfile icine (end ibaresi oncesi)</p>
+
+<pre><code>config.ssh.forward_x11=true
+</code></pre>
+
+<p>eklenmeli.</p>
+
+<p>Simdi</p>
+
+<pre><code>vagrant ssh
+</code></pre>
+
+<p>ile sanal "makinamiza" baglanabiliriz (sonraki isletimlerde yine
+vagrant ssh oncesi vagrant up yapmak lazim fakat ikinci sefer up
+cagrisi hemen geri gelir). Giris yaptiktan sonra bu makina icinde
+apt-get vs gibi her turlu Ubuntu komutunun mevcut oldugu
+gorulebilir. Sanal makinanin Internet baglantisi "disarida" olan
+makinanin Internet baglantisidir.</p>
+
+<p>X uygulamalari icin, mesela xclock icin,</p>
+
+<pre><code>ssh -X -p 2222 vagrant@localhost xclock
+</code></pre>
+
+<p>Sifre (ilk basta) vagrant. Not: Eger xclock uygulamasi yok ise sanal
+Ubuntu uzerinde apt-get install x11-utils isletilir.</p>
+
+<p>Dis (host) makinanin dosyalarina erismek icin sanal makina icinde
+/vagrant/ dizinini kullanabilirsiniz. Bu dizin bizi icinde Vagrantfile
+olan dizine goturecektir. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

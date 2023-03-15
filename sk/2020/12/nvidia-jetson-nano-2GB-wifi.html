@@ -1,0 +1,401 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>NVidia Jetson Nano Wifi</h1>
+
+<p>GPU geliştirmesi için Jetson Nano ürünü var, Türkiye'de 100 dolar
+civarı fiyatla satılıyor. Altta görülen Nano 2GB Wifi ürünü. Güç
+kaynağı bu pakete dahil değil, 5 Volt, 3 Amperlik bir adaptor almak
+lazım. Raspberry Pi uyumlu bu tür adaptörler var.</p>
+
+<p>Paketten iki tane ek kablo çıkacak, bunlardan birinin ucunda bir ufak
+"dongle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor (dongle
+kabloya bağlı geliyor, o çıkartıldıktan sonra kabloya gerek yok),
+alttaki resimde devrenin sol altında. Diğer kablonun bir ucu
+dizüstüne, diğeri Nano'ya takılacak, nihai resim</p>
+
+<p><img width="240" src="nano.jpg"/></p>
+
+<p>İşletim sistemi mikro SD kart üzerinden, en az 64 GB iyi olur,
+işlemler aynen <a href="../07/raspberrypi.html">Raspberry Pi</a> durumunda olduğu
+gibi. Orada olduğu gibi yine işletim sistemi indirilecek, ve SD'ye
+"yakılacak". Mikro SD de pakete dahil değil ayrıca alınması lazım.</p>
+
+<p>https://developer.nvidia.com/jetson-nano-2gb-sd-card-image</p>
+
+<p>Şöyle bir komutla indirebilir,</p>
+
+<pre><code>wget --continue https://developer.download.nvidia.com/assets/embedded/downloads/jetson-nano-2gb-jp441-sd-card-image/jetson-nano-2gb-jp441-sd-card-image.zip
+</code></pre>
+
+<p>Büyük bir dosya dikkat. İndirildikten sonra yakmak için Etcher adlı
+bir program kullanılır,</p>
+
+<p>Etcher</p>
+
+<p>https://www.balena.io/etcher/</p>
+
+<p>https://phoenixnap.com/kb/etcher-ubuntu</p>
+
+<p>Zip indirilir, açılır, içinde bir işler program var, tıklanır, görsel
+programla yakma yapılır (Nano imajı seçilir, hedef seçilir, yak
+denilir).</p>
+
+<p>Yakma işlemi bitince kart Nano'ya sokulur, bağlantılar yapılır, ve
+sistem başlayınca HDMI üzerinden monitöre bağlanılıp, fare, klavye
+Nano'ya bağlanılıp oradan kuruluma devam edilir. Burada isim,
+kullanıcı ismi, şifre, coğrafi yer vs sorulacak, bu bilgileri
+gireriz. Wifi bağlantısı orada görülecek, Wifi şifresi girilince
+bağlantı kurulacaktır. Wifi bağlantısı Nano'nun dışarıdan program
+indirmesi için faydalı, ama Nano'ya bizim girmemiz için şart değil.</p>
+
+<p>Aradaki o mavi kablo üzerinden seri bağlantıya dikkat, dizüstündeki
+Ubuntu üzerinde</p>
+
+<pre><code>$ dmesg | grep --color 'tty'
+[106921.687362] cdc_acm 1-2:1.2: ttyACM0: USB ACM device
+</code></pre>
+
+<p>deyince üsttekini görebilmek lazım.  Ya da <code>ls /dev/tty*</code> ile bakarsak
+orada bir <code>/dev/ttyACM0</code> olmalı. </p>
+
+<p>Şimdi </p>
+
+<pre><code>sudo screen /dev/ttyACM0 115200
+</code></pre>
+
+<p>seri bağlantı üzerinden ile sisteme girebiliriz, bunu bir kere /
+gerektiğinde yapmak yeterli, IP adresini almak için. Nano sistemi o
+seri bağlantı üzerinden bir yerel Ethernet bazlı bir ağ yaratıyor,
+Ubuntu tarafında bu ağın görülmüş olması lazım. <code>NVidia Ethernet
+Connection</code> ve <code>Wired Connection</code> gibi ifadelerin ağ listesinde
+görülüyordur herhalde. Ethernet'i seçmek, aktif hale getirmek gerekir.</p>
+
+<p>Neyse bir kerelik seri bağlantından girince <code>ifconfig -a</code> ile sistemin
+IP adresini alırız, bende <code>l4tbr0</code> birimine bağlı olan IP'yi aldım,
+ardından ben tüm ek işlemleri <code>ssh kullanıcı@IP</code> ile Nano'ya <code>ssh</code>
+girerek ayrı bir ekranda yapıyorum.</p>
+
+<p>Yeni sistemimizi kontrol edelim. <code>ssh</code> ile girip,</p>
+
+<pre><code>sudo nvpmodel -q
+
+NVPM WARN: fan mode is not set!
+NV Power Mode: MAXN
+0
+</code></pre>
+
+<p>görülebilir, bu GPU durumunu raporladı. CUDA ekleri olan C++
+derleyicisi için <code>nvcc</code> erişimi lazım,</p>
+
+<pre><code>vim ~/.bashrc
+</code></pre>
+
+<p>Ve dosya sonuna</p>
+
+<pre><code>export PATH=${PATH}:/usr/local/cuda/bin
+export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/cuda/lib64
+</code></pre>
+
+<p>ekleriz, kaydederiz, ve komut satırına dönüp,</p>
+
+<pre><code>source ~/.bashrc
+</code></pre>
+
+<p>işletiriz, şimdi </p>
+
+<pre><code>nvcc --version
+</code></pre>
+
+<pre><code>nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2019 NVIDIA Corporation
+Built on Wed_Oct_23_21:14:42_PDT_2019
+Cuda compilation tools, release 10.2, V10.2.89
+</code></pre>
+
+<p>göstermeli.</p>
+
+<p>Not</p>
+
+<p>Kurulum işlemini tamamen seri bağlantı üzerinden text bazlı da yapmak
+mümkün, alttaki video'da anlatılıyor, macera isteyenler bunu
+seçebilir, o zaman monitör vs bağlantısına gerek kalmaz.</p>
+
+<p>PyCuda</p>
+
+<p>Alttaki komutları yine Nano komut satırında işletiyoruz,</p>
+
+<pre><code>sudo apt install python3-pip
+
+pip3 install cython
+
+pip3 install pycuda
+</code></pre>
+
+<p>Acaba dizüstünde geliştirip Nano'ya işletmek için sürekli gönderme
+yapabilir miyiz? Evet. Hatta uzaktaki bir dizini <code>sshfs</code> ile
+monteleyebiliriz, bkz <a href="../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html">şuradaki</a> <code>ssh</code>
+yazı. Sonra <a href="gpu-cuda-pycuda.html">PyCuda</a> yazısındaki herhangi bir örneği alırız,
+GPU tipini gösteren örnek mesela, onu <code>tst.py</code> diye dizüstünde
+kaydedelim, sonra mesela tüm kodların Nano üzerinde
+<code>/home/user/Documents</code> dizininde olacak şekilde</p>
+
+<div class="codehilite">
+<pre><span></span><code>ssh burak@nano1 <span class="s2">&quot;/bin/bash /home/user/Documents/pygpu.sh </span><span class="nv">$1</span><span class="s2">&quot;</span>
+</code></pre>
+</div>
+
+<p>Nano üzerinde <code>/home/user/Documents/pygpu.sh</code> dosyası lazım, uzaktan o
+çağrılıyor (direk <code>python3</code> çağırmak ise yaramayabilir çünkü bazı
+çevre değişkenlerinin set edilmesi lazım), onun içeriği</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">export</span> <span class="nv">PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">PATH</span><span class="si">}</span>:/usr/local/cuda/bin
+<span class="nb">export</span> <span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="si">${</span><span class="nv">LD_LIBRARY_PATH</span><span class="si">}</span>:/usr/local/cuda/lib64
+/usr/bin/python3 /home/user/Documents/<span class="nv">$1</span>
+</code></pre>
+</div>
+
+<p>Script'i <code>run.sh</code> olarak kaydetsek, <code>sh run.sh tst.py</code> ile cağrınca bu
+uzaktan <code>ssh</code> ile o dosya üzerinde <code>python3</code> işletilmesini
+sağlar.</p>
+
+<p>Tabii tüm bu numaralar bir yana Nano'ya login edip komutu direk orada
+da işletebiliriz. O komut satırının ayrı durması için o pencereye
+farklı bir renk vermek iyi olur, benim Nano <code>.bashrc</code> de şu satır ekli,</p>
+
+<pre><code>PS1='${debian_chroot:+($debian_chroot)}\[\033[01;35m\]\u\[\033[01;30m\]@\[\033[01;32m\]\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+</code></pre>
+
+<p>Eğer mesela <code>matplotlib</code> kurmak istersek, </p>
+
+<pre><code>sudo apt install libfreetype6-dev
+
+pip3 install matplotlib==2.0
+</code></pre>
+
+<p>gerekli. En son matplotlib hata verdi. Kod icinde goruntusuz isletmek icin</p>
+
+<pre><code>import matplotlib; matplotlib.use('Agg')
+</code></pre>
+
+<p>gerekebilir.</p>
+
+<p>Devam edelim, <code>tst.py</code> işletince bizde</p>
+
+<pre><code>Device 0: NVIDIA Tegra X1
+         Compute Capability: 5.3
+         Total Memory: 1979 megabytes
+</code></pre>
+
+<p>sonucu geldi. PyCuda işliyor demektir.</p>
+
+<p>Bir kere arada <code>ssh</code> bağlantısı kurulunca daha ilginç şeyler de
+yapılabilir, <code>ssh</code> üzerinden görsel X tünellemesi mesela, Nano
+üzerinde görsel program işletip sonucu kendi makinamızda görebiliriz,
+ya da Jupyter servisi işletip dizüstü tarayıcısı ile ona
+bağlanabiliriz, vs. Ben kendi açımdan Nano üzerindeki yükü az tutmaya
+uğraşıyorum.</p>
+
+<p>Test olarak alttaki kodu islettik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span> <span class="nn">pycuda.elementwise</span> <span class="kn">import</span> <span class="n">ElementwiseKernel</span>
+
+<span class="n">host_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span> <span class="p">)</span>
+
+<span class="n">gpu_2x_ker</span> <span class="o">=</span> <span class="n">ElementwiseKernel</span><span class="p">(</span>
+<span class="s2">&quot;float *in, float *out&quot;</span><span class="p">,</span>
+<span class="s2">&quot;out[i] = 2*in[i];&quot;</span><span class="p">,</span>
+<span class="s2">&quot;gpu_2x_ker&quot;</span><span class="p">)</span>
+
+
+<span class="c1"># hizlandirma icin onceden ufak veri uzerinde islet</span>
+<span class="n">host_data_small</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="p">)</span>
+<span class="n">device_data_small</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">to_gpu</span><span class="p">(</span><span class="n">host_data_small</span><span class="p">)</span>
+<span class="n">device_data_2x_small</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">device_data_small</span><span class="p">)</span>
+<span class="n">gpu_2x_ker</span><span class="p">(</span><span class="n">device_data_small</span><span class="p">,</span> <span class="n">device_data_2x_small</span><span class="p">)</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">host_data_2x</span> <span class="o">=</span>  <span class="n">host_data</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;CPU: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+<span class="n">device_data</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">to_gpu</span><span class="p">(</span><span class="n">host_data</span><span class="p">)</span>
+<span class="n">device_data_2x</span> <span class="o">=</span> <span class="n">gpuarray</span><span class="o">.</span><span class="n">empty_like</span><span class="p">(</span><span class="n">device_data</span><span class="p">)</span>
+
+<span class="n">t1</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+<span class="n">gpu_2x_ker</span><span class="p">(</span><span class="n">device_data</span><span class="p">,</span> <span class="n">device_data_2x</span><span class="p">)</span>
+<span class="n">t2</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
+
+<span class="n">from_device</span> <span class="o">=</span> <span class="n">device_data_2x</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;GPU: </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">t2</span> <span class="o">-</span> <span class="n">t1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>CPU: 0.031684
+GPU: 0.000274
+</code></pre>
+
+<p>GPU'nun 115 kat daha hızlı olduğunu görüyoruz. İlginç Nano üzerindeki
+çekirdek sayısı da 128 değil mi?</p>
+
+<p>VNC</p>
+
+<p><code>ssh -X</code> ile bağlanınca Nano'da X programlarının çıktısını direk
+bağlandığımız diğer bir makinaya aktarabiliriz, fakat ne yazık ki
+ÖpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
+görüyorsunuz (alttaki paragrafta bir uyarı daha var), fakat monitörle
+Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNÇ kullanmak.</p>
+
+<p>Not: OpenGL içeren kodları arka plandaki çıktısını <code>ssh</code> üzerinden
+görmek istersek, ve <code>ssh -X</code> ile girdiysek grafik çağrıları
+patlar. Grafik çağrıların yok sayılmasını sağlamak için (ki böylece
+<code>cout</code> ile eklenen log mesajlarını görebilelim) pür <code>ssh</code> ile girmek
+lazım. </p>
+
+<p>VNC programlarını kullanmışızdır, bu programlar ile bir bilgisayarın
+tüm masaüstünü kendi makinamızda görebiliriz. Nano'da bunu yapmak için
+birkaç adımı uygulamak lazım, [6,7,8] kaynaklarına bakabiliriz. Yanlız
+dikkat, sadece [8] yöntemi vino servisi eğer monitör bağlı değilse
+işlemiyor (VNC'nin tüm faydaları sıfırlanmış oluyor yani). VNC düzgün
+işlemesi için Nano Unix kullanıcınızın otomatik olarak sistem
+başlayınca login olmasını sağlamak lazım, bkz [6,7]. Ubuntu <code>User
+Accounts</code> penceresinden <code>Automatic Login</code> aktif edilmeli. Tabii bu
+ekrana gelebilmek için de masaüstü idarecisi Unity olmalı, diğer
+idarecilerle buraya ulaşamadık. Eğer o değilse Unity'ye geçmek için
+monitorle bağlandığımız Nano Ubuntu'dan kullanıcı çıkışı (logout)
+yaparız, sonra tekrar giriş sırasında şifre girilen kutunun yanında
+ayak izi ikonu var, ona tıklayınca orada idareci seçenekleri çıkacak,
+burada Unity seçeriz, ve sisteme böyle gireriz. Servis tarafı böyle
+ayarlanır.</p>
+
+<p>Nihayet müşteri tarafı bağlanmasına geldik, dizüstü bilgisayarında
+benim Ubuntu 18'de <code>remmina</code> programı var, bu programa İP adresini
+verip bağlanma metotu olarak VNC seçersek, artık Nano'ya görsel olarak
+bağlanabiliriz.</p>
+
+<p>Bir diğer seçenek, aynen Raspberry Pi durumunda olduğu gibi, ufak bir
+elle tutulan HDMI monitör ve dongle'li klavye/mouse donanımı almak, bu
+ikisini direk Nano'ya bağlayınca her şeyi, hiç dizüstünden geçmeden,
+Nano üzerinde yapabiliriz. Nano tek başına oldukca kuvvetli bir
+bilgisayar, eh kendi Ubuntu'su var, tam tekmilli bir bilgisayar olarak
+kullanılabilir.</p>
+
+<p>Örnek Cuda Kodları</p>
+
+<p>C++ üzerinden CUDA kodlamak için Nano üzerinde bolca örnek var. Bu
+örnekler SD yakma işlemi sırasında Nano'ya tranfer edilmiş oldu,
+örnekler <code>/usr/local/cuda-[versiyon]/samples</code> altında
+bulunabilir. Derlemek için bu dizini tamamen kopyalayıp <code>user</code> için
+mesela <code>/home/user</code> altında bir yerlere koymak en iyisi, yoksa
+<code>/usr/local</code> için izin hataları verilebilir.</p>
+
+<p>Bu kopyada <code>make</code> uygularız, o komut tüm örnekleri derler. <code>nvcc</code>
+ayarlarını üstte anlattık, derleme işlemi onu kullanıyor. Tüm derleme
+işlemi biraz uzun sürecek, ama bitince her örnek işletilir halde hazır
+olacaktır. Mesela <code>samples/5_Simulations/oceanFFT</code> altında
+<code>./oceanFFT</code> örneğini işletebiliriz, Nano monitöründen ya da VNC
+üzerinden görebiliriz, su simulasyonu gayet güzel görülüyor.</p>
+
+<p>Particles</p>
+
+<p>Bu örnek kodlardan partıcles adlı projenin görsel kodları mümkün
+olduğu kadar çıkartılmış hali altta bulunabilir,</p>
+
+<p><a href="particles/Makefile">Makefile</a>,
+<a href="particles/particles.cpp">particles.cpp</a>
+<a href="particles/particles_kernel.cuh">particles<em>kernel.cuh</a>,
+<a href="particles/particles_kernel_impl.cuh">particles</em>kernel<em>impl.cuh</a>,
+<a href="particles/particleSystem.cpp">particleSystem.cpp</a>,
+<a href="particles/particleSystem_cuda.cu">particleSystem</em>cuda.cu</a>,
+<a href="particles/particleSystem.cuh">particleSystem.cuh</a>,
+<a href="particles/particleSystem.h">particleSystem.h</a>,
+<a href="particles/view.py">view.py</a></p>
+
+<p>Tensorflow</p>
+
+<p>Jetson üzerinde Tensorflow kurulumu için hangi Jetpack geliştirme ortamına
+sahip olduğumüza bakalım,</p>
+
+<pre><code>sudo apt-cache show nvidia-jetpack
+</code></pre>
+
+<p>Ben gördüğüm versiyona göre [10]'a danıştım, ve gerekli wheel <code>.whl</code>
+dosyasını indirdim,</p>
+
+<pre><code>wget https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+</code></pre>
+
+<p>Sonra bu dosyayı ayrı bir virtualenv içinde</p>
+
+<pre><code>pip3 install tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+</code></pre>
+
+<p>ile kurduk. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://imadelhanafi.com/posts/jetson<em>nano</em>setup/</p>
+
+<p>[2] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit</p>
+
+<p>[3] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-devkit#setup</p>
+
+<p>[4] https://developer.nvidia.com/embedded/learn/get-started-jetson-nano-2gb-devkit#write</p>
+
+<p>[5] https://youtu.be/Ch1NKfER0oM</p>
+
+<p>[6] https://medium.com/@bharathsudharsan023/jetson-nano-remote-vnc-access-d1e71c82492b</p>
+
+<p>[7] https://www.hackster.io/SaadTiwana/embedded-diaries-simple-remote-desktop-access-for-jetson-c1300a</p>
+
+<p>[8] https://developer.nvidia.com/embedded/learn/tutorials/vnc-setup</p>
+
+<p>[9] https://www.youtube.com/watch?v=KROP46Wte4Q</p>
+
+<p>[10] [Forum](https://forums.developer.nvidia.com/t/correct-version-of-tensorflow-for-jetpack-4-4/149310/3)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

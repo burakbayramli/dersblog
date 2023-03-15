@@ -1,0 +1,75 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Matplotlib ile Hareketli Grafikler</h1>
+
+<p>Robotik hakkinda bir yazida, baska seylerle beraber daha once
+bahsetmistik, ama daha detayli olarak; Python Matplotlib ile akici,
+interaktif grafikler kodlamasinin kalibi soyle.import
+matplotlib.pyplot as pltplt.ion()arkasindan, akisini istedigimiz veri
+cercevesinde bir donguyle (for, while, vs) plt uzerinde istedigimiz
+cizim cagrilarini teker teker yapiyoruz, ilk cizim sonrasi
+plt.hold(True) cagiriyoruz.  Dongude mesela plt.imshow ile bir bitmap
+grafigi gosterebiliriz, plt.hold(True) sonrasi bir plt.contour cagrisi
+yapabiliriz, sonra bir plt.plot yapabiliriz vs.</p>
+
+<p>Bir "kare" bittikten sonra en sonunda plt.draw cagrisi yapariz
+(dikkat, plt.show degil).</p>
+
+<p>"Video" akisi biraz yavaslasin istiyorsak (en basta) import time, ve
+yavaslik istedigimiz yerde time.sleep(saniye) ile suni gecikmeyi
+ekleriz. Cizim, bekleme bittikten sonra bu ekrani "silmek" icin
+plt.hold(False) cagiririz.Kalip soyle:</p>
+
+<pre><code>import matplotlib.pyplot as plt
+import time
+plt.ion()
+for .. in range(...):
+   plt.imshow(..)
+   plt.hold(True)
+   CS = plt.contour(..)
+   plt.plot(..)  ...
+   plt.draw()
+   time.sleep(1)
+   plt.hold(False)
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

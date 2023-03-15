@@ -1,0 +1,420 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h2>Veri İşlemek</h2>
+
+<p>Telefon tarafından toplanan verileri nasıl kullanırız? </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;./data/mitte4/&quot;</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;cam.bin&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;sizes.txt&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;cum&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">cumsum</span><span class="p">()</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;cum2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">cum</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span><span class="s1">&#39;to&#39;</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>Herhangi bir video karesini çekip çıkarmak</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">io</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="s1">&#39;fr&#39;</span><span class="p">])</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="s1">&#39;to&#39;</span><span class="p">])]</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
+<span class="n">im</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;out1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="out1.png" alt="" /></p>
+
+<p>Herhangi zaman anında gittiğimiz yön,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dforient</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;orientations.txt&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="nb">print</span> <span class="nb">str</span><span class="p">(</span><span class="n">dforient</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="mi">1</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
+      <span class="nb">str</span><span class="p">(</span><span class="n">dforient</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="mi">2</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
+      <span class="nb">str</span><span class="p">(</span><span class="n">dforient</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="mi">3</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">,</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>334.46 0.8803 84.372 
+</code></pre>
+</div>
+
+<p>GPS</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dfgps</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;gps.txt&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">,</span>\
+                    <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">,</span><span class="s1">&#39;speed&#39;</span><span class="p">,</span><span class="s1">&#39;acc&#39;</span><span class="p">,</span><span class="s1">&#39;alt&#39;</span><span class="p">])</span>
+<span class="nb">print</span> <span class="nb">str</span><span class="p">(</span><span class="n">dfgps</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="mi">0</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
+      <span class="nb">str</span><span class="p">(</span><span class="n">dfgps</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="mi">1</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> \
+      <span class="nb">str</span><span class="p">(</span><span class="n">dfgps</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="mi">2</span><span class="p">])[:</span><span class="mi">6</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;   &quot;</span> 
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>52.511 13.390 0.6519   
+</code></pre>
+</div>
+
+<p>Dört köşesi üzerinden belirtilen bir dörtgeni ekrana basmak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">util</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="mi">105</span><span class="p">)</span>
+<span class="n">quad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">143</span><span class="p">,</span><span class="mf">100.</span><span class="p">],[</span><span class="mi">202</span><span class="p">,</span><span class="mi">100</span><span class="p">],[</span><span class="mi">224</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">util</span><span class="o">.</span><span class="n">plot_quad</span><span class="p">(</span><span class="n">quad</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;out2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="out2.png" alt="" /></p>
+
+<p>Bazen bu dörtgenin içindeki pikselleri bulmak gerekebilir. Fakat tüm
+pikselleri de bulmak fazla yük getirebilir, 100x100 boyutundaki "ufak"
+bir dörtgen içinde bile 10000 piksel vardır, ki üç boyutlu HSV ya da
+RGB için 30000 veri noktasından bahsediyoruz, en iyisi resim
+kordinatları içinde tanımlı birörnek (uniform) bir dağılımdan sayılar
+(kordinatlar) örneklemek, bu kordinatlardan dörtgen içine düşenleri
+bulmak, ve boylece daha az sayıdaki kordinat kullanmak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># orneklenen kordinat sayisi</span>
+<span class="n">random_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+<span class="n">random_points</span> <span class="o">=</span> <span class="n">random_points</span><span class="p">[</span><span class="n">random_points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">240</span><span class="p">]</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">util</span><span class="o">.</span><span class="n">inside_quad</span><span class="p">(</span><span class="n">quad</span><span class="p">,</span> <span class="n">p</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">random_points</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">random_points</span><span class="p">[</span><span class="n">mask</span><span class="p">][:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">h</span><span class="o">-</span><span class="n">random_points</span><span class="p">[</span><span class="n">mask</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">util</span><span class="o">.</span><span class="n">plot_quad</span><span class="p">(</span><span class="n">quad</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;out3.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="out3.png" alt="" /></p>
+
+<p>Dörtgen içindeki kordinatların renk değerlerini alıp tüm bu değerlerin
+histogramını hesaplayabiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">bins</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">nim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+<span class="n">nim_quad</span> <span class="o">=</span> <span class="n">nim</span><span class="p">[</span><span class="n">random_points</span><span class="p">[</span><span class="n">mask</span><span class="p">][:,</span><span class="mi">1</span><span class="p">],</span><span class="n">random_points</span><span class="p">[</span><span class="n">mask</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]]</span>
+<span class="n">H</span><span class="p">,</span> <span class="n">edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">histogramdd</span><span class="p">(</span><span class="n">nim_quad</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">normed</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">range</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),(</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">)])</span>
+<span class="nb">print</span> <span class="s1">&#39;H&#39;</span><span class="p">,</span> <span class="n">H</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s1">&#39;edges&#39;</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>H (8, 8, 8) edges 3
+</code></pre>
+</div>
+
+<p>Bu histogram çok boyutlu, yani üç boyutlu HSV verisi üzerinde (8,8,8)
+kutuları yarattık, yani elimizde şimdi 8<em>8</em>8 tane kutu var. Bildiğimiz
+gibi bir histogram bir olasılıksal dağılımı ayrıksal olarak temsil
+eder. O zaman bu dağılıma herhangi bir HSV değerinin ne kadar olası olduğunu
+"sorabiliriz". </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
+    <span class="n">i</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">j</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">k</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">H</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">k</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="nb">print</span> <span class="nb">eval</span><span class="p">([</span><span class="mi">156</span><span class="p">,</span><span class="mi">17</span><span class="p">,</span><span class="mi">191</span><span class="p">],</span> <span class="n">H</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>1.23512073034e-06
+</code></pre>
+</div>
+
+<h2>OpenCv</h2>
+
+<p>Daha bitmedi (!). Eger video kareleri uzerinde OpenCV kullanmak
+istersek, mesela alttaki gayet basit bir gosterim kodu,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">io</span><span class="o">,</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+<span class="kn">import</span> <span class="nn">util</span>
+
+<span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;./data/mitte4/&quot;</span>
+<span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">150</span><span class="p">):</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">hsv</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="n">im2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2BGR</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span><span class="n">im2</span><span class="p">)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Görüldüğü gibi bazı dönüşümler gerekti, kaydedilen görüntü RGB, fakat
+OpenCV'nin ekrana basma kodu BGR istiyor. </p>
+
+<p>Video <a href="http://sayilarvekuramlar.blogspot.co.uk/2015/12/coklu-baks-ac-geometrisi-multiple-view.html">stabilize
+etmek</a>
+istersek, şu ekleri yaparız,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="o">..</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">VS</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="o">...</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">hsv</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+    <span class="n">im2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2BGR</span><span class="p">)</span>
+    <span class="n">im3</span> <span class="o">=</span> <span class="n">vs</span><span class="o">.</span><span class="n">stabilize</span><span class="p">(</span><span class="n">im2</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="s1">&#39;frame&#39;</span><span class="p">,</span><span class="n">im3</span><span class="p">)</span>
+    <span class="o">...</span>    
+</code></pre>
+</div>
+
+<p>İşletip sonuçları görebiliriz.</p>
+
+<p>Tek imajlar üzerinde, mesela kişi (ya da dik duran objeler) bulmak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">io</span><span class="o">,</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+<span class="kn">import</span> <span class="nn">util</span>
+
+<span class="k">def</span> <span class="nf">draw_detections</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">rects</span><span class="p">,</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
+        <span class="n">pad_w</span><span class="p">,</span> <span class="n">pad_h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">pad_w</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">pad_h</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="o">-</span><span class="n">pad_w</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="o">-</span><span class="n">pad_h</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">thickness</span><span class="p">)</span>
+
+<span class="n">frame</span> <span class="o">=</span> <span class="mi">195</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">hsv</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="n">im2</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_RGB2BGR</span><span class="p">)</span>
+<span class="n">hog</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">HOGDescriptor</span><span class="p">()</span>
+<span class="n">hog</span><span class="o">.</span><span class="n">setSVMDetector</span><span class="p">(</span> <span class="n">cv2</span><span class="o">.</span><span class="n">HOGDescriptor_getDefaultPeopleDetector</span><span class="p">()</span> <span class="p">)</span>
+<span class="n">found</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">hog</span><span class="o">.</span><span class="n">detectMultiScale</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">winStride</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">8</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span><span class="mi">32</span><span class="p">),</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.05</span><span class="p">)</span>
+<span class="n">found_filtered</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">ri</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">found</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">qi</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">found</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">ri</span> <span class="o">!=</span> <span class="n">qi</span> <span class="ow">and</span> <span class="n">inside</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+            <span class="k">break</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">found_filtered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">draw_detections</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">found</span><span class="p">)</span>
+<span class="n">draw_detections</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">found_filtered</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s1">&#39;out4.png&#39;</span><span class="p">,</span> <span class="n">im2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="out4.png" alt="" /></p>
+
+<p>Kamera Kalibrasyonu</p>
+
+<p>Kameranın içsel parametrelerini (intrinsic matrix) bilmek 3 boyutta
+tekrar oluşturma gibi pek çok uygulamada faydalıdır. Kalibrasyon
+sonucu olarak bize bir matris verilecek, bu matrisin içeriği hakkında
+anlatım bizim <em>Yapay Görüş</em> notlarımızda ya da
+<a href="http://docs.opencv.org/trunk/dc/dbb/tutorial_py_calibration.html">şurada</a>
+bulunabilir.</p>
+
+<p>Kalibrasyon için içinde bir satranç tahtası resmi olan birkaç tane
+resim lazım. OpenCV dizini altında verilen örneklerden bir tanesine
+bakalım, ve köşelerini otomatik olarak gösterelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">cv2</span>
+<span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;/home/burak/Downloads/opencv-master/samples/data&#39;</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/left01.jpg&quot;</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s1">&#39;out5.png&#39;</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+<span class="n">found</span><span class="p">,</span> <span class="n">corners</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findChessboardCorners</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pattern_size</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">drawChessboardCorners</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">found</span><span class="p">)</span>
+<span class="n">cv2</span><span class="o">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s1">&#39;out6.png&#39;</span><span class="p">,</span> <span class="n">img</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="out5.png" alt="" /></p>
+
+<p>Kaç köşe olduğu <code>size</code> içinde. Köşeleri bulunca</p>
+
+<p><img src="out6.png" alt="" /></p>
+
+<p>Birden fazla imajla köşeleri bulup kalibre etmek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">get_sample</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">iscolor</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_COLOR</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">filedata</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imdecode</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">filedata</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">iscolor</span><span class="p">)</span>
+
+<span class="n">img_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;left01.jpg&#39;</span><span class="p">,</span><span class="s1">&#39;left02.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left03.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left04.jpg&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;left05.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left06.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left07.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left08.jpg&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;left09.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left11.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left12.jpg&#39;</span><span class="p">,</span> <span class="s1">&#39;left13.jpg&#39;</span><span class="p">,</span>
+             <span class="s1">&#39;left14.jpg&#39;</span><span class="p">]</span>
+
+<span class="n">square_size</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">pattern_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+<span class="n">pattern_points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">pattern_size</span><span class="p">),</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">pattern_points</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">indices</span><span class="p">(</span><span class="n">pattern_size</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">pattern_points</span> <span class="o">*=</span> <span class="n">square_size</span>
+
+<span class="n">obj_points</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">img_points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">img_names_undistort</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">for</span> <span class="n">fn</span> <span class="ow">in</span> <span class="n">img_names</span><span class="p">:</span>
+    <span class="n">img</span> <span class="o">=</span> <span class="n">get_sample</span><span class="p">(</span><span class="n">fn</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">img</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="k">continue</span>
+    <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">found</span><span class="p">,</span> <span class="n">corners</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">findChessboardCorners</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">pattern_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">found</span><span class="p">:</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_EPS</span> <span class="o">+</span> <span class="n">cv2</span><span class="o">.</span><span class="n">TERM_CRITERIA_COUNT</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+        <span class="n">cv2</span><span class="o">.</span><span class="n">cornerSubPix</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">term</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">found</span><span class="p">:</span> <span class="k">continue</span>
+    <span class="n">img_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">corners</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">obj_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pattern_points</span><span class="p">)</span>
+
+<span class="n">rms</span><span class="p">,</span> <span class="n">camera_matrix</span><span class="p">,</span> <span class="n">dist_coefs</span><span class="p">,</span> <span class="n">rvecs</span><span class="p">,</span> <span class="n">tvecs</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">calibrateCamera</span><span class="p">(</span><span class="n">obj_points</span><span class="p">,</span> <span class="n">img_points</span><span class="p">,</span> <span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">flags</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dist_coefs</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">camera_matrix</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[ -2.81086258e-01   2.72581009e-02   1.21665908e-03  -1.34204274e-04
+    1.58514023e-01]]
+[[ 532.79536562    0.          342.45825163]
+ [   0.          532.91928338  233.90060514]
+ [   0.            0.            1.        ]]
+</code></pre>
+</div>
+
+<p>Bir satranç karesinin kenarının büyüklüğü için <code>square_size</code>
+parametresine kesin bir ölçüm de verilebilir, mesela 30 milimetre için
+30 gibi, o zaman hesaplanan kamera matrisiyle yapılan ölçümler gerçek
+dünya ölçümleri verirler. Üstte 1 verilmiş, o zaman takip eden
+hesaplar bize "satranç tahtası kare kenarı" biriminde sonuçlar
+verir. Mesela bir hesap bize "bir obje 10 yüksekliğinde" diyorsa bu
+"10 satranç kare kenarı yüksekliğinde" demek olacak.</p>
+
+<p>Imajı Bölümlere Ayırma (Segmentation)</p>
+
+<p><em>Bilgisayar Bilimi, Felzenswalb Gruplaması</em> ders notlarımızda işlenen
+çizit teorisini temel alan imaj bölümlere ayırma algoritması
+<code>scikit-image</code> kütüphanesinde kodlanmış. Örnek altta,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">skimage.segmentation</span> <span class="kn">import</span> <span class="n">felzenszwalb</span>
+<span class="kn">from</span> <span class="nn">skimage.segmentation</span> <span class="kn">import</span> <span class="n">mark_boundaries</span>
+<span class="kn">import</span> <span class="nn">util</span><span class="o">,</span> <span class="nn">cv2</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;./data/mitte4/&quot;</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="mi">195</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">hsv</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+<span class="n">im2</span> <span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">im</span><span class="p">,(</span><span class="mi">160</span><span class="p">,</span><span class="mi">120</span><span class="p">))</span>
+<span class="n">segments</span> <span class="o">=</span> <span class="n">felzenszwalb</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">min_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">im3</span> <span class="o">=</span> <span class="n">mark_boundaries</span><span class="p">(</span><span class="n">im2</span><span class="p">,</span> <span class="n">segments</span><span class="p">)</span>
+<span class="n">im4</span> <span class="o">=</span><span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">im3</span><span class="p">,(</span><span class="mi">320</span><span class="p">,</span><span class="mi">240</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;out7.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="out7.png" alt="" /></p>
+
+<p>Demo amaçlı olarak <code>mark_boundaries</code> çağrısı verilmiş, daha detaylı
+piksel bazlı bölüm bilgisi <code>segments</code> içinde;</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">segments</span><span class="o">.</span><span class="n">shape</span>
+<span class="nb">print</span> <span class="s1">&#39;bolum&#39;</span><span class="p">,</span> <span class="n">segments</span><span class="p">[</span><span class="mi">117</span><span class="p">,</span><span class="mi">155</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(120, 160)
+bolum 7
+</code></pre>
+</div>
+
+<p>Yani (117,155) pikseli 7. bölüme aitmiş. Eğer bu bölümdeki tüm
+pikselleri istersem,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">segments</span> <span class="o">==</span> <span class="mi">7</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[False False False ..., False False False]
+ [False False False ..., False False False]
+ [False False False ..., False False False]
+ ..., 
+ [False False False ...,  True  True  True]
+ [False False False ...,  True  True  True]
+ [False False False ...,  True  True  True]]
+</code></pre>
+</div>
+
+<p>gibi bir filtreleme matrisi, "maske (mask)" elde ederim, bu filtre ile
+gereken diğer bilgilere erişebiliriz.</p>
+
+<p>Felzenszwalb yöntemi görütü bölümlemesi bağlamında optimal; dışarıdan
+tanımlanan parametreler için en optimal olan ayrımı buluyor. İşlem
+karmaşıklığı O(N log N), yani lineere yakın, bu hızda video bile
+işlenebilir. Tabii daha fazlası için, yani anlamsal olarak gruplama
+için sadece imaj bilgisinden daha fazlası gerekebilir. Mesela bir
+portrede bölümleme yapınca yüz ayrı saç ayrı olabilir, fakat burada
+tüm kafayı illa ayrı bir bölüm olarak istiyorsak, bu anlamsal bir
+gruplama demektir, o zaman görüntü hakkında bir önbilgi gerekecektir
+(gerçi parametre ayarları ile tüm kafanın da kapsanması mümkün
+olabilir).</p>
+
+<p>Yardımcı kodlar <a href="util.py">şurada</a>.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

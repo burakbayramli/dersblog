@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>IETT Verileri, SOAP</h1>
+
+<p>Moovit [4] benzeri bir uygulamayı nasıl yazarız sorusuna cevap, önce
+İETT baz seyahat verileri gerekli. Gerekli verilerin bazıları İETT APİ
+servisi üzerinden alınabilir. APİ hakkında belgeler [2]'de, örnek kod
+[1]'de.</p>
+
+<p>Baz URL ve başlangıç ayarları,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">zeep</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">base</span> <span class="o">=</span> <span class="s2">&quot;https://api.ibb.gov.tr/iett&quot;</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Mesela tüm duraklar için (biraz zaman alabilir)</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">wsdl</span><span class="o">=</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;/UlasimAnaVeri/HatDurakGuzergah.asmx?wsdl&quot;</span><span class="p">)</span>
+<span class="n">data_text</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">GetDurak_json</span><span class="p">(</span><span class="n">DurakKodu</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data_text</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Bu verinin tam halini şuradan [3] alabilirsiniz.</p>
+
+<p>Tek bir durak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">wsdl</span><span class="o">=</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;/UlasimAnaVeri/HatDurakGuzergah.asmx?wsdl&quot;</span><span class="p">)</span>
+<span class="n">data_text</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">GetDurak_json</span><span class="p">(</span><span class="n">DurakKodu</span><span class="o">=</span><span class="s2">&quot;113252&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data_text</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>   SDURAKKODU SDURAKADI                                  KOORDINAT  ILCEADI  \
+0      113252    MASLAK  POINT (29.0209720086216 41.1085509961235)  Sariyer   
+
+     SYON AKILLI  FIZIKI  DURAK_TIPI ENGELLIKULLANIM  
+0  LEVENT    VAR  KAPALI  WALLMODERN     Uygun Degil  
+</code></pre>
+</div>
+
+<p>Bir hat üzerindeki tüm otobüslerin durumu (canlı veri),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">wsdl</span><span class="o">=</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;/FiloDurum/SeferGerceklesme.asmx?wsdl&quot;</span><span class="p">)</span>
+<span class="n">data_text</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">GetHatOtoKonum_json</span><span class="p">(</span><span class="n">HatKodu</span><span class="o">=</span><span class="s2">&quot;15B&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data_text</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>   kapino            boylam             enlem hatkodu guzergahkodu  \
+0   C-231        29.1032215        41.0488515     15B     15B_G_D0   
+1   C-301  29.0284016666667         41.035909     15B     15B_D_D0   
+2   C-299  29.0548008333333  41.0486603333333     15B     15B_D_D0   
+3   C-230  29.1017951666667  41.0361956666667     15B     15B_G_D0   
+4   C-229         29.086476  41.0254901666667     15B     15B_G_D0   
+5   C-296         29.079965         41.030994     15B     15B_D_D0   
+6   C-228         29.079794  41.0324728333333     15B     15B_G_D0   
+7   C-294  29.0963016666667  41.0258851666667     15B     15B_D_D0   
+8   C-227  29.0490996666667  41.0459533333333     15B     15B_G_D0   
+9   C-226  29.0331556666667        41.0386985     15B     15B_G_D0   
+10  C-232  29.1069303333333  41.0502151666667     15B     15B_G_D0   
+11  C-304        29.0160465        41.0276185     15B     15B_D_D0   
+12  C-234         29.106912  41.0501541666667     15B     15B_G_D0   
+13  C-297        29.0764325        41.0453085     15B     15B_D_D0   
+
+                                       hatad                 yon  \
+0   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+1   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR         KURAN KURSU   
+2   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR         KURAN KURSU   
+3   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+4   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+5   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR         KURAN KURSU   
+6   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+7   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR         KURAN KURSU   
+8   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+9   TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+10  TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+11  TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR         KURAN KURSU   
+12  TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR  ÜSKÜDAR  CAMİİ ÖNÜ   
+13  TOPAĞACI MAHALLESİ / GÜZELTEPE - ÜSKÜDAR         KURAN KURSU   
+
+       son_konum_zamani yakinDurakKodu  
+0   2023-01-23 12:41:54         215682  
+1   2023-01-23 12:41:55         219271  
+2   2023-01-23 12:41:52         219333  
+3   2023-01-23 12:41:51         217141  
+4   2023-01-23 12:41:53         222173  
+5   2023-01-23 12:41:56         223352  
+6   2023-01-23 12:41:58         223351  
+7   2023-01-23 12:41:57         261901  
+8   2023-01-23 12:41:57         219322  
+9   2023-01-23 12:41:57         219282  
+10  2023-01-23 12:41:53         223901  
+11  2023-01-23 12:41:56         404091  
+12  2023-01-23 12:41:52         223901  
+13  2023-01-23 12:41:52         220111  
+</code></pre>
+</div>
+
+<p>O andaki tüm otobüslerin durumu,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="n">wsdl</span><span class="o">=</span><span class="n">base</span> <span class="o">+</span> <span class="s2">&quot;/FiloDurum/SeferGerceklesme.asmx?wsdl&quot;</span><span class="p">)</span>
+<span class="n">data_text</span><span class="o">=</span><span class="n">client</span><span class="o">.</span><span class="n">service</span><span class="o">.</span><span class="n">GetFiloAracKonum_json</span><span class="p">()</span>
+<span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">data_text</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>     Operator                      Garaj KapiNo      Saat            Boylam  \
+0         OHO                       None  A-001  12:42:58         29.045502   
+1         OHO                       None  A-002  12:42:51  28.9921048333333   
+2         OHO                       None  A-003  12:42:54  29.0243251666667   
+3         OHO                       None  A-004  12:43:00  29.0538623333333   
+4         OHO                       None  A-005  12:42:56  29.0375251666667   
+...       ...                        ...    ...       ...               ...   
+6585     IETT  IKITELLIISLETTIRMEGARAJI2  T1104  12:42:58         28.953418   
+6586     IETT  IKITELLIISLETTIRMEGARAJI2  T1105  12:42:54  28.7240793333333   
+6587     IETT  IKITELLIISLETTIRMEGARAJI2  T1106  12:43:00  28.7477818333333   
+6588     IETT  IKITELLIISLETTIRMEGARAJI2  T1107  12:42:54  28.7472726666667   
+6589     IETT  IKITELLIISLETTIRMEGARAJI2  T1108  12:42:55         28.675459   
+
+                 Enlem Hiz       Plaka  
+0           41.0786255  24  34 HO 1000  
+1     41.0373373333333   3  34 HO 1001  
+2     41.0480058333333   0  34 HO 1002  
+3            41.099348  15  34 HO 1003  
+4           41.1275815   0  34 HO 1004  
+...                ...  ..         ...  
+6585        41.0119565  26    34KT9714  
+6586  40.9862843333333   0    34KT9728  
+6587  41.0615378333333  36    34LD0364  
+6588  41.1065363333333   0    34LD0369  
+6589  41.0843873333333   0    34CFK810  
+
+[6590 rows x 8 columns]
+</code></pre>
+</div>
+
+<p>API'de olmayan bir veri çeşidi bir hattın geçtiği tüm durakların
+listesi. Hat üzerinde giden otobüslerin o anda yakın olduğu duraklar
+canlı olarak paylaşılıyor fakat statik hat verisi yok, önce şu durak
+sonra şu durak gibi..  Bu veriyi belki üstteki çağrıları gün içinde
+birkaç kere işletip, veriyi toplayıp, sonradan birleştirerek elde
+edebiliriz. Biraz bulmaca çözer gibi olacak ama durak konumu
+biliniyor, hat üzerinde birkaç kere canlı veriyi alıp otobüsün önce
+hangi sonra hangi durağa yakın olduğu görülüyor (bkz
+<code>yakinDurakKodu</code>), bunları birleştirip bir hat oluşturmak mümkündür.</p>
+
+<p>Bazı Eksikler</p>
+
+<p>API servisi yazılalı bayağı zaman geçmiş herhalde, SOAP diye bir
+paylaşım tekniği kullanılmış, bu sistem artık yerini daha basit, daha
+sağlam bir teknik olan REST tekniğine bıraktı. Basit Web URL'leri
+üzerinde gerekirse JSON ile veri alınıp verilip bilgi paylaşımı
+yapılabiliyor.</p>
+
+<p>Ayrıca bazen hatalı durumlar ortaya çıktığında ekranda görülen <code>ORA-</code>
+türü mesajlara bakınca arka plandaki veri tabanının Oracle olduğu
+anlaşılıyor. Bu bir ticari tabandır, her ne kadar sağlam bir yazılım
+olsa da, lisansları pahalıdır, kamu hizmeti veren bir servis açık
+yazılım, bedava ve bir o kadar sağlam Postgresql tabanını kullanarak
+daha iyi (ve ucuz) hizmet verebilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://github.com/hakanatak/dataibbgovtr_python</p>
+
+<p>[2] https://data.ibb.gov.tr/dataset/3e32bb5d-2936-41eb-bdc7-65b843487e99/resource/6821f452-f6ff-49e9-940a-d4ebfc78f03e/download/iett-web-servis-kullanm-dokumanv.1.2.pdf</p>
+
+<p>[3] https://drive.google.com/uc?export=view&amp;id=1ATNV5qtW0gJoPuz2BKWBevakIe0mUiWF</p>
+
+<p>[4] https://moovitapp.com/istanbul-1563/lines/14b/21021537/6467401/en</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

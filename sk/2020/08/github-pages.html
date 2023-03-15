@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Markdown Bazli Web Yayinciligi, Github Pages</h1>
+
+<p>Artık Github'ta içinde markdown dosyaları içeren bir depo direk Github
+üzerinden blog tarzı Internet'te yayınlanır hale getirilebilir. Github
+Pages teknolojisi arka planda Jekyll yazılımı üzerinen markdown
+dosyalarını otomatik olarak HTML'e çeviriyor. </p>
+
+<p>Bu özelliğin aktif edilmesi için repoya gidip Settings'e tıklanır, ve
+en altta <code>Github Pages</code> bölümü aktif edilir. Farklı temalar da buradan
+seçilebilir. Bunlar yapılınca dizinde otomatik bir <code>_config.yml</code>
+yaratılacak, bunun içine mesela</p>
+
+<pre><code>plugins:
+  - jekyll-sitemap
+</code></pre>
+
+<p>eklersek Github Pages bizim için bir <code>sitemap.xml</code> üretir.</p>
+
+<p>GP'ın güzel tarafı markdown ıcinde sanki HTML'den haberimiz yokmuş
+gibi davranabiliriz, mesela ben alt dizin <code>şub1/şub2</code> içindeyim, ve
+<code>şub3/şub4</code> içindeki bir <code>yazı.md</code> dosyasına bağlantı vermek
+istiyorum, bunun için <code>[buraya tıkla](../../sub3/sub4/yazi.md)</code> yazmam
+yeterli, bu bağlantı GP tarafından <code>https://github.io/../repo1/sub3/sub4/yazi.html</code> 
+şeklindeki bir bağlantıya çevirilecektir .</p>
+
+<h3>Matematik Formülleri</h3>
+
+<p>Eğer Github Pages kendi şablonu üzerinen, mesela Slate şablonu
+üzerinden matematik formülleri servis etmek istersek, şurada anlatılıyor,</p>
+
+<p>https://github.com/cjerdonek/gh-pages-theme-slate</p>
+
+<p>ana dizinde <code>/_layouts/default.html</code> dosyasi yaratiriz, ve bu dosyaya</p>
+
+<p>https://github.com/pages-themes/slate/blob/master/_layouts/default.html</p>
+
+<p>görülen kodu koyarız. Bu kod mevcut Slate şablonu ile aynı kod, bu kodu
+olduğu gibi kullanınca öncesi sonrası hiçbir değişiklik görmemeniz lazım. 
+Sonra bu kod içine istediğimiz ekleri yaparız, mesela MathJax için</p>
+
+<pre><code>&lt;script type="text/x-mathjax-config"&gt;
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+&lt;/script&gt;
+&lt;script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full"&gt;
+&lt;/script&gt;
+</code></pre>
+
+<p><code>&lt;head&gt;</code> içine eklenir, bundan sonra Markdown dosyamızda iki <code>$$</code> arası formüller
+gösterilecektir. </p>
+
+<h3>Jekyl Iptali</h3>
+
+<p>Github Pages aslında iki işi aynı anda yapıyor, hem arka planda HTML
+üretiyor, hem de bildiğimiz Web servisi gibi bu HTML'leri servis
+ediyor. Fakat eğer biz kendi HTML'imizi Markdown dosyalarından
+üretirsek, Jekyl üretimini iptal edip kendi sayfalarımızı servis
+edebiliriz.</p>
+
+<p>İptal için en üst seviyede bir <code>.nojekyll</code> dosyası yaratmak lazım, içi
+boş olabilir önemli değil, GH bunu görünce HTML üretimini iptal
+edecek.</p>
+
+<p>Şimdi kendi html dosyalarımızı markdown'dan üretmeye gelelim, alttaki
+gibi bir kod olabilir,  </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">markdown</span>
+
+<span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">ignore_list</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ls ignore lst&#39;</span><span class="p">,</span> <span class="n">ignore_list</span><span class="p">)</span>
+    <span class="n">dirs</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+            <span class="n">do_add</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">ignore_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ignoring&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span> <span class="n">do_add</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">do_add</span><span class="p">:</span> <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span> 
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">do_add</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">ignore_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span> <span class="n">do_add</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">do_add</span><span class="p">:</span> <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span>
+
+<span class="k">def</span> <span class="nf">clean_html</span><span class="p">():</span>
+    <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;clean-html2&#39;</span><span class="p">:</span>
+        <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">ls</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">size</span><span class="p">)</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;.md&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">fmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">fhtml</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.md&quot;</span><span class="p">,</span><span class="s2">&quot;.html&quot;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fhtml</span><span class="p">):</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Erasing&#39;</span><span class="p">,</span> <span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fhtml</span><span class="p">)</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fhtml</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">gen_html</span><span class="p">():</span>
+        <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span> <span class="o">=</span> <span class="n">ls</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">size</span><span class="p">)</span> <span class="ow">in</span> <span class="n">files</span><span class="p">:</span>
+            <span class="k">if</span> <span class="s2">&quot;.md&quot;</span> <span class="ow">in</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">fmd</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                <span class="n">fhtml</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.md&quot;</span><span class="p">,</span><span class="s2">&quot;.html&quot;</span><span class="p">)</span>
+                <span class="n">update</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fhtml</span><span class="p">):</span>
+                    <span class="n">mdtime</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fmd</span><span class="p">)</span>
+                    <span class="n">htmltime</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fhtml</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">htmltime</span> <span class="o">&gt;</span> <span class="n">mdtime</span><span class="p">:</span> <span class="n">update</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="k">if</span> <span class="n">update</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Generating html for&#39;</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+                    <span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fmd</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+                    <span class="n">res</span> <span class="o">=</span> <span class="n">markdown</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fenced_code&#39;</span><span class="p">])</span>
+                    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">fhtml</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+                    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Kod en üst dizin seviyesinden işletilir, ve gördüğü her .md dosyası için
+aynı isimde bir .html dosyası üretir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

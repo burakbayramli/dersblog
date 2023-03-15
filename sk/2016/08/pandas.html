@@ -1,0 +1,652 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Pandas</h1>
+
+<p>Pandas'ı ilk kez bir CSV dosyasını okumak ve işlemek için
+kullanmıştım; numpy bu amacla yazılmamış -rivayete göre ticari ürün
+Matlab hala CSV dosyalarını basit bir şekilde okuyamıyor-, ve bazı
+belgelere göre Pandas bu işi R'ye benzer şekilde yapabiliyordu. Pandas
+kurduktan sonra, alttaki gibi bir kod Pandas noktalı virgül ile
+ayrılmış dosyayı söylendiği gibi güzelce okudu,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">io</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">c;d;a;b</span>
+<span class="s2">one;0;0;7</span>
+<span class="s2">one;1;1;6</span>
+<span class="s2">one;2;2;5</span>
+<span class="s2">two;0;3;4</span>
+<span class="s2">two;1;4;3</span>
+<span class="s2">two;2;5;2</span>
+<span class="s2">two;3;6;1</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s1</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>     c  d  a  b
+0  one  0  0  7
+1  one  1  1  6
+2  one  2  2  5
+3  two  0  3  4
+4  two  1  4  3
+5  two  2  5  2
+6  two  3  6  1
+</code></pre>
+</div>
+
+<p>Not: CSV'yi yazıda gösterebilmek için StringIO uzerinden okuduk, fakat
+aslında read_csv ile direk dosyadan da okuyabilirdik.</p>
+
+<p>Güzel... Ama sol tarafta bir takım sayılar var, 0,1,..,6 diye gidiyor,
+bunlar nedir? CSV okuyup direk numpy matrisi elde etsek olmaz mıydı?
+Bu "ekstra" "gereksiz" şeyleri ne yapacağız? Baştaki amacımız Pandas'i
+numpy için bir önyüz gibi kullanmaktı (gerçi np.array(df1)) ile hemen
+çevrim yapılabilirdi ama, şimdi, bu ek aşamaya ne gerek var?), fakat
+Pandas belgelerini takip ettikçe, ve örnekleri gördükçe bu rakamların,
+yanı indisin gerekliği anlaşılmaya başladı.</p>
+
+<p>İndis</p>
+
+<p>Pandas'in en temel iki objesi Series ve DataFrame'in muhakkak bir
+indisi vardır. Öyle ki herhangi bir Series, DataFrame için indis
+tanımlanmamissa, Pandas otomatik olarak bir indis kendisi yaratır. Bu
+indis cok temel, birer birer artan düz sayılar olacaktır (üstteki
+gibi) ama muhakkak bir indis olur.</p>
+
+<p>Pandas ile bir kolona erismek istersem bu cok basittir; mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df1</span><span class="p">[</span><span class="s1">&#39;b&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>0    7
+1    6
+2    5
+3    4
+4    3
+5    2
+6    1
+Name: b, dtype: int64
+</code></pre>
+</div>
+
+<p>Dikkat, kolona erişince indis de onunla "beraber geldi". Üstte elde
+ettiğimiz bir Series objesi, DataFrame'in kolonları Series
+objeleridir. Series tek bir kolonu temsil eden bir objedir.</p>
+
+<p>İndis pek çok türlü tipte olabilir. Bir tarih, bir string bile
+olabilir. Onu mevcut bir kolon üzerinden kendimiz tanımlayabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s2</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">c;d;a;b</span>
+<span class="s2">2016-01-02;one;0;0;7</span>
+<span class="s2">2016-01-03;one;1;1;6</span>
+<span class="s2">2016-01-04;one;2;2;5</span>
+<span class="s2">2016-01-05;two;0;3;4</span>
+<span class="s2">2016-01-06;two;1;4;3</span>
+<span class="s2">2016-01-07;two;2;5;2</span>
+<span class="s2">2016-01-08;two;3;6;1</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">s2</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">parse_dates</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>              c  d  a  b
+2016-01-02  one  0  0  7
+2016-01-03  one  1  1  6
+2016-01-04  one  2  2  5
+2016-01-05  two  0  3  4
+2016-01-06  two  1  4  3
+2016-01-07  two  2  5  2
+2016-01-08  two  3  6  1
+</code></pre>
+</div>
+
+<p>Sıfırıncı, ilk kolonu indis olarak tanımladık, Pandas'a ayrıca
+parse_dates ile bu kolonun içinde "tarihimsi" veriler olduğunu
+söyledik ki onları otomatik olarak DateTime objesi haline
+getirsin. Böylece tarihsel olarak büyüktür, küçüktür işlemlerini
+kullanabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df2</span><span class="p">[</span><span class="n">df2</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;</span> <span class="s1">&#39;2016-01-06&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>              c  d  a  b
+2016-01-07  two  2  5  2
+2016-01-08  two  3  6  1
+</code></pre>
+</div>
+
+<p>İndisi sonradan değiştirmek mümkün. Mesela b kolonunu indisi yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>       index    c  d  a
+b                      
+7 2016-01-02  one  0  0
+6 2016-01-03  one  1  1
+5 2016-01-04  one  2  2
+4 2016-01-05  two  0  3
+3 2016-01-06  two  1  4
+2 2016-01-07  two  2  5
+1 2016-01-08  two  3  6
+</code></pre>
+</div>
+
+<p>Dikkat <code>reset_index()</code> ile mevcut indisi iptal ettik, o indis normal
+bir kolon haline geldi. Tabii bir isme sahip olmasi gerekiyordu,
+Pandas da ona "index" diye bir isim verdi. Bu isim degistirilebilir
+muhakkak.</p>
+
+<p>İndisin esas değeri DataFrame'de yeni bir kolon yaratmak istediğimiz
+zaman ortaya çıkar. Diyelim ki bir şekilde elimizde şöyle bir Series
+var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>1    x
+2    y
+3    z
+dtype: object
+</code></pre>
+</div>
+
+<p>Bu seriyi tamamen kendimiz, yan bir tarafta apayrı bir şekilde
+yarattık. Şimdi bu seriyi bir kolon olarak df1'e ekleyelim. Ne olacak
+acaba?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df1</span><span class="p">[</span><span class="s1">&#39;s1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">s1</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>     c  d  a  b   s1
+0  one  0  0  7  NaN
+1  one  1  1  6    x
+2  one  2  2  5    y
+3  two  0  3  4    z
+4  two  1  4  3  NaN
+5  two  2  5  2  NaN
+6  two  3  6  1  NaN
+</code></pre>
+</div>
+
+<p>Pandas seriyi aldı, indisine baktı, ve o indisi df1 ile eşledi, uyan
+öğeleri yeni kolon öğesi olarak ekledi, diğerlerini boş bıraktı!</p>
+
+<p>Pandas'in bu özelliği sayesinde zaten formülsel hesaplar çok rahat
+yapılabiliyor. Mesela x = d + a + b gibi bir hesabı direk DataFrame
+üzerinde yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df1</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">d</span> <span class="o">+</span> <span class="n">df1</span><span class="o">.</span><span class="n">a</span> <span class="o">+</span> <span class="n">df1</span><span class="o">.</span><span class="n">b</span>
+<span class="nb">print</span> <span class="n">df1</span>
+</code></pre>
+</div>
+
+<pre><code>     c  d  a  b   s1   x
+0  one  0  0  7  NaN   7
+1  one  1  1  6    x   8
+2  one  2  2  5    y   9
+3  two  0  3  4    z   7
+4  two  1  4  3  NaN   8
+5  two  2  5  2  NaN   9
+6  two  3  6  1  NaN  10
+</code></pre>
+
+<p>Bu ifadenin çok rahat bir şekilde işleyebilmesinin arkasında yatan sır
+kolon erişiminin, toplama işlemlerinin sonucunun hepsinin içinde indis
+olan sonuçlar üretmeleri - bu sayede Pandas bu sonucu alıp pat diye
+geri DataFrame içine yazabiliyor.</p>
+
+<p>İndis uyumu üzerinden akla gelebilecek her türlü operasyon mümkün;
+mesela bir dizin içinde Series objeleri var, onları yanyana yapıştırıp
+bir DataFrame oluşturabilirim, Pandas indisleri uyan hücreleri aynı
+satıra koyar.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;x&#39;</span><span class="p">,</span><span class="s1">&#39;y&#39;</span><span class="p">,</span><span class="s1">&#39;z&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">s2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">s3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;aa&#39;</span><span class="p">,</span><span class="s1">&#39;bb&#39;</span><span class="p">,</span><span class="s1">&#39;cc&#39;</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">,</span><span class="n">s3</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df3</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;bir&#39;</span><span class="p">,</span><span class="s1">&#39;iki&#39;</span><span class="p">,</span><span class="s1">&#39;uc&#39;</span><span class="p">]</span>
+<span class="nb">print</span> <span class="n">df3</span>
+</code></pre>
+</div>
+
+<pre><code>  bir iki  uc
+
+1   x   a  aa
+
+2   y   b  bb
+
+3   z   c  cc
+</code></pre>
+
+<p>Aynı şekilde DataFrame'ler de yanyana yapıştırılabilir. </p>
+
+<p>Bu arada Pandas aynen SQL tabanları gibi birleştirme operasyonu
+yapabiliyor, yani iki DataFrame'i alıyorum, indis uyumu üzerinden, ya
+da sadece bazı kolonların ismini verip kolon uyumu üzerinden iki
+DataFrame birleştirilebilir. İşlem oldukça hızlı; bir projede her biri
+1 gigabaytlık iki DataFrame'i birleştirip üçüncü bir devasa DataFrame
+yaratmıştım bir kez, tamamen hafızada!</p>
+
+<p>Kordinat bazlı (kordinat derken indeks ve kolon, ki indeks hangi tipte
+ise o) kalıcı değişimler için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df2</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">&#39;2016-01-05&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="nb">print</span> <span class="n">df2</span>
+</code></pre>
+</div>
+
+<pre><code>              c     d  a  b
+2016-01-02  one     0  0  7
+2016-01-03  one     1  1  6
+2016-01-04  one     2  2  5
+2016-01-05  two  1000  3  4
+2016-01-06  two     1  4  3
+2016-01-07  two     2  5  2
+2016-01-08  two     3  6  1
+</code></pre>
+
+<p>Sadece tek bir hücre değiştirdik.</p>
+
+<p>Fonksiyonlar</p>
+
+<p>Üstte gördüğümüz formülsel erişim her türlü satırsal işlem için
+yeterli olmayabilir. Belki bir Series'in tüm öğleri, ya da
+DataFrame'in tüm satırları üzerinde bir fonksiyon işlemesi
+gerekir... Burada map ve apply fonksiyonları var; Python'un
+fonksiyonel ruhuna uygun bir şekilde satır satır gezinen kod
+yazmıyoruz, genel bir geziciye bir fonksiyon geçiyoruz, ve gezici her
+satıra / öğeye verilen fonksiyonu uyguluyor.</p>
+
+<p>Diyelim ki bir kolondaki her ögeyi string haline getirip yanına "XX"
+ekliyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;XX&quot;</span>
+
+<span class="nb">print</span> <span class="n">df1</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>0    0XX
+
+1    1XX
+
+2    2XX
+
+3    0XX
+
+4    1XX
+
+5    2XX
+
+6    3XX
+
+Name: d, dtype: object
+</code></pre>
+
+<p>Çok basit fonksiyonlar için Python'un lambda kullanımı var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">df1</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;XX&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Aynı sonucu verir. Elde edilen sonucun bir Series olduğuna dikkat, bir
+indisi var, ve alıp bu Series'i bir DataFrame içine yazabilirdik.</p>
+
+<p>Eğer fonksiyon içinde tüm DataFrame satırına  erişim gerekiyorsa,
+apply kullanımı var, apply ona geçilen fonksiyona satır geçer; yani
+apply satırları teker teker gezer ve satırlar sırasıyla bizim
+verdiğimiz fonksiyonun ilk parametresine "düşer".</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">df1</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">c</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">d</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>0    one:0
+
+1    one:1
+
+2    one:2
+
+3    two:0
+
+4    two:1
+
+5    two:2
+
+6    two:3
+</code></pre>
+
+<p>Sözlük</p>
+
+<p>Bazen bir DataFrame'in indis değerlerini baz alan bir sözlük yaratmak
+isteyebiliriz. Bunun için <code>to_dict</code> çağrısı var. Test verisi yaratalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>     b
+a     
+0    1
+2    3
+4    5
+6    7
+8    9
+10  11
+12  13
+14  15
+16  17
+18  19
+</code></pre>
+</div>
+
+<p>Eğer <code>a</code> bazlı bir sözlük yaratmak istersem,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">d</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
+<span class="n">d</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+{0: {&#39;b&#39;: 1},
+ 2: {&#39;b&#39;: 3},
+ 4: {&#39;b&#39;: 5},
+ 6: {&#39;b&#39;: 7},
+ 8: {&#39;b&#39;: 9},
+ 10: {&#39;b&#39;: 11},
+ 12: {&#39;b&#39;: 13},
+ 14: {&#39;b&#39;: 15},
+ 16: {&#39;b&#39;: 17},
+ 18: {&#39;b&#39;: 19}}
+</code></pre>
+</div>
+
+<p>Artık mesela <code>d[2]['b']</code> ile 2 indis değerindeki <code>b</code> kolon değerine
+erişmiş oluyorum bir bakıma, eğer daha fazla kolon olsaydı onlara da
+benzer şekilde erişim sağlanacaktı. </p>
+
+<p>Pivot</p>
+
+<p>Satır olarak tekrar eden iki kolondaki verileri bir tür kordinat
+olarak alıp, üçüncü bir kolondaki değere göre bir tablo hücresinde
+değer atamak istiyorsak, Pandas paketinin pivot özelliği ise
+yarar. Pivot genel bir veri prezentasyon yaklaşımı, Postgres içinde
+crosstab diye bir fonksiyon var, fakat kullanımı pek kolay değil.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="n">df</span><span class="o">=</span><span class="n">DataFrame</span><span class="p">({</span>
+       <span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">,</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>  <span class="s1">&#39;two&#39;</span><span class="p">,</span>  <span class="s1">&#39;two&#39;</span><span class="p">,</span>  <span class="s1">&#39;two&#39;</span><span class="p">],</span>
+       <span class="s1">&#39;bar&#39;</span><span class="p">:</span>  <span class="p">[</span> <span class="s1">&#39;A&#39;</span> <span class="p">,</span>   <span class="s1">&#39;B&#39;</span> <span class="p">,</span>   <span class="s1">&#39;C&#39;</span> <span class="p">,</span>   <span class="s1">&#39;A&#39;</span> <span class="p">,</span>   <span class="s1">&#39;B&#39;</span> <span class="p">,</span>   <span class="s1">&#39;C&#39;</span> <span class="p">]</span> <span class="p">,</span>
+       <span class="s1">&#39;baz&#39;</span><span class="p">:</span>  <span class="p">[</span> <span class="s1">&#39;1&#39;</span><span class="p">,</span>   <span class="s1">&#39;2&#39;</span><span class="p">,</span>   <span class="s1">&#39;3&#39;</span><span class="p">,</span>   <span class="s1">&#39;4&#39;</span><span class="p">,</span>   <span class="s1">&#39;5&#39;</span><span class="p">,</span>   <span class="s1">&#39;6&#39;</span><span class="p">]</span>
+       <span class="p">})</span>
+<span class="nb">print</span> <span class="n">df</span>
+<span class="n">pv</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">pivot</span><span class="p">(</span><span class="s1">&#39;bar&#39;</span><span class="p">,</span> <span class="s1">&#39;foo&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">pv</span><span class="o">.</span><span class="n">to_string</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Sonuc</p>
+
+<pre><code>foo one two
+bar       
+A     1   4
+B     2   5
+C     3   6
+</code></pre>
+
+<p>Kolonda Liste</p>
+
+<p>DataFrame pek cok Python tipini kabul edebilir, liste de bunlardan biri,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="n">df</span><span class="o">=</span><span class="n">DataFrame</span><span class="p">({</span>
+       <span class="s1">&#39;foo&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;one&#39;</span><span class="p">,</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>  <span class="s1">&#39;one&#39;</span><span class="p">,</span>  <span class="s1">&#39;two&#39;</span><span class="p">,</span>  <span class="s1">&#39;two&#39;</span><span class="p">,</span>  <span class="s1">&#39;two&#39;</span><span class="p">],</span>
+       <span class="s1">&#39;bar&#39;</span><span class="p">:</span>  <span class="p">[</span> <span class="s1">&#39;[2,3]&#39;</span><span class="p">,</span>   <span class="s1">&#39;[4,5]&#39;</span><span class="p">,</span> <span class="s1">&#39;[6,7]&#39;</span><span class="p">,</span> <span class="s1">&#39;[8,9]&#39;</span><span class="p">,</span> <span class="s1">&#39;[10,11]&#39;</span><span class="p">,</span> <span class="s1">&#39;[12,13]&#39;</span><span class="p">],</span>
+       <span class="s1">&#39;baz&#39;</span><span class="p">:</span>  <span class="p">[</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>   <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span>   <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">],</span>   <span class="p">[</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">],</span>   <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">],</span>   <span class="p">[</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">]]</span>
+       <span class="p">})</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>   foo      bar       baz
+0  one    [2,3]    [2, 3]
+1  one    [4,5]    [4, 5]
+2  one    [6,7]    [6, 7]
+3  two    [8,9]    [8, 9]
+4  two  [10,11]  [10, 11]
+5  two  [12,13]  [12, 13]
+</code></pre>
+</div>
+
+<p>Artık <code>bar</code> ve <code>baz</code> kolonları içinde liste var, biri metin bazli
+digeri duz Python objesi halinde. Listeleri nasıl geri okuruz?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">baz</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">baz</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[2, 3]
+&lt;class &#39;list&#39;&gt;
+[2,3]
+&lt;class &#39;str&#39;&gt;
+</code></pre>
+</div>
+
+<p>İlk durum kolay, liste doğru Python tipinde direk erişip
+kullanırız. Eğer liste bir string olarak geliyorsa, onu Python tipine çevirmek
+lazım. Burada <code>eval</code> kullanımı önerenler olabilir fakat bu kullanım yavaştır,
+ayrıca verilen parametreyi bir Python kodu kabul edip işlettiği için tehlikeli
+olabilir. Bu durumda en hızlı ve güvenli çözüm <code>json</code> kullanmak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[2, 3]
+&lt;class &#39;list&#39;&gt;
+2
+</code></pre>
+</div>
+
+<p>Bu yaklaşım işledi çünkü liste kabaca zaten bir JSON formatına
+sahiptir, sözlük (dictionary) yok ama liste var. Bu sebeple <code>loads</code>
+listeye çevrimi yapabildi.</p>
+
+<p>Dosyalardan Okumak</p>
+
+<p>Üstteki örneklerde <code>StringIO</code> kullandık, ama en basit Pandas kullanımı
+aslında <code>df = pd.read_csv('[dosya]')</code> ile direk diskten okumak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data.csv&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Burada ilginç bazı ek numaralar da yapılabiliyor, örnek zip içinde olan csv
+direk zip üzerinden okunabilir! Mesela <code>test.zip</code> içinde olan <code>test.csv</code>
+dosyasını okumak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">zipfile</span>
+<span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="s1">&#39;test.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+      <span class="n">df</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;test.csv&#39;</span><span class="p">))</span>
+      <span class="o">...</span> 
+</code></pre>
+</div>
+
+<p>Eğer CSV dosyası dosyası direk, basit ekranda gösterilebilen türden
+bir bağlantıysa, o zaman <code>https://...</code> diye giden bağlantıyı
+<code>read_csv</code> çağrısına geçmek yeterlidir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;https://.../data.csv&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Fakat bazen URL bağlantısı bir 'dosya indirme' aksiyonu tetikler, bu
+durumda o indirilen dosyanın 'yakalanması' ve okunması gerekir. Bu
+durum için ek hareketler gerekir, mesela Yahoo Finance üzerinde
+görelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib2</span><span class="o">,</span> <span class="nn">io</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://query1.finance.yahoo.com/v7/finance/download/AAPL?period1=1492524105&amp;period2=1495116105&amp;interval=1d&amp;events=history&quot;</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">tail</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Date
+2017-05-12    37.154709
+2017-05-15    37.059498
+2017-05-16    37.004768
+2017-05-17    35.762302
+2017-05-18    36.307369
+Name: Adj Close, dtype: float64
+</code></pre>
+</div>
+
+<p>Bunun bir ileri noktasi İnternet üzerinden indirme tetikleyen bir ZIP
+bağlantısını hiç diske indirmeden hem yakalamak, hem açmak, sonra
+içindeki dosyayı Pandas'a okutmak!</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib2</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="s2">&quot;https://www.filanca.com/test.zip&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">file</span> <span class="o">=</span> <span class="n">ZipFile</span><span class="p">(</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">r</span><span class="p">))</span>
+<span class="n">csv</span> <span class="o">=</span> <span class="n">file</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s2">&quot;test.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">csv</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Bazi Ayarlar</p>
+
+<p>Ekranda <code>print</code> ile dataframe basınca bazen tüm kolonlar gözükmeyebilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Kolonun kendisini en büyük halde görmek için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Excel'den okuma teknikleri icin [2]</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] http://pandas.pydata.org/pandas-docs/stable/</p>
+
+<p>[2] [Yazi](../../2012/05/python-pandas-excel.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

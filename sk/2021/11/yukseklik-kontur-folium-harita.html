@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yükseklik Verisini Kontur olarak Folium Haritasında Göstermek</h1>
+
+<p>Matplotlib'de <code>contour</code> komutu <code>x,y</code> ızgarasında üç boyutta yükseklik
+olarak kabul edilebilecek <code>z</code> verisini "kuşbakışı" olarak
+gösterebilen, kesit seviyelerini, bir nevi topografik haritayı
+hesaplabilen bir komuttur. Peki bu seviyeleri alıp Matplotlib ile
+direk bağlantısı olmayan Folium [3] haritalarına taşımak istesek bunu
+nasıl yaparız? Üç boyutlu yükseklik verisini iki boyutlu kesit
+seviyelerine dönüştürmek kolay değil, <code>contour</code> içindeki kodu bu iş
+için kullansak tekrar yazmaya gerek kalmazdı. Bunu yapmak mümkün,
+çünkü <code>contour</code> bize seviyeleri temsil eden parçaları dondürebiliyor.</p>
+
+<p>Örnek üzerinde görelim. Belli <code>x,y</code> değerleri arasında bir ızgara
+yaratalım (bu değerler TR haritasında özel bir yere tekabül edecek
+şekilde seçildi, ki sonra Folium'da gösterim yapabilelim), ve ızgaraya
+bir tane "tepe" koyalım, bunu iki degiskenli (bivariate, ve üç
+boyutlu) Gaussian fonksiyonu ile yapabiliyoruz, ve kesit seviyelerini
+gösterelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.cm</span> <span class="k">as</span> <span class="nn">cm</span>
+<span class="kn">import</span> <span class="nn">matplotlib.mlab</span> <span class="k">as</span> <span class="nn">mlab</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;xtick.direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span>
+<span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;ytick.direction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;out&#39;</span>
+
+<span class="k">def</span> <span class="nf">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">sigmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">sigmay</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">mux</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">muy</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">sigmaxy</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+    <span class="n">Xmu</span> <span class="o">=</span> <span class="n">X</span><span class="o">-</span><span class="n">mux</span>
+    <span class="n">Ymu</span> <span class="o">=</span> <span class="n">Y</span><span class="o">-</span><span class="n">muy</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">sigmaxy</span><span class="o">/</span><span class="p">(</span><span class="n">sigmax</span><span class="o">*</span><span class="n">sigmay</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Xmu</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sigmax</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Ymu</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">sigmay</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="n">Xmu</span><span class="o">*</span><span class="n">Ymu</span><span class="o">/</span><span class="p">(</span><span class="n">sigmax</span><span class="o">*</span><span class="n">sigmay</span><span class="p">)</span>
+    <span class="n">denom</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">sigmax</span><span class="o">*</span><span class="n">sigmay</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">rho</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span> <span class="o">/</span> <span class="n">denom</span>
+
+<span class="n">delta</span> <span class="o">=</span> <span class="mf">0.025</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">29.06161</span><span class="p">,</span> <span class="mf">29.20870</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">36.61599</span><span class="p">,</span> <span class="mf">36.70624</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span> <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="mi">10</span><span class="o">*</span><span class="n">bivariate_normal</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">29.13920</span><span class="p">,</span> <span class="mf">36.64653</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">CS</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span> <span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;elev1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="elev1.png" alt="" /></p>
+
+<p>Sanki bir "dağa" üstten bakıyoruz, dağın eteklerinde 500 metre
+yükseklik var, sonra giderek yükseliyor, ve en tepede 3000 metreye
+ulaşıyoruz.</p>
+
+<p>Üstteki grafiği oluşturan ham bilgilere erişmek mümkün. Gördüğümüz
+gibi çağrıyı <code>CS = plt.contour</code> ile yaptık, döndürülen <code>CS</code> içinde
+gerekli bilgiler var. Bu bilgiler bölümler (segments) olarak
+tutulmuş, mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">levels</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[   0.  500. 1000. 1500. 2000. 2500. 3000. 3500. 4000.]
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>9
+</code></pre>
+</div>
+
+<p>sonucunu verir. 1'inci bölümdeki 0'ıncı alt bölümde,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+array([[29.16850299, 36.61599   ],
+       [29.18289603, 36.64099   ],
+       [29.17913935, 36.66599   ],
+       [29.16161   , 36.68398265],
+       [29.13661   , 36.68902999],
+       [29.11161   , 36.67980347],
+       [29.0986095 , 36.66599   ],
+       [29.09359308, 36.64099   ],
+       [29.11161   , 36.61651895],
+       [29.11231435, 36.61599   ]])
+</code></pre>
+</div>
+
+<p>görülüyor. İşte bu noktalar kesit seviyelerini oluşturan çizgilerin baş
+ve son noktaları. Eğer o çizgileri ayrı ayrı kendimiz çizmek istesek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">CS</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">li</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">li</span><span class="p">][:,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="s1">&#39;r-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;elev3.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="elev3.png" alt="" /></p>
+
+<p>Aynı grafiği Folium ile yapmak için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+
+<span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mf">36.64653</span><span class="p">,</span> <span class="mf">29.13920</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="n">clat</span><span class="p">,</span> <span class="n">clon</span><span class="p">],</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">tiles</span><span class="o">=</span><span class="s2">&quot;Stamen Terrain&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="n">i</span><span class="p">])):</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">li</span><span class="p">][:,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">CS</span><span class="o">.</span><span class="n">allsegs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">li</span><span class="p">][:,</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">lon</span><span class="p">,</span><span class="n">lat</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span> <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">])</span>
+        <span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+<span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;elev.html&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sonuçlar <a href="elev.html">şurada</a> görülebilir.</p>
+
+<p>Yükseklik verilerini alma tekniklerini [4]'te göstermiştik; bir
+bölgedeki yükseklik verisini, sonra o veriyi kullanıp daha yüksek
+çözünürlü yükseklik verisini aradeğerleme ile hesaplama teknikleri o
+yazıda bulunabilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Tutorialspoint](https://www.tutorialspoint.com/how-to-get-coordinates-from-the-contour-in-matplotlib)</p>
+
+<p>[2] [Stackoverflow](https://stackoverflow.com/questions/19418901/get-coordinates-from-the-contour-in-matplotlib)</p>
+
+<p>[3] [Haritalamak](../../2020/02/haritalamak.html)</p>
+
+<p>[4] [Yükseklik (Elevation) Verileri](../../2019/04/elevation.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>iPython, rpy2, rmagic</h1>
+
+<p>iPython icinden (ya da bizim Emacs eklentisi emacs-ipython icinden) R
+kodlari cagirmak icin bazi kurulum numaralari; ozellikle alttaki ornek
+icin.</p>
+
+<p>R kurulacak, biz suradan Ubuntu 12 (precise) icin
+r-base-core<em>3.1.2-1precise0</em>amd64.deb indirdik ve sudo dpkg -i [deb
+dosyasi] ile kurduk, sonra R kutuphaneleri, R komut satiri icinden,</p>
+
+<pre><code>install.packages("lme4")
+install.packages("HSAUR2")
+</code></pre>
+
+<p>ile kurulabilir. Bu cagrilar bir pencere acip hangi bolgedeki servise
+baglanmak istediginizi sorar, birini secin, indirim, kurulum
+baslar. iPython baglantisi icin</p>
+
+<pre><code>sudo pip install rpy2
+</code></pre>
+
+<p>En son versiyon icin</p>
+
+<pre><code>sudo pip install --upgrade rpy2
+</code></pre>
+
+<p>Bende rpy2 kurulumu sirasinda hata mesajlari geldi, -llzma derleyici
+secenegi ile alakali (o kutuphane bulunamamis),</p>
+
+<pre><code>sudo apt-get install liblzma-dev
+</code></pre>
+
+<p>sonrasi hata gitti. Zaten ipython kurulmus olmali, o da pip ile olur.</p>
+
+<p>Ornek icin</p>
+
+<pre><code>%load_ext rpy2.ipython%R library(lme4)%R data("respiratory", package = "HSAUR2")
+%R write.csv(respiratory, 'respiratory2.csv')
+%R resp &lt;- subset(respiratory, month &gt; "0")
+%R resp$baseline &lt;- rep(subset(respiratory, month == "0")$status,rep(4, 111))
+%R resp_lmer &lt;- glmer(status ~ baseline + month + treatment + gender + age + centre + (1 | subject),family = binomial(), data = resp)
+%R -o resp_lmer_summary resp_lmer_summary = summary(resp_lmer)
+%R -o exp_res exp_res = exp(fixef(resp_lmer))print resp_lmer_summaryprint exp_res
+</code></pre>
+
+<p>Simdi bu isin bir kismini Python ile bir kismini R ile yapalim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;respiratory2.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">baseline</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">][[</span><span class="s1">&#39;subject&#39;</span><span class="p">,</span><span class="s1">&#39;status&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;subject&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;status&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;good&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;baseline&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">baseline</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;subject&#39;</span><span class="p">]],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;centre&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;centre&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;month&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<pre><code>%R -i df%R resp_lmer &lt;- glmer(status ~ baseline + month + treatment + gender + age + centre + (1 | subject),family = binomial(), data = df)
+%R -o res res = summary(resp_lmer)
+%R -o exp_res exp_res = exp(fixef(resp_lmer))print resprint exp_res
+</code></pre>
+
+<p>Bu ayni sonucu verecektir.</p>
+
+<p>%R ile -i ile degisken veriliyor, -o ile degisken aliniyor. Pandas
+dataframe objeleri sorunsuz R'ye verilebiliyor.</p>
+
+<p>%R icinde print ile birsey basmak, bazi ortamlarda islemiyor, o
+sebeple summary() sonucunu bile biz bir degiskene set edip onu python
+ile ekrana basiyoruz.</p>
+
+<p>R'yi hala bazi durumlarda kullanmak lazim, mesela ustte gosterilen R
+lme4 glmer kullanimi (karisim etkileri -mixed effects- modelleri)
+halen statsmodels'da kodlanmis degil.</p>
+
+<p>DTA, TXT Cevirmek, R Dili</p>
+
+<p>S, R, Stata gibi paketler DTA dosyalari kullanabiliyorlar, bu
+dosyalari R dilinde txt formatina cevirmek icin</p>
+
+<pre><code>library ("foreign")
+x = read.dta ("[dta file name]")
+write.table(x, file = "[txt file name]")
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

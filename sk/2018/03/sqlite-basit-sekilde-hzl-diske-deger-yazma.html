@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>sqlite, Basit, Hızlı Diske Değer Yazma Okuma</h1>
+
+<p>Bir Python uygulaması için  basit, hızlı bir şekilde diske
+yazılabilen, ve istendiği zaman anahtar bazlı, tüm dosyayı hafızaya
+getirmeden hızlı şekilde okunabilen bir yapıya ihtiyaç vardı. Çözüm
+için önce Python'un sözlük (dictionary) yapısının diske yazılmasına
+izin veren çözümler akla geliyor, ki muhakkak o çerçevede pek çok
+çözüm var. Fakat bir çözüm var ki Python kurulumunun zaten içinde, tek
+bir dosyaya yönlendirilebilen depolaması mevcut, ve her yazımın diske
+gitmesini, ve hızlı okunabilmesini sağlıyor.</p>
+
+<p>Bu yazılım sqlite3'ten başkası değil. Eğer az SQL yazmayı göze
+alırsak, ki bu dili tüm bilişimciler bilir, sqlite3 üstteki tüm
+ihtiyaçlara cevap verir.</p>
+
+<p>Kurmak</p>
+
+<pre><code>pip install pysqlite3
+</code></pre>
+
+<p>Test edelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="n">db</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;/tmp/mydb.db&#39;</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT,</span>
+<span class="s1">                  phone TEXT, email TEXT, password TEXT)</span>
+<span class="s1">                  &#39;&#39;&#39;</span><span class="p">)</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+<span class="n">cursor</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+
+<span class="n">name1</span> <span class="o">=</span> <span class="s1">&#39;Andres&#39;</span>
+<span class="n">phone1</span> <span class="o">=</span> <span class="s1">&#39;3366858&#39;</span>
+<span class="n">email1</span> <span class="o">=</span> <span class="s1">&#39;user@example.com&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+<span class="n">password1</span> <span class="o">=</span> <span class="s1">&#39;12345&#39;</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">email1</span><span class="p">)</span>
+
+<span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;INSERT INTO users(name, phone, email, password)</span>
+<span class="s1">                  VALUES(?,?,?,?)&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">name1</span><span class="p">,</span><span class="n">phone1</span><span class="p">,</span> <span class="n">email1</span><span class="p">,</span> <span class="n">password1</span><span class="p">))</span>
+
+<span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Taban tek bir dosya, hangisi olacağını biz tanımladık, gayet basit.
+Üstteki insert komutunu ardı ardına işletelim ve arada sırada
+/tmp/mydb.db dosyasına bakalım. Bu dosya içinde yaratılan farklı
+isimleri göreceğiz. Dosya büyüklüğünü kontrol etmek ise yaramayabilir
+çünkü sqlite taban dosyasını her yazimda degil, belli aralıklarla
+büyütüyor. </p>
+
+<p>Arada satır sayısını alttaki ile kontrol edebiliriz,</p>
+
+<pre><code>cursor = db.cursor()
+cursor.execute('''SELECT count(*) FROM users''')
+print (cursor.fetchone())
+</code></pre>
+
+<p>Taban iş bitince <code>db.close</code> ile kapatılır. Fakat düzgün kapatılmasa
+bile commit ile yazılanlar kaybolmayacaktır, yani süreç çökse, tekrar
+tabana dönsek en son yazdığımız satırı orada bulacağız. </p>
+
+<p>Bu tüm ihtiyaçları karşılıyor, farklı bir süreçte işleyen büyük bir
+taban değil, kurulmasına bile gerek yok zaten Python sürümünde var,
+ayrıca diske yazım var, hızlı okuma (herşeyi hafızaya getirmeden)
+destekleniyor.</p>
+
+<p>Vurgulamak gerekirse tanimlanan veri taban ismindeki bir dosya yok
+ise, ilk kullanimda otomatik olarak yaratiliyor. Bu isleri cok
+rahatlatiyor.</p>
+
+<p>Diğer bazı komutlar, bir ek veri sonrası,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;/tmp/mydb.db&#39;</span><span class="p">)</span>
+
+<span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">name2</span> <span class="o">=</span> <span class="s1">&#39;XXX&#39;</span>
+<span class="n">phone2</span> <span class="o">=</span> <span class="s1">&#39;YYYYY&#39;</span>
+<span class="n">email2</span> <span class="o">=</span> <span class="s1">&#39;xxxx@example.com&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">())</span>
+<span class="n">password1</span> <span class="o">=</span> <span class="s1">&#39;12345&#39;</span>
+<span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;INSERT INTO users(name, phone, email, password) VALUES(?,?,?,?)&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">name2</span><span class="p">,</span><span class="n">phone2</span><span class="p">,</span><span class="n">email2</span><span class="p">,</span><span class="s1">&#39;xxxx&#39;</span><span class="p">))</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Alınan verileri döngü içinde gezmek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;SELECT * FROM users&#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(1, &#39;Andres&#39;, &#39;3366858&#39;, &#39;user@example.com0.5546258413014995&#39;, &#39;12345&#39;)
+(2, &#39;XXX&#39;, &#39;YYYYY&#39;, &#39;xxxx@example.com0.09226623997325056&#39;, &#39;xxxx&#39;)
+</code></pre>
+</div>
+
+<p>Tabandaki tüm tabloları görmek için </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;SELECT * FROM sqlite_master WHERE type=&#39;table&#39; &#39;&#39;&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">row</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Chinook Tabani</p>
+
+<p>Orta ölçekte bir veri tabanı örneği olarak Chinook tabanı var. <a href="Chinook_Sqlite.zip">Chinook<em>Sqlite.zip</a>
+dosyasını açın, ve <a href="load_chinook.py">load</em>chinook.py</a> dosyasını işletince
+bu yüklemeyi yapılacaktır.</p>
+
+<p>GUI</p>
+
+<pre><code>sudo apt-get install sqlitebrowse
+</code></pre>
+
+<pre><code>sqlitebrowse
+</code></pre>
+
+<p>ile işletirsek, şu şekilde bir görsel program başlayacak.</p>
+
+<p><img src="sqlitebrowse2.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

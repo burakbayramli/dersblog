@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python ile Mail Göndermek, SMTP, GMail</h1>
+
+<p>Dışarıdan Python ile GMail'e bağlanıp email göndermek istersek, önce
+email göndereceğimiz hesaba girip, Account ayarlarına gideriz,
+Security altında "Less secure apps"'lere erişim için izin
+veririz. Burada Google bir sürü uyarı verecek, bunları geçip kullanıma
+geçebiliriz. </p>
+
+<p>Şifreyi kod içine koymak iyi değil tabii, onu <code>$HOME</code> altında <code>.şifre</code>
+adlı bir dosya içine koyabiliriz. Basit bir şifrelemeden sonra koymak
+ta iyi olabilir.</p>
+
+<p>Artık kullanıcı / şifre ile GMail'e email attırabiliriz.</p>
+
+<pre><code>import smtplib, os
+
+gmail_user = 'kaynakkullanici@gmail.com'  
+gmail_password = open(os.environ['HOME'] + "/.sifre").read()
+
+sent_from = gmail_user 
+to = ['hedefkullanici@gmail.com']  
+subject = 'OMG Super Important Message'  
+body = 'Hey, whats up?\n\n- You'
+
+email_text = """
+From: %s  
+To: %s  
+Subject: %s
+
+%s
+""" % (sent_from, ", ".join(to), subject, body)
+
+try:  
+    server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+    server.ehlo()
+    server.login(gmail_user, gmail_password)
+    server.sendmail(sent_from, to, email_text)
+    server.close()
+
+    print ('Email sent!')
+except Exception as e:
+    print (repr(e))
+    print ('Something went wrong...')
+
+</code></pre>
+
+<p>Bazen yerelden gönderilen email'ler sonuç (production) ortamında, ya
+da farklı bir makinada işlemeyebiliyor. Bu durumlarda [2] </p>
+
+<p>https://accounts.google.com/DisplayUnlockCaptcha</p>
+
+<p>adresine gidip Continue'ya tıklıyoruz, ve yeni makinadan gönderimi
+yapıyoruz. Artık takip eden gönderimler işleyecektir.</p>
+
+<p>Fakat ya idare edilen (managed) bulut ortamında isek, ya da çok
+makinalı küme ortamında iş yapıyorsak, o zaman GMail'e bağlanılan IP
+adresi her seferinde farklı olabilir, ve üstteki numarayı tüm bu
+makinalar için ayrı ayrı uygulamak gerekmez mi? Bu doğru. Ve bu tür
+şartlarda GMail SMTP servisi kullanmak uygun olmayabilir, daha servis
+tarafına yönelik bir servise bakmak faydalı olacaktır.</p>
+
+<p>[1] https://stackabuse.com/how-to-send-emails-with-gmail-using-python/</p>
+
+<p>[2] https://stackoverflow.com/questions/27140402/why-does-smtp-via-gmail-work-locally-but-not-on-my-production-server</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

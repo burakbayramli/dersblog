@@ -1,0 +1,194 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python'dan C Fonksiyonu Cagirmak</h1>
+
+<p>Python script icinden C fonksiyonu cagirmak icin sunlar gerekli. Kodun
+testmod.c dosyasinda oldugunu farzedelim; once bir shared library
+olusturmamiz lazim. make.sh adinda bir derleme script'i soyle
+olabilir:</p>
+
+<pre><code>#!/bin/sh
+gcc -shared -o testmod.so -I/usr/include/python2.5 -lpython2.5  testmod.c
+</code></pre>
+
+<p>C fonksiyonu soyle bir dosyada:</p>
+
+<h1>include "Python.h"</h1>
+
+<pre><code>static PyObject* py_myFunction(PyObject* self, PyObject* args)
+{
+ char *s = "Hello from C!";
+ return Py_BuildValue("s", s);
+}
+
+static PyObject* py_myOtherFunction(PyObject* self, PyObject* args)
+{
+ double x, y;
+ PyArg_ParseTuple(args, "dd", &amp;x, &amp;y);
+ return Py_BuildValue("d", x*y);
+}
+
+static PyMethodDef myModule_methods[] = {
+ {"myFunction", py_myFunction, METH_VARARGS},
+ {"myOtherFunction", py_myOtherFunction, METH_VARARGS},
+ {NULL, NULL}
+};
+
+void inittestmod()
+{
+ (void) Py_InitModule("testmod", myModule_methods);
+}
+</code></pre>
+
+<p>Usttekileri make.sh ile derledikten sonra, bir Python script icinden
+sunlar isletilebilir:</p>
+
+<pre><code>from testmod import *
+
+print "Result from myFunction:", myFunction()
+print "Result from myOtherFunction(4.0, 5.0):", myOtherFunction(4.0, 5.0)
+</code></pre>
+
+<p>Kodlarin tamami altta</p>
+
+<p>Not: Eger gcc yerine g++ kullanirsaniz, o zaman tum fonksiyonlarin
+extern "C" { } ile sarilmasi gerekli, cunku g++ derleyicileri
+derlerken fonksiyon isimlerini degisime ugratiyorlar (mangling), ve
+Python yorumlayicisi bekledigi cagri isimlerini bulamayinca hata
+veriyor. Surada.</p>
+
+<p>Not: Bir .so dosyasi, shared library icindeki sembolleri, fonksiyon
+cagrilarini listelemek icin "nm dosya.so" komutu kullanilabilir.</p>
+
+<p>Kaynak</p>
+
+<p>make.sh</p>
+
+<pre><code>#!/bin/sh
+gcc -shared -o testmod.so -g `pkg-config opencv --cflags --libs glib-2.0` -I/usr/include/python2.5 -lpython2.5  testmod.c
+</code></pre>
+
+<p>testmod.c</p>
+
+<pre><code>#include "Python.h"
+
+/*
+
+ * Function to be called from Python
+
+ */
+
+static PyObject* py_myFunction(PyObject* self, PyObject* args)
+
+{
+
+ char *s = "Hello from C!";
+
+ return Py_BuildValue("s", s);
+
+}
+
+
+
+/*
+
+ * Another function to be called from Python
+
+ */
+
+static PyObject* py_myOtherFunction(PyObject* self, PyObject* args)
+
+{
+
+ double x, y;
+
+ PyArg_ParseTuple(args, "dd", &amp;x, &amp;y);
+
+ return Py_BuildValue("d", x*y);
+
+}
+
+
+
+/*
+
+ * Bind Python function names to our C functions
+
+ */
+
+static PyMethodDef myModule_methods[] = {
+
+ {"myFunction", py_myFunction, METH_VARARGS},
+
+ {"myOtherFunction", py_myOtherFunction, METH_VARARGS},
+
+ {NULL, NULL}
+
+};
+
+
+
+/*
+
+ * Python calls this to let us initialize our module
+
+ */
+
+void inittestmod()
+
+{
+
+ (void) Py_InitModule("testmod", myModule_methods);
+
+}
+</code></pre>
+
+<p>testmod.py</p>
+
+<pre><code>from testmod import *
+
+print "Result from myFunction:", myFunction()
+
+print "Result from myOtherFunction(4.0, 5.0):", myOtherFunction(4.0, 5.0)
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

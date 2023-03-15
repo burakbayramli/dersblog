@@ -1,0 +1,563 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Paralel Veri Analizi, İstatistik</h1>
+
+<p>Eşzamanlı olarak veri işleme, analizi tekniklerinin temel yaklaşımını
+[2]'de gördük, orada ve bu yazıda kullanacağımız ana yapı şöyle;
+İşlenecek çok büyük bir CSV dosyası var, her çekirdek (birden fazla
+ise) her makina veri dosyasına direk erişebilir, paralel işlemler bu
+dosyanın farklı kısımlarını aynı anda işleyebilmek üzerinden
+gerçekleşecektir. Tercihimiz her zaman satır satır mesafe katedebilen
+algoritmalardır, yani verinin tek bir satırına bakarak bir bir
+katmadeğer elde edebilen, sonuca daha yaklaşabilen algoritmalar.</p>
+
+<h3>Sıralama (Sorting)</h3>
+
+<p>Yöntem 1</p>
+
+<ul>
+<li><p>B tane kutu yaratırız, ve hangi kolon bazında sıralama yapıyorsak,
+mesela bir kimlik (id) diyelim, o kimliklerin büyüklük olarak 1,2,3,
+kutusuna düşmesini sağlarız. Eğer maksimum 1000 kimliği var ise, ve
+N=4 için, kimliklerden 0 ile 250 arası 1'inci kutuya, 251 ile 500
+arası 2'inci kutuya vb gibi gitmeli.</p></li>
+<li><p>İlk tarama örnek 4 paralel süreç, 4 kutu üzerinden 16 tane dosya
+yaratır. Yani her süreç tüm kutulara düşen verileri bulmak
+zorundadır.</p></li>
+<li><p>Ardından paralel olarak yine her kutu için, o kutuya ait olan tüm
+parçaları alırız, hafızada birleştiriz, hafızada sıralarız, ve o
+kutu için diske yazarız.</p></li>
+<li><p>Bu bitince sıralanmış tüm kutuların dosyalarını alt alta ekleriz /
+yapıştırırız (basit Unix <code>cat</code> ile), ve sıralanmış nihai dosya elde
+edilir. Bu işler çünkü kutuları kendi aralarında 1,2,3,.. diye
+sıralıyoruz, biliyoruz ki 1'inci kutu içindeki id 2'inci kutudakilerden
+muhakkak daha küçük. Eh her kutu içindeki öğelerde sıralı olduğuna göre
+yapıştırılmış nihai sonuç ta kendiliğinden sıralanmış halde olacaktır.</p></li>
+</ul>
+
+<p>Disk bazlı işlemleri göstermek için sentetik veri üretelim, sadece bir
+kimlik (id) kolonu, iki tane isim, adres için metinsel iki kolon.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">util</span>
+<span class="n">util</span><span class="o">.</span><span class="n">create_sort_synthetic</span><span class="p">(</span><span class="mi">1000000</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">head</span> <span class="o">-</span><span class="mi">5</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="nb">input</span><span class="o">.</span><span class="n">csv</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>83473,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
+46657,nnnnnnnnnnnnnnnnnnnn,nnnnnnnnnnnnnnnnnnnn
+98157,HHHHHHHHHHHHHHHHHHHH,HHHHHHHHHHHHHHHHHHHH
+111152,CCCCCCCCCCCCCCCCCCCC,CCCCCCCCCCCCCCCCCCCC
+</code></pre>
+</div>
+
+<p>1 milyon satırlık bir veri oldu.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/input.csv&quot;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>0 474390 79792.60683260683
+</code></pre>
+</div>
+
+<p>Alttaki kodda bu rakamlara bakarak bazı sınırları deneme/yanilma ile
+tanımladık, fakat profosyonel ortamda bu sınırları bulmak ta ayrı bir
+paralel süreç olabilirdi.</p>
+
+<p>Şimdi ilk paralel kod, her kutuya düşen satırları paralel olarak bul, kendi
+dosyasına yaz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="k">class</span> <span class="nc">BucketJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="n">B</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">,</span> <span class="mi">130000</span><span class="p">,</span> <span class="mi">474391</span><span class="p">])</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/B-</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">),</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">bucket</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span> <span class="c1"># id hangi kutuya ait?</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bins</span> <span class="o">&gt;</span> <span class="nb">id</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>        
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bucket</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">:</span>
+           <span class="bp">self</span><span class="o">.</span><span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># diske yaz</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="c1"># altta seri islem var ama her kutu icin 4 paralel surec baslatilabilir</span>
+<span class="k">for</span> <span class="n">B</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/input.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">BucketJob</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/input.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">BucketJob</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/input.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">BucketJob</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/input.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">BucketJob</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>        
+</code></pre>
+</div>
+
+<p>Şimdi her kutu için parçaları hafızaya getir, Pandas üzerinden hafızada sırala,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">glob</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="c1"># seri islem gosterdik yine fakat her kutu icin paralel bir islem yaratilabilir</span>
+<span class="k">for</span> <span class="n">B</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">dfs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/tmp/B-</span><span class="si">%d</span><span class="s1">-</span><span class="si">%d</span><span class="s1">.csv&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="n">i</span><span class="p">),</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/B-</span><span class="si">%d</span><span class="s2">-sorted.csv&quot;</span> <span class="o">%</span> <span class="n">B</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Ve nihai olarak tum kutu parcalarini birlestir,</p>
+
+<pre><code>! cat /tmp/B-*-sorted.csv &gt; /tmp/B-final.csv
+</code></pre>
+
+<p>Kutu parçalarını basit alt alta yapıştırma ile birleştirmek işliyor
+çünkü her kutu içindeki kimlikler belli bir kutuya gitmiş durumda,
+mesela id=1000 kimliği B=0 içinde, id=72000 kimliği ikinci kutu içinde,
+ve eğer her kutunun dosyası kendi içinde sıralanmış ise, yapıştırılmış
+yeni dosyanin kendiliğinden sıralanmış hale geleceği garantidir.</p>
+
+<p>Tek pürüz şurada ortaya çıkabilir; her kutu için üstteki örnekte dört
+tane parçayı hafızaya getirdik, ve orada sıraladık. Ya bu sıralama
+için hafıza yeterli olmazsa?</p>
+
+<p>Bu durumda az hafıza ile diskteki dosyaları satır satır birleştirmenin
+bir yolu alttadır.</p>
+
+<p>Yöntem 2</p>
+
+<p>Bu yöntem bize daha az hafıza ile daha büyük dosyaları tek makinada
+sıralama şansı veriyor. Paralellik hala olabilir, fakat son
+birleştirme aşaması her ne kadar disk yoğunluklu olsa da tek bir
+makinada yapılmalı.</p>
+
+<p>2'inci yöntem ile dosyanın ufak parçalarını yine hafızada sıralarız,
+diske yazarız, sonra bir süreç o parçaları disk bazlı (satır satır)
+okuyarak birleştirir. Sıralanmış parçaların birleşmiş ve hala sıralı
+halde olmasını nasıl garantileriz? Alttaki algoritma ile;</p>
+
+<ul>
+<li><p>Her iki parçanın başına git</p></li>
+<li><p>Bir döngü içinde her ikisinin sıradaki en küçük parçasına bak (zaten
+sıralanmış dosyalar için bu en üstteki satır)</p></li>
+<li><p>Bu iki öğe arasından en ufak olanını al, yeni listeye ekle, öğesi alınan dosyanın sonraki satırına geç, tekrarla</p></li>
+<li><p>Listeler farklı boylarda olabilir, bir liste öncekinden önce biterse
+önemli değil, kalan listeyi olduğu gibi yeni listeye ekle.</p></li>
+</ul>
+
+<p>Altta bu işlemleri gösteren bir örnek görüyoruz.</p>
+
+<p><img src="sort1.png" alt="" /></p>
+
+<p>Listeden bir öğe alındığında o öğeyi "çıkartılmış" gibi gösterdik,
+fakat kodlama bağlamında yapılan bir indisin ilerletilmesinden ibaret.</p>
+
+<p>Tarif edilen birleştirmenin işlediğini alttaki ufak kodda
+görebiliriz. İki tane rasgele veri içeren liste yarattık, onları önce
+hafızada sıraladık, sonra teker teker her birinden en ufak öğeyi
+alarak yeni listeyi oluşturduk, ve yeni liste otomatik olarak
+sıralanmış hale geldi.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">random</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="k">def</span> <span class="nf">chunkmerge</span><span class="p">():</span>
+    <span class="n">N1</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">N2</span> <span class="o">=</span> <span class="n">N1</span><span class="o">*</span><span class="mi">2</span>
+
+    <span class="c1"># rasgele sayilarla iki liste uret</span>
+    <span class="n">arr1</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N1</span><span class="p">)]</span>
+    <span class="n">arr2</span> <span class="o">=</span> <span class="p">[</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">100</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N2</span><span class="p">)]</span>
+
+    <span class="n">arr1</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr1</span><span class="p">)</span> <span class="c1"># parcayi hafizada sirala</span>
+    <span class="n">arr2</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr2</span><span class="p">)</span> <span class="c1"># parcayi hafizada sirala</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;liste 1&#39;</span><span class="p">,</span><span class="n">arr1</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;liste 2&#39;</span><span class="p">,</span><span class="n">arr2</span><span class="p">)</span>
+
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span> <span class="c1"># sonuclar</span>
+
+    <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span> <span class="c1"># her iki listenin farkli indisi var</span>
+    <span class="k">while</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N1</span> <span class="ow">and</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N2</span><span class="p">:</span>
+        <span class="c1"># her iki listenin islenmemis en kucuk degerine bak, arr1[i], arr2[j]</span>
+        <span class="c1"># kucuk olanini al</span>
+        <span class="k">if</span> <span class="n">arr1</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">arr2</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="c1"># kalan ogeleri direk transfer et</span>
+    <span class="k">while</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">N1</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr1</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N2</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">arr2</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;siralanmis liste&#39;</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+    <span class="c1"># iki listeyi birlestirip klasik sekilde sirala</span>
+    <span class="n">arrsorted</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">arr1</span> <span class="o">+</span> <span class="n">arr2</span><span class="p">)</span>
+    <span class="c1"># ayni sonuc mu</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Siralama isledi mi?&#39;</span><span class="p">,</span><span class="n">arrsorted</span> <span class="o">==</span> <span class="n">res</span><span class="p">)</span>
+
+<span class="n">chunkmerge</span><span class="p">()</span>   
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>liste 1 [2, 33, 43, 49, 83]
+liste 2 [5, 29, 32, 48, 52, 59, 60, 73, 81, 93]
+siralanmis liste [2, 5, 29, 32, 33, 43, 48, 49, 52, 59, 60, 73, 81, 83, 93]
+Siralama isledi mi? True
+</code></pre>
+</div>
+
+<p>Disk bazlı kod üstteki mantığı dosya satırları için yapar, her iki
+dosya açılır, satırlar bu dosyalardan teker teker alınır, döngü içinde
+kimlikleri birbiri ile karşılaştırır, hangi dosyadan gelen kimlik daha
+küçük ise onun satırı, o dönüşte, çıktıya yazılır, o dosya üzerinde
+<code>readline</code> çağırılır böylece bir sonraki satıra geçilir. Dosyalardan
+biri bitene kadar bu devam eder, sonra kalan dosyanın satırları direk
+çıktıya yazılır.</p>
+
+<p>Kod üzerinde görelim. Önce örnek veri yaratılır, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">util</span>
+<span class="n">util</span><span class="o">.</span><span class="n">create_two_sorted_synthetic</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">1000</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Bu çağrı 1000 satırlık <code>L1.csv</code> ve <code>L1.csv</code> adında iki tane dosya
+yarattı, bu dosyalar sıralanması yapılmış halde. Alttaki kod bu dosyaları
+okuyarak birleştirecek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">merge_sorted</span><span class="p">(</span><span class="n">file1</span><span class="p">,</span><span class="n">file2</span><span class="p">,</span><span class="n">outfile</span><span class="p">):</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+    <span class="n">f1</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file1</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">);</span> <span class="n">f2</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">file2</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file1</span><span class="p">));</span> <span class="n">s2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file2</span><span class="p">))</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="n">s2</span><span class="p">)</span>
+
+    <span class="c1"># her iki dosyadan ilk satirlari al</span>
+    <span class="n">l1</span> <span class="o">=</span> <span class="n">f1</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span> <span class="n">toks1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+    <span class="n">l2</span> <span class="o">=</span> <span class="n">f2</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span> <span class="n">toks2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+    <span class="c1"># her iki dosya icin arada bir yigit tabakasi kullanmak iyi</span>
+    <span class="c1"># olur, &#39;dosya bitisi&#39; algilanmasi problemli, en iyisi yigit</span>
+    <span class="c1"># bitisine bakmak</span>
+    <span class="n">stack1</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">stack2</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">stack1</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l1</span><span class="p">,</span><span class="n">toks1</span><span class="p">));</span> <span class="n">stack2</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l2</span><span class="p">,</span><span class="n">toks2</span><span class="p">))</span>
+
+    <span class="c1"># yigitlardan herhangi biri bitene kadar dongu</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack1</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack2</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="c1"># iki yigitin ilk ogelerine bak</span>
+        <span class="n">l1</span><span class="p">,</span><span class="n">toks1</span> <span class="o">=</span> <span class="n">stack1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">];</span> <span class="n">l2</span><span class="p">,</span><span class="n">toks2</span> <span class="o">=</span> <span class="n">stack2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># hangisi daha ufaksa onu yaz</span>
+        <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">toks1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="n">toks2</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">l1</span><span class="p">)</span>
+            <span class="n">stack1</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">f1</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">s1</span><span class="p">:</span>
+                <span class="n">l1</span> <span class="o">=</span> <span class="n">f1</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span> <span class="n">toks1</span> <span class="o">=</span> <span class="n">l1</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">stack1</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l1</span><span class="p">,</span><span class="n">toks1</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>            
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
+            <span class="n">stack2</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">f2</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">:</span>
+                <span class="n">l2</span> <span class="o">=</span> <span class="n">f2</span><span class="o">.</span><span class="n">readline</span><span class="p">();</span> <span class="n">toks2</span> <span class="o">=</span> <span class="n">l2</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">stack2</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">l2</span><span class="p">,</span><span class="n">toks2</span><span class="p">))</span>
+
+    <span class="c1"># yigitlari bosalt</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack1</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">l1</span><span class="p">,</span><span class="n">toks1</span> <span class="o">=</span> <span class="n">stack1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">l1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">stack2</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">l2</span><span class="p">,</span><span class="n">toks2</span> <span class="o">=</span> <span class="n">stack2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">l2</span><span class="p">)</span>
+
+    <span class="c1"># bitmeyen dosyayi oldugu gibi ciktiya yaz</span>
+    <span class="k">while</span> <span class="n">f1</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">s1</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f1</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="k">while</span> <span class="n">f2</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">s2</span><span class="p">:</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">f2</span><span class="o">.</span><span class="n">readline</span><span class="p">())</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>        
+
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">merge_sorted</span><span class="p">(</span><span class="s2">&quot;/tmp/L1.csv&quot;</span><span class="p">,</span><span class="s2">&quot;/tmp/L2.csv&quot;</span><span class="p">,</span><span class="s2">&quot;/tmp/L-merged.csv&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sonuç <code>/tmp/L-merged.csv</code> dosyasında bu dosya 2000 satırlık ve
+sıralanmış halde olacaktır.</p>
+
+<p>Dört tane sıralanmış parçayı nasıl sıralardık? 1 ile 2 birleştirilip A
+yaratılabilir, 3 ve 4 ile B. Sonra A ve B birleştirilir, C elde
+edilir.</p>
+
+<p>Not: İlk yöntemde kutulama ile her kutu için dört dosya elde ediyoruz
+demiştik, ve üstteki algoritma ile her kutu için parçaları ikişer
+ikişer birleştirebiliyoruz. Acaba dört parçanın dosyasını aynı anda
+açıp her seferinde sıradaki dört değerden minimum olanı almak yine
+sıralanmış bir sonuç yaratır mı? Bu durumda dört dosya bir kerede
+satır satır okunarak birleştirilebilir. Bu da okuyucuya ödev olsun.</p>
+
+<h3>İstatistik</h3>
+
+<p>Bir dosyanın parçaları üzerinde ortalama ve varyans hesabını da
+paralel şekilde satırsal, parça parça yapabiliriz. Bu tür paralelliğin
+işleyebilmesi için önce satırsal, artımsal şekilde ortalama, ve
+varyans hesaplayabilen bir matematik lazım. O matematiği [7]'de
+işledik. Oradaki örnekte çok ufak veri gösterildi, alttaki örnekte
+dosya bazlı, daha büyük verileri işleyebilmeyi göreceğiz.</p>
+
+<p><img src="paralel-veri-analizi-istatistik_01.png" alt="" /></p>
+
+<p>Örnek veri yaratalım, insanların boyunu kaydettiğimizi farzediyoruz,
+veri 150 cm ve 190 cm arası rasgele sayılardan seçildi, ortalamanın da
+o aralığa düşmesini bekleriz. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">random</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">10000</span>
+<span class="n">height</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span><span class="mi">190</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">height</span><span class="p">}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;/tmp/height.csv&#39;</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ortalama&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span><span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;varyans&#39;</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>ortalama 169.5
+varyans 133.29
+</code></pre>
+</div>
+
+<p>Verinin tamamı <code>/tmp/height.csv</code> içinde, şimdi bu veriyi parçalara
+ayırıp her grup için ortalama ve varyansı artımsal
+hesaplattıracağız. Yine [2] altyapısını kullanarak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span><span class="o">,</span> <span class="nn">json</span>
+
+<span class="k">class</span> <span class="nc">StatJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ai</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># grup ortalamasi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># grup varyansi</span>
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">xn</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">aiprev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ai</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span> <span class="o">+</span> <span class="p">(</span><span class="n">xn</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vi</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span> <span class="o">+</span> <span class="p">(</span><span class="n">xn</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">xn</span><span class="o">-</span><span class="n">aiprev</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># diske yaz</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;N&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="s2">&quot;ai&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">ai</span><span class="p">,</span> <span class="s2">&quot;vi&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">vi</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">}</span>
+        <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/height-</span><span class="si">%d</span><span class="s2">.txt&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">res</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/height.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">StatJob</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/height.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">StatJob</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Bu noktada iki tane dosya üretilmiş olmalı,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">ls</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">height</span><span class="o">-*</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>/tmp/height-0.txt
+/tmp/height-1.txt
+</code></pre>
+</div>
+
+<p>Sonuç dosyaları içinde parçalar hakkında gerekli veriler var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">h1</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/height-0.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">h2</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/height-1.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">h1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">h2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&#39;N&#39;: 5062, &#39;ai&#39;: 169.48143026471752, &#39;vi&#39;: 132.43021620799738}
+{&#39;N&#39;: 4938, &#39;ai&#39;: 169.52632644795497, &#39;vi&#39;: 134.17721295297002}
+</code></pre>
+</div>
+
+<p>Şimdi bu parçaları birleştirmeye, ve nihai bir ortalama ve varyans
+oluşturmaya gelelim.</p>
+
+<p>Birleştirme için de ayrı bir matematik gerekiyor, [6] yazısında o
+konuyu işledik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">n1</span><span class="p">,</span><span class="n">n2</span> <span class="o">=</span> <span class="n">h1</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">],</span> <span class="n">h2</span><span class="p">[</span><span class="s1">&#39;N&#39;</span><span class="p">]</span>
+<span class="n">m1</span><span class="p">,</span><span class="n">m2</span> <span class="o">=</span> <span class="n">h1</span><span class="p">[</span><span class="s1">&#39;ai&#39;</span><span class="p">],</span> <span class="n">h2</span><span class="p">[</span><span class="s1">&#39;ai&#39;</span><span class="p">]</span>
+<span class="n">v1</span><span class="p">,</span><span class="n">v2</span> <span class="o">=</span> <span class="n">h1</span><span class="p">[</span><span class="s1">&#39;vi&#39;</span><span class="p">],</span> <span class="n">h2</span><span class="p">[</span><span class="s1">&#39;vi&#39;</span><span class="p">]</span>
+<span class="n">ap</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span><span class="o">*</span><span class="n">m1</span> <span class="o">+</span> <span class="n">n2</span><span class="o">*</span><span class="n">m2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span><span class="o">+</span><span class="n">n2</span><span class="p">)</span> 
+<span class="n">mean_of_var</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span><span class="o">*</span><span class="n">v1</span> <span class="o">+</span> <span class="n">n2</span><span class="o">*</span><span class="n">v2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span><span class="o">+</span><span class="n">n2</span><span class="p">)</span> 
+<span class="n">var_of_means</span> <span class="o">=</span> <span class="p">(</span><span class="n">n1</span><span class="o">*</span><span class="p">(</span><span class="n">m1</span><span class="o">-</span><span class="n">ap</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">n2</span><span class="o">*</span><span class="p">(</span><span class="n">m2</span><span class="o">-</span><span class="n">ap</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n1</span><span class="o">+</span><span class="n">n2</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/height.csv&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">,</span><span class="s1">&#39;height&#39;</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;grup 1&#39;</span><span class="p">,</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n1</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n1</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;grup 2&#39;</span><span class="p">,</span><span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ortalama&#39;</span><span class="p">,</span><span class="n">ap</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;varyans&#39;</span><span class="p">,</span> <span class="n">mean_of_var</span> <span class="o">+</span> <span class="n">var_of_means</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>grup 1 169.48143026471752 132.43021620799752
+grup 2 169.52632644795463 134.17721295297002
+ortalama 169.50360000000018
+varyans 133.29338703999994
+</code></pre>
+</div>
+
+<p>Birleştirilmiş değerlerin ilk başta bulunan toplam ortalama ve
+varyans ile aynı olduğunu görüyoruz. </p>
+
+<h3>Kümeleme (KMeans)</h3>
+
+<p>K-Means algoritma detayları [7]'de. Daha önce [1] yazısında bu işi
+eşle/indirge, Hadoop ortamında nasıl yapacağımızı gördük. Eğer
+[2]'deki yöntemi kullanmak istiyorsak, yani altyapı bir veriyi
+herhangi bir kritere göre (çoğunlukla basit bloklar üzerinden) bölmek
+ve her bölüm üzerinde ayrı bir süreç işletmek istiyorsak (indirgeme
+mimarisi kullanmadan), paralel KMeans algoritması şöyle
+kodlanabilir. [2]'de bahsettiğimiz gibi takip ettiğimiz yaklaşım
+hiçbir şey paylaşma (share nothing) yaklaşımı. Süreç işe başladığında
+kendi veri parçasını bilir, ve diğer süreçlerle iletişimde bulunmaz.</p>
+
+<p>Fakat unutmayalım, KMeans özyineli (recursive) bir algoritmadir,
+verinin üzerinden tek bir geçiş (single pass) yeterli değildir. Veri
+birkaç kere baştan sonra taranmalıdır.</p>
+
+<p>Bir algoritma şöyle olabilir;</p>
+
+<ul>
+<li><p>Her geçişte, döngüde, verinin başına gidilir, ve küme merkezlerinin
+en son ne olduğu <code>centers.txt</code> dosyasından tüm süreçler tarafından
+okunur (başta rasgele olabilir). Bu çok ufak bir veridir, anında
+okunabilir.</p></li>
+<li><p>Her süreç elindeki verinin her noktasının hangi merkeze yakın
+olduğunu saptar. Bu sonuçlar yeni bir dosyaya yazılabilir, bu dosya
+her süreç tarafından okunabilmelidir).</p></li>
+<li><p>Ardından başa dönülür, biraz önce yapılan üyelik atamasına göre yeni
+küme merkezleri hesaplanır. Bu yeni merkezler <code>C-0-0</code>, <code>C-0-1</code> gibi
+bir dosyaya yazılır, ki <code>C-0-1</code> 0'inci kümenin 1'inci süreç
+tarafından hesaplanmış merkezidir.</p></li>
+<li><p>Bu merkezler tabii ki tamamlanmış değildir, bir süreçten gelen
+hesaplardır bunlar, ana takip edici script tüm süreçlerin o
+geçişteki işi bitince, her küme için yarım hesaplanmış merkezleri
+alır, ortalamasını hesaplayıp yeni <code>centers.txt</code> dosyasını oluşturur.</p></li>
+<li><p>Üstteki adımlar tekrarlanır, ta ki belli bir geçiş sayısı ya da
+"stabiliteye erişim" durumu oluncaya kadar, stabilite derken mesela
+eğer küme merkezlerinde her geçiş sonrası artık büyük değişimler
+olmuyor ise, iş bitmiş kabul edilebilir.</p></li>
+</ul>
+
+<p><img src="kmeans.gif" alt="" /></p>
+
+<p>Önemli noktaları vurgulayalım, veri satırsal şekilde paylaştırılır,
+her sürecin işlediği parçada her kümeden değer olabilir. Her geçişte
+işlem paralel olur, fakat bir takip edici script o geçiş bitince bir
+sonraki geçişi hazırlamakla sorumludur, her süreçten gelen merkezlerin
+ortalaması, bir sonraki geçişin başlatılması bir script'in
+sorumluluğundadır. Ortalama, bekleme, birleştirme işlemleri ağır
+işlemler değildir, bu sebeple seri işlemelerinde problem yoktur.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Paralel KMeans, Hadoop](../../2013/10/paralel-kmeans-hadoop.html)</p>
+
+<p>[2] Bayramlı, <a href="../../2016/02/toptan-islemler-paralelizasyon.html">Paralel, Satır Bazlı Dosya İşlemek</a></p>
+
+<p>[3] Wikipedia, <a href="https://en.wikipedia.org/wiki/External_sorting">External Sorting</a></p>
+
+<p>[4] https://en.wikipedia.org/wiki/K-way<em>merge</em>algorithm</p>
+
+<p>[5] [Stackoverflow](https://stackoverflow.com/questions/29494594/sorting-data-with-space-contrainsts)</p>
+
+<p>[7] [Azar Azar İstatistik (Incremental Statistics) Temeli](https://burakbayramli.github.io/dersblog/stat/stat<em>176</em>app1inc/azar<em>azar</em>istatistik<em>_incremental</em>statistics_.html)</p>
+
+<p>[6] [Grupların Ortalamalarını ve Varyanslarını Birleştirmek](https://burakbayramli.github.io/dersblog/stat/stat<em>010</em>cov<em>corr/beklenti</em>varyans<em>kovaryans</em>ve_korelasyon.html#group)</p>
+
+<p>[7] [K-Means Kümeleme Metodu](https://burakbayramli.github.io/dersblog/algs/algs<em>080</em>kmeans/kmeans<em>kumeleme</em>metodu.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

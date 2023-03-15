@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Meteoroloji Verileri - ECMWF, NOAA, OpenWeatherMap</h1>
+
+<p>OpenWeatherMap</p>
+
+<p>Bu Web servisi kayıt olanlara bir APİ anahtarı verir ve belli sayıda
+APİ çağrısı için kullanım bedavadır. Servisten o andaki sıcaklık,
+rüzgar, nem vs gibi verileri alabiliriz, ayrıca bu veriler için
+tahminler de aynı API üzerinden paylaşılıyor [2,3].</p>
+
+<p>Kullanım şartlarına [1] baktığımızda bedava seçenek için,</p>
+
+<pre><code>60 calls/minute
+1,000,000 calls/month
+Current Weather
+Minute Forecast 1 hour*
+Hourly Forecast 2 days*
+Daily Forecast 7 days*
+National Weather Alerts*
+Historical weather 5 days*
+Climatic Forecast 30 days
+</code></pre>
+
+<p>servislerini görüyoruz, bir dakikada 60 çağrı, her ay 1 milyon çağrı
+yapabiliyoruz bu durumda, bu çoğu geliştirici için yeterli
+olmalı. Tabii OWM üzerinden başkalarına servis sağlamak isteyenler
+daha fazla erişime ihtiyaç duyabilir, onlar için farklı planlar var.</p>
+
+<p>Yazının geri kalanında bu anahtarı aldığınızı, ve anahtarın <code>.key</code>
+adlı bir dosyada olduğunu farzediyoruz (dikkat, bu anahtar kodda olsa
+<code>key='ASDFASDF'</code> gibi gözükecek bir şey, eğer dosya içine koyarsak son
+satır -newline- olmadan dosyaya yazmak gerekir),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">json</span>
+<span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="o">=</span> <span class="mf">41.969901</span><span class="p">,</span><span class="mf">29.070148</span>
+<span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;http://api.openweathermap.org/data/2.5/weather?&#39;</span>
+<span class="n">weatherapi</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;.key&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;metric&#39;</span><span class="p">,</span> <span class="s1">&#39;APPID&#39;</span><span class="p">:</span> <span class="n">weatherapi</span> <span class="p">}</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span> 
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;wind&#39;</span><span class="p">])</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;hiz&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;speed&#39;</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;yon&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;deg&#39;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>json [{&#39;speed&#39;: 8.92, &#39;deg&#39;: 214}]
+hiz 8.92
+yon 214
+</code></pre>
+</div>
+
+<p>Üstte <code>lat,lon</code> enlem ve boylamlarındaki o andaki rüzgar hızı ve
+yönünü aldık.</p>
+
+<p>Not: Rüzgar acısı meterolojik, ya da coğrafik acı denen şekilde,
+meteroloji dünyasında kuzeye göre rüzgarın nereden geldiği
+raporlanıyor, acılar ona göre ayarlanıyor, kuzeyden güneye doğru esen,
+yani tam güneyi gösteren açı sıfır, saat yönüne doğru
+artıyor. Aritmetik acılar farklı tabii, orada saat yönü tersinde artış
+ve tam sağ / doğu yönde sıfır. Aradaki değişim için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">geo2arit</span><span class="p">(</span><span class="n">geo</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">geo</span><span class="o">==</span><span class="mi">360</span><span class="p">:</span> <span class="n">geo</span><span class="o">=</span><span class="mi">0</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">geo</span><span class="o">&gt;=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">geo</span> <span class="o">&lt;</span><span class="mf">90.0</span><span class="p">):</span> <span class="k">return</span> <span class="mf">270.0</span><span class="o">-</span><span class="n">geo</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">geo</span><span class="o">&gt;=</span><span class="mf">90.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">geo</span><span class="o">&lt;</span><span class="mf">180.0</span><span class="p">):</span> <span class="k">return</span> <span class="mf">180.0</span><span class="o">-</span><span class="p">(</span><span class="n">geo</span><span class="o">-</span><span class="mi">90</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">geo</span><span class="o">&gt;=</span><span class="mf">180.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">geo</span><span class="o">&lt;</span><span class="mf">270.0</span><span class="p">):</span> <span class="k">return</span> <span class="mf">90.0</span><span class="o">-</span><span class="p">(</span><span class="n">geo</span><span class="o">-</span><span class="mi">180</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span><span class="n">geo</span><span class="o">&gt;=</span><span class="mf">270.0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">geo</span><span class="o">&lt;</span><span class="mf">360.0</span><span class="p">):</span> <span class="k">return</span> <span class="mf">360.0</span><span class="o">-</span><span class="p">(</span><span class="n">geo</span><span class="o">-</span><span class="mi">270</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>şeklinde bir çevirici kod yazılabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">geo2arit</span><span class="p">(</span><span class="mi">90</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">geo2arit</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">geo2arit</span><span class="p">(</span><span class="mi">80</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>180.0
+270.0
+190.0
+</code></pre>
+</div>
+
+<p>Daha fazla meteorolojik bilgi <code>'main'</code> anahtarı içinde,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span> 
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;main&#39;</span><span class="p">])</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&#39;temp&#39;: 12.36, &#39;feels_like&#39;: 5.71, &#39;temp_min&#39;: 12.36, &#39;temp_max&#39;: 12.36, &#39;pressure&#39;: 1015, &#39;humidity&#39;: 76, &#39;sea_level&#39;: 1015, &#39;grnd_level&#39;: 1015}
+</code></pre>
+</div>
+
+<p>Tahminler için farklı bir URL / API gerekiyor, mesela rüzgar yönü ve yağmur için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;http://api.openweathermap.org/data/2.5/forecast?&#39;</span>
+<span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;metric&#39;</span><span class="p">,</span> <span class="s1">&#39;APPID&#39;</span><span class="p">:</span> <span class="n">weatherapi</span> <span class="p">}</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+<span class="n">wind</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">rain</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">():</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">xx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;list&#39;</span><span class="p">]):</span>
+        <span class="n">wind</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">xx</span><span class="p">[</span><span class="s1">&#39;dt_txt&#39;</span><span class="p">],</span> <span class="n">xx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;wind&#39;</span><span class="p">)</span> <span class="p">))</span>
+        <span class="n">rain</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">xx</span><span class="p">[</span><span class="s1">&#39;dt_txt&#39;</span><span class="p">],</span> <span class="n">xx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rain&#39;</span><span class="p">)</span> <span class="p">))</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ruzgar&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  
+    <span class="nb">print</span> <span class="p">(</span><span class="n">wind</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;yagmur&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>  
+    <span class="nb">print</span> <span class="p">(</span><span class="n">rain</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>ruzgar
+(&#39;2021-01-07 12:00:00&#39;, {&#39;speed&#39;: 10.21, &#39;deg&#39;: 211})
+(&#39;2021-01-07 15:00:00&#39;, {&#39;speed&#39;: 9.37, &#39;deg&#39;: 213})
+(&#39;2021-01-07 18:00:00&#39;, {&#39;speed&#39;: 5.15, &#39;deg&#39;: 250})
+(&#39;2021-01-07 21:00:00&#39;, {&#39;speed&#39;: 2.69, &#39;deg&#39;: 25})
+(&#39;2021-01-08 00:00:00&#39;, {&#39;speed&#39;: 4.66, &#39;deg&#39;: 55})
+yagmur
+(&#39;2021-01-07 12:00:00&#39;, None)
+(&#39;2021-01-07 15:00:00&#39;, None)
+(&#39;2021-01-07 18:00:00&#39;, None)
+(&#39;2021-01-07 21:00:00&#39;, {&#39;3h&#39;: 0.17})
+(&#39;2021-01-08 00:00:00&#39;, {&#39;3h&#39;: 1.08})
+</code></pre>
+</div>
+
+<p>ECMWF</p>
+
+<p>Hava verisi uzerinde yapay ogrenim ile tahminler yapmak isteyenler ham
+veriyi almak icin alttaki siteye basvurabilir.</p>
+
+<p>https://www.ecmwf.int/</p>
+
+<p>Bu bir Avrupa bilim organizasyonu, ayrica hava tahmini modellerini
+isletip tahmin de uretiyorlar (Harvey kasirgasinin nereye vuracagini
+ABD NOAA'dan daha iyi tahmin ettiler). Python ile veri indirmek
+mumkun,</p>
+
+<pre><code>sudo pip install ecmwf-api-client
+</code></pre>
+
+<p>Burada "Register" ile kullanici bilgileri, email, vs. verilip
+kaydolunur. Bir aktivasyon email'i sonra bir tane daha email geliyor,
+ve kayit bitiyor.  Login yapilir. Simdi API'ye erismek icin anahtar
+lazim,</p>
+
+<p>https://api.ecmwf.int/v1/key/</p>
+
+<p>Burada gosterilen </p>
+
+<pre><code>{
+    "url"   : "https://api.ecmwf.int/v1",
+    "key"   : "[ANAHTAR]",
+    "email" : "[email]"
+}
+</code></pre>
+
+<p>formundaki anahtar $HOME/.ecmwfapirc dosyasina yazilir. </p>
+
+<p>Verilere erismeden once veri turune gore bazi lisans sayfalarinda bir
+lisans kabuluna "evet" demek gerekiyor, mesela alttaki tur bir script
+icin</p>
+
+<pre><code>from ecmwfapi import ECMWFDataServer
+
+server = ECMWFDataServer()
+
+server.retrieve({
+
+    'dataset' : "tigge",
+    'step'    : "24/to/120/by/24",
+    'number'  : "all",
+    'levtype' : "sl",
+    'date'    : "20071001/to/20071003",
+    'time'    : "00/12",
+    'origin'  : "all",
+    'type'    : "pf",
+    'param'   : "tp",
+    'area'    : "70/-130/30/-60",
+    'grid'    : "2/2",
+    'target'  : "data.grib"
+    })
+</code></pre>
+
+<p>[5] lisansına evet demiş olmak lazım. Bir tane daha [6].</p>
+
+<p>Eger lisans kabul edilmemisse hata mesaji hangi sayfaya gidilecegini soyler.</p>
+
+<p>NOAA</p>
+
+<p>[4] adresinde gunluk dosyalar var.</p>
+
+<p>Yapay Ogrenim</p>
+
+<p>Hava tahmini icin gunluk (saatlik, vs) hava verisi cok boyutlu bir
+zaman serisi olarak gorulebilir, mesela her t aninda sicaklik, nem,
+ruzgar hizi cok boyutlu bir zaman serisi olarak geliyor, egitim icin N
+tane gorulen veri kullanilir, bu veri N+1, N+2, . anlarindaki gelecek
+zaman serisini tahmin icin kullanilir. Bu sekilde hava tahmininin
+ornegi alttaki kodlarda bulunabilir,</p>
+
+<p>https://github.com/mouradmourafiq/tensorflow-lstm-regression/blob/master/lstm_weather.ipynb</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://openweathermap.org/price</p>
+
+<p>[2] https://openweathermap.org</p>
+
+<p>[3] https://openweathermap.org/api</p>
+
+<p>[4] https://www.ncdc.noaa.gov/orders/qclcd/</p>
+
+<p>[5] http://apps.ecmwf.int/datasets/licences/tigge/</p>
+
+<p>[6] http://apps.ecmwf.int/datasets/licences/general</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

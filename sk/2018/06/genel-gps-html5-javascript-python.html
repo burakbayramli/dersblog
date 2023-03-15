@@ -1,0 +1,416 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<p>°# Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python</p>
+
+<h3>Mesafe hesabı yapmak</h3>
+
+<p>İki enlem, boylam kordinatı arasında mesafe hesabı için geopy kullanılabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">geopy.distance</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="n">geopy</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">vincenty</span><span class="p">((</span><span class="mf">51.238689</span><span class="p">,</span> <span class="mf">4.406747</span><span class="p">),(</span><span class="mf">51.232246</span><span class="p">,</span> <span class="mf">4.444266</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dist</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dist</span><span class="o">.</span><span class="n">km</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>İkinci ifade float tıpınde mesafeyi verir, kilometre bazlıdır.</p>
+
+<p>Ya da</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy.sphericalNvector</span> <span class="kn">import</span> <span class="n">LatLon</span>
+
+<span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">lat1</span><span class="p">,</span> <span class="n">lon1</span><span class="p">)</span>
+<span class="n">p2</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">lat2</span><span class="p">,</span> <span class="n">lon2</span><span class="p">)</span>
+
+<span class="n">p1</span><span class="o">.</span><span class="n">distanceTo</span><span class="p">(</span><span class="n">p2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3>İki nokta arasında birinciden ikinciye olan açısal yön (bearing),</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">get_bearing</span><span class="p">(</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat2</span><span class="p">,</span><span class="n">lon2</span><span class="p">):</span>
+    <span class="n">dLon</span> <span class="o">=</span> <span class="n">lon2</span> <span class="o">-</span> <span class="n">lon1</span><span class="p">;</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dLon</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat2</span><span class="p">);</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat2</span><span class="p">)</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat2</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dLon</span><span class="p">);</span>
+    <span class="n">brng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">));</span>
+    <span class="k">if</span> <span class="n">brng</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">brng</span><span class="o">+=</span> <span class="mi">360</span>
+    <span class="k">return</span> <span class="n">brng</span>
+</code></pre>
+</div>
+
+<p>Sonuç 0 derece kuzey olmak üzere 0-360 derece arasında saat yönüne
+doğru artacak şekilde açı.</p>
+
+<p>Bir kordinattan "10 km doğuya, batıya, vs. adım atınca nereye
+geliriz?" sorusunun cevabı için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">geopy</span>
+<span class="kn">import</span> <span class="nn">geopy.distance</span>
+<span class="c1"># baslangic noktasi</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">geopy</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="mf">48.853</span><span class="p">,</span> <span class="mf">2.349</span><span class="p">)</span>
+<span class="c1"># mesafe 1 km</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">geopy</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">VincentyDistance</span><span class="p">(</span><span class="n">kilometers</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># derece olarak adim atilacak yon, 0 derece kuzey, 90 dogu, ..</span>
+<span class="n">reached</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">destination</span><span class="p">(</span><span class="n">point</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">reached</span><span class="o">.</span><span class="n">latitude</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">reached</span><span class="o">.</span><span class="n">longitude</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Ya da</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy.sphericalNvector</span> <span class="kn">import</span> <span class="n">LatLon</span>
+<span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mf">39.06084392603182</span><span class="p">,</span> <span class="mf">34.274201977299</span>
+<span class="n">DIST</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="p">)</span>
+<span class="n">EARTH_RAD</span> <span class="o">=</span> <span class="mi">6371</span>
+<span class="n">upright</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">DIST</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">EARTH_RAD</span><span class="p">)</span>
+<span class="n">lowleft</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">DIST</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mi">225</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">EARTH_RAD</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span> <span class="n">upright</span> <span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span> <span class="n">lowleft</span> <span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>45.090707 N, 043.281808 E
+32.450607 N, 026.747624 E
+</code></pre>
+</div>
+
+<p>Örnekte Anadolu ortasından başlayıp 45 derece kuzeydoğuya ve 225
+derece güneybatıya 1000 km adım atınca nereye geldiğimizi görüyoruz.</p>
+
+<h3>Orta Nokta</h3>
+
+<p>Bir GPS kordinat listesinin orta noktasını bulmak için, su <a href="https://www.navlab.net/nvector/#example_7">bağlantıdan</a>,
+enlem, boylam bir üç boyutlu vektör haline getiriliyor, ve Kartezyen bazlı bu
+vektörlerin ortalaması doğru ortalamayı veriyor. Kodun temel aldığı makale [1].</p>
+
+<p><img src="n-vector.jpg" alt="" /></p>
+
+<p>Grafiğe bakarsak yeryüzünde üç noktayı temsil eden A,B,C vektörleri
+bulunmuş bu vektörlerin her biri üç acı üzerinden temsil edilecek, ve
+eğer üç boyuttaki vektörlerin ortalamasını alırsak rahatlıkla M
+vektörünü bulabiliriz, çünkü vektörleri işaretlerinden tutun onların
+kapsamları aritmetiksel işlemler için uygundur. Kıyasla biri -90/+90
+arasında diğeri -180/+180 arasında gidip gelen iki sayının
+aritmetiksel ortalamasının yeryüzünün her noktasında doğru sonucu
+vermesi zordur. Biri -90 sınırının bir tarafı diğeri öteki tarafında
+olan iki noktayı düşünebiliriz mesela..</p>
+
+<p>Kodlama alttaki gibi olabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">lin</span>
+
+<span class="n">E</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>
+
+<span class="k">def</span> <span class="nf">lat_long2n_E</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span><span class="n">longitude</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">latitude</span><span class="p">)),</span>
+           <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">longitude</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">latitude</span><span class="p">)),</span>
+           <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">longitude</span><span class="p">))</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">latitude</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">n_E2lat_long</span><span class="p">(</span><span class="n">n_E</span><span class="p">):</span>
+    <span class="n">n_E</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">n_E</span><span class="p">)</span>
+    <span class="n">longitude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">n_E</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="o">-</span><span class="n">n_E</span><span class="p">[</span><span class="mi">2</span><span class="p">]);</span>
+    <span class="n">equatorial_component</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_E</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">n_E</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="p">);</span>
+    <span class="n">latitude</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">n_E</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">equatorial_component</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">latitude</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">longitude</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">average</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">:</span>
+        <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lat_long2n_E</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">))</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">m</span> <span class="o">/</span> <span class="n">lin</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">n_E2lat_long</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">lat_long2n_E</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_E2lat_long</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n</span><span class="p">)))</span>
+
+<span class="c1"># fransa ve libya ortasi</span>
+<span class="n">coords</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">30</span><span class="p">,</span><span class="mi">20</span><span class="p">],[</span><span class="mi">47</span><span class="p">,</span><span class="mi">3</span><span class="p">]]</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">average</span><span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">m</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Üstteki işlemleri yapan bir paket te var, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy.sphericalNvector</span> <span class="kn">import</span> <span class="n">LatLon</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">nvecs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">a</span><span class="o">.</span><span class="n">toNvector</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">b</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">nvecs</span><span class="p">)</span>
+<span class="n">mid</span> <span class="o">=</span> <span class="n">nvecs</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">toLatLon</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">mid</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">mid</span><span class="o">.</span><span class="n">lon</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[Nvector(0.707, 0.01234, 0.70711) Nvector(0.70668, 0.02468, 0.70711)
+ Nvector(0.69424, 0.02424, 0.71934) Nvector(0.69455, 0.01212, 0.71934)]
+45.50109067812444 1.5
+&lt;class &#39;pygeodesy.sphericalNvector.LatLon&#39;&gt;
+(0.700656, 0.018347, 0.713264)
+</code></pre>
+</div>
+
+<h3>Nokta Bir Alan İçinde mi</h3>
+
+<p>Elde köşeleri bilinen bir üçgen, kare ya da dışbükey poligon var
+diyelim, mesela Bermuda Üçgeni! Elimizdeki bir noktanın o alan içine
+düşüp düşmediğini nereden bileceğiz?  Burada iyi bir yaklaşım
+<code>pygeodesy</code> paketi, bu paket üstteki n-vektör yaklaşımını kullanıyor,
+yani sağlam. Bir örnek altta, dörk köşesi verilmiş alan içine <code>45.1,
+1.1</code> noktasının düşüp düşmediğini soruyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy.sphericalNvector</span> <span class="kn">import</span> <span class="n">LatLon</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="mf">45.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">LatLon</span><span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">isenclosedBy</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<h3>DMS ve Ondalik Formatlar Gecisi</h3>
+
+<p>Bazen <code>000  00' 05.31''W</code> ve <code>51  28' 40.12'' N</code> şeklinde enlem ve
+boylam verisi görebiliriz. Bu format yeri saat, dakika, saniye
+üzerinden göstermektedir. Çevirmek için <code>pygeodesy</code> içinde gerekli
+fonksiyonlar var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy</span> <span class="kn">import</span> <span class="n">parse3llh</span><span class="p">,</span> <span class="n">fstr</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">parse3llh</span><span class="p">(</span><span class="s1">&#39;000  00&#39;</span> <span class="mf">05.31</span><span class="s1">&#39;&#39;</span><span class="n">W</span><span class="p">,</span> <span class="mi">51</span>  <span class="mi">28</span><span class="s1">&#39; 40.12&#39;&#39; N&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">fstr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">6</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>51.477811, -0.001475, 0.0
+</code></pre>
+</div>
+
+<p>İlk iki sayı enlem ve boylamdır.</p>
+
+<h3>HTML5 ve Javascript ile Yer Bulmak</h3>
+
+<p>Javascript icinden yer bulmak mumkun, bu cep telefonunda da isliyor,
+Google'in Wifi, Telekom, GPS uzerinden yer bulan arayuzu ile
+baglantili zannederim. Kalitesini kontrol etmedim, ama alttaki kod
+isler ve yer rapor eder. Isletince tarayici 'yer bilgisine erisim'
+icin izin isteyecek. Izin verince (allow), bilgi sayfada basilacak ve
+kullanim ornegi olsun diye bir de URL baglantilardan birine parametre
+olarak eklenecek.</p>
+
+<pre><code>&lt;html&gt;
+  &lt;script&gt;
+    var lat = "lat";
+    var lon = "lon";
+    function getLocation() {
+       navigator.geolocation.getCurrentPosition(setPosition);
+    }
+    function setPosition(position) {
+      lat = position.coords.latitude;
+      lon = position.coords.longitude;
+      document.getElementById("locpos").innerHTML = lat + " " + lon;
+      document.getElementById("url1").href="/bir/baglanti/" + lat + ";" + lon;
+    }
+&lt;/script&gt;
+&lt;body onload="init()"&gt;
+
+  &lt;div class="navmenu"&gt;
+    &lt;nav&gt;
+      &lt;div id="locpos"&gt;
+        &lt;p&gt;&lt;/p&gt;
+      &lt;/div&gt;
+      &lt;ul&gt;
+        &lt;li&gt;&lt;a id="grab" href="#" onclick='getLocation()'&gt;Yer Bul&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a id="url1" href="/bir/baglanti/32324"&gt;Baglanti&lt;/a&gt;&lt;/li&gt;
+        &lt;li&gt;&lt;a id="vsvs" href=""&gt;Vs..&lt;/a&gt;&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/nav&gt;
+  &lt;/div&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<h3>İsimden Kordinat Bulmak</h3>
+
+<p>Bölge ve ülke ismi vererek dünyadaki pek çok yeri bulmak için <code>geonames</code>
+sitesi kullanılabilir, http://www.geonames.org adresine gidilip bilgiler
+girilince sonuçlar listeleniyor.</p>
+
+<p>Script üzerinden bu bilgiyi nasıl çekeriz? Site URL parametresi olarak
+girdi kabul ediyor, eğer sonuçlardan ilkini çekip çıkartabilirek onu
+kordinat sonucu olarak alabiliriz. Mesela Ağrı Dağları icin</p>
+
+<p>http://www.geonames.org/search.html?q=Agri+Mountain&amp;country=TR</p>
+
+<p>Script uzerinden</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pygeodesy</span> <span class="kn">import</span> <span class="n">parse3llh</span><span class="p">,</span> <span class="n">fstr</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib2</span><span class="o">,</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">geoname</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span> <span class="n">ccode</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://www.geonames.org/search.html?q=</span><span class="si">%s</span><span class="s2">&amp;country=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">keyword</span><span class="p">,</span><span class="n">ccode</span><span class="p">)</span>    
+    <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="s2">&quot;+&quot;</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">url</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s2">&quot;Latitude.*?&lt;td nowrap&gt;(.*?)&lt;/td&gt;&lt;td nowrap&gt;(.*?)&lt;/td&gt;&quot;</span><span class="p">,</span><span class="n">content</span><span class="p">,</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="kc">False</span><span class="p">,</span><span class="mi">99999</span><span class="p">,</span><span class="mi">999999</span>
+    <span class="n">lats</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">];</span> <span class="n">lons</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lats</span> <span class="o">=</span> <span class="n">lats</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">lats</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lons</span> <span class="o">=</span> <span class="n">lons</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">lons</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">geos</span> <span class="o">=</span> <span class="n">lats</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">lons</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">parse3llh</span><span class="p">(</span><span class="n">geos</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">fstr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">prec</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span><span class="p">,</span><span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">float</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">geoname</span><span class="p">(</span><span class="s2">&quot;Agri Mountain&quot;</span><span class="p">,</span><span class="s2">&quot;TR&quot;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Sonuc</p>
+
+<pre><code>(True, 39.702222, 44.297778)
+</code></pre>
+
+<p>olarak çıkacak. İlk değer bir statü değeri, eğer veri işlemede problem
+çıkarsa problem bu şekilde iletilebilir.</p>
+
+<p>Geocoder</p>
+
+<p>Eğer üstteki yaklaşım fazla çetrefil gibi gözüküyorsa, <code>geoçoder</code> adlı
+bir paket var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">geocoder</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">geocoder</span><span class="o">.</span><span class="n">osm</span><span class="p">(</span><span class="s2">&quot;Plymouth, MN&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">latlng</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">geocoder</span><span class="o">.</span><span class="n">osm</span><span class="p">(</span><span class="s2">&quot;Istanbul, Turkey&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">latlng</span><span class="p">)</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">geocoder</span><span class="o">.</span><span class="n">osm</span><span class="p">(</span><span class="s2">&quot;Canakkale&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">latlng</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[45.0065149, -93.46651]
+[41.0091982, 28.9662187]
+[40.0549886, 26.9278292]
+</code></pre>
+</div>
+
+<h3>Imajdan Kordinat Toplamak</h3>
+
+<p>Diyelim ki elimizde JPG üzerinde bir harita var, üzerinde bir sınır
+gösterilmiş, ve oradan sınır verilerini toplamak istiyoruz. Alttaki
+basit GUI kodu şunu yapar 1) Parametre olarak geçilen resmi gösterir,
+2) O resim üzerinde yapılacak fare tıklamalarının x,y piksel
+kordinatlarını ekrana basar. Bu sayede çıplak gözle sınıra bakarız,
+üzerine tıklarız, ve kordinatlarını "geriye mühendislik" ile toplamış
+oluruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageTk</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">tkinter</span>
+
+<span class="n">window</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Tk</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bla&quot;</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">700</span><span class="p">)),</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="n">image_tk</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="n">canvas</span><span class="o">.</span><span class="n">create_image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image_tk</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">,</span><span class="si">%d</span><span class="s2">],&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">canvas</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Button-1&gt;&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="n">tkinter</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Gerekli paketi kurmak için <code>sudo apt ınstall python3-tk</code> yeterli.</p>
+
+<p>Tabii nihai kordinatlar için ek bir adım daha gerekli, piksel
+değerlerini alıp enlem, boylama çevirmek; bu hesap için enlem
+boylamını bildiğimiz iki piksel değeri yeterli. Alttaki gibi bir kodla
+bu transformasyon yapılabilir. Referans iki kordiate değeri <code>refc</code>,
+ona tekabül eden iki piksel x,y değeri <code>refp</code> içinde, ve toplanan
+tüm piksel değerleri bir liste olarak <code>clicks</code> içinde.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">platlon</span><span class="p">(</span><span class="n">refc</span><span class="p">,</span> <span class="n">refp</span><span class="p">,</span> <span class="n">clicks</span><span class="p">):</span>
+    <span class="n">mlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">refc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">refp</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">mlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">refc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">refp</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span> <span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">mlat</span><span class="p">,</span> <span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">mlon</span> <span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="n">data</span> <span class="p">]</span>
+    <span class="k">return</span> <span class="n">cs</span>
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] Kenneth Gade (2010), A Non-singular Horizontal Position Representation,
+    The Journal of Navigation, Volume 63, Issue 03, pp 395-417, July 2010.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

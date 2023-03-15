@@ -1,0 +1,216 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Derin Öğrenimle 3D Uzaklık Bilgisi, Görüntü Bölümleri Bulmak</h1>
+
+<p>DO ile dış dünyadaki objelerin derinliğini, tek kamera kullanarak
+ayrıca kameranın hareketini hesaplayabilen bir ağ yapısı surada
+paylaşılmış. Yazarlardan biri David Lowe: bu araştırmacı DO'dan önce
+de yapay görüş alanında ünlüydü, görüntülerden özellik çıkartmak
+(feature extraction) alanında mesela SIFT buluşu vardır... Ilginç bir
+hikaye: Lowe SIFT'i keşfeder ama bu keşif hakkındaki yazıyı hiçbir
+bilimsel yayın kabul etmez, o da SIFT'i patentler.</p>
+
+<p>Neyse, genç bir diğer bilimci Zhou'nun başlattığı ve diğerlerinin
+katıldığı bu en son makalede ilginç bir diğer özellik DO'nun
+eğitiminin tamamen denetimsiz (unsupervised) olması, yani veri için
+etiket yok. DO hakkında yapılan eleştirilerden biri çok fazla etiketli
+veriye ihtiyacı olması, denetimsiz çalışmaması. Bu yaklaşım
+denetimsiz, ama aslında dolaylı olarak denetimli, çünkü etiketleri
+eğitim sürecinin kendisi üretiyor. Denetimli eğitim bilindiği gibi,
+mesela regresyon tekniğinde verili X için bir y'ye bir model
+uyduruyoruz, y'ler etiket ya da hedef verileri oluyorlar. DO'lar model
+uydurmayı çok boyutlu ve çok daha esnek şekilde yapabiliyorlar.</p>
+
+<p>Denetimsizlik icin etiket üretimi perspektif geometri kullanarak
+yapılıyor. Perspektif geometride  bir imajdan diğerine geçerken mesela
+kamera duruşunun nasıl değiştiğini biliyorsak 1. imajı yamultup
+(warping) 2. imaja çevirebiliriz, ya da ters yönde ters yamultma ile
+geriye gidebiliriz. Bunu biliyoruz. Arkadaşlar iki ağ yapısı
+kurmuşlar, biri derinlik için diğeri duruş için; Bir video'daki tüm
+kareleri işlerken önceki, sonraki, mevcut imaj kullanıp duruş, sonraki
+imaj kullanılarak mevcut resimdeki derinlik tahmin edilmeye
+uğraşılıyor. Sonra her iki ağın çıktısı kullanılarak önceki imaja
+doğru ters yamultma yapıyorsunuz, eğer yamultma iyi olmadıysa önceki
+imaja uymayacaktır tabii ki ve bu "hata" bir gradyan inişle her iki ağ
+üzerinde düzeltme amaçlı kullanılabilir. Geriye doğru yamultma
+işleminin türevi alınabilir halde olması için özen gösterilmiş ki DO
+ile eğitim yapılabilsin. Fikir müthiş. Yani perspektif geometri
+üzerinden verinin kendisi dolaylı denetimli eğitim sağlamış oluyor. </p>
+
+<p>Egitim KITTI adli bir veri seti üzerinde yapılmış. KITTI saatlerce bir
+arabanın yolda giderken kamerasından kaydedilmiş görüntülerini içerir.</p>
+
+<p>Kod şurada</p>
+
+<p>https://github.com/tinghuiz/SfMLearner</p>
+
+<p>DO için Tensorflow kullanılmış, kurmak için</p>
+
+<p>sudo pip install tensorflow==1.1</p>
+
+<p>Eğitilmiş modeli models/download_model.sh ile indirebiliyoruz. Biz modeli modeli test ettik, şu imaj üzerinde, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">time</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">scipy.misc</span>
+
+<span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="kn">from</span> <span class="nn">SfMLearner</span> <span class="kn">import</span> <span class="n">SfMLearner</span>
+
+<span class="kn">from</span> <span class="nn">utils</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;depth&#39;</span>
+
+<span class="n">img_height</span><span class="o">=</span><span class="mi">240</span><span class="p">;</span> <span class="n">img_width</span><span class="o">=</span><span class="mi">320</span>
+
+<span class="n">ckpt_file</span> <span class="o">=</span> <span class="s1">&#39;models/model-145248&#39;</span>
+
+<span class="n">I</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="s1">&#39;ins.jpg&#39;</span><span class="p">)</span>
+
+<span class="n">I</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">misc</span><span class="o">.</span><span class="n">imresize</span><span class="p">(</span><span class="n">I</span><span class="p">,</span> <span class="p">(</span><span class="n">img_height</span><span class="p">,</span> <span class="n">img_width</span><span class="p">))</span>
+
+<span class="n">sfm</span> <span class="o">=</span> <span class="n">SfMLearner</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">img_height</span><span class="o">=</span><span class="n">img_height</span><span class="p">,</span> <span class="n">img_width</span><span class="o">=</span><span class="n">img_width</span><span class="p">)</span>
+
+<span class="n">sfm</span><span class="o">.</span><span class="n">setup_inference_graph</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+
+<span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">([</span><span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">tf</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">()])</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+
+    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">ckpt_file</span><span class="p">)</span>
+
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">sfm</span><span class="o">.</span><span class="n">inference</span><span class="p">(</span><span class="n">I</span><span class="p">[</span><span class="kc">None</span><span class="p">,:,:,:],</span> <span class="n">sess</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">))</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">pred</span><span class="p">[</span><span class="s1">&#39;depth&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">,:,:,</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">normalize_depth_for_display</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;out2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sonuç</p>
+
+<p>Daha aydınlık pikseller daha yakın demek. Ortadaki engel açık şekilde
+görülüyor. Metre olarak biz bazı seçilmiş pikselleri kontrol ettik, </p>
+
+<p>Çoğu piksel iyi, alt soldaki daha iyi olabilirdi. Muhakkak bu
+yaklaşımda ilerlemeler olacaktır, ayrıca zaten üstteki türden
+resimleri kullanarak eğitim yapılsa sonuçlar daha iyi
+olabilirdi. Yapılan az buz iş değil; tek resme bakılarak tüm
+piksellerin derinlik bilgisini bulmak! </p>
+
+<p>Peki birkaç resme bakarak (video mesela) o resimlerdeki tüm objeleri
+üç boyutta bulmak, takip etmek amacında neredeyiz? Bu bağlamda daha
+gidecek yol var. Şimdilik en iyi seçenek DO (ya da diger, mesela
+Felzenswalb) kullanarak iki boyutta görüntü bölmesi (segmentation)
+yapmak, sonra bu iki boyuttaki görüntü parçalarını 3D takibi yapacak
+filtrelere geçmek. Filtreler kalman ya da parçacık filtreleri
+olabilir. Takip etme işlemi de zor bir iş yapıyor, bir zorluk takip
+edilen objeler görüntüden çıkıyorlar, yeni objeler tekrar
+giriyorlar. Bir digeri imaj parçalarının doğru filtre ile eşleşmesi
+lazım, bu eşleşmeyi direk yapan yaklaşım var, olasılıksal yapan
+yaklaşım var (imaj parçası 'tüm' filtrelere verilir, ama her filtrenin
+bir hipoteze bağlı olma olasılığı vardır). Filtrelemede iyi bilinen
+bir diğer  numara aynı ölçümün (bu durumda 2D imaj parçası) iki farklı
+filtreye verilmesi, mesela bir filtre objenin sola doğru gitmesi, bir
+diğeri üzerimize doğru gelmesi. Hangi filtre / hipotezin artığı /
+hatası daha az ise, o baskın haldedir, ve onun hipotezi kabul
+edilir. Ama arka planda olan filtreye hala ölçüm geçilmeye devam
+edilir. Tüm bu işlemlerin pür DO yaklaşımı ile yapılması çok zor.</p>
+
+<p>Pür 2D imaj bölmesinden bahsetmişken, bu alanda DO ile bir diğer
+ilerleme SegNet. </p>
+
+<p>http://mi.eng.cam.ac.uk/projects/segnet/</p>
+
+<p>SegNet anlamsal (semantic) bölme yapıyor, bir görüntüde yol, araba,
+direk gibi temel bölümleri bulup onları etiketliyor. </p>
+
+<p>Microsoft'un COCO veri setini kullanarak (denetimli) şekilde resimde DO ile obje bulma çok ilerledi. COCO verisi etiketli, bol veri var, bir imajdaki objenin nerede olduğunu Amazon'un Mekanik Türk servisi üzerinden gerçek insanlara etiket verdirerek kaydetmişler. Bu yer  bir "maske" üzerinden DO'ya veriliyor, ayrıca ham imaj verisi de sağlanıyor. Bu veriyi kullanan ağ yapısı mesela DeepMask var.</p>
+
+<p>Yaklaşımlar DO etrafında bir "yan sanayi" ya da "paylaşma kültürü"
+oluşmaya başladı. Zaten makalelerin neredeyse hepsi artık açık bir
+ortam olan arXiv'de yayınlanıyor (para ile makale servisi yapan
+şirketler üzerinden değil),  ve DO özelinde ağların kendisi paylaşılıp
+direk olduğu gibi kullanılıyor. Mesela obje bulma, görüntü işleme
+yapan DO'lar imajın tamamını sınıflama amaçlı hazırlanmış VGG-16
+modelini baz alıyorlar. Ve sadece ağ yapısını değil, eğitilmiş ağın
+ağırlıklarını bile olduğu gibi kullananlar var. Bu önceden eğitilmiş
+(pre-trained) model kullanma tekniği. Sonra kendi istediği yeni birkaç
+katman ekleyebilir, ya da mevcut bir katmanı atıp yerine yenisini
+koyabilir, vs. Sonra eğitimi mevcut ağırlıkların olduğu yerden "devam
+ettiriyorlar", böylece mevcut modelden faydalanıyorlar.. Bu mantıklı
+aslında çünkü VGG-16 imaj sınıflaması için eğitilmiş, o zaman
+ağırlıklarının içinde imajı anlaması için gerekli bazı ayarlar oluşmuş
+olmalıdır. Takip eden araştırmacılar bu ayarlardan istifade ediyorlar.</p>
+
+<p>Kapatmadan önce bir noktadan daha bahsedelim; DO'nun sadece denetimli
+olması bir kısıtlayıcı faktördü fakat bize göre eğer problem alanı
+hakkında temel matematik bilgisi devreye sokulabilirse denetimli
+problemler denetimsiz hale çevirilebilir. Mesela paylaşılan ilk
+makalede bu temel bilgi perspektif geometridir. Arkadaşlar kamera
+duruşu, yamultma, homografi, vs. gibi pek çok temel bilgi devreye
+sokarak sonuca ulaşmışlar. DO alaninda bazen bir beklenti "pür
+pikselleri vereyim her şeyi öğrensin" türünde olabiliyor. Fakat eğer
+işimizi kolaylaştıracaksa, "hipotez alanını daralatacaksa" eldeki pek
+çok diğer bilgiyi devreye sokabiliriz. Bilimin temeli modellemedir ne
+de olsa. Yazının başındaki makalenin yazarlarından Kendall surada
+benzer vurguyu yapmış.</p>
+
+<p>EK:</p>
+
+<p>Sehir ici etiketlenmis goruntuler icin Cityscapes veri seti ilginc.</p>
+
+<p><img src="out2.png" alt="" /></p>
+
+<p><img src="out4.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

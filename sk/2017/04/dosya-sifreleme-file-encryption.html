@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Dosya Şifreleme (File Encryption)</h1>
+
+<h3>SSH</h3>
+
+<p>SSH kullanarak Unix makinalarına giriş yapabiliyoruz, dosya
+kopyalayabiliyoruz. Bu program arka planda açık / kapalı anahtar çifti
+kullanıyor, ve yani bir anahtarla şifrelenen  mesaj bir diğeri ile
+açılabiliyor, eğer mesajın benden geldiğine birini ikna etmek
+istiyorsam o mesajı göndermeden önce gizli anahtarımla şifrelerim,
+benim açık anahtarım herkes tarafından bilinir, mesajı alan açık
+anahtarımı kullanarak mesajı açar, benden olduğuna emin olur. Ya da
+direk bana mesaj göndermek isteyen mesajı göndermeden önce açık
+anahtarımla mesajı şifreler, ben gizli anahtarımla mesajı açarım,
+gizli anahtarımı kimseyle paylaşmam, bu sebeple bu mesajı benden başka
+kimse okuyamaz.</p>
+
+<p>Bu mesajlaşma tekniğini ssh altyapısı üzerinden nasıl kullanırız?
+Çünkü programcılar çoğunlukla ssh kurmuş olurlar, ssh-keygen -t rsa
+ile $HOME/.ssh altında açık / kapalı anahtarları vardır (id<em>rsa.pub ve
+id</em>rsa dosyaları) başka şeylerle uğraşmasak olmaz mı?</p>
+
+<p>Bu mümkün. Önce id_rsa bir pem formatına çevirilmeli,</p>
+
+<pre><code>openssl rsa -in ~/.ssh/id_rsa -pubout  &gt; ~/.ssh/id_rsa.pub.pem
+</code></pre>
+
+<p>Şimdi açık anahtarımı kullanarak mesaj şifreleyim, message.txt içinde
+mesajım olsun,</p>
+
+<pre><code>cat message.txt  | openssl rsautl \
+      -encrypt -pubin -inkey ~/.ssh/id_rsa.pub.pem  &gt; encryptedMessage.txt
+</code></pre>
+
+<p>Ve şifrelenmiş mesajı kapalı anahtarla açayım</p>
+
+<pre><code>cat encryptedMessage.txt | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa
+</code></pre>
+
+<p>Ters yönden, kapalı anahtarla şifreleyim</p>
+
+<pre><code>cat message.txt  | openssl rsautl \
+    -sign -inkey ~/.ssh/id_rsa  &gt; encryptedMessage.txt
+</code></pre>
+
+<p>Ve açmak icin</p>
+
+<pre><code>cat encryptedMessage.txt | openssl rsautl -verify -pubin -inkey ~/.ssh/id_rsa.pub.pem
+</code></pre>
+
+<h3>Ccrypt</h3>
+
+<p>Emacs ile iyi entegre olmuş bir program <code>ccrypt</code>. Kurma için Ubuntu
+üzerinde <code>apt install ccrypt</code> yapılabilir, Emacs için gereken dosya
+[2]'deki zip, tar dosyalarında var, <code>ps-ccrypt.el</code>. Bu dosyayı alıp
+diğer Emacs tanım dosyalarının olduğu dizine koyup ana tanım içine</p>
+
+<pre><code>(setq load-path (cons "[DIZIN]" load-path))
+(require 'ps-ccrypt "ps-ccrypt.el")
+</code></pre>
+
+<p>eklemek yeterli. Artık <code>.cpt</code> ile biten dosyalar ccrypt ile
+açılacaktır, sadece ilk seferde bir şifre sorulur, ardından, aynı
+dosya Emacs buffer seviyesinde açık olduğu sürece takip eden kaydetme
+işlemleri için şifre sorulmaz. Üzerinde çalışılan dosyayı sık kaydeden
+kullanıcılar için (benim gibi) bu faydalı bir özellik.</p>
+
+<p>Kaynak</p>
+
+<p>[1] http://krisjordan.com/essays/encrypting-with-rsa-key-pairs</p>
+
+<p>[2] http://ccrypt.sourceforge.net/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

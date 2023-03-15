@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Imagemagick, Imaj Dosyalarini Islemek, Format Degisimi, Convert Komutu</h1>
+
+<p>Ubuntu Linux üzerinden formatlararası geçiş çok basit, ImageMagick kurulur,</p>
+
+<pre><code>sudo apt-get install imagemagick
+</code></pre>
+
+<p>Bu bize <code>convert</code> adlı bir program veriyor. Mesela <code>dosya.jpg</code> dosyasını
+dosya.png yapmak için</p>
+
+<pre><code>convert dosya.jpg dosya.png
+</code></pre>
+
+<p>Bir imajı yarısına indirmek / küçültmek için <code>-scale 50%</code> denir, yüzde
+50 yani. Eğer Web'de yayın için fotoğraf boyutu indirmek istiyorsak
+çoğunlukla ufak bir dosya isteriz ve biraz kalite kaybetmek bizi
+endiselendirmez, o zaman kalitede indirim de yapılabilir, <code>-quality 90</code> ile,</p>
+
+<pre><code>convert buyuk_resim.jpg  -quality 90  -scale 50% yeni_resim.jpg
+</code></pre>
+
+<p>Eğer animasyon gif dosyası üzerinde aynı komutu işletirsek,
+animasyondaki her kare ayrı bir png dosyası olarak verilirdi. Sonek
+png dosyalarının numaralandırması kontrol edilebilir, Dikkat: tüm
+imajın animasyondan çıkartılması için -coalesçe seçeneği gerekebilir.</p>
+
+<pre><code>convert -coalesce dosya.gif dosya-%3d.png
+</code></pre>
+
+<p>Birkaç png dosyasını animasyona çevirmek</p>
+
+<pre><code>convert -loop 0 -delay 100 *.png out.gif
+</code></pre>
+
+<p>Bu komutun pek çok özelliği var.</p>
+
+<p>Bir dosya içinden belli bir bölgeyi çıkartmak için, mesela üst sol
+köse referanslı olmak üzere <code>100,100</code> noktasından başlayarak sadece
+1000 genişliğinde 600 yükseliğinde bölgeyi almak için</p>
+
+<pre><code>convert -extract 1000x600+100+000 dosya.jpg sonuc.jpg
+</code></pre>
+
+<p>Pek çok görüntü dosyasını üst üste birleştirmek için (arada 20
+pikselllik boşluk ile)</p>
+
+<pre><code>convert -bordercolor White -border 2x20 dosya_*.jpg -append out.jpg
+</code></pre>
+
+<p>Yanyana (horizontally) birleştirmek için <code>-append</code> yerine <code>+append</code></p>
+
+<pre><code>convert -bordercolor White -border 2x20 dosya_*.jpg +append out.jpg
+</code></pre>
+
+<p>Diyelim ki iki sayfası tek bir kağıtta yatay basılmış bir dokümanı
+scan etmek istiyoruz. Scanımage ile tiff çıktıları aldıktan sonra,
+imajı çevirmek için</p>
+
+<pre><code>convert -rotate 270 [dosya1.tiff] [dosya2.tiff]
+</code></pre>
+
+<p>270 yerine 90 da olabilir tabii, scan etme pozisyonuna göre doğrusunu
+seçin. Eğer imaj yeterince net değilse, netleştirmek (sharpening) için
+şu komut</p>
+
+<pre><code>convert ... -unsharp 1.5x1.2+1.0+0.10  [dosya1.tiff] [dosya2.tiff]
+</code></pre>
+
+<p>Rotate ve unsharp işleri tek bir satırda aynı anda yapılabilir.</p>
+
+<p>Scan Edilmiş İmajları Ortadan Bölmek</p>
+
+<p>Eğer elinizde iki sayfası tek bir kağıda basılmış şekilde bir scan
+imajı varsa (bu şekilde basılmış bir kitaptan elde edilmiş olabilir),
+bu imajı ortadan yatay olarak ikiye bölerek iki imaj elde etmenin
+çaresi İmageMagick ile şöyle:</p>
+
+<pre><code>convert dosya.tiff -crop 100%x50% +repage dosya_%d.tiff
+</code></pre>
+
+<p>Bu çağrıdan sonuç olarak dosya<em>00.tiff, dosya</em>01.tiff adında iki imaj
+ortaya çıkacak.</p>
+
+<p>Bir video dosyasını numaralanmış görüntü dosyalarına çevirmek için,</p>
+
+<pre><code>convert video.avi chessb-right/video%03d.png
+</code></pre>
+
+<p>İki resmi yanyana eklemek için</p>
+
+<pre><code>convert resim1.jpg resim2.jpg +append output.jpg
+</code></pre>
+
+<p>GIF resmi optimize etmek için</p>
+
+<pre><code>convert -scale 70% -fuzz 6% +dither -layers Optimize +map in.gif out.gif
+</code></pre>
+
+<p>Arka plandaki saydamlık (transparent) durumunu çıkartmak için</p>
+
+<p>``
+convert dosya.png -background white -alpha remove -alpha off out.png</p>
+
+<pre><code>
+Işık seviyesi (brightness) ve farklılık (contrast) değişimi için
+
+</code></pre>
+
+<p>convert -brightness-contrast 30x20 in.tif out.tif
+```</p>
+
+<p>Bu örnekte ışık seviyesi 30 farklılık 20 arttırıldı.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

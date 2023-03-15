@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>2 Boyutlu Fiziksel Simulasyon (Rigid Body 2d Physics Simulation), pymunk</h1>
+
+<p>Belli şekildeki objelerin gerçek dünyada nasıl davranacağını merak
+ediyorsak simülasyon çözümüne başvurabiliriz. 2 boyutta bu tür
+simülasyonlar <code>pymunk</code> ile rahatça yapılabilir. Bu fizik motoru arka
+planda chipmunk adlı C++ ile yazılmış başka bir yazılıma arayüz
+sağlıyor. Kurmak için</p>
+
+<pre><code>pip install pymunk
+</code></pre>
+
+<p><code>pymunk</code> ile küresel, diktörtgen kenarlı, vs türünden objeler
+yaratabiliriz, hatta pek çok farklı parçaları birbirine yapıştırmak ta
+mümkündür. Sert zemin yaratılabilir. Objeleri çarpıştırmak, ya da
+istediğimiz objelere istediğimiz taraflarından dış kuvvet uygulamak
+mümkün. "Yere düşen" objeler gerçek dünyada tahmin edilebilecek
+şekilde davranırlar, yerçekim ayarlanabilir.</p>
+
+<p>Test etmek için üst ve alt kısımlarından kuvvet uygulanan bir çubuk örneği,</p>
+
+<p><a href="bar1.py">Bar 1</a></p>
+
+<p>Bu çubuğu bir dualkopter gibi düşünebiliriz, alt ve üst pervaneler
+var, alt üst ok tuşları ile uygulanan kuvvet arttırılıp
+azaltılabiliyor, ve sağ sol ok tuşları ile kuvvetin acısı
+değiştiriliyor, [1] örneğindeki durumun simülasyonu gibi
+düşünülebilir.</p>
+
+<p><img src="mcclay2.jpg" alt="" /></p>
+
+<p>Fakat dikkat edersek kopter hassas. Güç uygulandığı anda sağa sola
+yalpalanması çok kolay. Burada problem [1]'deki durumun iyi simüle
+edilmemiş olması. Simülasyon kuvveti tek noktaya uyguluyor, fakat [1]
+kopterine bakarsak, pervaneler objenin gövdesinden daha geniş, ve
+aerodinamik kurallarına göre pervanenin sağladıği kuvvet kapsadığı tüm
+alan için geçerlidir. O zaman yeni bir simülasyon ile iki ufak çubuğu
+alttan üstten daha büyük olan gövdeye yapıştırarak, ve kuvveti tüm
+ufak çubuk alanına uygularız. Böylece gövdeden daha geniş olan pervane
+alanı simule edilmiş olur.</p>
+
+<p>Bu ikinci simülasyonun daha dengeli olduğu görülecektir. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pymunk</span><span class="o">,</span> <span class="nn">pygame</span><span class="o">,</span> <span class="nn">random</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">pyglet</span>
+<span class="kn">from</span> <span class="nn">pymunk.pygame_util</span> <span class="kn">import</span> <span class="n">DrawOptions</span>
+
+<span class="n">width</span> <span class="o">=</span> <span class="mi">600</span>
+<span class="n">height</span> <span class="o">=</span> <span class="mi">600</span>
+
+<span class="k">class</span> <span class="nc">Dualcopter</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Poly</span><span class="o">.</span><span class="n">create_box</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">moment</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">moment_for_poly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">get_vertices</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Body</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">moment</span><span class="p">)</span>
+        <span class="n">top</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 2        </span>
+        <span class="n">bottom</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Segment</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>  <span class="c1"># 2        </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
+        <span class="n">space</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">Ground</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Body</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">body_type</span><span class="o">=</span><span class="n">pymunk</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">STATIC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Poly</span><span class="o">.</span><span class="n">create_box</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">space</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+
+    <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+    <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">&quot;The ball drops&quot;</span><span class="p">)</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Clock</span><span class="p">()</span>
+
+    <span class="n">draw_options</span> <span class="o">=</span> <span class="n">DrawOptions</span><span class="p">(</span><span class="n">screen</span><span class="p">)</span>
+
+    <span class="n">space</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Space</span><span class="p">()</span>
+    <span class="n">space</span><span class="o">.</span><span class="n">gravity</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">100</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">380</span><span class="p">)</span>
+    <span class="n">ground</span> <span class="o">=</span> <span class="n">Ground</span><span class="p">(</span><span class="n">space</span><span class="p">)</span>
+    <span class="n">copter</span> <span class="o">=</span> <span class="n">Dualcopter</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="mi">550</span><span class="p">),</span> <span class="n">space</span><span class="p">)</span>
+    <span class="n">thrust_angle</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">thrust</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;================&#39;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;velocity&#39;</span><span class="p">,</span> <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">velocity</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span> <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">angle</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;rv&#39;</span><span class="p">,</span> <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">rotation_vector</span><span class="p">)</span>
+        <span class="c1">#if i%20==0: pygame.image.save(screen, &quot;/tmp/out-%d.jpeg&quot; % i)</span>
+        <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">pygame</span><span class="o">.</span><span class="n">event</span><span class="o">.</span><span class="n">get</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">QUIT</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">pygame</span><span class="o">.</span><span class="n">KEYDOWN</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;thrust&#39;</span><span class="p">,</span><span class="n">thrust</span><span class="p">,</span><span class="s1">&#39;angle&#39;</span><span class="p">,</span><span class="n">thrust_angle</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="mi">274</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;down&#39;</span><span class="p">)</span>
+                    <span class="n">thrust</span> <span class="o">-=</span> <span class="mi">20</span>
+                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="mi">273</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;up&#39;</span><span class="p">)</span>
+                    <span class="n">thrust</span> <span class="o">+=</span> <span class="mi">20</span>
+                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="mi">275</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">)</span>
+                    <span class="n">thrust_angle</span> <span class="o">+=</span> <span class="mi">10</span>
+                <span class="k">elif</span> <span class="n">event</span><span class="o">.</span><span class="n">key</span> <span class="o">==</span> <span class="mi">276</span><span class="p">:</span>
+                    <span class="n">thrust_angle</span> <span class="o">-=</span> <span class="mi">10</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+
+        <span class="n">T</span> <span class="o">=</span> <span class="n">thrust</span> <span class="o">/</span> <span class="mf">6.0</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">T</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">25</span><span class="p">))</span>
+
+        <span class="n">F</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">thrust_angle</span><span class="p">)),</span> <span class="n">T</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">thrust_angle</span><span class="p">)))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+        <span class="n">copter</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">apply_force_at_local_point</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+
+        <span class="n">screen</span><span class="o">.</span><span class="n">fill</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="n">space</span><span class="o">.</span><span class="n">debug_draw</span><span class="p">(</span><span class="n">draw_options</span><span class="p">)</span>
+        <span class="n">space</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mf">50.0</span><span class="p">)</span>
+        <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="n">clock</span><span class="o">.</span><span class="n">tick</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<p><img src="bar2.png" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Mcclay, <a href="https://youtu.be/b14_XQ5nd2A">Dualcopter</a></p>
+
+<p>[2] Nielsen, <a href="https://gist.github.com/DuaneNielsen/25972133ec77c6cd5494217bbe3e3066">Drone Drop</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

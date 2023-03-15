@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Gson, Java Objelerini JSON Olarak Yazmak, Okumak</h1>
+
+<p>Java nesnelerini diske nasıl yazıp okuruz, eski ismiyle (!)
+serileştiririz (serialization) konusuna bakarken şu kodu gördük,</p>
+
+<p>https://github.com/google/gson</p>
+
+<p>Gson projesi Google tarafından geliştirilmiş, pek çok kişinin alışık
+olduğu JSON formatına objelerin yazılıp okunmasını sağlıyor.</p>
+
+<p>Bizim için en çok gereken "objeler arası göstergeç takibi olup
+olmadığı", yani A nesnesi B nesnesine referans ediyor, acaba A'yı
+diske yaz dediğimizde B referansı takip edilip o da A ile beraber
+yazılacak mı? Ufak bir test bunun olduğunu gösteriyor.</p>
+
+<p>Kurmak için derlemeye gerek yok, Maven tüm dünyayı indirebilir, tek bir jar yeterli,</p>
+
+<p>http://repo1.maven.org/maven2/com/google/code/gson/gson/2.8.0/gson-2.8.0.jar</p>
+
+<p>Simdi</p>
+
+<pre><code>public class Exam {
+    public String SUBJECT;
+    public double GRADE;
+    @Override
+    public String toString() {
+        return SUBJECT + " - " + GRADE;
+    }    
+}
+</code></pre>
+
+<pre><code>public class Person {
+    public String NAME;
+    public String LOCATION;
+    public Exam EXAM;
+    @Override
+    public String toString() {
+        return NAME + " - " + LOCATION;
+    }    
+}
+</code></pre>
+
+<pre><code>import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+
+public class Test {
+
+    public static void main(String[] args) {
+        Gson gson = new GsonBuilder().create();
+        Exam ee = new Exam();
+        ee.SUBJECT = "adsasf";
+        Person pp = new Person();
+        pp.NAME = "Husnu";
+        pp.EXAM = ee;   
+        try {
+            Writer writer = new OutputStreamWriter(new FileOutputStream("Output.json") , "UTF-8");
+            gson.toJson(pp, writer);
+            writer.close();
+        } catch (Exception e) {System.err.println("yazim hatasi"); } 
+    }
+}
+</code></pre>
+
+<p>Bu kodlar kendi java dosyalarinda olacak tabii ki.. Derleyelim,</p>
+
+<pre><code>javac -classpath gson-2.8.0.jar:. Test.java
+
+java  -classpath gson-2.8.0.jar:. Test
+</code></pre>
+
+<p>Kod isledi, sonuc olarak Output.json yazildi, icinde </p>
+
+<pre><code>{"NAME":"Husnu","EXAM":{"SUBJECT":"adsasf","GRADE":0.0}}
+</code></pre>
+
+<p>goruluyor.</p>
+
+<p>Okumak icin iki turlu yol gosterelim, ilki direk diskten okumak,
+ikincisi bir String icindeki objeyi okumak.</p>
+
+<pre><code>import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import java.io.*;
+
+public class Test2 {
+
+    public static void main(String[] args) {
+        Gson gson = new GsonBuilder().create();
+        try {
+            // disk
+            InputStream in = Person.class.getResourceAsStream("Output.json");       
+            Reader reader = new InputStreamReader(in, "UTF-8");
+            Person p1 = gson.fromJson(reader, Person.class);
+            System.out.println(p1);
+
+            // string
+            String s = "{'NAME':'Husnu','EXAM':{'SUBJECT':'adsasf','GRADE':0.0}}";
+            Person p2 = gson.fromJson(s, Person.class);
+            System.out.println(p2);
+
+        } catch (Exception e) { System.err.println("okuma hatasi"); }
+
+    }
+}
+</code></pre>
+
+<p>Şimdi ilginç bir kullanım görelim. Acaba Java bağlamında sözlük içinde
+sözlük içeren bir veri yapısını nasıl okurum / yazarım, daha doğrusu
+Java objesi olarak yazılıp / okunan şey neye benzer? Belki bu tür
+veriyi Python'dan üretiyorum, ve onu olduğu gibi Java'da okuyabilmek
+istiyorum. Bir deneme yaptık, tahmin olarak herhalde (GeoMap.java
+icinde)</p>
+
+<pre><code>import java.util.*;
+public class GeoMap extends HashMap&gt; { }
+</code></pre>
+
+<p>gibi bir kod olacakti. Yazmak icin </p>
+
+<pre><code>import com.google.gson.Gson;
+
+import com.google.gson.GsonBuilder;
+
+import java.io.FileOutputStream;
+
+import java.io.IOException;
+
+import java.io.OutputStreamWriter;
+
+import java.io.Writer;
+
+import java.util.*;
+
+public class Test3 {
+
+
+
+    public static void main(String[] args) {
+
+        Gson gson = new GsonBuilder().create();
+
+
+
+        GeoMap m = new GeoMap();
+
+        m.put("11.111 22.2222", new HashMap());
+
+        m.put("22.111 22.2222", new HashMap());
+
+        m.get("11.111 22.2222").put("11.111 22.4444", "10.0");
+
+        m.get("22.111 22.2222").put("33.111 22.2222", "11.0");
+
+
+
+        try {
+
+            Writer writer = new OutputStreamWriter(new FileOutputStream("Output.json") , "UTF-8");
+
+            gson.toJson(m, writer);
+
+            writer.close();
+
+        } catch (Exception e) {System.err.println("yazim hatasi"); }    
+
+    }
+
+}
+</code></pre>
+
+<p>Bu kod hakikaten bekleneni yapti, veri suna benzedi, </p>
+
+<pre><code>{"22.111 22.2222":{"33.111 22.2222":"11.0"},"11.111 22.2222":{"11.111 22.4444":"10.0"}}
+</code></pre>
+
+<p>Okumak icin alttaki kod; isi biraz ilginclestirelim dedik, bir zip
+dosyasi icinden json okuyoruz (test icin ustteki dosya elle
+ziplenebilir)</p>
+
+<pre><code>import com.google.gson.Gson;
+
+import com.google.gson.GsonBuilder;
+
+import java.util.zip.*;
+
+import java.io.*;
+
+
+public class Test4 {
+
+
+
+    public static void main(String[] args) {
+
+        Gson gson = new GsonBuilder().create();
+
+        try {
+
+            ZipFile  zipFile =  new  ZipFile ("Output.json.zip");
+
+            ZipEntry e = zipFile.getEntry("Output.json");
+
+            InputStream in = zipFile.getInputStream(e);     
+
+            Reader reader = new InputStreamReader(in, "UTF-8");
+
+            GeoMap p = gson.fromJson(reader, GeoMap.class);
+
+            System.out.println(p.size());
+
+            System.out.println(p.get("22.111 22.2222"));
+
+
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            System.err.println("okuma hatasi");
+
+        }
+
+
+
+    }
+
+}
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

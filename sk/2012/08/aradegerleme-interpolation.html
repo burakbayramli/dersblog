@@ -1,0 +1,283 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Aradeğerleme (Interpolation)</h1>
+
+<p>Özet olarak aradeğerleme eldeki veriye dayanarak bilinmeyen veriyi
+tahmin etmek, boşlukları doldurma tekniklerine verilen isimdir. Eğer
+elde x,y verisi var ise ki bu verinin f(x) = y gibi bir fonksiyondan
+(artı gürültü) ile elde edildiği varsayılır, elde olmayan bir yeni x
+verilince bunun eşleneceği y değeri acaba ne olur?</p>
+
+<p>Bu bağlamda aradeğerleme model uydurma, modele sorma ikilisi ile
+çözülebilir, mesela elimde alttaki gibi değerler var, veriye bir düz
+çizgi uyduruyorum, yeni nokta 7 değeri sorulunca modele danışıyorum,
+ve oradan gelen y sonucu aradeğerlenen sonuç oluyor.</p>
+
+<p><img src="aradegerleme-interpolation_01.jpeg" alt="" /></p>
+
+<p>Fakat illa ki formülsel bir model varlığı da gerekli değil; bazı
+teknikler yakındaki noktalara bakarak yakın x, ya da eğer y değerleri
+varsa yine yakın y değerleri döndürebilir. Her iki teknik te çok
+boyutta kullanılabilir, hem x hem y değerleri vektör içinde olacaktır.</p>
+
+<p>Konunun daha matematiksel açıklamalarını [1,2,3,4] yazılarında
+bulabiliriz.  Bu yazı daha çok pür yazılımsal tekniklere odaklanacak,
+ve direk kütüphane çağrılarına bakacağız. Daha çok yemek tarifi daha az
+formül.</p>
+
+<h3>RBF</h3>
+
+<p>Bu tekniği daha önce [1]'de detaylı işledik. Fakat açıkça söylemek
+gerekirse en yavaş işleyen aradeğerleme tekniklerinden biri
+RBF'tır. Yine de bazen kullanışlı olabilir, basit bir örnekte görelim,
+ana fonksiyon üç boyutlu bir fonksiyon olsun,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">cm</span>
+
+<span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="n">x1</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">;</span> <span class="n">y1</span> <span class="o">=</span> <span class="mf">5.0</span>
+    <span class="n">g1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span> <span class="o">-</span><span class="mi">4</span> <span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">y1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">s1</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">g1</span> 
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">zz</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;aradegerleme-interpolation_02.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="aradegerleme-interpolation_02.png" alt="" /></p>
+
+<p>Eğer <code>func</code> fonksiyonu elde olmasaydı, onun verilerine bakarak RBF ile
+yeni bir nokta için, 4,4 diyelim, aradeğerlemeyi alttaki gibi
+yapardık,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">Rbf</span>
+<span class="n">rbfi</span> <span class="o">=</span> <span class="n">Rbf</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">zz</span><span class="p">,</span><span class="n">function</span><span class="o">=</span><span class="s1">&#39;gaussian&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Aradeg:&#39;</span><span class="p">,</span><span class="n">rbfi</span><span class="p">([</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">]),</span> <span class="s1">&#39;Gercek:&#39;</span><span class="p">,</span><span class="n">func</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Aradeg: [0.53970076] Gercek: 0.540029869446153
+</code></pre>
+</div>
+
+<p>Görüldüğü gibi kullanım oldukca basit; x,y,z değerlerini iki boyutlu
+matris oalrak verdik (tek boyutlu vektör de işliyor), RBF objesi
+üzerinden ek değerler için aradeğerleme yaptık.</p>
+
+<h3>CloughTocher2DInterpolator</h3>
+
+<p>Hızlı işleyen bir kod, CloughTocher2DInterpolator.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">CloughTocher2DInterpolator</span>
+
+<span class="n">interp</span> <span class="o">=</span> <span class="n">CloughTocher2DInterpolator</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">flatten</span><span class="p">())),</span> <span class="n">zz</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">interp</span><span class="p">([</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">]))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[0.54049742]
+</code></pre>
+</div>
+
+<p>Benzer bir sonuc elde ettik.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">xx2</span><span class="p">,</span><span class="n">yy2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span><span class="n">y2</span><span class="p">)</span>
+<span class="n">zclough</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">xx2</span><span class="p">,</span><span class="n">yy2</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">surf</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span> <span class="n">yy</span><span class="p">,</span> <span class="n">zz</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cm</span><span class="o">.</span><span class="n">coolwarm</span><span class="p">,</span><span class="n">linewidth</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;aradegerleme-interpolation_03.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="aradegerleme-interpolation_03.png" alt="" /></p>
+
+<p>Farkettiysek üstteki ızgara her ekseni 50 parçaya böldü, <code>interp</code>
+objesi 30 parçalık izgara üzerinden yaratılmıştı; böylece elde olmayan
+bir sürü değeri sormuş olduk ama nihai grafik hala orijinale
+benziyor. Ayrıca Clough/Tocher yaklaşımı çok hızlı işler.</p>
+
+<h3>Pandas</h3>
+
+<p>Pandas paketinin de içinde aradeğerleme yapabilen kodlar var, bunlar
+bir DataFrame tablosunun eksik değerlerini doldurmak için kullanılabiliyor.
+Mesela,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">arr</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>      0
+0   1.0
+1   2.0
+2   3.0
+3   NaN
+4   5.0
+5   6.0
+6   7.0
+7   6.0
+8   5.0
+9   NaN
+10  4.0
+11  3.0
+</code></pre>
+</div>
+
+<p><code>NaN</code> degerleri eksik. Doldurmak icin basit lineer aradegerleme yapilabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>      0
+0   1.0
+1   2.0
+2   3.0
+3   4.0
+4   5.0
+5   6.0
+6   7.0
+7   6.0
+8   5.0
+9   4.5
+10  4.0
+11  3.0
+</code></pre>
+</div>
+
+<p>Görüldüğü gibi 3 ile 5 arasındaki değer 4 ile dolduruldu, 5 ile 4 arasındaki
+4.5 ile.</p>
+
+<h3>Matriste Boş Değerleri Yakın Değerle Doldurmak</h3>
+
+<p>Eğer içinde nan yani "tanımsız" ve "boş" değerler olan bir vektörümüz
+var ise, bu tanımsız değerlerin yerine, yine aynı vektörde, ve o boş
+değerin iki yanindaki değere yakın olan bir değerle doldurmak
+isteyebiliriz.</p>
+
+<p>Mesela vektor</p>
+
+<pre><code>1, nan, nan, 2, 2, nan, 0
+</code></pre>
+
+<p>olsun, ve <code>nan</code> diyen yerlerde 1 ve 2 arası, sonraki <code>nan</code> yerine 2 ve 0
+arası değerler olmalı.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">bad_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">good_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">bad_indexes</span><span class="p">)</span>
+<span class="n">good_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">good_indexes</span><span class="p">]</span>
+<span class="n">interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">bad_indexes</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">good_indexes</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">good_data</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="n">bad_indexes</span><span class="p">]</span> <span class="o">=</span> <span class="n">interpolated</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[ 1. nan nan  2.  2. nan  0.]
+[1.         1.33333333 1.66666667 2.         2.         1.
+ 0.        ]
+</code></pre>
+</div>
+
+<p>Peki işlemi bir matris üzerinde, ve her kolon için ayrı ayrı yapmak
+istersek?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">pad</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+    <span class="n">bad_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">good_indexes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_not</span><span class="p">(</span><span class="n">bad_indexes</span><span class="p">)</span>
+    <span class="n">good_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">good_indexes</span><span class="p">]</span>
+    <span class="n">interpolated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">bad_indexes</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">good_indexes</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="n">good_data</span><span class="p">)</span>
+    <span class="n">data</span><span class="p">[</span><span class="n">bad_indexes</span><span class="p">]</span> <span class="o">=</span> <span class="n">interpolated</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">300</span><span class="p">],</span>
+              <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">500</span><span class="p">]])</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">apply_along_axis</span><span class="p">(</span><span class="n">pad</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">A</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[  1.  20. 300.]
+ [  2.  30. 400.]
+ [  3.  40. 500.]]
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Dairesel Baz Fonksiyonları (Radial Basis Functions -RBF-)](https://burakbayramli.github.io/dersblog/stat/stat<em>175</em>rbf/dairesel<em>baz</em>fonksiyonlari<strong>radial<em>basis</em>functions<em>rbf</strong>yukseklik</em>verisi_daglar.html)</p>
+
+<p>[2] [Eğri Uydurma, Aradeğerleme (Interpolation) - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng<em>app20cfit1/egri</em>uydurma<em>aradegerleme<strong>interpolation</em></strong>1.html)</p>
+
+<p>[3] [Eğri Uydurma, Aradeğerleme (Interpolation) - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng<em>app20cfit2/egri</em>uydurma<em>aradegerleme<strong>interpolation</em></strong>2.html)</p>
+
+<p>[4] [Eğri Uydurma, Aradeğerleme (Interpolation) - 3](https://burakbayramli.github.io/dersblog/compscieng/compscieng<em>app20cfit3/egri</em>uydurma<em>aradegerleme<strong>interpolation</em></strong>3.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Obje Yansitmak</h1>
+
+<p>Uc boyutlu kordinat sistemindeki bir objeyi, noktayi alip onu iki
+boyuta yansitma isi kamera matrisi uzerinden yapiliyor. Bu matris
+kamera kalibre edilirken uretilen 3x3 boyutunda bir matristir. Test
+icin alttaki OpenCV Python kodunu paylasalim; bu kod 20x20
+boyutlarindaki bir hayali "kup" icin noktalar uretiyoruz ve bu
+noktalari teker teker kamera matrisi K ile carparak onlari 2 boyutlu
+piksel konumlarina yansitiyoruz. Carpim sonucu ele gecen sayilar 3x1
+boyutunda olacak, fakat bu sayilar homojen kordinatlar, sonuncu
+(ucuncu) kordinat 1 ya da katlari olmali / olabilir, o zaman 1
+sayisina erismek icin 1. ve 2. kordinat degerine sonuncuya boluyoruz,
+piksel degerlerini aliyoruz.Test icin xl, yl, zl degerleri ile
+oynanabilir, ve yesil renkle boyanan kup seklinin resim uzerinde
+degisik yerlere kondugu gorulebilir. K sayisini herkesi kendi
+kamerasina gore OpenCV kalibrasyonundan hesaplatmasi
+gerekiyor. Alttaki K degeri bizim kamera icin.import cvfrom pylab
+import *K = array([[653.52398682, 0., 326.47888184], [0.,
+653.76440430, 259.63595581], [0., 0., 1.]])color = cv.RGB(0, 255,
+0)cv.NamedWindow("win")im = cv.LoadImage("[HERHANGI BIR JPG RESIM]",
+cv.CV<em>LOAD</em>IMAGE<em>COLOR)image</em>size = cv.GetSize(im)print
+image<em>size[0]print image</em>size[1]xl = -90yl = -50zl = 200for x in
+arange(xl, xl+20): for y in arange(yl, yl+20): for z in arange(zl,
+zl+20): X = array([x, y, z]) q = dot(K, X) real<em>q = [q[0]/q[2],
+q[1]/q[2]] i</em>real<em>q = [int(real</em>q[0]), int(real<em>q[1])] if i</em>real<em>q[0]
+&lt; image</em>size[1] and i<em>real</em>q[1] &lt; image<em>size[0]: cv.Set2D(im,
+i</em>real<em>q[0], i</em>real_q[1], color) cv.ShowImage("win", im);k =
+cv.WaitKey()</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

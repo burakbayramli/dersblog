@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python ve Komut Satırına Erişmek, Popen</h1>
+
+<p>Script yazarken bazen ihtiyaçlardan biri python script'i içinde bir
+shell script işletebilmek. Çıktısı işlenmeyenler için
+<code>os.system(komut)</code> yetiyor tabii. Fakat komut çıktısını göstermek
+istiyorsak?</p>
+
+<pre><code>import os
+res = os.popen("ls -al")
+</code></pre>
+
+<p>kullanımı basit - fakat tedavülden kalkacakmış (deprecated), bu yüzden
+kalıcı kodları ona bağlı yazmak iyi olmaz. Kütüphane şubprocess
+tavsiye ediliyor,</p>
+
+<pre><code>import subprocess 
+p = subprocess.Popen(['ls','-al'], stdout=subprocess.PIPE)
+res = p.stdout.read()
+print (res)
+</code></pre>
+
+<p>İş biraz daha zorlaştı ama kullana kullana alışılabilir. </p>
+
+<p>Bir diğer ihtiyaç komut "işlerken" onun çıktısını iterator ile
+gezebilmektir. Belki komut yavaş işleyecektir, beklerken belki o ana
+kadar olan çıktıyı işlemek / ekrana basmak ve yan bazı işlerle
+uğraşmak isteyebiliriz. Bunu da <code>subprocess</code> ile yapabiliyorsunuz,</p>
+
+<pre><code>p = subprocess.Popen(['ping','-c','3','localhost'], stdout=subprocess.PIPE)
+for line in p.stdout:
+    print line
+</code></pre>
+
+<p>Üstteki komut  her satırı ayrı ayrı, Python döngüsü içinde basacak. </p>
+
+<p>Hata mesajlarını ekrana basmak için <code>stderr</code> ile çalışmak lazım, mesela alttaki
+komut bir derleme <code>gcc</code> komutunu bilerek yanlış işletti, hata mesajı gösterilmesi
+lazım ama hiçbir şey görülmüyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;gcc&#39;</span><span class="p">,</span><span class="s1">&#39;-c&#39;</span><span class="p">,</span><span class="s1">&#39;dkflakjsdlkas&#39;</span><span class="p">]</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">res</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>b&#39;&#39;
+</code></pre>
+</div>
+
+<p>Hataları görmek için alttaki yaklaşım gerekli,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">subprocess</span> 
+<span class="n">process</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stdin</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">,</span> <span class="n">stderr</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">STDOUT</span><span class="p">,</span> <span class="n">shell</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">process</span><span class="o">.</span><span class="n">communicate</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">output</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>b&#39;gcc: error: dkflakjsdlkas: No such file or directory
+gcc: fatal error: no input files
+compilation terminated.
+&#39;
+</code></pre>
+</div>
+
+        </section>          
+      </div>
+    </body>
+</html>

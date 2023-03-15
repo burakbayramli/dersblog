@@ -1,0 +1,298 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Mapsforge, OSM Bazlı Harita Tabanından Harita Görüntüsü Almak</h1>
+
+<p>Açık harita veri tabanı OSM bazlı bir diğer haritalama tabanı ve
+kodlama altyapısı mapsforge. Eğer kendi diskimizdeki bir dosyadan
+harita alıp basmak istiyorsak, en basit kod alttaki gibi</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">org.mapsforge.core.graphics.GraphicFactory</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.core.graphics.TileBitmap</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.core.model.Tile</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.core.util.MercatorProjection</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.awt.graphics.AwtGraphicFactory</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.datastore.MapDataStore</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.layer.cache.FileSystemTileCache</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.layer.labels.TileBasedLabelStore</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.layer.renderer.DatabaseRenderer</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.layer.renderer.RendererJob</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.model.DisplayModel</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.model.FixedTileSizeDisplayModel</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.reader.MapFile</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.rendertheme.InternalRenderTheme</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.rendertheme.XmlRenderTheme</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.map.rendertheme.rule.RenderThemeFuture</span><span class="p">;</span>
+
+<span class="kn">import</span> <span class="nn">java.io.File</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SaveTiles</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">SAVE_PATH</span> <span class="o">=</span> <span class="s">&quot;/tmp/&quot;</span><span class="p">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">File</span> <span class="n">DEFAULT_MAP_PATH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;[DIZIN]/kosovo.map&quot;</span><span class="p">);</span>
+    <span class="c1">// Kosovoda herhangi bir nokta</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">LAT</span> <span class="o">=</span> <span class="mf">42.470369</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">double</span> <span class="n">LNG</span> <span class="o">=</span> <span class="mf">20.838044</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">byte</span> <span class="n">ZOOM</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span>
+
+        <span class="n">MapDataStore</span> <span class="n">mapData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MapFile</span><span class="p">(</span><span class="n">DEFAULT_MAP_PATH</span><span class="p">);</span>
+
+        <span class="kd">final</span> <span class="kt">int</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">MercatorProjection</span><span class="p">.</span><span class="na">latitudeToTileY</span><span class="p">(</span><span class="n">LAT</span><span class="p">,</span> <span class="n">ZOOM</span><span class="p">);</span>
+        <span class="kd">final</span> <span class="kt">int</span> <span class="n">tx</span> <span class="o">=</span> <span class="n">MercatorProjection</span><span class="p">.</span><span class="na">longitudeToTileX</span><span class="p">(</span><span class="n">LNG</span><span class="p">,</span> <span class="n">ZOOM</span><span class="p">);</span>
+        <span class="n">Tile</span> <span class="n">tile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tile</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">ZOOM</span><span class="p">,</span> <span class="mi">800</span><span class="p">);</span>
+
+        <span class="n">GraphicFactory</span> <span class="n">gf</span> <span class="o">=</span> <span class="n">AwtGraphicFactory</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">;</span>
+        <span class="n">XmlRenderTheme</span> <span class="n">theme</span> <span class="o">=</span> <span class="n">InternalRenderTheme</span><span class="p">.</span><span class="na">OSMARENDER</span><span class="p">;</span>
+        <span class="n">DisplayModel</span> <span class="n">dm</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FixedTileSizeDisplayModel</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+        <span class="n">RenderThemeFuture</span> <span class="n">rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RenderThemeFuture</span><span class="p">(</span><span class="n">gf</span><span class="p">,</span> <span class="n">theme</span><span class="p">,</span> <span class="n">dm</span><span class="p">);</span>
+        <span class="n">RendererJob</span> <span class="n">theJob</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RendererJob</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="n">mapData</span><span class="p">,</span> <span class="n">rtf</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="n">File</span> <span class="n">cacheDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;/tmp&quot;</span><span class="p">,</span> <span class="s">&quot;tmp&quot;</span><span class="p">);</span>
+        <span class="n">FileSystemTileCache</span> <span class="n">tileCache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileSystemTileCache</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">cacheDir</span><span class="p">,</span> <span class="n">gf</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="n">TileBasedLabelStore</span> <span class="n">tileBasedLabelStore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TileBasedLabelStore</span><span class="p">(</span><span class="n">tileCache</span><span class="p">.</span><span class="na">getCapacityFirstLevel</span><span class="p">());</span>
+
+        <span class="n">DatabaseRenderer</span> <span class="n">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DatabaseRenderer</span><span class="p">(</span><span class="n">mapData</span><span class="p">,</span> <span class="n">gf</span><span class="p">,</span> <span class="n">tileCache</span><span class="p">,</span> <span class="n">tileBasedLabelStore</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+
+        <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="n">rtf</span><span class="p">);</span>
+        <span class="n">t</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
+
+        <span class="n">TileBitmap</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">renderer</span><span class="p">.</span><span class="na">executeJob</span><span class="p">(</span><span class="n">theJob</span><span class="p">);</span>
+        <span class="n">tileCache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">theJob</span><span class="p">,</span> <span class="n">tb</span><span class="p">);</span>
+
+        <span class="n">mapData</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;Tile has been saved at %s/%d/%d/%d.tile.\n&quot;</span><span class="p">,</span> <span class="n">cacheDir</span><span class="p">.</span><span class="na">getPath</span><span class="p">(),</span> <span class="n">ZOOM</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Bu kod için gereken jar dosyaları,</p>
+
+<p>https://mvnrepository.com/artifact/net.sf.kxml/kxml2/2.3.0</p>
+
+<p>https://mvnrepository.com/artifact/org.mapsforge/mapsforge-core/0.12.0</p>
+
+<p>https://mvnrepository.com/artifact/org.mapsforge/mapsforge-core/0.12.0</p>
+
+<p>https://mvnrepository.com/artifact/org.mapsforge/mapsforge-map-awt/0.12.0</p>
+
+<p>https://mvnrepository.com/artifact/org.mapsforge/mapsforge-map-reader/0.12.0</p>
+
+<p>https://mvnrepository.com/artifact/org.mapsforge/mapsforge-themes/0.12.0</p>
+
+<p>https://mvnrepository.com/artifact/com.kitfox.svg/svg-salamander/1.0</p>
+
+<p>Kodu derlemek icin gerekli iskelet dizi, Ant yapisi icin</p>
+
+<p><a href="https://github.com/burakbayramli/kod/tree/master/sk/2019/12/staticmap">https://github.com/burakbayramli/kod/tree/master/sk/2019/12/staticmap</a></p>
+
+<p>Mapsforge tabanları pek çok ülke için bulunabilir, mesela Kosova için
+(ufak olduğu için oraya gittik), <code>kosovo.map</code> indirilir,</p>
+
+<p><a href="http://download.mapsforge.org/maps/v5/europe/">http://download.mapsforge.org/maps/v5/europe/</a></p>
+
+<p>istenilen dizine konup ona göre kod ayarlanınca, <code>ant run</code> ile
+işletiriz, ve sonuç bir <code>tile</code> dosyası oluyor, alttaki gibi çıkacak,</p>
+
+<p><img src="kosovo.png" alt="" />
+<img src="https://1.bp.blogspot.com/-s95YnKzUq4o/Xe-qDizx-1I/AAAAAAAAB4g/OHJV4a_5A-cwtXkmUoBPDL8VN1PiGy86ACLcBGAsYHQ/s320/kosovo.png" alt="" /></p>
+
+<p>Dikkat: enlem/boylam verip bir statik elde ettiğimizde bu harita
+verilen enlem/boylam merkezli ortalanmış olmayabiliyor. Haritanın
+ortasının hangi kordinatlara sahip olduğunu bulmak için</p>
+
+<pre><code>double centerlon  = tile.getBoundingBox().getCenterPoint().getLongitude();
+double centerlat  = tile.getBoundingBox().getCenterPoint().getLatitude();
+</code></pre>
+
+<p>işletilebilir.</p>
+
+<h2>Python</h2>
+
+<p>Eğer Python üzerinden Java çağırmak istiyorsak, şu şekilde bir
+değişiklik yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">...</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.core.model.LatLong</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.mapsforge.core.model.Point</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">SaveTiles</span> <span class="p">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">SAVE_PATH</span> <span class="o">=</span> <span class="s">&quot;/tmp/&quot;</span><span class="p">;</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">File</span> <span class="n">DEFAULT_MAP_PATH</span><span class="p">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">byte</span> <span class="n">ZOOM</span><span class="p">;</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">IOException</span> <span class="p">{</span> 
+
+        <span class="n">DEFAULT_MAP_PATH</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span><span class="p">);</span>
+
+        <span class="n">ZOOM</span> <span class="o">=</span> <span class="p">(</span><span class="kt">byte</span><span class="p">)</span><span class="n">Integer</span><span class="p">.</span><span class="na">parseInt</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span><span class="p">);</span>
+
+        <span class="n">String</span> <span class="o">[]</span> <span class="n">tokens</span> <span class="o">=</span> <span class="n">args</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>  
+
+        <span class="kt">double</span> <span class="n">LAT</span> <span class="o">=</span> <span class="n">Double</span><span class="p">.</span><span class="na">parseDouble</span><span class="p">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
+        <span class="kt">double</span> <span class="n">LNG</span> <span class="o">=</span> <span class="n">Double</span><span class="p">.</span><span class="na">parseDouble</span><span class="p">(</span><span class="n">tokens</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
+
+        <span class="n">MapDataStore</span> <span class="n">mapData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MapFile</span><span class="p">(</span><span class="n">DEFAULT_MAP_PATH</span><span class="p">);</span>
+
+        <span class="kd">final</span> <span class="kt">int</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">MercatorProjection</span><span class="p">.</span><span class="na">latitudeToTileY</span><span class="p">(</span><span class="n">LAT</span><span class="p">,</span> <span class="n">ZOOM</span><span class="p">);</span>
+        <span class="kd">final</span> <span class="kt">int</span> <span class="n">tx</span> <span class="o">=</span> <span class="n">MercatorProjection</span><span class="p">.</span><span class="na">longitudeToTileX</span><span class="p">(</span><span class="n">LNG</span><span class="p">,</span> <span class="n">ZOOM</span><span class="p">);</span>
+        <span class="n">Tile</span> <span class="n">tile</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Tile</span><span class="p">(</span><span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">ZOOM</span><span class="p">,</span> <span class="mi">800</span><span class="p">);</span>
+
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;{\&quot;pixels\&quot;:[&quot;</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">tokens</span><span class="p">.</span><span class="na">length</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+            <span class="kt">double</span> <span class="n">currlat</span> <span class="o">=</span> <span class="n">Double</span><span class="p">.</span><span class="na">parseDouble</span><span class="p">(</span><span class="n">tokens</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">);</span>
+            <span class="kt">double</span> <span class="n">currlng</span> <span class="o">=</span> <span class="n">Double</span><span class="p">.</span><span class="na">parseDouble</span><span class="p">(</span><span class="n">tokens</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;;&quot;</span><span class="p">)</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">);</span>
+            <span class="n">Point</span> <span class="n">pix</span> <span class="o">=</span> <span class="n">MercatorProjection</span><span class="p">.</span><span class="na">getPixelRelativeToTile</span><span class="p">(</span><span class="k">new</span> <span class="n">LatLong</span><span class="p">(</span><span class="n">currlat</span><span class="p">,</span><span class="n">currlng</span><span class="p">),</span> <span class="n">tile</span><span class="p">);</span>
+            <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;[&quot;</span> <span class="o">+</span> <span class="n">pix</span><span class="p">.</span><span class="na">x</span> <span class="o">+</span> <span class="s">&quot;,&quot;</span><span class="o">+</span><span class="n">pix</span><span class="p">.</span><span class="na">y</span><span class="o">+</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="o">&lt;</span><span class="n">tokens</span><span class="p">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+            <span class="p">}</span>       
+        <span class="p">}</span>
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;]&quot;</span><span class="p">);</span>
+
+        <span class="n">GraphicFactory</span> <span class="n">gf</span> <span class="o">=</span> <span class="n">AwtGraphicFactory</span><span class="p">.</span><span class="na">INSTANCE</span><span class="p">;</span>
+        <span class="n">XmlRenderTheme</span> <span class="n">theme</span> <span class="o">=</span> <span class="n">InternalRenderTheme</span><span class="p">.</span><span class="na">OSMARENDER</span><span class="p">;</span>
+        <span class="n">DisplayModel</span> <span class="n">dm</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FixedTileSizeDisplayModel</span><span class="p">(</span><span class="mi">256</span><span class="p">);</span>
+        <span class="n">RenderThemeFuture</span> <span class="n">rtf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RenderThemeFuture</span><span class="p">(</span><span class="n">gf</span><span class="p">,</span> <span class="n">theme</span><span class="p">,</span> <span class="n">dm</span><span class="p">);</span>
+        <span class="n">RendererJob</span> <span class="n">theJob</span> <span class="o">=</span> <span class="k">new</span> <span class="n">RendererJob</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="n">mapData</span><span class="p">,</span> <span class="n">rtf</span><span class="p">,</span> <span class="n">dm</span><span class="p">,</span> <span class="mf">1.0f</span><span class="p">,</span> <span class="kc">false</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="n">File</span> <span class="n">cacheDir</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="n">args</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span><span class="p">,</span> <span class="s">&quot;&quot;</span><span class="p">);</span>
+        <span class="n">FileSystemTileCache</span> <span class="n">tileCache</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileSystemTileCache</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">cacheDir</span><span class="p">,</span> <span class="n">gf</span><span class="p">,</span> <span class="kc">false</span><span class="p">);</span>
+        <span class="n">TileBasedLabelStore</span> <span class="n">tileBasedLabelStore</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TileBasedLabelStore</span><span class="p">(</span><span class="n">tileCache</span><span class="p">.</span><span class="na">getCapacityFirstLevel</span><span class="p">());</span>
+
+        <span class="n">DatabaseRenderer</span> <span class="n">renderer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DatabaseRenderer</span><span class="p">(</span><span class="n">mapData</span><span class="p">,</span> <span class="n">gf</span><span class="p">,</span> <span class="n">tileCache</span><span class="p">,</span> <span class="n">tileBasedLabelStore</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="kc">null</span><span class="p">);</span>
+
+        <span class="n">Thread</span> <span class="n">t</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Thread</span><span class="p">(</span><span class="n">rtf</span><span class="p">);</span>
+        <span class="n">t</span><span class="p">.</span><span class="na">start</span><span class="p">();</span>
+
+        <span class="n">TileBitmap</span> <span class="n">tb</span> <span class="o">=</span> <span class="n">renderer</span><span class="p">.</span><span class="na">executeJob</span><span class="p">(</span><span class="n">theJob</span><span class="p">);</span>
+        <span class="n">tileCache</span><span class="p">.</span><span class="na">put</span><span class="p">(</span><span class="n">theJob</span><span class="p">,</span> <span class="n">tb</span><span class="p">);</span>
+
+        <span class="n">mapData</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">printf</span><span class="p">(</span><span class="s">&quot;,\&quot;file\&quot;: \&quot;%s/%d/%d/%d.tile\&quot;&quot;</span><span class="p">,</span> <span class="n">cacheDir</span><span class="p">.</span><span class="na">getPath</span><span class="p">(),</span> <span class="n">ZOOM</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span><span class="p">);</span>
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="s">&quot;}&quot;</span><span class="p">);</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Bu koda bir kordinat listesi verebiliyoruz, ve cevap olarak bir sözlük
+içinde piksel olarak o kordinatların yerleri, ve imaj dosyası yeri
+raporlanıyor.</p>
+
+<p>Altta Python'dan Java çağrısının nasıl yapıldığını, girdi ve çıktı
+işleme görülüyor. Çağrıyı aslında komut satırı ile yapıyoruz,
+<code>subprocess</code> paketi ile, bir anlamda bir süreç başlatıp Java'yı orada
+işletiyoruz, ve sonucu alıp Python'dan devam ediyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">import</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">outfile</span><span class="p">,</span><span class="n">pixel</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">bp</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">load_map</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span>
+    <span class="n">pixels</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;pixels&#39;</span><span class="p">]</span>
+    <span class="n">found_file</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;file&#39;</span><span class="p">]</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">found_file</span><span class="p">)</span>
+    <span class="n">nim</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;off&#39;</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_xaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="o">.</span><span class="n">get_yaxis</span><span class="p">()</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,[</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">]</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pixels</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">xx</span> <span class="o">&gt;</span> <span class="n">nim</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">or</span> <span class="n">yy</span> <span class="o">&gt;</span> <span class="n">nim</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">or</span> <span class="n">xx</span><span class="o">&lt;</span><span class="mi">0</span> <span class="ow">or</span> <span class="n">yy</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">bp</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="s1">&#39;rx&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="s1">&#39;r,&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pixel</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="s1">&#39;r,&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">,</span> <span class="n">pad_inches</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">dpi</span> <span class="o">=</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">load_map</span><span class="p">(</span><span class="n">pts</span><span class="p">):</span>
+    <span class="n">spts</span> <span class="o">=</span> <span class="nb">str</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pt</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">pts</span><span class="p">])</span>
+    <span class="n">spts</span> <span class="o">=</span> <span class="n">spts</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;[&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;]&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="n">spts</span> <span class="o">=</span> <span class="n">spts</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;&#39;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;/bin/sh&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;/Documents/kod/nomadicterrain/map/staticmap/run.sh&#39;</span><span class="p">,</span> <span class="n">spts</span><span class="p">,</span><span class="s1">&#39;/tmp&#39;</span><span class="p">,</span><span class="s1">&#39;/home/burak/Downloads/turkey.map&#39;</span><span class="p">,</span><span class="s1">&#39;14&#39;</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cmd</span><span class="p">,</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="n">lat1</span><span class="p">,</span><span class="n">lon1</span><span class="o">=</span><span class="mf">40.970041</span><span class="p">,</span><span class="mf">29.170311</span>
+<span class="n">lat2</span><span class="p">,</span><span class="n">lon2</span><span class="o">=</span><span class="mf">40.971041</span><span class="p">,</span><span class="mf">29.171311</span>
+<span class="n">lat3</span><span class="p">,</span><span class="n">lon3</span><span class="o">=</span><span class="mf">40.971041</span><span class="p">,</span><span class="mf">29.172311</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="p">[[</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon1</span><span class="p">],[</span><span class="n">lat2</span><span class="p">,</span><span class="n">lon2</span><span class="p">],[</span><span class="n">lat3</span><span class="p">,</span><span class="n">lon3</span><span class="p">]]</span>
+<span class="n">plot</span><span class="p">(</span><span class="n">points</span><span class="o">=</span><span class="n">pts</span><span class="p">,</span> <span class="n">outfile</span><span class="o">=</span><span class="s2">&quot;/tmp/out.png&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Ayrıca <code>run.sh</code> lazım,</p>
+
+<pre><code>DIR=$HOME/Documents/kod/nomadicterrain/map/staticmap
+java -cp $DIR/build:$DIR/lib/kxml2-2.3.0.jar:$DIR/lib/mapsforge-core-0.12.0.jar:\
+$DIR/lib/mapsforge-map-0.12.0.jar:$DIR/lib/mapsforge-map-awt-0.12.0.jar:\
+$DIR/lib/mapsforge-map-reader-0.12.0.jar:$DIR/lib/mapsforge-themes-0.12.0.jar:\
+$DIR/lib/svg-salamander-1.0.jar \
+SaveTiles $1 $2 $3 $4
+</code></pre>
+
+<p>Üç tane nokta bastık, sonucu altta görüyoruz,</p>
+
+<p><img src="https://1.bp.blogspot.com/-itpSxUWRF7M/XfDrlJICRSI/AAAAAAAAB4s/bPyoev5BE4gO8vLEyBt6vQtA_gApWa3QACLcBGAsYHQ/s320/ist1.png" alt="" />
+<img src="ist1.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

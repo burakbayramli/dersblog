@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Hatali Tarih Saptamak, Java</h1>
+
+<p>Eger SimpleDateFormat'i tarih bilgisini String tipinden Date tipine
+gecmek icin kullaniyorsaniz dikkat: Bu class, eger ozellikle
+belirtilmezse, herhangi bir gun ve ay bilgisini mutlu bir sekilde
+(kafasina gore) bir Date'e cevirebiliyor. Hicbir kontrol
+yapmiyor.</p>
+
+<p>Mesela 40-2-2008 tarihi 10 Mart 2008'e donusebiliyor!Bu hatadan
+kacinmak icin setLenient(false) cagrisi yapmaniz gerekli. Bizim bu isi
+yapan DateUtil class'imizdaki metot suna benziyor.</p>
+
+<pre><code>public static Date DMYtoDate(int day, int mon, int year)
+{
+  SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+  String ds = day + "-" + mon + "-" + year ;
+  Date date = null;
+  try {
+    fmt.setLenient(false); date = fmt.parse(ds);
+  } catch (java.text.ParseException e) {
+     log.error(e); return null;
+  }
+ return date;
+}
+</code></pre>
+
+<p>Bu metot, eger hatali bir tarih varsa, null dondurecektir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

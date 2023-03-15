@@ -1,0 +1,181 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>ffmpeg, moviepy</h1>
+
+<p>Video birlestirmek icin en rahat arac Python <code>moviepy</code> paketi ile,</p>
+
+<pre><code>from moviepy.editor import VideoFileClip, concatenate_videoclips
+clip1 = VideoFileClip("v1.mp4").resize(0.50)
+clip2 = VideoFileClip("v2.mp4").resize(0.50)
+final_clip = concatenate_videoclips([clip1,clip2])
+final_clip.write_videofile("out.mp4")
+</code></pre>
+
+<p>Bazi ffmpeg, komutlari</p>
+
+<p>Bir video dosyasinin belli zaman araligindaki parcasini cikartmak icin
+(baslangictan 4 saniyelik kisim)</p>
+
+<pre><code>ffmpeg -ss 00:00:00 -i girdi.mp4 -t 00:00:04 -c copy cikti.mp4
+</code></pre>
+
+<p>Bir video'nun belli bir parcasini nasil animasyon gif dosyasi haline
+ceviririz? Bir frames alt dizini yaratalim, sonra 20. saniyeden
+baslayip 10 saniyelik kismi cikartalim. Once sadece goruntu dosyalari
+alacagiz,</p>
+
+<pre><code>ffmpeg -ss 00:00:20 -t 00:00:10 -i [video dosyasi]  -vf \
+   scale=320:-1:flags=lanczos,fps=10  frames/ffout-%03d.png
+</code></pre>
+
+<p>Simdi bu dosyalari ImageMagick ile birlestirip animasyonu yaratalim</p>
+
+<pre><code>convert -loop 0 frames/ffout*.png output.gif
+</code></pre>
+
+<p>Eger direk gif yaratmak istersek,</p>
+
+<pre><code>ffmpeg -ss 61.0 -t 2.5 -i vid/dosya.mp4 -f gif dosya.gif
+</code></pre>
+
+<p>Her saniyede kaç kare (frame rate) olduğunu kontrol etmek için</p>
+
+<pre><code>ffmpeg  -ss 10.0 -t 5.0 -i girdi.mp4 -vf "fps=10,scale=320:-1" -f gif cikti.gif
+</code></pre>
+
+<ol start="10">
+<li>saniyeden başlayıp 5 saniyelik bir videoyu saniyede 10 kare
+üzerinden ve 320 piksel genişliğinde animasyonlu GIF yapmış olduk.</li>
+</ol>
+
+<p>Ya da</p>
+
+<pre><code>ffmpeg -y  -filter_complex 'fps=10,scale=460:-1:flags=lanczos' -i girdi.mp4 -f gif cikti.gif
+</code></pre>
+
+<p>GİF içinde yazı yazmak istersek,</p>
+
+<pre><code>ffmpeg -ss 30 -t 3 -i [DOSYA] -filter_complex "fps=10,scale=720:-1:flags=lanczos,drawtext=enable='between(t,0,1)':fontfile=font3.ttf:text='word':fontsize=24:fontcolor=white:x=(w-tw)/2:y=(h/PHI)+th,drawtext=enable='between(t,1,2)':fontfile=font3.ttf:text='word what':fontsize=24:fontcolor=white:x=(w-tw)/2:y=(h/PHI)+th,split[x1][x2];[x1]palettegen[p];[x2][p]paletteuse" output.gif
+</code></pre>
+
+<p>Format degisimi, kucultmek, mumkun oldugu kadar kaliteyi istenen
+sekilde tutmak, 440 yuksekliginde, genislik izafi, kalite 23 (en
+kaliteli 0)</p>
+
+<pre><code>ffmpeg -i input.mkv -vf scale=-1:440 -crf 23  output.avi
+</code></pre>
+
+<p>Format degisimi (ornekte mp4'den avi), video'nun bir kismini cekip cikartmak, mesela 100. saniyeden baslayarak 20 saniyelik kisim,</p>
+
+<pre><code>ffmpeg -i vid1.mp4 -ss 100 -t 20 -acodec copy -vcodec copy vid2.avi
+</code></pre>
+
+<p>Üstteki işlemi daha hızlı yapmak için mp4 formatına değişim ve alttaki ekler gerekebilir</p>
+
+<pre><code> ... -b:v 2500 -c:v mpeg4 ....
+</code></pre>
+
+<p>Video'yu numaralı JPG imaj dosyaları haline getirmek</p>
+
+<pre><code>ffmpeg -i vid.avi -vcodec mjpeg %05d.jpg
+</code></pre>
+
+<p>Diğer bazlı ffmpeg komutları.. Mesela bir görüntüyü  çevirmek için</p>
+
+<pre><code>ffmpeg.exe -i dosya.mp4 -vf "transpose=2" sonuc.mp4
+</code></pre>
+
+<p>transpose parametresine verilen değerlerin anlamı var, 1 saat yönü, 2 saat yönü tersi.</p>
+
+<p>Video ufaltmak icin</p>
+
+<pre><code>ffmpeg -i dosya.mp4 -vf scale=320:240 sonuc.mp4
+</code></pre>
+
+<p>Ya da</p>
+
+<pre><code>ffmpeg -i dosya.mp4 -filter:v scale=640:-1 -c:a copy sonuc.mp4
+</code></pre>
+
+<p>Genisligi 640 yap, geri kalan her seyi ona gore ayarla dedik.</p>
+
+<p>Video birlestirmek icin bir ara formattan gecmek lazim.</p>
+
+<pre><code>ffmpeg -i dosya1.mp4 -q:v 1 -filter:v scale=500:-1 -f mpegts dosya1.ts
+ffmpeg -i dosya2.mp4 -q:v 1 -filter:v scale=500:-1 -f mpegts dosya2.ts
+..
+</code></pre>
+
+<p>Sonra birlestirmek icin</p>
+
+<pre><code>ffmpeg -i "concat:dosya1.ts|dosya2.ts|..."  -c copy sonuc.mp4
+</code></pre>
+
+<p>Eger Windows'da bir mp4 cikmiyorsa, bir cevrim sekli de soyle,</p>
+
+<pre><code>ffmpeg -i dosya.mp4 -r 30  -codec:v mpeg4 -flags:v +qscale \
+  -global_quality:v 0 -codec:a libmp3lame dosya.avi 
+</code></pre>
+
+<p>mencoder</p>
+
+<p>Bir AVI video'nun parcasini kesip cikartmak icin</p>
+
+<pre><code>mencoder -ss 00:09:00 -endpos 00:02:00 -oac copy -ovc copy kaynak.avi
+-o parca.avi
+</code></pre>
+
+<p>Ustteki komut kaynak.avi dosyasinin 9'uncu dakikasindan 2 dakikalik
+parca cikartip parca.avi dosyasina kaydediyor. Dikkat: Ustteki
+seceneklerde "endpos" ibaresinin tercumesi "bitis noktasi" olmasina
+ragmen komut "reklam edildigi gibi" islemiyor.</p>
+
+<p>Video'dan Ses Cikartmak</p>
+
+<pre><code>ffmpeg -y -ss 00:02:10 -i vid.mp4 -t 00:00:04 -q:a 0 -map a out.mp3
+</code></pre>
+
+<p>Kaynaklar</p>
+
+<p>https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

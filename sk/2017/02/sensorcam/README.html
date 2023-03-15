@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<p>TR</p>
+
+<p>Iki proje var. Birincisi <a href="cam">cam</a>, Kamera resimlerini, yön
+algılayıcısı (orientation sensor), GPS, ivme algılayıcı
+(accelerometer) değerlerini belli aralıklarla biriktirir, ve istendiği
+anda (Rec düğmesine basarak) sonuçları telefon dizinine
+kaydeder. Dosyalar <code>SDCARD/Bass</code> altında bir numaralı dizindedir, her
+Rec sonrası yeni bir dizin yaratılır. Böylece birkaç ölçümü arka
+arkaya kaydetmek mümkün olur.</p>
+
+<p><img src="bass.png" alt="" /></p>
+
+<p>Her ölçüm için ayrı bir txt dosyası var, analiz amacıyla bu dosyaları
+USB ile dizüstüne aktarmak yeterli. Her veri dosyasındaki satır sayısı
+ve kameranın kaydettiği tek resim (frame) sayısı birbiriyle aynı, yani
+eğer ivme algılayıcından 20 satır kaydedildiyse, yön algılayıcısından
+da 20 satır kaydedilmiş demektir, ve her satırın zaman indisi
+birbiriyle eşittir.  Yani herhangi bir zaman anında tüm
+algılayıcılardan alınan veri aynı anda bellege alınır. Böylece
+sonradan analiz sırasında odaklanan zaman diliminde tüm ölçümlerin
+hangi seviyede olduğu bilinebilir.</p>
+
+<p><a href="scripts/map.md">Haritalama</a></p>
+
+<p>Kameranın kaydettiği video'nun herhangi bir zaman dilimindeki tek
+resmini elde etmek, resim işlemek, kalibrasyon ve ilgili diğer
+bilgilere erişmek icin örnek kodlar <a href="scripts/data.md">şurada</a>.</p>
+
+<p>Telefonun duruşunu, yere, kuzeye göre dönüş açılarını (rotation)
+<code>rotations.txt</code> adlı bir dosya içine yazıyoruz. Bu dönüşler hakkında ek
+bilgi <a href="scripts/rotations.md">şurada</a>.</p>
+
+<p>İkinci proje <a href="steps">steps</a>. İvmeölçer, kameranın duruşunu çok daha
+hızlı kaydeder, ayrıca <code>steps</code> için aynı sayıda kayıt satırı tutma
+şartı yok - ana ivmeölçer 200 satır kaydetmiş, lineer ivmeölçer 80
+satır kaydetmiş olabilir, birbirine yakın zamandaki kayıtların zaman
+mührü birbirine eşit olacaktır ama bunun haricinde bir eşitlik
+yok. GPS de kaydedilir. Çıktı dosyası <code>SDCARD/Steps</code> altında.</p>
+
+<p>Filtreleme</p>
+
+<p>Sigma Bazlı Kalman Filtreleri (Unscented Kalman Filter) Java kodları
+<a href="ukf">ukf</a> dizininde.</p>
+
+<p>English</p>
+
+<p>Two projects. First is <a href="cam">cam</a>, example of how to use Android
+camera, recording of orientation sensor, GPS, and camera frames. We
+skip some frames for performance / storage reasons, and the unit of
+storage for all recording is the frame. Whenever a frame is recorded,
+orientation, GPS will be recorded along with it.</p>
+
+<p>The data files are dumped under <code>SDCARD/Bass</code> folder (when Rec is
+pressed), which can be taken transferred to a notebook for
+analysis. Make sure to create this folder first.</p>
+
+<p>There is also offline mapping support, see the sample zip data file
+above. Simply drop this file under <code>SDCARD/Bass</code>.</p>
+
+<p>The camera, preview code is based on</p>
+
+<p>http://ibuzzlog.blogspot.tw/2012/08/how-to-use-camera-in-android.html</p>
+
+<p>Zoomable map viewer is based on</p>
+
+<p>https://github.com/MikeOrtiz/TouchImageView/blob/master/src/com/ortiz/touch/TouchImageView.java</p>
+
+<p>The other project is <a href="steps">steps</a> which records sensor data much
+faster, it does not try to maintain an equal number of records for all
+sensors, it tries to keep timestamp equality accross all sensor data
+points though, so at if there is an event time=111111, it will be
+recorded at that timestamp value. It also records GPS. The output goes
+under <code>SDCARD/Steps</code>.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

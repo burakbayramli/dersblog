@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>NoSQL</h1>
+
+<p>NoSQL tabanları ilişkisel veri yapısı (SQL ile erişilen türden)
+gerektirmeden veri sorgulamayı, eklemeyi destekleyen tabanlardır. Bir
+bakıma diske yazılmış Python sözlüğü gibi görülebilirler; tek ihtiyaç
+duydukları bir anahtar ve ona tekabül eden değerdir, ki değer herhangi
+bir obje olabilir. Mimarinin çekici tarafı veri ünitesini tek objeye
+indirdediğimizde dağıtık ortamda çalışmanın kolaylaşması, ölçeklemek
+için belli objeleri belli makinalara gönderdiğimizde problem
+çözülüyor, çünkü ilişkisel bağlantıları takip etmek gerekmiyor.</p>
+
+<p>Basit, dağıtık çalışabilen bir NoSQL taban tasarımı şöyle olabilir.</p>
+
+<ul>
+<li><p>Yükü karşılıyabilmek için ayrı servisler başlatılır. Bağlanan taraf
+istemcide N tane servisten hangisine gidileceğine karar vermek için
+her anahtar üzerinde i = mod N işletir, ve cevaba göre o veri için i
+servisine gidilir. Böylece veri bazlı yük dengesi yapılmış olur.
+Bildiğimiz gibi mod N sonucu N'yi geçemez, ve mod belli sayılar
+arasında gidip gelen, sona geldiğinde başa dönen bir yapıdadır bu
+şekilde dengeli bir dağıtım yapar.</p></li>
+<li><p>Her serviste ayrı bir Flask süreci işletilir, taban verisini Flask
+REST API'si üzerinden dışarı açarız, burada <code>get</code>, <code>set</code> çağrıları
+olacaktır. Girdi ve çıktı alış/veriş JSON üzerinden yapılır.</p></li>
+<li><p>Her Flask süreci kendi içinde seri halde çalışılır (paralel değil),
+bu seri süreç kendi sqlite tabanına yazar ve oradan okur, böylece
+her servisin kendi içindeki eşzamanlılık çakışma problemleri
+engellenmiş olur. Servis tarafı basitleşir.</p></li>
+<li><p>Bir anahtarla beraber herhangi bir obje, ne olursa olsun, tabana
+yazılıp okunabilmelidir, Python objelerini <code>pickle</code> üzerinden string
+haline getirebiliriz, ve arka planda temel depolama sqlite <code>TEXT</code>
+kolonunda olur, [1]'de bunun örneğini gördük.</p></li>
+<li><p>Listeleme: bu özellik için ayrı bir SQL tablosu yaratırız, bir
+kolonunda liste ismi, diğerinde obje anahtarı olacak şekilde. Liste
+ismi satırlarda tekrarlanabilir böylece çoka bir ilişki
+kuruyoruz. Listeyi istemciden almak için o isim üzerinde <code>where</code>
+işletiliriz. Sayfalama özelliği SQL LIMIT üzerinden sağlanır,
+çağıran tarafta liste obje anahtarlarını objeye çevirmek için
+servise tekrar sormak gerekecektir.</p></li>
+</ul>
+
+<h3>Servis</h3>
+
+<p>Basit bir Flask servisi altta,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">sqlite3</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">OnlyOne</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">class</span> <span class="nc">__OnlyOne</span><span class="p">:</span>
+        <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span>
+    <span class="n">instance</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span><span class="p">:</span>
+            <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span> <span class="o">=</span> <span class="n">OnlyOne</span><span class="o">.</span><span class="n">__OnlyOne</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">OnlyOne</span><span class="o">.</span><span class="n">instance</span>
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">def</span> <span class="fm">__setattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">instance</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">before_first_request</span>
+<span class="k">def</span> <span class="nf">start_check_db</span><span class="p">():</span>
+    <span class="n">sno</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;server_no&#39;</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/kvf-</span><span class="si">%d</span><span class="s2">.db&quot;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">sno</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+    <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">db</span><span class="p">):</span> 
+        <span class="n">c</span> <span class="o">=</span> <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;CREATE TABLE OBJ (key TEXT PRIMARY KEY, value TEXT); &#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;INSERT INTO OBJ(key,value) VALUES(?,?)&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;test1&quot;</span><span class="p">,</span><span class="s2">&quot;value1&quot;</span><span class="p">))</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>    
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;server&#39;</span><span class="p">,</span> <span class="n">sno</span><span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/get&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">get</span><span class="p">():</span>    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   
+    <span class="n">key</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT value FROM OBJ WHERE key = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span> 
+        <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s2">&quot;None&quot;</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]})</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/set&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">set</span><span class="p">():</span>    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   
+    <span class="n">key</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;insert or replace into OBJ (key,value) values (?,?)&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">])</span>
+    <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">})</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/remove&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;PUT&quot;</span><span class="p">,</span> <span class="s2">&quot;POST&quot;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">remove</span><span class="p">():</span>    
+    <span class="n">data</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">(</span><span class="n">force</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   
+    <span class="n">key</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;key&#39;</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;delete from OBJ where key = ?&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">key</span><span class="p">])</span>
+    <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;result&#39;</span><span class="p">:</span> <span class="s2">&quot;OK&quot;</span><span class="p">})</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;server_no&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>   
+</code></pre>
+</div>
+
+<p><code>start_check_db</code> ile taban yoksa başlangıçta yaratılır.</p>
+
+<p>Tabana tek bir bağlantı vardır, o bağlantı <code>OnlyOne</code> tekil obje
+(singleton) içinde muhafaza ediliyor. Arkadaki sqlite tabanına
+eşzamanlı erişim olmadığı için birden fazla bağlantıya da gerek yok.</p>
+
+<p>Metot <code>set</code> içinde <code>insert or replace into</code> komutunu kullandık, bu SQL
+çağrısı bir satır varsa onu günceller yoksa yeni satır ekler,
+İngilizce deyimle insert ve update karışımı olan "upsert" işlemini
+yapar. Bu depolama tarzı da yine hafıza sözlük kullanımını andırıyor,
+aynen bir Python sözlüğünde <code>d['key'] = 'değer'</code> çağrısının önceden
+varsa <code>key</code> değerlerini ezecek (yoksa ekleyecek) olduğu gibi, taban
+bazlı yaklaşım da bu işlevi taklit ediyor.</p>
+
+<p>Not: SQL kullanmayan tabanın arka planda bir SQL tabanı SQLite
+kullanıyor olması çelişki gibi durabilir fakat aslında değil; bu
+tabanı sadece basit bir depo olarak kullanıyoruz, ve bunu çok basit
+düz SQL komutları üzerinden yapıyoruz. Unutmayalım SQL sadece ekleme,
+silme gibi "CRUD" operasyonlarından ibaret değil, ilişkisel veriler
+literatürü çok daha kapsamlı. NoSQL dışarıya bu tür ilişkisel bir
+arayüz vermiyor, arka planda da SQL basit depolama amaçlı olarak
+kullanılıyor ve onun ilişkisel özelliklerine de dokunulmuyor.</p>
+
+<p>Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi bir
+sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine
+eklenecektir (böylece aynı makinada bile farklı taban süreçleri
+yanyana işleyebilir). Bu sayıyı servis tarafında bir makina:port
+listesi içinden birini seçmesi için de kullanabiliriz. Bağlanan
+tarafta anahtar üzerinde mod N işletildikten sonra elde edilen sayı
+aynı listeden bir makina:port seçip ona bağlanırdı.</p>
+
+<p>Şimdi REST arayüzüne <code>curl</code> ile erişelim, mevcut olan <code>test1</code> verisine erişim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">curl</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;key&quot;:&quot;test1&quot;}&#39;</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span><span class="o">/</span><span class="n">get</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&quot;result&quot;:&quot;value1&quot;}
+</code></pre>
+</div>
+
+<p>Olmayan bir anahtara erişim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">curl</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;key&quot;:&quot;asdjflkajsf&quot;}&#39;</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span><span class="o">/</span><span class="n">get</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&quot;result&quot;:&quot;None&quot;}
+</code></pre>
+</div>
+
+<p>Bir değeri set edip onun geri almak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">curl</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;key&quot;:&quot;3333&quot;, &quot;value&quot;:&quot;value333&quot;}&#39;</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span><span class="o">/</span><span class="nb">set</span>
+<span class="n">curl</span> <span class="o">-</span><span class="n">H</span> <span class="s2">&quot;Content-Type: application/json&quot;</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;{&quot;key&quot;:&quot;3333&quot;}&#39;</span>  <span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span><span class="o">/</span><span class="n">get</span>
+</code></pre>
+</div>
+
+<h3>Python İstemci</h3>
+
+<p>Üstteki <code>curl</code> tipi ham JSON çağrıları pür Python ile de
+yapabilirdik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080/get&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="s2">&quot;test1&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status code: &quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Status code:  200
+{&#39;result&#39;: &#39;value1&#39;}
+</code></pre>
+</div>
+
+<p>Şimdi REST çağrılarını üç ayrı fonksiyon ile sarmalayalım, normal
+durumda kullanıcıların çağıracağı tek metotlar bunlar olacak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">base64</span>
+
+<span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080/get&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="n">key</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status code: &quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">base64</span><span class="o">.</span><span class="n">decodestring</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">res</span>
+
+<span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">):</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">encodestring</span><span class="p">(</span><span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">value</span><span class="p">))</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080/set&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="n">key</span><span class="p">,</span><span class="s2">&quot;value&quot;</span><span class="p">:</span><span class="n">value</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status code: &quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;http://localhost:8080/remove&#39;</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span><span class="n">key</span><span class="p">})</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Status code: &quot;</span><span class="p">,</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+
+
+<span class="nb">set</span><span class="p">(</span><span class="s2">&quot;2324&quot;</span><span class="p">,</span><span class="s2">&quot;33333ddddd3&quot;</span><span class="p">)</span>
+<span class="n">o</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="s2">&quot;2324&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">o</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Status code:  200
+Status code:  200
+33333ddddd3
+</code></pre>
+</div>
+
+<p>Üstteki örnekte değer olarak basit string gönderdik ama tasarım öyle
+ki karmaşık objelere de izin veriyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">set</span><span class="p">(</span><span class="s2">&quot;randomId123&quot;</span><span class="p">,</span><span class="n">m</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Status code:  200
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">o</span> <span class="o">=</span> <span class="n">get</span><span class="p">(</span><span class="s2">&quot;randomId123&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">o</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Status code:  200
+[[0.21365823 0.42896852]
+ [0.31330469 0.03924181]]
+</code></pre>
+</div>
+
+<p>Bir Numpy matrisi gonderdik NoSQL onu bile tabana yazdi.</p>
+
+<p>Taban içeriğine bakarsak objelerin nasıl yazılmış olduğunu görüyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;/opt/Downloads/kvf-0.db&quot;</span> <span class="p">)</span>
+<span class="n">cur</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT key,value FROM OBJ&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(&#39;test1&#39;, &#39;value1&#39;)
+(&#39;2324&#39;, &#39;gANYCwAAADMzMzMzZGRkZGQzcQAu\n&#39;)
+(&#39;randomId123&#39;, &#39;gANjbnVtcHkuY29yZS5tdWx0aWFycmF5Cl9yZWNvbnN0cnVjdApxAGNudW1weQpuZGFycmF5CnEB\nSwCFcQJDAWJxA4dxBFJxBShLAUsCSwKGcQZjbnVtcHkKZHR5cGUKcQdYAgAAAGY4cQiJiIdxCVJx\nCihLA1gBAAAAPHELTk5OSv////9K/////0sAdHEMYolDIPATky0nWcs//JC9Xzh02z+EpHgZLw3U\nP7ATIoOAF6Q/cQ10cQ5iLg==\n&#39;)
+</code></pre>
+</div>
+
+<p>Karmaşık bazı string değerleri görüyoruz, bunlar Python objelerinin kodlanmış hali.</p>
+
+<p>Birkaç servisli durumdan bahsedelim; daha önce değinildiği gibi birden
+fazla servise bağlanmak için <code>key</code> üzerinde mod kullanabiliriz, mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">N</span> <span class="o">=</span> <span class="mi">3</span> <span class="c1"># bu kadar servis var</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;test1&quot;</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;servis&#39;</span><span class="p">,</span><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;test1&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;servis&#39;</span><span class="p">,</span><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;111122&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;servis&#39;</span><span class="p">,</span><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;323&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="n">N</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>-663401633428333736
+servis 1
+servis 2
+servis 0
+</code></pre>
+</div>
+
+<p>Bu indis değerleri <code>set</code> ve <code>get</code> içinde kullanılırdı, servise
+bağlantı yapılmadan önce hangi URL kullanılacağını bulmak için. Eğer
+0 alındıysa mesela,</p>
+
+<p>http://localhost:8080/get</p>
+
+<p>1 alindiysa</p>
+
+<p>http://localhost:8081/get</p>
+
+<p>bağlantısı yapılıyor olabilirdi, bu karar değiştirilmiş <code>get</code>, <code>set</code>
+üzerinde verilecektir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Obje String Olarak Kodlamak](../../2010/10/encoding-objeleri-yazip-okumak-pickle-base64.html)</p>
+
+<p>[2] [MongoDB](../../2014/05/mongodb.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

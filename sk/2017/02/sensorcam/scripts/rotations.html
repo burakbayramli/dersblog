@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<p>Android telefonun eksenleri şöyledir,</p>
+
+<p><img src="andaxis.png" alt="" /></p>
+
+<p><code>orientations.txt</code> icinde x,y,z eksenleri sırasıyla 1,2,3 değerleri
+içinde.</p>
+
+<p>Eğer yeryüzüne göre telefonun nasıl durduğunu bulmak istiyorsak,
+<code>SensorManager.getRotationMatrix()</code> kullanabiliriz. Bu algılayıcı bir
+"türevsel" algılayıcı, yani aslında kendisi bir donanım değil ama
+diğer donanımlardan gelen verileri birleştiriyor. Bu türevsel
+algılayıcının birleştirdikleri ivmesel ve manyetik
+algılayıcılar. İvmesel algılayıcıdan (acceloremeter) mesela yer
+çekiminin telefonun duruşuna göre hangi yönde olduğu bilgisi gelir,
+manyetik algılayıcı (magnetometer) kuzeyin hangi yönde olduğunu
+gösterir, yani telefonun o andaki duruşunun global kordinatlara göre
+net bir hesabını bu çağrıdan alabiliriz.</p>
+
+<p><img src="rphone.png" alt="" />
+<img src="rworld.png" alt="" /></p>
+
+<p>Bu ikisini birleştiren <code>SensorManager.getRotationMatrix()</code> bize her
+telefon ekseninin yeryüzü eksenine göre nasıl durduğunu
+gösterir. Yeryüzü eksenlerinden biri <code>x</code> ekvatora paralel gider
+(üstteki resimde tam ekvator üzerinde ama daha kuzeyde, güneyde de
+olunca yine oradaki enleme teğet bir çizgi hayal edilebilir). <code>y</code> ise
+kuzeyi gösteriyor, <code>z</code> ise olduğumuz yerden direk gökyüzüne fırlayan
+bir çizgi gibi düşünülebilir.</p>
+
+<p>Altta sensorcam kullanarak kaydettiğim değerlerden biri
+görülüyor. Telefonun arkasından dışa doğru giden -z yönünün dünyada
+nereyi gösterdiğini bulmak için <code>[0.,0.,-1.]</code> ile çarpıyorum. Bu değer
+ölçülürken telefonu yer düzlemine göre çapraz, ekranı bana dönük ve
+yatay halde tutuyordum ve hafif güneydoğuya doğru dönmüş haldeydim.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">Rs</span> <span class="o">=</span> <span class="s2">&quot;0.36073056 0.67114913 -0.6476358 -0.38567874 0.73957986 0.5516099 0.849191 0.050796863 0.5256371&quot;</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Rs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">R</span>
+<span class="nb">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[ 0.36073056  0.67114913 -0.6476358 ]
+ [-0.38567874  0.73957986  0.5516099 ]
+ [ 0.849191    0.05079686  0.5256371 ]]
+[[ 0.6476358]
+ [-0.5516099]
+ [-0.5256371]]
+</code></pre>
+</div>
+
+<p>Değerler -1,+1 arasında.</p>
+
+<p>Yine aynı yönde, ama bu sefer telefon ekranı alta dönük halde, ve
+telefon üstünü direk önüme (yani güneydoğuya) doğru tutuyordum, şimdi
+ekran arkası nereyi gösteriyor?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">Rs</span> <span class="o">=</span> <span class="s2">&quot;0.82920504 0.5577966 0.03580483 0.5570639 -0.82996815 0.028858235 0.045813892 -0.0039838166 -0.9989421&quot;</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">Rs</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.</span><span class="p">,</span><span class="mf">0.</span><span class="p">,</span><span class="o">-</span><span class="mf">1.</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[-0.03580483]
+ [-0.02885823]
+ [ 0.9989421 ]]
+</code></pre>
+</div>
+
+<p>Üstteki sonuçta telefon <code>z</code>'si dünya <code>z</code>'si ile aşağı yukarı aynı
+yönde.</p>
+
+<p>Kaynaklar</p>
+
+<p>http://stackoverflow.com/questions/11068571/getting-direction-vector-in-android</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

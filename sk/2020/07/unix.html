@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Unix</h1>
+
+<p>İşletim sistemlerinin kralı tartışmasız Unix. Geliştirilmesi 70'li
+yıllarda başlayan ve C programlama diline yakın oluşuyla daha da
+yayılan bu sistem çekirdeksel olarak şu anda cep telefonlar dahil
+olmak üzere milyarlarca makina üzerinde işliyor.</p>
+
+<p>Süreçler</p>
+
+<p>Unix'i Unix yapan pek çok kavram var. Kullanıcıya pek gözükmeyen sahne
+arkasındaki programları denetleyen, işleten çekirdek seviyesinde
+yaptıkları var, dosya / dizin bazında kullanıcıya gözüken kısmı var.</p>
+
+<p>Unix'te süreç kavramı önemli. Her işleyen program bir süreç içinde
+işler, diğerlerinden ayrı çevre değişkenleri, yerel hafıza bloğu
+vardır (global hafızaya özel programlama ile erişilebilir). O anda
+bilgisayarınızdaki işleyen süreçleri görmek için <code>ps -eaf</code>
+işletebiliriz, mesela bende</p>
+
+<pre><code>burak    15316 15314  0 11:21 pts/0    00:00:05 mplayer -quiet -playlist http://
+burak    15400     1  2 11:24 tty2     00:01:43 /usr/bin/emacs25
+burak    16320     1  1 11:47 tty2     00:00:49 /usr/lib/firefox/firefox -new-wi
+burak    16487 16320  0 11:47 tty2     00:00:26 /usr/lib/firefox/firefox -conten
+root     17133     2  0 11:54 ?        00:00:01 [kworker/u8:2+ev]
+</code></pre>
+
+<p>listesi var. Hakikaten şu anda Emacs içindeyim, arka planda Firefox
+işliyor, vs. Bunların hepsi görülüyor. Bu süreçler yokedilebilir, vs.,
+bkz <a href="../../2012/04/faydali-unix-komutlari.md">Faydalı Unix Komutları</a>.</p>
+
+<p>Süreç listesini daha renkli olarak htop komutu ile görebiliriz (bağlantı altta). </p>
+
+<p>Komut Satırı, Kabuk</p>
+
+<p>Unix'te çoğu işlem komut satırı etrafında döner, en azından usta
+admin, kullanıcılar onu tercih eder. Programları başlatmak, idare
+etmek, gözetlemek için tercih edilir, script yazabilme ve onları
+işletebilme açısından komut satırı hep faydalı olmuştur. Görsel
+tıklamayı hatırlamak yerine istenen aksiyonu temsil eden birkaç harfi
+hatırlamak ve klavyede yazmak her zaman daha hızlıdır, bu açıdan 'bir
+resim bin kelimeye bedeldir' sözü Unix'te tepetaklak olmuştur, 'birkaç
+harf bin resme bedeldir' demek daha doğru olur.</p>
+
+<p>Komut satırını başlattığımızda, mesela Ubuntu Linux'ta Terminal
+programı ile, bir süreç başlatılmıştır, ve bu süreç bir işler
+programın çağrılması ile olmuştur. Komut satırı başlatıyorum ve süreç
+listesine bakıyorum,</p>
+
+<pre><code>burak    14899 14890  0 11:20 pts/0    00:00:00 bash
+</code></pre>
+
+<p>görülüyor. Komut satırı, "kabuk (shell)" programı bu işte. Tabii komut
+satırları tek tip değil, pek çok farklı program var, üstteki <code>bash</code>,
+ona has özellikleri var, ama <code>sh</code> de var, ya da <code>tsch</code> var,
+vs. Terminale gidip</p>
+
+<pre><code>echo $SHELL
+</code></pre>
+
+<p>deyince</p>
+
+<pre><code>/bin/bash
+</code></pre>
+
+<p>cevabı alıyorum. Kabuk tipi orada tanımlı. Bu arada <code>SHELL</code> bir çevre
+değişkeni (environment variable), bir anlamda içinde olduğumuz sürecin
+"çevresini" tanımlıyor, bu açıdan uygun isim. Çevre değişkenleri her
+kabuk için farklı olabilir, birinden set ettiğimiz değişkeni
+diğerinden göremeyebiliriz, <code>ALI=veli</code> deyin, <code>echo $ALI</code> bir <code>veli</code>
+sonucunu verir, bir diğer bash ekranına gidin, aynı komut boş sonuç
+verecektir.</p>
+
+<p>Her <code>bash</code> penceresinin başlangıç değerleri her kullanıcı için ana /
+ev (home) dizindeki <code>.bashrc</code> içinde set edilir. Dikkat, farklı kabuk
+kullananlar için bu başlangıç dosyası farklı olur, mesela <code>csh</code> için
+<code>.csh</code>.</p>
+
+<p>Global ayarlar <code>.bashrc</code> den önce işletilen (bash icin) <code>/etc/profile</code>
+icindedir. Her kullanıcı başlangıçta yapılmasını istediği şeyleri
+kendi <code>.bashrc</code>'si içine koyabilir, admin her kullanıcı için
+işlemesini istediği şeyler varsa onları <code>/etc/profile</code> içine koyar.</p>
+
+<p>Ev dizini her kullanıcı için ana dizindir, <code>echo $HOME</code> ile ne
+olduğunu görebilirsiniz, tek <code>cd</code> komutu çoğu kabukta otomatik olarak
+sizi ev dizine götürür. Ubuntu'da bu benim icin <code>/home/burak</code> mesela.</p>
+
+<p>Program Başlatmak</p>
+
+<p>Kabuktan program başlattığımızda, mesela günün tarihi veren <code>date</code>
+ile, satırda</p>
+
+<pre><code>$ date
+</code></pre>
+
+<p>dedik ve sonuç</p>
+
+<pre><code>Mon Jul 27 14:21:08 EEST 2020
+</code></pre>
+
+<p>geldi, bu komutu işlettiğimizde arka planda birkaç şey oldu. <code>date</code>
+dedik ama hangi date? Bu programın işler kodunun olduğu dosya nerede?
+Soru cevabı <code>which date</code> ile alınabilir, cevap olarak <code>/bin/date</code>
+geldi bizde. Hakikaten orada bir <code>date</code> programı var,</p>
+
+<pre><code>$ ls -al /bin/date
+-rwxr-xr-x 1 root root 100568 Jan 18  2018 /bin/date
+</code></pre>
+
+<p>Pek çok "sistem komutu" <code>/bin/</code> altındadır bu arada. Peki sadece
+<code>date</code> deyince sistem <code>/bin/date</code> işletmesini gerektiğini nasıl bildi?
+Burada <code>PATH</code> kavramı var, kabuk çevre değişkenleri içinde <code>PATH</code> adlı
+dizin listesi program işletince nerelere bakılması gerektiğini tanımlar,</p>
+
+<pre><code>$ echo $PATH
+/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin...
+</code></pre>
+
+<p>Görüldüğü gibi <code>/bin</code> dizini listede (sonda), ve <code>bash</code> işletilmesi
+istenen programı arayıp bu son dizinde buldu. <code>PATH</code> değişkeni
+başlangıç ayar dosyasında set edilir, <code>bash</code> için <code>.bashrc</code> ve
+<code>/etc/profile</code>.</p>
+
+<p>Eğer karışıklığı meydan bırakmayacak şekilde bir programı direk
+işletmek istersek bunu komut satırında <code>/bin/date</code> yazarak
+yapabilirdik. Hatta script yazarken tavsiye edilen yaklaşım budur. </p>
+
+<p>Üstteki <code>ls</code> sonucunun soldaki kısmı kafa karıştırmış olabilir,
+<code>-rwxr-xr-x</code> ne demek? Alttaki resimle anlatmaya uğraşalım,</p>
+
+<p><img src="ls.png" alt="" /></p>
+
+<p>En soldaki harf <code>d</code> ise baktığımız şey bir dizindir, <code>-</code> ise dosyadır.</p>
+
+<p>Dikkat edersek kullanıcı (user) harfleri üç tane, grup (group) üç
+tane, diğerleri (other) üç tane. Bu harf üçlüleri, sırasıyla, o an
+olduğumuz kullanıcı, dahil olduğumüz grup ve diğerlerinin bu dosya
+üzerindeki izinlerini gösterir.</p>
+
+<p>Hangi kullanıcı olduğumuzu <code>id</code> ile hemen bulabiliriz.</p>
+
+<p>Her harf öbeği <code>rwx</code> olabilir, tabii bu harflerden bazıları iptal
+olabilir, mesela <code>-w-</code> olabilir. Harfler sırasıyla okuma (read), yazma
+(write) ve işletme (execute) haklarını temsil eder. Yani üstteki
+<code>/bin/date</code> için gördüğümüz <code>-rwxr-xr-x</code> kullanıcı (dosyanın sahibi
+olan kişi) için <code>rwx</code> diyor, yani tüm hakları vermiş, ama grup için
+<code>r-x</code> demiş, yani grup için yazma hakkı vermemiş.</p>
+
+<p>Grup bu tür izinleri idare etmenin bir kolay yolu bir bakıma, her Unix
+kullanıcısı admin tarafından birden fazla gruba atanmış
+olabilir. Hangi gruba dahil olunduğunu her kullanıcı <code>groups</code> komutunu
+işleterek bulabilir. Grup atamaları <code>/etc/groups</code> dosyası içinde
+tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
+<code>sudo ls -al /etc/group</code> deyin,</p>
+
+<pre><code>-rw-r--r-- 1 root root 936 Jul 20 15:46 /etc/group
+</code></pre>
+
+<p>Dosya sahibi (admin) hariç başka kimsenin dosyaya yazma hakkı
+olmadığını görüyoruz.</p>
+
+<p>Izinleri değiştirmek icin <a href="chmod.html">chmod</a> kullanılır.</p>
+
+<p>Pek çok şey kabuk etrafında döner dedik, program başlatmak bunlardan
+en önemlisi. Bir program ismini yazarak onu komut satırından
+başlatırız, ama o programı arka plana atarak ta işletebiliriz. Burada
+<code>&amp;</code> işareti devreye girer, mesela <code>xclock</code> desem grafik saat programı
+başlar ama onu başlattığım komut satırının "bloklanmış" olduğunu
+görebilirim çünkü başlatan program başlatılanın bitmesini
+bekliyor. Programı üst sağ köşesindeki kapatma düğmesinden kapatırsam,
+ya da başlatan kabuktan Ctrl-C ile durdurursam, ya da başka bir
+pencereden <code>kill -9</code> ile, o zaman kabuğa geri dönüldüğünü
+görürüm. Eğer bu bloklamanın olmasını istemiyorsak, en başta <code>xclock
+&amp;</code> işletebilirdik, bu <code>xlock</code> programını arka plana atar, hemen geri
+döner, bekleme olmaz, böylece ana kabukta hala başka komutlar
+işletebilir halde oluruz.</p>
+
+<p>Ama dikkat, her süreç başlattığı sürecin ebeveyni haline gelir, <code>&amp;</code>
+ile başlatsak bile başlatan ebeveyn durumundadır, eğer başlatan süreç
+ölürse, başlatılan da ölür. Mesela bir konsol komut satırı başlattım,
+oradan <code>emacs &amp;</code> ile editörü başlattım, konsolu kapatırsam, emacs
+programı da kapanacaktır. O zaman başlatanda "evlatlık reddi" yapmak
+lazım, yani <code>emacs &amp; disown</code>. O zaman aradaki bağlantı kopar, başlatan
+ölürse başlatılan ölmez.</p>
+
+<p>Referans</p>
+
+<p><a href="../../2012/04/faydali-unix-komutlari.html">Faydalı Unix Komutları</a></p>
+
+<p><a href="ubuntu-18-acer-swift.html">Ubuntu 18, Acer Swift</a></p>
+
+<p><a href="../../2012/12/htop.html">htop</a></p>
+
+<p><a href="chmod.html">chmod</a></p>
+
+<p><a href="../..//2002/10/unix-servisleri-nasl-baslatyor.html">Unix, Servisleri Nasıl Başlatıyor?</a></p>
+
+<p><a href="../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html">Bir Makinaya SSH ile Şifresiz Giriş</a></p>
+
+<p><a href="../../2011/08/lokal-dosya-arama-recoll.html">Lokal Dosya Arama - recoll</a></p>
+
+<p><a href="../../2017/11/serviste-isleyen-komut-satr-tmux.html">Serviste İşleyen Komut Satırı - tmux</a></p>
+
+<p><a href="../../2016/01/bellek-dosyalari-devshm.html">Bellek Dosyalari - /dev/shm</a></p>
+
+<p><a href="../../2013/03/ubuntu-swap-alani-nasil-arttirilir.html">Ubuntu SWAP Alanı Nasıl Arttırılır?</a></p>
+
+<p><a href="../../2003/10/unix-rsync-makineleraras-dosya.html">Unix Rsync - Makineler Arası Dosya Kopyalamanın Hızlı Yolu</a></p>
+
+<p><a href="../../2012/07/supervisord.html">supervisord</a></p>
+
+<p><a href="../../2020/10/dosya-kodlamasi-encoding.html">Dosya Kodlamasi (File Encoding)</a></p>
+
+<p><a href="../../2020/10/python-unix-dosya-islemleri.html">Dosya İşlemleri, Unix, Python</a></p>
+
+<p><a href="../../2014/12/popen-python-ve-komut-satirina-erismek.html">Python ve Komut Satırına Erişmek, Popen</a></p>
+
+<p><a href="https://github.com/burakbayramli/classnotes/raw/master/sk/2020/07/unix-kj.pdf">Unix, Kurumsal Java 2005 Kitabından, PDF</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

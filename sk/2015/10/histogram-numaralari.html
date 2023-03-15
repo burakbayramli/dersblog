@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Histogram Numaraları</h1>
+
+<p>Matplotlib kutuphanesinin histogram hist cagrisinin histogram
+grafigini basmak haricinde bazi ek ozellikleri var. Mesela bir verinin
+histograminin kutu (bins) noktalarinin nerede oldugunu
+raporlattirabiliriz, ayrica bu kutularin  icine ne kadar veri
+dustugunu, sayi ya da normalize edilmis sayi olarak
+gorebiliriz. Normalize edilmis sayi ozellikle onemli cunku bu sayi,
+olasiliksal baglamda, bir tur sayisal yogunluk fonksiyonu (density
+function) olarak gorulebilir.</p>
+
+<p>Ornek</p>
+
+<p>1,2,3,..,40 sayilarini iceren bir vektor uzerinden,</p>
+
+<pre><code>hst = plt.hist(range(40), bins=3)
+print hst[1]
+print hst[0]
+</code></pre>
+
+<pre><code>[  0.  13.  26.  39.]
+[ 13.  13.  14.]
+</code></pre>
+
+<p>Sonuclardan birincisi her kutunun sinir noktalarini veriyor. 3 kutu
+olustur dedik (bins=3 ile) ve mesela 1. kutu 0 ile 13 arasinda
+olusmus, sonraki 23-26, vs. Kutular icinde  sirasiyla 13,13 ve 14 tane
+deger var. </p>
+
+<p>Eger kutu icindeki sayilari olasiliksal yogunluk degeri gibi gormek
+isteseydik, normed=True parametresini vermek lazim, </p>
+
+<pre><code>hst = plt.hist(range(40), normed=True,bins=3)
+
+print hst[0]
+</code></pre>
+
+<pre><code>[ 0.025       0.025       0.02692308]
+</code></pre>
+
+<p>Yogunluklar birbirine cok yakin tabii ki cunku verimiz 1-40 arasi
+sayilar. Dagilimi daha degisik olan bir veri uzerinde farkli sayilar
+gorurduk. Mesela orta noktasi 10, standart sapmasi 0.1 olan normal
+(gaussian) dagilmis / uretilmis sayilar uzerinden, </p>
+
+<pre><code>data = np.random.normal(mu,sigma,40)
+
+hst = plt.hist(data, normed=True,bins=3)
+
+print hst[0]
+
+print hst[1]
+</code></pre>
+
+<pre><code>[ 1.996045    4.19169449  1.7964405 ]
+
+[  9.79075557   9.91600325  10.04125093  10.1664986 ]
+</code></pre>
+
+<p>Orta noktada cok daha fazla yogunluk oldugunu goruyoruz, bu normal
+tabii cunku dagilim da normal (!). Not: yogunluk fonksiyonu 1'den
+buyuk degerler dondurebilir (ama kumulatif yogunluk donduremez). </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

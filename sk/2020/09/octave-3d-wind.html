@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Octave ile Ruzgar Verisi, wind.dat, Curl Ornekleri</h1>
+
+<p>Matlab ile <code>wind.dat</code> rüzgar verisi ilginç bazı analizler,
+grafiklemeler yapılabiliyor. Bu veri x,y,z kordinatlarında u,v,w ile
+bir vektör alanı tanımlıyor ki vektörler o noktalarda rüzgarın hızını
+gösteriyor. Matlab'ın <code>curl</code>, <code>div</code> örnekleri kodlanmış.</p>
+
+<p>Matlab örneklerinin bazılarını onun açık yazılım kardeşi Octave'a
+geçirdik, altta bu kodlar görülebilir.</p>
+
+<p>Veri [1]'den indirilebilir. </p>
+
+<pre><code>load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
+figure()
+cav = curl(x,y,z,u,v,w);
+slice(x,y,z,cav,[90 134],[59],[0]); 
+shading interp
+daspect([1 1 1]); axis tight
+colormap (hot);
+camlight
+print -djpg image1.jpg
+</code></pre>
+
+<p><img src="image1.jpg" alt="" /></p>
+
+<pre><code>figure()
+load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
+idx = [2  6  10  14  18  22];
+idz = [2 4 6 8];
+x = x(idx,idx,idz);y = y(idx,idx,idz);z = z(idx,idx,idz);
+u = u(idx,idx,idz);v = v(idx,idx,idz);w = w(idx,idx,idz);
+quiver3(x,y,z,u,v,w);
+view(-45,20)
+set(gca, 'Color', 'black');
+axis tight
+axis equal
+print -djpg image2.jpg
+</code></pre>
+
+<p><img src="image2.jpg" alt="" /></p>
+
+<pre><code>figure()
+load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
+wind_vel = sqrt(u.^2 + v.^2 + w.^2);
+slice(x,y,z,wind_vel,[80,90,100,110,120],Inf,Inf)
+axis equal
+shading interp 
+print -djpg image3.jpg
+</code></pre>
+
+<p><img src="image3.jpg" alt="" /></p>
+
+<pre><code>figure()
+load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
+xmin = min(x(:));
+xmax = max(x(:));
+ymin = min(y(:));
+ymax = max(y(:));
+zmin = min(z(:));
+daspect([2,2,1])
+xrange = linspace(xmin,xmax,8);
+yrange = linspace(ymin,ymax,8);
+zrange = 3:4:15;
+[cx cy cz] = meshgrid(xrange,yrange,zrange);
+hcones = quiver3(x,y,z,u,v,w);
+hold on
+wind_speed = sqrt(u.^2 + v.^2 + w.^2);
+hsurfaces = slice(x,y,z,wind_speed,[xmin,xmax],ymax,zmin);
+set(hsurfaces,'FaceColor','interp','EdgeColor','none')
+hold off
+axis tight; view(30,40); axis off
+print -djpg image5.jpg
+</code></pre>
+
+<p><img src="image5.jpg" alt="" /></p>
+
+<pre><code>figure()
+load ../../../calc_multi/calc_multi_70_div_curl_lap/wind
+k = 4;
+x = x(:,:,k); y = y(:,:,k); u = u(:,:,k); v = v(:,:,k);
+cav = curl(x,y,u,v);
+pcolor(x,y,cav); shading interp
+hold on;
+quiver(x,y,u,v,'y')
+hold off
+colormap copper
+print -djpg image6.jpg
+</code></pre>
+
+<p><img src="image6.jpg" alt="" /></p>
+
+<pre><code>x = -3:0.5:3;
+y = -3:0.5:3;
+[X,Y] = meshgrid(x, y);
+Z = Y.^2 - X.^2;
+[U,V,W] = surfnorm(Z);
+figure
+quiver3(X,Y,Z,U,V,W)
+view(-35,45)
+print -djpg image7.jpg
+</code></pre>
+
+<p><img src="image7.jpg" alt="" /></p>
+
+<p>İlginç bir örnek daha, iki noktada curl sonucunu grafikliyoruz,
+grafiğe sığması için okları <code>S</code> kadar küçülttük,</p>
+
+<pre><code>x = -0.8:0.2:1;
+y = -0.8:0.2:1;
+z = -0.8:0.8:1;
+[xx,yy,zz] = meshgrid(x, y, z);
+size(xx)
+u = sin(pi .* xx) .* cos(pi .* yy) .* cos(pi .* zz);
+v = -cos(pi .* xx) .* sin(pi .* yy) .* cos(pi .* zz);
+w = (sqrt(2.0 / 3.0) .* cos(pi .* xx) .* cos(pi .* yy) .*  sin(pi .* zz));
+h = quiver3(xx,yy,zz,u,v,w);
+set (h, "maxheadsize", 0.25);
+hold on;
+
+[CURLX, CURLY, CURLZ, CAV] = curl(xx,yy,zz,u,v,w);
+
+i=3;j=3;k=2;
+ci=CURLX(i,j,k)
+cj=CURLY(i,j,k)
+ck=CURLZ(i,j,k)
+S = 10.0;
+quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S); 
+hold on;
+
+i=4;j=4;k=1;
+ci=CURLX(i,j,k)
+cj=CURLY(i,j,k)
+ck=CURLZ(i,j,k)
+quiver3(xx(i,j,k),yy(i,j,k),zz(i,j,k),ci/S,cj/S,ck/S);
+hold on;
+
+view(-10,-10);
+
+print -djpg image8.jpg
+</code></pre>
+
+<p><img src="image8.jpg" alt="" /></p>
+
+<p>Curl kodu [5]'teki Octave kodunu kullanıyor, bu kodun basitleştirilmiş
+hali <a href="curl3.m">curl3.m</a> bağlantısında bulunabilir. Üstteki kod <code>curl</code>
+yerine <code>curl3</code> çağrısı yaparsa aynı şekilde işleyecektir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://github.com/burakbayramli/classnotes/blob/master/calc<em>multi/calc</em>multi<em>70</em>div<em>curl</em>lap/wind.mat</p>
+
+<p>[2] http://matlab.izmiran.ru/help/techdoc/ref/divergence.html</p>
+
+<p>[3] http://matlab.izmiran.ru/help/techdoc/ref/curl.html</p>
+
+<p>[4] https://www.mathworks.com/help/matlab/ref/quiver3.html</p>
+
+<p>[5] http://ab-initio.mit.edu/octave-Faddeeva/scripts/general/curl.m</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,239 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>PostgreSql</h1>
+
+<p>Bir süredir PostgreSql tabanı ile çalışmıyorduk, iş için gerekli oldu,
+kuvvetli bir taban. Ubuntu 11'de apt-get ile gelen en son versiyon 9.1
+Bu taban MySql gibi açık kaynak, ve anlatıldığına göre amaçları
+tamamen Oracle'ın yerine geçebilmek. O yüzden komutları Oracle
+komutlarına birebir uyumlu yaratıyorlar. Kurmak için</p>
+
+<p><code>sudo apt-get install postgresql</code></p>
+
+<p>Ama aslında versiyon numaralı kurmak daha iyi, bende işleyen versiyon</p>
+
+<p><code>sudo apt-get install postgresql-9.5</code></p>
+
+<p>Faydalı bazı komutlar şurada bulunabilir. PG postgres adlı bir Unix
+kullanıcısı için kurulacak o yüzden shell bazlı tüm PG komutları
+başında <code>sudo -u postgres</code> gerekli. Paket kurulunca bilgisayarınız
+başlayınca otomatik olarak başlamak üzere ayarlı olacak, açıp,
+kapatmak için</p>
+
+<p><code>sudo service postgresql [komut]</code></p>
+
+<p>ki <code>[komut]</code> <code>stop</code>, <code>start</code>, <code>restart</code> olabilir.</p>
+
+<p>Komut satırından <code>psql</code> kullanmak için</p>
+
+<pre><code>sudo -u postgres createuser --superuser $USER
+
+sudo -u postgres createdb $USER
+</code></pre>
+
+<p>Bu işlemden sonra üzerinde olduğunüz Ünix kullanıcısı ile <code>psql</code> ile
+tabanın komut satırına girebiliriz. Burada ek kullanıcılar yaratmak mümkün, mesela</p>
+
+<pre><code>CREATE USER user1 with PASSWORD 'user1pass';
+</code></pre>
+
+<p>Şimdi <code>psql</code> e üstteki kullanıcı ile giriş yapabiliriz, fakat <code>psql -U
+user1</code> ile mesela problem çıkarsa,</p>
+
+<pre><code>psql user1 -h 127.0.0.1 -d [taban ismi]
+</code></pre>
+
+<p>ile giriş yapabiliriz, üstteki stil ile Postgres'i network üzerinden
+bağlanmaya zorlamış olduk, diğer şekilde <code>user1</code> in Ünix üzerinde de
+olması şartı aranabiliyor.</p>
+
+<p>PG komut satırı içinde taban yaratmak,</p>
+
+<pre><code>create database TABAN111;
+</code></pre>
+
+<p>Tabana bağlanmak için <code>\c [taban ismi]</code>.</p>
+
+<p>Bir tabandaki tüm tabloları görmek için</p>
+
+<pre><code>\dt
+</code></pre>
+
+<p>CSV</p>
+
+<p>Postgres'den veri çekip veri yüklemenin en hızlı yollarından biri CSV
+temelli. Veri almak için</p>
+
+<pre><code>psql [taban ismi]  -h [makina] -p [port] -U [kullanici] -c "COPY (SELECT * from [tablo] where [sart]) TO stdout " &gt; [csv dosya ismi]
+</code></pre>
+
+<p>Ya da sql dosyasi icinde</p>
+
+<pre><code>copy( .. SELECT .. ) to '/tmp/out' with csv header
+</code></pre>
+
+<p>gibi bir kullanim olabilir. Dikkat: bu durumda komut postgres kullanicisi tarafindan isletilecektir, bu kullanicinin sizin $HOME dizininize erisimi olmayabilir, o yuzden ustte /tmp/ kullanildi. Uzaktaki bir makina uzerinde SQL komut satirinda</p>
+
+<pre><code>copy( .. SELECT .. ) TO STDOUT with CSV HEADER &gt; /tmp/out
+</code></pre>
+
+<p>ta kullanilabilir.  Ama en iyisi herhalde</p>
+
+<pre><code>psql [taban]  -h [makina] -p [port] -U [kullanici] -c "COPY (`cat komut.sql`) TO stdout with delimiter ',' CSV HEADER "  &gt; /tmp/out
+</code></pre>
+
+<p>Bu komut uzaktaki bir taban üzerinde bir SQL dosyası işletilir ve
+çıktıyı CSV olarak kaydeder. Parametrize edilmiş halde biz run_csv.sh
+adlı bir dosya içinde</p>
+
+<pre><code>psql taban  -h localhost -p 5432 -U postgres  -c "COPY (`cat $1`) TO stdout with delimiter ',' CSV HEADER "
+</code></pre>
+
+<p>kullanırız, ve <code>run_csv.sh dosya.sql &gt; out</code></p>
+
+<p>şeklinde bunu kullanabiliriz.</p>
+
+<p>Dosya yüklemek için</p>
+
+<pre><code>psql [taban] -c "COPY [tablo] FROM '[dosya ismi]'";
+</code></pre>
+
+<p>Uzak tabanlara bağlanmak: Eğer <code>-h</code> ile uzaktaki (remote) tabanlarda sIk
+olarak psql komutları veriyorsanız, ve habire şifre sorulmasından
+kurtulmak istiyorsanız, <code>.pgpass</code> tekniğini kullanabilirsiniz. Bu <code>$HOME</code>
+dizininizde olması gereken bir dosyadır, ve</p>
+
+<pre><code>makina:port:db:kullanici:sifre
+</code></pre>
+
+<p>formatındadır. Dosyanın <code>chmod 0600</code> yapılması gerekiyor. Not: eğer
+<code>psql</code> komutunu <code>sudo -u postgres</code> ile işletiyorsanız (ki uzaktaki bir
+makina için gerekli değil) o zaman .pgpass dosyasının sizin
+makinanızdaki postgres kullanıcısının ana dizininde olması gerekiyor,
+bizim makinamızda bu <code>/var/lib/postgres</code> diye bir yerdeydi (şu -
+<code>postgres</code> ile o kullanıcıya girerek kontrol edebilirsiniz). Tabii ki
+dosya <code>chown</code> ile <code>postgres</code>'e ait yapılmalı.</p>
+
+<p>Ben PG ile çalışırken çoğunlukla <code>run.sh</code> adlı bir script'i aynı dizinde
+tutarım. Bunun içinde mesela</p>
+
+<pre><code>psql dellstore2 -h localhost -p 5432 -U postgres &lt; $1
+</code></pre>
+
+<p>gibi bir satır olabilir, taban önceden tanımlanmıştır, çünkü
+genellikle geliştirme sırasında tek bir taban ile çalışırım, ve
+geliştirirken,</p>
+
+<pre><code>sh run.sh test.sql
+</code></pre>
+
+<p>gibi komutlar işletirim. Böylece üstteki sql dosyası direk belirtilen
+taban üzerinde işletilir. .pgpass içinde de</p>
+
+<pre><code>localhost:5432:dellstore2:postgres:[sifre]
+</code></pre>
+
+<p>ibaresi vardir.</p>
+
+<p>Eger <code>hstore</code> adli bir veri tipini kullanmak istiyorsaniz,</p>
+
+<pre><code>sudo -u postgres psql [taban]
+</code></pre>
+
+<p>ile girdikten sonra</p>
+
+<pre><code>CREATE EXTENSION hstore;
+</code></pre>
+
+<p>komutunu kullanabilirsiniz.</p>
+
+<p>Eğer yeni Ünix kullanıcılarına Postgres üzerinde admin hakları vermek
+istiyorsanız (ki bu eğer admin'şeniz kışisel hesabınız için iyi olur,
+yoksa pg_dump komutu bile kullanılamıyor), sudo -u postgres psql ile
+girdikten sonra</p>
+
+<pre><code>CREATE ROLE unix_kullanici_isminiz PASSWORD 'bir sifre' SUPERUSER CREATEDB CREATEROLE INHERIT LOGIN;
+</code></pre>
+
+<p>ile kullanıcınızı Postgres üzerinde süper kullanıcı yapabilirsiniz.</p>
+
+<p>Silmek</p>
+
+<p>Postgresql'i <code>apt-get remove</code> ile silmek ise yaramayabilir (hala PG
+süreçlerini işler gördük, silme işleminden sonra bile). Daha kuvvetli
+bir silme işlemi için</p>
+
+<pre><code>sudo apt-get --purge remove postgresql\*
+</code></pre>
+
+<p>Dış dünyaya PG bağlantısını 5432 portunu açmak istiyorsak,
+<code>/etc/postgresql/9.1/main/postgresql.conf</code> içinde</p>
+
+<pre><code>listen_addresses = '*'
+</code></pre>
+
+<p>tanımlanmış olmalı.</p>
+
+<p>GUI</p>
+
+<p>Sema, ana / yabancı anahtar, tablolar hakkında detaylı bilgiler, SQL
+işletmek için faydalı bir GUİ,</p>
+
+<p><a href="squirrel-sql.sourceforge.net">Squirrel</a>.</p>
+
+<p>Diğer Postgres Yazıları</p>
+
+<p><a href="../../2012/08/tabanlar-arasi-buyuk-veri-transferi.html">Tabanlar Arasi Buyuk Veri Transferi, pg_dump</a></p>
+
+<p><a href="../../2012/08/kolon-degerleri-arasinda-harfleme.html">Postgresql ve Levenhstein</a></p>
+
+<p><a href="../../2012/05/postgres-firstvalue-sum-partition.html">Postgres First_Value, Sum, Partition</a></p>
+
+<p><a href="../../2012/09/postgresql-ile-yuzdelik-percentile.html">Postgresql ile Yuzdelik (Percentile) Hesabi</a></p>
+
+<p><a href="../../2012/04/postgresql-db-baglantisi-dblink.html">Postgresql DB Baglantisi (dblink)</a></p>
+
+<p><a href="../../2012/04/plpython.html">Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython</a></p>
+
+<p><a href="../../2012/06/enlemler-boylamlar-ve-postgresql.html">Enlemler, Boylamlar ve PostgreSql PostGis</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

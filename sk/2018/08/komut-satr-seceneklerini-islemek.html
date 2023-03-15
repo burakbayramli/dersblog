@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Komut Satırı Seçeneklerini İşlemek (Command Line Option Processing), Python</h1>
+
+<p>Python script'lerine verilecek seçenekleri nasıl isleriz? İlk akla
+gelen sys üzerinden işlem yapmak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="nb">print</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>gibi.. Burada script ismi sys.argv[0] içinde, ilk argüman sys.argv[1],
+vs. Eğer len(sys.argv) dersek kaç tane seçenek verildiğini raporlar. </p>
+
+<p>Fakat bu seçeneklerden hangileri zorunlu, hangileri değil, hiç seçenek
+verilmeyince güzel bir hata mesajı verilse iyi olmaz mı, gibi
+ihtiyaçlar için argparse paketi kullanılabilir. Bir test.py icinde,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Bir program&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;arg1&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;arg1 tanimi.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;arg2&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;arg2 tanimi.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--arg3&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">bool</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;arg3.&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--arg4&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s2">&quot;?&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;arg4.&#39;</span><span class="p">)</span>
+
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="n">args</span><span class="o">.</span><span class="n">arg1</span>
+    <span class="nb">print</span> <span class="n">args</span><span class="o">.</span><span class="n">arg2</span>
+    <span class="nb">print</span> <span class="n">args</span><span class="o">.</span><span class="n">arg3</span>
+    <span class="nb">print</span> <span class="n">args</span><span class="o">.</span><span class="n">arg4</span>
+</code></pre>
+</div>
+
+<p>Eğer hiç seçenek vermeden çağırırsak </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">usage</span><span class="p">:</span> <span class="n">test</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="o">-</span><span class="n">h</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">arg3</span> <span class="p">[</span><span class="n">ARG3</span><span class="p">]]</span> <span class="p">[</span><span class="o">--</span><span class="n">arg4</span> <span class="p">[</span><span class="n">ARG4</span><span class="p">]]</span> <span class="n">arg1</span> <span class="n">arg2</span>
+</code></pre>
+</div>
+
+<pre><code>test.py: error: too few arguments
+</code></pre>
+
+<p>mesaji gelecek. Istesek <code>-h</code> ile tanımları raporlatabilirdik.</p>
+
+<p>Önünde <code>--</code> olan seçenekler isim verilmeden geçilebilir.</p>
+
+<pre><code>python test.py secenek1 secenek2
+</code></pre>
+
+<p>gibi. Önünde -- olan ve nargs="?" diyen seçenekler şart olmayan
+seçeneklerdir.</p>
+
+<pre><code>python -u test.py secenek1 secenek2 --arg3 secenek3 --arg4 secenek4
+</code></pre>
+
+<p>Sonuç</p>
+
+<pre><code>secenek1
+
+secenek2
+
+True
+
+secenek4
+</code></pre>
+
+<ol start="3">
+<li>seçeneğin True gelmesi doğru, çünkü tip tanımı da yapılabiliyor, ve
+o tipi bool olarak tanımlamıştık.</li>
+</ol>
+
+        </section>          
+      </div>
+    </body>
+</html>

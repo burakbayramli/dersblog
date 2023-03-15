@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Serviste İşleyen Komut Satırı - tmux</h1>
+
+<p>Bir Unix servis makinasına giriş yaptık, uzun süreli bir süreç
+(process) isletmek istiyoruz, ama giriş yapılan komut satırını açık
+bırakmak istemiyoruz (dizüstü kapatılacak, kalkılıp gidilecek, vs).</p>
+
+<p>İlk seçim komutu arka plana atarak (background process) olarak işletmek, </p>
+
+<pre><code>nohup sh komut.sh &gt; /bir/log/dizini/log.out &amp; 
+</code></pre>
+
+<p><code>&amp;</code> işareti ile süreç arka plana atıldı, çıktılar log dosyasına gidiyor.</p>
+
+<p>Bir diger secim tmux. Kurmak icin</p>
+
+<pre><code>sudo apt-get install tmux
+</code></pre>
+
+<p>Tmux ile oturum acmak icin</p>
+
+<pre><code>tmux
+</code></pre>
+
+<p>Bu oturumlar makinadan çıkılsa bile açık dururlar, kıyasla ssh, telnet
+ile giriş yaptığımızda yeni bir komut ortamına gireriz, çıkınca da
+ortam bitirilir, tmux durumunda komut ortamı sürekli açık
+kalır. Üstteki komut bizi bir pencereye götürür, orada uzun sürecek
+işlemi başlatabiliriz, ve işlem devam ederken </p>
+
+<pre><code>CTRL-b d
+</code></pre>
+
+<p>ile çıkabiliriz. Makinadan da çıkabiliriz, işlem devam edecektir,
+makinaya tekrar ssh ile girince</p>
+
+<pre><code>tmux list-sessions
+</code></pre>
+
+<p>ile oturumlari listeleyebiliriz. Mesela "0" oturumu var, </p>
+
+<pre><code>tmux attach -t 0
+</code></pre>
+
+<p>ile aynı ekrana bağlanırız, işleyen programı tekrar görürüz.</p>
+
+<p>Diğer komutlar için alttaki kaynağa bakılabilir,</p>
+
+<p>Kaynak</p>
+
+<p>https://www.digitalocean.com/community/tutorials/how-to-install-and-use-tmux-on-ubuntu-12-10--2</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

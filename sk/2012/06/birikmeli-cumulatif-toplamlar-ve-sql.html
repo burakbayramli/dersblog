@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Birikmeli (Cumulatif) Toplamlar ve SQL</h1>
+
+<p>Mesela dellstore2 tabaninda tum siparisler uzerindeki "aktif
+musterileri" bulmak istiyoruz. Aktif musterinin tanimi orders
+tablosunda olmaktan ibaret, o zaman tekil (unique) olarak</p>
+
+<pre><code>select count(distinct(customerid)) from orders
+</code></pre>
+
+<p>dersek, tum zamanlar icin gerekli rakami bulabiliriz. Fakat ya bize
+birikimsel (cumulative) olarak, ay bazinda yavas yavas buyuyen bir
+rakam bulmamiz istenseydi? O zaman Postgresql'in OVER (ORDER BY ...)
+numarasini kullanmamiz lazim. Dikkat, burada PARTITION komutu yok.</p>
+
+<p>Fakat aklimiza ilk gelen basit kodlamayi yaparsak</p>
+
+<pre><code>select 
+
+date_trunc('month',orderdate),
+
+sum(count(distinct(customerid)))
+   over (order by date_trunc('month',orderdate))
+
+from orders group by date_trunc('month',orderdate) 
+</code></pre>
+
+<p>dogru sonucu almadigimizi goreceksiniz. Sebep farkli aylardaki
+customerid kayitlarinin toplami sisirmesidir. Tekil musteri sayisini
+aradigimiz icin bu bize dogru sonucu vermiyor. O zaman her customerid
+icin tek bir tarih kullanmamiz gerekir, tercihen musterinin ilk
+yaptigi siparisin ay kismi kullanilabilir. Ornek</p>
+
+<pre><code>SELECT  OrderDate,SUM(COUNT(DISTINCT customerid)) OVER (ORDER BY OrderDate)FROM
+    (
+
+ SELECT CustomerID,
+        DATE_TRUNC('MONTH', MIN(OrderDate)) AS OrderDate
+        FROM
+    orders
+        GROUP BY CustomerID) AS ordersGROUP BY OrderDate
+</code></pre>
+
+<p>Goruldugu gibi min(..) ile customerid icin mumkun olabilecek en erken
+tarih alinmis. Bu kod toplami duzeltecektir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Doküman İndeksleme, Arama</h1>
+
+<p>Veri tabanlı indeksleme, arama mimarileri rekabetçi olmaya devam
+ediyor. Hard diskimde tuttuğum pdf, epub kitapları indekslemek için
+<code>recoll</code> yerine bir aracı kendim yazmak istediğimde ilk öne çıkan
+<code>whoosh</code> adlı bir kütüphane idi. Paket <code>whoosh</code> içerik indeksler, ve
+bir indeks dizini altında gerekli dosyaları yazar. Bu dosyalar
+<code>whoosh</code> için anlam ifade eden ikisel dosyalar, bu aslında bir
+negatif. Bu dosyaların idare edilmesi gerekli. Ayrıca whoosh ile
+güncelleme işlemleri biraz problemli.</p>
+
+<p>Sqlite3 içinde işleyen bir diğer çözüm, fts3 daha
+kullanışlı. İndeksleme için bir kolonu <code>fts3</code> tipinde tanımlamak
+yeterli, artık bu kolona konan her veri doküman arama yaklaşımıyla
+aranabilir.</p>
+
+<pre><code>import os
+
+db = "/tmp/books.db"
+if os.path.isfile(db): os.remove(db)
+conn = sqlite3.connect(db)
+c = conn.cursor()
+res = c.execute('''CREATE VIRTUAL TABLE BOOKS USING fts3(path TEXT PRIMARY KEY, content TEXT); ''')
+</code></pre>
+
+<pre><code>insert = "INSERT INTO BOOKS(path,content) VALUES('%s','%s');"
+c.execute(insert % ("book1.pdf",'SQLite is a software...'))
+c.execute(insert % ("book2.pdf",'All SQLite is source code...'))
+c.execute(insert % ("book2.pdf",'All is code...'))
+conn.commit()
+</code></pre>
+
+<pre><code>print ('ara 1')
+res = c.execute('''SELECT * FROM BOOKS WHERE content MATCH 'sqlite'; ''' )
+for x in res: print (x)
+print ('ara 2')
+res = c.execute('''SELECT * FROM BOOKS WHERE content MATCH 'source'; ''' )
+for x in res: print (x)
+print ('ara 3')
+res = c.execute('''SELECT * FROM BOOKS WHERE content MATCH 'is code'; ''' )
+for x in res: print (x)
+</code></pre>
+
+<pre><code>ara 1
+('book1.pdf', 'SQLite is a software...')
+('book2.pdf', 'All SQLite is source code...')
+ara 2
+('book2.pdf', 'All SQLite is source code...')
+ara 3
+('book2.pdf', 'All SQLite is source code...')
+('book2.pdf', 'All is code...')
+</code></pre>
+
+<p>Veri taban semantiği aslında döküman indeksleme için çok uygun. Bir
+"dokümanı" indeksten çıkartmak için o dokümanın olduğu satırı tabandan
+bildik SQL komutları ile sileriz. Ya da güncelleriz.</p>
+
+<p>Bir tabanı temsil eden tek bir dosyayı kopyaladığımda indeks bilgisi o
+taban ile beraber gider. Whoosh ile ayrı dizindeki (bozulmaya açık)
+bir takım anlamsız  dosyalar yok.</p>
+
+<p>Performans oldukca iyi. Bu şekilde on milyonlarca satırı, belgeyi
+indekslemiş projeler var.</p>
+
+<p>Sqlite3 direk Python 3 içine dahil, <code>pip install</code> ile kurmaya bile gerek yok.</p>
+
+<p>Not: kendi kullanımım için yazdığım arama programı "loogle"
+<a href="https://github.com/burakbayramli/kod/tree/master/loogle">şurada</a>.</p>
+
+<p>Not: Bu fts3 yaklaşımı bir zamanlar MySQL'de sevilen <code>FULLTEXT</code>
+kolon kullanımı ile benzeşiyor.</p>
+
+<p>Kaynak</p>
+
+<p><a href="https://www.sqlite.org/fts3.html">https://www.sqlite.org/fts3.html</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

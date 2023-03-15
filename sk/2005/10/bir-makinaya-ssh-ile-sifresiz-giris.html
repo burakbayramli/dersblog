@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Bir Makinaya SSH ile Şifresiz Giriş</h1>
+
+<p>Bir makinadan diğerine hem şifresiz hem de güvenli bir şekilde girip,
+orada komut işletmek, ya da oraya dosya kopyalamak için iki program
+vardır: ssh ve scp. Kullanmak için komut satırından (<code>ssh</code> için)</p>
+
+<pre><code>ssh host1 -l remoteuser
+</code></pre>
+
+<p>komutunu kullandığınızda <code>host1</code> adlı makinaya <code>remoteuser</code>
+kullanıcısı üzerinden login etmiş olurzzzz. Ya da uzak makinada bir
+komut işletip sonucunu kendi makinanıza almak isterseniz (meselâ
+ikinci makinada listeleme komutu olan ls işletelim), şunu yaparız</p>
+
+<pre><code>ssh host1 -l remoteuser ls
+</code></pre>
+
+<p>Eğer uzak makinaya bir dosya kopyalamak istersek</p>
+
+<pre><code>scp file.txt remoteuser@host1:/tmp
+</code></pre>
+
+<p>Bu komut ile uzaktaki makinaya sanki yerel dizinlerimiz arasında dosya
+kopyalıyormuş kadar rahat bir şekilde bir dosya
+kopyalayabiliyoruz. Girişte bahsettiğimiz ba- sit teknik işte
+budur. ssh ve scp bir kez kurulduktan sonra, uzaktaki makina, yerel
+makinanızın bir uzantısı hâline gelir. Bir makinayı uzaktan idare
+etmek demek, ya bir dosya değişimi, ya da bir komut işletmek demek
+olduğu için, bu iki programı kullanarak uzaktaki bir makinada
+yapamayacağımız şey yoktur.</p>
+
+<p>Şifresiz Kullanımı Kurmak</p>
+
+<p>Eğer ssh’i hiçbir ek ayar yapmadan kullanırsanız, (ilk kurduğumuz haliyle)
+her kullanışınızda size bir şifre sorulacaktır. Aynı şekilde scp komutu da böyle
+davranır. Fakat, biz meselâ yüz tane makina için arka arkaya scp ya da ssh
+kullanmamız gerekeceği için, şifre isteme işlemini iptal edip, güvenlik kon-
+trolünü kullanıcıya sorulmayan başka bir şekilde yapmamız gerekiyor. Bu yöntem
+de, açık / gizli (public / private) anahtarlar kullanarak yapılan güvenlik kon-
+trolüdür.</p>
+
+<p>Windows üzerinde ssh ve scp’nin işler kodlarını kurmayı, A.8 bölümünde
+bulabilirsiniz. Linux üzerinde ssh ve scp genellikle otomatik olarak kurulur,
+eğer kurulmamışsa, Linux kurulum disklerinizde bu programı bulabilirsiniz, ya
+da admin’inize bu programları kurdurabilirsiniz.</p>
+
+<p>Açık / gizli anahtar kurulumunu yapmak için şunları yapın: İlk önce kod
+gönderimi ya da uzaktan idareyi yapan yerel makinamızı tanıtan bir gizli
+anahtar, bir de açık anahtar üretmemiz gerekiyor.</p>
+
+<pre><code>$ ssh-keygen -t rsa
+</code></pre>
+
+<p>Sorulan sorular için hiç cevap girmeden ENTER’e basarak geçin. Bu
+bittikten sonra, <code>$HOME/.ssh/</code> dizininiz icinde 2 dosya
+göreceksiniz. Bu dosyalar id<em>¬ rsa.pub ve id</em>rsa dosyaları
+olacaktır. HOME değişkeninin nerede olduğunu ko- mut satırından
+Unix/Cygwin’de echo \$HOME ile öğrenebilirsiniz. Windows’da dosyaların
+nereye yazıldığı OpenSSH tarafından zaten ssh-keygen sonunda size
+bildirilecektir.</p>
+
+<p>Biraz önce üretilen dosyalardan <code>id_rsa</code>, gizli anahtarınızdır. Dosya
+<code>id_rsa.pub</code> ise açık anahtarınızdır. Şimdi, <code>id_rsa.pub</code> kayıdındaki
+açık anahtarı, uzaktan erişeceğiniz servis bilgisayarına FTP ya da scp
+ile gönderin (scp kullanırsanız, -şimdilik- şifre girmeniz gerekecek
+tabii ki). Sonra, uzaktaki bilgisa- yardaki kullanacağınız kullanıcı
+hesabına girin, hesabın üst seviyesinde <code>$HOME/.ssh/</code> dizini altına
+id_rsa.pub kayıdını bırakın. Sonra, servis sisteminde</p>
+
+<pre><code>cat &gt; $HOME/.ssh/id_rsa.pub &gt;&gt; authorized_keys
+</code></pre>
+
+<p>komutunu calıştırın. Kuruluş işlemi bundan ibarettir. Bu son işlemden
+sonra artık uzaktan işlettiğiniz ssh ve scp işlemleri şifresiz bir
+şekilde işinizi yapmanıza izin verecektir.</p>
+
+<p>Açık anahtarımızı servis makinasına eklemek için, Unix cat komutu ile
+<code>&gt;&gt;</code> işlecini kullandığımıza dikkat edelim. Bu demektir ki, birden
+fazla .pub dosyasına tek bir authorized_keys dosyasına ekleyebiliriz
+(ve birden fazla kullanıcıyı desteklebilmek için bunu yapmamız
+gerekir). Böylece aynı makinaya erişen birden fazla erişen kişi, aynı
+servis makinasına ve aynı kullanıcıya değişik açık anahtarlar ile
+erişebilir. Bkz [2] </p>
+
+<p>Uzak Dosya Erişimi</p>
+
+<p>Uzaktaki makinanın herhangi bir dizin hiyerarşisini belli bir
+noktasından alıp, <code>ssh</code> üzerinden bizim yerel makinadaki bir boş
+dizine "montelemek (mount)" mümkün, <code>sshfs</code> ile. Kurmak için</p>
+
+<pre><code>sudo apt-get install sshfs
+</code></pre>
+
+<p>Şimdi mesela ben yerel <code>user1</code> kullanıcısı olayım,
+<code>/home/user1/Downloads/uzak</code> boş dizinine (yoksa yaratırım)
+192.168.1.1 makinasındaki <code>/home/ahmet/Documents</code> dizinini monteleyelim,</p>
+
+<pre><code>sudo sshfs -o allow_other,default_permissions burak@192.168.1.1:/home/ahmet/Documents /home/user1/Downloads/uzak
+</code></pre>
+
+<p>Önce kendi (root kabüllü) şifreniz, sonra uzaktaki makinanın şifresi
+sorulacak. Girince işlem tamamlanır, <code>mount</code> komutuyla montelenen
+dizinler listesinde uzaktaki makina artık görülmelidir</p>
+
+<p>Artık kendi <code>/home/user1/Downloads/uzak</code> dizinime gittiğimde, uzaktaki
+<code>/home/ahmet/Documents</code> dizinini görürüm, hangi programı kullanırsam
+kullanayım bu işler.</p>
+
+<p>Eski Anlatım</p>
+
+<p>SSH gizli/açık anahtar kavramına göre çalışır (public/private key
+encryption). Uzak bir makinada şifresiz giriş yapmak, komutlar
+işletmek, ve scp ile şifresiz kopyalama yapmak için, şunları yapmamız
+lâzım.</p>
+
+<p>Kendimiz için bir gizli/açık anahtar çifti yaratmak için şu komutu
+çalıştırın.</p>
+
+<pre><code>$ ssh-keygen -t rsa
+</code></pre>
+
+<p>Sorulan sorular için hiç cevap girmeden ENTER'e basarak geçin.</p>
+
+<p>Bu bittikten sonra, $HOME/.ssh/ dizini icinde 2 dosya
+göreceksiniz. id<em>rsa.pub ve id</em>rsa. ($HOME'un nerede olduğunu
+Cygwin'den ya da Linux komut satırından echo $HOME ile
+öğrenebilirsiniz). Bu kayıtlardan id<em>rsa isimli olan sizin gizli
+anahtarınızdır, id</em>rsa.pub ise açık anahtarınızdır. Şimdi, id<em>rsa.pub
+kayıdını, erişeceğiniz bilgisayara (meselâ CVS havuzunu tutan
+bilgisayara) scp ya da ftp ile gönderin (scp kullanilinca simdilik
+sifre sorulacak). O bilgisayardaki kullanıcı adınız altında girin, ve
+$HOME/.ssh/ dizini altına id</em>rsa.pub kayıdını bırakın.</p>
+
+<p>Sonra, sunucu sisteminde sunu calıştırın:</p>
+
+<pre><code>cat $HOME/.ssh/id_rsa.pub &gt;&gt; authorized_keys
+</code></pre>
+
+<p>Kutlarım. Artık ssh ya da CVS komutları kullanırken şifreye
+ihtiyacınız olmayacak. Artık <code>ssh kullanıcı@makina</code> ile şifresiz
+yapabiliriz, hatta <code>ssh kullanıcı@makina komut</code> ile uzaktaki
+makinadaki bir programı başlatıp sonuçlarını direk kendi makinamızda
+görebiliriz.</p>
+
+<p>Unix <code>cat</code> komutu ile <code>&gt;&gt;</code> işlecini kullandığımıza dikkat edin. Bu
+demektir ki, birden fazla .pub dosyasına tek bir authorized_keys
+dosyasına ekleyebiliriz. Yâni, birden fazla erişen kişi, aynı servis
+makinasına ve aynı kullanıcıya değişik açık anahtarlar ile erişebilir.</p>
+
+<p>Önemli bir ek detay, servis tarafındaki authorized<em>keys dosyasının
+güvenliğinin çok fazla açık olmamasıdır. Eğer dosyanın Unix bazında
+güvenliği çok açıksa, sshd bağlanmaya çalışan ssh/scp komutunu bir
+şifre girmeye zorlayacaktır. authorized</em>keys dosyasının yeterince
+kapalı hale getirmek için</p>
+
+<pre><code>chmod 600 authorized_keys
+</code></pre>
+
+<p>Çift Anahtar Bazlı Şifresiz Giriş Ne Kadar Güvenli?</p>
+
+<p>Bu kullanım güvenli, çünkü bir korsan, servis bilgisayarına sadece ve
+sadece id_rsa dosyasına sahipse başarabilir. Bu dosya da, sizin
+bâğlanan bilgisayarınızda duruyor olacaktır, ve o dosyayı almak için
+bâğlanan bilgisayara, (yâni ssh-keygen komutunu işlettiğiniz
+bilgisayara) sızılması gerekecektir. Demek ki akılda tutulması gereken
+kıstas şudur: Çift anahtar yaklaşımını kullanarak iki makina arasında
+şifresiz giriş kurduğunuzda, bağlanılan makina, bağlanan makinanın
+güvenli olduğu kadar güvenli olacaktır.</p>
+
+<p>Sorun Çıkarsa</p>
+
+<p>Bazı tipik kuruluş problemleri şunlar oluyor. SSH bağlanamama
+problemlerinde, sunucu bilgisayarında sshd programınının calıştığını
+kontrol edin. "ps -eaf | grep sshd" ile bunu kontrol edebilirsiniz.</p>
+
+<p>Bağlanan bilgisayarlarda Cygwin'e özel bir problem de Windows'da
+çıkabiliyor. Bunun tarifi ve tamiri de şöyle:</p>
+
+<p>Cygwin ssh programı (OpenSSH), gizli anahtarın üzerindeki erişim
+haklarının "kullanıcıya özel" olmasını istiyor. Bu normal tabii çünkü
+bu anahtar gizli, ve her kullanıcı tarafından okunamaması lâzım.</p>
+
+<p>Hata şöyle:</p>
+
+<p>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@</p>
+
+<p>Permissions 0644 for '/cygdrive/h/.ssh/id_rsa' are too open.</p>
+
+<p>It is recommended that your private key files are NOT accessible by
+others.</p>
+
+<p>This private key will be ignored.</p>
+
+<p>Hiç problem degil (diye düşünüyoruz) chmod, vs. iş biter. Bir tek
+problem, Windows ve Unix erişim hakları yöntemleri uyuşmaması. Chmod'u
+çalıştırdığınızda, komut bir sey yapmış gibi geri geliyor, fakat
+dosyada bir değişiklik olmuyor. Unix dosya haklarının Cygwin'de
+"simule" edilmesi için, cygwin.bat içine şunu eklemek lazım.</p>
+
+<pre><code>set CYGWIN=tty ntea
+</code></pre>
+
+<p>Bundan sonra</p>
+
+<pre><code>$ chmod 0600 id_rsa
+</code></pre>
+
+<p>.. ve bundan sonra ssh ve scp komutlarınız düzgün çalışacak.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh</p>
+
+<p>[2] [Youtube Video](https://youtu.be/V_ukbRUdcGU?t=69)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

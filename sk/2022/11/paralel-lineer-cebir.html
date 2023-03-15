@@ -1,0 +1,605 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Paralel Lineer Cebir</h1>
+
+<p>Lineer cebirdeki pek çok işlemi paralel şekilde işletmek mümkün. Altta
+bazı örnekler üzerinde göreceğiz. Paralelleştirme yolunda kullanılacak
+ana yaklaşım [4]'teki olacak - veri, burada matris verisi, satır satır
+işlenecek (her işlem tek bir satırı hafızaya getirecek) ve tüm
+satırlar parçalar halinde farklı çekirdeklerde (ya da makinalarda)
+paylaştırılacak.</p>
+
+<h3>Matris Çarpımı</h3>
+
+<p>Standart matris çarpımını azar azar (incremental) şekilde paralelize
+etmek zordur. Bize bir matrisi satır satır işlememizi sağlayacak bir
+yaklaşım gerekiyor. [3]'e danışırsak oradaki "satır kombinasyon bakış
+açısı" bize uygun gözüküyor, çünkü bu yöntemle A çarpı B deki A'yı
+azar azar işlemek mümkündür, her A satırı için bir sonuç satırı
+üretilebilecektir. Çarpım yöntemleri [1]'de yazıda da ve animasyonları
+ile işlenmiş, bizim istediğimiz alttakidir. Kırmızı matris A, mavi
+olan B, sonuç C ise yeşil matris içindedir.</p>
+
+<p><img src="carpim1.gif" alt="" /></p>
+
+<p>Gittikçe kararan yeşil hücreleri oraya yapılan toplam sebebiyle.</p>
+
+<p>A'yı satır satır aldık bu tamam. Fakat B'ye olacak? Ne yazık ki her A
+satırı için B'nin tamamı baştan sona gezilmeli. Bundan kaçış yok,
+zaten matris çarpımı O(N^3) çetrefilliğindeki bir operasyondur,
+standart kodlama üç tane iç içe döngü içerir, bunun sonucu olarak her
+satırda B'nin başa sarılması gerekecektir.</p>
+
+<p>Şimdi B için de satır gezme yaklaşımı düşünmeden önce, problemde bir
+basitleştirme yapalım; A, B matrisleri sırasıyla M x D ve D x N
+boyutlarında diyelim, ve farzedelim ki "çok olan" büyüklük M, D
+nispeten büyük ama fazla değil, N ise potansiyel olarak D'den küçük.</p>
+
+<p>Bu tür verileri mesela Büyük Veri problemlerine sürekli görüyoruz, M
+sayısı milyarlarca (satır) olabilir, veri noktaları bunlardır, verinin
+değişken boyutu ise D, yaş, boy, kilo gibi mesela özellikler
+(features) bu değişkenlerde, çok sayıda olabilirler ama milyarlarca
+değil, N ise daha ufak bir boyut. Örnek uygulama rasgele matris
+çarpımı ile boyut küçültme olabilir, milyarlarca satır binlerce kolon
+olabilecek A'yı bir D x N boyutundaki B ile çarpıyoruz, mesela eğer
+N=100 ise çarpım sonucu A x N kolon boyutu azalmış hale geliyor.</p>
+
+<p>Basitleştirme şurada; üstteki türden bir kullanım için B matrisinin
+tamamını, her çekirdek için, hafızaya alabiliriz. Eğer B matrisi
+milyarlarca satır / kolon içeriyor olsaydı bu olamazdı ama faraziyeye
+göre B'nin binlerce satırı ve çok az kolonu olacak. </p>
+
+<p>B hafızaya alınabilirse artık bazı <code>numpy</code> özelliklerinden
+faydalanabiliriz. Mesela, animasyonda da görüyoruz, bir A satırının
+her hücresi gezilirken oradaki değer alınıp bir B satırı ile
+çarpılıyordu. Bu çarpımı işlenen tüm A satırı ve tüm B matrisi için
+bir kerede yapabiliriz. Alttaki kod örneğine bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]])</span><span class="o">.</span><span class="n">T</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">a</span><span class="p">);</span> <span class="nb">print</span> <span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">B</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">((</span><span class="n">a</span><span class="o">*</span><span class="n">B</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[1]
+ [2]
+ [3]]
+[[3 4 5]
+ [1 1 1]
+ [2 2 2]]
+[[3 4 5]
+ [2 2 2]
+ [6 6 6]]
+[11 12 13]
+</code></pre>
+</div>
+
+<p>Dikkat <code>*</code> kullanıldı, <code>numpy.dot</code> değil. Çarpım sonucu elde edilen
+matrisin tüm satırlarının toplamı yine <code>numpy</code> üzerinden, basit bir
+<code>sum(axis=0)</code> ile hesaplanabilir.</p>
+
+<p>Tabii eklemek gerekir ki üstte tarif edilenler aslında <code>numpy.dot</code> işleminin
+ta kendisidir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">B</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[11 12 13]]
+</code></pre>
+</div>
+
+<p>Olan işlemleri teker teker göstermek için detaylı bir anlatıma girdik, ama
+B'nin hafızada olduğu durum için klasik matris çarpımı da işleyecektir.</p>
+
+<p>Şimdi örnek veriyi üretelim. Bunlar rasgele matrisler olacak. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">M</span> <span class="o">=</span> <span class="mi">1</span><span class="o">*</span><span class="mi">1000</span><span class="o">*</span><span class="mi">1000</span><span class="p">;</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span> <span class="n">N</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">D</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;/tmp/A.csv&#39;</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">D</span><span class="p">,</span><span class="n">N</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;/tmp/B.csv&#39;</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Pür <code>numpy</code> ile A çarpı B işlemini yapalım, bu işlem hafızada olacaktır.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/A.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/B.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;/tmp/C2.csv&#39;</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;elapsed time&#39;</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>elapsed time 0:01:24.053847
+</code></pre>
+
+<p>Bir milyon satır ve 100 kolonun 100 satır ve 30 kolon içeren B ile
+çarpılması 1 dakika 24 saniye aldı.</p>
+
+<p>Aynı işlemi paralel, ve satır satır yaklaşımı ile yapalım, alttaki kod
+[4]'teki altyapıyı kullanmıştır,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">class</span> <span class="nc">MultJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">,</span><span class="n">bfile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">afile</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">bfile</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
+        <span class="n">cname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/C-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">afile</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>        
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>        
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)])</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">vec</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  
+        <span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">res</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;/tmp&#39;</span>
+<span class="n">afile</span> <span class="o">=</span> <span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="s2">&quot;A.csv&quot;</span>
+<span class="n">bfile</span> <span class="o">=</span> <span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="s2">&quot;B.csv&quot;</span>
+
+<span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">4</span> <span class="c1"># kac paralel islem var</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">afile</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">MultJob</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">bfile</span><span class="p">)))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;elapsed time&#39;</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>    
+</code></pre>
+</div>
+
+<pre><code>elapsed time 0:00:55.157166
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">cat</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">C</span><span class="o">-*.</span><span class="n">csv</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">C3</span><span class="o">.</span><span class="n">csv</span>
+</code></pre>
+</div>
+
+<p>Bizim yaklaşım daha hızlı işledi. Acaba sonuçlar birbirine yakın mı?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span>
+<span class="n">C2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/C2.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">C2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">C3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/C3.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">C3</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">mdiff</span> <span class="o">=</span> <span class="n">C2</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">-</span><span class="n">C3</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">sdiff</span> <span class="o">=</span> <span class="n">C2</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">-</span><span class="n">C3</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">mdiff</span><span class="p">,</span> <span class="n">sdiff</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>(1000000, 30)
+(1000000, 30)
+6.320988177321851e-11 0.00189208984375
+</code></pre>
+
+<p>Oldukça yakın. Farklılıklar ufak yuvarlama farklılıkları, ya da
+verinin her iki yöntem için de okunup yazılırkenki kaybedilebilecek
+noktadan sonraki bazı değerleri sebebiyle olabilir.</p>
+
+<p>Pür bellek durumunda çarpım <code>numpy</code> ile yapılırken çekirdekleri
+gözledik, tüm çekirdekler kullanılıyordu, kullanıcı yorumlarına
+bakılırsa bazı Python ve <code>numpy</code> versiyonlarında paralellik
+vardır. Demek ki bizim eşzamanlı kodlama <code>numpy</code> eşzamanlı kodlamasını
+geçti.</p>
+
+<p>Fakat bir diğer önemli ilerleme şuradadır; Eğer A satır sayısını bir
+milyondan iki milyona çıkartacak olsak pür hafıza kullanan yaklaşım
+kullanılmaz hale gelir çünkü artık A matrisi tamamen bellege sığmaz.
+Kıyasla azar azar alıp işleyen üstteki yaklaşım banamısın demez, çünkü
+A büyüklüğü ne olursa olsun her seferinde onun sadece tek satırını
+işliyoruz, eh zaten B'yi belleğe sığar kabul ettik, o zaman veri ne
+kadar büyürse büyüsün bizim işlem yapmamız mümkündür. İşte Büyük Veri
+bu tür yaklaşımlar sayesinde başedilebilir hale gelmiştir.</p>
+
+<p><a name='random'/></p>
+
+<h3>Rasgele Matris Çarpımı</h3>
+
+<p>Bir matrisin boyutlarını azaltmak için bir teknik onu sıfır merkezli
+ve 1 varyanslı Gaussian dağılımından gelen rasgele sayılarla dolu bir
+matris ile çarpmaktır. A matrisi m x n ise bir rasgele matris Omega
+yaratabiliriz, n x k boyutunda, ve Y = A Omega sonucundaki m x k
+matrisinin satırlararası mesafeleri muhafaza edilmiş olur. Ornegi
+[6]'da goruluyor.</p>
+
+<p>Paralel işlem bağlamında, ve üstteki çarpım tekniğinden devam etmek
+gerekirse, bir kolaylaştırma amaçlı olarak B hafızaya alınabilir
+demiştik. Şimdi işleri biraz zorlaştıralım, rasgele izdüşümü yapacağız
+ama diyelim n o kadar büyük ki bir n x k matrisi bile <em>hafızada tutulamıyor</em>.</p>
+
+<p>Burada rasgele matris çarpımlarının avantajlı bir tarafı bize yardım
+eder, rasgele matris üretici kodları hep yarı-rasgele sayı üretici
+(pseudonumber) kullanırlar, bu üreticilerin bir algoritmasi var, bu
+algoritma basit toplama, mod, gibi işlemler kullanır bu sebeple sabit
+zamanda O(1) hızında çalışır. O zaman doğru yaklaşımla rasgele matrisi
+satır satır anında yaratabiliriz.</p>
+
+<p>Tabii dikkat etmek lazım, rasgele B matrisi dedik ama bu matris tabii
+ki her A satırı için <em>aynı</em> rasgele matris olmalı. O zaman her A
+satırı ile işimiz bittiğinde rasgele sayı üreticini,
+<code>np.random.seed()</code> ile tohumunu biz dışardan tanımlarsak, o zaman aynı
+rasgele sayıların B için satır satır tekrar baştan yaratılmasını
+sağlayabiliriz. Böylece</p>
+
+<ul>
+<li><p>Tüm B matrisini hafızada tutmaya gerek yok</p></li>
+<li><p>Her seferinde aynı rasgele B satırını aynı şekilde elde etmemiz
+mümkün çünkü B üretmeden önce tohumu başa döndürüyoruz.</p></li>
+</ul>
+
+<p>Ufak örnek bir kod üzerinde görelim, ufak bir A kullandık fakat onun
+üzerinde satır satır gezerek, büyük ölçekte olanları gösterebiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span> <span class="n">s</span> <span class="o">+=</span> <span class="n">elem</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="n">k</span><span class="p">)</span> <span class="c1"># B satirlari</span>
+    <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">Y</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[ 5.37286554  1.99697429  3.17910494]
+ [26.8353954  11.03858053  8.58916398]
+ [48.29792526 20.08018678 13.99922301]
+ [69.76045512 29.12179302 19.40928205]
+ [91.22298497 38.16339927 24.81934109]]
+</code></pre>
+</div>
+
+<p>İzdüşümü yapılmış yeni matris budur. Paralel kodu yazalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="k">class</span> <span class="nc">RandomProjJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/Y-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>        
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+        <span class="n">toks</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">row</span><span class="p">:</span> <span class="n">s</span> <span class="o">+=</span> <span class="n">elem</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span> 
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">infile</span> <span class="o">=</span> <span class="s1">&#39;../../../linear/linear_app10rndsvd/w1.dat&#39;</span>
+<span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">infile</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">RandomProjJob</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">infile</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">RandomProjJob</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">cat</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">Y</span><span class="o">-*</span> <span class="o">&gt;</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">Y</span><span class="o">.</span><span class="n">csv</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/Y.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(71, 7)
+</code></pre>
+</div>
+
+<p>Orijinal veriye bakarsak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(71, 30)
+</code></pre>
+</div>
+
+<p>Üstteki kodun tüm B'yi hafızada tutmasına gerek yok, bir döngü içinde
+her seferinde sadece k boyutlu bir vektörü hafızada yaratıyor.</p>
+
+<p>Satırlararası mesafeler,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclid&#39;</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclid&#39;</span><span class="p">)</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">d2</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d2</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">d1</span><span class="p">),</span><span class="n">d1</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">d2</span><span class="p">),</span><span class="n">d2</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">d1</span><span class="o">-</span><span class="n">d2</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>0.00019837333862328903 (71, 71)
+0.00019837333862328903 (71, 71)
+4.013403527124087e-06
+</code></pre>
+</div>
+
+<p>Mesafeler muhafaza edilmişe benziyor.</p>
+
+<h3>A Devriği Çarpı A</h3>
+
+<p>A'A çarpımı lineer cebir, istatistikte faydalı olabilecek bir işlem;
+özellikle "uzun boylu, zayıf" A matrisleri için, yani çok sayıda
+satırı ama az sayıda kolonu olan matrislerde bu çarpım ufak bir
+matrisi hesaplar. Mesela A boyutları M x D ise, D x M ve M x D matris
+çarpımı bize D x D boyutunda bir kare matris verecektir, D ufak ise D
+x D sonucu da ufaktır.</p>
+
+<p>Paralel işletmek için üstteki çarpımı biraz değiştirmek
+gerekli. Unutmayalım, paralel işlemde her zaman çok fazla satırı azar
+azar işlemek istiyoruz, o zaman A matrisini işlemek lazım. Fakat A'yı
+gezerken A devriğinin kolonlarını gezdiğimiz bilgisiyle gerekli
+işlemleri yapmak lazım.</p>
+
+<p>Önceki animasyona bakarsak soldaki matriste bir satırda soldan sağa
+doğru gidiliyordu. Fakat yeni durumda A satırlarını gezerken, bir
+bakıma A' kolonlarını geziyoruz. Ayrıca her kolona geldigimizde o
+kolonun tüm öğelerine sahibiz.</p>
+
+<p>Her kolonun bir ögesini tüm kolon ile çarpınca bize sonucun bir satırı
+verilir. Bunu tüm öğeler için yaparsak tüm bir matris elde
+ederiz. Tabii ki bu matris sonuçlarına ekler olmalıdır, bir sonraki A'
+kolonundan gelen yeni bir matris ilk toplama eklenir. Böyle devam
+eder, ta ki tüm A satırları (A' kolonları) bitene kadar.</p>
+
+<p><img src="carpim2.png" alt="" /></p>
+
+<p>Üstteki resimde ilk A' kolonu işlendikten sonraki sonucu görüyoruz.
+İlk kolonun tamamını kullanıyoruz bu sebeple tüm kolon koyu kırmızı,
+ve oradan gelen sonuçlar tam bir matris veriyor, bu sebeple sonuç açık
+yeşil (tüm hücrelerde biraz toplam yapılmış). A' matrisinde bir
+sonraki kolona geçilince oradan yeni bir matris elde edilecek, sağdaki
+yeşil matris biraz daha koyu yeşil hale gelecek.</p>
+
+<p>Bu işlemi paralelleştirmek mümkün, çünkü toplam sırabağımsız bir
+işlem, elde N tane parça var ise her birinden bir alt toplam D x D
+matrisi olarak gelir, N tane toplam matrisi birbiriyle toplanır ve
+nihai sonuç elde edilir.</p>
+
+<p>Her A' kolonu için matris sonucu nasıl elde edilir? Bir defasında tüm
+A' satırlarına sahibiz demiştik, orada her hücre tüm A' satırı ile
+teker teker çarpılır, bu çarpımlar birbirine yapıştırılarak matris
+elde edilir. Fakat sonuçta çarpılan ve çarpan hep aynı vektör içinde.
+Bu bize bir lineer cebir demirbaş işlemini hatırlatabilir: dış çarpım
+(outer product). Kütüphane <code>numpy.outer</code> ile her A' kolonu için
+gereken matrisi tek bir çağrıda elde edebiliriz. Altta ufak bir örnek
+üzerinde görüyoruz. Bu örnek gezme ve dış çarpım işlemlerini göstermek
+için yazıldı, hala paralel, veriyi dosyadan teker teker okuma
+özelliklerine sahip değil, fakat gereken işlemlerin sırasını görmek
+için faydalı olabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span>
+     <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span>
+     <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],</span>
+     <span class="p">[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">]]</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+
+<span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+  <span class="n">s</span> <span class="o">=</span> <span class="n">s</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,:],</span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">s</span><span class="p">)</span>    
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[ 62.  76.  90.]
+ [ 76.  94. 112.]
+ [ 90. 112. 134.]]
+</code></pre>
+</div>
+
+<p>Aynı işlemi direk yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span><span class="n">A</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[ 62  76  90]
+ [ 76  94 112]
+ [ 90 112 134]]
+</code></pre>
+</div>
+
+<p>Aynı sonucu aldık.</p>
+
+<p>Paralel versiyon üstteki kodun ruhunu takip edecek, her eşzamanlı
+süreç yine (kendi parçası içinde) satırları gezecek, her satır kendisi
+ile dış çarpıma tabi tutulacak, sonuç matrisleri her eşzamanlı süreç
+içinde toplanacak. Paralel durumda ayrıca ek olarak tüm süreçler
+işlemini bitirdikten sonra her sürecin toplam matrisi alınıp bir daha
+birbiri ile toplanacak, ve nihai matrisi elde edilecek.</p>
+
+<p>Kodlamaya gelirsek, veri yaratalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">M</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">D</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;/tmp/A.csv&#39;</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span><span class="n">A</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s1">&#39;/tmp/Cf-1.csv&#39;</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Paralel kodlar için yine [4]'teki gibi bir <code>process</code> kodu
+kullanıyoruz, kod bu dizin içindeki <code>util.py</code> dosyasında da
+bulunabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="k">class</span> <span class="nc">ATAJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">D</span><span class="p">,</span><span class="n">D</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+        <span class="n">tok</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+        <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tok</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">outfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/C-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+
+<span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/A.csv&#39;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">ATAJob</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="n">ci</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">util</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="s1">&#39;/tmp/A.csv&#39;</span><span class="p">,</span> <span class="n">ci</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">ATAJob</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="n">ci</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">C0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/C-0.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">C1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/C-1.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="n">C0</span> <span class="o">+</span> <span class="n">C1</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;/tmp/Cf-2.csv&quot;</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Bu sefer ayrı süreçler yaratmadık, fonksiyonu iki kere çağırdık, fakat
+artık paralellik için yapılacakları biliyoruz. Şimdi pür hafıza ve bizim
+yöntemin sonuçlarını karşılaştıralım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="n">Cf1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/Cf-1.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="n">Cf2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/Cf-2.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">((</span><span class="n">Cf1</span><span class="o">-</span><span class="n">Cf2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">((</span><span class="n">Cf1</span><span class="o">-</span><span class="n">Cf2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>-1.8024999735644087e-06
+-0.0007209999894257635
+</code></pre>
+</div>
+
+<p>İki matris birbirine çok yakın; demek ki satırsal paralel yöntem
+işledi.</p>
+
+<h3>Eşsiz Değerler Ayrıştırması (Singular Value Decomposition, SVD)</h3>
+
+<p>Üstteki parçalar kodlanmışsa onları kullanarak SVD hesaplamak
+kolaydır.  Önce bir A matrisi alındığında A'A hesaplanır, ardından
+[5]'teki matematiği kullanarak V vektörünü elde ederiz, ve onu A ile
+çarparak U elde ederiz. A büyük bir matris, matris çarpımlarını başta
+işledik.</p>
+
+<p>Ya eğer A matrisi uzun ama zayıf değilse? Belki elimizde uzun ve
+"şişman" bir matris var, yani aşırı sayıda kolon. Bu durumda,
+uygulamanın gerekliliklerine göre hala bir kolon, boyut küçültme
+(dimensionality reduction) yapılabilir, mesela uzaklık bağlamında bir
+matrisi rasgele (random) ve daha ufak boyutlu bir başka matrisle
+çarpmak sonucun mesafe ölçütlerini değiştirmez diye bir teori vardır,
+o zaman yine baştaki matris çarpımı teknikleri ile rasgele matris ile
+bir çarpım yaparız, ve ufaltılmış boyuttaki yeni sonuçla işleme devam
+ederiz.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://www.adityaagrawal.net/blog/architecture/matrix_multiplication</p>
+
+<p>[2] [GeeksforGeeks](https://www.geeksforgeeks.org/strassens-matrix-multiplication/)</p>
+
+<p>[3] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html">Lineer Cebir Ders 1</a></p>
+
+<p>[4] Bayramlı, <a href="../../2016/02/toptan-islemler-paralelizasyon.html">Paralel, Satır Bazlı Dosya İşlemek</a></p>
+
+<p>[5] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/linear/linear_app30parlinalg/paralel_lineer_cebir_temeli.html">Paralel Lineer Cebir Temeli</a></p>
+
+<p>[6] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/linear/linear_app10rndsvd/rasgele_izdusumu__random_projection__.html">Rasgele İzdüşümü (Random Projection)</a></p>
+
+<p>[7] Bayramlı, <a href="https://arxiv.org/abs/1310.4664">SVD Factorization for Tall-and-Fat Matrices on Parallel Architectures</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

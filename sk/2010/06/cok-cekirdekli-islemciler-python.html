@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Cok Cekirdekli Islemciler, Python</h1>
+
+<p>Moore kanunda (tek islemci baglaminda) bir duvara carpildi; Islemciler
+artik cok cekirdekli (multicore) mimariye dogru gidiyor. Dizustunde en
+az iki olmak uzere, 4, 8, vs. gibi cok cekirdekli islemciler normal
+hale gelmeye basladi. Buna ek olarak: Cok cekirdekli mimarilerdeki tek
+bir cekirdek (islemci), sadece bir tane islemci iceren "eski usul"
+mimarideki tek islemciden daha yavas olacak. Yani programcilar
+yazdiklari kodu hizlandirmak istiyorlarsa muhakkak cok cekirdekli
+ortamda calismaya alismali; yoksa eldeki mevcut hizi bile yeni
+mimaride kaybetmemiz mumkun.Python baglaminda: birden fazla cekirdegi
+kullanmak icin tavsiye edilen Thread objesini degil, <code>multiprocessing</code>
+adli bir paketi kullanmak. Thread objeleri GIL adli bir kilite
+takiliyor, bu cpython derleyicisi ile ilgili bir durum (imis); bu
+sebeple cekirdekleri kullanmak icin multiprocessing gibi ayri / farkli
+bir yaklasim gerekli.Bu paket baslatilan ilk surec icinde alt surecler
+(subprocess) baslatiyor, ve bu alt surecler dogru sekilde birden fazla
+cekirdege yayilabiliyor.</p>
+
+<p>Kurmak icin onceki baglantidan zip dosyasini indirin, acin ve "sudo
+python setup.py install" komutunu isletin.</p>
+
+<p>Ornek bir kod:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">from</span> <span class="nn">pylab</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">timedef</span> <span class="n">f</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+   <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+      <span class="nb">print</span> <span class="s1">&#39;hello&#39;</span><span class="p">,</span> <span class="n">name</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10000</span><span class="p">):</span>
+         <span class="n">y</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;first&#39;</span><span class="p">,))</span>
+  <span class="n">p1</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+  <span class="n">p2</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">f</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;second&#39;</span><span class="p">,))</span>
+  <span class="n">p2</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Bu ornekte iki surec baslatiyoruz, her surecte matematik cosine
+islemini yaptiriyoruz ve ekrana o surece ozel bir seyler
+basiyoruz. Isletince Ubuntu uzerinde System | Administration | System
+Monitor ile cekirdeklerin durumuna bakabilirsiniz. Bizde mevcut iki
+cekirdek %100'e yakin kullanim (utilization) rapor ettiler.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

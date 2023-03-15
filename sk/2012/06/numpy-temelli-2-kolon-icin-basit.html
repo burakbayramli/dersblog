@@ -1,0 +1,65 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Numpy Temelli 2 Kolon Icin Basit Gruplama (Group By)</h1>
+
+<p>SQL'deki group by komutunun Numpy karsiligi. 2 kolon bazinda
+calisiyor, tum islemler hafizada.</p>
+
+<pre><code>import numpy as npimport itertools
+def group2(arr):
+    rows,cols = arr.shape
+    res = []
+    c = 0
+    for unique_0,unique_1 in itertools.product(np.unique(arr[:,0]), np.unique(arr[:,1])):
+        tmp = arr[arr[:,0] == unique_0]
+        tmp = tmp[tmp[:,1] == unique_1]
+        res.append([unique_0, unique_1, len(tmp)])
+    return np.array(res)
+
+if __name__ == "__main__":
+    a = np.array([[1,2,5,4,5,5],
+                  [4,5,3,4,4,3]])
+    print group2(a.T)
+    print group2(a.T).shape
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

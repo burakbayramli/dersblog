@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Alternatif Combobox</h1>
+
+<p>Standard HTML birimlerinden olan select..options birimlerinin ne yazik
+ki bazi problemleri var; Oncelikle IE 6 uzerinde bu select
+etiketlerini stillemek, yani CSS ile bazi goruntu ogelerini
+degistirmek mumkun degil. Bunlardan biri border degisimi mesela, siz
+CSS'e hangi komutu koyarsaniz koyun, IE 6 uzerinde select o garip uc
+boyutumsu golgeli sInIrlI goruntuyu kaybedemiyor.</p>
+
+<p>Bu sebeple klasik select..option yerine, CSS/DHTML/Javascript bazli alternatif bir Combobox kullanmak daha yerinde olacak. Bu alternatif kodlar <div> temelli olacak ve bu kodlar Javascript bazli event'leri kullanarak bir normal combobox isleyisini taklit edecekler.  Bu birimler direk en temel DHTML ogeleri ile is yaptigi icin, onun herhangi bir gorsel ogesi ile oynamak serbest olabilecek.</p>
+
+<p>Peki hangi paketi kullanmak en iyisi? Etrafta pek cok Javascript bazli
+combobox kodu var. Hem combobox hem de diger veri giris ogelerinin
+alternatifleri icin su sayfa faydali olabilir. Benim buldugum ayri bir
+paket dhtmlxcombo adinda bir pakettir. Bu paket, duz HTML temelli olan
+select'i alip onu combolastiriyor, ya da sadece bos bir <div> blogunu
+da alip combo haline getirebiliyor.</p>
+
+<p>Bu kutuphaneyi kullanarak yazdigimiz ornek kodlari altta bulabilirsiniz. Onemli noktalardan biri combo'nun asagi gosteren ok imajini bulabilmesi icin <script> tagi icinde window.dhx_globalImgPath="/imaj/dizin/ismi"; ile ok imajinin yerini vermeniz. test.html icinde bunu gorebilirsiniz.</p>
+
+<p>Dosyalar</p>
+
+<p>dhtmlxcombo.js ve dhtmlxcommon.js ustteki kaynaklardan indirilebilir,
+ayrica bir blank.gif ve combo_select.gif lazim.</p>
+
+<p>dhtmlxcombo.css</p>
+
+<pre><code>.dhx_combo_img{
+    position:absolute;
+    top:0px;
+    right:0px;
+    width:17px;
+    height:20px;
+}
+
+.dhx_combo_option_img{
+    position:relative;
+    top:1px;
+    margin-left:2px;
+    left:0px;
+    width:18px; height:18px;
+}
+.dhx_combo_input{
+    color:#333333;
+    font-family: Arial;
+    font-size: 9pt;
+    border:0px;
+    padding:2px 2px 2px 2px;
+    position:absolute;
+    top:0px;
+}
+.dhx_combo_box{
+    position:relative;
+    text-align:left;
+    border:1px solid #C3BBB6;
+    height:20px;
+    _height:22px;
+    overflow:hidden;
+    background-color: white;
+}
+
+.dhx_combo_list{
+    position:absolute;
+    z-index:230;
+    overflow-y:auto;
+    overflow-x:hidden;
+    border:1px solid black;
+    height:100px;
+    font-family: Arial;
+    font-size: 9pt;
+    background-color: white;
+}
+
+
+.dhx_combo_list div{
+    cursor:default;
+    padding:2px 2px 2px 2px;
+}
+.dhx_selected_option{
+    background-color:navy;
+    color:white;
+}
+
+
+.dhx_combo_img_rtl{
+    position:absolute;
+    top:0px;
+    left:1px;
+    width:17px;
+    height:20px;
+}
+.dhx_combo_option_img_rtl{
+    float:right;
+    margin-right :0px;
+    width:18px; height:18px;
+}
+
+.dhx_combo_list_rtl{
+    direction: rtl;
+    unicode-bidi : bidi-override;
+    position:absolute;
+    z-index:230;
+    overflow-y:auto;
+    overflow-x:hidden;
+    border:1px solid black;
+    height:100px;
+    font-family: Arial;
+    font-size: 9pt;
+    background-color: white;
+}
+.dhx_combo_list_rtl div{
+    direction: rtl;
+    unicode-bidi : bidi-override;
+}
+.dhx_combo_list_rtl div div{
+    float :right !important;
+    cursor:default;
+    padding:2px 2px 2px 2px;
+}
+.dhx_combo_list_rtl div img{
+    float :right !important;
+}
+.dhx_combo_list_rtl div input{
+    float :right !important;
+}
+</code></pre>
+
+<p>test.html</p>
+
+<pre><code>&lt;html&gt;
+
+  &lt;head&gt;
+
+    &lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+
+    &lt;script  src="dhtmlxcommon.js"&gt;&lt;/script&gt;
+
+    &lt;script  src="dhtmlxcombo.js"&gt;&lt;/script&gt;
+
+    &lt;link rel="STYLESHEET" type="text/css" href="dhtmlxcombo.css"&gt;
+
+    &lt;script&gt;
+
+      window.dhx_globalImgPath="/home/burak/";
+
+    &lt;/script&gt;
+
+  &lt;/head&gt;
+
+
+
+  &lt;body&gt;
+
+
+
+    &lt;div id="combo_zone2" style="width:200px; height:30px;"&gt;&lt;/div&gt;
+
+    &lt;script&gt;
+
+      var z=new dhtmlXCombo("combo_zone2","alfa3",200);
+
+      z.addOption([[1,1111],[2,2222],[3,3333],[4,4444],[5,5555]]);
+
+    &lt;/script&gt;
+
+
+  &lt;/body&gt;
+
+
+&lt;/html&gt;
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

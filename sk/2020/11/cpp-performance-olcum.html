@@ -1,0 +1,146 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>C++ Programlarının Performansını Ölçmek</h1>
+
+<p>Kodun içinde hangi bloğun ne kadar zaman aldığını ölçmek kodu optimize
+etmek için gündeme gelir. Altta bir kronometre kodu var, [1]'de
+görülen bir kronometre objesi yaratmak ve onu başlatıp durdurduktan
+sonra ne kadar zaman geçtiğini raporlamak.</p>
+
+<p>Bizim yaptığımız ek birden fazla başlatıp durdurabilmek, böylece bir
+fonksiyon pek çok kez çağrılıyorsa mesela o fonksiyon başında sonunda
+sürekli başlatıp durdurma sonrası toplam o fonksiyonda ne kadar zaman
+harcandığını ölçebilmek. </p>
+
+<p>Ya farklı kod bloklarını ölçmek istersek? O zaman alttaki sınıftan her
+blok için ayrı obje yaratabiliriz böylece o her bloğun zaman kaydı
+ayrı tutulur.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;chrono&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;ctime&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;cmath&gt;</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">Timer</span>
+<span class="p">{</span>
+
+    <span class="kt">double</span> <span class="n">totalElapsed</span> <span class="o">=</span> <span class="mf">0.f</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">time_point</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">&gt;</span> <span class="n">m_StartTime</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">time_point</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">&gt;</span> <span class="n">m_EndTime</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">void</span> <span class="n">start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">m_StartTime</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">void</span> <span class="n">stop</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">m_EndTime</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">system_clock</span><span class="o">::</span><span class="n">now</span><span class="p">();</span>
+    <span class="n">totalElapsed</span> <span class="o">=</span> <span class="n">totalElapsed</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">duration_cast</span><span class="o">&lt;</span><span class="n">std</span><span class="o">::</span><span class="n">chrono</span><span class="o">::</span><span class="n">milliseconds</span><span class="o">&gt;</span><span class="p">(</span><span class="n">m_EndTime</span> <span class="o">-</span> <span class="n">m_StartTime</span><span class="p">).</span><span class="n">count</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="n">elapsedMilliseconds</span><span class="p">()</span>
+    <span class="p">{</span>        
+        <span class="k">return</span> <span class="n">totalElapsed</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kt">double</span> <span class="n">elapsedSeconds</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">elapsedMilliseconds</span><span class="p">()</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">};</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">#include</span> <span class="cpf">&quot;cronometer.h&quot;</span><span class="cp"></span>
+
+<span class="kt">long</span> <span class="nf">fibonacci</span><span class="p">(</span><span class="kt">unsigned</span> <span class="n">n</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="k">return</span> <span class="n">n</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="mi">-1</span><span class="p">)</span> <span class="o">+</span> <span class="n">fibonacci</span><span class="p">(</span><span class="n">n</span><span class="mi">-2</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>    
+    <span class="n">Timer</span> <span class="n">timer</span><span class="p">;</span>
+
+    <span class="c1">// ilk kez baslat</span>
+    <span class="n">timer</span><span class="p">.</span><span class="n">start</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="n">fibonacci</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">timer</span><span class="p">.</span><span class="n">stop</span><span class="p">();</span>    
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Milliseconds: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">timer</span><span class="p">.</span><span class="n">elapsedMilliseconds</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="c1">// ikinci kez baslat, onceki zamanin ustune eklenmesi lazim</span>
+    <span class="n">timer</span><span class="p">.</span><span class="n">start</span><span class="p">();</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="mi">100</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+    <span class="n">fibonacci</span><span class="p">(</span><span class="mi">30</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">timer</span><span class="p">.</span><span class="n">stop</span><span class="p">();</span>
+
+    <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Milliseconds: &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">timer</span><span class="p">.</span><span class="n">elapsedMilliseconds</span><span class="p">()</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Derlemek ve işletmek için,</p>
+
+<pre><code>g++ test.cpp  -o /tmp/run.exe; /tmp/run.exe
+</code></pre>
+
+<p>Dikkat: Bir fonksiyonun başında <code>start()</code> sonunda <code>stop()</code> koyduğumuz
+zaman unutmayalım, bu her zaman yeterli olmayabilir, eğer fonksiyonun
+kodununun ortasında belli bazı şartlarda <code>return</code> ile direk dönüş
+yapıyorsak, o zaman bu dönüş öncesi de bir <code>stop</code> eklememiz gerekir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://gist.github.com/mcleary/b0bf4fa88830ff7c882d</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

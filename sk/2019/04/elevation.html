@@ -1,0 +1,348 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yükseklik (Elevation) Verileri</h1>
+
+<p>Hangi servis ile yükseklik verisi alınır? Google Elevation servisi
+var, belli miktarda kullanım için bedava, sonrası için fiyatlı. Google
+Console'dan proje yaratıp projede elevation servisini aktif hale
+getirmek lazım, bundan sonra proje API kodunu kullanıp ES çağrılabilir.</p>
+
+<h3>Google</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">polyline</span><span class="o">,</span> <span class="nn">json</span>
+
+<span class="n">elev_query</span> <span class="o">=</span> <span class="s2">&quot;https://maps.googleapis.com/maps/api/elevation/json?&quot;</span> <span class="o">+</span> \
+          <span class="s2">&quot;locations=enc:</span><span class="si">%s</span><span class="s2">&amp;key=</span><span class="si">%s</span><span class="s2">&quot;</span>
+<span class="c1">#key = &quot;[ANAHTAR DEGERI]&quot;</span>
+<span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">40.994252</span><span class="p">,</span> <span class="mf">29.037847</span><span class="p">],[</span><span class="mf">40.991771</span><span class="p">,</span> <span class="mf">29.061873</span><span class="p">]]</span>
+<span class="n">locs</span> <span class="o">=</span> <span class="n">polyline</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">elev_query</span> <span class="o">%</span> <span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="n">html</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">json_res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">json_res</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&#39;status&#39;: &#39;OK&#39;, &#39;results&#39;: [{&#39;resolution&#39;: 610.8129272460938,
+&#39;location&#39;: {&#39;lng&#39;: 29.03785, &#39;lat&#39;: 40.99425}, &#39;elevation&#39;:
+9.726478576660156}, {&#39;resolution&#39;: 610.8129272460938, &#39;location&#39;:
+{&#39;lng&#39;: 29.06187, &#39;lat&#39;: 40.99177}, &#39;elevation&#39;: 58.94558334350586}]}
+</code></pre>
+</div>
+
+<h3>Velroutes (Bedava)</h3>
+
+<p>Bir diğer seçenek veloroutes.org adresi; burada arkadaş bedava servis
+veriyor; onun sayfalarından "kazıyarak" istenen veriyi alabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://veloroutes.org/elevation/?&quot;</span> <span class="o">+</span> \
+      <span class="s2">&quot;location=41.40000%2C28.15000&amp;units=m&quot;</span>
+<span class="n">html</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="s2">&quot;Elevation for .*? &lt;span style=</span><span class="se">\&quot;</span><span class="s2">font-size\:20px</span><span class="se">\&quot;</span><span class="s2">&gt;(\d*)&lt;/span&gt; meters&quot;</span>
+<span class="n">rres</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">rres</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>    
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>215.0
+</code></pre>
+</div>
+
+<p>Bir diğeri elevation.racemap.com adresinden; bu arkadaşlar da bedava
+servis veriyorlar, Curl kullanıp</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">curl</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;[[51.3, 13.4], [51.4, 13.3]]&#39;</span> <span class="o">-</span><span class="n">XPOST</span> \
+  <span class="o">-</span><span class="n">H</span> <span class="s1">&#39;Content-Type: application/json&#39;</span> \
+  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">elevation</span><span class="o">.</span><span class="n">racemap</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">api</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    37  100     9  100    28      8     27  0:00:01  0:00:01 --:--:--    27100    37  100     9  100    28      8     27  0:00:01  0:00:01 --:--:--    27
+[101,100]
+</code></pre>
+</div>
+
+<p>Bu komutu tabii ki sarmalayıp sonucu bir yere yazdırıp Python ile
+güzel liste döndürmesi için ayarlayabiliriz. Ya da <code>requests</code>
+kullanarak aynı çağrıyı yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>  <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="p">}</span>
+<span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;[[51.3, 13.4], [51.4, 13.3]]&#39;</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://elevation.racemap.com/api&#39;</span><span class="p">,</span>
+                         <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Daha Çetrefil Kullanım</p>
+
+<p>Alttaki örnekte bir kordinat alanıda 7 x 7 büyüklüğünde bir ızgara yaratıyoruz,
+o ızgara öğe kordinatları için yükseklik verisini alıyoruz, ve RBF tekniği [1]
+ile aradeğerleme (interpolation) yaparak yüksekliği yaklaşık şekilde temsil
+ediyoruz. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="k">def</span> <span class="nf">get_elev_data</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+    <span class="n">chunk</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;[&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunk</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span>
+    <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;]&quot;</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://elevation.racemap.com/api&#39;</span><span class="p">,</span>
+                             <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,},</span>
+                             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">res</span>
+</code></pre>
+</div>
+
+<p>Veri alındı, şimdi RBF,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">Rbf</span>
+
+<span class="n">latlow</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span> <span class="n">lathigh</span> <span class="o">=</span> <span class="mi">37</span>
+<span class="n">lonlow</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span> <span class="n">lonhigh</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="n">D</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lonlow</span><span class="p">,</span><span class="n">lonhigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">latlow</span><span class="p">,</span><span class="n">lathigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">xxf</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">D</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
+<span class="n">yyf</span> <span class="o">=</span> <span class="n">yy</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">D</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
+<span class="n">sampleCoords</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">yyy</span><span class="p">,</span><span class="n">xxx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">yyf</span><span class="p">,</span><span class="n">xxf</span><span class="p">):</span>
+    <span class="n">sampleCoords</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">yyy</span><span class="p">,</span><span class="n">xxx</span><span class="p">])</span>
+<span class="n">sampleCoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sampleCoords</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">sampleCoords</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">zr</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">get_elev_data</span><span class="p">(</span><span class="n">sampleCoords</span><span class="p">))</span>
+
+<span class="n">yr</span> <span class="o">=</span> <span class="n">sampleCoords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">xr</span> <span class="o">=</span> <span class="n">sampleCoords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">rbfi</span> <span class="o">=</span> <span class="n">Rbf</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span><span class="n">yr</span><span class="p">,</span><span class="n">zr</span><span class="p">,</span><span class="n">function</span><span class="o">=</span><span class="s1">&#39;multiquadric&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(49, 2)
+</code></pre>
+</div>
+
+<p>Şimdi RBF kullanarak daha yüksek çözünürlü bir ızgara için yüksekliği
+aradeğerleme ile hesaplatabiliriz, altta 15 x 15 büyüklüğünde bir ızgara
+için bunu yapıyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">D</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lonlow</span><span class="p">,</span><span class="n">lonhigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">latlow</span><span class="p">,</span><span class="n">lathigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">rbfi</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">CS</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">yhat</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;elev1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="elev1.png" alt="" /></p>
+
+<h3>DEM, GeoTiff</h3>
+
+<p>Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
+yerler daha kırmızımsı, daha alçaklar daha koyu gibi.. O zaman piksel
+yükseklik gösteriyorsa ve pikselleri depolayan teknoloji iyi durumdaysa,
+aynı işi yükseklik verisi kodlamak için de kullanabiliriz. DEM,
+GeoTiff formatı bunu yapar. Dünya verisi [2]'de, Zipped DEM GeoTiff
+indirilir, okumak için [3]. Örnek (İtalya'da bir yer)</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">geotiff</span> <span class="kn">import</span> <span class="n">GeoTiff</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">tiff_file</span> <span class="o">=</span> <span class="s2">&quot;/tmp/alwdgg.tif&quot;</span>
+
+<span class="n">area_box</span> <span class="o">=</span> <span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">45</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">46</span><span class="p">))</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">GeoTiff</span><span class="p">(</span><span class="n">tiff_file</span><span class="p">,</span> <span class="n">crs_code</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span> <span class="n">as_crs</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span>  <span class="n">band</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">read_box</span><span class="p">(</span><span class="n">area_box</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">area_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">area_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">area_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">area_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+
+<span class="n">CS</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;elev2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(11, 11)
+</code></pre>
+</div>
+
+<p><img src="elev2.png" alt="" /></p>
+
+<p><code>area_box</code> içinde alt sol köse ve üşe sağ köşe verildi, bir kutu oluşturuldu,
+ve kutu içine düşen yükseklik verisi <code>read_box</code> ile alındı.</p>
+
+<p>[2] verisinin çözünülürlüğü en yüksek olduğu yerde "1 dakika" olarak
+verilmiş, yani aşağı yukarı 1 km x 1 km karelerinin yükseklik verisi
+alınabilir. Dosyanin büyüklüğü 20 MB'dan daha az. [3] kullanımı önemli
+çünkü bazı alternatif GeoTiff okuma yöntemleri GDAL kurulmasının
+gerektirir, [3] kütüphanesi hafif, direk DEM dosyalarının içeriğini
+okuyabilir.</p>
+
+<p><a name='globe'/></p>
+
+<h3>GLOBE</h3>
+
+<p>Bir yöntem daha. GLOBE veri seti [4], tam ismiyle Global Land
+One-kilometer Base Elevation, NOAA kurumu tarafından
+paylaşılıyor. Kabaca verideki frekansa bakılırsa kilometre kare başına
+bir yükseklik noktası olduğu söylenebilir. Çok detaylı grafikleme için
+yeterli olmayabilir fakat geniş alanların yükseklik haritası için
+yeterli.</p>
+
+<p>Bu verinin iyi bir tarafı verinin Numpy matrisi olarak direk
+okunabilmesi. [4] bağlantısındaki haritaya bakılınca dünya A,B,C,D vs
+parçalarına bölünmüş, her bölümün yükseklik verisi ayrı bir
+dosyada. Tüm verileri tek bir zip dosyası olarak indirebiliriz, 300 MB
+civarı, A,B,C,D bölge dosyaları bu zip içinde, "All Tiles in One .zip
+file" seçeneği. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
+olacaktır, bazıları daha az, altta her bölgenin boyutları var.</p>
+
+<p>Zip dosyasını açalım, alttaki kod <code>g10g</code> bölgesini okuyup haritalıyor,
+[5] kodu örnek alındı, <code>downsample</code> ile veriyi daha da azalttığımızı
+görebiliyoruz, istemeyenler bu satırı çıkartıp ya da <code>downsample=1</code>
+ile veriyi olduğu gibi kullanabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">gltiles</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;a10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6098</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;b10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3940</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;c10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">4010</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;d10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4588</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;e10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">84</span><span class="p">,</span> <span class="mi">5443</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;f10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">6085</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;g10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">407</span><span class="p">,</span> <span class="mi">8752</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;h10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">63</span><span class="p">,</span> <span class="mi">7491</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;i10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2732</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;j10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">127</span><span class="p">,</span> <span class="mi">6798</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;k10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5825</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;l10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5179</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;m10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4009</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;n10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4743</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;o10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4039</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;p10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4363</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">]</span> <span class="p">}</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">&#39;all10g/all10/g10g&#39;</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;i2&#39;</span><span class="p">)</span>
+
+<span class="n">lat_min</span><span class="p">,</span> <span class="n">lat_max</span><span class="p">,</span> <span class="n">lon_min</span><span class="p">,</span> <span class="n">lon_max</span><span class="p">,</span> <span class="n">elev_min</span><span class="p">,</span> <span class="n">elev_max</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">gltiles</span><span class="p">[</span><span class="s1">&#39;g10g&#39;</span><span class="p">]</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">z</span><span class="p">,(</span><span class="nb">round</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span><span class="o">/</span><span class="n">cols</span><span class="p">),</span> <span class="n">cols</span><span class="p">))</span>
+
+<span class="n">z</span><span class="p">[</span><span class="n">z</span><span class="o">==-</span><span class="mi">500</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+
+<span class="n">lon</span> <span class="o">=</span> <span class="n">lon_min</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">lat_max</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="n">cols</span><span class="p">))</span>
+
+<span class="n">downsample</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">lat_select</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span><span class="n">downsample</span><span class="p">)</span>
+<span class="n">lon_select</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span><span class="n">downsample</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">lat</span><span class="p">[</span><span class="n">lat_select</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">lon</span><span class="p">[</span><span class="n">lon_select</span><span class="p">]</span>
+
+<span class="n">xg</span><span class="p">,</span> <span class="n">yg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">zm</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">lat_select</span><span class="p">,</span><span class="n">lon_select</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span><span class="n">yg</span><span class="p">,</span><span class="n">zm</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gltiles1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="gltiles1.png" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [RBF](https://burakbayramli.github.io/dersblog/stat/stat<em>175</em>rbf/dairesel<em>baz</em>fonksiyonlari<strong>radial<em>basis</em>functions<em>rbf</strong>yukseklik</em>verisi_daglar.html)</p>
+
+<p>[2] World digital elevation model (ETOPO5), https://www.eea.europa.eu/data-and-maps/data/world-digital-elevation-model-etopo5</p>
+
+<p>[3] https://github.com/KipCrossing/geotiff</p>
+
+<p>[4] [GLOBE](https://www.ngdc.noaa.gov/mgg/topo/gltiles.html)</p>
+
+<p>[5] https://github.com/developmentseed/landsat-util</p>
+
+<p>[6] [Yükseklik Verisini Kontur olarak Folium Haritasında Göstermek](../../2021/11/yukseklik-kontur-folium-harita.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

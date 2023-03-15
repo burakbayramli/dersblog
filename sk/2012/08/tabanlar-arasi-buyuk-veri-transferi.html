@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Tabanlar Arasi Buyuk Veri Transferi, pg_dump</h1>
+
+<p>Bir projemiz icin birkac tabanin icindeki (ayni semaya sahip)
+tablolarin icerigini nihai, bir baska taban icinde birbirine ekleyerek
+yeni, birlesmis tablolar olarak yaratmamiz gerekti. Bunun icin basta
+dblink kullandik fakat hafiza kullanimiyla alakali bazi hatalar ortaya
+cikti.</p>
+
+<p>Biz de dblink yerine pg_dump kullanmaya karar verdik.</p>
+
+<p>Diyelim ki taban1,taban2,taban3 icinde her tabanda ayni semaya sahip
+tablo1,tablo2 var. Script soyle:</p>
+
+<pre><code>TABLES="-t tablo1 -t tablo2"
+
+pg_dump $TABLES -f /tmp/xfer.db -c taban1
+psql -f /tmp/xfer.db sonuc
+pg_dump $TABLES -f /tmp/xfer.db -a taban2
+psql -f /tmp/xfer.db sonuc
+pg_dump $TABLES -f /tmp/xfer.db -a taban3
+psql -f /tmp/xfer.db sonuc
+</code></pre>
+
+<p>Dikkat edelim, ilk pg<em>dump -c ile veri aliyor, mevcut tablolari
+silecek komutlari da urettiriyoruz boylece. Daha sonraki pg</em>dump
+komutlari sadece veriyi aliyor, -a ile. Yani ilk basta tablolari,
+semasi ile yaratip ilk veriyi ekliyoruz, sonra sadece veri
+ekliyoruz. Boylece birlestirme islemini otomatik olarak
+gerceklestirmis oluyoruz. Surekli ayni veri dosyasini kullandik,
+xfer.db adinda, yer israfi olmamasi icin.</p>
+
+<p>pg<em>dump kullaniminin bir avantaji daha var. Uretilen xfer.db icine
+bakarsaniz, set komutlari ve analyze ibarelerini
+goreceksiniz. Postgresql analyze komutu bir tabanin "ic
+istatistiklerini" guncellemeye yarar, boylece sorgulayici daha guncel
+veriye sahip olur. Ozellikle buyuk veri transferlerinden sonra bunun
+yapilmasi tavsiye edilir. Eh pg</em>dump bunu kendiliginden yapiyor iste.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

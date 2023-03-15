@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>MySQL Kurulus</h1>
+
+<p>MySQL Ubuntu kurulusu</p>
+
+<pre><code>sudo apt-get install mysql-server
+</code></pre>
+
+<p>Baglanmak (kendi makinanizdan)</p>
+
+<pre><code>mysql --host=localhost --user=root --password=[sifre]
+</code></pre>
+
+<p>Kurulurken root icin sifre vs istenir, fakat bu kullanici disaridan
+kullanis sirasinda problem cikartir. Makina ici ve disindan
+kullanilacak bir kullanici yaratmak icin (suradan)</p>
+
+<pre><code>CREATE USER 'monty'@'localhost' IDENTIFIED BY 'some_pass';GRANT ALL PRIVILEGES ON *.* TO 'monty'@'localhost'
+    WITH GRANT OPTION;CREATE USER 'monty'@'%' IDENTIFIED BY 'some_pass';GRANT ALL PRIVILEGES ON *.* TO 'monty'@'%'
+    WITH GRANT OPTION;
+</code></pre>
+
+<p>Taban Dizini</p>
+
+<p>Eger veri tabanlarinin tutuldugu dizini degistirmek istiyorsaniz,
+/etc/mysql/my.cnf ayar dosyasindaki dataDir dizini degismeli. Hatta
+mevcut tabanlarin verisini kaybetmeden sadece dataDir'deki dizini
+oldugu gibi yeni yere kopyalayip, yeni dizinden ise devam etmek
+mumkun. Dikkat, kopyalanan yeni yerdeki erisim haklari mysql
+kullanicisina olmali. Tabii ondan once sudo service mysql stop ile
+servisi durdurmayi unutmayin.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

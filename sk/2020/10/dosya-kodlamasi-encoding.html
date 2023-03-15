@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Dosya Kodlamasi (File Encoding)</h1>
+
+<p>Bir Word dosyasını Excel ile açamıyoruz, ya da PDF'i Word ile.. Bunun
+sebebi dosya formatının değişik olması, veri içindeki bayt sıralaması
+bir programda diğeri için gibi değil. Bu dosyalar çoğunlukla ikisel
+(binary) olarak tanımlanıyor.</p>
+
+<p>Fakat metin dosyalar her ne kadar basit editör, ya da komut satırında
+mesela <code>cat</code> ile görülebiliyorlarsa da, aslında onların da bir iç
+formatı var, ve bazı formatlar diğerleri ile uyumlu değil, özellikle
+uluslararası karakterler varsa.</p>
+
+<p>En basit farklılık mesela Windows (DOS) ve Unix metin dosyaları
+arasında, Windows ile her satır hem yeni satır karakteri hem de CRLF
+denen bir veri ile biter. Linux üzerinde iki format arasında gidip
+gelmek için <code>unix2dos</code>, <code>dos2unix</code> kullandık uzun zaman, şimdi
+<code>tofrodos</code> var.</p>
+
+<p>Tüm sistemler için diğer bir farklılık kodlama (encoding)
+olabilir. Mesela yaygın olan UTF8, ISO8859-9'dan farklıdır. Birinde
+yazılan dosyanın enternasyonel karakterleri diğerinde bozuk
+çıkabilir. Bu iki format arasında gidip gelmek için <code>iconv</code>
+var. Örnek,</p>
+
+<pre><code>iconv file.tex -f ISO8859-9 -t UTF-8 -o out.tex
+</code></pre>
+
+<p>Not: Eğer bir dosyaya olduğu yerde aynı isimle <code>iconv</code> uygulanıyorsa,
+bu bazı dosyalarda <code>Bus error</code> hatasına yol açabilir. Hatadan
+kurtulmak için dosyanın çevrilmiş halini bir geçici dosyaya gönderip, sonra
+oradan geri alıp orijinal dosyayı <code>mv</code> ezmek daha iyi olur.</p>
+
+<p>Editor</p>
+
+<p>Editörümüzün de bir metni gösterirken hangi kodlama ile iş yaptığını
+bilmesi gerekir. Emacs'e bunu sonek çerçevesinde söylemek için,</p>
+
+<pre><code>(modify-coding-system-alist 'file "\\.tex\\'" 'utf-8)
+</code></pre>
+
+<p>diyebiliriz. Eğer <code>ISO8859-9</code> istersek</p>
+
+<pre><code>(modify-coding-system-alist 'file "\\.tex\\'" 'latin-5)
+</code></pre>
+
+<p>olurdu. Eğer LaTeX kullanıyorsak, onun da kodlamayı bilmesi
+gerekir. Dosya başında, UTF8 için,</p>
+
+<pre><code>\usepackage[utf8]{inputenc}
+</code></pre>
+
+<p>gerekli.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

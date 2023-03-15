@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Android, Raspberry Pi Geliştirme Ortamı</h1>
+
+<p>Rahat taşınabilir geliştirme ortamı için Bluetooth klavye, Android
+Tablet, SSH, RPi üzerinde Ubuntu olabilir. Çoğu işi editör'de metin
+girerek kodlama yapıyorsak (görsel çıktılar RPi mikro web servisi
+üzerinden alınabilir) bu işler. Powerbank RPi çalıştırır. Tablet ile
+Android üzerinde yazıyoruz, Android hotspot üzerinden Raspberry'ye
+DHCP IP adresi verdiriyoruz (192.168.43.x gibi bir adres bunu
+<code>ifconfig -a</code> ile RPi uzerinden ögrenebiliriz, ve RPi üzerinde WiFi
+aktif hale getirmek lazım). Ardından tablet üzerinden Termux [7] <code>ssh</code>
+ile RPi'a bağlanırız. Tüm girdi metin bazlı yapılır. Kuruluş böyle.</p>
+
+<p><a href="tablrpi1.jpg">Resim</a></p>
+
+<p>Assistant</p>
+
+<p>Bizim tablet Lenovo M8, Eğer editör kullanacaksak, üstte görülen
+tablet üzerinden, Windows tuşunu iptal etmek iyi fikir [2].</p>
+
+<p>Adım 1: <code>Device Settings</code> açılır, sonra <code>Apps/Application Manager</code>.</p>
+
+<p>Adım 2: <code>Default apps</code> tıklanır, sonra <code>Assist &amp; voice input</code>.</p>
+
+<p>Adım 3: <code>Assist app</code> seçeneği seçilir. Sonraki ekranda <code>Assist app</code>
+için <code>Google</code> gösteren bir app listesi görüyoruz. Biz <code>home</code> düğmesi
+için <code>None</code> seçiyoruz, böylece Assistant artık çıkmıyor.</p>
+
+<p>Tuş Değişimi</p>
+
+<p>Control tuşu Trust Bluetooth klavyelerinde rahat erişilen yerde değil,
+Vim, Emacs kullanıcıları bu tuşu çok kullanır, CAPS tuşunu CTRL
+yapabiliriz. Fakat Android seviyesinde değişiklik lazım. Şu [1]
+uygulama ile web üzerinde bir .apk ürettiriliyor (arka planda derleme
+vs işleri yapılıyor), bu .apk indirilip kurulunca (Android uyarılarını
+dikkate almayız) artık CAPS tuşu CTRL haline gelir. Üretimden önce
+seçeneklerde <code>Caps Lock as Left Ctrl</code> seçmiş olmak lazım, bu seçim
+<code>map key 58 CTRL_LEFT</code> komutunu alttaki kutuya ekler. Bu tanım daha
+sonra yaratılacak .apk içine koyulacak. Uygulamaya güvenmeyenler aynı
+sayfadaki bağlantıdan kaynak koduna gidip Android kodunu derleyebilir.</p>
+
+<p>SSH</p>
+
+<p>Termux <code>ssh</code> ile RPİ'a bağlandık, fakat ikidebir bağlantı
+kopuyor.. Tamir için Termux üzerinde <code>nano .ssh/config</code> dosyasına
+gidilir,</p>
+
+<pre><code>Host *
+    ServerAliveInterval 240
+</code></pre>
+
+<p>yazılır, artık <code>ssh</code> komut satırında 4 dakika hiçbir işlem olmasa bile
+bağlantı koparılmayacaktır.</p>
+
+<p>Note: Alternatif Android SSH programı Juice SSH.</p>
+
+<p>Yerel Ağ Baglantısı</p>
+
+<p>Test ettik, Tablet -> RPi arasındaki bağlantı eğer dış İnternet
+bağlantısı olmasa bile işliyor. DHCP sonuçta yerel ağlarda işleyen bir
+teknolojidir, dış İnternet olmasa da Android Wifi hotspot bir İP
+adresi (çoğunlukla hep aynı) üretip Raspberry Pi'a
+verecektir. Alternatif arayanlar mesela direk kablo ile USB-USB ile
+bağlantı kurmak isteyenler [3,4,5] yazılarına bakabilir. [3] yazısı
+için her iki ucun mikro USB olması lazım, genelde kablolar USB->mikro
+USB, bir ucu mikro USB yapan adaptörler var. [5] için iki ucun
+Ethernet olması lazım, RPi üzerinde zaten Ethernet var, bu durumda
+tablet için Ethernet->mikro USB adaptörü gerekir. Mikro USB-Mikro USB
+bağlantısının bir avantajı tableti artık RPi için güç kaynağı olarak
+kullanabilmektir.</p>
+
+<p>Bu Sistemle Neler Yapılabilir?</p>
+
+<p>Servis tarafindaki RPi tam tekmilli bir Linux (Ubuntu) oldugu icin
+servis tarafinda yapılamayacak sey yok. <code>sudo apt install</code> ile her
+türlü program kurulabilir. Mesela flask kurulup herhangi bir html
+sayfasını servis edebiliriz, bu sayfalari tablet tarayıcısı ile tablet
+üzerinde görebiliriz. Bende markdown -> HTML üretebilen ufak bir
+python script var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">markdown</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+<span class="n">head</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;</span>
+<span class="s1">&lt;html&gt;</span>
+<span class="s1">&lt;head&gt;</span>
+<span class="s1">&lt;script type=&quot;text/x-mathjax-config&quot;&gt;MathJax.Hub.Config({  tex2jax: {inlineMath: [[&quot;$&quot;,&quot;$&quot;]  ]}});&lt;/script&gt;</span>
+<span class="s1">&lt;script type=&quot;text/javascript&quot; src=&quot;https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full&quot;&gt;</span>
+<span class="s1">&lt;/script&gt;</span>
+<span class="s1">&lt;meta charset=&#39;utf-8&#39;&gt;</span>
+<span class="s1">&lt;/head&gt;</span>
+<span class="s1">&lt;body&gt;</span>
+<span class="s1">&#39;&#39;&#39;</span>
+<span class="n">content</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">head</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">markdown</span><span class="o">.</span><span class="n">markdown</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="n">extensions</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;fenced_code&#39;</span><span class="p">,</span><span class="s1">&#39;tables&#39;</span><span class="p">]))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">&lt;/body&gt;</span>
+<span class="s2">&lt;/html&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Tablet->SSH->Emacs ile RPİ'da (içinde matematik sembolleri bile olan)
+içerik yazıp, üstteki script ile HTML üretiliyor, onu Flask ile
+gösteriyoruz. Diyelim Flask <code>/home/user1/app4</code> altında başlatılmışsa,
+Flask o dizindeki <code>static</code> dizinini olduğu gibi servis etmek için
+hazırdır, o dizin altına Unix sembolik link koyarak istediğimiz
+dizindeki içeriği servis edebiliriz.</p>
+
+<p>VNC</p>
+
+<p>RPI masaüstünü tablet üzerinde görmek istiyenler varsa, direk kablo
+ile hızlı bir bağlantı kuruldu belki (Wifi üzerinden yavaş olur), o
+zaman RPi üzerinde VNC aktif edilebilir [6], ve Android üzerinde VNC
+ile bağlantı yapılır.</p>
+
+<p>X11</p>
+
+<p>Android üzerinde işleyen, sağlam bir X istemcisi bulunabilirse, RPi
+servis tarafı zaten X11 servisi yapmak için hazırdır, bu durumda tüm
+masaüstü yerine tek bir grafik program görsel olarak Android üzerinde
+işletilebilir. Bir ihtimal Termux üzerinden bu yapılabilirdi, ne yazık
+ki o proje şu anda sakat durumda. Ama işleyen uygulama bulabilenler
+için teorik olarak bu bir seçenektir. 90'li yıllarda Solaris Unix
+makinasına X ile bağlanıp Emacs ile C++ programı geliştiriyordum; X
+hızlı işler.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [exkeymo](https://exkeymo.herokuapp.com/)</p>
+
+<p>[2] [Windows Button / Assist Disable](https://www.guidingtech.com/remove-google-assistant-home-button/)</p>
+
+<p>[3] [Reddit](https://www.reddit.com/r/raspberry<em>pi/comments/3bpw4g/connecting</em>to<em>the</em>raspberry<em>pi</em>from<em>your</em>android/)</p>
+
+<p>[4] [Circuit Basics](https://www.circuitbasics.com/how-to-connect-to-a-raspberry-pi-directly-with-an-ethernet-cable/)</p>
+
+<p>[5] [elinux](https://elinux.org/How<em>to</em>use<em>an</em>Android<em>tablet</em>as<em>a</em>Raspberry<em>Pi</em>console<em>terminal</em>and<em>internet</em>router)</p>
+
+<p>[6] [Raspberry Pi](../../2020/07/raspberrypi.html)</p>
+
+<p>[7] [Android Uzerinde Linux - Termux](../../2018/09/android-uzerinde-linux-termux.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

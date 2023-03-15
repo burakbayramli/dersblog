@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Postgresql ve Levenhstein</h1>
+
+<p>Kolon Degerleri Arasinda Harfleme (Spelling) Hata Farki Var mi?</p>
+
+<p>Diyelim ki bir adres kolonundaki (cadde, numara, apartman) degerleri
+girilirken hata yapilip yapilmadigini kontrol etmek
+istiyorsunuz. Acaba tabanda birbirine benzeyen ve arasinda sadece
+harfleme hatasi kadar fark olan iki adres var mi? Kontrol etmek icin
+onceki yazida gordugumuz levenshtein uzakligini kullanabiliriz. Isin
+guzel tarafi bu fonksiyonu direk Postgresql icinden kullanabiliriz.</p>
+
+<p>Aktive etmek icin, tabana baglanin ve</p>
+
+<h1>CREATE EXTENSION fuzzystrmatch;</h1>
+
+<p>Test etmek icin</p>
+
+<h1>select levenshtein('elma','alma');</h1>
+
+<p>Sonuc</p>
+
+<h2> levenshtein </h2>
+
+<pre><code>       1
+</code></pre>
+
+<p>(1 row)</p>
+
+<p>Yani elma ve alma arasindaki fark 1 'degisimdir'. Levenshtein uzakligi
+her turlu degisime bakar, harf eklemek, silmek gibi operasyonlar hep
+uzakligi arttirir.</p>
+
+<p>Sorguya donelim. Once ilgilendigimiz kolonu ve onun tablosunu
+kendisiyle birlestiririz (join), yani tum adresleri tum diger
+adreslerle yanyana getirmeye ugrasiyoruz, bunu yapmanin en kolay yolu
+da SQL'deki join operasyonudur. Bilindigi gibi iliskisel teoride join
+bir kartezyen birlesimidir, iki tablo birlestirilince her satir, her
+diger satirla yanyana gelmis olur, yani tum mumkun kombinasyonlari
+elde ederiz. Yeni ANSI SQL icinde bunu ozellikle belirtmek gerekiyor,
+bunun icin cross join adli komut var.</p>
+
+<p>select adres, sub1.adresfrom tablocross join ( select adres from
+tablo ...) as sub1 where levenshtein(adres, sub1.adres) between 1 and
+3...</p>
+
+<p>Bu komutla arasinda 1 ila 3 fark olan adresleri bulmus olacagiz. 0
+uzakligi kullanmadik, bu iki adresin ayni olmasi demek olurdu. Onlarla
+ilgilenmiyoruz. 3'ten fazla uzaklik ise herhalde o adresin hakikaten
+degisik bir fiziki adres oldugu anlamina gelirdi. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

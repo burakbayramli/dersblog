@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Düzenli İfadeler, Python, Regex (Regular Expressions)</h1>
+
+<p>Düzenli İfadeler, Python, Regex (Regular Expressions)</p>
+
+<p>Bir metin içinde bir kelime arıyorsak,</p>
+
+<pre><code>s1 = "aaabbabbabbbbee 44 xxxxx xxxxxxx"
+print "aaa" in s1
+
+True
+</code></pre>
+
+<p>teknigini kullanabiliriz. Fakat ya "bir ya da daha fazla a ardından
+bir ya da daha fazla b gelen tüm bölümleri bana göster" diye bir kalıp
+arıyorsak? Bu gibi durumları basit string araması ile yapamayız, daha
+kuvvetli bir dil lazım.</p>
+
+<p>Düzenli ifadeler bir metin bloğunu temsil eden tariflerdir; onları bir
+algoritma olarak değil bir beyan şeklinde görmek lazim; birden fazla
+metin çeşidini temsil edebilecek bir kalıp tanımlıyoruz, ve bu kalıbın
+bir metin içinde olup olmadığını bilgisayara soruyoruz. Mesela onceki
+ornek icin</p>
+
+<pre><code>a+b+
+</code></pre>
+
+<p>ifadesi kullanılır. + işareti bir veya daha fazla demek, ondan önceki
+harflerin tekrar edebileceğini söylüyor. Metin üzerindeki uyumu nedir?</p>
+
+<pre><code>import re
+print re.match('a+b+', s1) != None
+
+True
+</code></pre>
+
+<p>Bir uyum var. Fakat daha iyisini yapabiliriz, uyan bölümleri gösterelim,</p>
+
+<pre><code>import re
+res = re.findall('a+b+',s1)
+print res
+
+['aaabb', 'abb', 'abbbb']
+</code></pre>
+
+<ul>
+<li>yerine * kullanabilirdik, * işareti "0 ya da daha fazla" anlamına geliyor.</li>
+</ul>
+
+<p>Hem + hem de * açgözlü operatörlerdir, yani uydurabildikleri büyük
+veriyi almak isterler. Bazen bunu istemeyiz, açgözlülüğü durdurmak
+için ? kullanılır.</p>
+
+<pre><code>print re.findall('a+?b+?',s1)
+
+['aaab', 'ab', 'ab']
+</code></pre>
+
+<p>Bir örnek daha</p>
+
+<pre><code>s2 = "jjjjddddddddd&lt;H1&gt;title&lt;/H1&gt;xxxxxxxxxxxxx"
+print 'acgozlu', re.findall("&lt;.*&gt;", s2)
+print 'degil', re.findall("&lt;.*?&gt;", s2) # acgozlu degil
+
+acgozlu ['&lt;H1&gt;title&lt;/H1&gt;']
+degil ['&lt;H1&gt;', '&lt;/H1&gt;']
+</code></pre>
+
+<p>Karakterlerin kendisi yerine onları temsil eden "joker" semboller de
+kullanılabilir. Nokta karakteri "ne olursa olsun" anlamına gelir,
+mesela 1. metin üzerinde 'a' ile başlasın '4' ile bitsin, arada ne
+olursa olsun diyorsak,</p>
+
+<pre><code>print re.findall('a.*?4',s1)
+['aaabbabbabbbbee 4']
+</code></pre>
+
+<p>[] işareti içine konan her karakter aynı bir seçenek olarak kabul
+edilir, yani "bu karakterlerden herhangi biri olabilir" ifadesi böyle
+kodlanır. Mesela [abc] diyorsak, 'a','b','c' harflerinden herhangi
+biri mümkündür. Aralık tanımlamak ta mümkün, mesela [0-4] demek 0 ile
+4 arasındaki tüm sayılar demektir, ya da [a-f] "a ile f arası tüm
+harfler". Bunların bir karışımı olabilir, [0-9A-Fa-f] gibi.</p>
+
+<pre><code>s3 = "xxxx4534yyyyy 444a44444444"
+print re.findall("[3-5a]+",s3)
+print re.findall("[a-z]+",s3)
+
+['4534', '444a44444444']
+['xxxx', 'yyyyy', 'a']
+</code></pre>
+
+<p>Bir Kalıp İçindeki Daha Ufak Kalıbı Çıkartmak</p>
+
+<p>Bazen aradığımız bir kalıp daha büyük bir kalıp içindedir,  HTML
+kazıma (scraping) yaparken bu tür ihtiyaç çok ortaya çıkar, diyelim ki
+döküman içinde 222.444.222.111'ye benzeyen yani noktalarla ayrılmış
+sayılar grubu pek çok yerde var, ama biz bunlardan sadece <tr>
+.. </tr> içinde olanlarını istiyoruz. Örnek veri</p>
+
+<pre><code>s4 = "ddddddhhhhhhf jjjjjj 111.222.33.444 dddddd ddddddddddd" + \
+"xxxxxxxxxx xxxxxxxxxj kkkkkk kkkkkk &lt;tr&gt;xxxxx111.222.888.444yyyy&lt;/tr&gt; " + \
+"xxxxxxxxxx xxxxxxxxxj kkkkkk kkkkkk &lt;tr&gt;xxxxx111.555.888.444yyyy&lt;/tr&gt; " + \
+"dddddd jjjjjjj 333.222.33.444 111.222.33.444 jjjjjjjjjjjj"
+Bu çağrıyı yapmanın iki yolu var. Birincisi,
+
+regex = "&lt;tr&gt;x+(\d+\.\d+\.\d+\.\d+)y+&lt;/tr&gt;"
+for x in re.finditer(regex, s4, re.DOTALL):
+   print x.group(0)
+   print x.group(1)
+
+&lt;tr&gt;xxxxx111.222.888.444yyyy&lt;/tr&gt;
+111.222.888.444
+&lt;tr&gt;xxxxx111.555.888.444yyyy&lt;/tr&gt;
+111.555.888.444
+</code></pre>
+
+<p>Bu çağrı hem dış, hem iç (parantez arasında olan) düzenli ifadenin
+sonucunu verebilir, group() ile hangisini istediğimize karar
+veririz. Eğer hep parantez içindekini istiyorsak, ki çoğunlukla böyle
+olur, direk group(0)'u veren findall'u kullanabiliriz,</p>
+
+<pre><code>print re.findall(regex, s4)
+['111.222.888.444', '111.555.888.444']
+</code></pre>
+
+<p>Tüm Veriye Bakmak</p>
+
+<p>Şimdiye kadar gördüğümüz tüm teknikler satır bazında işler; eğer bir
+dosyayi açıp satır satır işliyorsak bu problem değil. Fakat bazen bir
+satırda başlayıp diğer bir satırda biten kalıpları bulmamız
+gerekebilir. Mesela 444 ile başlayıp 5555 ile biten bir kalıp farklı
+satırlarda ise ne yapacağız? Alttaki veride yeni satır (newline) <code>\n</code>
+işaretine dikkat, bu karakter bir dosya içinde bir satırın sonunda
+mevcuttur.</p>
+
+<pre><code>s5 = "xxxxxx xxxxxxxxxxx 44444 xxxxx\n" + \
+     "555555 xxxxx"
+print re.findall("4+.*?5+", s5)
+
+[]
+</code></pre>
+
+<p>Hiç sonuç gelmedi. Fakat eğer re.DOTALL seçeneğini geçersek, bu nokta
+ifadesinin yeni satır karakterine de uyum yapabileceğini söyler,
+böylece</p>
+
+<pre><code>print re.findall("4+.*?5+", s5, re.DOTALL)
+
+['44444 xxxxx\n555555']
+</code></pre>
+
+<p>sonucu bulunabilir.</p>
+
+<p>Eğer belli bir kelimeden sonra tekrarlanan kalıpları bulmak
+istiyorsak, mesela sadece ccccccccccc kelimesinden sonra gelen ip
+adreslerini almak,</p>
+
+<pre><code>s6 = """
+ddddddhhhhhhf jjjjjj 111.222.33.444 dddddd ddddddddddd
+ccccccccccc
+xxxxxxxxxx xxxxxxxxxj kkkkkk kkkkkk xxxxx111.222.888.444yyyy
+xxxxxxxxxx xxxxxxxxxj kkkkkk kkkkkk xxxxx111.555.888.444yyyy
+dddddd jjjjjjj 333.222.33.444 111.222.33.444 jjjjjjjjjjjj
+"""
+
+regex = ".*?ccccccccccc|(\d+\.\d+\.\d+\.\d+)"
+res = re.findall(regex, s6, re.DOTALL)
+</code></pre>
+
+<p>Burada ilginç bir numara kullanıldı; | komutu ile metni iki bölüme
+ayırmış olduk, bu komut "ya onu ya bunu" şeklinde bir seçim yaptığı
+için önce sol tarafa uyacaktır, fakat belli bir noktadan sonra sağ
+kısmı uyduracaktır ve o kısım içinde gruplama vardır, ve o gruplamanın
+içi doldurulur. Bu komut</p>
+
+<pre><code>['', '111.222.888.444', '111.555.888.444', '333.222.33.444', '111.222.33.444']
+</code></pre>
+
+<p>sonucunu verir, baştaki boş kelime kısmini filter ile çıkartabiliriz,
+mesela filter(None, res) gibi.</p>
+
+<p>Metin Değiştirmek</p>
+
+<p><code>re.sub</code> ile duzenli ifadeler kullanip degistirme islemi de
+yapabiliriz. Mesela</p>
+
+<pre><code>line = '{\\em Bir kelime}'
+print (line)
+s = re.sub(r'{\\em (.*?)}', r'*\1*', line)
+print (s) 
+</code></pre>
+
+<p>Yani Dİ ile bir cümle içindeki bir kalıbı yakaladık, sonra uyan kalıba
+<code>\1</code> ile referans yaptık (Dİ'da kaç parantez varsa onlar numaralanır,
+ikinci, üçüncü parantezler <code>\2</code>,<code>\3</code> diye giderdi), ve uyan bölümü
+daha genel başka bir çıktı içinde kullandık.</p>
+
+<p>Tek Karakter Uyumu</p>
+
+<p><code>\d</code> Tek haneli bir sayı
+<code>\D</code> Tek haneli sayı haricinde her şey
+<code>\w</code> Bir alfabe harfi (a ile z, A ile Z arası)
+<code>\w</code> Alfabe haricinde herhangi bir karakter
+<code>\s</code> Beyaz boşluk (SPACE, TAB) karakteri
+<code>\S</code> Beyaz boşluk haricinde herhangi bir karakter
+<code>^</code> Satır başlangıç karakteri
+<code>.</code> Herhangi bir karakter
+<code>$</code> Satır sonu karakteri</p>
+
+<p>Tekrarlar</p>
+
+<p><code>*</code>  0 ya da daha fazla
+<code>+</code>  1 ya da daha fazla
+<code>?</code>  1 ya da hiç
+<code>{n}</code> n kere
+<code>{n,}</code> en az ne kere
+<code>{n,m}</code> en az ne kere, ama m'den fazla değil
+<code>str1 | str2</code> Ya ifade1 ya da ifade2 bulunacak </p>
+
+<p>"abbbccdaabccdde" üzerinde bazı düzenli ifade örnekleri</p>
+
+<p>Abc Uymaz. <code>\$d</code> içinde hiç "A" yoktur yâni "Abc" bulunamaz.</p>
+
+<p>abc Uyar.</p>
+
+<p>^abc Uymaz. Çünkü ^ meta-karakteri dizinin başında anlamındadır ve
+"abc" alt dizisi PVerb!\$d!'nin başında değildir.</p>
+
+<p>abc> Uymaz. Çünkü &gt; meta-karakteri dizinin sonunda anlamındadır ve
+"abc" alt dizisi $d 'nin sonunda değildir.</p>
+
+<p>^ab*c Uyar, çünkü dizinin basinda "a" ve ardından <code>sıfır veya daha
+fazla b'' ve ardından "c" var! Bu düzenli ifadede olan * karakteri
+hemen solundaki karakter için</code>sıfır veya daha fazla kez tekrar
+eden'' anlamında bir meta karakterdir.</p>
+
+<p>aH*bc Uyar. Çünkü dizide "a" ve ardından sıfır veya daha fazla "H" ve
+ardinda "bc" var!</p>
+
+<p>aH+bc Uymaz. Çünkü dizide "a" ve ardından en az bir tane "H" ve onun
+ardında "bc" seklinde bir düzen yok! Bu Duzenli ifadede olan "+"
+karakteri hemen solundaki karakter için "bir veya daha fazla kez
+tekrar eden" anlamında bir meta-karakterdir.</p>
+
+<p>a<em>bc Uymaz. Çünkü dizinin içinde hiç "a" ve ardından gelen "</em>" yok! Bu
+örnekte "*" bir meta-karakter olarak değil; basit anlamıyla bir
+asterisk karakteri olarak kullanıldığı için önündeki "" ile
+işaretlenmiştir.</p>
+
+<p>a+bc Uymaz. Çünkü dizinin içinde hiç "a" ve ardindan gelen "+" yok! Bu
+örnekte "+" bir meta-karakter olarak değil; basit anlamıyla bir artı
+işareti olarak kullanıldığı için önündeki "" ile işaretlenmiştir.</p>
+
+<p>a c Uymaz. Çünkü dizinin içinde hiç "a" ve ardindan gelen "" yok.</p>
+
+<p>a.<em>b Uyar Çünkü dizide <code>a ve aralarında birşeyler ve sonra b'' var!
+</code>.''  (nokta) meta-karakteri herhangi bir karaktere uyar; ardından
+gelen ``</em>'' ile birlikte (yâni .*!) birşeyler olarak okunabilir.</p>
+
+<p>d.<em>a Uyar Çünkü "birşey" anlamındaki noktanın ardından gelen "</em>"
+meta-karakteri sıfır veya daha fazla herhangi birşey anlamındadır.</p>
+
+<p>d.+a Uyar Çünkü "birşey" anlamındaki noktanın ardından gelen
+meta-karakter bir +! ; Yâni bir veya daha fazla "herhangi birşey"</p>
+
+<p>da? Uyar Çünkü dizide "d" ve ardından bir veya sıfır tane "a" gelen
+alt dizi var.</p>
+
+<p>Eski Anlatım</p>
+
+<p>Düzenli İfadeler, Perl, Kurumsal Java kitabından, <a href="https://github.com/burakbayramli/classnotes/raw/master/sk/2016/02/regex-kj.pdf">PDF</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

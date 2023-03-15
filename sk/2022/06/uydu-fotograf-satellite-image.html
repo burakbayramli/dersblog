@@ -1,0 +1,159 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Uydu Fotoğrafları Erişimi</h1>
+
+<p>Sık güncellenen uydu fotoğraflarına erişmek için <code>pystac_client</code>,<code>rioxarray</code>;
+<code>pip</code> ile kurulur. Örnek enlem, boylam için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pystac_client</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">rioxarray</span>
+
+<span class="n">api_url</span> <span class="o">=</span> <span class="s2">&quot;https://earth-search.aws.element84.com/v0&quot;</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">api_url</span><span class="p">)</span>
+
+<span class="n">collection</span> <span class="o">=</span> <span class="s2">&quot;sentinel-s2-l2a-cogs&quot;</span>
+
+<span class="n">lat</span><span class="p">,</span> <span class="n">lon</span> <span class="o">=</span> <span class="mf">52.37</span><span class="p">,</span> <span class="mf">4.90</span>
+<span class="n">geometry</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;coordinates&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="p">)}</span>
+
+<span class="n">mysearch</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+    <span class="n">collections</span><span class="o">=</span><span class="p">[</span><span class="n">collection</span><span class="p">],</span>
+    <span class="n">intersects</span><span class="o">=</span><span class="n">geometry</span><span class="p">,</span>
+    <span class="n">max_items</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">mysearch</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">item</span><span class="p">)</span>
+   <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">assets</span><span class="p">[</span><span class="s2">&quot;thumbnail&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">href</span><span class="p">)</span>
+   <span class="n">visual_href</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">assets</span><span class="p">[</span><span class="s2">&quot;visual&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">href</span>
+   <span class="k">break</span> <span class="c1"># ilk sonucu kullan</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;Item id=S2A_31UFU_20220629_0_L2A&gt;
+https://roda.sentinel-hub.com/sentinel-s2-l1c/tiles/31/U/FU/2022/6/29/0/preview.jpg
+</code></pre>
+</div>
+
+<p>Sonuçta bir <code>preview.jpg</code> görülüyor. Bu ufak bir dosya, erişilip
+bakılabilir, kabaca görüntünün nasıl olduğunu anlamak için iyi
+olabilir. Öteki bilgiler,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">datetime</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">geometry</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">properties</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>2022-06-29 10:56:35+00:00
+{&#39;type&#39;: &#39;Polygon&#39;, &#39;coordinates&#39;: [[[6.071664488869862, 52.22257539160586], [4.464995307918359, 52.25346561204129], [4.498475093400055, 53.24019917467795], [6.1417542968794585, 53.20819279121764], [6.071664488869862, 52.22257539160586]]]}
+{&#39;datetime&#39;: &#39;2022-06-29T10:56:35Z&#39;, &#39;platform&#39;: &#39;sentinel-2a&#39;, &#39;constellation&#39;: &#39;sentinel-2&#39;, &#39;instruments&#39;: [&#39;msi&#39;], &#39;gsd&#39;: 10, &#39;view:off_nadir&#39;: 0, &#39;proj:epsg&#39;: 32631, &#39;sentinel:utm_zone&#39;: 31, &#39;sentinel:latitude_band&#39;: &#39;U&#39;, &#39;sentinel:grid_square&#39;: &#39;FU&#39;, &#39;sentinel:sequence&#39;: &#39;0&#39;, &#39;sentinel:product_id&#39;: &#39;S2A_MSIL2A_20220629T104631_N0400_R051_T31UFU_20220629T170417&#39;, &#39;sentinel:data_coverage&#39;: 100, &#39;eo:cloud_cover&#39;: 22.69, &#39;sentinel:valid_cloud_cover&#39;: True, &#39;sentinel:processing_baseline&#39;: &#39;04.00&#39;, &#39;sentinel:boa_offset_applied&#39;: True, &#39;created&#39;: &#39;2022-06-29T19:43:11.806Z&#39;, &#39;updated&#39;: &#39;2022-06-29T19:43:11.806Z&#39;}
+</code></pre>
+</div>
+
+<p>Zaman damgasına bakıyoruz 29/6 diyor, kodu 30/6'da işlettik, fena
+değil. Birkaç günlük gecikme ile yeryüzünde pek çok noktanın
+görüntüsüne erişmek mümkün demek ki.</p>
+
+<p>Esas detaylı görüntü dosyası altta,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">visual_href</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/31/U/FU/2022/6/S2A_31UFU_20220629_0_L2A/TCI.tif
+</code></pre>
+</div>
+
+<p>Fakat bu dosya 100 MB'tan fazla olabilir, bu sebeple çoğunlukla
+yapılan dosyanın parçalarını indirmek, <code>rioxarray</code> bu işlemi
+gerçekleştirebilir, x,y için minimum, maksimum noktalar verip bir ufak kutu
+yaratabiliyoruz, ve sadece bu ufak kutudaki detaylı imaj parçası geri
+döndürülüyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">visual</span> <span class="o">=</span> <span class="n">rioxarray</span><span class="o">.</span><span class="n">open_rasterio</span><span class="p">(</span><span class="n">visual_href</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">visual</span><span class="p">)</span>
+<span class="n">visual_clip</span> <span class="o">=</span> <span class="n">visual</span><span class="o">.</span><span class="n">rio</span><span class="o">.</span><span class="n">clip_box</span><span class="p">(</span>
+    <span class="n">minx</span><span class="o">=</span><span class="mi">627000</span><span class="p">,</span>
+    <span class="n">maxx</span><span class="o">=</span><span class="mi">631000</span><span class="p">,</span>
+    <span class="n">miny</span><span class="o">=</span><span class="mi">5802000</span><span class="p">,</span>
+    <span class="n">maxy</span><span class="o">=</span><span class="mi">5806000</span>
+<span class="p">)</span>
+<span class="n">visual_clip</span><span class="o">.</span><span class="n">plot</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;uydu_01.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;xarray.DataArray (band: 3, y: 10980, x: 10980)&gt;
+[361681200 values with dtype=uint8]
+Coordinates:
+  * band         (band) int64 1 2 3
+  * y            (y) float64 5.9e+06 5.9e+06 5.9e+06 ... 5.79e+06 5.79e+06
+  * x            (x) float64 6e+05 6e+05 6e+05 ... 7.098e+05 7.098e+05 7.098e+05
+    spatial_ref  int64 0
+Attributes:
+    _FillValue:    0.0
+    scale_factor:  1.0
+    add_offset:    0.0
+    grid_mapping:  spatial_ref
+</code></pre>
+</div>
+
+<p><img src="uydu_01.png" alt="" /></p>
+
+<p>Detaylar net gözüküyor.. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [The Carpentries Incubator](https://carpentries-incubator.github.io/geospatial-python/19-access-data/index.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

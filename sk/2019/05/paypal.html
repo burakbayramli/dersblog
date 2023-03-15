@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Paypal, Internet'te Ödeme Almak</h1>
+
+<p>Paypal Türkiye'deki hizmetine son vermis fakat ileride açılabilir,
+ayrıca yabancı ülkelerde banka hesapları üzerinden hala Paypal
+kullanılabilir. Yazının geri kalanı işler bir Paypal hesabı olduğunu
+farz ediyor.</p>
+
+<p>Paypal aslında ciddi bir ödeme sistemi, hatta daha ilerisinde bir
+"ödeme işleyici (payment processor)". Bu tür şirketler dünya finans
+sistemının belkemiğine bağlıdır, bu bağlantıyı kurmak kolay değildir,
+mesela Google Pay var, ama GP bir ödeme işleyici değil. Diğer ödeme
+işleyicilere bağlanarak işini yapıyor, Paypal gibi.</p>
+
+<p>Eğer normal paypal.com hesabınız varsa, onunla alakalı</p>
+
+<p>developer.paypal.com</p>
+
+<p>hesabınız da olacaktır. Bu adresten Paypal'ın geliştirme ve test
+araçlarına erisebiliyorsunuz. Üstteki adrese paypal kullanıcı /
+şifremiz ile giriş yapalım. Burada bazı taklit satıcı, müşteri
+hesapları yaratacağız. Accounts'a tıklayın orada kum kabı (sandbox)
+hesapları yaratabiliriz. "Kum kabı" içinde "kumda kale yapar gibi" bu
+taklit hesaplar ile işlem gerçek işlemlere yakın hareketler
+yapacağız. Bir tane iş (business) hesabı yaratalim ki bu hesaptan
+ödeme kabul edebilelim, diğeri kişisel taklit hesap olabilir, ki ödeme
+gonderebilelim. Create Account ile bu hesapları yaratırız. Hesap
+yaratırken kullanılan email ve şifre ile şimdi</p>
+
+<p>sandbox.paypal.com</p>
+
+<p>adresine giriş yapabiliriz. Bu adres bizi bu taklit kullanıcıların
+"hesabına" götürüyor. Bu kullanıcılara neredeyse tam tekmilli paypal
+hesaplariymis gibi, o sayfalar üzerinden erisebilmek önemli böylece bu
+hesaplarda oynamalar, değişiklikler yaparak farklı test senaryolarını
+deneyebiliriz, ama bu testler gerçek hesabımızı etkilemiyor.</p>
+
+<p>Bir "satın al" butonu yaratalım. Satıcının hesabına girelim, menüden
+Tools | Business setup seçelim. Payment setup'tan "on your website"
+seçip Continue tıklayalım. Sonraki sayfada ödemeleri nasıl işlemek
+istediğimiz soruluyor, sol blok seçilebilir, oradaki Continue
+seçilebilir.</p>
+
+<p>Step 1 diyen, bir sonraki ekranda "create payment buttons using HTML".
+Düğme tipi için "Buy Now" tipi yeterli, en basiti bu.</p>
+
+<p>Step 2 altında "save button at Paypal" işaretini iptal edelim. Bir
+ürün fiyatı girelim, mesela 10 dolar.</p>
+
+<p>Step 3 altında Add advances variables kısmı var, bu kutu önemli,
+Paypal ödemeyi aldıktan sonra bizim sitemize bildirimi nasıl yapacak,
+onu gösteriyor. Bu kutuya</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">notify_url</span><span class="o">=</span><span class="p">[</span><span class="n">bizim</span> <span class="n">site</span> <span class="n">ve</span> <span class="n">paypal</span> <span class="n">url</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>Simdi create button ile düğmeyi üretelim. Düğme bir HTML kodu olarak
+bize verilecek, bu kodu sitemizin HTML'i içine koyunca bir ödeme
+düğmesi göreceğiz. Sayfayı tarayıcıda ziyaret edelim ve satın alma
+düğmesine tıklayaylım, paypal'e gideceğiz, burada taklit alıcı
+hesabıyla giriş yapıp ödemeyi yapalım. Ödeme şekillerinde kredi kart,
+paypal hesabı gibi seçenekler var, taklit kredi kartı da
+kullanabilirdik. Son birkaç rakamı gösterilen kart gerçek değil. Ödeme
+düğmesi bizi sandbox alanına götürmüştü, çünkü düğmeyi bu taklit
+alanda yaratmıştık.</p>
+
+<p>Artık www.sandbox.paypal.com adresine gidersek burada hesabımızdan 10
+dolar eksiltildiğini görürüz. Bu tabii ki taklit para. Şimdi satıcı
+hesabına girersek orada 10 dolara yakın bir paranın hesabımıza
+geçtiğini görüyoruz (10 dolardan biraz eksik olabilir çünkü paypal
+komisyonunu kesti).</p>
+
+<p>Eğer "save button at Paypal" işaretini iptal etmezsek, düğme Paypal
+sisteminde kaydedilecektir, ve bize verilen düğme HTML'i bir tür
+referans haline gelecektir. Bu referansın ima ettiği düğme (satış
+fiyatı, ürün, vs) bilgilerini istersek sonradan Paypal'de
+değiştirebiliriz, HTML kodunda hiçbir değişim olmaz. Bu sonuç ortamını
+test etmek ve diğer bazı durular için faydalı olabilir, mesela bir
+düğmeyi 5 USD ile test ederiz, sonra 30 USD'ye çıkartabiliriz.</p>
+
+<p>Kaydedilmiş düğmeleri görmek için <code>Tools | All Tools</code>'dan Paypal
+Buttons'a tıklayabiliriz, ya da direk https://paypal.com/buttons
+bağlantısına gidebiliriz.</p>
+
+<p>Paypal'den Bilgi Almak</p>
+
+<p>Üstte <code>notify_url</code> ile bir URL verdik. Bu URL bizim sitemizde mesela
+Flask ile servis ettiğimiz / dinlediğimiz bir adres olacak. Flask'te
+şu kodlar kullanılabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">urllib.parse</span>
+<span class="o">...</span>
+<span class="n">VERIFY_URL_PROD</span> <span class="o">=</span> <span class="s1">&#39;https://ipnpb.paypal.com/cgi-bin/webscr&#39;</span>
+<span class="n">VERIFY_URL_TEST</span> <span class="o">=</span> <span class="s1">&#39;https://ipnpb.sandbox.paypal.com/cgi-bin/webscr&#39;</span>
+<span class="n">VERIFY_URL</span> <span class="o">=</span> <span class="n">VERIFY_URL_TEST</span>
+<span class="o">...</span>
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/paypal_ipn&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
+<span class="k">def</span> <span class="nf">paypal_ipn</span><span class="p">():</span>    
+    <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cmd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_notify-validate&#39;</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;content-type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/x-www-form-urlencoded&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;user-agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Python-IPN-Verification-Script&#39;</span><span class="p">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">VERIFY_URL</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">verify</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">r</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;VERIFIED&#39;</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Verified&quot;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">r</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;INVALID&#39;</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;Invalid&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;some other response&quot;</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>       
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</code></pre>
+</div>
+
+<p>Şimdi Paypal'de ödeme yaptıktan sonra Paypal servis tarafı bizim
+servisimiz ile bağlantıya geçecek, <code>bizim site/paypal_ipn</code>'e
+bağlanacak (bu adresi düğme yaratırken vermiş olmamız lazım tabii), ve
+log'da bize gönderdiği bilgileri göreceğiz. Müşteri kodu, email'i,
+adresi gibi bir sürü bilgi burada var. Bu bilgileri kaydedip bir
+kullanıcı girişi için ileride kullanabiliriz.</p>
+
+<p>Bu çağrının oturumsal, asenkronluk durumuna gelelim: mesela kullanıcı
+sisteme girmiş (logged in) sonra Paypal ödeme düğmesinden ödeme yapmış
+ve Paypal'den çağrıyı üstteki metota almışız. Bu durumda kullanıcı
+oturumu ile bu çağrı arasında bağlantı yapabilir miyiz?</p>
+
+<p>Bunu yapamayız. Üstteki geri çağrı (çallback) asenkron şekilde Flask
+tarafından işletilecektir, fakat bu farklı bir Thread üzerinde
+asenkron şekilde yapılır, çok süreçli ortamlarda çağrıyı işleyen o
+çağrıyı tetikleyen kullanıcının üzerinde olduğu makinadan farklı bile
+olabilir. Bu durumda bu çağrıyı konumsuz (stateless) bir çağrı olarak
+işlemek gerekecektir, yani objesel değil fonksiyonel düşünmek
+lazım. Geri çağrıda bize verilen ne bilgi varsa sadece onları
+kullanabiliriz, daha fazlasını, mesela "içinde olduğumüz" objenin iç
+değişkenleri gibi, kullanamayız. Yani hernangi bir kullanıcı ve o
+bilgi arasında eşleştirmeyi veri tabanı üzerinden yapmamız lazım.</p>
+
+<p>Flask Python projemizde gerekli ek paketler <code>requests</code>, ve
+<code>urllib3</code>. Onlar <code>pip</code> ile kurulmuş olmalı.</p>
+
+<p>Paypal'den gelen üstte <code>params</code> içindeki sözlüğe bakarsak,</p>
+
+<p><code>{'mc_gross': '5.00', 'protection_eligibility': 'Eligible',
+'address_status': 'confirmed', 'payer_id': '[ID]', 'address_street':
+'1 Main St', 'payment_date': '00:06:13 May 30, 2019 PDT',
+'payment_status': 'Completed', 'charset': 'windows-1252',
+'address_zip': '95131', 'first_name': 'sdfsdf', 'mc_fee': '0.55',
+'address_country_code': 'US', 'address_name': 'sdfsdf asdfasdf',
+'notify_version': '3.9', 'custom': '', 'payer_status': 'verified',
+'business': '[ALICI EMAIL]', 'address_country': 'United
+States', 'address_city': 'San Jose', 'quantity': '1', 'verify_sign':
+'[UZUN BIR ID]', 'payer_email': '[EMAIL ADRESI]', 'txn_id':
+'[BIR ID]', 'payment_type': 'instant', 'last_name':
+'asdfasdf', 'address_state': 'CA', 'receiver_email': '[SATICI EMAIL]',
+'payment_fee': '', 'shipping_discount': '0.00', 'insurance_amount':
+'0.00', 'receiver_id': 'UBDDHGYZT5F3E', 'txn_type': 'web_accept',
+'item_name': '[URUN KODU]', 'discount': '0.00', 'mc_currency': 'EUR',
+'item_number': '', 'residence_country': 'US', 'test_ipn': '1',
+'shipping_method': 'Default', 'transaction_subject': '',
+'payment_gross': '', 'ipn_track_id': '2226091c8006d', 'cmd':
+'_notify-validate'}</code></p>
+
+<p>gibi bir çıktı göreceğiz. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://www.youtube.com/watch?v=NFUdd3gveN8</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

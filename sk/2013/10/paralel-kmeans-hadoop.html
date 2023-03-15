@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Paralel KMeans, Hadoop</h1>
+
+<p>K-Means algoritmasını [1] nasıl paralel şekilde işletiriz? Özellikle
+Hadoop gibi bir Eşle-İndirge (Map-Reduce) ortamını düşünelim. Veri çok
+büyük ölçekte olabilir ve bu veriler birden fazla makinaya
+bölünecektir. Eşle-İndirge kavramında eşleme safhasında "anahtar
+üretiriz", ve sonra indirgeme safhasında Hadoop sistemi öyle kurmuştur
+ki aynı anahtarlarlar tek bir makinaya gönderilir, ve bu nihai aşamada
+artık anahtar bazında indirgeme (özetleme) yapılır.</p>
+
+<p>Paralel K-Means için anahtar nedir? Anahtar, mesela küme
+olabilir. Yani küme 1, küme 2 gibi küme işaretleri / sayıları anahtar
+olarak kullanılabilirler.</p>
+
+<p>Peki anahtar ile eşlenecek "değer" nedir?</p>
+
+<p>Öyle bir değer arıyoruz ki üst üste konulabilecek bir şey olmalı, Eİ
+sisteminin kuvveti burada, anahtarlar farklı noktalarda
+üretilebiliyor, sonra tek noktada üst üste konuyor, o zaman değerler
+öyle üretilmeli ki bu üst üste koyma, özetleme işlemi
+yapılabilsin. Üst üste konabilecek şey, her veri noktası için, o veri
+noktasının ait olduğu küme üzerinden toplama işlemidir. 10.20, 20.5
+veri noktasına bakıyorum, bu nokta o anda elde olan küme
+merkezlerinden 6'ya en yakın, 10.20, 20.5 verisi ile bir 6 anahtarı
+yayınlarım.</p>
+
+<p>Tabii burada tavuk/yumurta problemi var, küme merkezlerini arıyorum,
+ama anahtar üretimi için küme merkezi lazım. Bu nasıl olacak?  O zaman
+(ilk başta rasgele bile olsa) küme merkezlerinin bilgisi tüm
+makinaların erişebileceği bir yerde olmalı. Biz bu veriyi
+<code>centers.csv</code> adlı bir dosyaya koymaya karar verdik, bu dosya tek
+makina ortamında bilinen bir dizinde (mesela /tmp), çok makinalı
+ortamda ise HDFS üzerinde herkesin erişebileceği bir yerde olmalı.</p>
+
+<p>Toplamaya gelelim: Normal K-Means'i hatırlarsak, her nokta için o
+noktaya en yakın kümeyi buluyordu ve sonra, atama işlemi bitince, her
+kümenin altındaki noktaları toparlayıp onların ortalamasını alarak
+yeni küme merkezini hesaplıyordu. Paralel ortamda ortalama işlemi üst
+üste konabilecek bir şey, çünkü toplama üst üste konabilecek bir
+işlem, ve / yani farklı makinalarda küme-nokta, eşlemelerini
+üretirsek, indirgeme aşamasında o anahtar için tüm değerleri toplayıp
+nokta sayısına böleriz ve yeni küme merkezini elde ederiz.</p>
+
+<p><img src="kmeans-diag.png" alt="" /></p>
+
+<p>Şimdi Hadoop ile ilgili bazı lojistik konulara gelelim:</p>
+
+<p>Paralel K-Means için tek bir eşle-indirge işletimi yeterli değil, bu
+algoritma döngülü / özyineli (iterative) bir algoritma, 5,10,20 kez
+işlemesi gerekebilir.  Her döngü (indirgeme) sonunda yeni küme
+merkezleri hesaplanacak, bu merkezler eski <code>centers.csv</code> yerini alacak
+ve işlem tekrar başlayacak.</p>
+
+<p>Şimdi ham veriyi gösterelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../kmeans/synthetic.txt&quot;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;kmeans_1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="kmeans_1.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">random</span>
+
+<span class="k">def</span> <span class="nf">euc_to_clusters</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="k">class</span> <span class="nc">MRKMeans</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+    <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">MRKMeans</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">centers_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/centers.csv&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
+
+    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;   &#39;</span><span class="p">)))</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">euc_to_clusters</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centers_</span><span class="p">),</span> <span class="n">point</span><span class="p">))</span>
+        <span class="k">yield</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+        <span class="n">new_centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+            <span class="n">new_centers</span> <span class="o">+=</span> <span class="n">val</span>
+            <span class="n">counts</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">yield</span><span class="p">(</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">counts</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">reduce_all_centers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">new_centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/centers.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">cluster</span><span class="p">,</span><span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="n">cluster</span><span class="p">,</span> <span class="n">val</span>
+            <span class="n">new_centers</span><span class="p">[</span><span class="n">cluster</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">new_centers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;   &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span><span class="n">row</span><span class="p">)))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="p">(</span><span class="n">mapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="p">,</span><span class="n">reducer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reducer</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reduce_all_centers</span><span class="p">)]</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">):</span> <span class="n">MRKMeans</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><code>reduce_all_centers</code> çağrısı tüm indirgeyiciler her küme için yeni
+orta noktayı hesaplayıp onu yayınladıktan (emit) sonra, tüm yeni
+merkezlerin geleceği yer.</p>
+
+<p>Komut satırından tek makina için Hadoop'suz işletelim,</p>
+
+<pre><code>!sort --random-sort synthetic.txt &gt; /tmp/synthetic.txt
+!head -15 /tmp/synthetic.txt &gt; /tmp/centers.csv
+!python kmeans.py synthetic.txt
+</code></pre>
+
+<pre><code>/usr/local/lib/python2.7/dist-packages/pytz/__init__.py:29: UserWarning: Module _yaml was already imported from /usr/lib/python2.7/dist-packages/_yaml.so, but /usr/local/lib/python2.7/dist-packages is being added to sys.path
+  from pkg_resources import resource_stream
+using configs in /home/burak/.mrjob.conf
+creating tmp directory /tmp/kmeans.burak.20131202.234454.312709
+writing to /tmp/kmeans.burak.20131202.234454.312709/step-0-mapper_part-00000
+Counters from step 1:
+  (no counters found)
+writing to /tmp/kmeans.burak.20131202.234454.312709/step-0-mapper-sorted
+&gt; sort /tmp/kmeans.burak.20131202.234454.312709/step-0-mapper_part-00000
+writing to /tmp/kmeans.burak.20131202.234454.312709/step-0-reducer_part-00000
+Counters from step 1:
+  (no counters found)
+writing to /tmp/kmeans.burak.20131202.234454.312709/step-1-mapper_part-00000
+Counters from step 2:
+  (no counters found)
+writing to /tmp/kmeans.burak.20131202.234454.312709/step-1-mapper-sorted
+&gt; sort /tmp/kmeans.burak.20131202.234454.312709/step-1-mapper_part-00000
+writing to /tmp/kmeans.burak.20131202.234454.312709/step-1-reducer_part-00000
+10 [ 33655.97916667  59869.70138889]
+13 [ 10318.87456446  55430.98780488]
+9 [ 21286.26027397  59328.61187215]
+0 [ 34297.27789474  43563.19789474]
+1 [ 56490.3362069   37260.18103448]
+2 [ 56217.97297297  43823.02702703]
+3 [ 56453.07407407  34324.16666667]
+4 [ 22960.27741935  45942.7483871 ]
+5 [ 61346.1443299   47761.37113402]
+6 [ 58466.11940299  60120.6641791 ]
+7 [ 51691.66477273  48608.63636364]
+8 [ 60189.47019868  53209.15231788]
+11 [ 62427.68  44841.88]
+12 [ 27699.59813084  56743.19626168]
+14 [ 41850.40925267  47055.58362989]
+Counters from step 2:
+  (no counters found)
+Moving /tmp/kmeans.burak.20131202.234454.312709/step-1-reducer_part-00000 -&gt; /tmp/kmeans.burak.20131202.234454.312709/output/part-00000
+Streaming final output from /tmp/kmeans.burak.20131202.234454.312709/output
+removing tmp directory /tmp/kmeans.burak.20131202.234454.312709
+using configs in /home/burak/.mrjob.conf
+using configs in /home/burak/.mrjob.conf
+creating tmp directory /tmp/kmeans.burak.20131202.234456.597838
+creating tmp directory /tmp/kmeans.burak.20131202.234456.597838
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-0-mapper_part-00000
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-0-mapper_part-00000
+Counters from step 1:
+Counters from step 1:
+  (no counters found)
+  (no counters found)
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-0-mapper-sorted
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-0-mapper-sorted
+&gt; sort /tmp/kmeans.burak.20131202.234456.597838/step-0-mapper_part-00000
+&gt; sort /tmp/kmeans.burak.20131202.234456.597838/step-0-mapper_part-00000
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-0-reducer_part-00000
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-0-reducer_part-00000
+Counters from step 1:
+Counters from step 1:
+  (no counters found)
+  (no counters found)
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-mapper_part-00000
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-mapper_part-00000
+Counters from step 2:
+Counters from step 2:
+  (no counters found)
+  (no counters found)
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-mapper-sorted
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-mapper-sorted
+&gt; sort /tmp/kmeans.burak.20131202.234456.597838/step-1-mapper_part-00000
+&gt; sort /tmp/kmeans.burak.20131202.234456.597838/step-1-mapper_part-00000
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-reducer_part-00000
+writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-reducer_part-00000
+10 [ 34190.76071429  59473.68214286]
+13 [  9524.38372093  55188.34689922]
+9 [ 19288.00425532  59048.12340426]
+0 [ 34495.96781609  42837.15862069]
+1 [ 56603.56756757  37301.28378378]
+2 [ 54698.1862069   43080.47586207]
+3 [ 56850.95180723  34689.86746988]
+4 [ 23627.50314465  45589.86792453]
+5 [ 60775.48039216  47705.81372549]
+6 [ 58623.54054054  59894.10135135]
+7 [ 51384.90184049  49124.60736196]
+8 [ 60238.23021583  52723.48920863]
+11 [ 61762.52830189  45110.81132075]
+12 [ 27191.86813187  57337.64835165]
+14 [ 41387.76223776  47391.7972028 ]       
+...
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../kmeans/synthetic.txt&quot;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">hold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/centers.csv&quot;</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">df2</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;rd&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;kmeans_2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="kmeans_2.png" alt="" /></p>
+
+<p>K-Means'i 20 kere işlettik. Eğer istenirse (hatta daha iyi olur) döngü
+bir <code>while</code> içine konur ve bitiş için "stabilite şartı"
+aranır. Stabilite yeni küme merkezinin eskisinden "çok fazla değişik
+olup olmadığı" şartıdır, değişim yoksa artık sonucu bulmuşuz demektir,
+daha fazla döngüye gerek kalmayacaktır. Biz döngüyü 20 kere döngüyü
+işlettik, bu problem için yeterli oldu.</p>
+
+<p>K-Means işini bitirdikten sonra elde edilen sonuçları
+okuyabiliriz. Nihai küme merkezleri <code>/tmp/centers.csv</code> içinde. Bu
+merkezleri alıp, ham veri üzerinde kırmızı nokta olarak gösteriyoruz.</p>
+
+<p>Veriyi 20-30 makinaya dağıtarak parça parça işleyip kümelemeniz
+mümkündür. Endüstride son zamanlarda habire duyulan Büyük Veri (Big
+Data) olayı işte bu.</p>
+
+<p><img src="../../2022/11/kmeans.gif" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [K-Means Kümeleme Metodu](https://burakbayramli.github.io/dersblog/algs/algs<em>080</em>kmeans/kmeans<em>kumeleme</em>metodu.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

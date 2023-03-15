@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python Bazli Tasinabilir Mobil UI Kodlari - Kivy</h1>
+
+<p>Kivy bazli yazilan Python UI kodlari hem Android hem iOS uzerinde
+isleyebiliyor. Android kodlamasi icin Java kullanmak istemeyenler icin
+iyi bir secenek olabilir. Kodun telefona gonderilmesi icin birkac
+yontem var, birisi Kivy "isletici" bir programi kurmak, bu isletici
+programin kendi apk'si var, ya Google Play'den ya da Kivy sitesinden
+bu apk indirilebilir.</p>
+
+<p>Bu isletici programi telefonda baslatinca program dizin sisteminde 
+/storage/emulated/0/kivy adli bir dizine bakacak, ve altinda gordugu
+tum alt dizinleri Kivy programlari olarak kabul edecek. Bir Kivy
+programinin olusturulmasi cok kolay, iki dosya yeterli. Biri
+android.txt digeri main.py. Text dosyasi</p>
+
+<pre><code>title=Hello World
+author=Burak Bayramli
+orientation=portrait
+</code></pre>
+
+<p>Merhaba Dunya uygulamasi </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">kivy.app</span>
+<span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">kivy.uix.button</span> <span class="kn">import</span> <span class="n">Button</span>
+
+<span class="k">class</span> <span class="nc">TestApp</span><span class="p">(</span><span class="n">App</span><span class="p">):</span>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        <span class="k">return</span> <span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+
+<span class="n">TestApp</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Tabii her "uygulama" kivy dizini altinda ayri bir dizin olabilir, her
+dizinde ayri bir android.txt dosyasi... Telefondak Kivy Launcher ana
+dizinde gordugu her alt dizini ayri bir uygulama olarak baslangic
+listesinde gosterir.</p>
+
+<p>Ayrica /storage/emulated/0/kivy dizini telefonda "Internal storage"
+denen dizine tekabul ediyor. Not: burada kivy dizini yoksa, bunu elle
+olusturmak lazim.</p>
+
+<p>Dugme Tiklama</p>
+
+<p>Bu ornekte dugme olsun, ona basilinca /sdcard/Download (bu /sdcard da ayni sekilde Internal Storage demek), altinda bir dosyaya bir seyler yazilsin.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">kivy.app</span> <span class="kn">import</span> <span class="n">App</span>
+<span class="kn">from</span> <span class="nn">kivy.uix.button</span> <span class="kn">import</span> <span class="n">Button</span>
+
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">instance</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;The button &lt;</span><span class="si">%s</span><span class="s1">&gt; is being pressed&#39;</span> <span class="o">%</span> <span class="n">instance</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/sdcard/Download/kivy-out.txt&quot;</span><span class="p">,</span><span class="s2">&quot;aw&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;filan falan fisman</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">TestApp</span><span class="p">(</span><span class="n">App</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">btn1</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Hello World&#39;</span><span class="p">)</span>
+        <span class="n">btn1</span> <span class="o">=</span> <span class="n">Button</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="s1">&#39;Hello world 1&#39;</span><span class="p">)</span>
+        <span class="n">btn1</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">on_press</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">btn1</span>
+
+<span class="n">TestApp</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Dizustunde Kivy GUI Isletmek</p>
+
+<p>Acaba Kivy uygulamasinin nasil isleyecegini gelistirme ortaminda,
+telefonda isletmeden once gorsek iyi olmaz mi? Bunun icin Python 3
+icin bir virtualenv sanal ortami kurup,</p>
+
+<pre><code>pip install kivy
+pip install pygame
+</code></pre>
+
+<p>yeterli. Simdi python main.py ile Kivy uygulamaniz baslayacaktir!
+(Not: tabii telefona yapilan referanslar ayni olmayabilir, mesela
+dizustu ortaminda /sdcard dizini yok).</p>
+
+<p>Kendi APK'mizi kendimiz Olusturmak</p>
+
+<p>Python kodlarindan direk APK'ye gitmek te mumkun. Burada Kivy'nin alt
+projeleri olan buildozer ve python-for-android gibi cozumler var. Bu
+projelerden python-for-android ile, anladigimiz kadariyla (daha
+kullanmadik) numpy, PIL, opencv gibi yerli kodlari APK icine dahil
+etmek mumun. Tek problem python-for-android sadece Linux uzerinde
+isliyor.  Fakat Kivy, VirtualBox uzerinden isletilebilecek ve icinde
+gerekli tum araclar onceden kurulmus bir sanal makina imajini
+sitesinden paylasiyor. Ya bu, ya da kendimiz Ubuntu kurarak
+python-for-android'i kullanabiliriz. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

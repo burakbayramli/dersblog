@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Seslendirme, Dublaj Nasil Yapilir</h1>
+
+<p>Diyelim YouTube'dan bir video'ya Turkce seslendirme yapmak
+istiyoruz. Once video'yu indiririz, youtube-dl araci bu is
+kullanilabilir,</p>
+
+<pre><code>sudo pip install youtube-dl
+</code></pre>
+
+<pre><code>youtube-dl [youtube video url adresi]
+</code></pre>
+
+<p>Video alindiktan sonra, mesela video-en.webm diye bir dosya olsun,
+video'yu baslatiriz, ayni anda Android cep telefonunda Voice Recorder
+aracini baslatiriz. Benim yaklasimim ana video'dan 5-10 saniye kadar
+izlemek, video dondurmak (pause), izledigim / duydugum konusmayi
+aklimda tercume edip aninda VR ile mikrofonda kaydetmek. Yani baska
+hicbir on hazirlik yapmadan direk  kaydi yapmak. Gayet basit. Tabii
+video / kayit donduruldugunda dusunmek icin bol vakit var, ve bu
+izle-tercume-kaydet islemini 5 dakikalik buyuk bloklara ayiriyorum,
+boylece aralarda mola vermek, hata ihtimalini azaltmak kolaylassin. VR
+ile kaydedilenler bir daha geri gidip duzeltilmiyor, o sebeple cok
+hatali bir kayit varsa sadece son 5 dakikalik blok tekrar kaydedilir,
+gerisi kaybedilmez.</p>
+
+<p>Neyse, diyelim 15 dakikalik ana video'dan sonra 3 tane 5'er dakikalik
+tercume kayit edildi. VR kayitlari m4a formatinda dosyalar, bu
+dosyalari alip dizustune getiririz, v1.m4a, v2.m4a,.. olsun,</p>
+
+<pre><code>ffmpeg  -i v1.m4a  v1.mp3
+ffmpeg  -i v2.m4a  v3.mp3
+ffmpeg  -i v3.m4a  v4.mp3
+</code></pre>
+
+<p>diye mp3 formatina ceviririz. Bu dosyalari birlestirip tek bir dosya
+yaratalim,</p>
+
+<pre><code>ffmpeg -i "concat:v1.mp3|v2.mp3|v3.mp3" -acodec copy voice.mp3
+</code></pre>
+
+<p>Simdi nihai seslendirme icin video'nun ses kismini bizim kaydettigimiz
+mp3 yapalim,</p>
+
+<pre><code>ffmpeg -i video_en.webm -i voice.mp3 -map 0:v -map 1:a -c:v copy -c:a libvorbis -ac 2 -shortest video_tr.webm
+</code></pre>
+
+<p>Artik video_tr.webm icinde seslendirilmis video var.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

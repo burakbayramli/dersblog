@@ -1,0 +1,99 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>PDF Formlari Otomatik Olarak Doldurmak</h1>
+
+<p>English </p>
+
+<p>PDF bazli formlari otomatik olarak doldurmak icin ekteki Python scriptlerini paylasiyoruz. Kullanicinin yapmasi gerekenler once PDF dosyasini jpg dosyalarina cevirmek, sonra UI aracimiz uzerinden bu imajlar uzerinde kutularin yerlerini tiklayarak isaretlemektir. Sonra doldurulacak bilgiler bir text dosyasina yazilir, ve script tum bunlari otomatik olarak birlestirir.</p>
+
+<p>Once cevirme islemi</p>
+
+<p>python convert.py BELGE.pdf [hedef dizin]</p>
+
+<p>Program bitince [hedef dizin] icinde BELGE-0.jpg, BELGE-1.jpg,
+vs. gibi dosyalar olacak.</p>
+
+<p>Simdi kutu yerlerini belirleyin</p>
+
+<p>python locs.py [hedef dizin]/BELGE-0.jpg</p>
+
+<p>GUI programi baslayacak, burada kutulara belli bir sirayla
+tiklayin. Siranin mantiki bir sira olmasi iyi olur, yukaridan asagi,
+soldan saga gibi. Cogu PDF formu kutular uzerinde bir sira no'su da
+verir, bu kullanilabilir mesela.</p>
+
+<p>Her tiklama o tiklanan kordinati BELGE-0.jpg.loc dosyasina
+yazacaktir. Dosyaya yazim islemi her tiklamada yapilir, yani isiniz
+bitince locs.py programini kapatmak yeterli.</p>
+
+<p>Simdi doldurulacak veriler icin BELGE-0.jpg.fill diye bir dosya
+baslatin, diger dosyalar ile ayni dizinde olsun. Bu dosyadaki her
+bilgi, loc dosyasindaki kordinat satirina tekabul ediyor olmali.</p>
+
+<p>Eger gerekiyorsa, mesela [down=30] komutu ile 30 piksel asagi
+gidilebilir. Ayni sekilde down, yerine up, left, right komutlari da
+kullanilabilir. Font kucultulmek, buyultulmek isteniyorsa, mesela
+[font=20] ile yeni deger tanimlanabilir.</p>
+
+<p>Bu dosya tamamlaninca</p>
+
+<p>python fill.py [hedef dizin]/BELGE-0.jpg</p>
+
+<p>Bu son script loc, fill, jpg dosyalarini birlestirecek, ve doldurulmus
+formu BELGE-0.jpg-out.jpg olarak goreceksiniz.</p>
+
+<p>Aracimiz ImageMagick kullanir, baslamadan once kurulmus oldugunu
+kontrol edin. Gerekli diger Python kutuphaneleri icin Ubuntu uzerinde</p>
+
+<p>sudo apt-get install python python-tk idle python-pmw python-imaging
+python-imaging-tk</p>
+
+<p>Bu program icin bir potansiyel ilerleme bir oruntu tanima algoritmasi
+kullanarak kutularin yerlerini otomatik olarak belirlemektir; boylece
+kutulari tiklama ile isaretleme islemine gerek kalmaz, loc dosyasi
+kendiliginden ortaya cikar.</p>
+
+<p>Indir</p>
+
+<p>https://github.com/burakbayramli/kod/tree/master/formfill</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

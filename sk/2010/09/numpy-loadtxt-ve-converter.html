@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Numpy Loadtxt ve Converter</h1>
+
+<p>CSV dosyasi diye bilinen bosluk, virgul, vs. ile ayrilmis satirsal,
+duz text bazli dosyalari Loadtxt ile yukluyoruz. Eger bu yukleme
+sirasinda mesela bir float olmasi gereken bir hucrede 'NA' gibi bir
+string bazli deger varsa, loadtxt bu degeri float yapamadigi icin
+sikayet edecektir. NA bilindigi gibi "deger yok" anlamina gelen "not
+applicable" kelimesinden geliyor; Numpy icinde buna tekabul eden bir
+float degeri var (Nump.nan diye erisiliyor), o zaman String gorunce bu
+degere donusumu bizim yapmamiz lazim.Alttaki kod nes.dat adli bir
+dosyayi okur, 1. satiri atlar, ve sadece 11 ve 32. kolonlarini cekip
+cikartir, bu kolonlarin her ikisinde de bazen NA metni gorulurse, onu
+converter() fonksiyonu uzerinden numpy.nan degerine cevirir.import
+numpydef converter(x): if x == 'NA': return numpy.nan else: return
+float(x)nes = numpy.loadtxt("nes.dat", skiprows=1, usecols = (11,32),
+converters={11:converter, 32:converter})</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

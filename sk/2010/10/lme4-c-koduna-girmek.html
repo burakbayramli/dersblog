@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Lme4 C Koduna Girmek</h1>
+
+<p>Lme4 (ya da herhangi bir R kutuphanesinin) C kodunu degistirip, bu
+yeni kodlari R'den islettirmek istersek, sunlari yapabiliriz:C kodunu
+degistirecegimiz R kutuphanesini herhalde install.packages ile
+kurmusuzdur, ona tekabul eden kaynak kodlari buluruz. Versiyon no'suna
+bakalim; home yani ~ altinda R dizini altindaki pakete gidelim. Bizim
+icin bu ~/R/i486-pc-linux-gnu-library/2.11/lme4. Bu dizin altinda
+DESCRIPTION dosyasinda hangi versiyon oldugu yaziyordur.Bu versiyona
+ait kaynak kodu Internet'ten bulup indiririz. Bu kaynakta istedigimiz
+degisikligi yapariz. Derlemek icin make.sh icinde sunlari
+yazdik:#!/bin/shgcc -std=gnu99 -fPIC -g -O2 -c lmer.c -o lmer.o
+-I/home/burak/R/i486-pc-linux-gnu-library/2.11/Matrix/include/ -I./src
+-I/usr/share/R/include/gcc -std=gnu99 -fPIC -g -O2 -c init.c -o init.o
+-I/home/burak/R/i486-pc-linux-gnu-library/2.11/Matrix/include/ -I./src
+-I/usr/share/R/include/gcc -std=gnu99 -fPIC -g -O2 -c local<em>stubs.c -o
+local</em>stubs.o
+-I/home/burak/R/i486-pc-linux-gnu-library/2.11/Matrix/include/ -I./src
+-I/usr/share/R/include/gcc -std=gnu99 -shared -o lme4.so init.o lmer.o
+local_stubs.o -llapack -lblas -lgfortran -lm -L/usr/lib/R/lib
+-lRKutuphane lme4.so yaratilinca bu dosyayi R altindaki so uzerine
+kopyalarsak, eski kod yerine bizimki islemeye baslar.cp lme4.so
+~/R/i486-pc-linux-gnu-library/2.11/lme4/libs/Biz R kodlarini "R -f
+test.R" seklinde isletiyoruz, yani her cagrida yeni bir process
+baslatiliyor, degisen so kutuphanesi hemen bir sonraki cagrida isleme
+konacaktir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

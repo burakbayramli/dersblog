@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>GAE Tabanina Veri Yuklemek</h1>
+
+<p>Google App Engine ortamında uygulama için gereken bazı başlangıç
+verileri olabilir. Bu verileri dışarıdan GAE'ye dahil etmek için
+toptan yükleyici olarak "appçfg.py upload_data" kullanılabilir. Bu
+komut ile düz dosyayı GAE tabanına toptan (bulk) olarak göndermek
+mümkün. Fakat bundan önce düz dosyadaki her satırın bir objeye nasıl
+tekabül ettiğini tanımlamamız gerekiyor.</p>
+
+<p>GAE veri tabanı bir anahtar/değer tabanı (key/value store). Bu tür
+tabanlar hakkında birkaç yazı yazdık; bir nevi Hash dictionary'nin
+dağıtık çalışan versiyonu olan bu tabanlar devasa boyutlarda yük olan
+Web ortamların demirbaşı haline geldi. Amazon, Facebook hep benzer
+yaklaşımları kullanıyorlar.GAE ortamındaki Bigtable teknolojisi
+Google'ın kendi ürünleri için de kullandığı taban (Gmail gibi). Bulut
+kavramının, özellikle Google ortamında olduğu gibi idareli ve tanımlı
+bir ortam için, önemli bir avantaj şudur. Tabana yazarsınız, ve işin
+ölçeklenmesiyle hiç ilgilenmezsiniz. Eğer verinin kopyalanması
+gerekiyorsa (mesela coğrafi lokasyana göre, kullanıcıya daha yakın bir
+makinaya veri yakın olacaksa), taban onu arka planda
+yapar. Yedeklemeyi yapar. Ölçeklemeyi yapar. Programcı sadece get(),
+put() komutlarıyla uğraşır.</p>
+
+<p>Veri yüklemeye gelelim. <code>app.yaml</code> dosyasında</p>
+
+<pre><code>handlers:
+- url: /remote_api
+script: $PYTHON_LIB/google/appengine/ext/remote_api/handler.py
+login: admin
+</code></pre>
+
+<p>tanimini eklemeniz lazim. Duz dosyadaki ve veri tabanindaki kayiti,
+class'i soyle tanimlariz. Mesela bir models.py dosyasi icinde</p>
+
+<pre><code>from google.appengine.ext import dbclass
+Txn(db.Model):
+  code = db.StringProperty()
+  date = db.DateProperty()
+  low = db.FloatProperty()
+  high = db.FloatProperty()
+  price = db.FloatProperty()
+  increase = db.FloatProperty()
+  volume = db.FloatProperty()
+</code></pre>
+
+<p>Sonra loader.py adli bir class icinde</p>
+
+<pre><code>import datetime
+from google.appengine.ext import db
+from google.appengine.tools import bulkloader
+from models import *
+
+class TxnLoader(bulkloader.Loader):
+   def __init__(self):
+      bulkloader.Loader.__init__( self, 'Txn', [('code', str), ('date',
+lambda x: datetime.datetime.strptime(x, '%Y%m%d').date()), ('low',
+float), ('high', float), ('price', float), ('increase', float),
+('volume', float) ])loaders = [TxnLoader]
+</code></pre>
+
+<p>Eger Python yukleme cevre degiskenini degistirmek istemiyorsak, o
+zaman</p>
+
+<p>import syssys.path.append('[GELISTIRME DIZINI]')ibaresini de kullanmak
+gerekecek.</p>
+
+<p>Verileri gelistirme ortamina yuklemek icin</p>
+
+<p>dev_appserver.py baslatiriz, ve</p>
+
+<p>appcfg.py upload<em>data --config</em>file=loader.py --filename=[VERI
+DOSYASI]--kind=Txn --url=http://localhost:8080/remote_api [GELISTIRME
+DIZINI]</p>
+
+<p>komutunu kullaniriz. Sonuc ortamina yuklemek icin once "appcfg.py
+update" ile kodlari gondeririz, sonra appcfg.py upload<em>data
+--config</em>file=loader.py --filename=[VERI DOSYASI]--kind=Txn
+[GELISTIRME DIZINI]</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

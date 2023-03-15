@@ -1,0 +1,171 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Islenmis OSM Verisi Yerel Diskte, osm2pgsql, PostGIS</h1>
+
+<p>Daha once OSRM projesi ile OSM verisi uzerinden nasil servis
+sunabilir, bunu gorduk. Peki ya ham veriyi almak istiyorsak ne
+yapariz?</p>
+
+<p>osm2pgsql adli arac apt-get ile kurulabiliyor, yerel diskteki osm.bz2
+tipindeki dosyalari isleyip direk Postgresql tabanina veriyi
+yazabiliyor. PG kurmak altta. Ek olarak bir de lokasyon modulu nasil
+kurulur onu da gorecegiz, bu eklere PostGIS adi veriliyor, PG'nin
+lokasyon verisinin islenmesini saglayan ozel fonksiyonlari var.</p>
+
+<pre><code>sudo apt-get install postgresql make cmake g++ libboost-dev libboost-system-dev
+  libboost-filesystem-dev libexpat1-dev zlib1g-dev
+  libbz2-dev libpq-dev libgeos-dev libgeos++-dev libproj-dev lua5.2
+  liblua5.2-dev
+ osm2pgsql postgresql-9.5-postgis-2.2 pgadmin3 postgresql-contrib-9.5
+</code></pre>
+
+<p>Not: Uzerine oldugumuz Ubuntu versiyonuna gore hangi PG kuruldugu
+degisik olabilir, bu durumda 9.5 yerine o versiyon koyulabilir.</p>
+
+<p>Baslamak, durdurmak icin sudo service postgresql stop ya da
+start. Kurulus sirasinda mevcut kullanicinizin direk erisebilecegi
+postgres adli bir kullanici yaratilmis olmali.</p>
+
+<pre><code>sudo -u postgres createdb gis
+</code></pre>
+
+<p>ile taban yaratilir.</p>
+
+<pre><code>sudo -i -u postgres
+</code></pre>
+
+<p>ile oteki kullaniciya girilir,</p>
+
+<pre><code>psql -d gis -c 'CREATE EXTENSION postgis; CREATE EXTENSION hstore;'
+</code></pre>
+
+<p>Simdi</p>
+
+<pre><code>osm2pgsql berlin-latest.osm.bz2 --slim
+</code></pre>
+
+<p>Tabana bakariz, <code>psql -d gis</code>, komut satirinda <code>\dt</code></p>
+
+<pre><code>planet_osm_line 
+planet_osm_nodes
+planet_osm_point
+planet_osm_polygon
+planet_osm_rels 
+planet_osm_roads
+planet_osm_ways 
+</code></pre>
+
+<p>tablolarini gormemiz lazim. Artik gereken ham veri bu tablolar icinde. Eger veriyi disari cikartmak istiyorsak, mesela tabandaki tum caddeler,</p>
+
+<pre><code>psql -d gis -t -A -F";" -c \
+     "SELECT  osm_id,name,highway,\
+     st_asText(st_startpoint(st_transform(way, 4326))), \
+     st_asText(st_endpoint(st_transform(way, 4326))) \
+     FROM planet_osm_line " &gt; output.csv
+</code></pre>
+
+<p>Not: Ayni cadde ismi ustteki sorgu sonucu birden fazla satirda ve
+baslangic / bitis noktasi ile gozukebilir. Bu durumda buyuk cogunlukla
+ayni caddeyi parcalar haline goruyoruz demektir.</p>
+
+<p>PostGIS icin iyi bir kitap PostGIS in Action.</p>
+
+<p>osm2po</p>
+
+<p>Alttaki Java bazli bir proje (kapali kod ne yazik ki), Geofabrik
+sitesinden gerekli veriyi alip bir Postgresql tabani uzerinde
+isletilebilecek SQL dosyasi uretiyor.</p>
+
+<p>http://osm2po.de</p>
+
+<pre><code>java -Xmx1g -jar osm2po-core-5.1.0-signed.jar prefix=tr tileSize=x http://download.geofabrik.de/europe/turkey-latest.osm.pbf postp.0.class=de.cm.osm2po.plugins.postp.PgRoutingWriter
+</code></pre>
+
+<p>cagrisi yeterli. Gerekli dosya tr altdizini icinde olacak. Fakat bu
+kutuphanenin bazi verileri disarida biraktigini gorduk.</p>
+
+<p>osm2pgrouting</p>
+
+<p>Ham OSM verisinin Postgresql tabana yazabilen bir proje</p>
+
+<p>https://github.com/pgRouting/osm2pgrouting.</p>
+
+<p>Derlemek gerekli.. Ayrica tabani pgrouting icin hazirlamak lazim, bazi
+create extension komutlari gerekiyor. Ustteki README icinde bunlar
+var.</p>
+
+<p>Bu kodun bir problemi eger yeterince hafiza yoksa (2 GB bile
+yetmeyebilir) tek bir bolge verisi uzerinde bile program cokebiliyor.</p>
+
+<p>Postgresql GUI</p>
+
+<p>Uzun zamandir taban semasini gosteren, sorgu isleten GUI araci olarak Squirrel kullaniyorduk (ondan once Toad). Fakat Squirrel projesinde fazla hareket yok; alternatif bir arac SQL Workbench/J.</p>
+
+<p>http://www.sql-workbench.net/</p>
+
+<p>Masaustu ikonu</p>
+
+<pre><code>[Desktop Entry]
+Comment=
+Terminal=false
+Name=SWJ
+Exec=/bin/sh /home/burak/Downloads/Workbench-Build121/sqlworkbench.sh
+Type=Application
+Icon=/usr/share/icons/Win7-icons/apps/gnome-networktool.png
+</code></pre>
+
+<p>Farkli tabanlara baglanti destegi var. Postgresql icin JDBC jar suradan</p>
+
+<p>https://jdbc.postgresql.org/download.html</p>
+
+<p>SWJ icinden File | Manage Drivers secilir, oradan Postgresql icin
+indirilen jar secilir.</p>
+
+<p>SQLLite icin jar</p>
+
+<p>https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/3.8.9.1/</p>
+
+<p>Yine manage drivers'dan sqllite icin yeni profil yaratilir. Sonra yeni
+baglanti yaratilir, File | Connect Window'dan sol ust kosedeki dugme
+ile.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

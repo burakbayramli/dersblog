@@ -1,0 +1,160 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>PDF Numaralari, pdftk, pdfjam, gs, mutool</h1>
+
+<p>PDFtk</p>
+
+<p>PDF dosyalari uzerinden pek cok islem pdftk ile yapilabilir. Kurmak icin</p>
+
+<pre><code>sudo apt-get install pdftk
+</code></pre>
+
+<p>ya da</p>
+
+<pre><code>sudo snap install pdftk
+</code></pre>
+
+<p>Bazi pdftk numaralari:</p>
+
+<p>Dokumanlari birlestirmek (doc1.pdf,.. istenen kadar dosya bir liste
+olarak arka arkaya)</p>
+
+<pre><code>pdftk doc1.pdf doc2.pdf output dokuman.pdf
+</code></pre>
+
+<p>Tum sayfalari 90 deree saat yonu tersine dondurmek</p>
+
+<pre><code>pdftk in.pdf cat 1-endwest output out.pdf
+</code></pre>
+
+<p>Bir belgenin cift sayfalarini 90 derece saga, tek sayfalarini 90
+derece sola dondurmek</p>
+
+<pre><code>pdftk A=doc.pdf  shuffle AevenE AoddW output out.pdf
+</code></pre>
+
+<p>Bir kitabin 100. ve 110. sayfalari arasindaki sayfalari ayri bir
+dokuman olarak yazmak</p>
+
+<pre><code>pdftk doc.pdf cat 100-110 output out.pdf
+</code></pre>
+
+<p>1-9 sayfalarini 180 derece cevirmek, geri kalanini oldugu gibi almak</p>
+
+<pre><code>pdftk doc.pdf cat 1-9S 10-end output out.pdf
+</code></pre>
+
+<ol start="20">
+<li>ve 30. sayfalar arasındaki sayfaları atlayıp, geri kalanları tutmak,</li>
+</ol>
+
+<pre><code>pdftk doc.pdf cat 1-19 30-end output parcalar.pdf
+</code></pre>
+
+<p>Bir koca.pdf içine 180. sayfadan sonra ara.pdf dosyasını sokuşturmak,</p>
+
+<pre><code>pdftk A=koca.pdf B=ara.pdf cat A1-180 B A181-end output output.pdf
+</code></pre>
+
+<p>2 sayfa yanyana scan edilmiş PDF dokümanlarını normal hale getirmek,
+ortadan bölmek için alttaki yöntemler kullanılabilir.</p>
+
+<p>İlk yöntem en kolayı, önce <code>apt install mupdf-tools</code> sonra,</p>
+
+<pre><code>mutool  poster -x 2  input.pdf output.pdf
+</code></pre>
+
+<p>Alttaki yöntem daha eski, ama bazıları için faydalı olabilir,</p>
+
+<p>Önce pdfjam adlı program lazım, <code>apt-get</code> bunu kurar, ya da <a href="https://github.com/rrthomas/pdfjam">suradan</a>
+indirip <code>build.sh</code> ile kurariz, ardından</p>
+
+<pre><code>pdfjam -o cift.pdf --trim '14cm 0cm 0cm 0cm' --clip true --scale 1.0 dokuman.pdf
+</code></pre>
+
+<pre><code>pdfjam -o tek.pdf --trim '0cm 0cm 14cm 0cm' --clip true --scale 1.0 dokuman.pdf
+</code></pre>
+
+<pre><code>pdftk A=cift.pdf B=tek.pdf shuffle B A output final_dokuman.pdf
+</code></pre>
+
+<p>Bu komutların yaptığı şu; biri sağdan bir soldan olmak üzere 14 cm'lik
+bölümü kesip atıyoruz (trim ve clip true), ve bu budanmış
+dokümanlardan birini tek sayılı sayfalar, diğerini çift sayılı
+sayfalar olarak kaydediyoruz. Sonra bir pdftk taklası atmak gerekiyor,
+bu komuta iki dökümanı birleştirmesini söylüyoruz, ama tek sayfaları
+bir yerden, çift sayfaları başka bir yerden almasını söylüyoruz
+(shuffle B A seçeneği)</p>
+
+<p>Kalite Azaltmak, Kucultmek</p>
+
+<p>Bazen içinde çok fazla resim olan PDF dosyalarının daha hızlı
+göstermek için, küçültmek için kalitesini azaltmak isteyebiliriz. Eğer
+<code>ghoştscript</code> var ise,</p>
+
+<pre><code>gs -sDEVICE=pdfwrite -dPDFSETTINGS=/ebook -q -o output.pdf input.pdf
+</code></pre>
+
+<p>Python</p>
+
+<p>Bazen PDF içinden tablo verisi çıkartmak gerekiyor. İşaretle-kopyala
+ile bu işlem her zaman rahat olmayabiliyor. Bir Python kütüphanesi
+faydalı olabilir,</p>
+
+<pre><code>pip install tabula-py
+</code></pre>
+
+<p>ile kurarız. Tabula PDF tablolarını Pandas DataFrame olarak döndürmeye
+uğraşır. Mesela 30-35 sayfalarındaki tabloları tek bir DataFrame olarak
+almak için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">tabula</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">35</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">ps</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">tabula</span><span class="o">.</span><span class="n">read_pdf</span><span class="p">(</span><span class="s2">&quot;doc.pdf&quot;</span><span class="p">,</span><span class="n">pages</span><span class="o">=</span><span class="n">ps</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">table</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;out.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+        </section>          
+      </div>
+    </body>
+</html>

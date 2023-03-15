@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Musteri Sadakati ve Pivot Tablo Kullanimi</h1>
+
+<p>Musteri Sadakati ve Pivot Tablo Kullanimi</p>
+
+<p>Onceki yazida Pandas ile nasil pivot tablosu yaratabilecegimizi gorduk. Bir baska yazida dellstore tabaninda ilk siparis tarihi ve guncel siparis tarihleri yanyana dokebilecegimizi gorduk, ve ay bazinda bu bilgiyi gosterdik. Simdi ilginc bir ek daha: eger bu iki ay kolonunu x,y kordinati gibi kullanip ucuncu bir musteri sayisi kolonunu pivot tablosunda gosterseydik ne olurdu?</p>
+
+<p>Onceki yazidaki (date<em>trunc kullanan sorgu) SQL'in ciktisini kolon isimleriyle ve virgullu ayrilmis sekile CSV olarak kaydedin. Simdi alttaki kod ile
+import numpy as np
+from pandas import *
+df = read</em>csv('/tmp/out')</p>
+
+<p>pv<em>cust = df.pivot('reg</em>date','cdate','customer<em>count')
+pv</em>cust.to<em>csv('out1.csv',  sep='\t', na</em>rep='')
+pivot dosyasini out1.csv'e basiyoruz.
+reg<em>date        2004-01-01      2004-02-01      2004-03-01
+2004-01-01      979.0   43.0    46.0    54.0    43.0    47.0
+2004-02-01              930.0   42.0    49.0    57.0    50.0
+2004-03-01                      882.0   38.0    47.0    26.0
+2004-04-01                              835.0   36.0    45.0
+2004-05-01                                      792.0   42.0
+2004-06-01                                              763.0
+Ciktinin bir merdiven goruntusu vermesi raslanti degil, tarihler solde ve ustte sirali, ve tanim itibariyle musteri ilk alim yaptigi tarihten once alim yapmis olamayacagina gore, ustteki cikti ortaya cikacak. Tablonun faydasi, herhangi bir reg</em>date icin gerekli satiri bulup o satiri saga dogru takip etmek, ve arka arkaya her ay neler oldugunu hemen gorebilmek.</p>
+
+<p>Ustteki ciktiya ilginc bir ek caprazdaki sayiyi bir yuzde 100 olarak almak, ve ondan sonraki sayilari "eski musterilerin kacta kaci tekrar alim yapti" sorusuna cevap olarak daha dusuk yuzdeler olarak gostermek (keske onlar da yuzde 100 olsa!). Bu ek kod
+pv<em>cust</em>perc = pv<em>cust.copy()
+for date in pv</em>cust<em>perc.index:
+for val in pv</em>cust<em>perc.T[date]:
+    if np.isnan(val) == False:
+        pv</em>cust<em>perc.T[date] = (pv</em>cust_perc.T[date] / val) * 100
+        break</p>
+
+<p>pv<em>cust</em>perc.to<em>csv('out2.csv',  sep='\t', na</em>rep='')
+Bu ciktiyi da out2.csv de bulabilirsiniz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

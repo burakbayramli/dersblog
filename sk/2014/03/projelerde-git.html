@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Projelerde Git</h1>
+
+<p>Projelerde kullanilan bazi Git numaralari ve tavsiyeleri:</p>
+
+<p>Eğer Wifi üzerinden git push yapmaya çalışıp <code>Connection refused</code> hatası
+alırsanız, tamir için <code>.ssh/config</code> dosyasına girip</p>
+
+<pre><code>Host github.com
+  Hostname ssh.github.com
+  Port 443
+</code></pre>
+
+<p>yazmak yeterli.</p>
+
+<p>N commit öncesi (mesela 10) ile en son commit arasında hangi dosyalar
+değişti:</p>
+
+<pre><code>git diff --name-only HEAD~10
+</code></pre>
+
+<h3>Git Pull</h3>
+
+<p>Artık Github çoğu projede kullanılan bir servis, onu baz alan bazı
+tavsiyeleri paylaşmak iyi olur. Tipik bir tür kullanım şöyle olabilir,
+kullanıcı</p>
+
+<pre><code>git add *
+git commit -m 'vs'
+git push origin master 
+</code></pre>
+
+<p>ile son kodu göndermektedir, ve gerektiğinde son kodları almak için
+<code>git pull</code> yapmaktadır. Eğer çakışma var ise, bu durumda Git birleştirme
+(merge) yapmaya uğraşır ve çakışmaları programcının çözmesini
+ister. Çözme sonrası <code>git push</code> işler, fakat <code>git log</code>, yani nelerin
+yapıldığını gösteren kayıt pek hoş gözükmez.</p>
+
+<p>Alternatif yöntem, ortak depodan en son kodları alırken <code>git pull</code>
+yerine <code>git fetch</code> kullanmaktır. Bu kullanım en son dalları (branch)
+alır, fakat yerel dosyalar üzerinde değişim yapmaz. Sonra <code>git rebase origin/master</code>
+yaparız, bu komut bizim kodumuzu biraz önce alınan son
+kod üzerine "istifler" / geri çalar (replay). Git bunu öyle yapar ki
+sanki bizim kodumuz mevcut olanın üzerine yazılmıştır, sanki o kodu o
+kod biter bitmez hemen almışız, ve onun üzerinde bizimkini yazmışız
+gibi... Bu durumda da çakışmalar görülebilir muhakkak, onlar varsa
+çözülür; Sonra <code>git push</code> daha önce yapıldığı gibi yapılır.</p>
+
+<h3>Dosyayı Tamamen Silmek</h3>
+
+<p>Belki geliştirme dizini içinde geçici dosyalar üretiliyor, ya da şifre
+dosyaları yanlışlıkla commit edilmiş, ya da aşırı büyük dosyalar
+depoya bir şekilde girdi.. Sonra <code>git push</code> sırasında hatayı
+farkettik, <code>git rm</code> ile dosyayı sildik. Fakat <code>push</code> hala çok zaman
+alıyor. Problem şurada, Git tüm değişiklikleri teker teker yollamaya
+uğraşıyor - dosya eklemesi, sonra onu silme. Şifre durumunda zaten
+silsek bile bir şifre dosyasının tarihte kalması durumu var, birisi
+<code>checkout</code> ile eski hale giderek şifreleri görebilir. Çözüm tamamen
+silmek.</p>
+
+<p>Metot 1</p>
+
+<pre><code>git filter-branch --force --index-filter 'git rm --cached \
+   --ignore-unmatch [BUYUK DOSYA, * VS ISARETLERI KULLANILABILIR]' \
+   --prune-empty --tag-name-filter cat -- --all
+</code></pre>
+
+<p>Ya da en basit kullanım</p>
+
+<pre><code>git filter-branch --tree-filter 'rm -rf [dizin]' HEAD
+</code></pre>
+
+<p>Bu islemler uzun zaman alabilir bu arada. Değişikliği göndermek için</p>
+
+<pre><code>git push origin --force --all 
+</code></pre>
+
+<p>Metot 2</p>
+
+<p>Artik Git tarafindan tavsiye edilen yeni yaklasim <code>git-filter-repo</code>
+kullanimi. Bu ayri bir yardimci kod, indirmek icin</p>
+
+<p>https://github.com/newren/git-filter-repo</p>
+
+<p>Yuksek Git versiyonuna ihtiyaci var, yoksa guncelleme yapalim,</p>
+
+<pre><code>sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt-get update
+sudo apt-get install git -y
+git --version
+</code></pre>
+
+<p>Şimdi silme işlemini yapacağımız depo en üst dizinine <code>cd</code> ile gidelim,
+ve <code>git-filter-repo</code> [DİZİN] altında kurulduğunu varsayarak,</p>
+
+<pre><code>[DIZIN]/git-filter-repo/git-filter-repo--invert-paths --path dir1/dir2/dosya3.txt
+</code></pre>
+
+<p>ile <code>dir1/dir2/dosya3.txt</code> dosyasını tarihten silelim. Tabii önceden
+<code>git-filter-repo</code> üzerinde <code>chmod u+x</code> yapmak gerekebilir.</p>
+
+<p>Üstteki komut işlem yapmak için illa sıfırdan <code>git clone</code> edilmiş depo
+istiyorum diye yakınabilir, eğer bu mümkünse yapın, değilse üstteki
+komuta <code>--force</code> eklenebilir.</p>
+
+<p>Komut işledikten sonra uzaktaki depoya ittirmek gerekli, herhangi bir
+sebeple uzak (remote) deponun ne olduğu silinmiş ise, <code>git remote -v</code>
+o listeye bakılır, eklemek için</p>
+
+<pre><code>git remote add origin git@github.com:[user]/[repo.git]
+</code></pre>
+
+<p>Artık</p>
+
+<pre><code>git push origin --force --all
+</code></pre>
+
+<p>ile kod gönderilebilir.</p>
+
+<p>Dal Yapısı (Branch Structure)</p>
+
+<p>Bizim kullandığımız bir yaklaşım şöyle: master yani ana dal her zaman
+"işleyen kodu" temsil eder. Yani master'da ne var ise, sonuç
+(production) makinasında o var demektir. Bu bağlantının sIkİ tutulması
+iyi olur, yani master'a gönderilen her şey, anında işleme konmalıdır.</p>
+
+<p>Geliştirme için master'dan dallanarak mesela bir dev (geliştirme) dalı
+kullanabiliriz, bu daldan her programcı kendisi için ayrı bir dal da
+yaratabilir, bu onlara kalmış. Fakat kodcular arası entegrasyon için
+dev dalı kullanılır. Çakışmalar vs var ise bu dalda çözülür, master a
+göndermeden önce entegrasyon testleri bu dal  üzerinden
+işletilir. Eğer sonuç iyi bulunursa buradan master'a birleştirme
+(merge) yapılır. Önemli nokta şudur: artık kimse master dalı üzerinde
+geliştirme yapmaz. Ana master dalı artık commit edilen bir şey değil,
+merge edilen bir şeydir yani.</p>
+
+<p>Gelistirme dali icin onu yaratiriz, ve kullanmaya baslariz, </p>
+
+<pre><code>git checkout dev
+</code></pre>
+
+<p>ile gecis yapariz. Kodlama vs bitince commit edilir. Sonra git push
+ile Github'a gonderilir. Birlestirme icin</p>
+
+<pre><code>git checkout master
+git merge dev
+git push origin master
+</code></pre>
+
+<p>yapilir.</p>
+
+<h3>Daha Sofistike Dal Yapılar</h3>
+
+<p>http://nvie.com/posts/a-successful-git-branching-model/</p>
+
+<p>Üstteki yazıda tarif edilen şudur: geliştirme (dev) ve sürüm (master)
+iki, sürekli orada olan dal vardır. Geliştiriciler belli özellikleri
+geliştirmek için dev'den dal ayırırlar. Master her zaman en son, işler
+kodu temsil etmektedir, sonuç ortamında işleyen budur. Sürüm yapmak
+için dev'den isminde versiyon no'su taşıyan yepyeni bir dal yaratılır,
+ve bu dalda artık yeni özellik eklenmez, sadece ufak tefek entegrasyon
+pürüzleri çözülür, hatalar onarılır.</p>
+
+<p>Github Projesini Yerel Dosyalardan Sıfırlamayıp Yaratmak</p>
+
+<p>Bazen GH'daki projemizi ismen aynı tutsak bile içeriğini yerel
+diskimizden en son dosyalardan yaratıp, Git tarihini sıfırlamak
+isteyebiliriz. Sebepler, belki Git kayıtlarının olduğu .git içindeki
+dosyalar bozulmuştur (corrupted), ya da Git tarihine aşırı büyük
+dosyalar commit edilmiştir, her ne kadar onların git rm ile silmişsek
+bile, hala tarihte duruyor olurlar, bu da .git dosyalarını
+şişirir. Onları tarihten silebiliriz tabii, ama bazılarını kaçırmiş
+olabiliriz. Her halükarda sıfırdan başlamak için pek çok sebep
+olabilir. Bunu yapmak için</p>
+
+<pre><code>cd [PROJE DIZINI]
+.git dizinini sil
+git init
+git add .
+git commit -m 'Initial commit'
+git remote add origin  - burada  git@github.com:kullanici/proje.git .. diye giden projenize ait olan url
+git push --force --set-upstream origin master
+</code></pre>
+
+<p>Dikkat: üstteki adımları takip edince eğer projenizdein GH üzerinde
+dallanma (branch) yapmış olan insanlarla bağlantı tamamen
+kesilir. Çünkü bu noktada tarihi sildiniz, ve neredeyse yeni baştan
+bir proje yaratmış oldunüz.</p>
+
+<p>Üstteki adımların iyi bir tarafı projenizin GH seviyesindeki bilgileri
+hala aynı kalır; alınan yıldızlar, takipçiler, vs. değişmez.</p>
+
+<p><img src="Screen-shot-2009-12-24-at-11.32.03.png" alt="" />
+<img src="https://1.bp.blogspot.com/-xg2XAf271oo/U4YPzRKa14I/AAAAAAAABZ0/Zm2o_8Vokhc/s1600/Screen-shot-2009-12-24-at-11.32.03.png" alt="" /></p>
+
+<h3>Başka Kullanıcı İsmi ile Github'da Çalışmak</h3>
+
+<p>Bazen çoğunlukla kullandığımızdan farklı bir kullanıcı üzerinden iş
+yapmamız gerekebilir. Belki ve ve iş kullanıcıları farklıdır
+mesela. Bu durumda, eğer ikinci kullanıcı için şifre girmek rahatsız
+etmiyorsa, en basit yol <code>git clone</code> komutunu <code>https</code> üzerinden
+yapmak. Alınan repo'ya bakın, <code>.git</code> içinde bir <code>config</code> dosyası olacak. O dosya</p>
+
+<pre><code>[core]
+    repositoryformatversion = 0
+    filemode = true
+    bare = false
+    logallrefupdates = true
+[remote "origin"]
+    url = https://github.com/[ikincikullanici]/[repo].git
+    fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+</code></pre>
+
+<p>gibi durmalı. Artık <code>git commit</code> yapınca ve <code>git push origin master</code>
+ile kodu yollamak istediğinizde ikinci kullanıcı ve şifre
+sorulmayacak. Dikkat url isminde <code>https</code> olmaması önemli, o yüzden
+kullanıcı / şifre soruluyor zaten. SSH üzerinden şifresiz commit için
+ayarlanan repo'larda bu url <code>git@github.com:...</code> diye gider.</p>
+
+<h3>Belli Bir Tarihe Dönüş</h3>
+
+<p>Depo'nun eski tarihteki haline donmek istiyorsak,</p>
+
+<pre><code>git blog - git checkout "`git rev-list master  -n 1 --first-parent --before=2022-06-02`"
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

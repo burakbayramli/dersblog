@@ -1,0 +1,214 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Java Öğrenelim, Ant, Derlemek, Kurmak</h1>
+
+<p>Blog'da Java'yı dil seviyesinde işlemiyoruz, bunun için çok iyi
+kaynaklar var, mesela Altuğ Altıntaş'ın kitabı,</p>
+
+<p>http://www.kitapyurdu.com/kitap/java-programlama-dili-ve-yazilim-tasarimi/53209.html</p>
+
+<p>İki tane bedava PDF temelli kitap, ki kuruluşu, temel dili Windows seviyesinde gösteriyorlar, </p>
+
+<p>http://web.cs.hacettepe.edu.tr/~bbm102/misc/java<em>notes</em>by_oa.pdf</p>
+
+<p>http://turhancoban.com/kitap/JAVA%20B%C4%B0LG%C4%B0SAYAR%20D%C4%B0L%C4%B0YLE%20PROGRAMLAMA.pdf</p>
+
+<p>Bizim tavsiyemiz her türlü geliştirmenin Ubuntu Linux üzerinde yapılması. Java kurmak için </p>
+
+<p>sudo apt-get install openjdk-8-jre</p>
+
+<p>En basit derleme şekli komut satırında, bir script içinden javac kullanmak. Aynı dizinde olan bir Test.java için</p>
+
+<pre><code>export CP=/bir/dizin/lib1.jar:.
+
+javac -classpath $CP Test.java 
+
+java -classpath $CP Test
+</code></pre>
+
+<p>CP içinde nokta kullanımına dikkat, nokta Unix'te mevcut dizine işaret
+eder. /bir/dizin/lib1.jar herhangi bir dizindeki jar dosyasına
+referans için, daha fazla varsa onları iki nokta üst üste ardından
+listeye ekleriz. Test.java içinde</p>
+
+<pre><code>import java.util.ArrayList;
+
+public class Test 
+
+{
+
+    public static void main(String[] args) throws Exception{
+
+        System.out.println("Hello World");
+
+        ArrayList&lt;String&gt; l = new ArrayList&lt;String&gt;();
+
+        l.add("1");
+
+        l.add("2");
+
+        System.out.println("Bir liste "+l );
+
+    }
+
+}
+</code></pre>
+
+<p>yeterli. İki üstteki üç satırı ayrı ayrı komut satırında ya da bir
+script içinde işletince derleme ve işletim sonuçlarını görürüz. Aynı
+dizinde bir .class dosyası da yaratılmış olmalı.</p>
+
+<p>Eğer paket sistemi kullanıyor olsaydık, mesela üstteki kod
+sample/src/com/vs/Test.java içinde olsaydı ve ilk satırında package
+com.vs; ibaresi olsaydı, o zaman kod bir com.vs paketinde demektir,
+derlemek ve işletmek için </p>
+
+<pre><code>export CP=/bir/dizin/lib1.jar:./sample/src
+
+javac -classpath $CP ./sample/src/com/vs/Test.java 
+
+java -classpath $CP com.vs.Test
+</code></pre>
+
+<p>gerekirdi. Üsttekiler çok basit derlemeler için (ama bilmek faydalı),
+daha çetrefil derlemeler için Ant var. </p>
+
+<pre><code>sudo apt-get install ant
+</code></pre>
+
+<p>ile kurulur. Proje dizini sample altında yine src olsun ve bir de lib
+dizini var. Üstteki proje yapısını derlemek için bir build.xml
+projenin en üst seviyesine konur ve icinde, </p>
+
+<pre><code>&lt;project name="sample" default="dist" basedir="."&gt;
+
+  &lt;property name="src" location="src"/&gt;
+
+  &lt;property name="build" location="build"/&gt;
+
+  &lt;property name="dist" location="bin"/&gt;
+
+  &lt;target name="init"&gt;
+
+    &lt;tstamp/&gt;
+
+    &lt;mkdir dir="${build}"/&gt;
+
+  &lt;/target&gt;
+
+  &lt;path id="build.classpath"&gt;
+
+    &lt;fileset dir="lib"&gt;
+
+      &lt;include name="**/*.jar"/&gt;
+
+    &lt;/fileset&gt;
+
+  &lt;/path&gt;
+
+  &lt;path id="compile.classpath"&gt;
+
+    &lt;pathelement location ="${build}"/&gt;
+
+    &lt;fileset dir="lib"&gt;
+
+      &lt;include name="**/*.jar"/&gt;
+
+    &lt;/fileset&gt;
+
+  &lt;/path&gt;
+
+  &lt;target name="compile" depends="init"
+
+        description="compile the source"&gt;
+
+    &lt;javac destdir="${build}"&gt;
+
+      &lt;src path="${src}"/&gt;
+
+    &lt;classpath refid="build.classpath"/&gt;
+
+  &lt;/javac&gt;
+
+  &lt;/target&gt;
+
+  &lt;target name="dist" depends="compile" description="generate the distribution"&gt;
+
+    &lt;mkdir dir="${dist}"/&gt;
+
+    &lt;jar jarfile="${dist}/sample.jar" basedir="${build}"/&gt;
+
+  &lt;/target&gt;
+
+    &lt;target name="test" depends="compile"&gt;
+
+      &lt;java fork="yes" classname="com.vs.Test" failonerror="true"&gt;
+
+        &lt;classpath refid="compile.classpath"/&gt;
+
+      &lt;/java&gt;
+
+  &lt;/target&gt;
+
+  &lt;target name="clean"
+
+        description="clean up"&gt;
+
+    &lt;delete dir="${build}"/&gt;
+
+    &lt;delete dir="${dist}"/&gt;
+
+  &lt;/target&gt;
+
+&lt;/project&gt;
+</code></pre>
+
+<p>olabilir. Script ant komutu ile derlenir, testi işletmek için ant
+test. İşlem ardından mesela bin altında projemizin class kodları
+jar'lanmış halde olacak (böylece dışarıdan başka projeler bizim
+jar'imizi kendi projelerine dahil edebilirler). Ayrıca pek çok
+CLASSPATH ayarı Ant tarafında otomatik olarak yapıldı.</p>
+
+<p>Ant, derleme, vs. ile ilgili bazı ek bilgiler bizim kitabın ek
+bölümünde bulunabilir. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

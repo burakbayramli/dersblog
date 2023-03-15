@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Hata Takip Aracı - ITracker</h1>
+
+<p>Java projemiz için hata takip programı gerektiğinde, İnternet'te ufak
+bir arama yaptık. XP projelerini idarede kullandığımız XPlanners
+tecrübesi, bizi tekrar aynı şekilde Struts ve J2EE tabanlı bir
+uygulama aramaya itti. J2EE bazlı programların kurulumu oldukça kolay
+oluyor, ve envai türden işletim sistemi ve veri tabanı ile
+çalışabiliyorlar.  Bu yüzden ITracker adlı programı denemeye karar
+verdik.  ITracker ITracker'ı kurmak için, itracker_xxx.noaxis.bin.zip
+şeklinde olan dosyayı indirin. Bu zip içinde web tabanlı çalışabilen
+işlerkodları bulabilirsiniz. Öteki listelenen dosyalar başlangıçta
+lazım olmayacaktır.</p>
+
+<p>Mesela içinde axis kelimesi geçen zip, ITracker'ı bir Web Servisi
+olarak işletiyor ve öteki programlar ile XML üzerinden iletişim
+kurmasını sağlıyor! Başlangıçta çok fazla. (İleride kurcalamak
+isterseniz aklınızda olsun).  Bu yazımızda ITracker'ı, JBoss ve
+PostgreSQL üzerinde kurmayı tarif edeceğiz.  Kurmak JBoss ve
+PostgreSql kurulduktan sonra, aynı makinada birden fazla JBoss servisi
+işletip işletmeyeceğinize karar verin. Makina kıtlığı çeken projeler
+genelde hata takip programlarını, proje idare araçlarını ve
+uygulamalarının test edildiği servisi hep aynı makina üzerine
+koyabiliyorlar.</p>
+
+<p>Eğer projeniz JBoss üzerinde geliştirilen/test edilen bir uygulama
+ise, ve aynı makinada ITracker ve sizin uygulamanız aynı anda
+çalışacaksa, iki JBoss arasında port çakışması yaşanacaktır!  Evet,
+aynı JBoss içine birden fazla EAR atabilirsiniz, ama bir uygulamayı
+iptal ettiğiniz anda, öteki uygulamada duracaktır. En iyisi, iki
+uygulamayı tamamiyle birbirinden izole edin. Ayrı JBoss'lar.  Aynı
+makinadaki PostGreSql veri tabanı, herhalde başka uygulamalar
+tarafından da kullanılıyordur. ITracker için yeni bir veri tabanı
+yaratırsak, idaresi daha rahat olur. Bu veri tabanının ismi itracker
+olsun.  createdb itracker Diğer yazımızda tarif edilen admin
+kullanıcısı, bu veri tabanı için de geçerli olacak.  Şimdi,</p>
+
+<pre><code>ITRACKERDIZINI\sql\postgres\install\create_itracker_core.sql
+</code></pre>
+
+<p>adlı dosyayı, psql itracker ile komut satırına girdikten sonra \i
+create<em>itracker</em>core.sql kullanarak işletin.  Güzel. Şimdi JBoss
+dizininize girin, ve ITracker için gerekli olan veri kaynak dosyasını
+yaratın. <code>itracker-ds.xml</code> adını verebileceğiniz bu dosyayı
+<code>JBOSSDIZINI/server/default/deploy</code> altına bırakın. İçeriği şöyle
+olabilir (jndi-name mutlaka ITrackerDS olmalı)</p>
+
+<pre><code>ITrackerDS jdbc:postgresql://localhost:5432/itrackerorg.postgresql.Driver
+admin
+</code></pre>
+
+<p>Şimdi, <code>JBOSSDIZINI/server/default/conf/standardjbosscmp-jdbc.xml</code>
+dosyasını açın.</p>
+
+<p>Default datasource'u değiştirmeniz gerekecek. DefaultDB kelimesi
+yerine şöyle olsun: <code>... java:/ITrackerDS...</code>  En son olarak
+<code>ITRACKER/docs/itrackerApplication.properties</code> dosyasını
+<code>JBOSSDIZINI/server/default/conf</code> altına koyarsanız, herşey
+tamamlanacak.</p>
+
+<p>JBoss'u başlattıktan sonra, <code>http://makinaismi:port/itracker</code>
+... adresinden programı kullanmaya başlayabilirsiniz. Program otomatik
+olarak ilk kullanıcıyı yaratıyor, kullanıcı: admin, şifre: admin ile
+programa girip projeniz için gerekli bilgileri girmeye
+başlayabilirsiniz.  ITracker resmi sürümü, blogumuz yardımlarıyla
+Türkçeleştirilmiştir durumdadır. Kullanıcı olarak sisteme girdikten
+sonra, "Tercihlerim" (My Preferences) seçeneği altından Türkçe'yi
+seçerek uygulamanın dilini tamamen değiştirmeniz mümkün.</p>
+
+<p><img src="itracker.gif" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

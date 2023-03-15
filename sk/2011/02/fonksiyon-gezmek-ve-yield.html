@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Fonksiyon Gezmek ve Yield</h1>
+
+<p>Bir vektörün, listenin elemanlarını gezebildiğimizi (iteratation) biliyoruz.</p>
+
+<p>Python'un üretici (generatörs) özelliği ile bir fonksiyonu gezmek te mümkün.</p>
+
+<p>Bu nasıl oluyor? Hokus pokus yield adı verilen bir komutta.</p>
+
+<p>Bir fonksiyon return çağrısı ile bir değer döndürebilir. Fakat o
+noktada o fonksiyondan dışarı çıkmış oluruz yani o fonksiyon ile
+işimiz biter. Kıyasla yield ile bir değer döndürürüz, geriye bir sonuç
+gelir ama fonksiyonun yield anındaki hali dondurulur -- yani
+unutulmaz. Fonksiyondan dışarı çıkmış olsak bile geri dönebiliriz, ve
+lokal değişkenleri oldukları halde kullanmaya devam edebiliriz:
+Alttaki fonksiyona bakalım:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">fib</span><span class="p">():</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span>
+<span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+  <span class="k">yield</span> <span class="n">b</span>
+  <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">a</span><span class="o">+</span><span class="n">b</span>
+</code></pre>
+</div>
+
+<p>Bu fonksiyon Fibonaccı sayılarını üretir, Fibonaccı sayıları 1,1,2,3
+diye gider, bir sonraki sayı her zaman önceki iki sayının
+toplamıdır. Görüldüğü gibi yield ile en son toplamı donduruyoruz,
+fonksiyondan çıkıyoruz, fakat gezme işlemi bir sonraki değeri
+istediğinde fib()'e geri dönülüyor ve işlem yield'den bir sonraki
+satırdan, yani kaldığı yerden devam ediyor. Fonksiyon içindeki tüm
+lokal değişkenler hala değerlerini koruyorlar.</p>
+
+<p>Kullanmak için <code>fib()</code> çağrısını sanki bir listeymiş gibi çağırabiliriz:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">fib</span><span class="p">():</span> <span class="nb">print</span> <span class="n">x</span>
+</code></pre>
+</div>
+
+<p>Yukarıda anlatılan türden değer gezme olanağının faydası nedir? Kod
+düzenlemesi açısından getirdiği faydalar ötesinde (temizlik gibi,
+geçici bir liste objesine gerek yok), performans bakımından faydası
+olabilir. Bir şekilde hesaplanan ve üretilen elemanları gezmek için
+onların önceden bir listeye doldurulmuş olması gerekmiyor -- her
+eleman fonksiyon tarafından "gerektiği anda" hesaplanıp teker teker
+alınıyor, ve bu bir tür "tembel (lazy)" hesaplama olarak
+görülebilir. CPU bedelini her Fibonaccı sayısını üretirken sadece o
+sayı için ödüyoruz. 10 tane önceden üretip bir yerde bekletmiyoruz.</p>
+
+<p>Üreticilerin ne kadar kuvvetli özelliklerinin olduğunu tekrar
+belirtmek iyi olur: içinde yield içeren bir fonksiyonu aslında bir
+bakıma konumu olan bir obje gibi bile düşünebiliriz, daha doğrusu
+onlar bir bakıma "konumlu fonksiyonlar" oluyorlar. Mesela azar azar
+işlem yapan ortamlarda tipik bir ihtiyaç bir dosyanın açılması, ve o
+dosyadan azar azar satır alınabilmesi.</p>
+
+<p>Üretici yaklaşımı ile bu iş şöyle yapılır, in.csv dosyası şöyle olsun</p>
+
+<pre><code>y,x1,x2
+1,6,10
+2,5,20
+3,4,30
+4,3,40
+5,2,50
+</code></pre>
+
+<p>Kod</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">csv</span>
+
+<span class="k">def</span> <span class="nf">get_row</span><span class="p">(</span><span class="n">cols</span><span class="p">):</span>
+
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;in.csv&quot;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+
+        <span class="n">rd</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
+
+        <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">))}</span>
+
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rd</span><span class="p">:</span>
+
+            <span class="n">label</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]])</span>
+
+            <span class="c1"># sadece istenen kolonlari al</span>
+
+            <span class="n">rrow</span> <span class="o">=</span> <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="n">x</span><span class="p">]]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">headers</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">]</span>
+
+            <span class="k">yield</span> <span class="n">rrow</span><span class="p">,</span> <span class="n">label</span>
+</code></pre>
+</div>
+
+<p>Bu akıllı fonksiyon aynen bir class gibi yaratılıyor, sonra
+çağrılıyor. Mesela ilgilendiğimiz belli bir kolon listesini verip
+geziciyi oluşturabiliriz, sonra ondan bir satır isteyebiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">getter</span> <span class="o">=</span> <span class="n">get_row</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span><span class="s1">&#39;x2&#39;</span><span class="p">])</span>
+
+<span class="n">Y</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="n">getter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> 
+
+<span class="nb">print</span> <span class="n">Y</span><span class="p">,</span><span class="n">x</span>
+</code></pre>
+</div>
+
+<p>Şu sonucu görürüz,</p>
+
+<pre><code>['10', '6'] 1.0
+</code></pre>
+
+<p>Şu anda fonksiyon bekler durumda. Biz başka çağrılar yapabiliriz,
+gidip kahve içebiliriz, geri geldiğimizde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">Y</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="n">getter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> 
+
+<span class="nb">print</span> <span class="n">Y</span><span class="p">,</span><span class="n">x</span>
+
+<span class="n">Y</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="n">getter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> 
+
+<span class="nb">print</span> <span class="n">Y</span><span class="p">,</span><span class="n">x</span>
+</code></pre>
+</div>
+
+<p>çağrıları bize iki yeni satır verir. </p>
+
+<pre><code>['20', '5'] 2.0
+
+['30', '4'] 3.0
+</code></pre>
+
+<p>Elimizdeki fonksiyon göstergecini başka birini versek o next() çağırsa
+o da aynı yerden devam ederdi. Ama biz tekrar başa dönmek istiyoruz,
+problem değil, yeni bir gezici fonksiyon yaratırız, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">getter</span> <span class="o">=</span> <span class="n">get_row</span><span class="p">([</span><span class="s1">&#39;x1&#39;</span><span class="p">,</span><span class="s1">&#39;x2&#39;</span><span class="p">])</span>
+
+<span class="n">Y</span><span class="p">,</span><span class="n">x</span> <span class="o">=</span> <span class="n">getter</span><span class="o">.</span><span class="n">next</span><span class="p">()</span> 
+
+<span class="nb">print</span> <span class="n">Y</span><span class="p">,</span><span class="n">x</span>
+</code></pre>
+</div>
+
+<pre><code>['10', '6'] 1.0
+</code></pre>
+
+<p>Başa dönmüş olduk.</p>
+
+<p>Üreticilerin gezme işlemini başlatmadan önce bazı hazırlık işleri,
+atamaları yapmaları en önemli özelliklerinden. Aynen bir obje
+başlatıldığında onun kurucusunda başlangıç kodları işletilebildiği
+gibi, ilk yield anına kadar işletilen her şey bir fonksiyonda hazırlık
+aşaması sayılabilir, ondan sonra bir döngüye girilip daha az mıktarda
+kod sürekli işlenip yield ile dönülecektir. Üstteki örnekte dosyanın
+açılması, başlık kolonların okunması, vs gibi işlemlerin hepsi bu
+başlangıç aşamasında. Bir gezici fonksiyonu ismiyle ve istenen
+parametreleri ile yarattığımız zaman bu hazırlık kodları işleyecek. </p>
+
+<p>Kaynaklar</p>
+
+<p>http://www.python.org/dev/peps/pep-0255/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

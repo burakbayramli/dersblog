@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Roket İnişi, Kontrol, OpenAI Gym</h1>
+
+<p>OpenAİ Gym altyapısı altında paylaşılan simülatörlerden biri aya iniş
+(lunar lander), bir diğeri, yine Gym altyapısı üzerinde yazılmış ama
+ayrı bir proje, rocket-lander. Her iki proje her ne kadar takviyeli
+öğrenim / yapay zeka için yazılmış olsa da, (matematiksel modelleme
+içeren) kontrol teorisi amaçlı kullanılabilir. İniş problemi kolay
+değil; rüzgar, yerçekim etkileriyle boğuşurken en az yakıt harcayip ve
+yumuşak şekilde iniş yapmak ciddi bir optimizasyon problemi.</p>
+
+<p><img width="400" src="https://1.bp.blogspot.com/-OIxLXQe2s7U/XSwvOIA8XQI/AAAAAAAAB1M/WNK70QseuswPtK7E7Zn1ogVhzqSGrE44ACLcBGAs/s1600/rocket-0100.png"/></p>
+
+<p>İkinci iniş simülasyonu birinciyi kıyasla daha çetrefil bir iniş
+modelliyor, geçende deniz üstünde bir platforma iniş yapan SpaceX'in
+Falcon 9 ilk aşama roketi modellenmiş. Ufak bir hedefe iniş yapıldığı
+için iş çok daha zor, ayrıca bu simülatörde kontroller sürekli
+(continuous) olabiliyor, aya iniş ayrıksal kontrolle işliyor.</p>
+
+<p>Aya iniş için <code>gym==0.9.4</code> kurulur, altta rasgele hareketler yaptıran
+bir kod (ayrıca simülasyondan resim alınıyor),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">gym</span><span class="o">,</span> <span class="nn">six</span><span class="o">,</span> <span class="nn">pyglet</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s1">&#39;LunarLander-v2&#39;</span><span class="p">)</span>
+
+<span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">action_space</span><span class="o">.</span><span class="n">sample</span><span class="p">()</span> 
+    <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+    <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="n">buffer</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_buffer_manager</span><span class="p">()</span><span class="o">.</span><span class="n">get_color_buffer</span><span class="p">()</span>            
+    <span class="n">image_data</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">get_image_data</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">image_data</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;frames/lunar-</span><span class="si">%04d</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+
+    <span class="nb">print</span> <span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">done</span><span class="p">:</span> <span class="k">break</span>
+
+<span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Falcon 9 için ana proje</p>
+
+<p><a href="https://github.com/arex18/rocket-lander">https://github.com/arex18/rocket-lander</a></p>
+
+<p>Ama tüm bu kodlara gerek yok, simülatör için iki dosya yeterli
+(<code>rocketlander.py</code> ve <code>constants.py</code>), bu dosyaları biz aldık, ve
+alttaki dizinde bulunabilir ,</p>
+
+<p><a href="https://github.com/burakbayramli/kod/tree/master/sk/2019/07">https://github.com/burakbayramli/kod/tree/master/sk/2019/07</a></p>
+
+<p>Kontrol için taslak bir kod (sabit kontrol veriliyor). Kodda mesela
+rüzgar etkisi nasıl eklenir görüyoruz,
+<code>env.apply_random_x_disturbance</code> ile. İniş yapılan platform sanal bir
+dalga sebebiyle sola ya da sağa kayıyor olabilir, bunu
+<code>env.move_barge_randomly</code> ile veriyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">rocketlander</span> <span class="kn">import</span> <span class="n">RocketLander</span>
+<span class="kn">from</span> <span class="nn">constants</span> <span class="kn">import</span> <span class="n">LEFT_GROUND_CONTACT</span><span class="p">,</span> <span class="n">RIGHT_GROUND_CONTACT</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pyglet</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Side Engines&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;Clouds&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;Vectorized Nozzle&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+                <span class="s1">&#39;Starting Y-Pos Constant&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;Initial Force&#39;</span><span class="p">:</span> <span class="s1">&#39;random&#39;</span><span class="p">}</span>  <span class="c1"># (6000, -10000)}</span>
+
+    <span class="n">env</span> <span class="o">=</span> <span class="n">RocketLander</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+    <span class="n">left_or_right_barge_movement</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">30</span><span class="p">):</span>
+
+            <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]</span>                        
+            <span class="n">obs</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+            <span class="n">buffer</span> <span class="o">=</span> <span class="n">pyglet</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">get_buffer_manager</span><span class="p">()</span><span class="o">.</span><span class="n">get_color_buffer</span><span class="p">()</span>            
+            <span class="n">image_data</span> <span class="o">=</span> <span class="n">buffer</span><span class="o">.</span><span class="n">get_image_data</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">image_data</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;frames/rocket-</span><span class="si">%04d</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">draw_marker</span><span class="p">(</span><span class="n">env</span><span class="o">.</span><span class="n">landing_coordinates</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">env</span><span class="o">.</span><span class="n">landing_coordinates</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">refresh</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="n">LEFT_GROUND_CONTACT</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">s</span><span class="p">[</span><span class="n">RIGHT_GROUND_CONTACT</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">move_barge_randomly</span>
+                <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">left_or_right_barge_movement</span><span class="p">)</span>
+
+                <span class="n">env</span><span class="o">.</span><span class="n">apply_random_x_disturbance</span> \
+                <span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">0.005</span><span class="p">,</span> \
+                 <span class="n">left_or_right</span><span class="o">=</span><span class="n">left_or_right_barge_movement</span><span class="p">)</span>
+                <span class="n">env</span><span class="o">.</span><span class="n">apply_random_y_disturbance</span><span class="p">(</span><span class="n">epsilon</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span> <span class="k">break</span>
+</code></pre>
+</div>
+
+<p><code>step</code> çağrısından gelen <code>obs</code> içinde o adımda bilinen roket hakkında
+ölçümler var. Konumda</p>
+
+<pre><code>x_pos, y_pos, x_vel, y_vel, lateral_angle, angular_velocity
+</code></pre>
+
+<p><code>x_pos, y_pos</code> roketin yatay, dikey konumu. <code>x_vel,y_vel</code> yatay, dikey
+hız. <code>lateral_angle</code> roketin eğimi, <code>angular_velocity</code> açısal hız,
+yani bu açının ne hızda değiştiği.</p>
+
+<p>Kontrol aksiyonları <code>Fe,Fs,Psi</code>, bunlardan <code>Fe</code> ana itiş roketi, dikey
+yönde. <code>Fs</code> yandaki nitrojenle çalışan iticileri kontrol ediyor. <code>Psi</code>
+ile roketin açısının değiştirmek mümkün.</p>
+
+<p>Diğer değişkenlerden, <code>env.remaining_fuel</code> kalan yakıtı raporlar,
+<code>env.initial_mass</code> başlangıçtaki (yakıt dahil) kütle,
+<code>env.get_landing_coordinates()</code> platformun yerini. Raporlanabilen tüm
+değişkenleri <code>dir(env)</code> ile görebiliriz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

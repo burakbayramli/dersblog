@@ -1,0 +1,110 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>supervisord</h1>
+
+<p>Unix'te süreç (process) isletimi, onların takibi için faydalı bir
+program, süpervisord. Bu tür programların en çok aranan
+özelliklerinden biri eğer takip ettikleri program çökmüş ise onu
+tekrar başlatabilmeleri. Çok uzun süren bir toptan işleyici (batch)
+programı mesela tekrar başlatılabilir (restartable) yapabilirsiniz, ve
+eğer bir şekilde çökerse programı başlatınca kaldığı yerden devam
+eder, ve çöken programı tekrar başlatacak olan şey süpervisord gibi
+bir program olacaktır.</p>
+
+<p>http://supervisord.org/index.html</p>
+
+<p>Kurmak için en rahat yol</p>
+
+<pre><code>sudo easy_install supervisor
+</code></pre>
+
+<p>Alttaki</p>
+
+<pre><code>echo_supervisord_conf
+</code></pre>
+
+<p>komutu ile örnek bir ayar dosyası ürettirebilirsiniz.</p>
+
+<p>Bir ornek</p>
+
+<pre><code>[supervisord]logfile=/tmp/supervisord.log ; (main log file;default $CWD/supervisord.log)logfile_maxbytes=50MB
+        ; (max main logfile bytes b4 rotation;default 50MB)
+logfile_backups=10
+           ; (num of main logfile rotation backups;default 10)
+loglevel=info
+                ; (log level;default info; others: debug,warn,trace)
+pidfile=/tmp/supervisord.pid ;
+(supervisord pidfile;default supervisord.pid)nodaemon=false[program:mytest]
+command=python -u /home/burak/data/scripts/test_supervisord.pyautorestart=trueuser=postgresredirect_stderr=truestdout_logfile=/tmp/test_supervisord.log
+</code></pre>
+
+<p>Bir mytest adında programı başlatıp kontrol ettiriyoruz, log dosyasını
+tanımlıyoruz, autorestart=true ile hatalı şekilde süreç çökerse tekrar
+başlat diyoruz, ve "hangi kullanıcı üzerinden" alt programın
+başlatılmasını gerektiğini bile tanımlayabiliyoruz. Bu durumda
+süpervisord root olarak başlatılmalı tabii, yoksa istediği diğer
+kullanıcıya geçiş yapamaz.</p>
+
+<p>Baslatmak icin </p>
+
+<pre><code>sudo supervisord
+</code></pre>
+
+<p>komutu yeterli.</p>
+
+<p>Kontrol edilen tüm programları (süpervisord ile beraber) oldurmek için
+<code>supervisord</code>'nin PİD'ini ps -eaf | grep süpervisord ile bulun, ve</p>
+
+<pre><code>sudo kill -SIGTERM [PID]
+</code></pre>
+
+<p>Not: Yukarıdaki program tanımında python'u -u seçeneği ile kullandık,
+bu seçenek ile "print" gibi stdout'a çıkan ifadeler derhal "dışarı
+atılıyor (flushed)". Bu yapılmazsa çocuk süreç işliyor ve ekrana mesaj
+basıyor olsa bile log'da hiç bir şey gözükmeyecektir.</p>
+
+<p>Ekler</p>
+
+<p>Bizim yazdığımız <a href="https://github.com/burakbayramlı/kod/tree/master/dand">dand</a> adlı
+program benzer işlevi gerçekleştiriyor.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

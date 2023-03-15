@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Sabitler</h1>
+
+<p>Web uygulamasi sabit degerleri (constants) nasil almali? Bir
+properties dosyasindan, muhakkak, fakat bu dosya EAR icinde mi disinda
+mi olsa daha iyi?Disinda olmasi daha iyi; boylece bu dosyanin set
+edilmesi tamamen derleme sistemi disinda, gelistirme ile alakali
+degil, sonuca gonderme (deployment) ile ilgili. Sonuc ortaminda "ant"
+olmasa bile, properties dosyasinda degisim yapabiliriz. Alttaki class
+sabitleri okumak icin yazildi.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">org.apache.log4j.Logger</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span><span class="kn">import</span>
+<span class="nn">java.io.FileInputStream</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Properties</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constants</span>
+<span class="p">{</span>
+    <span class="kd">transient</span> <span class="n">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">.</span><span class="na">getLogger</span><span class="p">(</span><span class="s">&quot;logger&quot;</span><span class="p">);</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Constants</span> <span class="n">_instance</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="n">Properties</span> <span class="n">properties</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="p">();</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Constants</span> <span class="nf">instance</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">_instance</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Constants</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">_instance</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="nf">Constants</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">String</span> <span class="n">userHome</span> <span class="o">=</span> <span class="n">System</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="s">&quot;user.home&quot;</span><span class="p">).</span><span class="na">toLowerCase</span><span class="p">();</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;userHome =&quot;</span> <span class="o">+</span> <span class="n">userHome</span> <span class="o">+</span> <span class="s">&quot;/etc/pocketbudda.properties&quot;</span><span class="p">);</span>
+        <span class="n">properties</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">userHome</span> <span class="o">+</span><span class="s">&quot;/etc/app.properties&quot;</span><span class="p">));</span>
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="n">Util</span><span class="p">.</span><span class="na">log</span><span class="p">(</span><span class="n">e</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getString</span><span class="p">(</span><span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">return</span> <span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getInt</span><span class="p">(</span><span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="k">new</span> <span class="n">Integer</span><span class="p">(</span><span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">)).</span><span class="na">intValue</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getList</span><span class="p">(</span><span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">);</span> <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Uygulamamizin sabitleri, diyelim ki app.properties dosyasi, her zaman
+$HOME/etc/ altinda aranir. Mesela JBoss baslatan "ubuntu" adli bir
+kullanici ise, <code>/home/ubuntu/etc/app.properties</code> okunacak. Sabit
+degerleri okumak icin uygulamamizin herhangi bir yerinde
+<code>Constants.instance().getString("anahtar")</code> gibi bir cagri
+yeterli. Dosya</p>
+
+<pre><code>anahtar1=deger1
+anahtar2=deger2
+</code></pre>
+
+<p>formatinda... Constants class'i listeler, sayilari "tip guvenlikli
+(type safe)" bir sekilde okuyabilecek halde.Sabitleri Seam'e vermek
+mumkun; uygulama baslayinca muhakkak islemesi garanti bir Action
+class'i icine:@OutString showAds =
+Constants.instance().getString("showAds");gibi bir tanim "showAds"
+sabitini dis dunyaya de-enjekte edecektir. Artik</p>
+
+<pre><code>&lt;s:div rendered="#{showAds == 'false'}"&gt;
+  &lt;img src="[imaj]"/&gt;&lt;/s:div&gt;
+</code></pre>
+
+<p>gibi tanimlar xhtml sayfalari icinde kullanilabilir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

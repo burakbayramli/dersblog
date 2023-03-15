@@ -1,0 +1,207 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Dosya İşlemleri, Unix, Python</h1>
+
+<p>Genel ihtiyaca dönük Python'da yapılabilecek dosya işlemleri;</p>
+
+<p>Bir dosya, dizin mevcut mu?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>False
+</code></pre>
+</div>
+
+<p>Bir dizini yaratmak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>True
+</code></pre>
+</div>
+
+<p>Python ile dosya işlemleri yaparken, komut işletirken o anda içinde olunan
+bir dizin var; bu dizini değiştirmek için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">os</span><span class="o">.</span><span class="n">chdir</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Artık takip eden işlemler bu dizin içinde yapılacak. Hangi dizinde olduğumuzu
+raporlamak için </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>/tmp/filan1
+</code></pre>
+</div>
+
+<p>Tüm dosya isminden (dizin artı dosya ismi) sadece dizin bölümünü çıkartmak
+için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="n">file</span> <span class="o">=</span> <span class="s2">&quot;/vs/vs/dir1/dir2/file1.txt&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: &#39;/vs/vs/dir1/dir2&#39;
+</code></pre>
+</div>
+
+<p>Eğer sadece dosya ismini çekip çıkartmak istersek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: &#39;file1.txt&#39;
+</code></pre>
+</div>
+
+<p>Dizini altındaki tüm dosyalarla beraber silmek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">shutil</span>
+<span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Bir dizin altındaki dosyaları, dizinleri belli bir kalıba uyacak şekilde listelemek. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">glob</span>
+
+<span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/usr/*&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+[&#39;/usr/local&#39;,
+ &#39;/usr/games&#39;,
+ &#39;/usr/lib&#39;,
+ &#39;/usr/share&#39;,
+ &#39;/usr/src&#39;,
+ &#39;/usr/libexec&#39;,
+ &#39;/usr/include&#39;,
+ &#39;/usr/sbin&#39;,
+ &#39;/usr/bin&#39;]
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/usr/*bin*&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: [&#39;/usr/sbin&#39;, &#39;/usr/bin&#39;]
+</code></pre>
+</div>
+
+<p>Eğer daha alt seviye dizinleri göstermek istersek, mesela iki seviye
+aşağısı için, <code>/*/*</code> diyebilirdik.</p>
+
+<p>Fakat üstteki ifade özyineli bir şekilde en üst seviye dizinden tüm
+altdızinleri göstermez. Bunun için bir kod yazdık,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">ls</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">ignore_list</span><span class="o">=</span><span class="p">[]):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ls ignore lst&#39;</span><span class="p">,</span> <span class="n">ignore_list</span><span class="p">)</span>
+    <span class="n">dirs</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">directories</span><span class="p">,</span> <span class="n">filenames</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">walk</span><span class="p">(</span><span class="n">d</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">directory</span> <span class="ow">in</span> <span class="n">directories</span><span class="p">:</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">directory</span><span class="p">)</span>
+            <span class="n">do_add</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">ignore_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span>
+                    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;ignoring&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">);</span> <span class="n">do_add</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">do_add</span><span class="p">:</span> <span class="n">dirs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">filenames</span><span class="p">:</span> 
+            <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">root</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+            <span class="n">do_add</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="k">for</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">ignore_list</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">ignore</span> <span class="ow">in</span> <span class="n">path</span><span class="p">:</span> <span class="n">do_add</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">do_add</span><span class="p">:</span> <span class="n">files</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">path</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">path</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">files</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1/filan12&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1/filan13&quot;</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1/filan12/filan121&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">ls</span><span class="p">(</span><span class="s2">&quot;/tmp/filan1&quot;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>ls ignore lst []
+([&#39;/tmp/filan1/filan12&#39;, &#39;/tmp/filan1/filan13&#39;, &#39;/tmp/filan1/filan12/filan121&#39;], [])
+</code></pre>
+</div>
+
+        </section>          
+      </div>
+    </body>
+</html>

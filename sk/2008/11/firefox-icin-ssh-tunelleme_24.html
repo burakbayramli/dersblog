@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Firefox Icin SSH Tunelleme</h1>
+
+<p>Altta bahsedecegim tunelleme tekniginin 2 yarari var: Birincisi hicbir
+Internet yasagina takilmadan, istediginiz siteyi
+gezebilmeniz. Ikincisi, eristiginiz adres ve network trafiginizin
+guvenli hale gelmesi; Mesela acik ve/ya size ait olmayan bir Internet
+baglantisindan (cafe'lerdeki WiFi noktalarindan mesela) disari
+cikiyorsaniz, bu teknik isinize yarayacak.Teknigin tek dezavantaji,
+Internet yasagini delmek istiyorsaniz, ulke disinda bir Unix hesabi
+gerektirmesi. Ama sadece Internet'i guvenli gezmek istiyorsaniz, ulke
+icinde bir makina da olabilir.SSH tunelleme teknigi icin once Unix
+makinaniza baglaniyorsunuz:</p>
+
+<pre><code>ssh -D 8080 -f -C -q -N kullanici@makina
+</code></pre>
+
+<p>Bunu islettikten sonra komut satiri hemen geri donecek, ama
+baglantiniz arka planda yapilmis olacak. Ustte lokal makinanin 8080
+portunu tunelleme portu olarak tanimladik. Simdi Firefox'a girin ve
+tum Internet trafiginin bu port uzerinde disari cikmasi icin, gerekli
+ayarlari yapin. Bunun icin URL kutusuna <code>about:config</code> yazin, bu size
+gereken ayarlari getirecek.</p>
+
+<p>Burada olmasi gerekenler soyle:</p>
+
+<pre><code>network.proxy.no_proxies_on : localhost, 127.0.0.1
+network.proxy.socks : 127.0.0.1
+network.proxy.socks_port : 8080
+network.proxy.socks.remote_dns : true
+network.proxy.socks_version : 5
+network.proxy.type : 1
+</code></pre>
+
+<p>Bu kadar. Artik Firefox'un tum istekleri SSH uzerinden Unix makinasina
+gidecek, ve Internet'te gezinmeyi aslinda bu makina yapacak, ve size
+sayfa iceriklerini yine SSH uzerinden geri dondurecek. Eger
+network'unuz "izleniyorsa" sadece sifrelenmis SSH trafigi gorecekler,
+gittiginiz URL bile belli olmayacak.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Oracle Explain Plan'i Anlamak</h1>
+
+<p>SQL TRACE ve tkprof programları birden fazla işlenen sorgular için
+yararlı istatistikler verse bile, "tek bir" sorgu için harcanacak
+zamanı hesaplamak için değişik bir yöntem kullanmanız daha yararlı
+olur. EXPLAIN PLAN komutunu sorguyu işletmenize gerek kalmadan,
+Oracle'ın işlem planını hesaplaması için kullanabilirsiniz. İşlem
+planı (execution plan) Oracle'in herhangi bir sorguyu nasıl işletmeyi
+planladığını gösterir.  İşletmeden sorgu analiz edebilme özelliği,
+uzun süreli sorgular için çok işinize yarayacak. Uzun süren derken,
+mesela 30 dakika işleyebilecek bir sorgudan bahsediyoruz. Bu sorguyu,
+çalıştırmadan analiz edebilme, her seferinde 30 dakika beklemekten
+sizi kurtaracaktır.  Explain Plan'i masıl kullanacağız? İlk önce plan
+çizelgesi denilen bir çizelgeyi yaratmamız lazım. Bu çizelge, plan
+çıktısını depolamak için kullanılıyor.</p>
+
+<p>Bu çizelgeyi otomatik yaratan betik Unix üzerinde
+$ORACLE<em>HOME/rdbms/admin/utxlplan.sql dosyasındadır. Script işledikten
+sonra, hangi şematikten işlettiyseniz orada PLAN</em>TABLE adlı bir
+çizelge göreceksiniz.</p>
+
+<p>Evet hazırız. Şimdi, analiz etmek istediğiniz sorgu üzerinde EXPLAIN
+PLAN işletin: SQL> EXPLAIN PLAN 2> SET STATEMENT<em>ID='SORGU</em>1' 3> FOR
+4> SELECT EMPLOYEE<em>ID 5> FROM EMPLOYEES 6> WHERE EMPLOYEE</em>ID=243218;
+Bu komut, analizi yaptı, ve sonucu plan çizelgesinde sakladı. Sonucu
+almak için, şunu işletebilirsiniz.  SQL> SELECT OPERATION, OPTIONS,
+OBJECT<em>NAME, ID, PARENT</em>ID, POSITION 2> FROM PLAN<em>TABLE 3> WHERE
+STATEMENT</em>ID='SORGU_1' 4> ORDER BY ID;</p>
+
+<p>Bu komut, analizi düz bir tablo halinde gösterecek. Eğer daha düzgun
+ve girintili bir sonuç istiyorsanız, şunu işletin.</p>
+
+<p>SQL> SELECT LPAD(' ',2*LEVEL[nd]1) | | OPERATION | | ' ' | | OPTIONS |
+| ' ' | |OBJECT<em>NAME | | ' ' | | DECODE(ID, 0, 'COST= '| | POSITION)
+"QUERY PLAN" 2> FROM PLAN</em>TABLE 3> START WITH ID=0 AND
+STATEMENT<em>ID='SORGU</em>1' 4> CONNECT BY PRIOR ID=PARENT_ID;</p>
+
+<p>Büyük işlem planları için bu şekilde bir çıktı daha yararlı olacaktır.
+Sonucu Analiz Etmek Amaç, sorgularda indis kullanımını en üst düzeye
+getirmektir. İndisler, CREATE INDEX komutu ile yaratılırlar, ve
+çizelgeye erişimi hızlandırırlar. Amacımız, EXPLAIN PLAN komutundan
+gelen sonuçlarda INDEX RANGE SCAN ibaresini mümkün olduğunca çok
+görmektir. Eğer FULL TABLE SCAN ibaresini birden fazle kere
+görüyorsanız sorgu çizelgeye satır satır erişiliyor demektir ve bu çok
+kötüdür. İndis ekleyerek, ya da mevcut olan indislerin kullanılmasını
+Oracle'a 'hatırlatmak' için sorgularınız içinde tiyo vermeye
+başlayabilirsiniz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

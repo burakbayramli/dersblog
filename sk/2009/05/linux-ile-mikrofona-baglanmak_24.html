@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Linux ile Mikrofona Baglanmak</h1>
+
+<p>Linux uzerinde standart mikrofon ve ses geri calma araclari olan
+arecord ve aplay ile disaridan gelen sesleri bilgisayara
+aktarabilirsiniz.arecord -d 1 -f datkomutu bir saniye sureli olarak
+wav formatina uyumlu ses verisini ekrana basar. Bu bilgiyi bir wav
+dosyasina aktarabiliriz, ama bu kaydi ek araclar ile islemden gecirmek
+istiyorsak (mesela ses tanima uygulamalari icin) o zaman bir Python
+scripti ile isletebiliriz.</p>
+
+<pre><code>import osoutput = os.popen('arecord -d 2 -f dat').read()
+</code></pre>
+
+<p>Su anda output String tipindedir ve bu String icindeki her karakter
+ses kaydinin bir parcasini tasimaktadir.print len(output)print
+type(output)print output[1:10]komutlari sirasiyla bu verinin
+uzunlugunu, tipini ve ilk 10 karakteri ekrana basar. Eger dosyaya
+yazmak istiyorsak</p>
+
+<pre><code>outfile = open("/tmp/out.wav", "w")
+outfile.write(output)
+</code></pre>
+
+<p>Simdi aplay /tmp/out.wav komutu ile bu ses kaydinin dinlememiz
+mumkun. Degisken output icindeki veriyi Numpy, Scipy ile islemden
+gecirebiliriz; FFT (fast fourier transform) bu islemlerden sadece bir
+tanesi.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

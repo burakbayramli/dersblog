@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>SQL Nasıl Kullanılmalı</h1>
+
+<p>Küme kavramı (ilkokuldan hatırladınız mı?)  Veri tabanı programları,
+büyük miktarda veriyi işlemek için yazılmıştır. Yaptıkları bütün
+işlem, kaybedilmez türden veriyi saklamak, hızlı şekilde geri getirmek
+ve geriği olduğu zaman filterden geçirip sadece bir bölümünü
+kullanıcıya sunmaktır.  Mesela aşağıdaki komut,</p>
+
+<p>INSERT INTO MUSTERI VALUES ('Murat', 'Bilisim', 'Adres', 111);</p>
+
+<p>veri tabanınıza VALUES kısmından sonra gelen bölümü, MÜŞTERİ kayıtına
+yazmanızı sağlar. Elektrik kesilse de, ekranınız patlasa da, bu veri
+bir yere gitmeyecektir. (Hard dışkınız bozulmadığı sürece tabii). Eğer
+bu veriyi geri istese idiniz,</p>
+
+<p>SELECT * from MUSTERI WHERE ISIM = 'Murat';</p>
+
+<p>komutunu uygulardınız.  Şimdi size ilginç bir şey açıklayacağım. SQL
+Veri tabanları ilkokulda öğrendiğiniz küme kavramı ile
+çalışırlar. Hani kesisen kümeler, ek kümeler, vs.. hatırlarsınız.
+Sonuçta veri bulmanın en rahat yolu, veriyi bir küme gibi görmek, ve
+istediğiniz elemanları istenen küme içinde, ötekileri dışında görmek
+uygun olur.  Ve en can alıcı yere geliyoruz. Veri tabanları, küme
+teorisi ile en hızlı halde çalışırlar. Bundan başka yol varmı ki?
+diyebilirsiniz. Elbette var. SQL diline sonradan eklenen bu uzatmalar,
+bazen gerekli olsa bile, genelde kaçınilmasi gereken kullanım
+biçimleri. Bu alternatif metoda 'tekci metod' diyeceğiz, ötekine
+küme metodu.</p>
+
+<p>Tekci Metot</p>
+
+<p>Elinizde 1 milyon müşteri kayıdının olduğunu düşünün. Diyelim ki, bir
+program yazmanız istendi, bu programa göre, her müşterinin size
+masrafı, getirdiği parayı birbirinden çıkarıp, müşterinin size net
+maliyetini bulup, aynı müşteri kayıdı üzerinde 'net maliyet' adlı yere
+geri yazmanız istendi. Bu programı iki şekilde yazabilirsiniz.  ---
+Tarif kod yazıyoruz</p>
+
+<p>BASLA;HER KAYIT ICIN EGER MUSTERI SEHIR = 'ANKARA'
+ISE KAYIDI AC; NET<em>MALIYET = MASRAF - MUSTERI</em>KAR; MUSTERI.NET<em>MASRAF
+= NET</em>MALIYET.  EGER SON;SONRAKI KAYIDA GEC;</p>
+
+<p>Yukarıdaki koda göre, her kayıdı teker teker açıp, işleyip, tekrar
+geri yazmanız gerekecek. Yani her işlemi, teker teker yapacaksınız,
+teker teker nasıl işleyeceğini düşüneceksiniz demektir. Yani veri
+tabanına, işini 'nasıl' yapacağını öğretmeye uğraşacaksınız demektir.
+Fakat veri tabanları, büyük veri kümeleri üzerinde çalışmaya alışık
+değiller mi? Niye nasıl yapacağımızı tarif edelim? Ne istediğimizi
+istesek, gerisini veri tabanı yapsa olmaz mı?</p>
+
+<p>Iste alternatif yontem:</p>
+
+<p>Kume Metodu</p>
+
+<p>UPDATE MUSTERI SET NET<em>MASRAF = MASRAF - MUSTERI</em>KAR WHERE
+SEHIR = 'ANKARA';</p>
+
+<p>Vay canına, bu daha kısa oldu. Hem de sonuçta daha hızlı işleyecektir
+göreceksiniz. Bunun sebebi nedir? Çünkü küme teorisini kullandık. Veri
+tabanları kümeler ile çalışmayı severler. Biz yukarıda, bir küme
+tanımladık, 'ne' istediğimizi söyledik, ama nasıl yapılacağını
+söylemedik. Kümemiz, Ankara şehrinde çalışan müşteriler idi. Bunu
+yaptıktan sonra, veri tabanı arkasına dönüp veriye baktı, en hızlı
+erişim ve değiştirme algoritmasini kendi hesapladı, ve uygun olan en
+hızlı metodu kullanıma koydu. Biz veri tabanının önüne engel
+koymadığımız için, bu metod en hızlısı oldu.  Her teknolojinin
+kullanılmayı sevdiği bir şekil vardır. Bu şekli bulun, böylece
+teknolojinin cevapladığı sorun tiplerini de bulacaksınız. Böylece
+çekiç gereken yerde testere kullanmazsınız, daha tecrübeli, gereken
+yerde gereken malzemeyi kullanan usta mühendis haline gelirsiniz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>MathJax: Web Sayfalarinda Javascript ile Matematik Formülleri</h1>
+
+<p>LaTeX ile yazılan matematik formüllerinin HTML içinde gösterilebilmesi
+için MathJax Javascript kütüphanesi var. Gerekli JS dosyaları diğer
+HTML, CSS dosyaları ile birlikte aynı dizinde olur, gerektikçe servis
+makinasından alınır, ve formül grafiğinin üretilmesi için işlem zaten
+Javascript ile kullanıcının tarayıcısında yapılır. Eğer MathJax
+kodlarını Internet'ten almak yeterliyse, şu şekilde bir HTML yeterli,</p>
+
+<pre><code>&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+&lt;script type="text/x-mathjax-config"&gt;
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+&lt;/script&gt;
+&lt;script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full"&gt;
+&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  ...
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Eğer kurmak istiyorsak alttakiler. </p>
+
+<p>Kurmak icin GH'dan kod alinir, </p>
+
+<p>https://github.com/mathjax/MathJax</p>
+
+<p>Depo icinde gereken dosya / dizinler</p>
+
+<pre><code>config/
+extensions/
+jax/
+MathJax.js
+</code></pre>
+
+<p>Bu dosyalar sayfalarla beraber web servis makinasindan servis
+edilecek. Simdi bu dosyalarla ayni seviyede olan bir HTML dosyasi
+icinde</p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;meta http-equiv="Content-Type" content="text/html; charset=UTF-8" /&gt;
+&lt;script type="text/x-mathjax-config"&gt;
+   MathJax.Hub.Config({
+    tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]}
+  });
+  &lt;/script&gt;
+  &lt;script type="text/javascript" src="MathJax.js?config=TeX-AMS_HTML-full"&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+&lt;p&gt;
+Eğer $a \ne 0$ olursa  \(ax^2 + bx + c = 0\) denkleminin çözümü iki tanedir
+ve bunlar $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}.$$
+&lt;/p&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>Bu dosya tarayıcıda gösterilince</p>
+
+<p><img src="mathj01.png" alt="" /></p>
+
+<p>MathJax yaklaşımı güzel çünkü ek bir "üretme komutu"na gerek duymuyor
+- kod HTML içinde, bildiğimiz LaTeX olarak kalıyor, servis tarafında
+neredeyse hiç işlem yapılmıyor, sayfayı görmek isteyen kişinin
+bilgisayarı gerekli işlemi yaparak formülü görüyor. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,251 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python Liste Kavraması (List Comprehension)</h1>
+
+<p>Python'un en geç anlaşılan, öğrenilen özelliklerinden biri belki de
+budur. Kitap yazarlarının bile hala eski usül liste oluşturmayı
+kullanması bunun işareti. Eski usül nasıldır? Mesela 1 ila 10
+arasındaki sayıların karesini alacağım, ve bununla yeni bir liste
+oluşturacağım. Ana liste,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">data</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">kareler</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">):</span>
+   <span class="n">kareler</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">kareler</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+</code></pre>
+</div>
+
+<p>Bir boş liste tanımlandı, ona ekler yapıldı, bir <code>for</code> döngüsü var,
+vs. Fakat liste oluşturması liste kavrama ile tek bir satırda
+yapılabilirdi,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">kareler</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">kareler</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[1, 4, 9, 16, 25, 36, 49, 64, 81, 100]
+</code></pre>
+</div>
+
+<p>Yani liste içeriğinin nasıl oluşturulacağını bir nevi liste tanımının
+parçası haline getirmiş oluyoruz. </p>
+
+<p>Kavrama operasyonları çok daha kapsamlı olabiliyor, <code>if</code>, <code>else</code>,
+kullanmak mümkün mesela, hatta içiçe (nested) döngüler bile
+kullanılabiliyor.</p>
+
+<p>Sadece çift sayıların karesini alalım, diğerleri olduğu gibi kalsın,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">kareler2</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">if</span> <span class="n">x</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span> <span class="k">else</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">11</span><span class="p">)]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">kareler2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[1, 4, 3, 16, 5, 36, 7, 64, 9, 100]
+</code></pre>
+</div>
+
+<p>Liste kavrama ifadeleri biraz dil sözdizimini tersine çeviriyor sanki,
+mesela <code>for</code> döngü içine gidecek olan <code>if</code> ifadesi şimdi en başta.</p>
+
+<p>İçiçe döngü örneği; 100 ila 105 arasındaki sayılar dış döngü, 1 ile 3
+arasındakiler iç döngü olsun, ve içteki listeyi gezerken dıştakine
+ekleyelim. Eski usulle bunu</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">toplamlar</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">106</span><span class="p">):</span>
+   <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">):</span>
+      <span class="n">toplamlar</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">y</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">toplamlar</span><span class="p">)</span>      
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[101, 102, 103, 102, 103, 104, 103, 104, 105, 104, 105, 106, 105, 106, 107, 106, 107, 108]
+</code></pre>
+</div>
+
+<p>diye yapardık. Uzun iş.. Her şeyi tek satırda yapabilirdik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">toplamlar</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">+</span><span class="n">y</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">106</span><span class="p">)</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">)]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">toplamlar</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[101, 102, 103, 102, 103, 104, 103, 104, 105, 104, 105, 106, 105, 106, 107, 106, 107, 108]
+</code></pre>
+</div>
+
+<p>Bu temel ile pek çok yöne gidilebilir. Unutmayalım, <code>enumerate</code> ile herhangi
+bir liste gezimi sırasında üzerinde olunan indis üretilebilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;ali&#39;</span><span class="p">,</span><span class="s1">&#39;veli&#39;</span><span class="p">,</span><span class="s1">&#39;ahmet&#39;</span><span class="p">]):</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>0 ali
+1 veli
+2 ahmet
+</code></pre>
+</div>
+
+<p>Ve bu tür bir kullanım liste kavraması için de aynen geçerlidir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">isimler_indisler</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">,</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;ali&#39;</span><span class="p">,</span><span class="s1">&#39;veli&#39;</span><span class="p">,</span><span class="s1">&#39;ahmet&#39;</span><span class="p">])]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">isimler_indisler</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[(0, &#39;ali&#39;), (1, &#39;veli&#39;), (2, &#39;ahmet&#39;)]
+</code></pre>
+</div>
+
+<p>Böylece bir değişken grubu (tuple) listesi oluşturduk, ve tüm bunları
+tek bir satırda yaptık.</p>
+
+<p>Şimdi sıkı durun, benzer bir sözdizim ile Python sözlüğü de
+(dictionary) yaratmak mümkün, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">isimler_indis_dict</span> <span class="o">=</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;ali&#39;</span><span class="p">,</span><span class="s1">&#39;veli&#39;</span><span class="p">,</span><span class="s1">&#39;ahmet&#39;</span><span class="p">])</span> <span class="p">}</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">isimler_indis_dict</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{0: &#39;ali&#39;, 1: &#39;veli&#39;, 2: &#39;ahmet&#39;}
+</code></pre>
+</div>
+
+<p>Aslında bu kullanıma sözlük kavraması (dictionary comprehension)
+deniyor, her neyse, benzer kullanım alanı.</p>
+
+<p>Uygulama</p>
+
+<p>Bu konuya nereden girdik? Veri bilimiyle alakalı bir kitap okuyordum,
+<em>Introduction to Time Series Modeling with Python</em> adında, yazar
+regresyon yapıyor, veriye eğri uyduruyor, ve katsayılar elde
+ediyor. Temel x kordinat değerleri <code>X</code> içinde, katsayılar <code>coef</code>
+içinde, sonra modeli tekrar oluşturmak için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">coef</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span>
+<span class="n">degree</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">curve</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)):</span>
+   <span class="n">value</span> <span class="o">=</span> <span class="n">coef</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+   <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">degree</span><span class="p">):</span>
+      <span class="n">value</span> <span class="o">+=</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">**</span><span class="p">(</span><span class="n">degree</span><span class="o">-</span><span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="n">coef</span><span class="p">[</span><span class="n">d</span><span class="p">]</span>
+   <span class="n">curve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">curve</span><span class="p">)</span>   
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[18, 100, 312, 714]
+</code></pre>
+</div>
+
+<p>kullanıyor. Fakat bu kod çok karışık... Yapılmaya uğraşılan basit bir
+şey aslında, <code>X</code> içindeki her değer için <code>coef</code> içindeki katsayılar
+alınıp ona tekabül eden polinom dereceleri <code>x</code> ile çapılacak ve
+sonuçlar toplanacak, yani her <code>x</code> için 10 + 5<em>x -3</em>x^2 + 6*x^3 hesabı
+yapılacak. Bir dış döngü var, <code>X</code> için, bir de iç döngü var <code>coef</code>
+için.</p>
+
+<p>Arkadaş <code>coef</code> gezmek için <code>range</code> ile indis yaratıyor, 1'inci ofsayt
+(çünkü o indise <code>degree-d</code> yapmak için ihtiyacı var). Diğer yandan
+<code>range(len(X))</code> ile bir diğer indis yaratıyor, ona hiç gerek yok,
+ikinci ofsayt. İndis gerektiginde <code>enumerate</code> ile erişilebilirdi, geri
+kalan durumlarda <code>for</code> ile öğeleri gezmek yeterlidir. Tabii gereksiz
+boş liste yaratmayı bir tarafa bırakalım, o herşeyi daha da uzatmış.</p>
+
+<p>Tüm bunlar çok kısa bir kodla yapılabilirdi,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">curve</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">([</span><span class="n">coef</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="n">x</span><span class="o">**</span><span class="p">(</span><span class="n">degree</span><span class="o">-</span><span class="n">d</span><span class="p">)</span><span class="o">*</span><span class="n">c</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span><span class="n">c</span> \
+        <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">coef</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])])</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">X</span><span class="p">]</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">curve</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[18, 100, 312, 714]
+</code></pre>
+</div>
+
+<p>Toplamı nasıl yaptığımıza dikkat, liste içinde liste var, ama içeride
+listeyi dışarı vermeden önce <code>numpy.sum(..)</code> ile topluyoruz. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

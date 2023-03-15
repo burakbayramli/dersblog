@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Lokal Dosya Arama - recoll</h1>
+
+<p>Kendi diskimizdeki dosyalari, PDF, EPUB, ne olursa olsun,
+indeksleyebilmemizi saglayan <code>recoll</code> araci var. Kurmak icin</p>
+
+<pre><code>sudo apt-get install recoll
+</code></pre>
+
+<p>Komutta <code>recoll</code> yazılınca GUI açılır. <code>Preferences | Indexing configuration</code> 
+ile indekslenecek dizinler eklenebilir, çıkartılabilir. Komut
+satırından indeksleme için <code>recollindex</code> çağrısı yeterli. Ben tipik olarak
+bir kitaplar üst dizinini veriyorum, ve oraya yeni doküman eklendikçe arada
+sırada <code>recollindex</code> çağrısı yapıp indeksi güncelliyorum.</p>
+
+<p>Doküman bulmak için <code>recoll</code> GUI'sinde kutuya istenen kelimeler yazılır
+ve sonuçlar altta listelenir.</p>
+
+<p>Komut Satirindan Aramak</p>
+
+<p>Direk komut satırından arama için <code>recoll -t</code> çağrısı ardından anahtar
+kelimeler verilir, ve sonuç listelenebilir. Bu çağrıyı sarmalayan basit bir
+Python script alttadır,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">subprocess</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">sys</span>
+<span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;kelime&quot;</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">Popen</span><span class="p">([</span><span class="s1">&#39;recoll&#39;</span><span class="p">,</span><span class="s1">&#39;-t&#39;</span><span class="p">,</span><span class="n">q</span><span class="p">],</span> <span class="n">stdout</span><span class="o">=</span><span class="n">subprocess</span><span class="o">.</span><span class="n">PIPE</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">p</span><span class="o">.</span><span class="n">stdout</span><span class="p">:</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="s1">&#39;\[file:\/\/(.*?)\]&#39;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">re</span><span class="o">.</span><span class="n">DOTALL</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">res</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">:1:1&quot;</span> <span class="o">%</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p>Fakat bu çıktıdan arama sonucunu temsil eden özet paragraflar
+çıkartmak zor olabilir.</p>
+
+<p>Bir diğer yöntem <code>recoll</code> yazılımının kendi kaynağı içindeki Python
+kodlarını bir Python paketi olarak kurmak. Fakat bunu için tüm recoll
+kodunu almak ve derlemek gerekiyor.</p>
+
+<p>Kaynaklar [1] adresinde, kurulus tarifi [2]. Onceden bazi paketleri
+kurmak lazim, bizim uyguladigimiz komutlar,</p>
+
+<pre><code>sudo apt install libxslt1-dev zlib1g-dev libxapian-dev libx11-dev
+</code></pre>
+
+<p>Ardından recoll açılmış zip dizinine gidilir, ve</p>
+
+<pre><code>./configure --disable-qtgui ekle --disable-python-chm
+</code></pre>
+
+<p>Bu bir Makefile hazırlayacak, aynı zamanda Python paketini de kurulmaya
+hazır hale getirecek. Eğer tüm recoll bu kaynaktan gelsin istiyorsak</p>
+
+<pre><code>make
+sudo make install
+</code></pre>
+
+<p>ile kurulumu yapabiliriz.</p>
+
+<p>Bu bittikten sonra <code>recoll --version</code> ile yeni kurulum yapıldığını kontrol
+ederiz, şimdi sıra Python'a geldi. Alt dizin <code>python/recoll</code> altında şimdi
+bir <code>setup.py</code> dosyası olmalı. Yanlız dikkat: bu dosyayı yazanlar kodu
+biraz eksik bırakmış, mesela virtualenv gibi geliştirme ortamı kullananlar
+ortamlarına girip hangi <code>setup.py</code> üzerinde <code>install</code> işletirlerse o
+kurulumun içinde olduğu ortamın parçası olmasını beklerler. Bu arkadaşlar
+böyle yapmamış, tüm hazırlığı sistem seviyesindeki Python için yapmışlar.</p>
+
+<p>O sebeple eğer bir virtualenv ortamındaysak mesela <code>deactivate</code> ile
+dışarı çıkıyoruz, ve oradan eski usul, ilk Python öğrendiğimiz
+emekleme günlerinde olduğu gibi haldır huldur bir <code>sudo python3
+setup.py install</code> işletiyoruz. Bu komut kurulumu sistem seviyesinde
+yapacaktır. Şimdi eğer bu paketi geliştirme ortamından kullanmak istersek
+bir takla atarak sistem Python'undaki recoll'dan geliştirme
+ortamına bir sembolik bağlantı oluşturmak yeterli. Mesela ben kendi <code>env3</code>
+adındaki ortamımın dizini <code>env3/lib/python3.6/site-packages</code> altında</p>
+
+<pre><code>/usr/local/lib/python3.6/dist-packages/Recoll-1.32.7-py3.6-linux-x86_64.egg/recoll
+</code></pre>
+
+<p>adresini gösteren bir <code>recoll</code> sembolik bağlantısı yarattım, ve her şey
+ortam içinden normal şekilde çalışmaya başladı. Not: üstteki dizin herkes
+için aynı olmayabilir, mesela python3.6 yerine başka bir dizin olabilir,
+bunu kontrol etmek gerekebilir.</p>
+
+<p>Bu paketi kullanan bir kodu altta görebiliriz, bir kelime arayıp ilk 5
+sonucu özetleriyle beraber gösteriyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">recoll</span> <span class="kn">import</span> <span class="n">recoll</span>
+<span class="n">db</span> <span class="o">=</span> <span class="n">recoll</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">db</span><span class="o">.</span><span class="n">setAbstractParams</span><span class="p">(</span><span class="n">maxchars</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">contextwords</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">q</span> <span class="o">=</span> <span class="s2">&quot;kelime&quot;</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+<span class="n">nres</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Result count: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">nres</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">query</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Result #</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">query</span><span class="o">.</span><span class="n">rownumber</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;url&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> : </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">k</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">db</span><span class="o">.</span><span class="n">makeDocAbstract</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="n">query</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] [LesBonsComptes Download](https://www.lesbonscomptes.com/recoll/pages/download.html)</p>
+
+<p>[2] [LesBonsComptes Install](https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.INSTALL)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

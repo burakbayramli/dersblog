@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Zaman Serilerinde Tepe Noktası Bulmak (Peak Detection)</h1>
+
+<p>Matlab / Octave kullananlar zaman serisi tepe noktası
+analizinde peakutils adlı bir aracı kullanıyorlar. Bu kod Python'a
+taşınmış,</p>
+
+<p>https://github.com/atjacobs/PeakUtils</p>
+
+<p>Kod içinden gerekli fonksiyonu çıkarttık,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">indexes</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">thres</span><span class="p">,</span> <span class="n">min_dist</span><span class="p">):</span>
+    <span class="n">thres</span> <span class="o">*=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">peaks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">dy</span><span class="p">,</span> <span class="mf">0.</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.</span><span class="p">)</span>
+                     <span class="o">&amp;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="mf">0.</span><span class="p">,</span> <span class="n">dy</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.</span><span class="p">)</span>
+                     <span class="o">&amp;</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">thres</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">peaks</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">min_dist</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">highest</span> <span class="o">=</span> <span class="n">peaks</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">peaks</span><span class="p">])][::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">rem</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">)</span>
+        <span class="n">rem</span><span class="p">[</span><span class="n">peaks</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">for</span> <span class="n">peak</span> <span class="ow">in</span> <span class="n">highest</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">rem</span><span class="p">[</span><span class="n">peak</span><span class="p">]:</span>
+                <span class="n">sl</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">peak</span> <span class="o">-</span> <span class="n">min_dist</span><span class="p">),</span> <span class="n">peak</span> <span class="o">+</span> <span class="n">min_dist</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+                <span class="n">rem</span><span class="p">[</span><span class="n">sl</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="n">rem</span><span class="p">[</span><span class="n">peak</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="n">peaks</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">)[</span><span class="o">~</span><span class="n">rem</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">peaks</span>
+</code></pre>
+</div>
+
+<p>Parametreler tepe noktalarının arasında en az ne kadar mesafe, ayrıca
+noktaların en az ne kadar genliğe (y yönünde) sahip olmaları
+gerektiği. Eldeki bir veri üzerinde indexes(d,thres=0.3,min_dist=3)
+çağrısı sonrası</p>
+
+<p>Java için benzer bir çağrı, alttaki kütüphaneden,</p>
+
+<p>https://github.com/JorenSix/TarsosDSP</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">java.util.*</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="nf">indexes</span><span class="p">(</span><span class="kt">double</span><span class="o">[]</span> <span class="n">data</span><span class="p">,</span>
+                                          <span class="kt">int</span> <span class="n">width</span><span class="p">,</span>
+                                          <span class="kt">double</span> <span class="n">threshold</span><span class="p">,</span>
+                                          <span class="kt">double</span> <span class="n">decayRate</span><span class="p">,</span>
+                                          <span class="kt">boolean</span> <span class="n">isRelative</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span> <span class="n">peaks</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedList</span><span class="o">&lt;</span><span class="n">Integer</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">maxp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">end</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+    <span class="kt">double</span> <span class="n">av</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">mid</span> <span class="o">&lt;</span> <span class="n">end</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">av</span> <span class="o">=</span> <span class="n">decayRate</span> <span class="o">*</span> <span class="n">av</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">decayRate</span><span class="p">)</span> <span class="o">*</span> <span class="n">data</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">av</span> <span class="o">&lt;</span> <span class="n">data</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">)</span>
+            <span class="n">av</span> <span class="o">=</span> <span class="n">data</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">-</span> <span class="n">width</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">mid</span> <span class="o">+</span> <span class="n">width</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">stop</span> <span class="o">&gt;</span> <span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">)</span>
+            <span class="n">stop</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+        <span class="n">maxp</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="o">++</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">data</span><span class="o">[</span><span class="n">maxp</span><span class="o">]</span><span class="p">)</span>
+                <span class="n">maxp</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">maxp</span> <span class="o">==</span> <span class="n">mid</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">overThreshold</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">maxp</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">threshold</span><span class="p">,</span> <span class="n">isRelative</span><span class="p">,</span><span class="n">av</span><span class="p">)){</span>
+                <span class="n">peaks</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Integer</span><span class="p">(</span><span class="n">maxp</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="n">mid</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">peaks</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">public</span> <span class="kd">static</span> <span class="kt">boolean</span> <span class="nf">overThreshold</span><span class="p">(</span><span class="kt">double</span><span class="o">[]</span> <span class="n">data</span><span class="p">,</span> <span class="kt">int</span> <span class="n">index</span><span class="p">,</span> <span class="kt">int</span> <span class="n">width</span><span class="p">,</span>
+                                    <span class="kt">double</span> <span class="n">threshold</span><span class="p">,</span> <span class="kt">boolean</span> <span class="n">isRelative</span><span class="p">,</span>
+                                    <span class="kt">double</span> <span class="n">av</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kt">int</span> <span class="n">pre</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">post</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">&lt;</span> <span class="n">av</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">isRelative</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">iStart</span> <span class="o">=</span> <span class="n">index</span> <span class="o">-</span> <span class="n">pre</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">iStart</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">iStart</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">iStop</span> <span class="o">=</span> <span class="n">index</span> <span class="o">+</span> <span class="n">post</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">iStop</span> <span class="o">&gt;</span> <span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">)</span>
+            <span class="n">iStop</span> <span class="o">=</span> <span class="n">data</span><span class="p">.</span><span class="na">length</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="n">iStop</span> <span class="o">-</span> <span class="n">iStart</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">(</span><span class="n">iStart</span> <span class="o">&lt;</span> <span class="n">iStop</span><span class="p">)</span>
+            <span class="n">sum</span> <span class="o">+=</span> <span class="n">data</span><span class="o">[</span><span class="n">iStart</span><span class="o">++]</span><span class="p">;</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">sum</span> <span class="o">/</span> <span class="n">count</span> <span class="o">+</span> <span class="n">threshold</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">data</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">threshold</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Güzel. Fakat bu tepe noktası çağrıları toptan şekilde çalışıyor,
+verinin tamamını alıyorlar, fonksiyon verinin tamamına bakiyor. Soru
+şu: canlı zamanda, sürekli akan veri üzerinde tepe noktası nasıl
+buluruz? En son N tane noktayı hatırlamak mümkün olsun diyelim (ama
+verinin tamamı değil).</p>
+
+<p>İlk akla gelebilecek basit çözüm bir genlik alt limiti ymin'i aşan
+tepe noktasını seçmek, bu nokta ardından xmin kadar bekleriz, ylim'den
+üstte yeni bir tepe nokta var ise, bunu da alırız, böyle devam
+ederiz. Fakat basit çözüm biraz aceleci aslında, belki xmin sonrası
+bulunan tepe noktasına çok yakın "daha iyi (yani daha yukarıda)" bir
+nokta daha var, tipik olarak hemen bir önceki noktanın üzerine atlamak
+istemiyoruz, daha yukarıdaki noktayı istiyoruz.</p>
+
+<p>Bu durum için yine ilk akla gelen çözüm xmin'i arttırmak olabilir,
+fakat global bir parametreyle bu şekilde oynamak çoğunlukla iyi sonuç
+vermez, büyük ihtimalle analizin diğer yerlerinde başka yanlışlara yol
+açar.</p>
+
+<p>Çözüm yaklaşımı değiştirip veriler için bir kayan pencere
+kullanmak. Tepe noktası "en son N öğenin içinde orta noktanın maksimum
+olması demek" diye bir tanım getirebiliriz. Kayan pencere  için
+CircularFifoQueue kullanılabilir, bu bir org.apache.commons sınıfı,
+bir tür sınırlandırılmış kuyruk (queue). N öğe tutsun diye tanimlarsak
+N öğe ardından verilen N+1'inci öğe için 1. öğe dışarı atılır. O zaman
+tepe noktası bulan kod şöyle olabilir</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">java.io.*</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.*</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.util.Queue</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">org.apache.commons.collections4.queue.CircularFifoQueue</span><span class="p">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">TestPeak</span> <span class="p">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">class</span> <span class="nc">PeakFinder</span> <span class="p">{</span>
+        <span class="kt">double</span> <span class="n">xmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">double</span> <span class="n">ymin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="n">CircularFifoQueue</span> <span class="n">idxs</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="n">CircularFifoQueue</span> <span class="n">vals</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="c1">// &quot;null&quot; olmayan degeri temsil etmek icin kullaniyoruz</span>
+        <span class="c1">// elinde process&#39;e verecek id&#39;si olmayan cagrilar icin</span>
+        <span class="c1">// kullanisli olabilir</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">DUMMY</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> 
+        <span class="kd">public</span> <span class="nf">PeakFinder</span><span class="p">(</span><span class="kt">int</span> <span class="n">xmin</span><span class="p">,</span> <span class="kt">double</span> <span class="n">ymin</span><span class="p">){</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">xmin</span> <span class="o">=</span> <span class="n">xmin</span><span class="p">;</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">ymin</span> <span class="o">=</span> <span class="n">ymin</span><span class="p">;</span>
+            <span class="n">idxs</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CircularFifoQueue</span><span class="p">(</span><span class="n">xmin</span><span class="p">);</span>
+            <span class="n">vals</span> <span class="o">=</span> <span class="k">new</span> <span class="n">CircularFifoQueue</span><span class="p">(</span><span class="n">xmin</span><span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="na">mid</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">vals</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// process hem id hem deger aliyor, fakat id aslinda</span>
+        <span class="c1">// tutulup oldugu gibi geri veriliyor, cagri yapana</span>
+        <span class="c1">// yardimci olmasi icin bunu yapiyoruz, fonksiyonun ic</span>
+        <span class="c1">// isleyisi icin onemli degil.</span>
+        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">process</span><span class="p">(</span><span class="kt">double</span> <span class="n">val</span><span class="p">,</span> <span class="kt">int</span> <span class="n">idx</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">vals</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Double</span><span class="p">(</span><span class="n">val</span><span class="p">));</span>
+            <span class="n">idxs</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="k">new</span> <span class="n">Integer</span><span class="p">(</span><span class="n">idx</span><span class="p">));</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">vals</span><span class="p">.</span><span class="na">size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">xmin</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">vals</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span> <span class="o">&gt;</span> <span class="k">this</span><span class="p">.</span><span class="na">ymin</span> <span class="o">&amp;&amp;</span> <span class="n">vals</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">mid</span><span class="p">)</span> <span class="o">==</span> <span class="n">Collections</span><span class="p">.</span><span class="na">max</span><span class="p">(</span><span class="n">vals</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="n">idxs</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">mid</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Integer.MIN_VALUE null degeri yerine kullanildi, </span>
+            <span class="c1">// cunku int yerel tip, obje degil</span>
+            <span class="k">return</span> <span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="p">)</span> <span class="kd">throws</span> <span class="n">Exception</span><span class="p">{</span>
+        <span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">Random</span> <span class="n">r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">java</span><span class="p">.</span><span class="na">util</span><span class="p">.</span><span class="na">Random</span><span class="p">();</span>
+        <span class="n">r</span><span class="p">.</span><span class="na">setSeed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+        <span class="kt">double</span> <span class="n">samples</span><span class="o">[]</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">double</span><span class="o">[</span><span class="mi">1024</span><span class="o">]</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">samples</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span> <span class="p">)</span>
+            <span class="p">{</span>
+                <span class="kt">double</span> <span class="n">noise</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="na">nextGaussian</span><span class="p">()</span> <span class="o">*</span> <span class="n">Math</span><span class="p">.</span><span class="na">sqrt</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+                <span class="n">samples</span><span class="o">[</span><span class="n">n</span><span class="o">]</span> <span class="o">=</span> <span class="n">Math</span><span class="p">.</span><span class="na">sin</span><span class="p">(</span> <span class="n">n</span> <span class="o">*</span> <span class="n">Math</span><span class="p">.</span><span class="na">PI</span> <span class="o">/</span> <span class="mf">18.</span> <span class="p">)</span> <span class="o">+</span> <span class="n">noise</span><span class="p">;</span>
+            <span class="p">}</span>
+
+        <span class="c1">// uretilen veriyi dosyaya yazalim, ustteki Python kodu ayni veriyi</span>
+        <span class="c1">// kullanacak.</span>
+        <span class="n">PrintWriter</span> <span class="n">writer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PrintWriter</span><span class="p">(</span><span class="s">&quot;out.txt&quot;</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">samples</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="n">writer</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">samples</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">);</span>
+        <span class="n">writer</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+
+        <span class="n">ArrayList</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="p">();</span>
+        <span class="n">PeakFinder</span> <span class="n">pf</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PeakFinder</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span> <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">samples</span><span class="p">.</span><span class="na">length</span><span class="p">;</span> <span class="n">n</span><span class="o">++</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">idx</span> <span class="o">=</span> <span class="n">pf</span><span class="p">.</span><span class="na">process</span><span class="p">(</span><span class="n">samples</span><span class="o">[</span><span class="n">n</span><span class="o">]</span><span class="p">,</span> <span class="n">n</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">&gt;</span> <span class="n">Integer</span><span class="p">.</span><span class="na">MIN_VALUE</span><span class="p">)</span> <span class="n">res</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;&quot;</span><span class="o">+</span><span class="n">res</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Sonuc,</p>
+
+<p>Tekrarlamak gerekirse: tepe noktası "sağında ve solunda vadiler olan
+orta noktadır" tanımı üzerinden  sonucu aldık. Pencereyi sürekli
+kaydırıyoruz (daha doğrusu her yeni veriyi N tane sınırlı öğe
+içerebilen bir kuyruğa sürekli sondan ekliyoruz), ve bu sırada orta
+noktanın maksimum olup olmadığına bakıyoruz. </p>
+
+<p><img src="test_02.png" alt="" /></p>
+
+<p><img src="test_01.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

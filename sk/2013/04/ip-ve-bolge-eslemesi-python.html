@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>IP ve Bolge Eslemesi, Python</h1>
+
+<p>IP adresini yaklasik olarak bir bolgeye, sehre, hatta enlem boylam
+kordinatina eslemek icin pygeoip adli Python paketi var. Kurmak icin</p>
+
+<pre><code>sudo easy_install pygeoip
+</code></pre>
+
+<p>Kodun ek veri dosyalarina ihtiyaci var. Bu dosyalar</p>
+
+<pre><code>http://dev.maxmind.com/geoip/geolite#IP_Geolocation-1
+</code></pre>
+
+<p>adresinde Downloads bolumunden indirilebilir, GeoIP.dat.gz,
+GeoIPv6.dat.gz, GeoLiteCity.dat.gz dosyalari mesela. Ornek kod, mesela
+212.174.157.30 ip adresi icin (adresi nslookup www.tbmm.gov.tr ile
+bulduk)</p>
+
+<pre><code>import pygeoipgi = pygeoip.GeoIP('[DIZIN]/GeoLiteCity.dat')
+print gi.record_by_addr('212.174.157.30')
+</code></pre>
+
+<p>Sonuc</p>
+
+<p>``` {'city': u'B\xfcy\xfck', 'region<em>name': u'61', 'area</em>code': 0,
+'time<em>zone': 'Asia/Istanbul', 'dma</em>code': 0, 'metro<em>code': None,
+'country</em>code3': 'TUR', 'latitude': 40.66669999999999, 'postal<em>code':
+'', 'longitude': 40.400000000000006, 'country</em>code': 'TR',
+'country_name': 'Turkey', 'continent': 'EU'}</p>
+
+<pre><code>
+Sonuc Istanbul (sitenin barindirma servisi degisik bir sehirde demek
+ki). Diger ornekler
+
+https://github.com/appliedsec/pygeoip
+
+Eger mesela Pandas DataFrame objesi uzerindeki bir IP adresini
+isleyip, hesaplanan enlem / boylam degerlerini ayni satira ayri
+kolonlar olarak yazmak isteseydiniz,
+
+</code></pre>
+
+<p>import pygeoip, os
+import pandas as pd
+gi = pygeoip.GeoIP('[DIZIN]/GeoLiteCity.dat')
+def ip<em>loc(x):
+    rec = gi.record</em>by_addr(x)
+    lat = rec['latitude']
+    lon = rec['longitude']
+    return pd.Series([lat, lon], index=['latitude','longitude'])</p>
+
+<p>df = pd.DataFrame({'ip': ['212.174.157.30','212.174.157.30','212.174.157.30']})
+df[['latitude','longitude']] = df['ip'].apply(ip_loc)
+print df</p>
+
+<pre><code>
+Buradan gelen sonuc
+
+</code></pre>
+
+<p>ip  latitude  longitude0  212.174.157.30   40.6667       40.41 
+212.174.157.30   40.6667       40.42  212.174.157.30   40.6667 <br />
+40.4
+```</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

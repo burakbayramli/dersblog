@@ -1,0 +1,267 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>OpenGL, PyOpenGL</h1>
+
+<p>3 boyutlu simülasyonlar için OpenGL ünlü bir paket. Çeşitli objeler,
+satıhlar, onları gösteren bir kamera gibi kavramların kodlaması
+basit. Birkaç örnek C++ kodunu <a href="sph.html">SPH</a> yazısında gördük. Ek bazı
+kodlar [2]'den alınmıştır,</p>
+
+<p><a href="glcode/bouncingballs.cpp">bouncingballs.cpp</a>,
+<a href="glcode/checkeredtriangles.cpp">checkeredtriangles.cpp</a>,
+<a href="glcode/colorcube.cpp">colorcube.cpp</a>,
+<a href="glcode/cometride.cpp">cometride.cpp</a>,
+<a href="glcode/fish.cpp">fish.cpp</a>,
+<a href="glcode/litsolids.cpp">litsolids.cpp</a>,
+<a href="glcode/moon.cpp">moon.cpp</a>,
+<a href="glcode/robotarm.cpp">robotarm.cpp</a>,
+<a href="glcode/sierpinski2d.cpp">sierpinski2d.cpp</a>,
+<a href="glcode/sierpinski3d.cpp">sierpinski3d.cpp</a>,
+<a href="glcode/spinningsquare.cpp">spinningsquare.cpp</a>,
+<a href="glcode/tetrahedron.cpp">tetrahedron.cpp</a>,
+<a href="glcode/torus.cpp">torus.cpp</a>,
+<a href="glcode/triangle.cpp">triangle.cpp</a></p>
+
+<p>Derlemek icin</p>
+
+<pre><code>sudo apt-get install mesa-common-dev libgl1-mesa-dev libglu1-mesa-dev freeglut3-dev
+</code></pre>
+
+<p>Sonra</p>
+
+<pre><code>g++ dosya.cpp -lX11 -lGL -lGLU -lglut -g -Wall -O2 -o islet.exe
+</code></pre>
+
+<p>Alttaki kodlarda [2]'den alınan bir uçuş simulatörü var</p>
+
+<p><a href="glcode/flight/fly.cpp">fly.cpp</a>
+<a href="glcode/flight/geometry.h">geometry.h</a>
+<a href="glcode/flight/landscape.cpp">landscape.cpp</a>
+<a href="glcode/flight/landscape.h">landscape.h</a>
+<a href="glcode/flight/ship.h">ship.h</a></p>
+
+<p>Derlemek icin</p>
+
+<pre><code>g++ -c landscape.cpp -o landscape.o -lX11 -lGL -lGLU -lglut -g -Wall -O2 
+g++ fly.cpp -g -Wall -O2 -o r.exe -lX11 -lGL -lGLU -lglut landscape.o
+</code></pre>
+
+<p>Python</p>
+
+<p>Kurulus</p>
+
+<pre><code>pip install PyOpenGL==3.1.0
+</code></pre>
+
+<p>[1] kodu baz alınarak bir topun düşüşünü, duvarlara, yere çarpmasını
+simüle eden bir kod altta görülüyor. Top sayısını <code>self.n</code> ile
+arttırabiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">OpenGL.GL</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GLU</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">OpenGL.GLUT</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">random</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageOps</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">class</span> <span class="nc">Simulation</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n</span>   <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span>   <span class="o">=</span> <span class="mf">0.1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span>   <span class="o">=</span> <span class="mf">9.8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>  <span class="o">=</span> <span class="mf">0.01</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cor</span> <span class="o">=</span> <span class="mf">0.6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">balls</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tm</span>  <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">th</span>  <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span> <span class="o">=</span>  <span class="mf">1.0</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mmin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mmin</span> <span class="o">+</span> <span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mmax</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mmin</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mmin</span> <span class="o">+</span> <span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mmax</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">mmin</span><span class="p">),</span>
+                <span class="mf">0.9</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="o">-</span><span class="mf">1.5</span> <span class="o">+</span> <span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="mf">3.0</span><span class="p">,</span>
+                <span class="o">-</span><span class="mf">1.5</span> <span class="o">+</span> <span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="mf">3.0</span><span class="p">,</span>
+                <span class="o">-</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">random</span><span class="p">()</span><span class="o">*</span><span class="mf">2.0</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">balls</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span><span class="n">p</span><span class="p">,</span><span class="s1">&#39;vel&#39;</span><span class="p">:</span><span class="n">v</span><span class="p">})</span>
+        <span class="n">tm</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_LIGHTING</span><span class="p">)</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_LIGHT0</span><span class="p">)</span>
+        <span class="n">glEnable</span><span class="p">(</span><span class="n">GL_DEPTH_TEST</span><span class="p">)</span>
+        <span class="n">glClearColor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_PROJECTION</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+        <span class="n">gluPerspective</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">50.0</span><span class="p">)</span>
+        <span class="n">glTranslatef</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="o">-</span><span class="mf">3.5</span><span class="p">)</span>
+        <span class="n">glMatrixMode</span><span class="p">(</span><span class="n">GL_MODELVIEW</span><span class="p">)</span>
+        <span class="n">glLoadIdentity</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">balls</span><span class="p">:</span>
+            <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+            <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+            <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+            <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span><span class="p">):</span>
+                <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">cor</span>
+                <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmin</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span><span class="p">):</span>
+                <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">cor</span>
+                <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmin</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span><span class="p">):</span>
+                <span class="n">b</span><span class="p">[</span><span class="s1">&#39;vel&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">*=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">cor</span>
+                <span class="k">if</span> <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmin</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mmax</span>
+
+        <span class="c1"># kamerayi saga sola dondurmek icin</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">right</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">th</span> <span class="o">+=</span> <span class="mf">0.2</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="o">&gt;</span><span class="mf">360.0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">th</span> <span class="o">-=</span> <span class="mf">360.0</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">left</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">th</span> <span class="o">-=</span> <span class="mf">0.2</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="o">&gt;</span><span class="mf">360.0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">th</span> <span class="o">-=</span> <span class="mf">360.0</span>
+
+        <span class="n">glutPostRedisplay</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">display</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">glClear</span><span class="p">(</span> <span class="n">GL_COLOR_BUFFER_BIT</span> <span class="o">|</span> <span class="n">GL_DEPTH_BUFFER_BIT</span><span class="p">)</span>
+        <span class="n">glPushMatrix</span><span class="p">()</span>
+        <span class="n">glRotatef</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">th</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glRotatef</span><span class="p">(</span><span class="mf">90.0</span><span class="p">,</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">glutWireCube</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">balls</span><span class="p">:</span>
+            <span class="n">glPushMatrix</span><span class="p">()</span>
+            <span class="n">glTranslatef</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">b</span><span class="p">[</span><span class="s1">&#39;pos&#39;</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">glutSolidSphere</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
+            <span class="n">glPopMatrix</span><span class="p">()</span>
+        <span class="n">glPopMatrix</span><span class="p">()</span>
+        <span class="n">glutSwapBuffers</span><span class="p">()</span>
+
+    <span class="c1"># her 40&#39;inci resmi diske png olarak yaz</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">%</span> <span class="mi">40</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="n">width</span><span class="p">,</span><span class="n">height</span> <span class="o">=</span> <span class="mi">640</span><span class="p">,</span><span class="mi">480</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">glReadPixels</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">GL_RGBA</span><span class="p">,</span> <span class="n">GL_UNSIGNED_BYTE</span><span class="p">)</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">frombytes</span><span class="p">(</span><span class="s2">&quot;RGBA&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">),</span> <span class="n">data</span><span class="p">)</span>
+            <span class="n">image</span> <span class="o">=</span> <span class="n">ImageOps</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+            <span class="n">image</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;/tmp/glutout-</span><span class="si">%03d</span><span class="s1">.png&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">i</span><span class="p">,</span> <span class="s1">&#39;PNG&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="k">def</span> <span class="nf">mouse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">button</span><span class="p">,</span><span class="n">state</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">button</span> <span class="o">==</span> <span class="n">GLUT_LEFT_BUTTON</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">right</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">state</span>
+        <span class="k">elif</span> <span class="n">button</span> <span class="o">==</span> <span class="n">GLUT_RIGHT_BUTTON</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">left</span> <span class="o">=</span> <span class="ow">not</span> <span class="n">state</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">Simulation</span><span class="p">()</span>
+    <span class="n">glutInit</span><span class="p">(())</span>    
+    <span class="n">glutInitDisplayMode</span><span class="p">(</span><span class="n">GLUT_DOUBLE</span> <span class="o">|</span> <span class="n">GLUT_RGB</span> <span class="o">|</span> <span class="n">GLUT_DEPTH</span><span class="p">)</span>
+    <span class="n">glutInitWindowSize</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">glutCreateWindow</span><span class="p">(</span><span class="s2">&quot;GLUT Bouncing Ball in Python&quot;</span><span class="p">)</span>
+    <span class="n">glutDisplayFunc</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">display</span><span class="p">)</span>
+    <span class="n">glutIdleFunc</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">update</span><span class="p">)</span>
+    <span class="n">glutMouseFunc</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">mouse</span><span class="p">)</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+    <span class="n">glutMainLoop</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Sonuc</p>
+
+<p><img src="pyopengl_01.png" alt="" /></p>
+
+<p>Dikkat üstteki kodda duvar çarpım fiziği var fakat topların birbirine
+çarpma fiziği yok.</p>
+
+<p>Görüntüsüz (Headless) İsletmek</p>
+
+<p>Bazen uzun sürebilecek, ya da otomize şekilde script içinden grafik
+rutinleri çağırmak isteyebiliriz, ve program işlerken bir pencere
+açılip görüntü gösterilsin istemiyoruz. Bu durumda normal bir Unix
+script çağırır gibi OpenGL ya da PyOpenGL çağrıları yapabiliriz,
+görüntüyü işletim sistemi seviyesine yakalayıp göstermemek
+lazım. <code>xvfb</code> ile bunu yapabiliriz, Ubuntu'da</p>
+
+<pre><code>sudo apt-get install xvfb
+</code></pre>
+
+<p>İşletmek için</p>
+
+<pre><code>xvfb-run -s "-screen 0 1x1x24"  python -u script.py
+</code></pre>
+
+<p>Görüntü gösterilmeyecek fakat program işleyecek, eğer kod içinde png
+dosyaları yazıyorsak mesela bunların normal olduğu gibi üretildiğini
+göreceğiz. .</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] http://fab.cba.mit.edu/classes/864.05/people/knorton/01-balls/</p>
+
+<p>[2] https://cs.lmu.edu/~ray/notes/openglexamples/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

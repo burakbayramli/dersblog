@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>S3 ve Yedeklemek</h1>
+
+<p>Bir EC2 makinasi kapandiginda bir imaja yakilmamis her verisini
+kaybeder. O zaman bir MySql tabanini EC2 uzerinde isletiyorsak,
+dinamik olarak surekli guncellenen verisini kaybetmemenin bir yolunu
+bulmamiz lazim. S3 servisi buyuk dosyalarinizi Amazon sistemi icinde
+depolamanizi sagliyor. O zaman EC2 makinasindan rutin olarak (cron
+uzerinden mesela) MySql'in yedegini alip, bu yedegi S3'e gondermek bir
+cozum olabilir.S3'e script ortamindan erisebilmek icin Ubuntu EC2
+makinanizdasudo apt-get install s3cmdkomutunu isletin. Bu komut s3cmd
+adli bir yardimci programi kuracak. Bu programi sc3cmd --configure ile
+isletin; sorulan sorular EC2 acik ve gizli anahtarlariniz.</p>
+
+<p>Bu anahtarlar girildikten sonra s3cmd onlari hep hatirlayacak ve
+bundan sonra isletilen tum s3cmd komutlari o anahtarlar uzerinden
+gerceklestirilecek, yani tum islemler ayni hesabin isaret ettigi
+kullanici uzerinden yapilacak. Bu kullanicinin kullanmasi icin yeni
+bir dizin yaratmak;</p>
+
+<p>s3cmd mb s3://[BUCKET ISMI]</p>
+
+<p>Herhangi bir dosyayi oraya kopyalamak icins</p>
+
+<p>3cmd put /tmp/test s3://[BUCKET ISMI]</p>
+
+<p>[BUCKET ISMI] isminin "global" bir isim oldugunu belirtmistik, yani
+yeterince tekil olan bir isim secelim.Bu kadar; artikmysqldump -u root
+--quick [DB] | gzip &gt; /vs/vs/db-backup.gzgibi bir komutla rutin olarak
+yaratilan yedek dosyasini (db-backup.gz yani) s3cmd ile S3 hesabimiza
+gonderebiliriz.Kaynak</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

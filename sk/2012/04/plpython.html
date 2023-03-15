@@ -1,0 +1,178 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python ile Kayıtlı Prosedürler (Stored Procedures) - plpython</h1>
+
+<p>Kayıtlı prosedürler (stored procedures) veri tabanlarına fonksiyonel
+bazlı çetrefil ek mantık eklemek gerektiğinde gündeme
+gelirler. Çoğunlukla bir sorgudan gelen sonucu satır satır işleyerek
+ek mantık uygulamak gerektiğine kullanılırlar, SELECT vb. sorgu
+komutları, her ne kadar kuvvetli özelliklere sahip olsalar da, bu
+bağlamda yetersiz kalabilirler.</p>
+
+<p>Kayıtlı prosedürleri kodlamak için her tabanın kendine has bir dili
+var çoğunlukla, Oracle PL/ŞQL kullanır, MySql başka, vs. Hepsi de
+koşul (ıf), döngü (loop) için farklı komutlar kullanırlar. Postgresql
+da kayıtlı prosedür içinde Python kullanmak mümkün. Bu büyük rahatlık
+çünkü farklı bir dil öğrenmeye gerek kalmıyor. Kurmak için</p>
+
+<pre><code>sudo apt-get install postgresql-plpython-9.1
+
+sudo -u postgres createlang plpythonu [taban] -U postgres
+</code></pre>
+
+<p>Ornek bir prosedur</p>
+
+<pre><code>CREATE FUNCTION pymax (a integer, b integer)
+RETURNS integer
+AS $$
+if a &gt; b:
+  return a
+return b
+$$ LANGUAGE plpythonu;
+</code></pre>
+
+<p>Test etmek icin</p>
+
+<pre><code>select pymax(2,4);
+</code></pre>
+
+<p>Sonucun 4 geldiğini göreceksiniz.</p>
+
+<p>Bir plpython kodunun kullanması gereken yardımcı kodları var
+diyelim. Fakat plpython sonunda Postgres tarafından, onun süreç
+alanında, hesabında işletilen bir şey olduğu için, yardımcı kodu
+plpython fonksiyonu ile "aynı dizine koymak" tekniği ise
+yaramaz. Yardımcı kodu bir paket haline getirmek gerekiyordu, yani
+kodun her süreç, her Ünix kullanıcısı tarafından bulunabilecek merkezi
+(ya da sanal ortama) bir yere koyulması gerekiyordu. Paketleme
+yazısı surada.</p>
+
+<p>Python bazlı PG kayıtlı işlemleri her türlü Python paketini import
+edebilirler. Yani select üzerinde çağırdığınız bir işlem arka planda
+Numpy, Scipy kullanıyor bile olabilir! Burada müthiş potansiyel
+var. Raporlama motorunuz (mesela Pentaho) hiçbir şeyden habersiz
+"basit" SQL işletiyor olabilir, ama arka planda o basit çağrılar
+sofistike analitik işlemleri yapıyor olabilirler.</p>
+
+<p>Plpython fonksiyonlari icinden logging mumkun, basta</p>
+
+<pre><code>import logging
+LOG_FILENAME = '/tmp/plpython.log'
+logging.basicConfig(filename=LOG_FILENAME,level=logging.DEBUG)
+tanimlanirsa,
+logging.debug("mesaj")
+</code></pre>
+
+<p>ile istenilen cikti ustte tanimli dosyaya yaziliyor.</p>
+
+<p>Notlar</p>
+
+<p>plpython içinden kullanılan python, ya da sisteminizde kurulu aynı
+Python'un kullanılış şekli biraz daha seçici olabilir. Mesela ıf
+'kelime' in değişken gibi bir ifade eğer değişken Nöne ise dışarıdan
+bir test ile problemsiz çalışsa da Postgresql içinden problem
+çıkarttı. Bu tür farklılıklar olabilir.</p>
+
+<p>Python kayitli islemler ile veri islemenin ornegi</p>
+
+<pre><code>CREATE or REPLACE FUNCTION test ()
+RETURNS text
+AS $$
+import sys
+class WritableObject:
+   def __init__(self):
+         self.content = ''
+   def write(self, string):
+         self.content = self.content + string + "\n"
+outbuffer = WritableObject()
+rv = plpy.execute("select a from TABLO");
+for y in rv:
+ outbuffer.write(y['a'])
+return outbuffer.content
+$$ LANGUAGE plpythonu;
+</code></pre>
+
+<pre><code>select * from test()
+</code></pre>
+
+<p>Sondaki select işlemi bu sql dosyasını her işlettiğimizde hem kodun
+değişmesi hem de test edilmesi için eklendi. Sonuç ortamı için bu
+select ifadesi çıkartılmalı.</p>
+
+<p>Kodun yaptığı bir sorgu işletip sonucu kayıtlı işlemden döndürmek, ve
+SELECT üzerinden bu sonucun ekrana basılmasıdır.</p>
+
+<p>Başka bir örnek, plpython kodu içinden SELECT'vari kolon bazlı
+satırlar döndürmek. Bunun için önce bir "tip" yaratılması gerekli,
+daha sonra bu tip üzerinden hafızada bir Python listesi olarak
+oluşturulan sonuçlar geriye döndürülebiliyor. Bu sonuç çağrı yapan
+tarafa aynen bir SELECT çıktısı gibi gözüküyor.</p>
+
+<pre><code>CREATE TYPE kayit_tipi AS (
+ how text,
+ who text
+);
+
+CREATE or replace FUNCTION veri_getir()
+ RETURNS SETOF kayit_tipi
+AS $$
+ return ( [ "xxx", "World" ], [ "yyy", "PostgreSQL" ], [ "zzz", "PL/Python" ] )
+$$ LANGUAGE plpythonu;
+
+select * from veri_getir();
+Ayni kodun yield kullanan sekli
+CREATE TYPE bizim_tip AS (
+ how text,
+ who text
+);
+
+CREATE or replace FUNCTION veri_getir ()
+ RETURNS SETOF greeting
+AS $$
+ for val in [ "World", "PostgreSQL", "PL/Python" ]:
+   yield ( val, val )
+$$ LANGUAGE plpythonu;
+
+select * from veri_getir();
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

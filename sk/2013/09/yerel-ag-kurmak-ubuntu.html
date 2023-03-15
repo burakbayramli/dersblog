@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yerel Ağ (Network) Kurmak - Ubuntu</h1>
+
+<p>Ubuntu temelli bir yerel ag (network) nasil kurulur? Ubuntu uzerinden
+bunu yapmak aslinda cok basit (dis Internet baglantisinin paylastirma
+konularina daha girmiyoruz), dinamik IP adres kullanmadan, tum
+makinalara bir statik (ve yerel) IP adresi atayarak bu ag
+kurulabilir. Belki evde bir Hadoop kumesi kurmak istiyorsunuz, vs.</p>
+
+<p>Once tum makinalarda sshd kurulursa iyi olur:</p>
+
+<pre><code>apt-get install openssh-server
+</code></pre>
+
+<p>Ag kurmak icin su resimdeki hareketler</p>
+
+<p><img src="550px-1-169.jpg" alt="" /></p>
+
+<p><img src="2-100.jpg" alt="" /></p>
+
+<p><img src="4-51.jpg" alt="" /></p>
+
+<p>Adres olarak 192.168.0.1 sayisi kullanildi, bu adres dis baglantilar
+icin anlamsiz bir sayidir, sadece yerel ic ag icinde gecerlidir. Bu
+tur disaridan bagimsiz IP adresleri vardir. Eger ikinci, ucuncu
+makinayi eklerseniz, 0.2, 0.3, vs. gibi bu makinalar adreslenebilir.</p>
+
+<p>Fiziki baglanti icin en azindan switch denen bir donanim gerekli. Bu
+donanim uzerinde Ethernet kablo baglantilari olur, eger laptop
+baglanacaksa, ve son zamanlarda artik laptop'lar uzerinde Ethernet
+girisi olmadigi icin, bir USB / Ethernet donusturucusu lazim.</p>
+
+<p>Neyse, switch baglantisi ve IP atamasi yapildigi anda o bilgisayarin
+komut satirindan</p>
+
+<pre><code>sudo ifconfig
+</code></pre>
+
+<p>isletince yeni IP'nin gorulmesi lazim. Diger makinalar baglaninca,
+onlardan bu makinaya</p>
+
+<pre><code>ssh 192.168.0.1 -l [kullanici]
+</code></pre>
+
+<p>diye erisebilirsiniz. Eger tum makinalara sifresiz (ama guvenli)
+baglanmak icin daha once pek cok kez bahsettigimiz ssh-keygen -t rsa,
+ile anahtar uretmek, sonra id<em>rsa.pub'in alinip oteki makinaya
+kopyalanip .ssh/authorized</em>keys'e eklenmesi, ardindan ustteki ssh (ve
+scp) komutu sifresiz olarak giris yapma numarasi kullanilabilir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

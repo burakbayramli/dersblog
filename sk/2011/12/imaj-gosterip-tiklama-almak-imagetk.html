@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Imaj Gosterip Tiklama Almak, ImageTk</h1>
+
+<p>TkInter diye bir paket gerekli <code>sudo apt-get install python python-tk
+idle python-pmw python-imaging python-imaging-tk</code>. Tiklama almak icin
+ornek kod alttta. [DIZIN] baslangic dizininden secilen imaj secilir,
+ekranda gosterilir, sonra bu imaj uzerindeki tiklamalar konsola
+yazilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">Tkinter</span> <span class="kn">import</span> <span class="o">*</span><span class="kn">from</span> <span class="nn">tkFile</span>
+<span class="n">Dialog</span> <span class="kn">import</span> <span class="nn">askopenfilename</span>
+<span class="kn">import</span> <span class="nn">Image</span><span class="o">,</span> <span class="nn">ImageTkif</span>
+<span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">Tk</span><span class="p">()</span>
+<span class="c1">#setting up a tkinter canvas with scrollbars</span>
+<span class="n">frame</span> <span class="o">=</span> <span class="n">Frame</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">bd</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">relief</span><span class="o">=</span><span class="n">SUNKEN</span><span class="p">)</span>
+<span class="n">frame</span><span class="o">.</span><span class="n">grid_rowconfigure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">frame</span><span class="o">.</span><span class="n">grid_column</span>
+<span class="n">configure</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">xscroll</span> <span class="o">=</span> <span class="n">Scrollbar</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+<span class="n">xscroll</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">sticky</span><span class="o">=</span><span class="n">E</span><span class="o">+</span><span class="n">W</span><span class="p">)</span>
+<span class="n">yscroll</span> <span class="o">=</span> <span class="n">Scrollbar</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="n">yscroll</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">sticky</span><span class="o">=</span><span class="n">N</span><span class="o">+</span><span class="n">S</span><span class="p">)</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">Canvas</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">bd</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xscrollcommand</span><span class="o">=</span><span class="n">xscroll</span><span class="o">.</span><span class="n">set</span><span class="p">,</span><span class="n">yscrollcommand</span><span class="o">=</span><span class="n">yscroll</span><span class="o">.</span><span class="n">set</span><span class="p">)</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sticky</span><span class="o">=</span><span class="n">N</span><span class="o">+</span><span class="n">S</span><span class="o">+</span><span class="n">E</span><span class="o">+</span><span class="n">W</span><span class="p">)</span>
+<span class="n">xscroll</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">xview</span><span class="p">)</span>
+<span class="n">yscroll</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">command</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">yview</span><span class="p">)</span>
+<span class="n">frame</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="n">fill</span><span class="o">=</span><span class="n">BOTH</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1">#adding the</span>
+<span class="n">imageFile</span> <span class="o">=</span> <span class="n">askopenfilename</span><span class="p">(</span><span class="n">parent</span><span class="o">=</span><span class="n">root</span><span class="p">,</span> <span class="n">initialdir</span><span class="o">=</span><span class="s2">&quot;/[DIZIN]&quot;</span><span class="p">,</span><span class="n">title</span><span class="o">=</span><span class="s1">&#39;Choose an image.&#39;</span><span class="p">)</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">File</span><span class="p">))</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">create_image</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">image</span><span class="o">=</span><span class="n">img</span><span class="p">,</span><span class="n">anchor</span><span class="o">=</span><span class="s2">&quot;nw&quot;</span><span class="p">)</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">scrollregion</span><span class="o">=</span><span class="n">canvas</span><span class="o">.</span><span class="n">bbox</span><span class="p">(</span><span class="n">ALL</span><span class="p">))</span>
+<span class="c1">#function to be called when mouse is clicked</span>
+
+<span class="k">def</span> <span class="nf">printcoords</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="c1">#outputting x and y coords to console</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span><span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+<span class="c1">#mouseclick eventcanvas.bind(&quot;&lt;Button 1&gt;&quot;,printcoords)</span>
+<span class="n">root</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Daha oz kisa bir ornek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">Tkinter</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageTk</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">window</span> <span class="o">=</span> <span class="n">Tkinter</span><span class="o">.</span><span class="n">Tk</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bla&quot;</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">800</span><span class="p">),</span><span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">Tkinter</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="n">image_tk</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">create_image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image_tk</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+  <span class="nb">print</span> <span class="s2">&quot;clicked at: &quot;</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">ycanvas</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+
+<span class="n">Tkinter</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</code></pre>
+</div>
+
+        </section>          
+      </div>
+    </body>
+</html>

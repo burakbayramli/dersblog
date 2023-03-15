@@ -1,0 +1,148 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>OpenAI, Çubuklu Araba, CartPole</h1>
+
+<p>Kontrol Problemleri</p>
+
+<p>Gym sadece görsel çıktıyla sınırlı değil, mesela sadece alttan tutarak
+dik tutmaya uğraştığımız bir çubuğu düşünelim, bunu belki çocukken
+yapmışızdır, ağır olan dik bir cismi parmak üzerinde tutmaya
+uğraşmak. Tabii sağa sola giderek dengelemeye uğraşılır, oldukca zor
+bir iştir, vs. Gym içinde bu ortam da var,</p>
+
+<pre><code>import gym, time
+import numpy as np
+
+env = gym.make("CartPole-v0")
+env.reset()
+obs, reward, done, info = env.step(0)
+print obs
+print obs.shape
+env.render()
+</code></pre>
+
+<p>deyince alttaki resim çıkar,</p>
+
+<p>Fakat aslında step çağrıları bize Pong'da olduğu gibi resim değil,
+çubuk hakkında 4 tane parametre donduruyor, render çağrısı bu
+parametreleri kullanarak bir temsili resim ortaya çıkartmış. Üstteki
+durum için parametreler</p>
+
+<pre><code>[ 0.02585672 -0.17299761  0.030009    0.29081285]
+</code></pre>
+
+<p>Parametrelerin ne olduğunun detayı şurada. Soldan 3. çubuğun duruş
+açısı, -45 ile +45 arasında, artı açılar sağa doğru yatik demek,
+eksiler sola doğru. </p>
+
+<p>Eğer çubuğu dengede tutmayı öğrenmek istersek step ile alt kısmı sağa
+ya da sola kaydırabiliriz, çubuk sola düşecek gibi olsa mesela sola
+gidip dengeyi tekrar bulmaya uğraşırız, vs. Sistem bize hangi durumda
+olduğunu üstteki 4 sayıyla söyler. Bu yeterli, Pong ile olduğu gibi
+tüm ekranı görmemize gerek yok. Mükafat (ya da ceza) başarılı geçen
+her adım için verilir, oyun eğer çubuk belli bir açıdan fazla yatiksa
+biter, o zaman çubuk "düşmüş" demektir. Ekran dışına çıkmak aynı
+şekilde oyunu bitirir.</p>
+
+<p>CartPole kontrol problemlerini anlamak açısından faydalı bir
+örnek.  Kontrol Mühendisliği'nde bu tür durumlar yoğun şekilde
+görülür.</p>
+
+<p>Her gözlenen parametrenin kabul edilir değer aralıklarını ekrana basalım,</p>
+
+<pre><code>print(env.observation_space.high)
+print(env.observation_space.low)
+</code></pre>
+
+<p>Sonuc</p>
+
+<pre><code>[4.8000002e+00 3.4028235e+38 4.1887903e-01 3.4028235e+38]
+[-4.8000002e+00 -3.4028235e+38 -4.1887903e-01 -3.4028235e+38]
+</code></pre>
+
+<p>Rasgele şekilde CartPole oynayan ve çıktıları her 10 adımda bir <code>/tmp</code>
+altına resim olarak kaydeden bir kod</p>
+
+<pre><code>import matplotlib.animation as animation
+import gym, six
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+env = gym.make('CartPole-v0')
+
+observation = env.reset() 
+rewards = 0
+
+for t in range(500):
+    action = env.action_space.sample() 
+    img = env.render(mode='rgb_array') 
+    if t%10 == 0:
+        plt.imshow(img)
+        plt.savefig('/tmp/cart-%d' % t)
+        print (img.shape)
+    observation, reward, done, info = env.step(action)
+    print (observation)
+
+print(env.observation_space.high)
+print(env.observation_space.low)
+
+env.close()
+</code></pre>
+
+<p>Alternatif bir yöntem (üstte yerine koyun)</p>
+
+<pre><code>import pyglet
+...
+...
+    env.render()
+    buffer = pyglet.image.get_buffer_manager().get_color_buffer()            
+    image_data = buffer.get_image_data()
+    if t % 10 == 0:
+        image_data.save(filename='/tmp/car-%04d.png' % t)
+</code></pre>
+
+<p><img src="openai01.png" alt="" /></p>
+
+<p><img src="https://1.bp.blogspot.com/-CqgBg7345gc/XSMCYQgmbBI/AAAAAAAAB0s/e5qqzGvucLcZ9MseCOg-K2SDVI83I9ApwCLcBGAs/s1600/Screenshot%25252Bfrom%25252B2017-09-14%25252B13-50-00.png" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

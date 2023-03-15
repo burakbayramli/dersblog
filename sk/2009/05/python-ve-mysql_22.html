@@ -1,0 +1,79 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python ve MySql</h1>
+
+<p>Bilimsel hesaplama (scientific computing) icin Python araclarini
+isledik. Bunlar SciPy, NumPy ve Matplotlib araclari idi. Isin veri
+tarafina bakarsak; Eger hesaplanacak veri Mysql gibi bir tabanda ise,
+bu tabandan verileri okuyabilmek gerekir. Bir hesap tipik olarak
+gereken tum veriyi hafizaya getirip sonra vektor bazli hesaplara tabi
+tutar. Islemcilerin gelecegi cok cekirdekli (multi-core) yonune dogru
+gittigine gore, hesaplarin paralelize edilip bir sekilde asenkron
+usulde isletmek te mumkun tabii.. Bazi Python araclari burada yardimci
+olabilir; En alt seviyede cekirdekler arasinda mesajlasma icin MPI
+standardi var mesela, ve burada yardimci olabilecek kutuphaneler
+mevcut. Bu konulara ileride girebiliriz.Mysql'e baglanmaya gelelim. Bu
+alanda en iyi bilinen MySql-Python paketidir. Kurma yontemi oldukca
+standart, paketi indirin, acin, ve sudo python setup.py build ve
+install. Bu paketi kullanmanin iyi yontemi var, bir tanesi Mysql
+arayuzune bagli olarak, digeri ise standart Python DB-API arayuzu
+kullanarak. Biz ikisini de gosterelim, ama bizim tercihimiz "mecbur
+olunmadikca" standart arayuzdur, boylece yazilan kodlar diger tabanlar
+uzerinde de isler.</p>
+
+<pre><code>import _mysql
+db=_mysql.connect(host="localhost",user="kullanici",passwd="",db="taban")
+db.query("""SELECT count(*) from tablo""")
+r=db.store_result()
+print r.fetch_row()
+</code></pre>
+
+<p>DB-API usulu</p>
+
+<pre><code>import MySQLdb
+db=MySQLdb.connect(user="kullanici",passwd="",db="taban")
+c=db.cursor()
+c.execute("""SELECT count(*) from tablo""")
+print c.fetchone()
+</code></pre>
+
+        </section>          
+      </div>
+    </body>
+</html>

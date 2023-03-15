@@ -1,0 +1,176 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>LaTeX</h1>
+
+<p>Programlama dili ile komut yazarak güzel formatlı doküman üretmenin
+sanatını LaTeX mükemmeleştirdi. Microsoft Word gibi ürünler
+'gördüğünüz elinize geçen sonuçtur' (what you see is what you get,
+WYSIWYG) sloganı ile yaşarlar, fakat aslında bir doküman,
+bilgisayardaki pek çok şey gibi, bir dil olarak görülebilir ve o
+şekilde kodlanabilir.  Özellikle zaten başka amaçlar için kod yazan
+bizler için bu yaklaşım daha çekici olmuştur. WYSİWYG yaklaşımı
+sürekli dökümanın nihai halini grafiksel olarak kullanıcıya göstermeye
+uğraştığı için çok fazla işlemci zamanı harcar, diğer yandan
+dil-ile-doküman yaklaşımının daha optimal olduğu iddia edilebilir, az
+sayıda komut ile pek çok farklı şekilde belge üretebiliriz, ve bu
+komutları basit bir editör ile bir dosyaya girebiliriz.</p>
+
+<p>Kurmak için Ubuntu üzerinde</p>
+
+<pre><code>apt install texlive-latex-extra texlive-latex-recommended texlive-base
+</code></pre>
+
+<p>Bunlar oldukca buyuk programlar, şimdiden uyaralım.</p>
+
+<p>Kurduktan sonra <code>pdflatex dosya.tex</code> ile TeX dosyasindan PDF uretilebilir.</p>
+
+<p>HTML içinde LaTeX komutları kullanmak istiyorsak bkz [1] yazısı.</p>
+
+<h3><code>\equiv</code></h3>
+
+<p>Bir şeyin tanımı (defined as) için kullanılan sembol, eşitlik
+işaretinin üçlü olanı.</p>
+
+<h3><code>\overline{kelime}</code></h3>
+
+<p>Bazen <code>\bar</code> yeterli olmuyor, tüm kelimelerin üstünü kapsayacak bir
+çizgi gerekiyor.</p>
+
+<h3><code>\underbrace{formül}_{altta ne söyleyecek}</code></h3>
+
+<p>Formüllerin altına not olarak yazılacak şeyler için.</p>
+
+<h3><code>\cancel{ne}</code> ve <code>cancelto{neye}{neyi}</code></h3>
+
+<p>Formullerde bazen bir seyin uzeri cizilip onun iptal edildigi
+gosterilir. Sadece uzeri cizmek icin <code>\cancel</code>, eger cizip neye dogru
+iptal oldugu icin <code>\cancelto</code> kullanilabilir. Kullanmak icin
+<code>\usepackage{cancel}</code> ile cancel paketini almak lazim.</p>
+
+<h3><code>\leadsto</code></h3>
+
+<p>Soldan sağa kıvrık ok işareti. Laplace Transformunu temsil etmek için
+kullanılıyor bazen.</p>
+
+<h3><code>\stackrel{üst}{alt}</code></h3>
+
+<p>Bir operatörü, işareti diğerinin üstüne koymak için kullanılabilir,
+mesela biraz önceki <code>\leadsto</code> sembolünün hemen üstünde bir -1 sayısı
+çıksın istiyorsam, <code>\stackrel{-1}{\leadsto}</code> kullanırım.</p>
+
+<h3><code>\buildrel</code></h3>
+
+<p>Aynı şey, iki operatörü üst üste koymak. Üstteki örnek için <code>\buildrel
+-1 \over \leadsto</code> kullanabilirdim.</p>
+
+<h3><code>\nabla</code></h3>
+
+<p>Gradyan sembolü olan ters üçgen işareti</p>
+
+<h3><code>\oint</code></h3>
+
+<p>Ortasında bir yuvarlak çizilmiş olan entegral işareti, eğri üzerinden
+entegral alırken kullanılan sembol.</p>
+
+<h3><code>\mathbb{harf}</code></h3>
+
+<p>Doğal sayılar N, reel sayılar R kümelerini gösterirken sol taraflarına
+bir ekstra çizgi daha çekilir ve bu harfler daha "kalın" gözükür,
+<code>\mathbb</code> bu işi yapıyor. <code>\usepackage{mathrsfs}</code> paketi dahil
+edilmeli.</p>
+
+<h3><code>\mathscr{harf}</code></h3>
+
+<p>Aşırı sükseli, bol kıvrımlı türden harfler için.</p>
+
+<h3>LaTeX ile Sözde Program (Pseudocode) ve Matematik Sembolleri</h3>
+
+<p>Eğer TeX dokümanı içinde sözde kod gösterilecekse çoğu zaman şatafatlı
+paketler (mesela algorithmicx, pseudocode, vs gibi) gerekli
+değildir. Bu paketler ufaçık bir program için apayrı başka bir
+programlama dili öğrenmenizi gerektiriyor, for, while, ıf gibi
+komutların o paketlerin istediği şekilde yazılması gerekiyor mesela,
+<code>\IF</code>, <code>\WHILE</code> gibi..</p>
+
+<p>Düz kod göstermek için kullanılan Listings paketi kullanılabilir, eğer
+bu kod içinde matematik sembolleri gerekiyorsa, mathescape seçeneği
+eklenir, mesela</p>
+
+<pre><code>\begin{lstlisting}[language=Matlab,mathescape]..\end{lstlisting}
+</code></pre>
+
+<p>gibi, boylece <code>$$</code> isaretleri arasinda hala matematik sembolleri mumkun
+olur.</p>
+
+<h3>Matris İçeriğini Büyütmek</h3>
+
+<p>Su sekilde bir matris ufak sekilde cikabilir,</p>
+
+<pre><code>\nabla u = \frac{\partial u_i}{\partial X_j} =
+\left[\begin{array}{ccc}
+\frac{\partial u_1}{\partial X_1} &amp; \frac{\partial u_1}{\partial X_2} &amp; \frac{\partial u_1}{\partial X_3} \\
+\frac{\partial u_2}{\partial X_1} &amp; \frac{\partial u_2}{\partial X_2} &amp; \frac{\partial u_2}{\partial X_3} \\
+\frac{\partial u_3}{\partial X_1} &amp; \frac{\partial u_3}{\partial X_2} &amp; \frac{\partial u_3}{\partial X_3} 
+\end{array}\right]
+</code></pre>
+
+<p>Bölümleri gösterirken LateX font boyunu küçültebiliyor. Büyük font
+kullanmak için <code>\arraystretch</code> ve <code>\dfrac</code> lazım,</p>
+
+<pre><code>\renewcommand*{\arraystretch}{2.5}
+\nabla u = \frac{\partial u_i}{\partial X_j} =
+\left[\begin{array}{ccc}
+\dfrac{\partial u_1}{\partial X_1} &amp; \dfrac{\partial u_1}{\partial X_2} &amp; \dfrac{\partial u_1}{\partial X_3} \\
+\dfrac{\partial u_2}{\partial X_1} &amp; \dfrac{\partial u_2}{\partial X_2} &amp; \dfrac{\partial u_2}{\partial X_3} \\
+\dfrac{\partial u_3}{\partial X_1} &amp; \dfrac{\partial u_3}{\partial X_2} &amp; \dfrac{\partial u_3}{\partial X_3} 
+\end{array}\right]
+</code></pre>
+
+<p>Sonuç, öncesi solda sonrası sağda olacak şekilde,</p>
+
+<p><img src="latex1.png" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [MathJax: Web Sayfalarinda Javascript ile Matematik Formülleri](../../2017/11/mathjax-javascript-ile-matematik.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

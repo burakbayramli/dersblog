@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Tomcat ve Güvenlik</h1>
+
+<p>Aşağı yukarı her bilgi işlem uygulaması "sistem idarecisi" diye
+adlandırılabilecek kullanıcılar için özel bölgeler (sayfalar)
+tanımlar. Mesela, kullanici_ekle.jsp gibi bir sayfaya her kullanıcının
+girebilmesi güvenlik açısından tehlikeli olur. Bu sayfaları
+kullanıcı/şifre isteyerek korumamız gerekmektedir.  Tomcat üzerinde
+bunu yapmanın en basit yolu Realm (alanlar) fikrini
+kullanmaktır.</p>
+
+<p>Hatta eğer, kullacıya göre değişken türden sayfalara ihtiyacınız yok
+ise, isim/şifre ile sadece sayfaya "erişimi" kontrol etmek için Tomcat
+üzerinde kod bile yazmanıza gerek yok.  Kullanıcı Tanımlaması
+TOMCAT<em>DIZINI/conf/tomcat</em>users.xml dosyasını metinyazar (notepad,
+emacs, vs) ile açın. Bu dosyada şu gibi veriler görebilirsiniz.</p>
+
+<pre><code>&lt;tomcat-users&gt;&lt;user name="tomcat" password="tomcat" roles="tomcat"
+/&gt;&lt;user name="role1" password="tomcat" roles="role1" /&gt;&lt;user
+name="both" password="tomcat" roles="tomcat,role1" /&gt;&lt;/tomcat-users&gt;
+</code></pre>
+
+<p>Bu isimler ve şifreler Tomcat ile beraber paketten çıkıyor. İsterseniz
+silebilirsiniz bile.. (Ama örnek oluşturması açısından tutsanız iyi
+olur). Şimdi, ali adında bir kullanıcıya bakıcı rolü vermek istersek,
+<user name="ali" password="sifre123" roles="bakici" /> .. gibi bir
+satır yeterli olacaktır. Kullanıcı tanımlaması bu kadar!
+Sayfa/Servlet Korumak Şimdi, bir servlet'e erişim kontrolü getirelim.
+site_dizininiz/WEB-INF/web.xml dosyasını açın, ve
+KorunacakBirServletIsmi adlı Servlet'inize sadece bakici rolünde
+olanların erişebilmesi için, şu ekleri yapın.</p>
+
+<pre><code>&lt;security-constraint&gt;&lt;display-name&gt;skBakicisi&lt;/display-name&gt;&lt;web-resource-collection&gt;
+&lt;web-resource-name&gt;skAdmin&lt;/web-resource-name&gt;
+&lt;url-pattern&gt;/servlet/KorunacakBirServletIsmi&lt;/url-pattern&gt;&lt;/web-resource-collection&gt;&lt;auth-constraint&gt;
+&lt;role-name&gt;bakici&lt;/role-name&gt;&lt;/auth-constraint&gt;&lt;user-data-constraint&gt;
+&lt;transport-guarantee&gt;NONE&lt;/transport-guarantee&gt;&lt;/user-data-constraint&gt;
+&lt;/security-constraint&gt;&lt;login-config&gt;&lt;auth-method&gt;BASIC&lt;/auth-method&gt;&lt;realm-name&gt;sk
+&lt;/realm-name&gt;&lt;/login-config&gt;&lt;security-role&gt;&lt;role-name&gt;bakici&lt;/role-name&gt;&lt;/security-role&gt;
+</code></pre>
+
+<p>Bu kadar! Artık tarayıcınız ile
+http://localhost:8080/servlet/KorunacakBirServletIsmi sayfasını
+ziyaret ettiğinizde, isim ve şifreniz sorulacaktır. Bunun bir resmi
+aşağıda görülebilir.</p>
+
+<p><img src="tomcat_guvenlik.jpg" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

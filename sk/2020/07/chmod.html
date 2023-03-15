@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>chmod</h1>
+
+<p>Bir dosyanın izinlerini Unix <a href="unix.html">yazısında</a> işledik. Bu
+değerleri nasıl değiştiririz?</p>
+
+<p>En basit yol <code>+</code> ve <code>-</code> isaretleri kullanmak, mesela</p>
+
+<p><code>echo 'birseyler' &gt;&gt; out.txt</code></p>
+
+<p>ile yeni bir dosya yaratalım. Sonra</p>
+
+<pre><code>ls -al out.txt 
+-rw-r--r-- 1 burak burak 10 Jul 27 23:36 out.txt
+</code></pre>
+
+<p>İzinler benim için yazılabilir ve okunabilir gözüküyor. İzin öbekleri şöyleydi,</p>
+
+<p><img src="ls.png" alt="" /></p>
+
+<p>Bu öbekler <code>chmod</code> için kullanıcı için <code>u</code>, group için <code>g</code>, diğerleri
+için 'o` ile de erişilebilir. O zaman, mesela diğerleri için yazma
+hakkı vermek istersem,</p>
+
+<pre><code>chmod o+w out.txt
+</code></pre>
+
+<p>diyebilirim. Simdi <code>ls</code> ne diyor?</p>
+
+<pre><code>ls -al out.txt 
+-rw-r--rw- 1 burak burak 10 Jul 27 23:36 out.txt
+</code></pre>
+
+<p>Diğerleri için yazma izni eklenmiş.</p>
+
+<p>Fakat bu işi yapmanın daha hızlı bir yolu var. Öbekleri hatırlarsak,
+üçlü harfler idi, fakat bu harflerin yerleri belli, ve belli yerdeki
+bir harf ya aktif ya da değil. Bu durumu ikisel sayı olarak daha rahat
+temsil edebiliriz, mesela kullanıcı için <code>rwx</code> demek yerine 111
+diyebilirim, ve bu ikisel sayının tek bir onlu sayı olarak karşılığı
+var, bu 7. Grup ve kullanıcı için de aynı tercümeyi yaparsam, üç tane
+onlu sayı ile tüm izinleri bir kerede set edebilmek mümkündür. </p>
+
+<p>| İkisel | Onlu     |
+| -------|----------|
+| 000    |  0       |
+| 001    |  1       |
+| 010    |  2       |
+| 011    |  3       |
+| 011    |  3       |
+| 100    |  4       |
+| 101    |  5       |
+| 110    |  6       |
+| 111    |  7       |</p>
+
+<p>Mesela kullanıcı ve gruba her izni veriyorum, ama diğerlerine sadece
+okuma izni vermek istiyorum, bu 111, 111 ve 100 demektir, üç tane önlü
+sayı yanyana 774.</p>
+
+<pre><code>chmod 774 out.txt
+ls -al out.txt 
+-rwxrwxr-- 1 burak burak 10 Jul 27 23:36 out.txt
+</code></pre>
+
+<p>Usta adminler üstteki sayıları kullanırlar, sık kullanılan çoğunu da
+ezbere bilirler, ya da kafadan ikisel / onlu tercüme yaparlar.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

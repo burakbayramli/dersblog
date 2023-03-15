@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Devre Simulasyonu - Gnucap</h1>
+
+<p>Elektronik devrelerin nasıl işleyeceğini önceden görmek için bir
+simülasyon programı, <code>gnucap</code>. Kurmak için <code>apt-get install
+gnucap</code>. Fazla büyük bir program değil. Bir örnek</p>
+
+<p>http://thoughtmountain.com/gnucap_demo.html</p>
+
+<p>Örnek şu devreyi kodlamış,</p>
+
+<p><img src="gnucap_demo1.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;demo1.ckt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>.TITLE Ornek #1
+
+Vin 0 1 AC 1
+R1  1 2 1K
+R2  0 2 1K
+C1  0 2 1UF
+
+.OPTION OUT=80
+.PRINT OP Iter(0) V(2)
+
+.PLOT AC  VDB(2)(-20,0)
+
+.AC 5 1K OCT
+</code></pre>
+</div>
+
+<p>Simülasyonu işletmek için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span><span class="n">gnucap</span> <span class="o">-</span><span class="n">b</span> <span class="n">demo1</span><span class="o">.</span><span class="n">ckt</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Gnucap 2009.12.07 RCS 26.136
+The Gnu Circuit Analysis Package
+Never trust any version less than 1.0
+Copyright 1982-2009, Albert Davis
+Gnucap comes with ABSOLUTELY NO WARRANTY
+This is free software, and you are welcome
+to redistribute it under the terms of 
+the GNU General Public License, version 3 or later.
+See the file &quot;COPYING&quot; for details.
+
+VDB(2)-20.              -15.             -10.              -5.               0.
+        +-----------------+----------------+-----------------+----------------+
+ 5.     |                 .                .             *   .                |
+ 10.    |                 .                .             *   .                |
+ 20.    |                 .                .             *   .                |
+ 40.    |                 .                .             *   .                |
+ 80.    |                 .                .            *    .                |
+ 160.   |                 .                .          *      .                |
+ 320.   |                 .                .  *              .                |
+ 640.   |                 .     *          .                 .                |
+ 1.28K  |     *           .                .                 .                |
+        +-----------------+----------------+-----------------+----------------+
+</code></pre>
+</div>
+
+<p>Çıktıyı sayısal olarak bir dosyaya yönlendirmek için <code>.PLOT</code> komutu
+<code>.PRINT</code> ile değiştirilir, ve komut satırında çıktı bir dosyaya yönlendirilir, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;demo2.ckt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>.TITLE Ornek #2
+
+Vin 0 1 AC 1
+R1  1 2 1K
+R2  0 2 1K
+C1  0 2 1UF
+
+.OPTION OUT=80
+.PRINT OP Iter(0) V(2)
+
+.PRINT AC  VDB(2)(-20,0)
+
+.AC 5 1K OCT
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span><span class="n">gnucap</span> <span class="o">-</span><span class="n">b</span> <span class="n">demo2</span><span class="o">.</span><span class="n">ckt</span> <span class="o">&gt;</span> <span class="n">out</span><span class="o">.</span><span class="n">txt</span>
+</code></pre>
+</div>
+
+<p>Sonuç dosyasına bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;out.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Gnucap 2009.12.07 RCS 26.136
+The Gnu Circuit Analysis Package
+Never trust any version less than 1.0
+Copyright 1982-2009, Albert Davis
+Gnucap comes with ABSOLUTELY NO WARRANTY
+This is free software, and you are welcome
+to redistribute it under the terms of 
+the GNU General Public License, version 3 or later.
+See the file &quot;COPYING&quot; for details.
+
+#Freq       VDB(2)    
+ 5.        -6.0217    
+ 10.       -6.0249    
+ 20.       -6.0377    
+ 40.       -6.0886    
+ 80.       -6.2866    
+ 160.      -6.9989    
+ 320.      -9.054     
+ 640.      -13.047    
+ 1.28K     -18.368    
+</code></pre>
+</div>
+
+        </section>          
+      </div>
+    </body>
+</html>

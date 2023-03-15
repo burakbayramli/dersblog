@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Oracle ve İşlem İdaresi</h1>
+
+<p>Veri tabanlarını kullanırken anlamamız gereken çok önemli bir kavram
+işlem (transaction) kavramıdır. Veri tabanı nedzinde işlemler, zamana
+bağlı olarak gelişirler, ve bu konuda işlemler, veri tabanına direk
+bağlı olan programların veriyi 'hangi zamanda, nasıl' göreceğini
+kontrol ederler.  Yani, dış dünyadan veri tabanının içine bakmamız bir
+işlem çerçevesinde gerçekleşir.</p>
+
+<p>Üstteki resim ile işlemlerin nasıl kullanıldığını görüyoruz. Benzetme
+ile anlatmak gerekirse, bir işleme başlamak şuna benzer: Mesela veri
+tabanı bir apartman dairesi olsun, o zaman işleme başlamak, kişinin
+(kullanıcı) evin bütün odalarına (veriye) bakıp, akılda tutup, sonra
+bir odaya girmesidir. Bu odaya girince, kişi aklında olan bilgileri
+işleyip hakkında kararlar verebilir, vs.  O sırada, öteki odalarda ve
+de evin içinde yapılan kalıcı değişiklikleri göremez.</p>
+
+<p>İşlem bitimi, Oracle COMMIT kelimesi ile olur, ve benzetmemizdeki
+kişinin odanın dışına çıkıp yaptığı değişiklikleri evin içine kalıcı
+olarak koymasına ya da, dısarıda yapılmış olanları görmesi demektir.
+Buna işlemlerin kendilerini birbirlerinden 'izole' edebilme özelliği
+denir.  Kilit Sistemi ve İşlem Sınırları Ayrıca, işlemlerin veri
+izolesi için kullanılmasına ek olarak, Oracle kilit sisteminin de
+işlem kavramında direk bağlandığını göreceksiniz.</p>
+
+<p>Yani, SELECT * FROM CIZELGE1 WHERE DIZEY1 = '111' FOR UPDATE; komutu
+sonucunda, DIZEY1 değeri 111 olan veri satırı (row) kitlenecektir. Bu
+satır, aynı bağlantı üzerinde COMMIT komutu verilene kadar kitli
+kalacaktır.  Aynı işlem sırasında kitli satıra erişmek isteyen öteki
+kullanıcılar, eğer yukarıdaki komutun AYNISINI işletirlerse, beklemede
+kalacaklardır.  Beklemeden geri dönmek istiyorlar ise, FOR UPDATE
+kelimesinden sonra NOWAIT (hiç bekleme) kelimesini eklemeleri gerekir.
+İslem Ne Zaman Başlar?  Bir işlem, zaten bir işlem içinde
+bulunmuyorsanız, herhangi bir SQL komutuna kullandığınızda otomatik
+olarak başlayacaktır. Yani BEGIN TRANSACTION (işleme başla) gibi bir
+komuta gerek yoktur. Bir önceki işlemi COMMIT ile bitirdiyseniz, aynı
+bağlantı üzerindeki ilk SQL komutu otomatik olarak sonraki işlemi
+başlatır.</p>
+
+<p><img src="transaction.jpg" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

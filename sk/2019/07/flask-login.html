@@ -1,0 +1,330 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Flask, Kullanıcı Giriş (Login), Şifre, Oturum İdaresi, Flask-User</h1>
+
+<p>Kullanıcının şifresini almak, unuttuysa hatırlatmak, email üzerinden
+kaydetmek, oturum açıp oturumu hatırlamak, hangi sayfaya izin var
+hangisine yok kontrol etmek, vs. gibi işlerlerle gayet "Pythonic"
+şekilde başedebilmemizi sağlayan bir paket Flask-User. Kodları,</p>
+
+<p>https://github.com/lingthio/Flask-User/</p>
+
+<p>dan indirebiliriz. Gerekli paketleri </p>
+
+<pre><code>pip install -r requirements.txt
+</code></pre>
+
+<p>ile kurarız. Örnek bir kod ([1] baz alınmıştır), <code>basic_app.py</code> diyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">util</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">render_template</span>
+<span class="kn">from</span> <span class="nn">flask_babelex</span> <span class="kn">import</span> <span class="n">Babel</span>
+<span class="kn">from</span> <span class="nn">flask_sqlalchemy</span> <span class="kn">import</span> <span class="n">SQLAlchemy</span>
+<span class="kn">from</span> <span class="nn">flask_user</span> <span class="kn">import</span> <span class="n">current_user</span><span class="p">,</span> <span class="n">login_required</span>
+<span class="kn">from</span> <span class="nn">flask_user</span> <span class="kn">import</span> <span class="n">roles_required</span><span class="p">,</span> <span class="n">UserManager</span><span class="p">,</span> <span class="n">UserMixin</span>
+
+<span class="k">class</span> <span class="nc">ConfigClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Flask application config &quot;&quot;&quot;</span>
+
+    <span class="n">SECRET_KEY</span> <span class="o">=</span> <span class="s1">&#39;This is an INSECURE secret!! DO NOT use this in production!!&#39;</span>
+
+    <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="s1">&#39;sqlite:///basic_app.sqlite&#39;</span> 
+    <span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="kc">False</span>   
+
+    <span class="n">MAIL_SERVER</span> <span class="o">=</span> <span class="s1">&#39;smtp.gmail.com&#39;</span>
+    <span class="n">MAIL_PORT</span> <span class="o">=</span> <span class="mi">587</span>
+    <span class="n">MAIL_USE_SSL</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">MAIL_USE_TLS</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">MAIL_USERNAME</span> <span class="o">=</span> <span class="s1">&#39;[kaynak email@gmail.com]&#39;</span>
+    <span class="n">MAIL_PASSWORD</span> <span class="o">=</span> <span class="s1">&#39;[sifre]&#39;</span>
+    <span class="n">MAIL_DEFAULT_SENDER</span> <span class="o">=</span> <span class="s1">&#39;&quot;MyApp&quot; &lt;noreply@example.com&gt;&#39;</span>
+
+    <span class="n">USER_APP_NAME</span> <span class="o">=</span> <span class="s2">&quot;Flask-User Basic App&quot;</span>
+    <span class="n">USER_ENABLE_EMAIL</span> <span class="o">=</span> <span class="kc">True</span>       
+    <span class="n">USER_ENABLE_USERNAME</span> <span class="o">=</span> <span class="kc">False</span>  
+    <span class="n">USER_EMAIL_SENDER_NAME</span> <span class="o">=</span> <span class="n">USER_APP_NAME</span>
+    <span class="n">USER_EMAIL_SENDER_EMAIL</span> <span class="o">=</span> <span class="s2">&quot;noreply@example.com&quot;</span>
+
+
+<span class="k">def</span> <span class="nf">create_app</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Flask application factory &quot;&quot;&quot;</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="vm">__name__</span><span class="o">+</span><span class="s1">&#39;.ConfigClass&#39;</span><span class="p">)</span>
+
+    <span class="n">babel</span> <span class="o">=</span> <span class="n">Babel</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">UserMixin</span><span class="p">):</span>
+        <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;users&#39;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;is_active&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span>
+                       <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
+
+        <span class="n">email</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="n">collation</span><span class="o">=</span><span class="s1">&#39;NOCASE&#39;</span><span class="p">),</span>
+                      <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">email_confirmed_at</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">DateTime</span><span class="p">())</span>
+        <span class="n">password</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">first_name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">collation</span><span class="o">=</span><span class="s1">&#39;NOCASE&#39;</span><span class="p">),</span>
+                           <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">last_name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="n">collation</span><span class="o">=</span><span class="s1">&#39;NOCASE&#39;</span><span class="p">),</span>
+                          <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+        <span class="n">roles</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">relationship</span><span class="p">(</span><span class="s1">&#39;Role&#39;</span><span class="p">,</span> <span class="n">secondary</span><span class="o">=</span><span class="s1">&#39;user_roles&#39;</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">Role</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+        <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;roles&#39;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">String</span><span class="p">(</span><span class="mi">50</span><span class="p">),</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">class</span> <span class="nc">UserRoles</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">):</span>
+        <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;user_roles&#39;</span>
+        <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+                        <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;users.id&#39;</span><span class="p">,</span> <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;CASCADE&#39;</span><span class="p">))</span>
+        <span class="n">role_id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">(),</span>
+                        <span class="n">db</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="s1">&#39;roles.id&#39;</span><span class="p">,</span> <span class="n">ondelete</span><span class="o">=</span><span class="s1">&#39;CASCADE&#39;</span><span class="p">))</span>
+
+    <span class="n">user_manager</span> <span class="o">=</span> <span class="n">UserManager</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">User</span><span class="p">)</span>
+
+    <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;member@example.com&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">():</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s1">&#39;member@example.com&#39;</span><span class="p">,</span>
+            <span class="n">email_confirmed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">user_manager</span><span class="o">.</span><span class="n">hash_password</span><span class="p">(</span><span class="s1">&#39;Password1&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s1">&#39;admin@example.com&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">():</span>
+        <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>
+            <span class="n">email</span><span class="o">=</span><span class="s1">&#39;admin@example.com&#39;</span><span class="p">,</span>
+            <span class="n">email_confirmed_at</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">(),</span>
+            <span class="n">password</span><span class="o">=</span><span class="n">user_manager</span><span class="o">.</span><span class="n">hash_password</span><span class="p">(</span><span class="s1">&#39;Password1&#39;</span><span class="p">),</span>
+        <span class="p">)</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Role</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Admin&#39;</span><span class="p">))</span>
+        <span class="n">user</span><span class="o">.</span><span class="n">roles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Role</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Agent&#39;</span><span class="p">))</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+        <span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">home_page</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;home.html&quot;</span><span class="p">)</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/members&#39;</span><span class="p">)</span>
+    <span class="nd">@login_required</span>    <span class="c1"># Use of @login_required decorator</span>
+    <span class="k">def</span> <span class="nf">member_page</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;/member_page.html&quot;</span><span class="p">)</span>
+
+    <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/admin&#39;</span><span class="p">)</span>
+    <span class="nd">@roles_required</span><span class="p">(</span><span class="s1">&#39;Admin&#39;</span><span class="p">)</span>    <span class="c1"># Use of @roles_required decorator</span>
+    <span class="k">def</span> <span class="nf">admin_page</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">render_template</span><span class="p">(</span><span class="s2">&quot;/admin.html&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">app</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">()</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sayfalar <code>templates</code> alt dizininde,</p>
+
+<p>admin.html</p>
+
+<p><a href="t1.txt">Link</a></p>
+
+<p>home.html</p>
+
+<p><a href="t2.txt">Link</a></p>
+
+<p>member_page.html</p>
+
+<p><a href="t3.txt">Link</a></p>
+
+<p>Bu kod basit bir şekilde <code>python basic_app.py</code> diye başlatılır. Email,
+sifre girilir, ve konfirmasyon için email gelir, ona tıklanır,
+kullanıcı doğrulanmış olur.</p>
+
+<p>Sayfaları daha kendimize göre tasarlamak istersek, mesela <code>extends</code>
+ibaresini çıkartıp daha pür HTML kodları kullanmak istersek, sistem
+mesajlarını görmeyebiliriz, bu mesajlar 'kullanıcıya konfirme için
+email gönderildi', vs. gibi mesajlardır, o mesajları görmek için</p>
+
+<p><a href="t4.txt">Link</a></p>
+
+<p>kodunu sayfalarımıza ekleyebiliriz. Bu durumda</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">flash</span>
+<span class="o">...</span>
+<span class="n">flash</span><span class="p">(</span><span class="s1">&#39;Invitation has been sent.&#39;</span><span class="p">,</span> <span class="s1">&#39;success&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>ile gönderilen mesajlar üstteki kodun olduğu sayfalarda bir kereliğine
+gösterilecektir. Aynı sayfaya bir daha gidersek mesaj görülmez.</p>
+
+<p>Eğer bir sayfayı (onun metoduna daha doğrusu) site giriş yapmış
+olanlar için kısıtlamak istersek o metotu <code>@login_required</code> ile
+işaretleriz.</p>
+
+<p>Kullanıcılar çok basit bir sqlite veri tabanında tek bir dosya içinde
+kaydedilirler, dosya ismi <code>SQLALCHEMY_DATABASE_URI</code> ile tanımlı.</p>
+
+<p>SQLAlchemy aslında pek çok farklı taban ile çalışabilir. Ben
+Postgresql'e geçmek istediğimde bu rahat bir şekilde oldu,
+<code>SQLALCHEMY_DATABASE_URI</code> icin <code>sqlite:///basic_app.sqlite</code> yerine</p>
+
+<pre><code>postgresql+psycopg2://{user}:{pw}@{url}/{db}'.format(user="[kullanici]",pw="[sifre]",url="[makina]",db="[taban]")
+</code></pre>
+
+<p>kullanınca taban yaratma, ona erişme, vs her şey işledi.</p>
+
+<p>Giriş yapmak, oturum kapatmak, şifre ile ilgili envai türden işlem
+üstteki örnek ile yapılabiliyor.</p>
+
+<p>SQL</p>
+
+<p>Flask-User içinde SQLAlchemy kullanılıyor, bu bir tür ORM
+(ilişkisel-obje eşlemesi), Java dünyasındaki Hibernate gibi. Fakat siz
+direk SQL ile iş yapmak isterseniz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">res</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;select * from users&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>kullanımı olur. <code>db</code> referansı <code>db = SQLAlchemy(app)</code> ifadesinden geliyor. </p>
+
+<p>Eğer <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> gibi sorgular işletmek istersek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">connection</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">trans</span> <span class="o">=</span> <span class="n">connection</span><span class="o">.</span><span class="n">begin</span><span class="p">()</span>
+<span class="n">db</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot; ...</span>
+<span class="o">...</span>
+<span class="n">trans</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Roller</p>
+
+<p>Bazı kullanıcılara bakıcı, "Admin" rolü atamak isteyebiliriz. Bu rolü
+ben spesifik bir email adresine atamak için Flask üzerinden bir metot içinde </p>
+
+<pre><code>insert into roles (id,name) values (1,'Admin')
+insert into user_roles select 1, id, 1 from users where email = '[BENIM EMAIL]'
+</code></pre>
+
+<p>sorgularını işlettim. Bende üstteki kodun başında görülen kullanıcı ve
+rolleri tabana ekleyen bölüm yok. Onları direk SQL içinden kendimiz yapıyoruz.</p>
+
+<p>Bir kullanıcı Admin olduktan sonra (ya da herhangi bir başka rol), bu
+rolü metot girişinde kontrol edebiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/onemli_admin_komutu&#39;</span><span class="p">)</span>
+<span class="nd">@roles_required</span><span class="p">(</span><span class="s1">&#39;Admin&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">onemli_admin_komutu</span><span class="p">():</span>
+<span class="o">...</span>
+</code></pre>
+</div>
+
+<p>Kullanıcı Durumuna Göre Sayfa</p>
+
+<p>Eğer kullanıcı sisteme şifre ile girmiş ise farklı, girmemiş ise
+farklı içerik göstermek istersek sayfa içinde
+<code>current_user.is_authenticated</code> kullanabiliriz. Mesela</p>
+
+<p><a href="t5.txt">Link</a></p>
+
+<p>Kullanıcı <code>user</code> objesine çağrıldığı anda hesaplanan yeni öğeler
+(property) ekleyebiliriz, <code>@property</code> ile bu mümkün. Diyelim ki o
+günün tarihini, kullanıcının tabandaki son erisebileceği tarih ile
+karşılaştırıp doğru ve yanlış cevabı verebilen <code>is_member</code> (üye mi)
+adlı bir öğe istiyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">is_member</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="n">nd</span> <span class="o">=</span> <span class="o">...</span> <span class="c1"># gunun tarihi</span>
+    <span class="n">ld</span> <span class="o">=</span> <span class="o">..</span>  <span class="c1"># son kullanim</span>
+    <span class="k">return</span> <span class="n">ld</span> <span class="o">&lt;</span> <span class="n">nd</span>
+</code></pre>
+</div>
+
+<p>Artık bu öğeyi aynen üstteki gibi <code>current_user.is_member</code> ile çağırıp
+sayfa mantığı içinde kullanabiliriz.</p>
+
+<p>Temel Sayfaları Değiştirmek</p>
+
+<p>Dikkat edersek sisteme giriş, kayıt sayfaları Flask-User projesinin
+içinden geliyor. Bu sayfalar için kendi istediğimiz sayfaları
+kullanmak istersek, <code>Flask-User / flask_user / templates / flask_user</code>
+dizinini olduğu gibi alıp kendi projemizin <code>templates</code> dizinine
+kopyalayabiliriz, ve ilgili sayfaları artık kendi yerel projemizde
+değiştirebiliriz. Flask-User artık otomatik olarak kurulan paket
+içindeki değil bu yerel proje altındaki sayfalara gidecektir.</p>
+
+<p>Email, SMTP</p>
+
+<p>Email, Gmail SMTP ile ilgili problem olursa bir <a href="/2012/06/python-ile-mail-göndermek-smtp-gmail.html">diğer
+yazı</a>. Ya da başka
+bir email servisi için
+<a href="/2019/05/sendgrid-smtp-email-servisi.html">şurası</a>.  <code>MAIL_USE_SSL</code>
+kullanımı ile <code>MAIL_USE_TLS</code> kullanımı arasında ya o ya bu türünden
+bir durum var, SSL ya da TLS seçimi SMTP servisinde hangi port'u
+kullandığımızı etkiler.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://github.com/lingthio/Flask-User/blob/master/example<em>apps/basic</em>app.py</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

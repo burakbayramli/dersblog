@@ -1,0 +1,321 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>NetCDF, İklim Verisi, NOAA</h1>
+
+<p>İklim, mesela Berkeley veri tabanından gelen sıcaklıklar, ya da
+NOAA'dan gelen günlük, saatlik rüzgar verileri çoğunlukla netCDF adlı
+bir formatla paylaşılıyor. Bu formatları işlemenin yöntemlerine, veri
+içeriğine bakalım..</p>
+
+<h2>Berkeley</h2>
+
+<p>Berkeley'den gelen dünya ısı verisi mesela.. Berkeley pek çok iklim
+verisi paylaşır [3] . Bunlardan biri dünyayı belli bölgelere ayırıp ay
+bazında sıcaklık verisini kaydeder. Veri için [3]'e gidilir ve Gridded
+Data | Monthly Land | Equal Area alınır, <code>/tmp</code> altında olduğunu
+düşünelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">netCDF4</span>
+
+<span class="n">url</span><span class="o">=</span><span class="s1">&#39;/tmp/Complete_TAVG_EqualArea.nc&#39;</span>
+<span class="n">nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">nc</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;class &#39;netCDF4._netCDF4.Dataset&#39;&gt;
+root group (NETCDF4 data model, file format HDF5):
+    Conventions: Berkeley Earth Internal Convention (based on CF-1.5)
+    title: Native Format Berkeley Earth Surface Temperature Anomaly Field
+    history: 06-Oct-2021 21:09:04
+    institution: Berkeley Earth Surface Temperature Project
+    source_file: Complete_TAVG.50592s.20211006T205528.mat
+    source_history: 03-Oct-2021 08:32:25
+    source_data_version: eead777c589734c11a431a21725e06d3
+    comment: This file contains Berkeley Earth surface temperature anomaly field in our native equal-area format.
+    dimensions(sizes): map_points(5498), time(3261), month_number(12)
+    variables(dimensions): float32 longitude(map_points), float32 latitude(map_points), float64 time(time), float64 land_mask(map_points), float32 temperature(time, map_points), float32 climatology(month_number, map_points)
+    groups: 
+</code></pre>
+</div>
+
+<p>NetCDF değişik bir format, Pandas ya da numpy stiline benzemiyor. Mesela
+<code>climatology</code>, <code>temperature</code> ve <code>time</code> öğeleri,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">clim</span> <span class="o">=</span> <span class="n">nc</span><span class="p">[</span><span class="s1">&#39;climatology&#39;</span><span class="p">][:,:]</span>
+<span class="n">anom</span> <span class="o">=</span>  <span class="n">nc</span><span class="p">[</span><span class="s1">&#39;temperature&#39;</span><span class="p">][:,:]</span>
+<span class="n">time</span> <span class="o">=</span>  <span class="n">nc</span><span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">][:]</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">clim</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">anom</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(12, 5498)
+(3261, 5498)
+(3261,)
+</code></pre>
+</div>
+
+<p>Şimdi <code>clim</code> içinde bir matris var, <code>anom</code> içinde bir tane daha,
+<code>time</code> bir vektör. İçeriği şöyle,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">time</span><span class="p">[:</span><span class="mi">10</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[1750.04166667 1750.125      1750.20833333 1750.29166667 1750.375
+ 1750.45833333 1750.54166667 1750.625      1750.70833333 1750.79166667]
+</code></pre>
+</div>
+
+<p>Biraz belge okuma sonrası anlaşılıyor ki zaman bir reel sayı olarak
+temsil edilmiş, yani 1750 senesi ve 1751 senesi ortalarında bir yer,
+aşağı yukarı Haziran ayı, 1750.4583 olarak temsil ediliyor. Bu
+tür sene kodlaması genelde bazı grafikleme, hesaplama işlerini kolaylaştırmak
+için yapılır. O zaman mesela üstte 1750.125 anında olanı görmek için indis
+1 kullanmak lazım (ikinci öğe).</p>
+
+<p>Dünya 5498 bölgeye bölünmüş bu bölgelerin nerede olduğunu anlamak için
+Berkeley belgelerine bakılabilir.</p>
+
+<p>Sıcaklık bir baz sıcaklık artı sapma (anormallik) olarak verilmiş.
+Eğer 1000'inci bölge 1750.125 senesindeki sıcaklığı görmek istersek, 
+alttaki erişimi yapmak gerekir (0.125 Şubat ayı olur herhalde indis 1)</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">region</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">tidx</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">month</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">clim</span><span class="p">[</span><span class="n">month</span><span class="p">,</span> <span class="n">region</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">anom</span><span class="p">[</span><span class="n">tidx</span><span class="p">,</span> <span class="n">region</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>-12.628022
+0.026923507
+</code></pre>
+</div>
+
+<p>Bu iki değer toplanınca nihai sıcaklık elde edilir. Yani baz sıcaklık
+bir ay | bölge matrisi içindeydi, sapma bir zaman | bölge matrisi
+içinde. Nihai sıcaklık için belli bir zamanın ayına ve bölgeye göre
+baz, zaman indisi ve yine bölgeye göre sapma almak gerekti.</p>
+
+<h3>NOAA NCEI</h3>
+
+<p>Bu veriyi dosyayı elle indirmeden işleyeceğiz, kodun kendisi gerekli
+dosyayı Internet'ten alıp içindeki netCDF bilgisini işleyecek. Mesela
+13/3/1993 için rüzgar esme (hız) verisini alalım, bu bilgi dikey ve
+yatay bileşenler u,v içinde gelecek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span><span class="p">,</span> <span class="n">num2date</span>
+<span class="kn">from</span> <span class="nn">scipy.ndimage</span> <span class="kn">import</span> <span class="n">gaussian_filter</span>
+<span class="kn">from</span> <span class="nn">siphon.catalog</span> <span class="kn">import</span> <span class="n">TDSCatalog</span>
+
+<span class="n">year</span> <span class="o">=</span> <span class="mi">1993</span>
+<span class="n">month</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">day</span> <span class="o">=</span> <span class="mi">13</span>
+<span class="n">hour</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">dt</span> <span class="o">=</span> <span class="n">datetime</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">month</span><span class="p">,</span> <span class="n">day</span><span class="p">,</span> <span class="n">hour</span><span class="p">)</span>
+<span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;https://www.ncei.noaa.gov/thredds/catalog/model-narr-a-files/&#39;</span>
+<span class="n">cat</span> <span class="o">=</span> <span class="n">TDSCatalog</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_url</span><span class="si">}{</span><span class="n">dt</span><span class="si">:</span><span class="s1">%Y%m</span><span class="si">}</span><span class="s1">/</span><span class="si">{</span><span class="n">dt</span><span class="si">:</span><span class="s1">%Y%m%d</span><span class="si">}</span><span class="s1">/catalog.xml&#39;</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">cat</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">filter_time_nearest</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+<span class="n">ncss</span> <span class="o">=</span> <span class="n">ds</span><span class="o">.</span><span class="n">subset</span><span class="p">()</span>
+<span class="n">query</span> <span class="o">=</span> <span class="n">ncss</span><span class="o">.</span><span class="n">query</span><span class="p">()</span>
+<span class="n">query</span><span class="o">.</span><span class="n">lonlat_box</span><span class="p">(</span><span class="n">north</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">south</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">east</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">west</span><span class="o">=</span><span class="mi">225</span><span class="p">)</span>
+<span class="n">query</span><span class="o">.</span><span class="n">all_times</span><span class="p">()</span>
+<span class="n">query</span><span class="o">.</span><span class="n">add_lonlat</span><span class="p">()</span>
+<span class="n">query</span><span class="o">.</span><span class="n">accept</span><span class="p">(</span><span class="s1">&#39;netcdf&#39;</span><span class="p">)</span>
+<span class="n">query</span><span class="o">.</span><span class="n">variables</span><span class="p">(</span><span class="s1">&#39;Geopotential_height_isobaric&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;Temperature_isobaric&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;u-component_of_wind_isobaric&#39;</span><span class="p">,</span>
+                <span class="s1">&#39;v-component_of_wind_isobaric&#39;</span><span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">ncss</span><span class="o">.</span><span class="n">get_data</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">dimensions</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>OrderedDict([(&#39;time1&#39;, &lt;class &#39;netCDF4._netCDF4.Dimension&#39;&gt;: name = &#39;time1&#39;, size = 1), (&#39;isobaric1&#39;, &lt;class &#39;netCDF4._netCDF4.Dimension&#39;&gt;: name = &#39;isobaric1&#39;, size = 29), (&#39;y&#39;, &lt;class &#39;netCDF4._netCDF4.Dimension&#39;&gt;: name = &#39;y&#39;, size = 119), (&#39;x&#39;, &lt;class &#39;netCDF4._netCDF4.Dimension&#39;&gt;: name = &#39;x&#39;, size = 268)])
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;class &#39;netCDF4._netCDF4.Dataset&#39;&gt;
+root group (NETCDF3_CLASSIC data model, file format NETCDF3):
+    Originating_or_generating_Center: US National Weather Service, National Centres for Environmental Prediction (NCEP)
+    Originating_or_generating_Subcenter: North American Regional Reanalysis Project
+    GRIB_table_version: 0,131
+    Generating_process_or_model: North American Regional Reanalysis (NARR)
+    Conventions: CF-1.6
+    history: Read using CDM IOSP GribCollection v3
+    featureType: GRID
+    History: Translated to CF-1.0 Conventions by Netcdf-Java CDM (CFGridWriter2)
+Original Dataset = DatasetScan#narr-a_221_19930313_0000_000.grb; Translation Date = 2022-01-08T09:37:42.079Z
+    geospatial_lat_min: 10.753308882144761
+    geospatial_lat_max: 46.8308828962289
+    geospatial_lon_min: -153.88242040519995
+    geospatial_lon_max: -42.666108129242815
+    dimensions(sizes): time1(1), isobaric1(29), y(119), x(268)
+    variables(dimensions): float32 u-component_of_wind_isobaric(time1, isobaric1, y, x), float64 time1(time1), float32 isobaric1(isobaric1), float32 y(y), float32 x(x), int32 LambertConformal_Projection(), float64 lat(y, x), float64 lon(y, x), float32 Geopotential_height_isobaric(time1, isobaric1, y, x), float32 Temperature_isobaric(time1, isobaric1, y, x), float32 v-component_of_wind_isobaric(time1, isobaric1, y, x)
+    groups: 
+</code></pre>
+</div>
+
+<p>Boyutları, ve bazı örnek veriyi, kullanımı altta görüyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;u-component_of_wind_isobaric&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;v-component_of_wind_isobaric&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:]</span>
+<span class="n">lon</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lat</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+
+<span class="n">u_wind_var</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;u-component_of_wind_isobaric&#39;</span><span class="p">]</span>
+<span class="n">u_wind</span> <span class="o">=</span> <span class="n">u_wind_var</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">squeeze</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">u_wind</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(29, 119, 268)
+(119, 268)
+[[17.87115668 17.9637901  18.05570545 ... 11.17123674 11.04457979
+  10.91753102]
+ [18.10795748 18.20108494 18.29349116 ... 11.37401449 11.2467457
+  11.11908431]
+ [18.34510656 18.4387305  18.53163001 ... 11.57699036 11.44910733
+  11.32083096]
+ [18.58259681 18.67671966 18.77011491 ... 11.78015756 11.65165792
+  11.52276419]]
+(119, 268)
+</code></pre>
+</div>
+
+<h2>THREDDS Verisi</h2>
+
+<p>Bu veri [1,2]'den geliyor, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">netCDF4</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;/tmp/uwnd.10m.2021.nc&quot;</span>
+<span class="n">nc</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">nc</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;class &#39;netCDF4._netCDF4.Dataset&#39;&gt;
+root group (NETCDF4_CLASSIC data model, file format HDF5):
+    Conventions: CF-1.2
+    centerlat: 50.0
+    centerlon: -107.0
+    comments: 
+    institution: National Centers for Environmental Prediction
+    latcorners: [ 1.000001  0.897945 46.3544   46.63433 ]
+    loncorners: [-145.5       -68.32005    -2.569891  148.6418  ]
+    platform: Model
+    standardpar1: 50.0
+    standardpar2: 50.000001
+    title: Daily NARR
+    history: created Sat Mar 26 05:25:45 MDT 2016 by NOAA/ESRL/PSD
+    dataset_title: NCEP North American Regional Reanalysis (NARR)
+    references: https://www.esrl.noaa.gov/psd/data/gridded/data.narr.html
+    source: http://www.emc.ncep.noaa.gov/mmb/rreanl/index.html
+    References: 
+    dimensions(sizes): time(334), y(277), x(349), nbnds(2)
+    variables(dimensions): float64 time(time), float32 lat(y, x), float32 lon(y, x), float32 y(y), float32 x(x), int32 Lambert_Conformal(), float32 uwnd(time, y, x), float64 time_bnds(time, nbnds)
+    groups: 
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">lat</span> <span class="o">=</span> <span class="n">nc</span><span class="p">[</span><span class="s1">&#39;lat&#39;</span><span class="p">][:]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lat</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">lon</span> <span class="o">=</span> <span class="n">nc</span><span class="p">[</span><span class="s1">&#39;lon&#39;</span><span class="p">][:]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lon</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">uwnd</span> <span class="o">=</span> <span class="n">nc</span><span class="p">[</span><span class="s1">&#39;uwnd&#39;</span><span class="p">][:,:,:]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">uwnd</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(277, 349)
+(277, 349)
+(334, 277, 349)
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] THREDDS Catalog, https://psl.noaa.gov/thredds/catalog/Datasets/NARR/catalog.html</p>
+
+<p>[2] THREDDS Data Server, https://psl.noaa.gov/thredds/catalog/Datasets/NARR/Dailies/monolevel/catalog.html?dataset=Datasets/NARR/Dailies/monolevel/uwnd.10m.2021.nc</p>
+
+<p>[3] http://berkeleyearth.org/data/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

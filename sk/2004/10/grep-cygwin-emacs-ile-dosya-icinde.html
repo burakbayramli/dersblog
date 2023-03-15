@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Grep + Cygwin + Emacs ile Dosya İçinde Kelime Arama</h1>
+
+<p>Birçok dosya içinde, belli bir metni aramak için, Unix üzerinde   </p>
+
+<pre><code>find . -name '*.java' -exec grep -n 'aranankelime' \;
+</code></pre>
+
+<p>.. gibi bir ifade kullabiliyoruz. Windows üzerinde de bazı görsel
+seçenekler mevcut.</p>
+
+<p>Programcıların ellerin sürekli klavye üzerinde olarak kodlaması daha
+isabetli olduğu için, metin arama gibi monoton işlerin Emacs aracılığı
+ile 'komut satırından' işlemiz daha isabetli olabilir. Hattâ, bulunan
+sonuçların Emacs üzerinden 'ziyaret edilebilir' bir liste halinde
+gösterilmesi güzel olur.</p>
+
+<p>Not: Unix üzerinde Emacs kullanlar için değişiklik yapmaya gerek
+yok. Bu kullanıcı arkadaşlarımız "ESC x grep-find" komutu ile, metin
+aramayı derhal başlatabilirler. Bu yazımız, Windows NT üzerinde Emacs
+kullanıcıları için, ek uzatmaları anlatmak içindir.</p>
+
+<p>Önce, evvelki yazılarda bahsettiğimiz Cygwin ürününü indirmeniz
+gerekiyor. Cygwin, bildiğimiz gibi Unix komut satır özelliklerini
+Windows'a taşıyor.</p>
+
+<p>Cygwin kurulduktan sonra, Emacs ile bağını oluşturmak için şu
+eklentiyi kurmamız gerekecek. Bu dosyayı C:/SizinEmacsDizini/site-lisp
+dizini altına bırakabilirsiniz.</p>
+
+<p>Bu yapıldıktan sonra, Emacs'e grep-find komutunu cygwin üzerinden
+işletmesini bildirmek için, .emacs ayartanım dosyasında şu ibareleri
+ekleyin.</p>
+
+<pre><code>(setenv "PATH" (concat "c:/cygwin/bin;" (getenv "PATH")))
+(setq exec-path (cons "c:/cygwin/bin/" exec-path))
+(require 'cygwin-mount)
+(cygwin-mount-activate)
+</code></pre>
+
+<p>Ek olarak grep-find komutunu, meselâ Control-c Control-g ikilisine
+bağlamak için aşağıdaki ayarları yapın.</p>
+
+<pre><code>(global-set-key "\C-c\C-g" 'grep-find)  
+</code></pre>
+
+<p>Evet. Artık Emacs'i tekrar başlattıktan sonra, metinyazar programını
+terketmeden istediğiniz arama işlemini yapabilirsiniz. Ikidebir fare
+ile oraya buraya tıklamaya gerek yok! Örnek bir çıktıyı aşağıda
+görüyoruz.</p>
+
+<p><img src="emacs_cygwin_find.jpg" alt="" /></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

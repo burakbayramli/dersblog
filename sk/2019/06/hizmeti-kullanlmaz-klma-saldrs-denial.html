@@ -1,0 +1,116 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Hizmeti Kullanılmaz Kılma Saldırısı (Denial of Service Attacks -DoS-), Hız Kısıtlamak (Rate Limiting)</h1>
+
+<p>Web sitemize saldırı yapmak isteyenler olabilir, bunlar ardı ardına
+siteye bağlanarak işlemci (para) israfına sebep olabilir, ya da
+sistemi aşırı yükleyerek başkası tarafından kullanılmaz hale
+getirebilirler. Ya da en azından bir script ile ardı ardına farklı
+saldırı yöntemlerini otomatik şekilde deneyebilirler.</p>
+
+<p>Burada ortak bir nokta ardı ardına, sisteme çok hızlı bir şekilde
+bağlanılıyor olması. O zaman sisteme erişim hızını kısıtlayabilirsek,
+belki genel saldırıdan korunmuş oluruz.</p>
+
+<p>Hız kısıtlamak için bazı seçenekler; eğer bir idare edilen ortamda
+isek, mesela Google App Engine, Heroku gibi, makinalar onların bulut
+ortamında işlediği için bu tür saldırıları onların engellemesini
+bekleriz. Bu en iyi seçenek, hiç bir şey yapmaya gerek yok. </p>
+
+<p>Kendimiz bir dış servis kullanmak istersek,
+<a href="https://www.cloudflare.com">Cloudflare</a>. Bu servisle sitemizin ismini
+kontrol eden isim servisine (nameserver) DNS makinaları verdiğimizde,
+genel DNS makinaları yerine Cloudflare DNS makinalarını veriyoruz,
+böylece isim sorgulama işlemi onlar üzerinden akıyor. Hız gözleme,
+filtreleme, kısıtlama işini onlar yapıyor.</p>
+
+<p>Uygulama seviyesinde kendimiz bazı taklalar atabiliriz; mesela Flask
+seviyesinde <code>flask_limiter</code> paketi var. Sınırlamaları her URL
+<code>@app.route</code> için ayrı ayrı tanımlayabiliyoruz, eğer bir kullanıcı
+sınırlamaları aşmışsa onlara 429 hata kodu donduruluyor. Özgün
+"kullanıcı" tanımı ise <code>get_remote_address</code> ile okunabilen bağlananın
+IP adresi olabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span> <span class="nn">flask_limiter</span> <span class="kn">import</span> <span class="n">Limiter</span>
+<span class="kn">from</span> <span class="nn">flask_limiter.util</span> <span class="kn">import</span> <span class="n">get_remote_address</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">limiter</span> <span class="o">=</span> <span class="n">Limiter</span><span class="p">(</span>
+    <span class="n">app</span><span class="p">,</span>
+    <span class="n">key_func</span><span class="o">=</span><span class="n">get_remote_address</span><span class="p">,</span>
+    <span class="n">default_limits</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;200 per day&quot;</span><span class="p">,</span> <span class="s2">&quot;50 per hour&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/slow&quot;</span><span class="p">)</span>
+<span class="nd">@limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="s2">&quot;1 per day&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">slow</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;24&quot;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/slowmin&quot;</span><span class="p">)</span>
+<span class="nd">@limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="s2">&quot;2 per minute&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">slowmin</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;24&quot;</span>
+
+<span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/fast&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">fast</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s2">&quot;42&quot;</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>       
+</code></pre>
+</div>
+
+<p>Bu şekilde çetrefil dağıtık (distributed) DoS saldırıları
+durdurulamayabilir, ama baz tek kişinin açıklara bakmak için mesela
+ardı ardına enjeksiyon (injection) tekniklerini denediği durum
+zorlaştırılabilir.</p>
+
+<p>Özgün kullanıcı tanımı için İP adresi yeterli olmayabilir, İnternet
+bağlantısının ortak kullanıldığı yerlerde pek çok kişi bir proxy
+üzerinden dışarı bağlanır, onlar dışarıya tek bir İP adresi gibi
+gözükebilirler, o zaman üstteki <code>key_func</code> için farklı bir çağrı
+kullanabilir.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu'da CAPS Tusunu Control Yapmak</h1>
+
+<p>Kabul edelim: Caps Lock tusu fazla bir halta yaramiyor. Bu tusu eger
+daha cok ise yarayan Control tusu ile degistirmek istiyorsak, alttaki
+tarif ise yarayabilir.Once /etc/X11/xorg.conf dosyasina girelim. Bu
+dosyada degistirmemiz (yoksa eklememiz) gereken ibare soyle:</p>
+
+<pre><code>Section "InputDevice"
+Identifier "Generic Keyboard"
+Driver "kbd"
+Option "CoreKeyboard"
+Option "XkbRules" "xorg"
+Option "XkbModel" "pc105"
+Option "XkbLayout" "us"
+Option "XkbOptions" "lv3:ralt_switch, ctrl:nocaps"
+EndSection
+</code></pre>
+
+<p>Bilgisayari tekrar baslattiktan sonra CAPS tusunun artik Control
+olarak isledigini goreceksiniz.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

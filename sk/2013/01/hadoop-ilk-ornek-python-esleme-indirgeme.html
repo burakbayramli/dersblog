@@ -1,0 +1,185 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Hadoop - Ilk Ornek (Python), Esleme-Indirgeme</h1>
+
+<p>Şimdi bir önceki yazıda Java ile yapılanı Python ile yapalım. Önce
+mapper.py kodunu <code>/home/hduser</code> altında yaratalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="c1"># input comes from STDIN (standard input)</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdin</span><span class="p">:</span>
+    <span class="c1"># remove leading and trailing whitespace</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c1"># split the line into words</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+    <span class="c1"># increase counters</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">words</span><span class="p">:</span>
+        <span class="c1"># write the results to STDOUT (standard output);</span>
+        <span class="c1"># what we output here will be the input for the</span>
+        <span class="c1"># Reduce step, i.e. the input for reducer.py</span>
+        <span class="c1">#</span>
+        <span class="c1"># tab-delimited; the trivial word count is 1</span>
+        <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">word</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Sonra aynı dizinde reducer.py</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="ch">#!/usr/bin/env python</span>
+<span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">itemgetter</span>
+<span class="kn">import</span> <span class="nn">syscurrent_word</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">current_count</span> <span class="o">=</span> <span class="mi">0</span><span class="n">word</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="c1"># input comes from STDINfor line in sys.stdin:</span>
+    <span class="c1"># remove leading and trailing whitespace</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="c1"># parse the input we got from mapper.py</span>
+    <span class="n">word</span><span class="p">,</span> <span class="n">count</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># convert count (currently a string) to int</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">count</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">count</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="c1"># count was not a number, so silently</span>
+        <span class="c1"># ignore/discard this line</span>
+        <span class="k">continue</span>
+    <span class="c1"># this IF-switch only works because Hadoop sorts map output</span>
+    <span class="c1"># by key (here: word) before it is passed to the reducer</span>
+    <span class="k">if</span> <span class="n">current_word</span> <span class="o">==</span> <span class="n">word</span><span class="p">:</span>
+        <span class="n">current_count</span> <span class="o">+=</span> <span class="n">count</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">current_word</span><span class="p">:</span>
+            <span class="c1"># write result to STDOUT</span>
+            <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">current_word</span><span class="p">,</span> <span class="n">current_count</span><span class="p">)</span>
+        <span class="n">current_count</span> <span class="o">=</span> <span class="n">count</span>
+        <span class="n">current_word</span> <span class="o">=</span> <span class="n">word</span><span class="c1"># do not forget to output the last word if needed!</span>
+<span class="k">if</span> <span class="n">current_word</span> <span class="o">==</span> <span class="n">word</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="se">\t</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">current_word</span><span class="p">,</span> <span class="n">current_count</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>İşe başlamadan önce <code>mapper.py</code> işliyor mu hemen kontrol edelim,</p>
+
+<pre><code>echo "foo foo quux labs foo bar quux" | /home/hduser/mapper.py
+</code></pre>
+
+<p>Sonuc</p>
+
+<pre><code>foo
+    1foo
+    1quux
+    1labs
+    1foo
+    1bar
+    1quux
+    1
+</code></pre>
+
+<p>olmalı. İndirgeyiciyi test edelim</p>
+
+<pre><code>echo "foo foo quux labs foo bar quux" | /home/hduser/mapper.py | /home/hduser/reducer.py
+</code></pre>
+
+<p>Sonuc </p>
+
+<pre><code>foo
+
+ 2quux
+
+
+1
+labs
+
+ 1foo  
+ 1bar
+
+ 1quux
+
+ 1
+</code></pre>
+
+<p>Eğer bir önceki örnek yüzünden mevcut dizine yazılamayacağı gibi bir
+hata gelmesin istersek (ya da gelirse) bu dizini silebiliriz,</p>
+
+<pre><code>bin/hadoop dfs -rmr /user/hduser/gutenberg-output
+</code></pre>
+
+<p>Şimdi Python süreçleri başlatabiliriz, Python kodunun kullanılabilmesi
+için Hadoop Streaming kullanacağız, HS sayesinde işleyici süreçlerin
+verilerini standart girdi (standard ınput, STDİN) üzerinde alırlar, ve
+çıktıları standart çıktı (standard output, STDOUT) üzerine
+yazarlar. <code>[HADOOP DIZIN]/contrib/streaming/hadoop-*streaming*.jar</code>
+dosyası bu işi yapmaktadır. Ayrıca HS kullanılınca STDIN, STDOUT ile
+iletişim yapabilen (neredeyse her programlama dili) her türlü stil /
+dil işleyici yazmak için kullanılabilir.</p>
+
+<pre><code>bin/hadoop jar contrib/streaming/hadoop-*streaming*.jar -mapper /home/hduser/mapper.py -reducer /home/hduser/reducer.py -input /user/hduser/gutenberg/* -output /user/hduser/gutenberg-output
+</code></pre>
+
+<p>Sonuçları daha önce yaptığımız gibi geri alırız,</p>
+
+<pre><code>bin/hadoop dfs -getmerge /user/hduser/gutenberg-output /tmp/gutenberg-output
+</code></pre>
+
+<p>Artık üstteki dosya tüm sonuçları içeren sonuç dosyasıdır.</p>
+
+<p>Daha detaylı eşle/indirge anlatımı için İstatistik notlarımıza bakılabilir.</p>
+
+<p>Not: Kelime sayma probleminde anahtarlara ayırma işlemi basit gibi
+duruyor, "kelimenin kendisi anahtar zaten" vs. Fakat bu evrede bazı
+veri temizleme işlemleri olabilir, ki bu işlemler kendi iç
+mantıklarını taşıyor olabilirler; ya da anlamsal (semantic) farklı
+işlemler devreye sokabiliriz. Kelimelerde Ankara, ankara, annkara
+kelimelerinin aynı anahtara eşleneceğinin kararını bu aşamada veriyor
+olabilirdiik mesela. Belki elimizde yazma hatalarını algılayabilen bir
+algoritmamiz vardır, onu bu aşamada kullanmaya karar verdik
+vs. Geometrik transformasyonlardan tutun, coğrafi, kelimesel her türlü
+eşleştirme bu safhada kullanılabilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] http://developer.yahoo.com/hadoop/tutorial/module4.html</p>
+
+<p>[2] http://www.michael-noll.com/tutorials/running-hadoop-on-ubuntu-linux-single-node-cluster/</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

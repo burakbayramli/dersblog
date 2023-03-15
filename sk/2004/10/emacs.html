@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Emacs</h1>
+
+<p>Emacs hiç kuşkusuz, bol özellikli, ve esnek bir editör.</p>
+
+<p>Ubuntu üzerinde kurmak için</p>
+
+<pre><code>sudo apt-get install emacs25
+</code></pre>
+
+<p>Başlatmak için ben bir bash script yazdım, çünkü o script içinden bir
+Python sanal ortam başlatıyorum, böylece Emacs ıcindeyken istediğim
+Python paketlerine de erişebilmiş oluyorum. Çünkü Python script'leri
+çoğunlukla Emacs ıcinden işletirim, eğer Emacs süreci Python
+paketlerinden habersiz ise, script işini yapamaz. Mesela <code>env3</code> adlı
+bir ortam için</p>
+
+<pre><code>#!/bin/bash
+source /home/burak/Documents/env3/bin/activate 
+/usr/bin/emacs25 &amp;
+</code></pre>
+
+<p>Bu script'i bir ikon üzerinden başlatmak için Ubuntu kuruluş notlarına bakılabilir.</p>
+
+<p>Emacs'ın tüm başlangıç ayarlarını bir el dosyasında
+tutabiliriz. Olağan haliyle Emacs ev dizini <code>$HOME</code> altındaki <code>.emacs</code>
+dosyasını arar. Fakat bu dosya ev dizininde silinir, kaybolur endisesi
+ile biz orada</p>
+
+<pre><code>(load-file "/dizin/dizin/emacs-ayar.el")
+</code></pre>
+
+<p>gibi başka bir dosyayı yükleriz, yani ayarlar <code>emacs-ayar.el</code> içinde
+oluyor mesela, ki bu dosya kod deposu içinde güvenli.</p>
+
+<p>Emacs,  </p>
+
+<ul>
+<li><p>LISP'i andıran bir dil ile her şeyini değiştirmenize izin veriyor.  </p></li>
+<li><p>Gene LISP kullanarak özellik eklemenize izin veriyor (ne isterseniz).  </p></li>
+<li><p>Her programlama dili icin bir 'kip' (mode) desteği var. Mesela
+'sadece' Java yazarken "if kelimesinden sonra otomatik aşağı satıra
+git" gibi bir tanım Emacs için cok kolay. Bu gibi ayarlar, .emacs
+config dosyasından rahatça yapılıyor.</p></li>
+<li><p>Emacs ve dış dünya bağlantısı rahat. Unix komutlarını Emacs içinden
+işletmek mümkün. (Esc-x shell)</p></li>
+<li><p>Emacs içinden dış kaynak kodları derleme, ve sonuçları tarayıp
+hatalı olan satırı göstermek çok rahat.</p></li>
+</ul>
+
+<p>Ekte göstereceğimiz kodlar, benim .emacs config dosyamdan alındı. İlk
+önce açıklamayı, sonra kodun kendisini sunacağım.</p>
+
+<p>Örnek .emacs</p>
+
+<p>Emacs içinden derleme yapmak, istenilen komut buraya girilebilir,</p>
+
+<pre><code>(setq compile-command "make ")
+</code></pre>
+
+<p>Metin incelerken, Emacs göstergesinden, kaçıncı satırda olduğumuzu
+görmek:</p>
+
+<pre><code>(setq column-number-mode t)
+</code></pre>
+
+<p>Sevdiğim renkler..  </p>
+
+<pre><code>(set-face-background 'modeline "darkred")
+(set-face-foreground 'modeline "white")
+(set-face-foreground 'region "lightgrey")
+(set-face-background 'region "white")
+(set-background-color  "navyblue")
+(set-foreground-color "white")
+(set-cursor-color "turquoise")
+</code></pre>
+
+<p>Sevdiğim boyutlar..  </p>
+
+<pre><code>(set-frame-width (selected-frame) 83)
+(set-frame-height (selected-frame) 49)
+</code></pre>
+
+<p>Tuşların ne yaptığını tamamen değiştirebilirsiniz. Şahsen ben ok
+tusları yerine (uzak oldukları için) Control tuşu ile alfabe
+harflerine beraber basarak ileri-geri gitmeyi tercih ediyorum. 4 yön
+için, sol = control-J, sağ = control-L, yukarı = control-P ve aşağı =
+control-N kullandık.</p>
+
+<pre><code>(define-key global-map "\C-m" 'newline-and-indent)
+(global-unset-key "\C-f")
+(global-unset-key "\C-w")
+(global-unset-key "\C-d")
+(global-unset-key "\C-l")
+(global-unset-key "\C-p")
+(global-unset-key "\C-j")
+(global-unset-key "\C-k")
+(global-unset-key "\C-o")
+(global-set-key "\C-o" 'other-window)
+(global-set-key "\C-p" 'previous-line)
+(global-set-key "\C-k" 'backward-delete-char-untabify)
+(global-set-key "\C-n" 'next-line)
+(global-set-key "\C-j" 'backward-char)
+(global-set-key "\C-f" 'backward-kill-word) ;; geriye git, kelime sil
+(global-set-key "\C-w" 'backward-word) ;; geri git, kelime atla
+(global-set-key "\C-d" 'forward-word) ;; ileri kelime atla
+(global-set-key "\C-l" 'forward-char) ;; ileri git
+(global-set-key "\C-p" 'previous-line) ;; onceki satir
+(global-set-key "\C-t" 'kill-line) ;; satir sil
+(global-set-key "\C-x\c" 'compile) ;; derle
+(global-set-key [f9] 'kill-buffer) ;; hafizadaki metni hafizadan cikar
+(global-set-key "\C-c\i" 'indent-region) ;; dile gore, secilmis alani duzenle
+(global-set-key "\C-c\k" 'kill-region) ;; secilmis alani sil
+(global-set-key "\C-c\c" 'copy-region-as-kill) ;; secilmis alani kopyala
+(global-set-key "\C-c\u" 'scroll-cursor-to-top)
+(global-set-key "\C-x\q" 'query-replace) ;; ara ve degistir
+(global-set-key "\C-x\g" 'goto-line) ;; satir no'ya atla
+</code></pre>
+
+<p>Emacs programlama dili kiplerinden bahsetmiştim. Bu kiplere geçmek
+için "Esc-x java-mode (enter)" gibi komut işletirseniz Emacs kipe
+geçecektir. Fakat eğer bu geçişin otomatik olmasını istiyorsanız,
+aşağıdakini yapabilirsiniz.</p>
+
+<pre><code>(setq auto-mode-alist
+ (append '(("\\.C$"   . c++-mode)
+("\\.cc$"  . c++-mode)
+("\\.cpp$" . c++-mode)
+("\\.log$" . hscroll-mode)
+("\\.cxx$" . c++-mode)
+("\\.hxx$" . c++-mode)
+("\\.h$"   . c++-mode)
+("\\.hh$"  . c++-mode)
+("\\.idl$" . c++-mode)
+("\\.c$"   . c-mode)
+           ("\\.pl$" . perl-mode)
+           ("\\.java$" . java-mode)
+           ("\\.jsp$" . java-mode)
+           ("\\.inc$" . html-mode)
+           ("\\.rb$" . ruby-mode)
+           ("\\.?[Ff][Aa][Qq]$" . faq-mode)
+           ("\\.txt$" . text-mode))
+   auto-mode-alist))
+</code></pre>
+
+<p>Ayrıca, Emacs kullanırken Control tusunu çok kullanmak gerekiyor. Yeni
+bilgisayarların çogunda Control tuşu oldukça alttadır. Sürekli Ctrl
+tuşuna basacağım derken Emacs kullanıcıları el felci geçirmesin diye,
+çözüm olarak CAPS tuşunu Control tuşuna çevirmek iyi olabilir. CAPS
+düğmesi yukarıda olduğu için, sol serçe parmağı ile basmak çok
+rahhattır. Bu degisimler isletim sistemi seviyesinde yapilir. Ubuntu
+yazilarinda isliyoruz. Windows'da yapmak için, <a href="capsctrl.reg">su dosyayi</a>
+indirip, üzerine tıklayın. Sorulan soruya evet
+diye cevap verin. Bilgisayarı kapatıp açtıktan sonra, CAPS düğmeniz
+Control gibi işliyor olacak.</p>
+
+<p>Referans</p>
+
+<p><a href="/2009/04/pymacs.md">Pymacs</a></p>
+
+<p><a href="https://github.com/burakbayramli/kod/tree/master/site-lisp">Ayarlarım (My Config File)</a></p>
+
+<p><a href="../../2018/07/unicode-ascii-deascii-python-emacs.md">Unicode, Ascii, Deascii, Python, Emacs</a></p>
+
+        </section>          
+      </div>
+    </body>
+</html>

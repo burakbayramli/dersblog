@@ -1,0 +1,203 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python Paketleme</h1>
+
+<p>Python paketleme sistemiyle kaynak kodumuzu paketleyerek ona <code>pip
+install</code> ya da <code>setup.py install</code> sonrası herhangi bir dış dizin ya da
+yeni bilgisayardan <code>import</code> ile erisebilmemiz sağlanır. Paketler
+global kurulabilir ama çoğunlukla <code>virtualenv</code> benzeri sanal
+geliştirme ortamı içinde kurulurlar.</p>
+
+<p>Kurulum için bir <code>setup.py</code> gerekir. Mesela <code>modul1</code> adında paylaşmak
+istediğimiz bir kod var, kodlar <code>/home/vs/dizin/modul1</code> altında, bu
+dizinde en üst seviyede bir <code>setup.py</code> koyarız, </p>
+
+<pre><code>from setuptools import setup
+
+setup(name='modul1',
+      version='0.1',
+      description='Modul 1 cok onemli seyler yapar',
+      url='https://github.com/user/modul1',
+      author='Burak Bayramli',
+      author_email='dd@post.com',
+      license='MIT',
+      packages=['modul1'],
+      install_requires=['dateutil'],
+      zip_safe=False)
+</code></pre>
+
+<p>olabilir. </p>
+
+<p>Not: Paketleme servisinin isimleme yöntemi sebebiyle kodlarımızın
+<code>modul1</code> altında bir <code>modul1</code> alt dizini içinde olması lazım.</p>
+
+<p>Bu altdizin içinde mutlaka bir <code>__init__.py</code> dosyası gerekli, içinde
+en basit kullanım için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">.modul1</span> <span class="kn">import</span> <span class="o">*</span>
+</code></pre>
+</div>
+
+<p>olmalı. Bu sayede <code>import modul1</code> deyince <code>__init__.py</code> yükleniyor,
+yüklenen bu dosya da diğer kod dosyalarımızı yükleyip kullanıma
+açıyor. Böylece mesela <code>modul1/modul1</code> altında <code>source.py</code> diye bir
+dosya varsa, onun içinde de <code>def callme()</code> gibi bir fonksiyon varsa,
+üstteki tanım sayesinde <code>modul1.callme()</code> çağrısı artık yapılabilir.</p>
+
+<p>Şimdi en üst dizinde iken <code>python setup.py install</code> ile kurulum
+gerçekleştirebiliriz.</p>
+
+<p><code>install_requires</code> seçeneğine verilen liste install sırasında <code>pip</code> ile
+otomatik kurulacak ek programların listesidir. Üstteki örnekte
+<code>dateutil</code> adlı dış Python paketi kurulacaktır.</p>
+
+<p>Eğer <code>setup.py develop</code> dersek belli bazı sembolik bağlantılar
+sayesinde <code>modul1</code> geliştirme dizininde yaptığımız değişiklikler direk
+kurulu kütüphane üzerinde etki yaratır. Bu geliştirme (develop) için
+çok faydalı.</p>
+
+<p>Eğer global ortamdaysak `install`` çağrısı global, sanal ortamda isek
+sanal ortama kurulum yapar. Sanal ortam hakkındaki virtualenv yaziları
+[2, 3].</p>
+
+<p>Eğer paket içine veri dosyaları da eklemek istiyorsak, <code>setup.py</code> içinde</p>
+
+<pre><code>    include_package_data=True,
+    package_data={
+        "": ["*.zip","*.csv"]
+    },
+</code></pre>
+
+<p>eki yapabiliriz. Bu durumda <code>modul1/modul1</code> altındaki tüm belirtilen
+sonekli dosyalar toparlanıp pakete dahil edilecektir. <code>setup.py install</code>
+sonrası, mesela benim <code>/home/burak/Documents/env3</code> sanal geliştirme
+ortamım için kurulum</p>
+
+<pre><code>/home/burak/Documents/env3/lib/python3.6/site-packages/modul1-0.1--py3.6.egg
+</code></pre>
+
+<p>dizini altına gitti, oraya baktım, veri dosyaları oraya koyulmuştu. </p>
+
+<p>Tabii dikkat, bir sorun daha var, paketlenen veriye kod nasıl
+erişecek? Bir çözüm işleyen kod dosyasının adresinin kod içinde,</p>
+
+<pre><code>data_dir = os.path.dirname(__file__)
+</code></pre>
+
+<p>ile alınması, ve kod içinde tüm veri erişimlerini mesela <code>veri.zip</code>
+için <code>data_dir + "/veri.zip"</code> olarak değiştirmek. Ibare <code>__file__</code> o
+anda içinde olunan dosyanın tüm adresidir, onun baz dizinini alıp veri
+dosya erişimini ona göre ayarlıyoruz.</p>
+
+<p>PyPi'da Paket Yayinlama, Pip Hazırlığı</p>
+
+<p>Bildiğimiz gibi Python dosyalarının <code>pip</code> komutu ile kurulabilmesini
+sağlayan bir altyapı var. Bu yapı</p>
+
+<p>https://pypi.org/</p>
+
+<p>adresinde, kodumuzu herkesin kullanımına açmak için oraya da
+gönderebiliriz [1]. Eğer <code>setup.py</code> kurulumu tam yapılmışsa,
+<code>python setup.py sdist bdist_wheel</code> ile PyPi için gerekli dosyaları da üretmek
+mümkün, bu dosyalar <code>dist</code> dizini altında konuluyor. Dikkat, önce
+<code>python install</code> komutu işletin, sonra üsttekini, <code>dist</code> altında üç
+tane dosya lazım, <code>.egg</code>, <code>.zip</code> ve <code>.whl</code>.</p>
+
+<p>Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  <code>twine</code> adlı
+araç gerekli, onu</p>
+
+<pre><code>pip install twine
+</code></pre>
+
+<p>ile kurabiliriz. Kurduktan sonra proje en üst dizininde</p>
+
+<pre><code>twine upload dist/*
+</code></pre>
+
+<p>işletiriz, sorulunca kullanıcı ve şifre girilir, ve kod PyPi sistemine transfer
+edilir. Artık</p>
+
+<p>https://pypi.org/project/modul1/</p>
+
+<p>adresinde projemizi görebiliriz. 'Release history' seçilince orada şimdiye
+kadar yayınladığımız tüm versiyonlar görülür. Bu versiyon numaraları <code>setup.py</code>
+içinde tanımladığımız <code>version</code> tanımını baz alıyor tabii. Versiyon konusundan
+devam edersek, eğer <code>setup.py</code> içindeki versiyonu değiştirip sistemi derleyip
+PyPi'a <code>twine</code> ile tekrar gönderirsek, yeni versiyon 'Release history' altında
+gözükecektir, kullanıcılar PyPi sayfasından ya da <code>pip install modul1==[versiyon]</code>
+ile o versiyonlardan herhangi birini kurabilirler.</p>
+
+<p>PyPi dokümantasyonu ile kolay entegre için güzel bir numara şu; nasıl olsa
+Github için bir <code>README.md</code> yazıyoruz, bir tane daha ayrı dosyayı PyPi için
+yaratmaya gerek yok, eğer <code>setup.py</code> içinde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">readme</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;README.md&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+
+<span class="n">setuptools</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span>
+  <span class="o">...</span>
+  <span class="n">long_description</span><span class="o">=</span><span class="n">readme</span><span class="p">,</span>
+  <span class="n">long_description_content_type</span><span class="o">=</span><span class="s2">&quot;text/markdown&quot;</span><span class="p">,</span>    
+  <span class="o">..</span>
+<span class="p">)</span>
+</code></pre>
+</div>
+
+<p>tanımlarsak, bu paketi gönderince <code>README.md</code> içinde olan belgeleme direk
+PyPİ sayfası olarak gözükecektir.</p>
+
+<p>Not</p>
+
+<p>PyPI'a versiyon arttırıp yeni kodu derleyip göndermeden önce kendi
+yerel kurulumuzda <code>lib/python../site-packages</code> gibi bir dizinde
+olacak, eski sürümün dizinini kendimiz silersek daha iyi olur.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://realpython.com/pypi-publish-python-package/#preparing-your-package-for-publication</p>
+
+<p>[2] [Virtualenv](../../2018/08/virtualenv-python-izole-sanal-calsma.html)</p>
+
+<p>[3] http://guide.python-distribute.org/creation.html</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

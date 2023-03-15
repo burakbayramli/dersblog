@@ -1,0 +1,323 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Tensorflow</h1>
+
+<p>Google'ın yazdığı ve açık yazılım haline getirdiği paket TF çoğunlukla
+yapay öğrenim bağlamında gündeme geliyor, fakat TF aslında genel
+kullanımı olan bir yazılım. TF bir sayısal hesap kütüphanesi, daha
+spesifik olarak, ona çizit olarak verilen hesapları yapabilen bir
+sayısal hesap paketi.</p>
+
+<p>TF ile hesap yapmak için hesabı temsil eden bir çizit kurulur, mesela
+f(x,y) = x^2 y + y + 2 için</p>
+
+<p><img src="tf_01.png" alt="" /></p>
+
+<p>Bu hesap ağacında görülen sayılar tek sayı olabilir, çok boyutlu
+vektör, matris, ya da çok boyutlu matris olabilir. Matematikte bu
+objelere genel olarak "tensor" ismi veriliyor, paketin ismi de buradan
+geliyor, tensorlar hesap çiziti içinde bir hesaptan diğerine
+"akıyorlar" (flow). Hesabı çizit olarak belirtmenin bazı avantajları
+var, en önemlisi çizit üzerinde direk otomatik türev alınabilir, bkz
+[4] yazısı, ve bu şekilde gradyan hesapları kolay bir şekilde
+yapılabiliyor. Bir diğeri çizitin paralelleştirme için doğal bir yapı
+olması; çiziti istediğimiz şekilde bölerek parçaları farklı
+mikroişlemci (CPU), ya da grafik işlemci (GPU) üzerinde paralel bir
+şekilde işletebiliriz, mesela üstteki f için f(3,4) hesabı,</p>
+
+<p><img src="tf_02.png" alt="" /></p>
+
+<p>şeklinde iki parçaya bölünebilir. 3 girilen soldaki parça kendi başına
+hesabını yaparken aynı anda 4 girilen diğer parça işlemine devam
+edebilir. Ayrıca Google TPU adı verilen tensor işlemci üniteleri üzerinden
+artık CPU, GPU yerine direk TF için optimize edilmiş yeni işlemciler
+üzerinden paralelizasyon yapılabiliyor.</p>
+
+<h3>Tensorflow 1</h3>
+
+<p>TF kodlaması nasıl olur? Üstteki örnek için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">tensorflow</span> <span class="k">as</span> <span class="nn">tf</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span>
+</code></pre>
+</div>
+
+<p>İçinde x,y,f düğümleri (node) olan bir çizit yaratıldı. Bu kadar!
+Fakat anlamamız gereken önemli bir nokta var, üstteki kodu işletince
+halen bir hesap yapmış olmuyoruz, sadece üzerinden hesabın
+yapılabileceği çizit yapısını yaratmış oluyoruz. Hesabın kendisi için
+bir TF oturumu (session) açmak lazım, bu oturum üzerinden değişkenler
+başlangıç değerlerlerine eşitlenir, ve sonra f hesabı
+tetiklenir. Esas hesap bu şekilde ortaya çıkar.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">initializer</span><span class="p">)</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">initializer</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>42
+</code></pre>
+
+<p>Eğer işimiz bitti ise ve kaynakların (bellek, işlemci gibi) geri
+dönüşümünü, serbest bırakılmasını istiyorsak oturumu kapatırız,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Kodlama açısından biraz daha temiz bir yol, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">x</span><span class="o">.</span><span class="n">initializer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">y</span><span class="o">.</span><span class="n">initializer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="nb">print</span> <span class="n">result</span>
+</code></pre>
+</div>
+
+<pre><code>42
+</code></pre>
+
+<p>\verb!with! kullanımı ile blok dışına çıkılınca kapatma işlemi otomatik
+olarak yapılıyor. Nihai hesap için \verb!eval! çağrısı yapıldığını gördük,
+bu çağrı aslında herhangi bir düğümün hesaplanmasını tetikleyebilir. Bu
+tetikleme sonrasında TF bir düğümün hangi diğer düğümlere bağlı olduğuna
+bakarak çizitte önce o düğümlerin hesabını yapacaktır, ve o çıktıları
+çizite göre birleştirerek nihai sonucu bulacaktır. Mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">5</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">3</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="s1">&#39;y =&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="s1">&#39;z =&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<pre><code>y = 10
+z = 15
+</code></pre>
+
+<p>TF otomatik olarak y'nin w'ye, onun da x'e bağlı olduğunu gördü, önce
+w'yi işletti, sonra y'yi, ve onu da z hesabı için kullandı. Dikkat, TF
+önbellekleme yapmaz, yani üstteki kod w,x hesabını iki kere
+yapar. Hesap çağrısı sonrası değişken değerleri muhafaza edilir (çünkü
+onlar çizitin parçası) fakat düğüm değerleri yokolur.</p>
+
+<p>TF bir anlamda numpy kütüphanesinin çizitli, çok işlemcili versiyonu olarak
+görülebilir. Bir numpy matrisi üzerinde yapılan pek çok işlem TF ile de
+yapılabilir. Mesela bir matrisin tümü, herhangi bir ekseni bazındaki toplam
+alttaki gibi alınabiliyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># y ekseni uzerinden toplam</span>
+<span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
+<span class="n">c2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># x ekseni uzerinden toplam</span>
+<span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>6.0
+[ 2.  2.  2.]
+[ 3.  3.]
+</code></pre>
+
+<p>Boyutları tekrar düzenlemek için <code>reshape</code> var, alışık olunan numpy
+versiyonu gibi işliyor. <code>-1</code> değerinin özel bir önemi var, sadece bir
+tane <code>-1</code> kullanılabilir, ve bu durumda o boyutta "ne olduğu önemli
+değil" mesajı verilmiş olur.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">x1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+
+<span class="n">x2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span>
+                 <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span>
+                 <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]])</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">res1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">res1</span><span class="p">)</span>
+    <span class="n">res2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">res2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>[[1 2 3]
+ [4 5 6]
+ [7 8 9]]
+[[1 1 1 2 2 2 3 3 3]
+ [4 4 4 5 5 5 6 6 6]]
+</code></pre>
+
+<p>Dışarıdan Okunan Veriyi Çizite Vermek</p>
+
+<p>Bunu yapmanın en basit yolu yer tutucu düğüm (placeholder node)
+kullanmak. Bu düğümler özel düğümler, hiç bir iş yapmıyorlar, içlerinde
+veri yok, sadece onlara dışarıdan verdiğimiz veriyi çizit içine taşıyorlar,
+yani çizitin akışına dahil ediyorlar. Eğer işleyiş anında onlara dışarıdan
+veri verilmezse TF bir hata mesajı verecektir.</p>
+
+<p>Yer tutucuları tanımlarken onların önceden tipini tanımlayabiliriz,
+şart degil ama bir büyüklük te tanımlanabilir, <code>None</code> ile burayı boş
+bırakmak ta mümkün. Şimdi yer tutucu <code>A</code> tanımlayalım, <code>B</code> ona bağlı
+olsun, sonra <code>B</code> değerini hesaplamak için <code>eval</code> çağrırken yer
+tutucunun içini o anda dolduralım, ve sonuca bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">5</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="nb">print</span>  <span class="n">B</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">A</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]})</span>
+</code></pre>
+</div>
+
+<pre><code>[[ 6.  7.  8.]]
+</code></pre>
+
+<p>Yer tutucular tipik olarak gradyan inişi ile optimizasyon sırasında
+eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
+çizite vermek için kullanılır.</p>
+
+<h3>Tensorflow 2</h3>
+
+<p>Yeni versiyonda bazı değişiklikler var, mesela sürekli <code>Session</code>
+kullanımı gerekli değil,</p>
+
+<pre><code>import tensorflow as tf
+print("TensorFlow version:", tf.__version__)
+</code></pre>
+
+<pre><code>TensorFlow version: 2.9.2
+</code></pre>
+
+<p>Basit bir çarpma örneği,</p>
+
+<pre><code>a = tf.constant([1, 2, 3, 4, 5, 6], shape=[2, 3])
+b = tf.constant([7, 8, 9, 10, 11, 12], shape=[3, 2])
+c = tf.matmul(a, b)
+print (c)
+</code></pre>
+
+<pre><code>&lt;tf.Tensor: shape=(2, 2), dtype=int32, numpy=
+array([[ 58,  64],
+       [139, 154]], dtype=int32)&gt;
+</code></pre>
+
+<p>Hız Kontrolü</p>
+
+<p>Tensorflow basit matris çarpımlarını ne kadar hızlandırıyor? Kontrol edelim,</p>
+
+<pre><code>import numpy as np
+N = 3000
+A = np.random.randn(N,N)
+B = np.random.randn(N,N)
+
+from timeit import default_timer as timer
+from datetime import timedelta
+
+start = timer()
+C = np.dot(A,B)
+end = timer()
+print('elapsed time', timedelta(seconds=end-start))
+</code></pre>
+
+<pre><code>elapsed time 0:00:01.292723
+</code></pre>
+
+<p>Şimdi TF ile çarpım,</p>
+
+<pre><code>TA = tf.random.normal([N,N], 0, 1, tf.float32)
+TB = tf.random.normal([N,N], 0, 1, tf.float32)
+
+start = timer()
+TC = tf.matmul(TA, TB)
+end = timer()
+print('elapsed time', timedelta(seconds=end-start))
+</code></pre>
+
+<pre><code>elapsed time 0:00:00.043483
+</code></pre>
+
+<p>Kod Google Collab üzerinde işletildi, ve bu örnek için çarpım 30 kat
+daha hızlı yapıldı. Yanlız GPU'ya veri kopyalama durumuna dikkat, eğer
+Numpy matrisleri A, B'yi alıp Tensorflow'a <code>constant</code> ile verseydim,
+TF çarpmımı ilk seferinde daha hızlı olmazdı (2'inci, 3'üncü hızlı,
+herhalde önbellekleme var) çünkü kopyalarken zaman kaybetmiş
+olurdum. Fonksiyon <code>tf.random.normal</code> ile matrisi GPU üzerinde
+yaratılmasını zorlamış olduğumuz için, GPU çarpım işlem farkı hemen
+gözüküyor.</p>
+
+<h3>Kurulum</h3>
+
+<p>Tensorflow kullanımı ve gelişimi GPU [1] gelişimi ile kol kola
+gitmiştir, zannederim bu sebeple CPU üzerinde kurulum gözardı edilmeye
+başlandı. Bazı versiyonlar ve işletim sistemlerinde CPU kullanımı
+yapılamıyor. Bu sebeple Google Collab [2] denenebilir, İnternet
+sayfası üzerinden kodlama yani, ya da spesifik bir GPU donanımı
+alınabilir, mesela NVidia Jetson [3]. Jetson üzerinde kurulum o yazıda
+var.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [GPU](../../2020/12/gpu-cuda-pycuda.html)</p>
+
+<p>[2] [Google Collab](../../2018/11/gpu-tpu-saglayan-not-defter-ortami.html).</p>
+
+<p>[3] [Jetson Nano](../../2020/12/nvidia-jetson-nano-2GB-wifi.html)</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

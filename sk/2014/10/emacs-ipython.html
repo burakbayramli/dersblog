@@ -1,0 +1,166 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>emacs-ipython</h1>
+
+<p>Emacs'te LaTeX modundan direk iPython kodu isletip sonucu metin /
+grafik olarak alip yine LaTeX icinde gosterebilen Emacs eklentisi
+emacs-ipython'u ayri bir proje olarak yayinladik. Indirin ve
+icindeki ipython-md.py ve ipython-tex.py dosyalarini bir yere koyun.</p>
+
+<p>Kurmak icin once bir sanal ortam yaratin, Python 2, 3 farketmez.</p>
+
+<p>pip ile mock, ipython, matplotlib kurulmali.</p>
+
+<p>Matplotlib icin ~/.config/matplotlib/matplotlibrc icinde</p>
+
+<p>backend : TxAgg</p>
+
+<p>ya da agg, ya da GTKAgg ya da TkAgg yazmak gerekebilir.</p>
+
+<p>http://sayilarvekuramlar.blogspot.com/2018/08/virtualenv-python-izole-sanal-calsma.html</p>
+
+<p>Ortama source ile girin. Simdi Pymacs alin</p>
+
+<p>https://github.com/pinard/Pymacs</p>
+
+<p>emacs-ipython indirin, acin,</p>
+
+<p>Acip python setup.py install ile kurun</p>
+
+<p>emacs.el icinde</p>
+
+<pre><code>(load-file "[PYMACS DIZIN]/pymacs.el")
+
+(require 'tempo)
+
+
+(autoload 'pymacs-apply "pymacs")
+
+(autoload 'pymacs-call "pymacs")
+
+(autoload 'pymacs-eval "pymacs" nil t)
+
+(autoload 'pymacs-exec "pymacs" nil t)
+
+(autoload 'pymacs-load "pymacs" nil t)
+
+
+
+
+
+(defun reload-pymacs()
+
+  (interactive)
+
+  (if (buffer-live-p (get-buffer "*Pymacs*" ))
+
+      (kill-buffer (get-buffer "*Pymacs*")))
+
+  (message (buffer-file-name (current-buffer)))
+
+  ;;
+
+  ;; load tex or md mode based on the extension
+
+  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "tex")
+
+      (progn 
+
+ (pymacs-load "[DIZIN]/ipython-tex")
+
+ (global-set-key "\M-," 'ipython-tex-run-py-code)
+
+ (global-set-key [f5] 'ipython-tex-complete-py)
+
+ (tempo-define-template 
+
+  "tex-listings-python" 
+
+  '("\\begin{minted}[fontsize=\\footnotesize]{python}\n"
+
+    (s)
+
+    "\n\\end{minted}\n"
+
+    )
+
+  "") 
+
+ ))
+
+  (if (equal (file-name-extension (buffer-file-name (current-buffer))) "md")
+
+      (progn 
+
+ (pymacs-load "[DIZIN]/ipython-md")
+
+ (global-set-key "\M-," 'ipython-md-run-py-code)
+
+ (global-set-key [f5] 'ipython-md-complete-py)
+
+ (tempo-define-template 
+
+  "tex-listings-python" 
+
+  '("```python\n"
+
+    (s)
+
+    "\n```\n"
+
+    )
+
+  "") 
+
+ ))
+
+  )
+
+</code></pre>
+
+<p>Emacs'i source ile sanal ortama girdikten sonra baslatin cunku sadece
+bu sekilde artik dogru python islemcisi bulunabilir.</p>
+
+<p>Artik herhangi bir md, tex dosyasinda M-x reload-pymacs deyince
+eklenti yuklenecektir. </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,259 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>GraphHopper: Pür Java ile Haritada Yol Bulmak</h1>
+
+<p>Yol bulmak için OSRM projesinden bahsettik. OSRM çok hızlı çalışır,
+sonuçları kullanışlı, fakat C++ ile yazılmış, eğer pür Java bazlı bir
+çözüm istiyorsak (ki böylece kodları mesela Android'e rahatça
+koyabilelim) o zaman Graphhopper projesi var. GH ismi bir kelime
+oyunu, grasshopper bilinebileceği gibi çekirge demek, graph (yani
+çizit) hopper "bir çizitte sağ sola zıplayan" bir görüntü zihinde
+canlandırıyor, ki bu görüntü pek gerçekten uzak değil, haritada yol
+bulma algoritmaları hakikaten bilgisayar bilimdeki çizit yapısını
+temel alıyorlar. Kod şurada,</p>
+
+<p>https://github.com/graphhopper/graphhopper</p>
+
+<p>Kodun derleme sistemi gradle / Maven bazlı, fakat o kadar çetrefil
+derleme işlemlerine gerek yok, önce GH içinden gerekli java kodlarını
+çıkartalım, sonra çok baz bir derleme sistemi ile ve ek birkaç jar ile
+derlemeyi kendimiz dışarıda halledelim. Alternatif bir proje / dizin
+yaratılır, altında lib, src, resources dizinleri olur. GH indirilir,
+şimdi alternatif dizin altında</p>
+
+<pre><code>cp -r [GH]/core/src/main/java/* src/
+cp -r [GH]/core/src/main/resources/* resources
+cp -r [GH]/reader-osm/src/main/java/* src/
+</code></pre>
+
+<p>ile sadece gerekli Java kodlarını alırız. Şimdi gereken jarları alalım, </p>
+
+<p>https://mvnrepository.com/artifact/com.carrotsearch/hppc/0.7.2</p>
+
+<p>https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-annotations/2.8.8</p>
+
+<p>https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind/2.8.8</p>
+
+<p>https://mvnrepository.com/artifact/com.vividsolutions/jts/1.13</p>
+
+<p>https://mvnrepository.com/artifact/org.openstreetmap.osmosis/osmosis-osm-binary/0.45</p>
+
+<p>https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java/3.3.1</p>
+
+<p>https://mvnrepository.com/artifact/org.slf4j/slf4j-api/1.7.21</p>
+
+<p>https://mvnrepository.com/artifact/javax.xml.stream/stax-api/1.0-2</p>
+
+<p>https://mvnrepository.com/artifact/org.apache.xmlgraphics/xmlgraphics-commons/1.4</p>
+
+<p>Bu jarları nasıl bulduk? Ya derlerken olmayan jar için gelen hata
+mesajlara bakıp bu class ismini "vs.vs.Class maven jar" ile Google'da
+ararız, ya da [GH]/pom.xml ya da hangi pom.xml var ise versiyon
+sayısını oradan buluruz ve yine Google'da ararız. Mesela
+jackson-databind lazım, "jackson-databind maven jar" bize gerekli
+bağlantıyı verir. Zaten görüldüğü gibi bağlantılarda belli bir kalıp
+da var, class ismi ve versiyon ile bağlantı tahmin de edilebilir.</p>
+
+<p>Jar'lar lib altına gidiyor tabii. Derleme için Ant build.xml</p>
+
+<pre><code>&lt;project name="gh" default="dist" basedir="."&gt;
+  &lt;property name="src" location="src"/&gt;
+  &lt;property name="build" location="build"/&gt;
+  &lt;property name="dist" location="bin"/&gt;
+  &lt;target name="init"&gt;
+    &lt;tstamp/&gt;
+    &lt;mkdir dir="${build}"/&gt;
+  &lt;/target&gt;
+  &lt;path id="build.classpath"&gt;
+    &lt;fileset dir="lib"&gt;
+      &lt;include name="**/*.jar"/&gt;
+    &lt;/fileset&gt;
+  &lt;/path&gt;
+  &lt;path id="compile.classpath"&gt;
+    &lt;pathelement location ="${build}"/&gt;
+    &lt;fileset dir="lib"&gt;
+      &lt;include name="**/*.jar"/&gt;
+    &lt;/fileset&gt;
+  &lt;/path&gt;
+  &lt;target name="compile" depends="init"
+        description="compile the source"&gt;
+    &lt;javac destdir="${build}"&gt;
+      &lt;src path="${src}"/&gt;
+    &lt;classpath refid="build.classpath"/&gt;
+  &lt;/javac&gt;
+  &lt;/target&gt;
+  &lt;target name="resources"&gt;
+    &lt;copy todir="${build}" includeEmptyDirs="no"&gt;
+      &lt;fileset dir="resources"&gt;
+        &lt;patternset&gt;
+          &lt;include name="**/*.*"/&gt;
+        &lt;/patternset&gt;
+      &lt;/fileset&gt;
+    &lt;/copy&gt;
+  &lt;/target&gt;
+  &lt;target name="dist" depends="compile" description="generate the distribution"&gt;
+    &lt;mkdir dir="${dist}"/&gt;
+    &lt;jar jarfile="${dist}/ghopper.jar" basedir="${build}"/&gt;
+  &lt;/target&gt;
+    &lt;target name="test" depends="compile"&gt;
+      &lt;java fork="yes" classname="Test" failonerror="true"&gt;
+        &lt;classpath refid="compile.classpath"/&gt;
+      &lt;/java&gt;
+  &lt;/target&gt;
+  &lt;target name="clean"
+        description="clean up"&gt;
+    &lt;delete dir="${build}"/&gt;
+    &lt;delete dir="${dist}"/&gt;
+  &lt;/target&gt;
+&lt;/project&gt;
+</code></pre>
+
+<p>Bu kadar, ant ile derleriz. Kodların işleyişi için OSM harita
+dosyaları gerekli, bu dosyalar daha önce de bahsedilen </p>
+
+<p>http://download.geofabrik.de</p>
+
+<p>sitesinden alınabiliyor. Mesela Türkiye için </p>
+
+<p>http://download.geofabrik.de/europe/turkey-latest.osm.bz2</p>
+
+<p>Bu dosyayı bunzip2 ile açıp gzip ile tekrar zipleyelim, çünkü GH .gz
+dosyası istiyor. Ya da .osm dosyası olduğu gibi bırakılır, GH onu da
+işler.</p>
+
+<p>GH sürekli direk .gz dosyasını da kullanmaz bu arada, onu işleyip bazı
+ara dosyalar üretmesi lazım (daha önce bahsedilen çizit dosyaları
+bunlar, GH OSM formatını alıp daha hızlı işleyiş için çizit yapısına
+geçiyor). Ara dosyaların üretilmesi ve yol bulma testi çin src altında
+Test.java yaratalım, </p>
+
+<pre><code>import com.graphhopper.*;
+
+import com.graphhopper.routing.util.EncodingManager;
+
+import com.graphhopper.reader.osm.GraphHopperOSM;
+
+
+
+public class Test {
+
+
+
+    static String tmpGraphFile = "/tmp/gh";
+
+
+
+    public static void createGraph() {
+
+        String fin = "[DB DIZINI]/turkey-latest.osm.gz";
+
+        GraphHopper gh = new GraphHopperOSM().setStoreOnFlush(true).
+
+            setEncodingManager(new EncodingManager("foot")).setCHEnabled(false).
+
+            setGraphHopperLocation(tmpGraphFile).
+
+            setDataReaderFile(fin);
+
+        gh.importOrLoad();
+
+    }
+
+
+
+    public static void testPath() {
+
+        GraphHopper gh = new GraphHopperOSM().
+
+            setEncodingManager(new EncodingManager("foot")).setCHEnabled(false).
+
+            setGraphHopperLocation(tmpGraphFile);
+
+        gh.importOrLoad();
+
+        GHResponse res = gh.route(new GHRequest(40.987659, 29.036428, 
+                                                40.992186, 29.039228).
+                                 setVehicle("foot"));
+
+        System.out.println(""+res );
+
+    }
+
+
+
+    public static void main(String[] args) throws Exception{
+
+        createGraph();
+
+        testPath();
+
+        testPath();
+
+    }
+
+}
+</code></pre>
+
+<p>Isletmek icin ant test. Araba tarifleri için setEncodingManager ve
+setVehicle çağrılarında car kullanılır. Kodda createGraph'ın sadece
+bir kez çağırılması yeterli, bu çağrı /tmp/gh altında gerekli çizit
+dosyalarını yaratır (çağrı birkaç dakika sürebilir), diğer tüm yol
+bulma çağrıları bundan sonra çizit dosyalarını kullanıp hızlı şekilde
+cevabı üretir. Artık elimizde pür Java bazlı, çok hızlı işleyen,
+mobilde İnternet bağlantısız çalışabilecek harita tarif kodları
+var. Üstteki kodların kendisi fazla yer tutmuyor zaten (biraz da bunun
+için daha büyük GH içinden sadece gerekli java ve jar dosyalarını
+çekip çıkardık, az sayıda java ve 10 tane jar dosyasi ile elimize yol
+tarifi yapabilen çekirdek bir kod geçti), çizit dosyaları ise bir
+şehrin büyüklüğüne göre 10-20 MB arasında olur.</p>
+
+<p>Kodun teorik, algoritmik yapısını merak edenler için: kısa yol
+algoritmaları çoğunlukla Dijkstra algoritmasını kullanırlar
+(Dijkstra'yı bilgisayar bilim notlarında isledik), OSRM ve Graphhopper
+da böyle yapıyor, yanlız Dijkstra yaklaşımına bazı ekler yapıyorlar,
+yaklaşımın adı "kısalan hiyerarşiler (contracting hierarchies)"; yol
+ağ yapısına bazı noktalarda haritaya dışarıdan kısa yol / zıplamalar
+ekliyorlar, böylece Dijkstra daha hızlı, verimli işliyor.</p>
+
+<p>Dil, derleme hakkında bazı bilgiler:  </p>
+
+        </section>          
+      </div>
+    </body>
+</html>

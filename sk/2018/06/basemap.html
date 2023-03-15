@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>basemap</h1>
+
+<p>Kurmak icin bazi paketlerin birbiriyle muhakkak uymasi gerekiyor. Bu
+uyumluluk altta,</p>
+
+<pre><code>pip install GEOS
+pip install matplotlib==1.5.3
+pip install https://github.com/matplotlib/basemap/archive/v1.0.7rel.tar.gz
+pip install pillow
+</code></pre>
+
+<p>Termux icin usttekilerden once bir de</p>
+
+<pre><code>pkg install libxml2-dev
+
+pkg install libxslt-dev
+</code></pre>
+
+<p>gerekli.</p>
+
+<p>Ornek kod</p>
+
+<pre><code>import pandas as pd
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+from mpl_toolkits.basemap import Basemap
+
+
+
+fig = plt.figure(figsize=(8, 8))
+
+m = Basemap(projection='lcc', resolution='h',
+
+            width=1E6, height=1.2E6, 
+
+            lat_0=45, lon_0=-100,)
+
+m.shadedrelief()
+
+m.drawcoastlines(color='gray')
+
+m.drawcountries(color='gray')
+
+m.drawstates(color='gray')
+
+
+
+x, y = m(-122.3, 47.6)
+
+plt.plot(x, y, 'ok', markersize=5)
+
+plt.text(x, y, ' Seattle', fontsize=12);
+
+plt.show()
+</code></pre>
+
+<p>Daha onceki bir yazida basemap kurulumu icin sunu soylemistik:
+once basemap paketini de indirin. Basemap acildiginda geos-... alt
+dizinine girin, ve ./configure, make, sudo make install ile bu paketi
+kurun, sonra bir uste cikip basemap python setup.py install yapin.</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Mahout, Jython ve Yapay Ogrenim</h1>
+
+<p>Bir diger unlu yapay ogrenim kutuphanesi Mahout. Kurmak icin su
+sayfanin basindaki hareketler takip edilebilir</p>
+
+<pre><code>$ apt-get install maven2
+
+$ cd /opt
+$ svn co http://svn.apache.org/repos/asf/mahout/trunk
+$ mv trunk mahout_trunk
+$ ln -s mahout_trunk/ mahout
+$ cd mahout$ mvn install
+</code></pre>
+
+<p>Burada Maven denen ve Java dunyasinda pek sevilmeyen bir program
+kullaniliyor. Maven, Ant yerine / ustune ona bir paket sistemi
+kazandiran bir sistem, mvn install sirasinda bir suru paketin
+Internet'ten indirildigini goreceksiniz. Yani Maven paket
+baglantilarini takip ederek (guya) bizi bir suru dertten kurtariyor,
+gereken her seyi indiriyor, fakat goreceginiz gibi mvn install asamasi
+saatler surebilir. Neyse, Mahout kullanabilmek icin bu aci ilaci icmek
+gerekecek (!), ve bundan sonra Maven bir daha da kullanilmayacak.</p>
+
+<p>Kurulus bitinca $HOME dizini altinda bir .m2 dizini olusturulur. Maven
+tum gerekli jar dosyalarini buraya koymustur. Biz bu jar dosyalarini
+Jython'a disaridan kullandirtacagiz. Bunun icin ufak bir bash script
+numarasi yeterli. Dizin .m2 seviyesinden baslayarak ozyineli
+(recursive) olarak asagi ineriz, ve onumuze cikan her jar dosyasini
+alip iki nokta ustuste ile ayirarak CLASSPATH'e ekleriz. Bu noktadan
+sonra Jython gerekli tum jar'lara sahip olacaktir.</p>
+
+<pre><code>CLASSPATH=`find $HOME/.m2/ -name *.jar`export CLASSPATH=`echo $CLASSPATH | sed 's/jar\s/jar\:/g'`jython test.py
+</code></pre>
+
+<p>Ornek bir Jython Mahout programini altta bulduk</p>
+
+<p>https://gist.github.com/2878249</p>
+
+<p>Yanliz biz bu programda bazi degisiklikler yaptik, ustteki kod icinde
+CLASSPATH Python programi "icinde" olusturuluyor, bu pek temiz degil,
+biz bu isleri bash script ortaminda yaptik, boylece Python kodu sadece
+Mahout ile ilgili isler yapabiliyor. Bizim versiyon test.py altta</p>
+
+<pre><code>from datetime import datetime
+from org.apache.mahout.common import RandomUtils
+from org.apache.mahout.cf.taste.common
+import TasteException
+from org.apache.mahout.cf.taste.eval import *
+from org.apache.mahout.cf.taste.impl.eval import *
+from org.apache.mahout.cf.taste.impl.model.file import *
+from org.apache.mahout.cf.taste.impl.neighborhood import *
+from org.apache.mahout.cf.taste.impl.recommender import GenericUserBasedRecommender
+from org.apache.mahout.cf.taste.impl.recommender.slopeone
+import SlopeOneRecommender
+from org.apache.mahout.cf.taste.impl.similarity import *
+from org.apache.mahout.cf.taste.model import *
+from org.apache.mahout.cf.taste.neighborhood import *
+from org.apache.mahout.cf.taste.recommender import *
+from org.apache.mahout.cf.taste.similarity import *
+from java.io import *from java.util import *
+class GenericRecommenderBuilder(RecommenderBuilder):
+    def __init__(self):
+        pass
+    def buildRecommender(self, model):
+        similarity = PearsonCorrelationSimilarity(model)
+        neighborhood = NearestNUserNeighborhood(2, similarity, model)
+        return GenericUserBasedRecommender(model, neighborhood, similarity)
+
+class SlopeOneRecommenderBuilder(RecommenderBuilder):
+    def __init__(self):
+        pass    def buildRecommender(self, model):
+        similarity = PearsonCorrelationSimilarity(model)
+        neighborhood = NearestNUserNeighborhood(2, similarity, model)
+        return SlopeOneRecommender(model)def main():
+    RandomUtils.useTestSeed()    model = FileDataModel(File("intro.csv"))
+    builder = GenericRecommenderBuilder()
+    print 'Starting run at %s' % datetime.now()
+    for builder in [GenericRecommenderBuilder(), SlopeOneRecommenderBuilder()]:
+        print 'Starting evaluations of recommender created using %s at %s...' % (builder, datetime.now())
+        for evaluator in [AverageAbsoluteDifferenceRecommenderEvaluator(), RMSRecommenderEvaluator()]:
+            print 'Evaluating recommender using %s at %s...' % (evaluator, datetime.now())
+            score = evaluator.evaluate(builder, None, model, 0.7, 1.0)
+            print 'Score evaluated by %s=%.2f' % (evaluator, score)
+    print 'Ending run at %s' % datetime.now()
+
+if __name__ == '__main__':
+    main()
+</code></pre>
+
+<p>Bu kod intro.csv adli bir dosyaya ihtiyac duyar. Bu ornek veri</p>
+
+<p>1,101,5.01,102,3.01,103,2.52,101,2.02,102,2.52,103,5.02,104,2.03,101,2.53,104,4.03,105,4.53,107,5.04,101,5.04,103,3.04,104,4.54,106,4.05,101,4.05,102,3.05,103,2.05,104,4.05,105,3.55,106,4.0</p>
+
+        </section>          
+      </div>
+    </body>
+</html>

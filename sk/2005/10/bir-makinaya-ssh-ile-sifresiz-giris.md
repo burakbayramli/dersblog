@@ -59,9 +59,9 @@ Sorulan sorular için hiç cevap girmeden ENTER’e basarak geçin. Bu
 bittikten sonra, `$HOME/.ssh/` dizininiz icinde 2 dosya
 göreceksiniz. Bu dosyalar id_¬ rsa.pub ve id_rsa dosyaları
 olacaktır. HOME değişkeninin nerede olduğunu ko- mut satırından
-Unix/Cygwin’de echo \$HOME ile öğrenebilirsiniz. Windows’da dosyaların
-nereye yazıldığı OpenSSH tarafından zaten ssh-keygen sonunda size
-bildirilecektir.
+Unix/Cygwin’de echo `$HOME` ile öğrenebilirsiniz. Windows’da
+dosyaların nereye yazıldığı OpenSSH tarafından zaten ssh-keygen
+sonunda size bildirilecektir.
 
 Biraz önce üretilen dosyalardan `id_rsa`, gizli anahtarınızdır. Dosya
 `id_rsa.pub` ise açık anahtarınızdır. Şimdi, `id_rsa.pub` kayıdındaki
@@ -129,15 +129,15 @@ $ ssh-keygen -t rsa
 
 Sorulan sorular için hiç cevap girmeden ENTER'e basarak geçin.
 
-Bu bittikten sonra, $HOME/.ssh/ dizini icinde 2 dosya
-göreceksiniz. id_rsa.pub ve id_rsa. ($HOME'un nerede olduğunu
-Cygwin'den ya da Linux komut satırından echo $HOME ile
+Bu bittikten sonra, `$HOME/.ssh` dizini icinde 2 dosya
+göreceksiniz. id_rsa.pub ve id_rsa. (`$HOME`'un nerede olduğunu
+Cygwin'den ya da Linux komut satırından echo `$HOME` ile
 öğrenebilirsiniz). Bu kayıtlardan id_rsa isimli olan sizin gizli
-anahtarınızdır, id_rsa.pub ise açık anahtarınızdır. Şimdi, id_rsa.pub
+anahtarınızdır, id_rsa.pub ise açık anahtarınızdır. Şimdi, `id_rsa.pub`
 kayıdını, erişeceğiniz bilgisayara (meselâ CVS havuzunu tutan
-bilgisayara) scp ya da ftp ile gönderin (scp kullanilinca simdilik
+bilgisayara) `scp` ya da `ftp` ile gönderin (scp kullanilinca simdilik
 sifre sorulacak). O bilgisayardaki kullanıcı adınız altında girin, ve
-$HOME/.ssh/ dizini altına id_rsa.pub kayıdını bırakın.
+`$HOME/.ssh` dizini altına `id_rsa.pub` kayıdını bırakın.
 
 Sonra, sunucu sisteminde sunu calıştırın:
 

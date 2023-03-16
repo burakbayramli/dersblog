@@ -103,7 +103,7 @@ yazilabilir, gidisat o yonde.
 
 Eger Ubuntu icinde masaustunde mesela dizinler arasinda gorsel olarak
 gezinirken icinde oldugunuz dizinde isleyen bir not defter servisi
-baslatmak istersek, $HOME altinda .gnome2/nautilus-scripts dizinine
+baslatmak istersek, `$HOME` altinda `.gnome2/nautilus-scripts` dizinine
 gidip mesela notebook-server adinda bir dosya yaratiriz, bu dosya
 icine
 

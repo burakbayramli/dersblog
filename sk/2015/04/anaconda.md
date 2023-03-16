@@ -35,17 +35,17 @@ Anaconda su anda Windows uzerinde dogru durust veri analiz Python
 paketlerini kurabilmek icin neredeyse tek cozum.
 
 Anaconda'nin degisik bazi ozellikleri var, mesela bir python isler
-programi kendi $HOME dizininiz altinda kurulacak
-($HOME/anaconda/bin/python) ve artik olagan Python yorumcunuz bu
-olacak (cunku $PATH'inizde bu dizin en one eklenecek) ve tum Python
+programi kendi `$HOME` dizininiz altinda kurulacak
+(`$HOME/anaconda/bin/python`) ve artik olagan Python yorumcunuz bu
+olacak (cunku `$PATH`'inizde bu dizin en one eklenecek) ve tum Python
 paketleri de sizin kendi ev dizininize gidecek,
-$HOME/anaconda/lib/python2.7 altinda..
+`$HOME/anaconda/lib/python2.7` altinda..
 
 Bu sebeple artik Python paket kuruluslari icin sudo kullanimina gerek
 kalmiyor, kisisel kullanim icin conda install yeterli.
 
 Ayrica pip ile paket kurmak isterseniz, Conda'nin pip'i ile bu isi
-yapmaniz lazim, yani $HOME/anaconda/bin/pip ile. Ayni sekilde, sudo
+yapmaniz lazim, yani `$HOME/anaconda/bin/pip` ile. Ayni sekilde, sudo
 pip degil pip.
 
 Ubuntu

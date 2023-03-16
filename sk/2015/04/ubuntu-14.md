@@ -67,7 +67,7 @@ Sag ust kosedeki kisayollar
 
 Eger gnome panelden ikon silmek istiyorsak, Alt Super + sag mouse
 tiklamasi yapilir ve "Remove from Panel" secilir. Ya da
-$HOME/.config/gnome-panel altinda ikona tekabul eden dosya silinir.
+`$HOME/.config/gnome-panel` altinda ikona tekabul eden dosya silinir.
 
 Hata Mesajlari
 

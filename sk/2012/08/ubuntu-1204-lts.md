@@ -58,7 +58,7 @@ sudo apt-get remove indicator-messages
 
 Eger gnome panelden ikon silmek istiyorsak, Alt Super + sag mouse
 tiklamasi yapilir ve "Remove from Panel" secilir. Ya da
-$HOME/.config/gnome-panel altinda ikona tekabul eden dosya silinir.
+`$HOME/.config/gnome-panel` altinda ikona tekabul eden dosya silinir.
 
 Emacs uzerinde Alt-Space cok kullaniyoruz, fakat bu kombinasyon Ubuntu
 tarafindan "kapilmis". Bu kombinasyonu Ubuntu seviyesinde iptal etmek

@@ -15,8 +15,8 @@ gizli anahtarımı kimseyle paylaşmam, bu sebeple bu mesajı benden başka
 kimse okuyamaz.
 
 Bu mesajlaşma tekniğini ssh altyapısı üzerinden nasıl kullanırız?
-Çünkü programcılar çoğunlukla ssh kurmuş olurlar, ssh-keygen -t rsa
-ile $HOME/.ssh altında açık / kapalı anahtarları vardır (id_rsa.pub ve
+Çünkü programcılar çoğunlukla ssh kurmuş olurlar, `ssh-keygen -t rsa`
+ile `$HOME/.ssh` altında açık / kapalı anahtarları vardır (`id_rsa.pub` ve
 id_rsa dosyaları) başka şeylerle uğraşmasak olmaz mı?
 
 Bu mümkün. Önce id_rsa bir pem formatına çevirilmeli,

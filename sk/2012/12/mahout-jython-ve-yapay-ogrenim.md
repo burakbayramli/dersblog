@@ -22,7 +22,7 @@ gereken her seyi indiriyor, fakat goreceginiz gibi mvn install asamasi
 saatler surebilir. Neyse, Mahout kullanabilmek icin bu aci ilaci icmek
 gerekecek (!), ve bundan sonra Maven bir daha da kullanilmayacak.
 
-Kurulus bitinca $HOME dizini altinda bir .m2 dizini olusturulur. Maven
+Kurulus bitinca `$HOME` dizini altinda bir `.m2` dizini olusturulur. Maven
 tum gerekli jar dosyalarini buraya koymustur. Biz bu jar dosyalarini
 Jython'a disaridan kullandirtacagiz. Bunun icin ufak bir bash script
 numarasi yeterli. Dizin .m2 seviyesinden baslayarak ozyineli

@@ -84,7 +84,7 @@ Masaustu'nde Dizin Kisayollari
 Eger Gnome Flashback ile calismaya mecbur kalindiysa, dosya gosterme
 sistemi olagan durumda nemo olmayabilir. Fakat nemo guzel program,
 masaustu kisayollarindan nemo ile dizin gostermek icin masaustunde
-mesela $HOME/Desktop/Downloads.desktop adli bir dosya yaratilir, ve
+mesela `$HOME/Desktop/Downloads.desktop` adli bir dosya yaratilir, ve
 icine sunlar konur,
 
 ```
@@ -98,7 +98,7 @@ Icon=/usr/share/icons/Win7-icons/filesystems/folder.png
 Terminal=false
 ```
 
-Bu dosya $HOME/Desktop altina yazilir yazilmaz bir ikonu masaustu
+Bu dosya `$HOME/Desktop` altina yazilir yazilmaz bir ikonu masaustu
 uzerinde goreceksiniz. Onun uzerine sag tiklama yapin, Properties |
 Permissions uzerinden "Allow executing as program"'i secin. Bu kadar.
 

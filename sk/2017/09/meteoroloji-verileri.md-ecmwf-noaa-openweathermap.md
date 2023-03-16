@@ -175,7 +175,7 @@ Burada gosterilen
 }
 ```
 
-formundaki anahtar $HOME/.ecmwfapirc dosyasina yazilir. 
+formundaki anahtar `$HOME/.ecmwfapirc` dosyasina yazilir. 
 
 Verilere erismeden once veri turune gore bazi lisans sayfalarinda bir
 lisans kabuluna "evet" demek gerekiyor, mesela alttaki tur bir script

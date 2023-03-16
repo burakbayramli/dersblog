@@ -50,7 +50,7 @@ public class Constants
 ```
 
 Uygulamamizin sabitleri, diyelim ki app.properties dosyasi, her zaman
-$HOME/etc/ altinda aranir. Mesela JBoss baslatan "ubuntu" adli bir
+`$HOME/etc/` altinda aranir. Mesela JBoss baslatan "ubuntu" adli bir
 kullanici ise, `/home/ubuntu/etc/app.properties` okunacak. Sabit
 degerleri okumak icin uygulamamizin herhangi bir yerinde
 `Constants.instance().getString("anahtar")` gibi bir cagri

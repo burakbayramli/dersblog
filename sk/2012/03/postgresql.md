@@ -78,7 +78,10 @@ Ya da sql dosyasi icinde
 copy( .. SELECT .. ) to '/tmp/out' with csv header
 ```
 
-gibi bir kullanim olabilir. Dikkat: bu durumda komut postgres kullanicisi tarafindan isletilecektir, bu kullanicinin sizin $HOME dizininize erisimi olmayabilir, o yuzden ustte /tmp/ kullanildi. Uzaktaki bir makina uzerinde SQL komut satirinda
+gibi bir kullanim olabilir. Dikkat: bu durumda komut postgres
+kullanicisi tarafindan isletilecektir, bu kullanicinin sizin `$HOME`
+dizininize erisimi olmayabilir, o yuzden ustte /tmp/
+kullanildi. Uzaktaki bir makina uzerinde SQL komut satirinda
 
 ```
 copy( .. SELECT .. ) TO STDOUT with CSV HEADER > /tmp/out

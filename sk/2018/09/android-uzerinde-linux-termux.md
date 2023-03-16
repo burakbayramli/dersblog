@@ -55,8 +55,8 @@ Paketler pandas, matplotlib icin ek bazi kurma islemleri
 
 `pkg install clang freetype-dev libpng-dev python2-dev`
 
-Matpotlib icin `$HOME/.config/matplotlib/matplotlibrc` icinde `backend :
-agg` yazmak lazim, komut satirindan cikip tekrar girin, sonra
+Matpotlib icin `$HOME/.config/matplotlib/matplotlibrc` icinde `backend : agg`
+yazmak lazim, komut satirindan cikip tekrar girin, sonra
 
 `LDFLAGS=" -lm -lcompiler_rt -lpython" pip install cython pandas matplotlib`
 

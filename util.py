@@ -153,6 +153,7 @@ def tex_mathjax_html(texfile, htmlfile, title):
    res = res.replace("<p><!DOCTYPE html>","")
    res = res.replace("}<em>{","}_{")
    res = res.replace("}</em>{","}_{")
+   res = res.replace("}<em>","}_")
    fout.write(res)
    fout.write(bottom)   
    fout.close()

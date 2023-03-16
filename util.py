@@ -151,6 +151,8 @@ def tex_mathjax_html(texfile, htmlfile, title):
    res = markdown.markdown(content, extensions=['fenced_code'])
    #res = markdown2.markdown(content, extras=['fenced-code-blocks'])
    res = res.replace("<p><!DOCTYPE html>","")
+   res = res.replace("}<em>{","}_{")
+   res = res.replace("}</em>{","}_{")
    fout.write(res)
    fout.write(bottom)   
    fout.close()

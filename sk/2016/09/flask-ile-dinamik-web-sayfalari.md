@@ -110,8 +110,6 @@ Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
 </html>
 ```
 
-<a name='form'/>
-
 ### Form Verisi
 
 Örnek olarak bir girdi kutusu düşünelim, o kutuya girilen parametre

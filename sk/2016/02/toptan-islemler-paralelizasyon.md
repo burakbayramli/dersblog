@@ -90,8 +90,6 @@ edici araçlar sayesinde komut satırından elle biz program
 başlatmıyoruz, takip edici programlarımızı başlatıyor, onları izliyor,
 çökmüs ise tekrar başlatıyor, vs.
 
-<a name='csv'/>
-
 Paralel, Satır Bazlı Dosya İşlemek
 
 Paralel işlem için işbölümünün nasıl yapılacağını kararlaştırmak
@@ -363,8 +361,6 @@ with open(file_name, 'r') as f:
 
 ifadesi eklenebilir. Böylece her işlemci süreç `skip` kadar satırı o dosya
 için atlaması gerektiğini bilir ve başlangıç doğru noktaya getirilmiş olur.
-
-<a name='restart'/>
 
 ### Tekrar Başlatılabilirlik (Restartability)
 

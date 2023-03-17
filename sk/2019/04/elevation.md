@@ -208,8 +208,6 @@ alınabilir. Dosyanin büyüklüğü 20 MB'dan daha az. [3] kullanımı önemli
 gerektirir, [3] kütüphanesi hafif, direk DEM dosyalarının içeriğini
 okuyabilir.
 
-<a name='globe'/>
-
 ### GLOBE
 
 Bir yöntem daha. GLOBE veri seti [4], tam ismiyle Global Land

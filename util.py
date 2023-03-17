@@ -43,6 +43,7 @@ html_head = '''
 '''   
 
 bottom = """
+          <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>
     </body>

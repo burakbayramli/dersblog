@@ -158,7 +158,7 @@ def title_tex(to):
             title = get_title_from_tex(dir + "/" + subdir + "/" + tex)
             html = subdir + "/" + filename_from_title(title) + ".html"        
             fout.write("<p><a href='%s'>%s</a><p/>" % (html,title))
-        fout.write("<br/><br/><a href='..'>Yukari</a><br/>")
+        fout.write("<br/><a href='../index.html'>Yukarı</a><br/>")
 
 def title_sk(to):
     d = "sk"

@@ -154,6 +154,8 @@ def tex_mathjax_html(texfile, htmlfile, title):
    res = res.replace("}<em>{","}_{")
    res = res.replace("}</em>{","}_{")
    res = res.replace("}<em>","}_")
+   res = res.replace("\\sum</em>{","\\sum_{")
+   res = res.replace(")<em>{",")_{")
    fout.write(res)
    fout.write(bottom)   
    fout.close()

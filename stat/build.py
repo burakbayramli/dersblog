@@ -21,3 +21,9 @@ elif sys.argv[1] == 'tex':
     file = glob.glob('stat_*.tex')
     os.system("pdflatex -shell-escape %s" % file[0])
     
+elif sys.argv[1] == 'md':
+    sys.path.append("../.."); import util
+    file = glob.glob('*.tex')
+    ftex = file[0]; path = os.getcwd()
+    util.tex_mathjax_html(path + "/" + ftex, path + "/" + "out.html","adkasdf")
+    

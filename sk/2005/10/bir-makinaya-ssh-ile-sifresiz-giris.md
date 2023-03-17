@@ -226,5 +226,5 @@ Kaynaklar
 
 [1] https://www.digitalocean.com/community/tutorials/how-to-use-sshfs-to-mount-remote-file-systems-over-ssh
 
-[2] [Video ile Anlatım](bir-makinaya-ssh-ile-sifresiz-giris-video.html)
+[2] <a href="bir-makinaya-ssh-ile-sifresiz-giris-video.html">Video ile Anlatım</a>
 

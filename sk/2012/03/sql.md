@@ -701,9 +701,9 @@ Referans
 
 [1] Veri Tabanları, Kurumsal Java 2005 Kitabından, [PDF](https://github.com/burakbayramli/classnotes/raw/master/sk/2012/03/db-kj.pdf)
 
-[2] [sqlite](../../2018/03/sqlite-basit-sekilde-hzl-diske-deger-yazma.html)
+[2] <a href="../../2018/03/sqlite-basit-sekilde-hzl-diske-deger-yazma.html">sqlite</a>
 
-[3] [psycopg2](../../2012/06/psycopg2.html)
+[3] <a href="../../2012/06/psycopg2.html">psycopg2</a>
 
 [4] https://github.com/Olamiotan/PythonStarter
 
@@ -726,17 +726,17 @@ Referans
 
 [10] https://github.com/douglasnavarro/chinook-analysis
 
-[11] [Postgresql](../../2012/03/postgresql.html)
+[11] <a href="../../2012/03/postgresql.html">Postgresql</a>
 
 [12] https://www.guru99.com/er-diagram-tutorial-dbms.html
 
 [13] https://www.c-sharpcorner.com/article/diving-into-basics-of-sql-server/
 
-[14] [MongoDB](../../2014/05/mongodb.html)
+[14] <a href="../../2014/05/mongodb.html">MongoDB</a>
 
-[15] [SQL Nasıl Kullanılmalı](../../2001/10/sql-nasl-kullanlmal.html)
+[15] <a href="../../2001/10/sql-nasl-kullanlmal.html">SQL Nasıl Kullanılmalı</a>
 
-[16] [SQL veri analizi nasıl hızlandırılır](../../2001/10/sql-veri-analizi-nasl-hzlandrlr.html)
+[16] <a href="../../2001/10/sql-veri-analizi-nasl-hzlandrlr.html">SQL veri analizi nasıl hızlandırılır</a>
 
-[17] [Chinook.db ZIP](https://drive.google.com/uc?export=view&id=1bbr8y45VXla4wRf_7kJVa0Xj7r8PBTOD)
+[17] <a href="https://drive.google.com/uc?export=view&id=1bbr8y45VXla4wRf_7kJVa0Xj7r8PBTOD">Chinook.db ZIP</a>
 

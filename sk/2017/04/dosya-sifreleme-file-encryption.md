@@ -16,10 +16,11 @@ kimse okuyamaz.
 
 Bu mesajlaşma tekniğini ssh altyapısı üzerinden nasıl kullanırız?
 Çünkü programcılar çoğunlukla ssh kurmuş olurlar, `ssh-keygen -t rsa`
-ile `$HOME/.ssh` altında açık / kapalı anahtarları vardır (`id_rsa.pub` ve
-id_rsa dosyaları) başka şeylerle uğraşmasak olmaz mı?
+ile `$HOME/.ssh` altında açık / kapalı anahtarları vardır
+(`id_rsa.pub` ve `id_rsa` dosyaları) başka şeylerle uğraşmasak olmaz
+mı?
 
-Bu mümkün. Önce id_rsa bir pem formatına çevirilmeli,
+Bu mümkün. Önce `id_rsa` bir pem formatına çevirilmeli,
 
 ```
 openssl rsa -in ~/.ssh/id_rsa -pubout  > ~/.ssh/id_rsa.pub.pem

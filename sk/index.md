@@ -25,7 +25,7 @@
 
 [Network, TCP/IP, Internet](2000/10/network.html)
 
-[Animasyonlu Matematik](https://www.youtube.com/channel/UCx64ou5qw0Q9LLkwE8xSNEg)
+[Animasyonlu Matematik](2023/02/animasyonlu-matematik-video.html)
 
 [Elektrik, Elektronik](2020/08/elektronik.html)
 

@@ -8,6 +8,8 @@
 
 [Ders 4](lineer-cebir-ders-4-video.html)
 
+[Ders 4 - Ekler](lineer-cebir-ders-4-app-video.md)
+
 [Ders 5](lineer-cebir-ders-5-video.html)
 
 [Ders 6](lineer-cebir-ders-6-video.html)

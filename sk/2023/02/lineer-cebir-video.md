@@ -1,4 +1,4 @@
-# Lineer Cebir Video
+# Lineer Cebir Video Ders Listesi
 
 [Ders 1](lineer-cebir-ders-1-video.html)
 

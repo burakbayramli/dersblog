@@ -1,5 +1,8 @@
 # Lineer Cebir Video Ders Listesi
 
+Bu video'lar HTML5 `<video>` etiketi ile Google Drive üzerinden servis
+ediliyor. 
+
 [Ders 1](lineer-cebir-ders-1-video.html)
 
 [Ders 2](lineer-cebir-ders-2-video.html)
@@ -14,9 +17,13 @@
 
 [Ders 6](lineer-cebir-ders-6-video.html)
 
+[Ders 6 - Ekler](lineer-cebir-ders-6-app-video.html)
+
 [Ders 7](lineer-cebir-ders-7-video.html)
 
-[Ders 8](lineer-cebir-ders-8-video.html)
+[Ders 8, Bölüm 1](lineer-cebir-ders-8-1-video.md)
+
+[Ders 8, Bölüm 2](lineer-cebir-ders-8-2-video.md)
 
 [Ders 9](lineer-cebir-ders-9-video.html)
 

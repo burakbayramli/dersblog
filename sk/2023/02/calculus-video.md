@@ -20,3 +20,5 @@
 
 [Ders 10](calculus-ders-10-video.html)
 
+[Calculus'a Genel Bakış](calculus-ders-genel-video.html)
+

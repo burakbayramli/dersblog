@@ -29,3 +29,5 @@ ediliyor.
 
 [Ders 10](lineer-cebir-ders-10-video.html)
 
+[Ders 11](lineer-cebir-ders-11-video.html)
+

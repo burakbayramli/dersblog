@@ -20,38 +20,32 @@ ile `$HOME/.ssh` altında açık / kapalı anahtarları vardır
 (`id_rsa.pub` ve `id_rsa` dosyaları) başka şeylerle uğraşmasak olmaz
 mı?
 
-Bu mümkün. Önce `id_rsa` bir pem formatına çevirilmeli,
+Bu mümkün. Diyelim ki birinin açık anahtarını biliyorum, bu anahtar bu
+kişiye şifreli mesaj gönderilebilmesi için yayınlanır, mesela bana
+mesaj gelmesi için siteme koyarım, onu herkes görür. Bu anahtar `mypub`
+dosyasında diyelim. Onu `pkcs8` formatına çevirmek lazım,
 
 ```
-openssl rsa -in ~/.ssh/id_rsa -pubout  > ~/.ssh/id_rsa.pub.pem
+ssh-keygen -f pub1 -e -m pkcs8 > pub1.pkcs8
 ```
 
-Şimdi açık anahtarımı kullanarak mesaj şifreleyim, message.txt içinde
-mesajım olsun,
+Simdi mesaj `mesaj.txt` icinde diyelim,
 
 ```
-cat message.txt  | openssl rsautl \
-      -encrypt -pubin -inkey ~/.ssh/id_rsa.pub.pem  > encryptedMessage.txt
+cat message.txt | openssl rsautl -encrypt -pubin -inkey pub1.pkcs8 > message.enc
 ```
 
-Ve şifrelenmiş mesajı kapalı anahtarla açayım
+Böylece şifrelenmiş mesaj `message.enç` içinde olacak. Bu mesajı email ile
+artık o kişiye gönderebilirim, çünkü birisi bu mesajı yolda 'yakalaşa' bile
+içeriğini çözmesi çok zor olacaktır. 
+
+Mesajı alan kişi onu çözmek için gizli anahtarını kullanabilir,
 
 ```
-cat encryptedMessage.txt | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa
+cat message.enc | openssl rsautl -decrypt -inkey ~/.ssh/id_rsa
 ```
 
-Ters yönden, kapalı anahtarla şifreleyim
-
-```
-cat message.txt  | openssl rsautl \
-    -sign -inkey ~/.ssh/id_rsa  > encryptedMessage.txt
-```
-
-Ve açmak icin
-
-```
-cat encryptedMessage.txt | openssl rsautl -verify -pubin -inkey ~/.ssh/id_rsa.pub.pem
-```
+Üstteki komut şifrelenmiş mesajın orijinal içeriğini gösterecektir. 
 
 ### Ccrypt
 

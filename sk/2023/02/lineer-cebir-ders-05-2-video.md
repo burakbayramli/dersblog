@@ -4,3 +4,5 @@
     <source src="https://drive.google.com/uc?export=view&id=https://drive.google.com/file/d/1baCf-IUC18pVar5VSK75CwkDjoQ4ENGO/view?usp=sharing" type='video/mp4'>
 </video>
 
+Determinant, transformasyon, 3 boyut
+

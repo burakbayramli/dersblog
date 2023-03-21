@@ -19,7 +19,7 @@ ediliyor.
 
 [Ders 6, Bölüm 2](lineer-cebir-ders-06-2-video.html)
 
-[Ders 6, Bölüm 2](lineer-cebir-ders-06-3-video.html)
+[Ders 6, Bölüm 3](lineer-cebir-ders-06-3-video.html)
 
 [Ders 7](lineer-cebir-ders-07-video.html)
 
@@ -34,4 +34,6 @@ ediliyor.
 [Ders 10, Bölüm 2](lineer-cebir-ders-10-2-video.html)
 
 [Ders 11](lineer-cebir-ders-11-video.html)
+
+
 

@@ -9,15 +9,17 @@ ediliyor.
 
 [Ders 3](lineer-cebir-ders-03-video.html)
 
-[Ders 4](lineer-cebir-ders-04-video.html)
+[Ders 4, Bölüm 1](lineer-cebir-ders-04-1-video.html)
 
-[Ders 4 - Ekler](lineer-cebir-ders-04-app-video.md)
+[Ders 4, Bölüm 2](lineer-cebir-ders-04-2-video.html)
 
 [Ders 5](lineer-cebir-ders-05-video.html)
 
-[Ders 6](lineer-cebir-ders-06-video.html)
+[Ders 6, Bölüm 1](lineer-cebir-ders-06-1-video.html)
 
-[Ders 6 - Ekler](lineer-cebir-ders-06-app-video.html)
+[Ders 6, Bölüm 2](lineer-cebir-ders-06-2-video.html)
+
+[Ders 6, Bölüm 2](lineer-cebir-ders-06-3-video.html)
 
 [Ders 7](lineer-cebir-ders-07-video.html)
 

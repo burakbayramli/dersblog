@@ -48,6 +48,10 @@
 
 [Lineer Cebir Ders 4 Video](02/lineer-cebir-ders-04-video.html)
 
+[Lineer Cebir Ders 5 Video Bölüm 1](02/lineer-cebir-ders-05-1-video.html)
+
+[Lineer Cebir Ders 5 Video Bölüm 2](02/lineer-cebir-ders-05-2-video.html)
+
 [Lineer Cebir Ders 5 Video](02/lineer-cebir-ders-05-video.html)
 
 [Lineer Cebir Ders 6 Video Bölüm 1](02/lineer-cebir-ders-06-1-video.html)

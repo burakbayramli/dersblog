@@ -28,7 +28,7 @@ kodcular icin daha kullanisli olabilir.
 
 Kaynaklar
 
-[Video, Jupyter Not Defterleri -Jupyter Notebooks-](https://youtu.be/uDOO1A-Aja0)
+[Video, Jupyter Not Defterleri -Jupyter Notebooks-](jupyter-not-defterleri-video.html)
 
-[Video, Python, Komut Satiri, VirtualEnv, ipython](https://youtu.be/iaWyvH67Nrg)
+[Video, Python, Komut Satiri, VirtualEnv, ipython](../virtualenv-python-izole-sanal-calsma-video.html)
 

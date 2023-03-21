@@ -140,12 +140,10 @@ Python 2.7.7
 
 cevabını verdiğini göreceğiz.
 
-Video
+Detaylı görsel tarif için [video](virtualenv-python-izole-sanal-calsma-video.html).
 
 Kaynaklar
 
-https://help.dreamhost.com/hc/en-us/articles/115000218612-Installing-a-custom-version-of-Python-2
+[Dreamhost 1](https://help.dreamhost.com/hc/en-us/articles/115000218612-Installing-a-custom-version-of-Python-2)
 
-https://help.dreamhost.com/hc/en-us/articles/215489338-Installing-and-using-virtualenv-with-Python-2
-
-
+[Dreamhost 2](https://help.dreamhost.com/hc/en-us/articles/215489338-Installing-and-using-virtualenv-with-Python-2)

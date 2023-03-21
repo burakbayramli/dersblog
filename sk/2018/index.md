@@ -26,11 +26,15 @@
 
 [Spark, PySpark](08/spark-pyspark.html)
 
+[virtualenv, Python İzole, Sanal Çalışma Alanı (Python Virtual Environment) Video](08/virtualenv-python-izole-sanal-calsma-video.html)
+
 [virtualenv, Python İzole, Sanal Çalışma Alanı (Python Virtual Environment)](08/virtualenv-python-izole-sanal-calsma.html)
 
 [Android Uzerinde Linux - Termux](09/android-uzerinde-linux-termux.html)
 
 [Docker](09/docker.html)
+
+[Jupyter Not Defterleri Video](09/jupyter-not-defterleri-video.html)
 
 [Jupyter Not Defterleri](09/jupyter-not-defterleri.html)
 

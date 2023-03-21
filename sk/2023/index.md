@@ -40,11 +40,21 @@
 
 [Lineer Cebir Ders 3 Video](02/lineer-cebir-ders-03-video.html)
 
+[Lineer Cebir Ders 4 Video Bölüm 1](02/lineer-cebir-ders-04-1-video.html)
+
+[Lineer Cebir Ders 4 Video Bölüm 2](02/lineer-cebir-ders-04-2-video.html)
+
 [Lineer Cebir Ders 4 Ek Video](02/lineer-cebir-ders-04-app-video.html)
 
 [Lineer Cebir Ders 4 Video](02/lineer-cebir-ders-04-video.html)
 
 [Lineer Cebir Ders 5 Video](02/lineer-cebir-ders-05-video.html)
+
+[Lineer Cebir Ders 6 Video Bölüm 1](02/lineer-cebir-ders-06-1-video.html)
+
+[Lineer Cebir Ders 6 Video Bölüm 2](02/lineer-cebir-ders-06-2-video.html)
+
+[Lineer Cebir Ders 6 Video Bölüm 3](02/lineer-cebir-ders-06-3-video.html)
 
 [Lineer Cebir Ders 6 Ek Video](02/lineer-cebir-ders-06-app-video.html)
 
@@ -52,11 +62,15 @@
 
 [Lineer Cebir Ders 7 Video](02/lineer-cebir-ders-07-video.html)
 
-[Lineer Cebir Ders 8-1 Video](02/lineer-cebir-ders-08-1-video.html)
+[Lineer Cebir Ders 8-1 Video Bölüm 1](02/lineer-cebir-ders-08-1-video.html)
 
-[Lineer Cebir Ders 8-1 Video](02/lineer-cebir-ders-08-2-video.html)
+[Lineer Cebir Ders 8-1 Video Bölüm 2](02/lineer-cebir-ders-08-2-video.html)
 
 [Lineer Cebir Ders 9 Video](02/lineer-cebir-ders-09-video.html)
+
+[Lineer Cebir Ders 10 Video Bölüm 1](02/lineer-cebir-ders-10-1-video.html)
+
+[Lineer Cebir Ders 10 Video Bölüm 2](02/lineer-cebir-ders-10-2-video.html)
 
 [Lineer Cebir Ders 10 Video](02/lineer-cebir-ders-10-video.html)
 

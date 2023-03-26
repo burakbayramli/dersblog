@@ -240,14 +240,14 @@ if __name__ == "__main__":
       exit()  
       
     if sys.argv[1] == 'title':
-        frdirs, todirs = copy_files_and_dirs(fr, to, ".git,.pdf,_minted,work")
+        frdirs, todirs = copy_files_and_dirs(fr, to, ".git,.pdf,_minted,zwork")
         os.chdir(to)
         title_tex(to)
         os.chdir(to)
         title_sk(to)
         
     if sys.argv[1] == 'html': 
-        frdirs, todirs = copy_files_and_dirs(fr, to, ".git,.pdf,_minted,work,README.md")
+        frdirs, todirs = copy_files_and_dirs(fr, to, ".git,.pdf,_minted,zwork,README.md")
         os.chdir(to)
         gen_html_sk()
         os.chdir(to)

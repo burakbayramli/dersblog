@@ -3,6 +3,8 @@
 
 ## En Son
 
+26/3 - [Calculus Video Dersleri](https://burakbayramli.github.io/dersblog/sk/2023/02/calculus-video.html)
+
 20/3 - [Lineer Cebir Video Dersleri](https://burakbayramli.github.io/dersblog/sk/2023/02/lineer-cebir-video.html)
 
 8/3 - [Materyel Mekaniği - Hazırlık](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_00/materyel_mekanigi__hazirlik.html)
@@ -10,8 +12,6 @@
 3/3 - [Rasgele Matris İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html#random)
 
 20/2 - [Jensen'in Eşitsizliği (Jensen's Inequality)](https://burakbayramli.github.io/dersblog/stat/stat_176_app2/ekler.html#jensen)
-
-20/2 - [GDELT Dünya Olayları Veri Tabanı (Event Database)](https://burakbayramli.github.io/dersblog/sk/2021/09/gdelt-olay-veritabani.html)
 
 ## Konular, Referans
 

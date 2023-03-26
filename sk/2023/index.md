@@ -70,3 +70,19 @@
 
 [Lineer Cebir Video Ders Listesi](02/lineer-cebir-video.html)
 
+[Evrişimsel Sınır Ağları (Convolutional Neural Networks) Video](03/evrisimsel-neural-network-video.html)
+
+[Yapay Sinir Ağları Video - 1](03/yapay-sinir-aglari-neural-network-video-01.html)
+
+[Yapay Sinir Ağları Video - 2 Bölüm 1](03/yapay-sinir-aglari-neural-network-video-02-1.html)
+
+[Yapay Sinir Ağları Video - 2 Bölüm 2](03/yapay-sinir-aglari-neural-network-video-02-2.html)
+
+[Yapay Sinir Ağları Video - 3 Bölüm 1](03/yapay-sinir-aglari-neural-network-video-03-1.html)
+
+[Yapay Sinir Ağları Video - 3 Bölüm 2](03/yapay-sinir-aglari-neural-network-video-03-2.html)
+
+[Yapay Sinir Ağları Video - 3 Bölüm 3](03/yapay-sinir-aglari-neural-network-video-03-3.html)
+
+[Yapay Sinir Ağları Video](03/yapay-sinir-aglari-neural-network-video.html)
+

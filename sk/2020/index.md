@@ -36,6 +36,8 @@
 
 [ipyvolume](08/ipyvolume.html)
 
+[Network Ölçümü, Izlemek](08/network-olcumu.html)
+
 [3D Baskıya Hazır CAD Tasarımlarına Erişmek, Numpy-STL](08/numpy-stl.html)
 
 [OpenGL, PyOpenGL](08/pyopengl.html)

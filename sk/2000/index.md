@@ -26,6 +26,8 @@
 
 [Nesnesel Programlama (Object-Oriented Programming)](10/nesnesel-programlama.html)
 
+[Network, TCP/IP, Internet](10/network.html)
+
 [Organizasyonlarda Teknik Bilgi İletişimi](10/organizasyonlarda-teknik-bilgi.html)
 
 [Projelerde İşbölümü](10/projelerde-isbolumu.html)

@@ -70,7 +70,7 @@
 
 [Lineer Cebir Video Ders Listesi](02/lineer-cebir-video.html)
 
-[Evrişimsel Sınır Ağları (Convolutional Neural Networks) Video](03/evrisimsel-neural-network-video.html)
+[Evrişimsel Sinir Ağları (Convolutional Neural Networks) Video](03/evrisimsel-neural-network-video.html)
 
 [Yapay Sinir Ağları Video - 1](03/yapay-sinir-aglari-neural-network-video-01.html)
 

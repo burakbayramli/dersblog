@@ -1,6 +1,6 @@
 # 2023
 
-[Toplam, Parcalarin Toplamindan Fazla - Bilim ve Teknolojide Tasarim](01/bilim-teknoloji-tasarim.html)
+[Toplam, Parçaların Toplamından Fazla - Bilim ve Teknolojide Tasarım](01/bilim-teknoloji-tasarim.html)
 
 [IETT Verileri, SOAP](01/iett-ibb-otobus-verisi.html)
 

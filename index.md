@@ -1,7 +1,7 @@
 
 <a href="algs/index.html">Bilgisayar Bilim (Computer Science)</a>
 
-<a href="calc_multi/index.html">Cok Degiskenli Calculus (Multivariable Calculus)</a>  
+<a href="calc_multi/index.html">Çok Degiskenli Calculus (Multivariable Calculus)</a>  
 
 <a href="chaos/index.html">Gayri Lineer Dinamik ve Kaos (Non-linear Dynamics and Chaos)</a>
 
@@ -32,3 +32,5 @@ alınabilir.
   <input autocomplete="on" class="form-controls search" name="q" placeholder="ders notlarını ara" required="required"  type="text">
   <button class="button" type="submit">Ara</button>        
 </form>
+
+

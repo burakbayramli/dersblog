@@ -200,7 +200,6 @@ def gen_html_sk():
                 title = get_title_from_md(f)
                 content = open(path + "/" + fmd).read()
                 res = util.html_head.replace("[title]","")
-                #res += markdown.markdown(content, extensions=['fenced_code'])
                 res += markdown2.markdown(content, extras=['fenced-code-blocks'])
                 res += util.bottom
                 fout = open(path + "/" + fhtml, "w")

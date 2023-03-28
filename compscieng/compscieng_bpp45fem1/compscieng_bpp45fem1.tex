@@ -92,8 +92,8 @@ formüldeki $W_i$ onun için, fakat bu $W_i$ nereden geliyor?
 Ağırlık için farklı fonksiyonlar seçilebilir, ve her seçilen fonksiyon tipine
 göre farklı sonuçlar elde edilebilir. Galerkin metotuna göre $W_i$ deneme
 fonksiyonu $\phi_i$ ile aynı olacak şekilde seçilir. Bu ve ileriki derslerde
-öğreneceğimiz Galerkin yaklaşımı çünkü çoğu profosyonel FEM paketleri bu
-yaklaşımı kullanır.
+öğreneceğimiz Galerkin yaklaşımı çünkü çoğu profosyonel FEM paketi bu yaklaşımı
+kullanır.
 
 Örnek olarak [3]'te gördüğümüz eksenel yükleme (axial loading) modelini
 kullanalım. 
@@ -119,15 +119,30 @@ $$
 u_{approx} = a_0 \phi_0(X_1) + a_1 \phi_1(X_1) + a_2 \phi_2(X_1) + a_3 \phi_3(X_1) 
 $$
 
-3'uncu derece polinom kullanabiliriz, tüm dereceler $X_1$'in fonksiyonu olsun
+3'üncü derece polinom kullanabiliriz, tüm dereceler $X_1$'in fonksiyonu olsun
 $\phi_i = a_i X_1^i$, 
 
 $$
 u_{approx} = a_0 + a_1 X_1 + a_2 X_1^2 + a_3 X_1^3 
 $$
 
+Galerkin yöntemi kullandığımız için şimdi ağırlık fonksiyonlarını seçiyoruz,
+fakat daha önce belirttiğimiz gibi Galerkin yönteminde $\phi_i$ ve ağırlık $W_i$
+aynı seçilir, yani
 
+$$
+W_1 = \phi_1(X_1) = X_1 \qquad 
+W_2 = \phi_2(X_1) = X_1^2 \qquad 
+W_3 = \phi_3(X_1) = X_1^3
+$$
 
+Artık elimizde 
+
+$$
+\int_D W_i R \ud x = 0
+$$
+
+problemini çözmek için gerekli her şey var.
 
 
 

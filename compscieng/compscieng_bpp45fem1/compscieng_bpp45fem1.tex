@@ -110,7 +110,7 @@ Eşitliğin sağındakileri sola geçirip her şeyi $EA$ ile bölersem, artık
 (residual) hatasını bulabilirim,
 
 $$
-R =  \frac{\ud^2 u_{approx}}{\ud X_1^2} + \frac{c X_1}{EA}
+R = \frac{\ud^2 u_{approx}}{\ud X_1^2} + \frac{c X_1}{EA}
 $$
 
 Yaklaşıklama fonksiyonumuz ne olacak? Genel formu hatırlayalım,
@@ -124,6 +124,14 @@ $\phi_i = a_i X_1^i$,
 
 $$
 u_{approx} = a_0 + a_1 X_1 + a_2 X_1^2 + a_3 X_1^3 
+$$
+
+Bir gerekli (essential) sınır şartı ekleyebiliriz, ki bu $u_{approx}(0)=0$,
+çünkü kiriş sol tarafında sabitlenmiştir, ve bunun polinoma yansıması
+$a_0=0$ olacaktır, yani bu katsayı çıkartılabilir. Yeni hal,
+
+$$
+u_{approx} = a_1 X_1 + a_2 X_1^2 + a_3 X_1^3 
 $$
 
 Galerkin yöntemi kullandığımız için şimdi ağırlık fonksiyonlarını seçiyoruz,
@@ -142,7 +150,45 @@ $$
 \int_D W_i R \ud x = 0
 $$
 
-problemini çözmek için gerekli her şey var.
+problemini çözmek için gerekli her şey var. $R$'nin ne olduğunu biliyoruz
+çünkü o ana problem tanınından geliyor,
+
+$$
+= \int_{0}^{L} W_i \left( \frac{\ud^2 u_{approx}}{\ud X_1^2} + \frac{c X_1}{EA}  \right) \ud x = 0
+$$
+
+Entegral sınırını 0 ila $L$ arası yaptık çünkü etki alanını biliyoruz artık,
+hesap tüm kiriş boyunca yapılacak, $L$.
+
+Şimdi bulmamız gereken bilinmeyenlere bakıyoruz, üç tane var $a_1$, $a_2$,
+$a_3$. Üç tane bilinmeyeni çözmek için üç tane denklem gerekir, ki tüm sistemi
+çözünce bilinmeyenler bulunabilsin. Ama üstte bir tane denklem var, nasıl
+üç tane denklem bulacağız?
+
+Aslında üstteki denklem bir denklem kalıbı, her $i$ için bu kalıp bize ayrı bir
+ağırlık $W_i$ üzerinden farklı bir denklem verebilir. Ağırlıklar $W_1 = X_1$,
+$W_2 = X_1^2$, $W_3 = X_1^3$ demiştik, o zaman 
+
+$$
+\int_{0}^{L} X_1 \left( \frac{\ud^2 u_{approx}}{\ud X_1^2} + \frac{c X_1}{EA}  \right) \ud X_1 = 0
+$$
+
+$$
+\int_{0}^{L} X_1^2 \left( \frac{\ud^2 u_{approx}}{\ud X_1^2} + \frac{c X_1}{EA}  \right) \ud X_1 = 0
+$$
+
+$$
+\int_{0}^{L} X_1^3 \left( \frac{\ud^2 u_{approx}}{\ud X_1^2} + \frac{c X_1}{EA}  \right) \ud X_1 = 0
+$$
+
+formüllerini elde edebiliriz.
+
+Fakat hala bir problem var; bilinmeyen katsayı kadar denklem var, fakat
+diferansiyel denklem derecesini tatmin edecek kadar sınır şartı
+yok. $u_{approx}(0)=0$ üzerinden bir şart elde ettik, fakat hala bir tane
+daha şart gerekli. Bu duruma cevap bulmazsak hala üstteki yaklaşımla bile
+sonsuz tane sonuç elde edilebilir.
+
 
 
 

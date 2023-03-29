@@ -116,7 +116,7 @@ $$</p>
 <p>Eşitliğin sağındakileri sola geçirip her şeyi $EA$ ile bölersem, artık
 (residual) hatasını bulabilirim,</p>
 <p>$$
-R =  \frac{\mathrm{d}^2 u_{approx}}{\mathrm{d} X_1^2} + \frac{c X_1}{EA}
+R = \frac{\mathrm{d}^2 u_{approx}}{\mathrm{d} X_1^2} + \frac{c X_1}{EA}
 $$</p>
 <p>Yaklaşıklama fonksiyonumuz ne olacak? Genel formu hatırlayalım,</p>
 <p>$$
@@ -126,6 +126,12 @@ $$</p>
 $\phi_i = a_i X_1^i$, </p>
 <p>$$
 u_{approx} = a_0 + a_1 X_1 + a_2 X_1^2 + a_3 X_1^3 
+$$</p>
+<p>Bir gerekli (essential) sınır şartı ekleyebiliriz, ki bu $u_{approx}(0)=0$,
+çünkü kiriş sol tarafında sabitlenmiştir, ve bunun polinoma yansıması
+$a_0=0$ olacaktır, yani bu katsayı çıkartılabilir. Yeni hal,</p>
+<p>$$
+u_{approx} = a_1 X_1 + a_2 X_1^2 + a_3 X_1^3 
 $$</p>
 <p>Galerkin yöntemi kullandığımız için şimdi ağırlık fonksiyonlarını seçiyoruz,
 fakat daha önce belirttiğimiz gibi Galerkin yönteminde $\phi_i$ ve ağırlık $W_i$
@@ -139,7 +145,35 @@ $$</p>
 <p>$$
 \int_D W_i R \mathrm{d} x = 0
 $$</p>
-<p>problemini çözmek için gerekli her şey var.</p>
+<p>problemini çözmek için gerekli her şey var. $R$'nin ne olduğunu biliyoruz
+çünkü o ana problem tanınından geliyor,</p>
+<p>$$
+= \int_{0}^{L} W_i \left( \frac{\mathrm{d}^2 u_{approx}}{\mathrm{d} X_1^2} + \frac{c X_1}{EA}  \right) \mathrm{d} x = 0
+$$</p>
+<p>Entegral sınırını 0 ila $L$ arası yaptık çünkü etki alanını biliyoruz artık,
+hesap tüm kiriş boyunca yapılacak, $L$.</p>
+<p>Şimdi bulmamız gereken bilinmeyenlere bakıyoruz, üç tane var $a_1$, $a_2$,
+$a_3$. Üç tane bilinmeyeni çözmek için üç tane denklem gerekir, ki tüm sistemi
+çözünce bilinmeyenler bulunabilsin. Ama üstte bir tane denklem var, nasıl
+üç tane denklem bulacağız?</p>
+<p>Aslında üstteki denklem bir denklem kalıbı, her $i$ için bu kalıp bize ayrı bir
+ağırlık $W_i$ üzerinden farklı bir denklem verebilir. Ağırlıklar $W_1 = X_1$,
+$W_2 = X_1^2$, $W_3 = X_1^3$ demiştik, o zaman </p>
+<p>$$
+\int_{0}^{L} X_1 \left( \frac{\mathrm{d}^2 u_{approx}}{\mathrm{d} X_1^2} + \frac{c X_1}{EA}  \right) \mathrm{d} X_1 = 0
+$$</p>
+<p>$$
+\int_{0}^{L} X_1^2 \left( \frac{\mathrm{d}^2 u_{approx}}{\mathrm{d} X_1^2} + \frac{c X_1}{EA}  \right) \mathrm{d} X_1 = 0
+$$</p>
+<p>$$
+\int_{0}^{L} X_1^3 \left( \frac{\mathrm{d}^2 u_{approx}}{\mathrm{d} X_1^2} + \frac{c X_1}{EA}  \right) \mathrm{d} X_1 = 0
+$$</p>
+<p>formüllerini elde edebiliriz.</p>
+<p>Fakat hala bir problem var; bilinmeyen katsayı kadar denklem var, fakat
+diferansiyel denklem derecesini tatmin edecek kadar sınır şartı
+yok. $u_{approx}(0)=0$ üzerinden bir şart elde ettik, fakat hala bir tane
+daha şart gerekli. Bu duruma cevap bulmazsak hala üstteki yaklaşımla bile
+sonsuz tane sonuç elde edilebilir.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,

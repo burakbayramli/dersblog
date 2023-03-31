@@ -101,8 +101,37 @@ düğümlerde hesaplanıyor dedik, peki sisteme dağıtık bir yük uygulanıyor
 ne yapacağız? Bu tür kuvvetlerin düğümler arasında etkili olduğunu biliyoruz,
 o zaman bu tür kuvvetleri $x,y,z$ bileşenlerine ayırıp onları düğümlere etkili
 vektörler haline getirebilirim.</p>
+<p>Ana denklemle baslarsak,</p>
 <p>$$
 E A \frac{\mathrm{d}^2 y}{\mathrm{d} X_1^2} = -p
+$$</p>
+<p>Artik (residual) hesabi soyle,</p>
+<p>$$
+R = EA \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2} + p
+$$</p>
+<p>Bu artığın tanım bölgesi üzerinden ağırlıklı entegralinın sıfır olmasını
+istiyoruz,</p>
+<p>$$
+\int_\Omega R N_i \mathrm{d} x = 0 
+$$</p>
+<p>Dikkat, daha önce ağırlık $W_i$ kullanmıştık, şimdi $N_i$ var, bu fonksiyonlar
+her düğümde tanımlı şekil fonksiyonu (shape function) olacak. O şekillerin
+ne seçildiği FEM'in kilit noktası, detayları göreceğiz.</p>
+<p>Simdi $R$'yi acip duzenleme yaparsak,</p>
+<p>$$
+\int _{0}^{L} \left( EA \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2} + p  \right) N_i \mathrm{d} X_1 = 0 
+$$</p>
+<p>$$
+\int <em>{0}^{L} \left( EA \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2} \right) N_i \mathrm{d} X_1 =
+- \int </em>{0}^{L} p N_i \mathrm{d} X_1
+$$</p>
+<p>Parçalı Entegral tekniğini uygulayalım,</p>
+<p>$$
+\int <em>{0}^{L} EA \left( \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2}  \right) N_i \mathrm{d} X_1 =
+\left( EA \frac{\mathrm{d} u}{\mathrm{d} X_1} N_i \right) \bigg\vert</em>{X_1=0}^{X_1=L} -
+\int_{0}^{L} EA
+\left( \frac{\mathrm{d} u}{\mathrm{d} X_1} \right)
+\left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1} \right) \mathrm{d} X_1
 $$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>

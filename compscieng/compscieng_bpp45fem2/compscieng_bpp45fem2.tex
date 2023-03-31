@@ -82,17 +82,49 @@ ne yapacağız? Bu tür kuvvetlerin düğümler arasında etkili olduğunu biliy
 o zaman bu tür kuvvetleri $x,y,z$ bileşenlerine ayırıp onları düğümlere etkili
 vektörler haline getirebilirim.
 
+Ana denklemle baslarsak,
+
 $$
 E A \frac{\ud^2 y}{\ud X_1^2} = -p
 $$
 
+Artik (residual) hesabi soyle,
 
+$$
+R = EA \frac{\ud^2 u}{\ud X_1^2} + p
+$$
 
+Bu artığın tanım bölgesi üzerinden ağırlıklı entegralinın sıfır olmasını
+istiyoruz,
 
+$$
+\int_\Omega R N_i \ud x = 0 
+$$
 
+Dikkat, daha önce ağırlık $W_i$ kullanmıştık, şimdi $N_i$ var, bu fonksiyonlar
+her düğümde tanımlı şekil fonksiyonu (shape function) olacak. O şekillerin
+ne seçildiği FEM'in kilit noktası, detayları göreceğiz.
 
+Simdi $R$'yi acip duzenleme yaparsak,
 
+$$
+\int _{0}^{L} \left( EA \frac{\ud^2 u}{\ud X_1^2} + p  \right) N_i \ud X_1 = 0 
+$$
 
+$$
+\int _{0}^{L} \left( EA \frac{\ud^2 u}{\ud X_1^2} \right) N_i \ud X_1 =
+- \int _{0}^{L} p N_i \ud X_1
+$$
+
+Parçalı Entegral tekniğini uygulayalım,
+
+$$
+\int _{0}^{L} EA \left( \frac{\ud^2 u}{\ud X_1^2}  \right) N_i \ud X_1 =
+\left( EA \frac{\ud u}{\ud X_1} N_i \right) \bigg\vert_{X_1=0}^{X_1=L} -
+\int_{0}^{L} EA
+\left( \frac{\ud u}{\ud X_1} \right)
+\left( \frac{\ud N_i}{\ud X_1} \right) \ud X_1
+$$
 
 
 

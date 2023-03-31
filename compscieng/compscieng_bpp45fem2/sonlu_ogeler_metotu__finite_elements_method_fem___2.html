@@ -84,40 +84,40 @@ her parçaya uygulayıp ayrıksal sonuçları birleştiriyor.</p>
 (nodes), düğümleri birleştiren öğeler (elements) var. Bu yaklaşımda yer
 değişimleri tüm nesne için değil, her düğümde hesaplayacağız. Yer değişimleri
 birbiriyle bağlayan şeyler ögeler, kırmızı ile görülen parçalar.  Bu öğe
-parçaları aslında bir anlamda bir aradeğerlemeyi temsil ediyor olacaklar, eğer
-iki düğümün yer değişimini biliyorsam onları bağlayan parçanın yer değişimini
-bunları kullanarak, ara değerleme yaparak hesaplayabilirim.</p>
+parçaları aslında bir aradeğerlemeyi (interpolation) temsil ediyor olacaklar,
+eğer iki düğümün yer değişimini biliyorsam onları bağlayan parçanın yer
+değişimini bunları kullanarak, aradeğerleme yaparak hesaplayabilirim.</p>
 <p><img alt="" src="compscieng_bpp45fem2_03.jpg" /></p>
 <p>Eğer tek bir öğeye bakarsak,</p>
 <p><img alt="" src="compscieng_bpp45fem2_04.jpg" /></p>
-<p>Yer değişimleri her düğüm için demiştik, $u_1,u_2$, amacımız onları hesaplamak.
-Eğer onları hesaplayabilirsem, daha önce belirttiğimiz gibi, aradaki öğenin
-yer değişimini yaklaşık olarak, iki uca bağlı olarak hesaplayabilirim.  Yani
-eğer düğümlerin her değişimini biliyorsam her şeyin yer değişimini biliyorum
-demektir.</p>
+<p>Yer değişimler her düğüm için demiştik, $u_1,u_2$, amacımız onları hesaplamak.
+Eğer bu değişimleri hesaplayabilirsem, daha önce belirttiğimiz gibi, aradaki
+öğenin yer değişimini yaklaşık olarak, iki uca bağlı olarak hesaplayabilirim.
+Yani eğer düğümlerin her değişimini biliyorsam her şeyin yer değişimini
+biliyorum demektir.</p>
 <p>Galerkin metotuna başlayalım. Metot uygulanınca bize yer değişimleri için bir
 direngenlik matrisi ve öğeler için düğümsel kuvvet vektörü vermeli. Her şey
 düğümlerde hesaplanıyor dedik, peki sisteme dağıtık bir yük uygulanıyorsa
 ne yapacağız? Bu tür kuvvetlerin düğümler arasında etkili olduğunu biliyoruz,
 o zaman bu tür kuvvetleri $x,y,z$ bileşenlerine ayırıp onları düğümlere etkili
 vektörler haline getirebilirim.</p>
-<p>Ana denklemle baslarsak,</p>
+<p>Ana denklemle başlarsak,</p>
 <p>$$
 E A \frac{\mathrm{d}^2 y}{\mathrm{d} X_1^2} = -p
 $$</p>
-<p>Artik (residual) hesabi soyle,</p>
+<p>Artık (residual) hesabı şöyle,</p>
 <p>$$
 R = EA \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2} + p
 $$</p>
-<p>Bu artığın tanım bölgesi üzerinden ağırlıklı entegralinın sıfır olmasını
+<p>Bu artığın tanım bölgesi üzerinden ağırlıklı entegralinin sıfır olmasını
 istiyoruz,</p>
 <p>$$
 \int_\Omega R N_i \mathrm{d} x = 0 
 $$</p>
 <p>Dikkat, daha önce ağırlık $W_i$ kullanmıştık, şimdi $N_i$ var, bu fonksiyonlar
-her düğümde tanımlı şekil fonksiyonu (shape function) olacak. O şekillerin
-ne seçildiği FEM'in kilit noktası, detayları göreceğiz.</p>
-<p>Simdi $R$'yi acip duzenleme yaparsak,</p>
+her düğümde tanımlı şekil fonksiyonu (shape function) olacak. O şekillerin ne
+seçildiği FEM'in ana özelliklerinden, detayları göreceğiz.. Şimdi $R$'yi açıp
+düzenleme yaparsak,</p>
 <p>$$
 \int _{0}^{L} \left( EA \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2} + p  \right) N_i \mathrm{d} X_1 = 0 
 $$</p>
@@ -131,7 +131,17 @@ $$</p>
 \left( EA \frac{\mathrm{d} u}{\mathrm{d} X_1} N_i \right) \bigg\vert</em>{X_1=0}^{X_1=L} -
 \int_{0}^{L} EA
 \left( \frac{\mathrm{d} u}{\mathrm{d} X_1} \right)
+\left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1} \right) \mathrm{d} X_1 =
+- \int _{0}^{L} p N_i \mathrm{d} X_1
+$$</p>
+<p>Ekşi işaretler olmasın diye birkaç yer değişimi yapalım,</p>
+<p>$$
+\int_{0}^{L} EA
+\left( \frac{\mathrm{d} u}{\mathrm{d} X_1} \right)
 \left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1} \right) \mathrm{d} X_1
+=
+\left( EA \frac{\mathrm{d} u}{\mathrm{d} X_1} N_i \right) \bigg\vert_{X_1=0}^{X_1=L} +
+\int _{0}^{L} p N_i \mathrm{d} X_1 
 $$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>

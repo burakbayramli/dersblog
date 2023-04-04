@@ -59,7 +59,7 @@ içe doğru strese karşı çok dayanıklıdır, ki bu yüzden pek çok yapıda 
 fakat beton dışa doğru stres, yani gerilime karşı dayanıklı değildir. Çok az bir
 yükü bile beton parçaya dışa doğru uygulasam çatlamaya başlar, çatlamak demek
 oradaki yüzeyin bozulmaya uğraması demektir, ki dolaylı olarak $I$
-değisecektir. Diğer bir problem yüke bağlı olarak betonun $E$ değerinin de
+değişecektir. Diğer bir problem yüke bağlı olarak betonun $E$ değerinin de
 değişmesi. Yani gerçek dünyada $I$ neredeyse hiçbir zaman sabit değildir, $E$
 benzer şekilde, durumu daha kötü yapan bu değişimlerin çoğunlukla yük $q$
 değerine bağlı olması. Bu herşeyi arap saçına döndürür.</p>
@@ -80,14 +80,14 @@ her FEM yaklaşımında faydalı olan kavramlar.</p>
 <p>Not düşelim, önceki FEM çözümü Galerkin yaklaşımı ile tüm denkleme analitik bir
 çözüm buldu. Bu derste ve gerisinde göreceğimiz türden FEM, Galerkin çözümünü
 her parçaya uygulayıp ayrıksal sonuçları birleştiriyor.</p>
-<p>Makaskiriş alttaki gibi olsun, onu parçalara bölelim, sarı noktalar düğümler
+<p><img alt="" src="compscieng_bpp45fem2_03.jpg" /></p>
+<p>Makaskiriş üstteki gibi olsun, onu parçalara bölelim, sarı noktalar düğümler
 (nodes), düğümleri birleştiren öğeler (elements) var. Bu yaklaşımda yer
 değişimleri tüm nesne için değil, her düğümde hesaplayacağız. Yer değişimleri
 birbiriyle bağlayan şeyler ögeler, kırmızı ile görülen parçalar.  Bu öğe
 parçaları aslında bir aradeğerlemeyi (interpolation) temsil ediyor olacaklar,
 eğer iki düğümün yer değişimini biliyorsam onları bağlayan parçanın yer
 değişimini bunları kullanarak, aradeğerleme yaparak hesaplayabilirim.</p>
-<p><img alt="" src="compscieng_bpp45fem2_03.jpg" /></p>
 <p>Eğer tek bir öğeye bakarsak,</p>
 <p><img alt="" src="compscieng_bpp45fem2_04.jpg" /></p>
 <p>Yer değişimler her düğüm için demiştik, $u_1,u_2$, amacımız onları hesaplamak.
@@ -105,7 +105,7 @@ vektörler haline getirebilirim.</p>
 <p>$$
 E A \frac{\mathrm{d}^2 y}{\mathrm{d} X_1^2} = -p
 $$</p>
-<p>Artık (residual) hesabı şöyle,</p>
+<p>Artıksal (residual) hesap şöyle,</p>
 <p>$$
 R = EA \frac{\mathrm{d}^2 u}{\mathrm{d} X_1^2} + p
 $$</p>
@@ -147,7 +147,7 @@ $$</p>
 ilişki görüyor muyuz? $EA$ çarpı $\mathrm{d} u / \mathrm{d} x$.. Tanıdık geliyor mu?  O ifade
 aslında bir kuvvet değil mi? Çünkü hatırlarsak $\mathrm{d} u / \mathrm{d} x$ yer değişimin
 türevi, ki bu gerilme, gerilmeyi Young Genliği $E$ ile çarpınca stres elde
-ederim. Ek olarak $A$ ile alan çarpımı var, stres kuvvet bolu alan olduğu için
+ederim. Ek olarak $A$ ile alan çarpımı var, stres kuvvet bölü alan olduğu için
 stresi alanla çarpınca geriye kuvvet kalır. Demek ki o terimle eksenel kuvvet
 elde ediyorum, bir düğümde konsantre edilmiş $f = E A \epsilon$ kuvvetini
 hesaplıyorum. </p>
@@ -198,7 +198,78 @@ $$</p>
 <p>$$
 u = \frac{u_2 x_1 - u_1 x_2}{L} - \frac{u_2 - u_1}{L} X_1
 $$</p>
+<p>Biraz daha cebirsel değiştirme sonrası</p>
+<p>$$
+u = \frac{(x_2 - X_1)}{L} u_1 + \frac{(X_1 - x_1)}{L} u_2
+$$</p>
+<p>Bu son değişimi yaptık çünkü bu formda dikkat edersek denklem daha önce
+gördüğümüz Galerkin deneme fonksiyonlarına benziyor,</p>
+<p>$$
+u = u_1 \phi_1(X_1) + u_2 \phi_2 (X_1)
+$$</p>
+<p>kalıbında görüldüğü gibi. Deneme fonksiyonlarında $u_1,u_2$ sabit değerlerdi, bu
+bölümde gördüğümüz $u_i$ değerleri de öyle aslında. Bilinen $u_i$ değerlerini
+yaklaşık temsile uğraşıyoruz, gerçi çözüm mekanığı içinde o $u$ değerleri de
+hesaplanıyor fakat bu belli formülasyonlar için onların bilindiği
+farzedilebilir.</p>
+<p>Şimdi $\phi_1,\phi_2$ fonksiyonları bizim önceden seçtiğimiz fonksiyonlardı,
+polinom seçtiğimizde $X_1,X_1^2$ gibi hesaplar kullandık. Üstteki türetim
+sonrası $N_1,N_2$ var, ve ulaştığımız fonksiyonlar</p>
+<p>$$
+N_1 = \frac{(x_2 - X_1)}{L}, \quad N_2 \frac{(X_1 - x_1)}{L} 
+$$</p>
+<p>Bu şekil fonksiyonları neye benziyor acaba? Alttaki gibi,</p>
 <p><img alt="" src="compscieng_bpp45fem2_08.jpg" /></p>
+<p>Bu iki fonksiyonu üst üste koyduğumuzda (süperimpose) yani topladığımızda,
+sonucun mavi çizgiyi aynen vereceğini görebilirdik.</p>
+<p>İlginç bir diğer özellik, eğer mesela $N_2$'ye tek başına bakarsam, onun ilk
+düğümde 0 değerinde, ikinci düğümde 1 değerinde olduğunu görebiliriz.  Eğer
+$N_3$ olsa bu şekil de birinci ve ikinci düğümde sıfır olurdu. Diğer yandan her
+şekil fonksiyonu ait olduğu düğümde 1 değerindedir. $N_1$ birinci düğümde 1
+değerinde, $N_2$ ikinci düğümde 1 değerinde, vs. Bu şekil fonksiyonları öyle
+tasarlanmıştır.</p>
+<p>Artik $N_i$ icin bir tanima sahibiz, hesaplamaya baslayabiliriz. Genel FEM
+formulasyonunda son alttaki noktaya gelmistik,</p>
+<p>$$
+\int_{0}^{L} EA
+\left( \frac{\mathrm{d} u}{\mathrm{d} X_1} \right)
+\left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1} \right) \mathrm{d} X_1
+= \int _{0}^{L} p N_i \mathrm{d} X_1
+\qquad (1)
+$$</p>
+<p>$N_i$ icin biraz onceki tanimlari kullaniriz. $u_1,u_2$ sabittir demistik,
+turevden disari cikartilabilir, yani</p>
+<p>$$
+u = u_1 N_1 + u_2 N_2
+$$</p>
+<p>turevi</p>
+<p>$$
+\frac{\mathrm{d} u}{\mathrm{d} X_1} = u_1 \left( \frac{\mathrm{d} N_1}{\mathrm{d} X_1}  \right) +
+u_2 \left( \frac{\mathrm{d} N_2}{\mathrm{d} X_1}  \right)
+$$</p>
+<p>Matris / vektör formunda gösterebiliriz,</p>
+<p>$$
+\frac{\mathrm{d} u}{\mathrm{d} X_1} = \left[\begin{array}{cc}
+\dfrac{\mathrm{d} N_1}{\mathrm{d} X_1} &amp; \dfrac{\mathrm{d} N_2}{\mathrm{d} X_1} 
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ u_2
+\end{array}\right]
+$$</p>
+<p>(1) formulune koyarsak,</p>
+<p>$$
+\underbrace{
+\int <em>{0}^{L} EA
+\left[\begin{array}{cc}
+\dfrac{\mathrm{d} N_1}{\mathrm{d} X_1} &amp; \dfrac{\mathrm{d} N_2}{\mathrm{d} X_1} 
+\end{array}\right]
+\left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1}  \right) \mathrm{d} X_1
+}_{\textrm{Direngenlik Matrisi}}
+\left[\begin{array}{c} u_1 \\ u_2 \end{array}\right] =
+\underbrace{
+\int <em>{0}^{L} p N_i \mathrm{d} X_1
+}_{\textrm{Düğümsel Kuvvetler}}
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,

@@ -1,5 +1,5 @@
 
-![](sk.jpg)
+<img width='95%' src='sk.jpg'/> 
 
 ## En Son
 

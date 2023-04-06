@@ -263,54 +263,6 @@ $$
 \mlabel{1}
 $$
 
-$N_i$ için biraz önceki tanımları kullanırız. $u_1,u_2$ sabittir demiştik,
-türevden dışarı çıkartılabilir, yani
-
-$$
-u = u_1 N_1 + u_2 N_2
-$$
-
-turevi
-
-$$
-\frac{\ud u}{\ud X_1} = u_1 \left( \frac{\ud N_1}{\ud X_1}  \right) +
-u_2 \left( \frac{\ud N_2}{\ud X_1}  \right)
-$$
-
-Matris / vektör formunda gösterebiliriz,
-
-$$
-\frac{\ud u}{\ud X_1} = \left[\begin{array}{cc}
-\dfrac{\ud N_1}{\ud X_1} & \dfrac{\ud N_2}{\ud X_1} 
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2
-\end{array}\right]
-$$
-
-(1) formülüne koyarsak,
-
-$$
-\underbrace{
-  \int_{0}^{L} EA
-  \left[\begin{array}{cc}
-  \dfrac{\ud N_1}{\ud X_1} & \dfrac{\ud N_2}{\ud X_1} 
-  \end{array}\right]
-  \left( \frac{\ud N_i}{\ud X_1}  \right) \ud X_1
-}_{\textrm{Direngenlik Matrisi}}
-\left[\begin{array}{c} u_1 \\ u_2 \end{array}\right] =
-\underbrace{
-  \int_{0}^{L} p N_i \ud X_1
-}_{\textrm{Düğümsel Kuvvetler}}
-$$
-
-Eşitliğin solunda gösterilen hesap bize bir matris verecek, materyel mekanığine
-ona direngenlik matrisi denir. Sağ tarafta ise düğümsel kuvvetlerin vektörü var,
-eğer elde dağıtık bir yük var ise ve düğümsel kuvvetleri hesaplamak istiyorsam
-eşitliğin sağındaki o formülü kullanırım. Yani matris çarpı bilinmeyen $u_1,u_2$
-vektör çarpımı, eşittir sağda bir vektör.. Bir lineer sistem var elimizde!
-Direngenlik çarpı yer değişimi eşittir kuvvet. Bulmak istediğimiz yer
-değişimleri değil mi? Üstteki sistemi çözerek onu elde edebiliriz.
 
 Şekil $N$ fonksiyonlarına dönelim, üstteki şapka fonksiyonlarını ifade
 etmenin daha genel bir yöntemi [2, sf. 9], ki $h = x_{j+1}-x_j$, ya da
@@ -376,7 +328,32 @@ Böylece alttaki fonksiyonları yaratmış olduk,
 
 \includegraphics[width=10em]{compscieng_bpp45fem2_11.jpg}
 
+Şekil fonksiyonlarının türevleri oldukca basit,
 
+$$
+\frac{\ud N_1}{\ud X_1} = \left\{ \begin{array}{rr}
+4/L   & 0 \le X_1 \le L/4 \\
+-4/L  & L/4 \le X_1 \le L/2
+\end{array} \right.
+$$
+
+$$
+\frac{\ud N_2}{\ud X_1} = \left\{ \begin{array}{rr}
+4/L  & L/4 \le X_1 \le L/2 \\
+-4/L & L/2 \le X_1 \le 3L/4
+\end{array} \right.
+$$
+
+$$
+\frac{\ud N_3}{\ud X_1} = \left\{ \begin{array}{rr}
+4/L  & L/2 \le X_1 \le 3L/4 \\
+-4/L & 3L/4 \le X_1 \le L
+\end{array} \right.
+$$
+
+$$
+\frac{\ud N_4}{\ud X_1} = 4/L
+$$
 
 
 

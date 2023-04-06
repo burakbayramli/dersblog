@@ -237,46 +237,6 @@ formülasyonunda son alttaki noktaya gelmiştik,</p>
 = \int _{0}^{L} p N_i \mathrm{d} X_1
 \qquad (1)
 $$</p>
-<p>$N_i$ için biraz önceki tanımları kullanırız. $u_1,u_2$ sabittir demiştik,
-türevden dışarı çıkartılabilir, yani</p>
-<p>$$
-u = u_1 N_1 + u_2 N_2
-$$</p>
-<p>turevi</p>
-<p>$$
-\frac{\mathrm{d} u}{\mathrm{d} X_1} = u_1 \left( \frac{\mathrm{d} N_1}{\mathrm{d} X_1}  \right) +
-u_2 \left( \frac{\mathrm{d} N_2}{\mathrm{d} X_1}  \right)
-$$</p>
-<p>Matris / vektör formunda gösterebiliriz,</p>
-<p>$$
-\frac{\mathrm{d} u}{\mathrm{d} X_1} = \left[\begin{array}{cc}
-\dfrac{\mathrm{d} N_1}{\mathrm{d} X_1} &amp; \dfrac{\mathrm{d} N_2}{\mathrm{d} X_1} 
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2
-\end{array}\right]
-$$</p>
-<p>(1) formülüne koyarsak,</p>
-<p>$$
-\underbrace{
-  \int_{0}^{L} EA
-  \left[\begin{array}{cc}
-  \dfrac{\mathrm{d} N_1}{\mathrm{d} X_1} &amp; \dfrac{\mathrm{d} N_2}{\mathrm{d} X_1} 
-  \end{array}\right]
-  \left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1}  \right) \mathrm{d} X_1
-}_{\textrm{Direngenlik Matrisi}}
-\left[\begin{array}{c} u_1 \\ u_2 \end{array}\right] =
-\underbrace{
-  \int</em>{0}^{L} p N_i \mathrm{d} X_1
-}_{\textrm{Düğümsel Kuvvetler}}
-$$</p>
-<p>Eşitliğin solunda gösterilen hesap bize bir matris verecek, materyel mekanığine
-ona direngenlik matrisi denir. Sağ tarafta ise düğümsel kuvvetlerin vektörü var,
-eğer elde dağıtık bir yük var ise ve düğümsel kuvvetleri hesaplamak istiyorsam
-eşitliğin sağındaki o formülü kullanırım. Yani matris çarpı bilinmeyen $u_1,u_2$
-vektör çarpımı, eşittir sağda bir vektör.. Bir lineer sistem var elimizde!
-Direngenlik çarpı yer değişimi eşittir kuvvet. Bulmak istediğimiz yer
-değişimleri değil mi? Üstteki sistemi çözerek onu elde edebiliriz.</p>
 <p>Şekil $N$ fonksiyonlarına dönelim, üstteki şapka fonksiyonlarını ifade
 etmenin daha genel bir yöntemi [2, sf. 9], ki $h = x_{j+1}-x_j$, ya da
 1 uzunluğundaki bir yatay eksen için $h = 1/N$ ve $j = 1,2,...,N$ olmak
@@ -328,6 +288,28 @@ N_4 = (X_1 - 3L/4) / h
 $$</p>
 <p>Böylece alttaki fonksiyonları yaratmış olduk,</p>
 <p><img alt="" src="compscieng_bpp45fem2_11.jpg" /></p>
+<p>Şekil fonksiyonlarının türevleri oldukca basit,</p>
+<p>$$
+\frac{\mathrm{d} N_1}{\mathrm{d} X_1} = \left\{ \begin{array}{rr}
+4/L   &amp; 0 \le X_1 \le L/4 \\
+-4/L  &amp; L/4 \le X_1 \le L/2
+\end{array} \right.
+$$</p>
+<p>$$
+\frac{\mathrm{d} N_2}{\mathrm{d} X_1} = \left\{ \begin{array}{rr}
+4/L  &amp; L/4 \le X_1 \le L/2 \\
+-4/L &amp; L/2 \le X_1 \le 3L/4
+\end{array} \right.
+$$</p>
+<p>$$
+\frac{\mathrm{d} N_3}{\mathrm{d} X_1} = \left\{ \begin{array}{rr}
+4/L  &amp; L/2 \le X_1 \le 3L/4 \\
+-4/L &amp; 3L/4 \le X_1 \le L
+\end{array} \right.
+$$</p>
+<p>$$
+\frac{\mathrm{d} N_4}{\mathrm{d} X_1} = 4/L
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,

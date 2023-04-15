@@ -13,8 +13,6 @@
 
 8/3 - [Materyel Mekaniği - Hazırlık](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_00/materyel_mekanigi__hazirlik.html)
 
-3/3 - [Rasgele Matris İzdüşümü (Random Projection)](https://burakbayramli.github.io/dersblog/sk/2022/11/paralel-lineer-cebir.html#random)
-
 ## Konular, Referans
 
 [Python](2016/01/python-dil-ogrenimi.html)

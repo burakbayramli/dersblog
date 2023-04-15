@@ -1,7 +1,9 @@
 
-<img width='95%' src='sk.jpg'/> 
+<img width='99%' src='sk.jpg'/> 
 
 ## En Son
+
+15/4 - [Materyel Mekaniği - 2](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_02/materyel_mekanigi__2.html)
 
 2/4 - [Materyel Mekaniği - 1](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_01/materyel_mekanigi__1.html)
 

@@ -25,24 +25,51 @@ bulabilmek çünkü düğümler üzerindeki kuvvetleri biliyorsam (ki biliyorum)
 direngenliği kullanarak çözümde ilerleyebilirim.
 
 Hatırlarsak çubuk ve kirişleri modellerken bir yaklaşıklama fonksiyonu
-kullanmıştım, bu fonksiyon yukarı ya da yana doğru bir hareketi yaklaşık temsil
-ediyordu. İki boyutta benzer bir prosedürü kullanacağız, fakat tek yön yerine
-iki yönü aynı anda temsil etmemiz gerekecek.
+kullanmıştım, bu fonksiyon yukarı ya da yana doğru bir hareketi, yer değişimini
+yaklaşık olarak temsil ediyordu. İki boyutta benzer bir prosedürü kullanacağız,
+fakat tek yön yerine iki yönü aynı anda temsil etmemiz gerekecek.
 
 \includegraphics[width=20em]{compscieng_bpp45fem3_03.jpg}
 
+Demek ki $x_{2D}$ vektörünü yaklaşıklamam lazım, genel bir metot şöyle olabilir,
 
+$$
+x_{2D} = \left[\begin{array}{c}
+a_0 + a_1 X_1 + a_2 X_2 + a_3 X_1 X_2 + ...\\
+b_0 + b_1 X_1 + b_2 X_2 + b_3 X_1 X_2 + ...
+\end{array}\right]
+$$
 
+Tek yaptığımız tek yönde yaklaşıklama yerine iki yönde yaklaşık bir temsil
+kullanmak. 
 
+Fakat daha önce baktığımız 1D FEM örneğinden hatırlarsak yer değişim yaklaşık
+fonksiyonunu düğümsel yer değişiklikleri ($u_i$ ve $v_i$) ve şekil fonksiyonları
+($N_i$ gibi) üzerinden temsil etmek istiyoruz. Üstteki değişim tüm üçgene
+bakıyor, biz üçgenin düğümlerini temsil etmek istiyoruz. 
 
+\includegraphics[width=20em]{compscieng_bpp45fem3_04.jpg}
 
+O zaman herhangi bir FEM öğesi için yer değişimini, genel olarak, düğümleri
+üzerinden
 
+$$
+x_{2D} = \left[\begin{array}{c}
+u_1 N_1 + u_2 N_2 + .. + u_n N_N \\
+v_1 N_1 + v_2 N_2 + .. + v_n N_N
+\end{array}\right]
+$$
 
+ile gösterebilirim. Üstteki üçgen öğe örneğinde 
 
+$$
+x_{2D} = \left[\begin{array}{c}
+u_1 N_1 + u_2 N_2 + u_3 N_3 \\
+v_1 N_1 + v_2 N_2 + v_3 N_3
+\end{array}\right]
+$$
 
-
-
-
+yeterlidir. 
 
 
 

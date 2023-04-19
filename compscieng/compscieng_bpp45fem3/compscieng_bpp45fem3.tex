@@ -3,7 +3,7 @@
 Sonlu Öğeler Metotu (Finite Elements Method -FEM-) - 3
 
 İki boyutta FEM kullanımına gelelim. Diyelim ki alttaki gibi bir problem
-yarattım,
+yarattım [1, Video 5],
 
 \includegraphics[width=10em]{compscieng_bpp45fem3_01.jpg}
 
@@ -31,7 +31,8 @@ fakat tek yön yerine iki yönü aynı anda temsil etmemiz gerekecek.
 
 \includegraphics[width=20em]{compscieng_bpp45fem3_03.jpg}
 
-Demek ki $x_{2D}$ vektörünü yaklaşıklamam lazım, genel bir metot şöyle olabilir,
+Demek ki $x_{2D} = [\begin{array}{cc} u & v \end{array}]^T$ vektörünü
+yaklaşıklamam lazım, genel bir metot şöyle olabilir,
 
 $$
 x_{2D} = \left[\begin{array}{c}
@@ -81,7 +82,7 @@ u_1 \\ v_1 \\ u_2 \\ v_2 \\ \dots \\ u_n \\ v_n
 \end{array}\right]
 $$
 
-Daha kisa olarak
+Daha kısa olarak
 
 $$
 \implies x_{2D} = [N] u_e
@@ -90,19 +91,31 @@ $$
 denebilir. Dikkat edersek $N$ fonksiyonları $X_1,X_2$ değişkenlerinin
 birer fonksiyonu, $u_i,v_i$ değerleri ise sabit.
 
-Bu noktada elimde genel bir yer degisim fonksiyonu var, onu kullanarak bir
-gerilme (strain) vektoru hesaplayabilirim. Iki boyutta $\epsilon$'un sadece uc
-tane ogesi var,
+Bu noktada elimde genel bir yer değişim fonksiyonu var, onu kullanarak bir
+gerilme (strain) vektörü hesaplayabilirim. İki boyutta $\epsilon$'un sadece üç
+tane öğesi var,
 
 $$
 \epsilon = \left[\begin{array}{c}
 \epsilon_{11} \\ \epsilon_{22} \\ 2 \epsilon_{12} 
 \end{array}\right]
+\renewcommand*{\arraystretch}{2.0}
+= \left[\begin{array}{c}
+\dfrac{\partial u}{\partial X_1} \\
+\dfrac{\partial v}{\partial X_2} \\
+\dfrac{\partial u}{\partial X_2} + \dfrac{\partial v}{\partial X_1} 
+\end{array}\right]
 $$
 
+Bazılarımız sorabilir, 'ama $\epsilon_{33}$ nerede, ya da $\epsilon_{31}$?'.
+Fakat hatırlayalım şu anda baktığımız iki boyut versiyonu. Üç boyuta sonra
+geleceğiz ve o zaman garanti ederim çok daha karmaşık sonuçlar göreceğiz. 
 
-
-
+Notasyonel bir konuya dikkat, [1, Video 5]'te $x_{2D}$ kullanıldı, bu harf daha
+önceki $x$, değişim sonrası varılan yer ile karıştırılmasın, hoca çok boyutlu
+bir yer değişimden bahsediyor daha önce $u$ ile gösterilen.  Yani üstteki
+matriste $u$'nun $X_1$'e göre türevi $x_{2D}$ üzerinden, yani $x_{2D} = [N] u_e$
+üzerinden alınacak.
 
 
 
@@ -128,6 +141,6 @@ Kaynaklar
 [2] Petitt, {\em Finite Element Method Theory}, University of Alberta,
     \url{https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi}
 
-[3] Bayramli, {\em Fizik, Materyel Mekanigi 2}
+[3] Bayramlı, {\em Fizik, Materyel Mekanigi 2}
     
 \end{document}

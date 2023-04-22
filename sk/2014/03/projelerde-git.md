@@ -238,6 +238,6 @@ ayarlanan repo'larda bu url `git@github.com:...` diye gider.
 Depo'nun eski tarihteki haline donmek istiyorsak,
 
 ```
-git blog - git checkout "`git rev-list master  -n 1 --first-parent --before=2022-06-02`"
+git checkout "`git rev-list master  -n 1 --first-parent --before=2022-06-02`"
 ```
 

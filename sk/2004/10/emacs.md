@@ -167,8 +167,8 @@ Control gibi işliyor olacak.
 
 Referans
 
-[Pymacs](/2009/04/pymacs.md)
+[Pymacs](../../2009/04/pymacs.html)
 
 [Ayarlarım (My Config File)](https://github.com/burakbayramli/kod/tree/master/site-lisp)
 
-[Unicode, Ascii, Deascii, Python, Emacs](../../2018/07/unicode-ascii-deascii-python-emacs.md)
+[Unicode, Ascii, Deascii, Python, Emacs](../../2018/07/unicode-ascii-deascii-python-emacs.html)

@@ -44,7 +44,7 @@ plt.savefig('osmnx-01.jpg',quality=50)
 için baktık `30 520ecdb05972a5893b8a541266157cd0b30a6381.json` diye bir dosya
 oraya yazılmış, büyüklüğü 1.8 MB.
 
-`graph_from_bbox` ile belli kuzey, güney, doğu, batı üç noktalarının
+`graph_from_bbox` ile belli kuzey, güney, doğu, batı uç noktalarının
 oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
 verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
 `graph_from_point((37.79, -122.41), dist=750` ile verili noktanın 750
@@ -172,16 +172,14 @@ Haritada görülen kırmızı çizgiler yürünüş için en kısa yolu gösteri
 
 Kaynaklar
 
-[1] [Geoff Boeing](https://geoffboeing.com/2016/11/osmnx-python-street-networks/)
+[1] <a href="https://geoffboeing.com/2016/11/osmnx-python-street-networks/">Geoff Boeing</a>
 
-[2] [OSRM Yol Tarifi](../../2016/11/yol-tarifi-harita-bilgisi-osrm-backend.html)
+[2] <a href="../../2016/11/yol-tarifi-harita-bilgisi-osrm-backend.html">OSRM Yol Tarifi</a>
 
-[3] [NetworkX Multidigraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html)
+[3] <a href="https://networkx.org/documentation/stable/reference/classes/multidigraph.html">NetworkX Multidigraph</a>
 
-[4] [OSMNX Belge 1](https://github.com/gboeing/osmnx-examples/blob/main/notebooks/01-overview-osmnx.ipynb)
+[4] <a href="https://github.com/gboeing/osmnx-examples/blob/main/notebooks/01-overview-osmnx.ipynb">OSMNX Belge 1</a>
 
-[5] [OSMNX Belge 2](https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest_path_osm_updated_example.ipynb)
+[5] <a href="https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest_path_osm_updated_example.ipynb">OSMNX Belge 2</a>
 
-[6] [OSMNX Belge 3](https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb)
-
-
+[6] <a href="https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb">OSMNX Belge 3</a>

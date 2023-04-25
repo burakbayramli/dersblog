@@ -19,7 +19,7 @@ kabiliyetine sahiptir, ve bu veriyi diskte önbellekleme yaparak
 saklayabilir, böylece aynı bölge için sonraki yükleme çağrılarının
 OSM'e bağlanması gerekmez. Eğer veride çizit yapısına uymayan yerler
 varsa bunlar döndürülmeden önce tamir edilir. Örnek olarak [1]'deki
-örnek yere bakalım,
+yere bakalım,
 
 ```python
 import matplotlib.pyplot as plt

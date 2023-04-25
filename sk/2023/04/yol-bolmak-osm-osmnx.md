@@ -48,6 +48,15 @@ tek bir nokta verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mes
 `graph_from_point((37.79, -122.41), dist=750` ile verili noktanın 750
 metre çevresindeki ağ alınabilir.
 
+```python
+import osmnx as ox
+
+ox.config(use_cache=True, cache_folder='/tmp/osmnx')
+
+G = ox.graph_from_point((37.79, -122.41), dist=750, network_type="walk")
+```
+
+
 Network tipi `network_type` ile tanımlanabilir, `walk`, `drive`, `bike`
 değerleri geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
 bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
@@ -66,7 +75,7 @@ print (list(G)[20])
 
 ```text
 65281835
-65295347
+65295291
 ```
 
 İlk 10 düğüm
@@ -76,7 +85,7 @@ print (list(G)[:10])
 ```
 
 ```text
-[65281835, 65281838, 65282081, 65282083, 65282130, 65282133, 65282136, 65282140, 65282144, 65285109]
+[65281835, 65281838, 65287183, 65287185, 65290169, 65290173, 65290750, 65290756, 65291738, 65291741]
 ```
 
 Kısa yol bulmaya gelelim; ilk önce eldeki başlangıç ve bitiş coğrafi
@@ -85,15 +94,15 @@ kordinatlarına en yakın çizit düğümlerini bulmak lazım,
 ```python
 origin = (37.784825495166544, -122.40208526405367)
 destination = (37.79584463577157, -122.40724290129684)
-origin_node = ox.distance.nearest_nodes(G, origin[1], origin[0])
-destination_node = ox.distance.nearest_nodes(G, destination[1], destination[0])
-print (origin_node)
-print (destination_node)
+origin_res = ox.get_nearest_node(G, origin,method='euclidean',return_dist=True)
+destination_res = ox.get_nearest_node(G, destination,method='euclidean',return_dist=True)
+print (origin_res)
+print (destination_res)
 ```
 
 ```text
-5429618404
-9835210340
+(5554084244, 5.332404779362496)
+(7233579607, 15.949918872077847)
 ```
 
 Görülen iki kimlik değeri düğüm ID.
@@ -102,22 +111,22 @@ Görülen iki kimlik değeri düğüm ID.
 algoritmasını işletiyoruz,
 
 ```python
-route = ox.shortest_path(G, origin_node, destination_node)
+route = ox.shortest_path(G, origin_res[0], destination_res[0])
 route[:10]
 ```
 
 ```text
 Out[1]: 
-[5429618404,
- 5429618406,
- 65343960,
- 65333814,
- 1580501206,
- 65334120,
- 65312401,
- 65343962,
- 65314158,
- 10802171480]
+[5554084244,
+ 5554084275,
+ 5554084256,
+ 5554084269,
+ 995847660,
+ 5554084309,
+ 1270745639,
+ 275431510,
+ 5554083274,
+ 1332541752]
 ```
 
 Gecilecek yolun ilk 10 dugumunu listeledik. Kısa yol bize yine bir
@@ -132,7 +141,7 @@ G.nodes[route[0]]
 ```
 
 ```text
-Out[1]: {'y': 37.7838048, 'x': -122.410132, 'street_count': 1}
+Out[1]: {'y': 37.7848105, 'x': -122.4021429, 'street_count': 3}
 ```
 
 Tüm noktaları enlem/boylam listesine çevirelim,
@@ -143,14 +152,17 @@ print (coords)
 ```
 
 ```text
-[[37.7838048, -122.410132], [37.7842485, -122.4102223], [37.7841515, -122.4109719], [37.7850815, -122.4111594], [37.7860145, -122.4113476], [37.7869469, -122.4115357], [37.7872177, -122.4115903], [37.7875647, -122.4116603], [37.7878756, -122.411723], [37.7880186, -122.4105956], [37.7882369, -122.4106376], [37.7883078, -122.4101224], [37.7884585, -122.4101529], [37.7885478, -122.410171], [37.7889453, -122.4102515], [37.7890203, -122.4102667], [37.7890994, -122.4102825], [37.7891123, -122.4101922], [37.7898919, -122.4103503], [37.7899644, -122.4103641]]
+[[37.7848105, -122.4021429], [37.7845016, -122.4030429], [37.7846474, -122.4031738], [37.7847412, -122.4032112], [37.784882, -122.403207], [37.7850366, -122.4034089], [37.7850702, -122.4034505], [37.7851231, -122.4035159], [37.7851702, -122.4035743], [37.7855328, -122.40403], [37.7862746, -122.4049529], [37.7864463, -122.404735], [37.7865865, -122.4048136], [37.7867459, -122.4048752], [37.7868265, -122.4049267], [37.7868355, -122.4048551], [37.7869147, -122.404873], [37.7877685, -122.4050568], [37.788237, -122.4051523], [37.7887033, -122.4052473], [37.7891462, -122.4053364], [37.7892111, -122.4053494], [37.7893261, -122.4053725], [37.7896352, -122.4054347], [37.7901017, -122.4055285], [37.7905698, -122.4055991], [37.7915047, -122.4057597], [37.7917761, -122.4058148], [37.7923696, -122.4059355], [37.7924582, -122.4059535], [37.7925624, -122.4059745], [37.7933866, -122.4061403], [37.793828, -122.4062291], [37.7942666, -122.4063174], [37.7950988, -122.4064848], [37.7951483, -122.4064948], [37.7952034, -122.4065059], [37.7959786, -122.4066619], [37.7959709, -122.4067263], [37.7959246, -122.4070922]]
 ```
 
 Kordinatları bir Folium haritasında gösterebiliriz artık,
 
+
 ```python
 import folium
 map = folium.Map(location=origin,zoom_start=16,control_scale=True)
+folium.Marker(origin, popup="Park").add_to(map)
+folium.Marker(destination, popup="Çin Mahallesi").add_to(map)
 folium.PolyLine(locations=coords, color="red").add_to(map)
 map.save('direction1.html')
 ```

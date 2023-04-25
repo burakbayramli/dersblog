@@ -87,6 +87,15 @@ tek bir nokta verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mes
 <code>graph_from_point((37.79, -122.41), dist=750</code> ile verili noktanın 750
 metre çevresindeki ağ alınabilir.</p>
 
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+
+<span class="n">ox</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_folder</span><span class="o">=</span><span class="s1">&#39;/tmp/osmnx&#39;</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_point</span><span class="p">((</span><span class="mf">37.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.41</span><span class="p">),</span> <span class="n">dist</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;walk&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>Network tipi <code>network_type</code> ile tanımlanabilir, <code>walk</code>, <code>drive</code>, <code>bike</code>
 değerleri geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
 bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
@@ -105,7 +114,7 @@ ve 20'inci düğümler</p>
 
 <div class="codehilite">
 <pre><span></span><code>65281835
-65295347
+65295291
 </code></pre>
 </div>
 
@@ -117,7 +126,7 @@ ve 20'inci düğümler</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>[65281835, 65281838, 65282081, 65282083, 65282130, 65282133, 65282136, 65282140, 65282144, 65285109]
+<pre><span></span><code>[65281835, 65281838, 65287183, 65287185, 65290169, 65290173, 65290750, 65290756, 65291738, 65291741]
 </code></pre>
 </div>
 
@@ -127,16 +136,16 @@ kordinatlarına en yakın çizit düğümlerini bulmak lazım,</p>
 <div class="codehilite">
 <pre><span></span><code><span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">37.784825495166544</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.40208526405367</span><span class="p">)</span>
 <span class="n">destination</span> <span class="o">=</span> <span class="p">(</span><span class="mf">37.79584463577157</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.40724290129684</span><span class="p">)</span>
-<span class="n">origin_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">destination_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">destination</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">destination</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">origin_node</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">destination_node</span><span class="p">)</span>
+<span class="n">origin_res</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">get_nearest_node</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span><span class="n">return_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">destination_res</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">get_nearest_node</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span><span class="n">return_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">origin_res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">destination_res</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>5429618404
-9835210340
+<pre><span></span><code>(5554084244, 5.332404779362496)
+(7233579607, 15.949918872077847)
 </code></pre>
 </div>
 
@@ -146,23 +155,23 @@ kordinatlarına en yakın çizit düğümlerini bulmak lazım,</p>
 algoritmasını işletiyoruz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin_node</span><span class="p">,</span> <span class="n">destination_node</span><span class="p">)</span>
+<pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin_res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">destination_res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="n">route</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
 <pre><span></span><code>Out[1]: 
-[5429618404,
- 5429618406,
- 65343960,
- 65333814,
- 1580501206,
- 65334120,
- 65312401,
- 65343962,
- 65314158,
- 10802171480]
+[5554084244,
+ 5554084275,
+ 5554084256,
+ 5554084269,
+ 995847660,
+ 5554084309,
+ 1270745639,
+ 275431510,
+ 5554083274,
+ 1332541752]
 </code></pre>
 </div>
 
@@ -178,7 +187,7 @@ sorulabiliyor, ilk noktayı soralım,</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>Out[1]: {&#39;y&#39;: 37.7838048, &#39;x&#39;: -122.410132, &#39;street_count&#39;: 1}
+<pre><span></span><code>Out[1]: {&#39;y&#39;: 37.7848105, &#39;x&#39;: -122.4021429, &#39;street_count&#39;: 3}
 </code></pre>
 </div>
 
@@ -191,7 +200,7 @@ sorulabiliyor, ilk noktayı soralım,</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>[[37.7838048, -122.410132], [37.7842485, -122.4102223], [37.7841515, -122.4109719], [37.7850815, -122.4111594], [37.7860145, -122.4113476], [37.7869469, -122.4115357], [37.7872177, -122.4115903], [37.7875647, -122.4116603], [37.7878756, -122.411723], [37.7880186, -122.4105956], [37.7882369, -122.4106376], [37.7883078, -122.4101224], [37.7884585, -122.4101529], [37.7885478, -122.410171], [37.7889453, -122.4102515], [37.7890203, -122.4102667], [37.7890994, -122.4102825], [37.7891123, -122.4101922], [37.7898919, -122.4103503], [37.7899644, -122.4103641]]
+<pre><span></span><code>[[37.7848105, -122.4021429], [37.7845016, -122.4030429], [37.7846474, -122.4031738], [37.7847412, -122.4032112], [37.784882, -122.403207], [37.7850366, -122.4034089], [37.7850702, -122.4034505], [37.7851231, -122.4035159], [37.7851702, -122.4035743], [37.7855328, -122.40403], [37.7862746, -122.4049529], [37.7864463, -122.404735], [37.7865865, -122.4048136], [37.7867459, -122.4048752], [37.7868265, -122.4049267], [37.7868355, -122.4048551], [37.7869147, -122.404873], [37.7877685, -122.4050568], [37.788237, -122.4051523], [37.7887033, -122.4052473], [37.7891462, -122.4053364], [37.7892111, -122.4053494], [37.7893261, -122.4053725], [37.7896352, -122.4054347], [37.7901017, -122.4055285], [37.7905698, -122.4055991], [37.7915047, -122.4057597], [37.7917761, -122.4058148], [37.7923696, -122.4059355], [37.7924582, -122.4059535], [37.7925624, -122.4059745], [37.7933866, -122.4061403], [37.793828, -122.4062291], [37.7942666, -122.4063174], [37.7950988, -122.4064848], [37.7951483, -122.4064948], [37.7952034, -122.4065059], [37.7959786, -122.4066619], [37.7959709, -122.4067263], [37.7959246, -122.4070922]]
 </code></pre>
 </div>
 
@@ -200,6 +209,8 @@ sorulabiliyor, ilk noktayı soralım,</p>
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
 <span class="nb">map</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span><span class="n">zoom_start</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span><span class="n">control_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s2">&quot;Park&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s2">&quot;Çin Mahallesi&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
 <span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
 <span class="nb">map</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;direction1.html&#39;</span><span class="p">)</span>
 </code></pre>

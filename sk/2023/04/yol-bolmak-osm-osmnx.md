@@ -15,11 +15,11 @@ düğümler duraklar, köşe başları vs olabilir bağlantılar onlar
 arasındaki yollar olacaktır.
 
 OSMNX kullanıcının tanımladığı bölgeler içindeki yol yapısını döndürme
-kabiliyetine sahiptir, ve bu veriyi diskte onbellekleme yaparak
+kabiliyetine sahiptir, ve bu veriyi diskte önbellekleme yaparak
 saklayabilir, böylece aynı bölge için sonraki yükleme çağrılarının
 OSM'e bağlanması gerekmez. Eğer veride çizit yapısına uymayan yerler
 varsa bunlar döndürülmeden önce tamir edilir. Örnek olarak [1]'deki
-gösterile örnek yere bakalım,
+örnek yere bakalım,
 
 ```python
 import matplotlib.pyplot as plt
@@ -42,9 +42,11 @@ plt.savefig('osmnx-01.jpg',quality=50)
 
 `cache_folder` ile önbellek dosyalarının yazılacağı yer tanımlandı. Üstteki çağrı
 için baktık `30 520ecdb05972a5893b8a541266157cd0b30a6381.json` diye bir dosya
-oraya yazılmış, büyüklüğü 1.8 MB. `graph_from_bbox` ile belli kuzey, güney, doğu,
-batı üç noktalarının oluşturduğu kutunun içine düşen yol ağını aldık, fakat
-tek bir nokta verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
+oraya yazılmış, büyüklüğü 1.8 MB.
+
+`graph_from_bbox` ile belli kuzey, güney, doğu, batı üç noktalarının
+oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
+verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
 `graph_from_point((37.79, -122.41), dist=750` ile verili noktanın 750
 metre çevresindeki ağ alınabilir.
 
@@ -56,12 +58,11 @@ ox.config(use_cache=True, cache_folder='/tmp/osmnx')
 G = ox.graph_from_point((37.79, -122.41), dist=750, network_type="walk")
 ```
 
-
-Network tipi `network_type` ile tanımlanabilir, `walk`, `drive`, `bike`
+Network tipi `network_type` ile tanımlanıyor, `walk`, `drive`, `bike`
 değerleri geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
-bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
-ihtiyacına göre farklı değerler kullanılabilir, arabalarin geçebildiği her
-yol bisiklete uygun olmayabilir mesela, bu sebeple bu seçenek gerekli.
+bisiklet, ya da yürünebilen yol yapılarını döndürür. Uygulamanın
+ihtiyacına göre farklı ağ yapıları gerekebilir (arabaların geçebildiği her
+yol bisiklete uygun olmayabilir mesela), bu sebeple bu seçenek gerekli.
 
 Çağrı yapıldı, ve artık geri döndürülen `G` değişkeni içinde yol yapısı var,
 buna düğümlerden oluşan bir liste olarak erişilebilir, mesela 0'inci
@@ -105,10 +106,10 @@ print (destination_res)
 (7233579607, 15.949918872077847)
 ```
 
-Görülen iki kimlik değeri düğüm ID.
-
-Şimdi bu düğümler ile yine OSMNX içinde mevcut olan en kısa yol
-algoritmasını işletiyoruz,
+Sonuçlar bir Python tüpü (tuple) olarak verildi, birinci değer düğüm
+kimliği, ikincisi bizim verdiğimiz kordinata olan metre olarak yakınlık.
+Şimdi bu ID'ler ile yine OSMNX içinde mevcut olan en kısa yol algoritmasını
+işletiyoruz,
 
 ```python
 route = ox.shortest_path(G, origin_res[0], destination_res[0])
@@ -129,12 +130,10 @@ Out[1]:
  1332541752]
 ```
 
-Gecilecek yolun ilk 10 dugumunu listeledik. Kısa yol bize yine bir
-düğüm ID listesi olarak donduruldu, en kısa yol bu noktalardan
-oluşuyor. Bu noktalar hakkında daha detaylı bilgiyi `G` çizit
-objesinden alabiliriz, mesela enlem, boylam değerleri bu objeye
-sorulabiliyor, ilk noktayı soralım,
-
+Geçilecek yolun ilk 10 düğümü listeledik, en kısa yol bu noktalardan
+oluşuyor. Noktalar hakkında daha detaylı bilgiyi `G` çizit objesinden
+alabiliriz, mesela enlem, boylam değerleri bu objeye sorulabiliyor,
+ilk noktayı soralım,
 
 ```python
 G.nodes[route[0]]
@@ -184,3 +183,5 @@ Kaynaklar
 [5] [OSMNX Belge 2](https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest_path_osm_updated_example.ipynb)
 
 [6] [OSMNX Belge 3](https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb)
+
+

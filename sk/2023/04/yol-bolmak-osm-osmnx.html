@@ -36,26 +36,28 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Yol Bulmak, OSMNX</h1>
+<h1>En Kısa Yol Algoritması, Yol Ağı, OSMNX</h1>
 
-<p>OpenStreetMap dünya coğrafi verilerini içeren açık kaynak, herkesin
-bilgi ekleyebildiği devasa bir kaynaktır, verisi açık, bedava olarak
-paylaşılır. İçinde yollar, restoranlar, dükkanlar, önemli yerler gibi
-pek çok coğrafi bilgileri içerir. Fakat veriyi işlemek bazıları için
-zor olabilir.</p>
+<p>OpenStreetMap verisi tüm dünya coğrafi verilerini kapsayan açık
+kaynak, herkesin bilgi ekleyebildiği devasa bir veri deposudur, bedava
+olarak paylaşılır. İçinde yollar, restoranlar, dükkanlar, önemli
+yerler gibi pek çok coğrafi bilgileri içerir. Fakat veriyi işlemek
+bazıları için zor olabilir.</p>
 
 <p>Bu verinin daha rahat işlenmesini sağlayan bir paket OSMNX. Özellikle
 yol ağ yapısını rahat şekilde indirilmesini ve çizit (graph) olarak
 doğru şekilde gelmesini sağlıyor. Çizitler bilindiği gibi matematiğin
-bir dalidir, bize düğüm-bağlantı yapılarını işleyen algoritmalar
-sağlar, tabii ki bir yol ağı çizit teorisinin en bariz uygulama
-alanıdır, düğümler duraklar, köşe başları vs olabilir bağlantılar
-onlar arasındaki yollar olacaktır.</p>
+bir dalı, bize düğüm-bağlantı yapılarını işleyen algoritmalar sağlar,
+tabii ki bir yol ağı çizit teorisinin en bariz uygulama alanıdır,
+düğümler duraklar, köşe başları vs olabilir bağlantılar onlar
+arasındaki yollar olacaktır.</p>
 
-<p>OSMNX sadece kullanicinin tanimladigi bolgeler icindeki yol yapisini
-dondurme kabiliyetine sahiptir, ve bu veriyi diskte onbellekleme yaparak
-saklayabilir, boylece ayni bolge icin sonraki yukleme cagrilarinin OSM'e
-baglanmasi gerekmez. Örnek olarak [1]'deki şehre bakalım,</p>
+<p>OSMNX kullanıcının tanımladığı bölgeler içindeki yol yapısını döndürme
+kabiliyetine sahiptir, ve bu veriyi diskte onbellekleme yaparak
+saklayabilir, böylece aynı bölge için sonraki yükleme çağrılarının
+OSM'e bağlanması gerekmez. Eğer veride çizit yapısına uymayan yerler
+varsa bunlar döndürülmeden önce tamir edilir. Örnek olarak [1]'deki
+gösterile örnek yere bakalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
@@ -77,24 +79,23 @@ baglanmasi gerekmez. Örnek olarak [1]'deki şehre bakalım,</p>
 
 <p><img src="osmnx-01.jpg" alt="" /></p>
 
-<p><code>cache_folder</code> ile önbellek dosyalarının yazılacağı yer tanımlanır. Üstteki çağrı
+<p><code>cache_folder</code> ile önbellek dosyalarının yazılacağı yer tanımlandı. Üstteki çağrı
 için baktık <code>30 520ecdb05972a5893b8a541266157cd0b30a6381.json</code> diye bir dosya
-oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. </p>
-
-<p><code>graph_from_bbox</code> ile belli kuzey, güney, doğu, batı üç noktalarının
-oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
-verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
+oraya yazılmış, büyüklüğü 1.8 MB. <code>graph_from_bbox</code> ile belli kuzey, güney, doğu,
+batı üç noktalarının oluşturduğu kutunun içine düşen yol ağını aldık, fakat
+tek bir nokta verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
 <code>graph_from_point((37.79, -122.41), dist=750</code> ile verili noktanın 750
 metre çevresindeki ağ alınabilir.</p>
 
-<p>Network tipi <code>network_type</code> ile <code>walk</code>, <code>drive</code>, <code>bıke</code> değerleri
-geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
+<p>Network tipi <code>network_type</code> ile tanımlanabilir, <code>walk</code>, <code>drive</code>, <code>bike</code>
+değerleri geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
 bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
-ihtiyacına göre farklı değerler kullanılabilir.</p>
+ihtiyacına göre farklı değerler kullanılabilir, arabalarin geçebildiği her
+yol bisiklete uygun olmayabilir mesela, bu sebeple bu seçenek gerekli.</p>
 
-<p>Artık geri döndürülen <code>G</code> içinde yol yapısı var, buna düğümlerden
-oluşan bir liste olarak erişilebilir, mesela 0'inci ve 20'inci
-düğümler</p>
+<p>Çağrı yapıldı, ve artık geri döndürülen <code>G</code> değişkeni içinde yol yapısı var,
+buna düğümlerden oluşan bir liste olarak erişilebilir, mesela 0'inci
+ve 20'inci düğümler</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
@@ -139,8 +140,10 @@ kordinatlarına en yakın çizit düğümlerini bulmak lazım,</p>
 </code></pre>
 </div>
 
-<p>Görülen iki kimlik değeri düğüm İD, bunlarla yine OSMNX içinde mevcut
-olan en kısa yol algoritmasini işletiyoruz,</p>
+<p>Görülen iki kimlik değeri düğüm ID.</p>
+
+<p>Şimdi bu düğümler ile yine OSMNX içinde mevcut olan en kısa yol
+algoritmasını işletiyoruz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin_node</span><span class="p">,</span> <span class="n">destination_node</span><span class="p">)</span>
@@ -163,9 +166,11 @@ olan en kısa yol algoritmasini işletiyoruz,</p>
 </code></pre>
 </div>
 
-<p>Kısa yol bize bir düğüm İD listesi olarak donduruldu, yani en kısa yol
-bu düğüm değerlerinden oluşuyor. Listedeki ilk düğümün bilgilerini <code>G</code>
-çiziti üzerinden alabiliriz, </p>
+<p>Gecilecek yolun ilk 10 dugumunu listeledik. Kısa yol bize yine bir
+düğüm ID listesi olarak donduruldu, en kısa yol bu noktalardan
+oluşuyor. Bu noktalar hakkında daha detaylı bilgiyi <code>G</code> çizit
+objesinden alabiliriz, mesela enlem, boylam değerleri bu objeye
+sorulabiliyor, ilk noktayı soralım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
@@ -176,6 +181,8 @@ bu düğüm değerlerinden oluşuyor. Listedeki ilk düğümün bilgilerini <cod
 <pre><span></span><code>Out[1]: {&#39;y&#39;: 37.7838048, &#39;x&#39;: -122.410132, &#39;street_count&#39;: 1}
 </code></pre>
 </div>
+
+<p>Tüm noktaları enlem/boylam listesine çevirelim,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">coords</span> <span class="o">=</span> <span class="p">[[</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">route</span><span class="p">]</span>
@@ -199,6 +206,8 @@ bu düğüm değerlerinden oluşuyor. Listedeki ilk düğümün bilgilerini <cod
 </div>
 
 <p><a href="direction1.html">Tarif</a></p>
+
+<p>Haritada görülen kırmızı çizgiler yürünüş için en kısa yolu gösteriyor.</p>
 
 <p>Kaynaklar</p>
 

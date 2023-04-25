@@ -1,23 +1,25 @@
-# Yol Bulmak, OSMNX
+# En Kısa Yol Algoritması, Yol Ağı, OSMNX
 
-OpenStreetMap dünya coğrafi verilerini içeren açık kaynak, herkesin
-bilgi ekleyebildiği devasa bir kaynaktır, verisi açık, bedava olarak
-paylaşılır. İçinde yollar, restoranlar, dükkanlar, önemli yerler gibi
-pek çok coğrafi bilgileri içerir. Fakat veriyi işlemek bazıları için
-zor olabilir.
+OpenStreetMap verisi tüm dünya coğrafi verilerini kapsayan açık
+kaynak, herkesin bilgi ekleyebildiği devasa bir veri deposudur, bedava
+olarak paylaşılır. İçinde yollar, restoranlar, dükkanlar, önemli
+yerler gibi pek çok coğrafi bilgileri içerir. Fakat veriyi işlemek
+bazıları için zor olabilir.
 
 Bu verinin daha rahat işlenmesini sağlayan bir paket OSMNX. Özellikle
 yol ağ yapısını rahat şekilde indirilmesini ve çizit (graph) olarak
 doğru şekilde gelmesini sağlıyor. Çizitler bilindiği gibi matematiğin
-bir dalidir, bize düğüm-bağlantı yapılarını işleyen algoritmalar
-sağlar, tabii ki bir yol ağı çizit teorisinin en bariz uygulama
-alanıdır, düğümler duraklar, köşe başları vs olabilir bağlantılar
-onlar arasındaki yollar olacaktır.
+bir dalı, bize düğüm-bağlantı yapılarını işleyen algoritmalar sağlar,
+tabii ki bir yol ağı çizit teorisinin en bariz uygulama alanıdır,
+düğümler duraklar, köşe başları vs olabilir bağlantılar onlar
+arasındaki yollar olacaktır.
 
-OSMNX sadece kullanicinin tanimladigi bolgeler icindeki yol yapisini
-dondurme kabiliyetine sahiptir, ve bu veriyi diskte onbellekleme yaparak
-saklayabilir, boylece ayni bolge icin sonraki yukleme cagrilarinin OSM'e
-baglanmasi gerekmez. Örnek olarak [1]'deki şehre bakalım,
+OSMNX kullanıcının tanımladığı bölgeler içindeki yol yapısını döndürme
+kabiliyetine sahiptir, ve bu veriyi diskte onbellekleme yaparak
+saklayabilir, böylece aynı bölge için sonraki yükleme çağrılarının
+OSM'e bağlanması gerekmez. Eğer veride çizit yapısına uymayan yerler
+varsa bunlar döndürülmeden önce tamir edilir. Örnek olarak [1]'deki
+gösterile örnek yere bakalım,
 
 ```python
 import matplotlib.pyplot as plt
@@ -38,24 +40,23 @@ plt.savefig('osmnx-01.jpg',quality=50)
 ![](osmnx-01.jpg)
 
 
-`cache_folder` ile önbellek dosyalarının yazılacağı yer tanımlanır. Üstteki çağrı
+`cache_folder` ile önbellek dosyalarının yazılacağı yer tanımlandı. Üstteki çağrı
 için baktık `30 520ecdb05972a5893b8a541266157cd0b30a6381.json` diye bir dosya
-oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. 
-
-`graph_from_bbox` ile belli kuzey, güney, doğu, batı üç noktalarının
-oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
-verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
+oraya yazılmış, büyüklüğü 1.8 MB. `graph_from_bbox` ile belli kuzey, güney, doğu,
+batı üç noktalarının oluşturduğu kutunun içine düşen yol ağını aldık, fakat
+tek bir nokta verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
 `graph_from_point((37.79, -122.41), dist=750` ile verili noktanın 750
 metre çevresindeki ağ alınabilir.
 
-Network tipi `network_type` ile `walk`, `drive`, `bıke` değerleri
-geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
+Network tipi `network_type` ile tanımlanabilir, `walk`, `drive`, `bike`
+değerleri geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
 bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
-ihtiyacına göre farklı değerler kullanılabilir.
+ihtiyacına göre farklı değerler kullanılabilir, arabalarin geçebildiği her
+yol bisiklete uygun olmayabilir mesela, bu sebeple bu seçenek gerekli.
 
-Artık geri döndürülen `G` içinde yol yapısı var, buna düğümlerden
-oluşan bir liste olarak erişilebilir, mesela 0'inci ve 20'inci
-düğümler
+Çağrı yapıldı, ve artık geri döndürülen `G` değişkeni içinde yol yapısı var,
+buna düğümlerden oluşan bir liste olarak erişilebilir, mesela 0'inci
+ve 20'inci düğümler
 
 
 ```python
@@ -95,8 +96,10 @@ print (destination_node)
 9835210340
 ```
 
-Görülen iki kimlik değeri düğüm İD, bunlarla yine OSMNX içinde mevcut
-olan en kısa yol algoritmasini işletiyoruz,
+Görülen iki kimlik değeri düğüm ID.
+
+Şimdi bu düğümler ile yine OSMNX içinde mevcut olan en kısa yol
+algoritmasını işletiyoruz,
 
 ```python
 route = ox.shortest_path(G, origin_node, destination_node)
@@ -117,9 +120,11 @@ Out[1]:
  10802171480]
 ```
 
-Kısa yol bize bir düğüm İD listesi olarak donduruldu, yani en kısa yol
-bu düğüm değerlerinden oluşuyor. Listedeki ilk düğümün bilgilerini `G`
-çiziti üzerinden alabiliriz, 
+Gecilecek yolun ilk 10 dugumunu listeledik. Kısa yol bize yine bir
+düğüm ID listesi olarak donduruldu, en kısa yol bu noktalardan
+oluşuyor. Bu noktalar hakkında daha detaylı bilgiyi `G` çizit
+objesinden alabiliriz, mesela enlem, boylam değerleri bu objeye
+sorulabiliyor, ilk noktayı soralım,
 
 
 ```python
@@ -129,6 +134,8 @@ G.nodes[route[0]]
 ```text
 Out[1]: {'y': 37.7838048, 'x': -122.410132, 'street_count': 1}
 ```
+
+Tüm noktaları enlem/boylam listesine çevirelim,
 
 ```python
 coords = [[G.nodes[r]['y'],G.nodes[r]['x']] for r in route]
@@ -149,6 +156,8 @@ map.save('direction1.html')
 ```
 
 [Tarif](direction1.html)
+
+Haritada görülen kırmızı çizgiler yürünüş için en kısa yolu gösteriyor.
 
 Kaynaklar
 

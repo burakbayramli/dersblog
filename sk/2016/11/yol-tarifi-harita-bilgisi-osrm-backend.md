@@ -2,14 +2,14 @@
 
 Verili herhangi bir enlem / boylam kordinatına en yakın sokak, yol
 isimlerini, yerlerini bulabilen, hatta bir noktadan diğerine nasıl
-gidileceğini veren bir veri tabanı ve program ÖSRM. Aslında bu
+gidileceğini veren bir veri tabanı ve program OSRM. Aslında bu
 arkadaşlar OpenStreetMap adli projenin veri tabanını daha iyi
 erişilebilir hale getirmişler.
 
 https://github.com/Project-OSRM
 
 Proje C++ bazlı, hızlı işliyor. İçinde OSM projesinin dosyalarını alıp
-onları daha ufaltan, ve bir servis ve APİ üzerinden dış erişime hazır
+onları daha ufaltan, ve bir servis ve API üzerinden dış erişime hazır
 hale getiren kodlar var. Bu servisin nasıl işlediğini göstermek için
 kendileri bir bedava servis işletiyorlar,
 
@@ -24,8 +24,8 @@ gidilir, hangi caddeler kullanılır,
 
 http://router.project-osrm.org/route/v1/foot/29.036428,40.987659;29.039228,40.992186
 
-ÜkURL içinde v1 ardından gidiş şekli verilmeli, araba için `çar`, bisiklet
-için `bicycle`; üstteki yürüyerek.
+URL içinde v1 ardından gidiş şekli verilmeli, araba için `car`,
+bisiklet için `bicycle`; üstteki yürüyerek.
 
 Servisten gelen verileri işlemenin basit yollarından biri tarifte
 kordinat yol parçalarını birleştirip bir harita üzerinde
@@ -107,16 +107,12 @@ isletilir. Bu komut 5000 port'unu dinleyen bir servis baslatir. Artik
 ustteki turunden tum komutlarda http://router.project-osrm.org yerine
 http://localhost:5000 kullanilabilir.
 
-Baglantilar
+Kaynaklar
 
 https://www.digitalocean.com/community/tutorials/how-to-set-up-an-osrm-server-on-ubuntu-14-04
 
 https://github.com/Project-OSRM/osrm-backend/wiki/Running-OSRM
 
 https://github.com/Project-OSRM/osrm-backend/blob/master/docs/http.md
-
-
-
-
 
 

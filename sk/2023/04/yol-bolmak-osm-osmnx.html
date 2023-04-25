@@ -1,0 +1,172 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yol Bulmak, OSMNX</h1>
+
+<p>OpenStreetMap dünya coğrafi verilerini içeren açık kaynak, herkesin
+bilgi ekleyebildiği devasa bir kaynaktır, verisi açık, bedava olarak
+paylaşılır. İçinde yollar, restoranlar, dükkanlar, önemli yerler gibi
+pek çok coğrafi bilgileri içerir. Fakat veriyi işlemek bazıları için
+zor olabilir.</p>
+
+<p>Bu verinin daha rahat işlenmesini sağlayan bir paket OSMNX. Özellikle
+yol ağ yapısını rahat şekilde indirilmesini ve çizit (graph) olarak
+doğru şekilde gelmesini sağlıyor. Çizitler bilindiği gibi matematiğin
+bir dalidir, bize düğüm-bağlantı yapılarını işleyen algoritmalar
+sağlar, tabii ki bir yol ağı çizit teorisinin en bariz uygulama
+alanıdır, düğümler duraklar, köşe başları vs olabilir bağlantılar
+onlar arasındaki yollar olacaktır.</p>
+
+<p>OSMNX sadece kullanicinin tanimladigi bolgeler icindeki yol yapisini
+dondurme kabiliyetine sahiptir, ve bu veriyi diskte onbellekleme yaparak
+saklayabilir, boylece ayni bolge icin sonraki yukleme cagrilarinin OSM'e
+baglanmasi gerekmez. Örnek olarak [1]'deki şehre bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+
+<span class="n">ox</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_folder</span><span class="o">=</span><span class="s1">&#39;/tmp/osmnx&#39;</span><span class="p">)</span>
+
+<span class="n">north</span><span class="p">,</span> <span class="n">south</span><span class="p">,</span> <span class="n">east</span><span class="p">,</span> <span class="n">west</span> <span class="o">=</span> <span class="mf">37.79</span><span class="p">,</span> <span class="mf">37.78</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.41</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.43</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_bbox</span><span class="p">(</span><span class="n">north</span><span class="p">,</span> <span class="n">south</span><span class="p">,</span> <span class="n">east</span><span class="p">,</span> <span class="n">west</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;walk&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">plot_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;osmnx-01.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="osmnx-01.jpg" alt="" /></p>
+
+<p><code>cache_folder</code> ile önbellek dosyalarının yazılacağı yer tanımlanır. Üstteki çağrı
+için baktık <code>30 520ecdb05972a5893b8a541266157cd0b30a6381.json</code> diye bir dosya
+oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">20</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>65281835
+65295347
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[65281835, 65281838, 65282081, 65282083, 65282130, 65282133, 65282136, 65282140, 65282144, 65285109]
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">40.969615352945354</span><span class="p">,</span><span class="mf">29.07036154764545</span><span class="p">)</span>
+<span class="n">destination</span> <span class="o">=</span> <span class="p">(</span><span class="mf">40.96660865138665</span><span class="p">,</span><span class="mf">29.086701750114123</span><span class="p">)</span>
+<span class="n">origin_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">destination_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">destination</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">destination</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">origin_node</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">destination_node</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>455860527
+455860791
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin_node</span><span class="p">,</span> <span class="n">destination_node</span><span class="p">)</span>
+<span class="c1">#fig, ax = ox.plot_graph_route(graph, route, route_color=&quot;c&quot;, node_size=3)</span>
+<span class="c1">#plt.savefig(&#39;/tmp/out2.jpg&#39;)</span>
+<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">route</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>455860527
+455860629
+455860619
+6928189233
+6928189232
+455860627
+448779470
+2244437518
+10023487057
+2373133718
+448779466
+448779460
+448779457
+448779453
+448779456
+448779463
+448779455
+455860791
+</code></pre>
+</div>
+
+<p>[devam edecek]</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Geoff Boeing](https://geoffboeing.com/2016/11/osmnx-python-street-networks/)</p>
+
+<p>[2] [OSRM Yol Tarifi](../../2016/11/yol-tarifi-harita-bilgisi-osrm-backend.html)</p>
+
+<p>[3] [NetworkX Multidigraph](https://networkx.org/documentation/stable/reference/classes/multidigraph.html)</p>
+
+<p>[4] [OSMNX Belge 1](https://github.com/gboeing/osmnx-examples/blob/main/notebooks/01-overview-osmnx.ipynb)</p>
+
+<p>[5] [OSMNX Belge 2](https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest<em>path</em>osm<em>updated</em>example.ipynb)</p>
+
+<p>[6] [OSMNX Belge 3](https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb)</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

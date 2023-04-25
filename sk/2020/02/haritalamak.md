@@ -56,6 +56,15 @@ m.save("/tmp/index.html")
 
 ![](har8.jpg)
 
+Eğer kapalı alan yerine sadece başlangıç ve bitiş kordinatları arasında bir
+parçalı çizgi çizilsin istiyorsak
+
+```python
+folium.PolyLine(locations=coordinates, color="blue").add_to(map)
+```
+
+gibi bir çağrı gerekirdi.
+
 Başlık Eklemek
 
 ```python

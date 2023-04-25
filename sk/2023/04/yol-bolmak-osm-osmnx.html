@@ -81,6 +81,21 @@ baglanmasi gerekmez. Örnek olarak [1]'deki şehre bakalım,</p>
 için baktık <code>30 520ecdb05972a5893b8a541266157cd0b30a6381.json</code> diye bir dosya
 oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. </p>
 
+<p><code>graph_from_bbox</code> ile belli kuzey, güney, doğu, batı üç noktalarının
+oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
+verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
+<code>graph_from_point((37.79, -122.41), dist=750</code> ile verili noktanın 750
+metre çevresindeki ağ alınabilir.</p>
+
+<p>Network tipi <code>network_type</code> ile <code>walk</code>, <code>drive</code>, <code>bıke</code> değerleri
+geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
+bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
+ihtiyacına göre farklı değerler kullanılabilir.</p>
+
+<p>Artık geri döndürülen <code>G</code> içinde yol yapısı var, buna düğümlerden
+oluşan bir liste olarak erişilebilir, mesela 0'inci ve 20'inci
+düğümler</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
 <span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">20</span><span class="p">])</span>
@@ -93,6 +108,8 @@ oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. </p>
 </code></pre>
 </div>
 
+<p>İlk 10 düğüm</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span>
 </code></pre>
@@ -103,53 +120,85 @@ oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. </p>
 </code></pre>
 </div>
 
+<p>Kısa yol bulmaya gelelim; ilk önce eldeki başlangıç ve bitiş coğrafi
+kordinatlarına en yakın çizit düğümlerini bulmak lazım,</p>
+
 <div class="codehilite">
-<pre><span></span><code><span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">40.969615352945354</span><span class="p">,</span><span class="mf">29.07036154764545</span><span class="p">)</span>
-<span class="n">destination</span> <span class="o">=</span> <span class="p">(</span><span class="mf">40.96660865138665</span><span class="p">,</span><span class="mf">29.086701750114123</span><span class="p">)</span>
-<span class="n">origin_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="n">destination_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">destination</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">destination</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<pre><span></span><code><span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">37.784825495166544</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.40208526405367</span><span class="p">)</span>
+<span class="n">destination</span> <span class="o">=</span> <span class="p">(</span><span class="mf">37.79584463577157</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.40724290129684</span><span class="p">)</span>
+<span class="n">origin_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">destination_node</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">distance</span><span class="o">.</span><span class="n">nearest_nodes</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">destination</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">destination</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 <span class="nb">print</span> <span class="p">(</span><span class="n">origin_node</span><span class="p">)</span>
 <span class="nb">print</span> <span class="p">(</span><span class="n">destination_node</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>455860527
-455860791
+<pre><span></span><code>5429618404
+9835210340
+</code></pre>
+</div>
+
+<p>Görülen iki kimlik değeri düğüm İD, bunlarla yine OSMNX içinde mevcut
+olan en kısa yol algoritmasini işletiyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin_node</span><span class="p">,</span> <span class="n">destination_node</span><span class="p">)</span>
+<span class="n">route</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">origin_node</span><span class="p">,</span> <span class="n">destination_node</span><span class="p">)</span>
-<span class="c1">#fig, ax = ox.plot_graph_route(graph, route, route_color=&quot;c&quot;, node_size=3)</span>
-<span class="c1">#plt.savefig(&#39;/tmp/out2.jpg&#39;)</span>
-<span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">route</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<pre><span></span><code>Out[1]: 
+[5429618404,
+ 5429618406,
+ 65343960,
+ 65333814,
+ 1580501206,
+ 65334120,
+ 65312401,
+ 65343962,
+ 65314158,
+ 10802171480]
+</code></pre>
+</div>
+
+<p>Kısa yol bize bir düğüm İD listesi olarak donduruldu, yani en kısa yol
+bu düğüm değerlerinden oluşuyor. Listedeki ilk düğümün bilgilerini <code>G</code>
+çiziti üzerinden alabiliriz, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>455860527
-455860629
-455860619
-6928189233
-6928189232
-455860627
-448779470
-2244437518
-10023487057
-2373133718
-448779466
-448779460
-448779457
-448779453
-448779456
-448779463
-448779455
-455860791
+<pre><span></span><code>Out[1]: {&#39;y&#39;: 37.7838048, &#39;x&#39;: -122.410132, &#39;street_count&#39;: 1}
 </code></pre>
 </div>
 
-<p>[devam edecek]</p>
+<div class="codehilite">
+<pre><span></span><code><span class="n">coords</span> <span class="o">=</span> <span class="p">[[</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">route</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[37.7838048, -122.410132], [37.7842485, -122.4102223], [37.7841515, -122.4109719], [37.7850815, -122.4111594], [37.7860145, -122.4113476], [37.7869469, -122.4115357], [37.7872177, -122.4115903], [37.7875647, -122.4116603], [37.7878756, -122.411723], [37.7880186, -122.4105956], [37.7882369, -122.4106376], [37.7883078, -122.4101224], [37.7884585, -122.4101529], [37.7885478, -122.410171], [37.7889453, -122.4102515], [37.7890203, -122.4102667], [37.7890994, -122.4102825], [37.7891123, -122.4101922], [37.7898919, -122.4103503], [37.7899644, -122.4103641]]
+</code></pre>
+</div>
+
+<p>Kordinatları bir Folium haritasında gösterebiliriz artık,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span><span class="n">zoom_start</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span><span class="n">control_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;direction1.html&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="direction1.html">Tarif</a></p>
 
 <p>Kaynaklar</p>
 

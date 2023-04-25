@@ -42,6 +42,21 @@ plt.savefig('osmnx-01.jpg',quality=50)
 için baktık `30 520ecdb05972a5893b8a541266157cd0b30a6381.json` diye bir dosya
 oraya yazılmış, büyüklüğü 1.8 MB. Fena değil. 
 
+`graph_from_bbox` ile belli kuzey, güney, doğu, batı üç noktalarının
+oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
+verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
+`graph_from_point((37.79, -122.41), dist=750` ile verili noktanın 750
+metre çevresindeki ağ alınabilir.
+
+Network tipi `network_type` ile `walk`, `drive`, `bıke` değerleri
+geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
+bisiklet, ya da yürünebilen yol yapılarını döndürecektir. Uygulamanın
+ihtiyacına göre farklı değerler kullanılabilir.
+
+Artık geri döndürülen `G` içinde yol yapısı var, buna düğümlerden
+oluşan bir liste olarak erişilebilir, mesela 0'inci ve 20'inci
+düğümler
+
 
 ```python
 print (list(G)[0])
@@ -53,6 +68,8 @@ print (list(G)[20])
 65295347
 ```
 
+İlk 10 düğüm
+
 ```python
 print (list(G)[:10])
 ```
@@ -61,50 +78,77 @@ print (list(G)[:10])
 [65281835, 65281838, 65282081, 65282083, 65282130, 65282133, 65282136, 65282140, 65282144, 65285109]
 ```
 
+Kısa yol bulmaya gelelim; ilk önce eldeki başlangıç ve bitiş coğrafi
+kordinatlarına en yakın çizit düğümlerini bulmak lazım,
 
 ```python
-origin = (40.969615352945354,29.07036154764545)
-destination = (40.96660865138665,29.086701750114123)
-origin_node = ox.distance.nearest_nodes(graph, origin[1], origin[0])
-destination_node = ox.distance.nearest_nodes(graph, destination[1], destination[0])
+origin = (37.784825495166544, -122.40208526405367)
+destination = (37.79584463577157, -122.40724290129684)
+origin_node = ox.distance.nearest_nodes(G, origin[1], origin[0])
+destination_node = ox.distance.nearest_nodes(G, destination[1], destination[0])
 print (origin_node)
 print (destination_node)
 ```
 
 ```text
-455860527
-455860791
+5429618404
+9835210340
 ```
 
+Görülen iki kimlik değeri düğüm İD, bunlarla yine OSMNX içinde mevcut
+olan en kısa yol algoritmasini işletiyoruz,
+
 ```python
-route = ox.shortest_path(graph, origin_node, destination_node)
-#fig, ax = ox.plot_graph_route(graph, route, route_color="c", node_size=3)
-#plt.savefig('/tmp/out2.jpg')
-for r in route: print (r)
+route = ox.shortest_path(G, origin_node, destination_node)
+route[:10]
 ```
 
 ```text
-455860527
-455860629
-455860619
-6928189233
-6928189232
-455860627
-448779470
-2244437518
-10023487057
-2373133718
-448779466
-448779460
-448779457
-448779453
-448779456
-448779463
-448779455
-455860791
+Out[1]: 
+[5429618404,
+ 5429618406,
+ 65343960,
+ 65333814,
+ 1580501206,
+ 65334120,
+ 65312401,
+ 65343962,
+ 65314158,
+ 10802171480]
 ```
 
-[devam edecek]
+Kısa yol bize bir düğüm İD listesi olarak donduruldu, yani en kısa yol
+bu düğüm değerlerinden oluşuyor. Listedeki ilk düğümün bilgilerini `G`
+çiziti üzerinden alabiliriz, 
+
+
+```python
+G.nodes[route[0]]
+```
+
+```text
+Out[1]: {'y': 37.7838048, 'x': -122.410132, 'street_count': 1}
+```
+
+```python
+coords = [[G.nodes[r]['y'],G.nodes[r]['x']] for r in route]
+print (coords)
+```
+
+```text
+[[37.7838048, -122.410132], [37.7842485, -122.4102223], [37.7841515, -122.4109719], [37.7850815, -122.4111594], [37.7860145, -122.4113476], [37.7869469, -122.4115357], [37.7872177, -122.4115903], [37.7875647, -122.4116603], [37.7878756, -122.411723], [37.7880186, -122.4105956], [37.7882369, -122.4106376], [37.7883078, -122.4101224], [37.7884585, -122.4101529], [37.7885478, -122.410171], [37.7889453, -122.4102515], [37.7890203, -122.4102667], [37.7890994, -122.4102825], [37.7891123, -122.4101922], [37.7898919, -122.4103503], [37.7899644, -122.4103641]]
+```
+
+Kordinatları bir Folium haritasında gösterebiliriz artık,
+
+```python
+import folium
+map = folium.Map(location=origin,zoom_start=16,control_scale=True)
+folium.PolyLine(locations=coords, color="red").add_to(map)
+map.save('direction1.html')
+```
+
+[Tarif](direction1.html)
 
 Kaynaklar
 

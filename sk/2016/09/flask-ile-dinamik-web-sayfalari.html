@@ -271,6 +271,22 @@ yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.</p>
 </code></pre>
 </div>
 
+<h3>Dinamik İmaj, HTML Üretmek</h3>
+
+<p>Bazen kontrolü aktardığımız bir sonraki ekranın tamamen bir imaj, ya
+da tamamen pür bizim ürettiğimiz (şablon kullanmadan) bir HTML
+olmasını isteyebiliriz. Her iki durumda da <code>send_file</code> komutu faydalı.
+Mesela</p>
+
+<pre><code>@app.route('/show_img`)
+def travel_maps(coords,resolution):
+  ...  
+  fout = ... # imaj yarat, /tmp altinda olabilir, isim fout
+  return send_file(fout)  
+</code></pre>
+
+<p>HTML dosyaları için benzer mantık yeterli.</p>
+
 <h3>Dosya Yüklemek (Upload)</h3>
 
 <p>Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML</p>
@@ -299,9 +315,10 @@ yani 3,2,1 siralanip 1,2,3 olarak geri gonderilecek.</p>
 
 <h3>Dosya İndirmek</h3>
 
-<p>Eğer ek olarak indirim (download) dizinine gidecek bir dosyayı tarayıcıya
-vermek istiyorsak, <code>send_file</code> kullanabiliriz. Alttaki örnekte <code>/tmp/out.csv</code>
-dosyasının bir şekilde üretildiğini farzediyoruz, </p>
+<p>Ekrana basilan degil, eğer eklenti (attachement) olarak indirim
+(download) dizinine gidecek bir dosyayı tarayıcıya vermek istiyorsak,
+<code>send_file</code> kullanabiliriz. Alttaki örnekte <code>/tmp/out.csv</code> dosyasının
+bir şekilde üretildiğini farzediyoruz,</p>
 
 <p>@app.route('/test<em>csv')
 def test</em>csv():

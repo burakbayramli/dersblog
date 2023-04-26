@@ -236,6 +236,23 @@ print("Status code: ", response.status_code)
 print(response.json())
 ```
 
+### Dinamik İmaj, HTML Üretmek
+
+Bazen kontrolü aktardığımız bir sonraki ekranın tamamen bir imaj, ya
+da tamamen pür bizim ürettiğimiz (şablon kullanmadan) bir HTML
+olmasını isteyebiliriz. Her iki durumda da `send_file` komutu faydalı.
+Mesela
+
+```
+@app.route('/show_img`)
+def travel_maps(coords,resolution):
+  ...  
+  fout = ... # imaj yarat, /tmp altinda olabilir, isim fout
+  return send_file(fout)  
+```
+
+HTML dosyaları için benzer mantık yeterli.
+
 ### Dosya Yüklemek (Upload)
 
 Bir siteye yerel dosyalarımıza göndermek / yüklemek için HTML
@@ -264,9 +281,10 @@ def upload_file():
 
 ### Dosya İndirmek
 
-Eğer ek olarak indirim (download) dizinine gidecek bir dosyayı tarayıcıya
-vermek istiyorsak, `send_file` kullanabiliriz. Alttaki örnekte `/tmp/out.csv`
-dosyasının bir şekilde üretildiğini farzediyoruz, 
+Ekrana basilan degil, eğer eklenti (attachement) olarak indirim
+(download) dizinine gidecek bir dosyayı tarayıcıya vermek istiyorsak,
+`send_file` kullanabiliriz. Alttaki örnekte `/tmp/out.csv` dosyasının
+bir şekilde üretildiğini farzediyoruz,
 
 @app.route('/test_csv')
 def test_csv():

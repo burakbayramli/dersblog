@@ -110,7 +110,7 @@ Mobil için UI geliştirenler bilir, HTML görüntüsü küçük
 </html>
 ```
 
-### Form Verisi
+### Form Verisi, Metin Kutusu
 
 Örnek olarak bir girdi kutusu düşünelim, o kutuya girilen parametre
 ile bir işlem yapılıyor, sonuçlar aynı sayfada gösteriliyor, bir arama
@@ -149,6 +149,15 @@ teker erisebilirdi mesela,
 [Sayfa](sayfa2.txt)
 
 gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. 
+
+### Form Verisi Secenek Listesi (Dropdown List)
+
+`<form>` içinde gerekli olan komutlar altta gösteriliyor,
+
+[Sayfa](sayfa3.txt)
+
+Secenegi form post edildikten sonra gonderilen metot icinde `request.form.get("secim")`
+komutu ile okuyabiliriz. 
 
 ### Hafızada Sonuç, Referans Veri Tutmak
 

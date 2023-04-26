@@ -262,6 +262,20 @@ def upload_file():
       return 'file uploaded successfully'
 ```
 
+### Dosya İndirmek
+
+Eğer ek olarak indirim (download) dizinine gidecek bir dosyayı tarayıcıya
+vermek istiyorsak, `send_file` kullanabiliriz. Alttaki örnekte `/tmp/out.csv`
+dosyasının bir şekilde üretildiğini farzediyoruz, 
+
+@app.route('/test_csv')
+def test_csv():
+    return send_file('/tmp/out.csv',mimetype='text/csv',as_attachment=True)
+
+Artık tarayıcıyla `/test_csv` adresi ziyaret edildiğinde dosya indirilmeye
+başlayacaktır. 
+
+
 ### Başlatma Numaraları
 
 En basit kullanımla bir `app.py` içinde olan uygulamayı `python

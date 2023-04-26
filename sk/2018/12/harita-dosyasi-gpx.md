@@ -1,6 +1,8 @@
 # Yol Dosyaları, GPX Formatı
 
-Paket gpxpy ile yol tarifi içeren harita dosyalarını işlenebilir,
+Wikiloc gibi servisler yol tariflerini çoğunlukla GPX formatında
+paylaşırlar. Paket `gpxpy` ile bu dosyaları işleyebiliriz. Bu yazıyla
+aynı dizinde `yol1.gpx` dosyası var, içeriği şöyle,
 
 ```python
 from bs4 import BeautifulSoup
@@ -52,7 +54,7 @@ print(pretty_xml[:900])
 
 ```
 
-Kordinat listesini çıkartmak için,
+Kordinat listesini bu dosyadan şöyle çıkartabiliriz,
 
 ```python
 import gpxpy, gpxpy.gpx
@@ -72,7 +74,7 @@ print (points[:4])
 [[40.964344, 41.010343], [40.964344, 41.010344], [40.964344, 41.010344], [40.964325, 41.010299]]
 ```
 
-Yeni bir GPX dosyasi sifirdan yaratmak icin,
+Yeni bir GPX dosyası sıfırdan yaratmak için,
 
 ```python
 gpx = gpxpy.gpx.GPX()

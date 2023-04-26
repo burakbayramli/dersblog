@@ -89,9 +89,7 @@ gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(40.964344, 41.010343, elevatio
 gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(40.964344, 41.010344, elevation=1235))
 gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(40.964325, 41.010299, elevation=1236))
 
-# You can add routes and waypoints, too...
-
-print('Created GPX:', gpx.to_xml())
+print('GPX:', gpx.to_xml())
 ```
 
 ```text

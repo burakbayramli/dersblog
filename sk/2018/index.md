@@ -54,3 +54,5 @@
 
 [Doküman İndeksleme, Arama](12/dokuman-indeksleme-arama.html)
 
+[Yol Dosyaları, GPX Formatı](12/harita-dosyasi-gpx.html)
+

@@ -71,3 +71,47 @@ print (points[:4])
 170
 [[40.964344, 41.010343], [40.964344, 41.010344], [40.964344, 41.010344], [40.964325, 41.010299]]
 ```
+
+Yeni bir GPX dosyasi sifirdan yaratmak icin,
+
+```python
+gpx = gpxpy.gpx.GPX()
+
+gpx_track = gpxpy.gpx.GPXTrack()
+gpx.tracks.append(gpx_track)
+
+gpx_segment = gpxpy.gpx.GPXTrackSegment()
+gpx_track.segments.append(gpx_segment)
+
+gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(40.964344, 41.010343, elevation=1234))
+gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(40.964344, 41.010344, elevation=1235))
+gpx_segment.points.append(gpxpy.gpx.GPXTrackPoint(40.964325, 41.010299, elevation=1236))
+
+# You can add routes and waypoints, too...
+
+print('Created GPX:', gpx.to_xml())
+```
+
+```text
+Created GPX: <?xml version="1.0" encoding="UTF-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd" version="1.1" creator="gpx.py -- https://github.com/tkrajina/gpxpy">
+  <trk>
+    <trkseg>
+      <trkpt lat="40.964344" lon="41.010343">
+        <ele>1234</ele>
+      </trkpt>
+      <trkpt lat="40.964344" lon="41.010344">
+        <ele>1235</ele>
+      </trkpt>
+      <trkpt lat="40.964325" lon="41.010299">
+        <ele>1236</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+```
+
+Kaynaklar
+
+[1] https://pypi.org/project/gpxpy/
+

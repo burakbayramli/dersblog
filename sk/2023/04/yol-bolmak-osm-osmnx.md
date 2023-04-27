@@ -170,6 +170,37 @@ map.save('direction1.html')
 
 Haritada görülen kırmızı çizgiler yürünüş için en kısa yolu gösteriyor.
 
+Ham OSM Dosyaları, Format Değişimi
+
+Eger bir OSM dosyasini indirip direk kendi yerel diskimizden okutmak istiyorsak
+`graph_from_xml` cagrisi var. [7]'den mesela ufak bir dosya Seychelles indirelim,
+`.osm.bz2` dosyasi
+
+```python
+import osmnx as ox
+
+G = ox.graph_from_xml("seychelles-latest.osm.bz2")
+```
+
+ile okuyabiliriz. Eğer bu çiziti başka bir formatta yazmak istiyorsak,
+mesela her satır "düğüm1 - düğüm2 - değerler" olacak şekilde, yani
+1'inci düğümün bağlı olduğu 2'inci düğüm ve aralarındaki kenar
+ağırlığı her satıra yazılacak, bunu
+
+```python
+import networkx as nx
+
+nx.write_edgelist(G, "test.edgelist.gz",data=["oneway","length"])
+```
+
+ile yapabiliriz. Her düğümün coğrafi kordinatını .osm dosyasını direk
+tarayarak yapabiliriz, okunabilir bir dosya bu, ve `lat`, `lon` değerleri
+her düğüm için var.
+
+Dikkat, eğer .osm dosyası çok büyük ise `graph_from_xml` için yerel
+bilgisayarın hafızası yetmeyebilir, mesela Lüksemburg gibi ufak bir
+harita için bile 4 GB yeterli olmadı.
+
 Kaynaklar
 
 [1] <a href="https://geoffboeing.com/2016/11/osmnx-python-street-networks/">Geoff Boeing</a>
@@ -183,3 +214,5 @@ Kaynaklar
 [5] <a href="https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest_path_osm_updated_example.ipynb">OSMNX Belge 2</a>
 
 [6] <a href="https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb">OSMNX Belge 3</a>
+
+[7] http://download.geofabrik.de

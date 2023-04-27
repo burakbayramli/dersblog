@@ -221,6 +221,39 @@ ilk noktayı soralım,</p>
 
 <p>Haritada görülen kırmızı çizgiler yürünüş için en kısa yolu gösteriyor.</p>
 
+<p>Ham OSM Dosyaları, Format Değişimi</p>
+
+<p>Eger bir OSM dosyasini indirip direk kendi yerel diskimizden okutmak istiyorsak
+<code>graph_from_xml</code> cagrisi var. [7]'den mesela ufak bir dosya Seychelles indirelim,
+<code>.osm.bz2</code> dosyasi</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_xml</span><span class="p">(</span><span class="s2">&quot;seychelles-latest.osm.bz2&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>ile okuyabiliriz. Eğer bu çiziti başka bir formatta yazmak istiyorsak,
+mesela her satır "düğüm1 - düğüm2 - değerler" olacak şekilde, yani
+1'inci düğümün bağlı olduğu 2'inci düğüm ve aralarındaki kenar
+ağırlığı her satıra yazılacak, bunu</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="n">nx</span><span class="o">.</span><span class="n">write_edgelist</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;test.edgelist.gz&quot;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;oneway&quot;</span><span class="p">,</span><span class="s2">&quot;length&quot;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p>ile yapabiliriz. Her düğümün coğrafi kordinatını .osm dosyasını direk
+tarayarak yapabiliriz, okunabilir bir dosya bu, ve <code>lat</code>, <code>lon</code> değerleri
+her düğüm için var.</p>
+
+<p>Dikkat, eğer .osm dosyası çok büyük ise <code>graph_from_xml</code> için yerel
+bilgisayarın hafızası yetmeyebilir, mesela Lüksemburg gibi ufak bir
+harita için bile 4 GB yeterli olmadı.</p>
+
 <p>Kaynaklar</p>
 
 <p>[1] <a href="https://geoffboeing.com/2016/11/osmnx-python-street-networks/">Geoff Boeing</a></p>
@@ -234,6 +267,8 @@ ilk noktayı soralım,</p>
 <p>[5] <a href="https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest_path_osm_updated_example.ipynb">OSMNX Belge 2</a></p>
 
 <p>[6] <a href="https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb">OSMNX Belge 3</a></p>
+
+<p>[7] http://download.geofabrik.de</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

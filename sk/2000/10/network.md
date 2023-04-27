@@ -6,7 +6,7 @@
 
 [TCP/IP'ye Genel Bir Bakis](tcpip-genel-bir-bakis.html)
 
-[Network Ölçümü](../../2020/08)
+[Network Ölçümü](../../2020/08/network-olcumu.html)
 
 [Yerel Ağ (Network) Kurmak - Ubuntu](../../2013/09/yerel-ag-kurmak-ubuntu.html)
 

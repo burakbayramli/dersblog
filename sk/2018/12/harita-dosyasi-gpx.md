@@ -2,7 +2,7 @@
 
 Wikiloc gibi servisler yol tariflerini çoğunlukla GPX formatında
 paylaşırlar. Paket `gpxpy` ile bu dosyaları işleyebiliriz. Bu yazıyla
-aynı dizinde `yol1.gpx` dosyası var, içeriği şöyle,
+aynı dizinde `yol1.gpx` dosyası var, içeriği,
 
 ```python
 from bs4 import BeautifulSoup
@@ -113,5 +113,7 @@ Created GPX: <?xml version="1.0" encoding="UTF-8"?>
 
 Kaynaklar
 
-[1] https://pypi.org/project/gpxpy/
+[1] [PyPI](https://pypi.org/project/gpxpy/)
+
+
 

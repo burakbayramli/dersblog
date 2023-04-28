@@ -3,6 +3,8 @@
 
 ## En Son
 
+28/4 - [Yol Dosyaları, GPX Formatı](https://burakbayramli.github.io/dersblog/sk/2018/12/harita-dosyasi-gpx.html)
+
 25/4 - [En Kısa Yol Algoritması, Yol Ağı, OSMNX](https://burakbayramli.github.io/dersblog/sk/2023/04/yol-bolmak-osm-osmnx.html)
 
 15/4 - [Materyel Mekaniği - 2](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_02/materyel_mekanigi__2.html)
@@ -10,8 +12,6 @@
 2/4 - [Materyel Mekaniği - 1](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_01/materyel_mekanigi__1.html)
 
 26/3 - [Calculus Video Dersleri](https://burakbayramli.github.io/dersblog/sk/2023/02/calculus-video.html)
-
-20/3 - [Lineer Cebir Video Dersleri](https://burakbayramli.github.io/dersblog/sk/2023/02/lineer-cebir-video.html)
 
 ## Konular, Referans
 

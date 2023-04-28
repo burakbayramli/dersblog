@@ -44,86 +44,88 @@ tarifi almak icin neler gerekir onlari gorelim.</p>
 
 <p>Java</p>
 
-<pre><code>private static StringBuffer encodeSignedNumber(int num) {
-    int sgn_num = num &lt;&lt; 1;
-    if (num &lt; 0) {
-        sgn_num = ~(sgn_num);
-    }
-    return(encodeNumber(sgn_num));
-}
+<div class="codehilite">
+<pre><span></span><code><span class="kd">private</span> <span class="kd">static</span> <span class="n">StringBuffer</span> <span class="nf">encodeSignedNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">sgn_num</span> <span class="o">=</span> <span class="n">num</span> <span class="o">&lt;&lt;</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">num</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">sgn_num</span> <span class="o">=</span> <span class="o">~</span><span class="p">(</span><span class="n">sgn_num</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">encodeNumber</span><span class="p">(</span><span class="n">sgn_num</span><span class="p">));</span>
+<span class="p">}</span>
 
-private static StringBuffer encodeNumber(int num) {
-    StringBuffer encodeString = new StringBuffer();
-    while (num &gt;= 0x20) {
-        int nextValue = (0x20 | (num &amp; 0x1f)) + 63;
-        encodeString.append((char)(nextValue));
-        num &gt;&gt;= 5;
-    }
-    num += 63;
-    encodeString.append((char)(num));
-    return encodeString;
-}
+<span class="kd">private</span> <span class="kd">static</span> <span class="n">StringBuffer</span> <span class="nf">encodeNumber</span><span class="p">(</span><span class="kt">int</span> <span class="n">num</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">StringBuffer</span> <span class="n">encodeString</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="p">();</span>
+    <span class="k">while</span> <span class="p">(</span><span class="n">num</span> <span class="o">&gt;=</span> <span class="mh">0x20</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">nextValue</span> <span class="o">=</span> <span class="p">(</span><span class="mh">0x20</span> <span class="o">|</span> <span class="p">(</span><span class="n">num</span> <span class="o">&amp;</span> <span class="mh">0x1f</span><span class="p">))</span> <span class="o">+</span> <span class="mi">63</span><span class="p">;</span>
+        <span class="n">encodeString</span><span class="p">.</span><span class="na">append</span><span class="p">((</span><span class="kt">char</span><span class="p">)(</span><span class="n">nextValue</span><span class="p">));</span>
+        <span class="n">num</span> <span class="o">&gt;&gt;=</span> <span class="mi">5</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">num</span> <span class="o">+=</span> <span class="mi">63</span><span class="p">;</span>
+    <span class="n">encodeString</span><span class="p">.</span><span class="na">append</span><span class="p">((</span><span class="kt">char</span><span class="p">)(</span><span class="n">num</span><span class="p">));</span>
+    <span class="k">return</span> <span class="n">encodeString</span><span class="p">;</span>
+<span class="p">}</span>
 
-public static String encode(ArrayList&lt;GeoPoint&gt; polyline, int precision) {
-    StringBuilder encodedPoints = new StringBuilder();
-    int prev_lat = 0, prev_lng = 0;
-    for (GeoPoint trackpoint:polyline) {
-        int lat = trackpoint.getLatitudeE6() / precision;
-        int lng = trackpoint.getLongitudeE6() / precision;
-        encodedPoints.append(encodeSignedNumber(lat - prev_lat));
-        encodedPoints.append(encodeSignedNumber(lng - prev_lng));
-        prev_lat = lat;
-        prev_lng = lng;
-    }
-    return encodedPoints.toString();
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">String</span> <span class="nf">encode</span><span class="p">(</span><span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">GeoPoint</span><span class="o">&gt;</span> <span class="n">polyline</span><span class="p">,</span> <span class="kt">int</span> <span class="n">precision</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">StringBuilder</span> <span class="n">encodedPoints</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuilder</span><span class="p">();</span>
+    <span class="kt">int</span> <span class="n">prev_lat</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">prev_lng</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">GeoPoint</span> <span class="n">trackpoint</span><span class="p">:</span><span class="n">polyline</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">lat</span> <span class="o">=</span> <span class="n">trackpoint</span><span class="p">.</span><span class="na">getLatitudeE6</span><span class="p">()</span> <span class="o">/</span> <span class="n">precision</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">lng</span> <span class="o">=</span> <span class="n">trackpoint</span><span class="p">.</span><span class="na">getLongitudeE6</span><span class="p">()</span> <span class="o">/</span> <span class="n">precision</span><span class="p">;</span>
+        <span class="n">encodedPoints</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">encodeSignedNumber</span><span class="p">(</span><span class="n">lat</span> <span class="o">-</span> <span class="n">prev_lat</span><span class="p">));</span>
+        <span class="n">encodedPoints</span><span class="p">.</span><span class="na">append</span><span class="p">(</span><span class="n">encodeSignedNumber</span><span class="p">(</span><span class="n">lng</span> <span class="o">-</span> <span class="n">prev_lng</span><span class="p">));</span>
+        <span class="n">prev_lat</span> <span class="o">=</span> <span class="n">lat</span><span class="p">;</span>
+        <span class="n">prev_lng</span> <span class="o">=</span> <span class="n">lng</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">encodedPoints</span><span class="p">.</span><span class="na">toString</span><span class="p">();</span>
 
-}
+<span class="p">}</span>
 
-public static ArrayList&lt;String []&gt; readOsrmUrl(String urlString) {
-    ArrayList&lt;String []&gt; res = new ArrayList&lt;String []&gt;();
-    try {
-        URL url = new URL(urlString);
-        BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        String line = "";
-        while ((line = in.readLine()) != null) {
-            String regex =
-                "bearing_after.*?:(\\d+),.*?" +
-                "\\[(-*\\d+\\.\\d+,-*\\d+\\.\\d+)\\].*?" +
-                "distance.\\:(.*?),.*?" +
-                "name.\\:(.*?)," ;
-            Pattern r = Pattern.compile(regex);
-            Matcher m = r.matcher(line);
-            while (m.find( )) {
-                String [] tmp = new String[4];
-                tmp[0] = m.group(1);
-                tmp[1] = m.group(2);
-                tmp[2] = m.group(3);
-                tmp[3] = m.group(4);
-                res.add(tmp);
-            }
-        }
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span> <span class="o">[]&gt;</span> <span class="n">readOsrmUrl</span><span class="p">(</span><span class="n">String</span> <span class="n">urlString</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span> <span class="o">[]&gt;</span> <span class="n">res</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span> <span class="o">[]&gt;</span><span class="p">();</span>
+    <span class="k">try</span> <span class="p">{</span>
+        <span class="n">URL</span> <span class="n">url</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URL</span><span class="p">(</span><span class="n">urlString</span><span class="p">);</span>
+        <span class="n">BufferedReader</span> <span class="n">in</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BufferedReader</span><span class="p">(</span><span class="k">new</span> <span class="n">InputStreamReader</span><span class="p">(</span><span class="n">url</span><span class="p">.</span><span class="na">openStream</span><span class="p">()));</span>
+        <span class="n">String</span> <span class="n">line</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">line</span> <span class="o">=</span> <span class="n">in</span><span class="p">.</span><span class="na">readLine</span><span class="p">())</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">String</span> <span class="n">regex</span> <span class="o">=</span>
+                <span class="s">&quot;bearing_after.*?:(\\d+),.*?&quot;</span> <span class="o">+</span>
+                <span class="s">&quot;\\[(-*\\d+\\.\\d+,-*\\d+\\.\\d+)\\].*?&quot;</span> <span class="o">+</span>
+                <span class="s">&quot;distance.\\:(.*?),.*?&quot;</span> <span class="o">+</span>
+                <span class="s">&quot;name.\\:(.*?),&quot;</span> <span class="p">;</span>
+            <span class="n">Pattern</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Pattern</span><span class="p">.</span><span class="na">compile</span><span class="p">(</span><span class="n">regex</span><span class="p">);</span>
+            <span class="n">Matcher</span> <span class="n">m</span> <span class="o">=</span> <span class="n">r</span><span class="p">.</span><span class="na">matcher</span><span class="p">(</span><span class="n">line</span><span class="p">);</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">m</span><span class="p">.</span><span class="na">find</span><span class="p">(</span> <span class="p">))</span> <span class="p">{</span>
+                <span class="n">String</span> <span class="o">[]</span> <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="o">[</span><span class="mi">4</span><span class="o">]</span><span class="p">;</span>
+                <span class="n">tmp</span><span class="o">[</span><span class="mi">0</span><span class="o">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+                <span class="n">tmp</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+                <span class="n">tmp</span><span class="o">[</span><span class="mi">2</span><span class="o">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+                <span class="n">tmp</span><span class="o">[</span><span class="mi">3</span><span class="o">]</span> <span class="o">=</span> <span class="n">m</span><span class="p">.</span><span class="na">group</span><span class="p">(</span><span class="mi">4</span><span class="p">);</span>
+                <span class="n">res</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">tmp</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
 
-    } catch (IOException e) {
-        e.printStackTrace();
-    }
-    return res;
-}
+    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">;</span>
+<span class="p">}</span>
 
-public static ArrayList&lt;String []&gt; shortestPath(double lat1, double lon1, double lat2, double lon2) {
+<span class="kd">public</span> <span class="kd">static</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span> <span class="o">[]&gt;</span> <span class="n">shortestPath</span><span class="p">(</span><span class="kt">double</span> <span class="n">lat1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">lon1</span><span class="p">,</span> <span class="kt">double</span> <span class="n">lat2</span><span class="p">,</span> <span class="kt">double</span> <span class="n">lon2</span><span class="p">)</span> <span class="p">{</span>
 
-    GeoPoint p1 = new GeoPoint(lat1, lon1);
-    GeoPoint p2 = new GeoPoint(lat2, lon2);
-    ArrayList&lt;GeoPoint&gt; l = new ArrayList&lt;GeoPoint&gt;();
-    l.add(p1);
-    l.add(p2);
-    String geo = encode(l, 10);
-    String ourl = "http://router.project-osrm.org/route/v1/foot/polyline("+ geo +
-        ")?overview=simplified&amp;steps=true&amp;alternatives=false&amp;geometries=polyline";
-    ArrayList&lt;String []&gt; r = readOsrmUrl(ourl);
+    <span class="n">GeoPoint</span> <span class="n">p1</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GeoPoint</span><span class="p">(</span><span class="n">lat1</span><span class="p">,</span> <span class="n">lon1</span><span class="p">);</span>
+    <span class="n">GeoPoint</span> <span class="n">p2</span> <span class="o">=</span> <span class="k">new</span> <span class="n">GeoPoint</span><span class="p">(</span><span class="n">lat2</span><span class="p">,</span> <span class="n">lon2</span><span class="p">);</span>
+    <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">GeoPoint</span><span class="o">&gt;</span> <span class="n">l</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">GeoPoint</span><span class="o">&gt;</span><span class="p">();</span>
+    <span class="n">l</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">p1</span><span class="p">);</span>
+    <span class="n">l</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">p2</span><span class="p">);</span>
+    <span class="n">String</span> <span class="n">geo</span> <span class="o">=</span> <span class="n">encode</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+    <span class="n">String</span> <span class="n">ourl</span> <span class="o">=</span> <span class="s">&quot;http://router.project-osrm.org/route/v1/foot/polyline(&quot;</span><span class="o">+</span> <span class="n">geo</span> <span class="o">+</span>
+        <span class="s">&quot;)?overview=simplified&amp;steps=true&amp;alternatives=false&amp;geometries=polyline&quot;</span><span class="p">;</span>
+    <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">String</span> <span class="o">[]&gt;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">readOsrmUrl</span><span class="p">(</span><span class="n">ourl</span><span class="p">);</span>
 
-    return r;
-}
+    <span class="k">return</span> <span class="n">r</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
+</div>
 
 <p>Bu kodun kullandigi yardimci fonksiyonlar alttaki baglantida bulunabilir.</p>
 
@@ -143,119 +145,121 @@ public static ArrayList&lt;String []&gt; shortestPath(double lat1, double lon1, 
 
 <p>Alttaki kod yol bulma (route)  icin yeterli</p>
 
-<pre><code>import numpy as np
-from pandas import DataFrame
-from urllib2 import urlopen
-from polyline import encode as polyline_encode
-from ogr import Geometry
-from polyline.codec import PolylineCodec
-import json
-def _chain(*lists):
-    for li in lists:
-        for elem in li: yield elem
-class DefaultRequestConfig:
-    def __init__(self):
-        self.host = "http://localhost:5000"
-        self.profile = "driving"
-        self.version = "v1"
-    def __str__(self):
-        return("/".join([self.host, '*', self.version, self.profile]))
-    def __repr__(self):
-        return("/".join([self.host, '*', self.version, self.profile]))
-    @staticmethod
-    def __call__(addr=None):
-        if not addr:
-            return DefaultRequestConfig()
-        else:
-            tmp = addr.split('/')
-            cla = DefaultRequestConfig()
-            cla.host = tmp[0]
-            i = len(tmp)
-            cla.version = tmp[i-2]
-            cla.profile = tmp[i-1]
-            return cla
-RequestConfig = DefaultRequestConfig()
-def check_host(host):
-    """ Helper function to get the hostname in desired format """
-    if not ('http' in host and '//' in host) and host[len(host)-1] == '/':
-        return ''.join(['http://', host[:len(host)-1]])
-    elif not ('http' in host and '//' in host):
-        return ''.join(['http://', host])
-    elif host[len(host)-1] == '/':
-        return host[:len(host)-1]
-    else:
-        return host
-def decode_geom(encoded_polyline):
-    ma_ligne = Geometry(2)
-    lineAddPts = ma_ligne.AddPoint_2D
-    for coord in PolylineCodec().decode(encoded_polyline):
-        lineAddPts(coord[1], coord[0])
-    return ma_ligne
-def simple_route(coord_origin_old, coord_dest_old, coord_intermediate=None,
-                 alternatives=False, steps=False, output="full",
-                 geometry='polyline', overview="simplified",
-                 url_config=RequestConfig, send_as_polyline=True):
-    if geometry.lower() not in ('wkt', 'well-known-text', 'text', 'polyline',
-                                'wkb', 'well-known-binary', 'geojson'):
-        raise ValueError("Invalid output format")
-    else:
-        geom_request = "geojson" if "geojson" in geometry.lower() \
-            else "polyline"
-    coord_origin = tuple(reversed(coord_origin_old))
-    coord_dest = tuple(reversed(coord_dest_old))
-    host = check_host(url_config.host)
-    if not send_as_polyline:
-        url = [host, "/route/", url_config.version, "/", url_config.profile,
-               "/", "{},{}".format(coord_origin[0], coord_origin[1]), ';']
-        if coord_intermediate:
-            url.append(";".join(
-                [','.join([str(i), str(j)]) for i, j in coord_intermediate]))
-        url.extend([
-            '{},{}'.format(coord_dest[0], coord_dest[1]),
-            "?overview={}&amp;steps={}&amp;alternatives={}&amp;geometries={}".format(
-                 overview, str(steps).lower(),
-                 str(alternatives).lower(), geom_request)
-            ])
-    else:
-        coords = [
-            pt[::-1] for pt in _chain(
-                        [coord_origin],
-                        coord_intermediate if coord_intermediate else [],
-                        [coord_dest])
-            ]
-        url = [
-            host, "/route/", url_config.version, "/", url_config.profile, "/",
-            "polyline(", polyline_encode(coords), ")",
-            "?overview={}&amp;steps={}&amp;alternatives={}&amp;geometries={}".format(
-                 overview, str(steps).lower(),
-                 str(alternatives).lower(), geom_request)
-            ]
-    rep = urlopen(''.join(url))
-    parsed_json = json.loads(rep.read().decode('utf-8'))
-    if "Ok" in parsed_json['code']:
-        if geometry in ("polyline", "geojson") and output == "full":
-            return parsed_json
-        elif geometry in ("polyline", "geojson") and output == "routes":
-            return parsed_json["routes"]
-        else:
-            if geometry == "wkb":
-                func = Geometry.ExportToWkb
-            elif geometry == "wkt":
-                func = Geometry.ExportToWkt
-            for route in parsed_json["routes"]:
-                route["geometry"] = func(decode_geom(route["geometry"]))
-        return parsed_json if output == "full" else parsed_json["routes"]
-    else:
-        raise ValueError(
-            'Error - OSRM status : {} \n Full json reponse : {}'.format(
-                parsed_json['code'], parsed_json))
-# test
-result1 = simple_route((40.987659,29.036428), (40.992186,29.039228),
-                       output="routes",
-                       geometry="wkt",
-                       send_as_polyline=True, steps=True)
-print result1
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="n">DataFrame</span>
+<span class="kn">from</span> <span class="nn">urllib2</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">from</span> <span class="nn">polyline</span> <span class="kn">import</span> <span class="n">encode</span> <span class="k">as</span> <span class="n">polyline_encode</span>
+<span class="kn">from</span> <span class="nn">ogr</span> <span class="kn">import</span> <span class="n">Geometry</span>
+<span class="kn">from</span> <span class="nn">polyline.codec</span> <span class="kn">import</span> <span class="n">PolylineCodec</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="k">def</span> <span class="nf">_chain</span><span class="p">(</span><span class="o">*</span><span class="n">lists</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">li</span> <span class="ow">in</span> <span class="n">lists</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">elem</span> <span class="ow">in</span> <span class="n">li</span><span class="p">:</span> <span class="k">yield</span> <span class="n">elem</span>
+<span class="k">class</span> <span class="nc">DefaultRequestConfig</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="s2">&quot;http://localhost:5000&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="s2">&quot;driving&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="s2">&quot;v1&quot;</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">]))</span>
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="s1">&#39;*&#39;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">profile</span><span class="p">]))</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="n">addr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">addr</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">DefaultRequestConfig</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="n">addr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+            <span class="n">cla</span> <span class="o">=</span> <span class="n">DefaultRequestConfig</span><span class="p">()</span>
+            <span class="n">cla</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+            <span class="n">cla</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+            <span class="n">cla</span><span class="o">.</span><span class="n">profile</span> <span class="o">=</span> <span class="n">tmp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">return</span> <span class="n">cla</span>
+<span class="n">RequestConfig</span> <span class="o">=</span> <span class="n">DefaultRequestConfig</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">check_host</span><span class="p">(</span><span class="n">host</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Helper function to get the hostname in desired format &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;http&#39;</span> <span class="ow">in</span> <span class="n">host</span> <span class="ow">and</span> <span class="s1">&#39;//&#39;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">)</span> <span class="ow">and</span> <span class="n">host</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="n">host</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]])</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="p">(</span><span class="s1">&#39;http&#39;</span> <span class="ow">in</span> <span class="n">host</span> <span class="ow">and</span> <span class="s1">&#39;//&#39;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s1">&#39;http://&#39;</span><span class="p">,</span> <span class="n">host</span><span class="p">])</span>
+    <span class="k">elif</span> <span class="n">host</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">host</span><span class="p">[:</span><span class="nb">len</span><span class="p">(</span><span class="n">host</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">host</span>
+<span class="k">def</span> <span class="nf">decode_geom</span><span class="p">(</span><span class="n">encoded_polyline</span><span class="p">):</span>
+    <span class="n">ma_ligne</span> <span class="o">=</span> <span class="n">Geometry</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">lineAddPts</span> <span class="o">=</span> <span class="n">ma_ligne</span><span class="o">.</span><span class="n">AddPoint_2D</span>
+    <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="n">PolylineCodec</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">encoded_polyline</span><span class="p">):</span>
+        <span class="n">lineAddPts</span><span class="p">(</span><span class="n">coord</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">coord</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">ma_ligne</span>
+<span class="k">def</span> <span class="nf">simple_route</span><span class="p">(</span><span class="n">coord_origin_old</span><span class="p">,</span> <span class="n">coord_dest_old</span><span class="p">,</span> <span class="n">coord_intermediate</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">alternatives</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;full&quot;</span><span class="p">,</span>
+                 <span class="n">geometry</span><span class="o">=</span><span class="s1">&#39;polyline&#39;</span><span class="p">,</span> <span class="n">overview</span><span class="o">=</span><span class="s2">&quot;simplified&quot;</span><span class="p">,</span>
+                 <span class="n">url_config</span><span class="o">=</span><span class="n">RequestConfig</span><span class="p">,</span> <span class="n">send_as_polyline</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">geometry</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s1">&#39;wkt&#39;</span><span class="p">,</span> <span class="s1">&#39;well-known-text&#39;</span><span class="p">,</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="s1">&#39;polyline&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;wkb&#39;</span><span class="p">,</span> <span class="s1">&#39;well-known-binary&#39;</span><span class="p">,</span> <span class="s1">&#39;geojson&#39;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid output format&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">geom_request</span> <span class="o">=</span> <span class="s2">&quot;geojson&quot;</span> <span class="k">if</span> <span class="s2">&quot;geojson&quot;</span> <span class="ow">in</span> <span class="n">geometry</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> \
+            <span class="k">else</span> <span class="s2">&quot;polyline&quot;</span>
+    <span class="n">coord_origin</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">coord_origin_old</span><span class="p">))</span>
+    <span class="n">coord_dest</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">reversed</span><span class="p">(</span><span class="n">coord_dest_old</span><span class="p">))</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">check_host</span><span class="p">(</span><span class="n">url_config</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">send_as_polyline</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="p">[</span><span class="n">host</span><span class="p">,</span> <span class="s2">&quot;/route/&quot;</span><span class="p">,</span> <span class="n">url_config</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">url_config</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span>
+               <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">,</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coord_origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord_origin</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="s1">&#39;;&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">coord_intermediate</span><span class="p">:</span>
+            <span class="n">url</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+                <span class="p">[</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">j</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">coord_intermediate</span><span class="p">]))</span>
+        <span class="n">url</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span>
+            <span class="s1">&#39;</span><span class="si">{}</span><span class="s1">,</span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">coord_dest</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">coord_dest</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span>
+            <span class="s2">&quot;?overview=</span><span class="si">{}</span><span class="s2">&amp;steps=</span><span class="si">{}</span><span class="s2">&amp;alternatives=</span><span class="si">{}</span><span class="s2">&amp;geometries=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                 <span class="n">overview</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                 <span class="nb">str</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">geom_request</span><span class="p">)</span>
+            <span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">coords</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pt</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">pt</span> <span class="ow">in</span> <span class="n">_chain</span><span class="p">(</span>
+                        <span class="p">[</span><span class="n">coord_origin</span><span class="p">],</span>
+                        <span class="n">coord_intermediate</span> <span class="k">if</span> <span class="n">coord_intermediate</span> <span class="k">else</span> <span class="p">[],</span>
+                        <span class="p">[</span><span class="n">coord_dest</span><span class="p">])</span>
+            <span class="p">]</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">host</span><span class="p">,</span> <span class="s2">&quot;/route/&quot;</span><span class="p">,</span> <span class="n">url_config</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="n">url_config</span><span class="o">.</span><span class="n">profile</span><span class="p">,</span> <span class="s2">&quot;/&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;polyline(&quot;</span><span class="p">,</span> <span class="n">polyline_encode</span><span class="p">(</span><span class="n">coords</span><span class="p">),</span> <span class="s2">&quot;)&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;?overview=</span><span class="si">{}</span><span class="s2">&amp;steps=</span><span class="si">{}</span><span class="s2">&amp;alternatives=</span><span class="si">{}</span><span class="s2">&amp;geometries=</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                 <span class="n">overview</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">steps</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+                 <span class="nb">str</span><span class="p">(</span><span class="n">alternatives</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">geom_request</span><span class="p">)</span>
+            <span class="p">]</span>
+    <span class="n">rep</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">url</span><span class="p">))</span>
+    <span class="n">parsed_json</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">rep</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+    <span class="k">if</span> <span class="s2">&quot;Ok&quot;</span> <span class="ow">in</span> <span class="n">parsed_json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="n">geometry</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;polyline&quot;</span><span class="p">,</span> <span class="s2">&quot;geojson&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parsed_json</span>
+        <span class="k">elif</span> <span class="n">geometry</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;polyline&quot;</span><span class="p">,</span> <span class="s2">&quot;geojson&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;routes&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">parsed_json</span><span class="p">[</span><span class="s2">&quot;routes&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">geometry</span> <span class="o">==</span> <span class="s2">&quot;wkb&quot;</span><span class="p">:</span>
+                <span class="n">func</span> <span class="o">=</span> <span class="n">Geometry</span><span class="o">.</span><span class="n">ExportToWkb</span>
+            <span class="k">elif</span> <span class="n">geometry</span> <span class="o">==</span> <span class="s2">&quot;wkt&quot;</span><span class="p">:</span>
+                <span class="n">func</span> <span class="o">=</span> <span class="n">Geometry</span><span class="o">.</span><span class="n">ExportToWkt</span>
+            <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">parsed_json</span><span class="p">[</span><span class="s2">&quot;routes&quot;</span><span class="p">]:</span>
+                <span class="n">route</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="n">decode_geom</span><span class="p">(</span><span class="n">route</span><span class="p">[</span><span class="s2">&quot;geometry&quot;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">parsed_json</span> <span class="k">if</span> <span class="n">output</span> <span class="o">==</span> <span class="s2">&quot;full&quot;</span> <span class="k">else</span> <span class="n">parsed_json</span><span class="p">[</span><span class="s2">&quot;routes&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s1">&#39;Error - OSRM status : </span><span class="si">{}</span><span class="s1"> </span><span class="se">\n</span><span class="s1"> Full json reponse : </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">parsed_json</span><span class="p">[</span><span class="s1">&#39;code&#39;</span><span class="p">],</span> <span class="n">parsed_json</span><span class="p">))</span>
+<span class="c1"># test</span>
+<span class="n">result1</span> <span class="o">=</span> <span class="n">simple_route</span><span class="p">((</span><span class="mf">40.987659</span><span class="p">,</span><span class="mf">29.036428</span><span class="p">),</span> <span class="p">(</span><span class="mf">40.992186</span><span class="p">,</span><span class="mf">29.039228</span><span class="p">),</span>
+                       <span class="n">output</span><span class="o">=</span><span class="s2">&quot;routes&quot;</span><span class="p">,</span>
+                       <span class="n">geometry</span><span class="o">=</span><span class="s2">&quot;wkt&quot;</span><span class="p">,</span>
+                       <span class="n">send_as_polyline</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">result1</span>
 </code></pre>
+</div>
 
 <p>Bu arada ciktilarda enlem, boylam degerleri yer degisikligine ugramis,
 OSRM her nedense boyle yapiyor, biz sadece girdide sirayi degistirdik.</p>

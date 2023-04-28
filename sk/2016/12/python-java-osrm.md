@@ -6,7 +6,7 @@ tarifi almak icin neler gerekir onlari gorelim.
 
 Java
 
-```
+```java
 private static StringBuffer encodeSignedNumber(int num) {
     int sgn_num = num << 1;
     if (num < 0) {
@@ -106,7 +106,7 @@ https://github.com/ustroetz/python-osrm
 
 Alttaki kod yol bulma (route)  icin yeterli
 
-```
+```python
 import numpy as np
 from pandas import DataFrame
 from urllib2 import urlopen

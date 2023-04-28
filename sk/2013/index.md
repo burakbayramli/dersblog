@@ -18,7 +18,7 @@
 
 [Ubuntu SWAP Alanı Nasıl Arttırılır?](03/ubuntu-swap-alani-nasil-arttirilir.html)
 
-[IP ve Bolge Eslemesi, Python](04/ip-ve-bolge-eslemesi-python.html)
+[IP ve Bölge Eşlemesi, Python](04/ip-ve-bolge-eslemesi-python.html)
 
 [Sqlplus ile CSV Uretmek](04/sqlplus-ile-csv-uretmek.html)
 

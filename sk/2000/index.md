@@ -40,7 +40,7 @@
 
 [Sürekli Entegre Etmek](10/surekli-entegre-etmek.html)
 
-[TCP/IP'ye Genel Bir Bakis](10/tcpip-genel-bir-bakis.html)
+[TCP/IP'ye Genel Bir Bakış](10/tcpip-genel-bir-bakis.html)
 
 [Tekil Nesne Kalıbı (Singleton Pattern)](10/tekil-nesne-kalb-singleton-pattern.html)
 

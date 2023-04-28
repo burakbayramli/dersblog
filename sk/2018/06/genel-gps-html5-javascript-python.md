@@ -1,4 +1,4 @@
-°# Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python
+# Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python
 
 ### Mesafe hesabı yapmak
 

@@ -1,4 +1,4 @@
-# IP ve Bolge Eslemesi, Python
+# IP ve Bölge Eşlemesi, Python
 
 IP adresini yaklasik olarak bir bolgeye, sehre, hatta enlem boylam
 kordinatina eslemek icin pygeoip adli Python paketi var. Kurmak icin
@@ -63,4 +63,6 @@ ip  latitude  longitude0  212.174.157.30   40.6667       40.41
 212.174.157.30   40.6667       40.42  212.174.157.30   40.6667      
 40.4
 ```
+
+
 

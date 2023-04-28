@@ -50,7 +50,7 @@
 
 [Gson, Java Objelerini JSON Olarak Yazmak, Okumak](12/gson-objeleri-json-olarak-yazmak-okumak.html)
 
-[Islenmis OSM Verisi Yerel Diskte, osm2pgsql, PostGIS](12/islenmis-osm-verisi-yerel-dite-osm2po.html)
+[İşlenmiş OSM Verisi Yerel Diskte, osm2pgsql, PostGIS](12/islenmis-osm-verisi-yerel-dite-osm2po.html)
 
 [OSM, PostGIS, Örnek Sorgular](12/osm-postgis-ornek-sorgular.html)
 

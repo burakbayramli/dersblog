@@ -14,6 +14,8 @@
 
 [Genel Coğrafi Kordinat Kodları, HTML5, Javascript, Python](06/genel-gps-html5-javascript-python.html)
 
+[Coğrafi Bilgi İşlem Yazılımları, Yazılar](06/geo-cografi-enlem-boylam.html)
+
 [Keras](06/keras.html)
 
 [Unicode, Ascii, Deascii, Python, Emacs](07/unicode-ascii-deascii-python-emacs.html)

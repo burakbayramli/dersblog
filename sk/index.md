@@ -21,6 +21,8 @@
 
 [SQL](2012/03/sql.html)
 
+[Coğrafi](2018/06/geo-cografi-enlem-boylam.html)
+
 [Proje İdaresi](2020/07/proje-idaresi.html)
 
 [Network, TCP/IP, Internet](2000/10/network.html)

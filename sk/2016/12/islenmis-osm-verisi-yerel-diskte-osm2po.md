@@ -1,4 +1,4 @@
-# Islenmis OSM Verisi Yerel Diskte, osm2pgsql, PostGIS
+# İşlenmiş OSM Verisi Yerel Diskte, osm2pgsql, PostGIS
 
 Daha once OSRM projesi ile OSM verisi uzerinden nasil servis
 sunabilir, bunu gorduk. Peki ya ham veriyi almak istiyorsak ne

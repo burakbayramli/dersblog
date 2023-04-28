@@ -25,7 +25,8 @@ print gi.record_by_addr('212.174.157.30')
 
 Sonuc
 
-``` {'city': u'B\xfcy\xfck', 'region_name': u'61', 'area_code': 0,
+```
+{'city': u'B\xfcy\xfck', 'region_name': u'61', 'area_code': 0,
 'time_zone': 'Asia/Istanbul', 'dma_code': 0, 'metro_code': None,
 'country_code3': 'TUR', 'latitude': 40.66669999999999, 'postal_code':
 '', 'longitude': 40.400000000000006, 'country_code': 'TR',
@@ -41,7 +42,7 @@ Eger mesela Pandas DataFrame objesi uzerindeki bir IP adresini
 isleyip, hesaplanan enlem / boylam degerlerini ayni satira ayri
 kolonlar olarak yazmak isteseydiniz,
 
-```
+```python
 import pygeoip, os
 import pandas as pd
 gi = pygeoip.GeoIP('[DIZIN]/GeoLiteCity.dat')

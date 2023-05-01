@@ -14,5 +14,5 @@
 
 [Flask ile Dinamik Web Sayfalari Gelistirmek](../../2016/09/flask-ile-dinamik-web-sayfalari.html)
 
-[HTML -> Ajax -> AppEngine](../../2010/04/html-ajax-appengine.html)an
+[HTML -> Ajax -> AppEngine](../../2010/04/html-ajax-appengine.html)
 

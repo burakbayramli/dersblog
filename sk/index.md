@@ -25,6 +25,8 @@
 
 [Proje İdaresi](2020/07/proje-idaresi.html)
 
+[Web, HTML](2023/04/web-html.html)
+
 [Network, TCP/IP, Internet](2000/10/network.html)
 
 [Animasyonlu Matematik](2023/02/animasyonlu-matematik-video.html)

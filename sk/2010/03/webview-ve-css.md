@@ -12,8 +12,3 @@ olarak yeri neresidir? assets/ altina birakilan dosya,
 file:///android_asset/ diye baslamali, o zaman style.css kullanimi
 icin ... link rel= .. href="file:///android_asset/style.css .. diye
 giden bir kullanimdan bahsediyoruz. Bu kadar.
-
-
-
-
-

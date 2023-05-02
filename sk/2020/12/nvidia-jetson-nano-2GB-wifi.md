@@ -5,6 +5,18 @@ civarı fiyatla satılıyor. Altta görülen Nano 2GB Wifi ürünü. Güç
 kaynağı bu pakete dahil değil, 5 Volt, 3 Amperlik bir adaptor almak
 lazım. Raspberry Pi uyumlu bu tür adaptörler var.
 
+Ya da Nano güç kablosunun ucu standard USB olduğu için eğer buna bir
+mikro USB adaptoru bağlarsak bir akıllı telefon, ya da tablet ile ona
+güç verebiliriz. Böyle adaptörler mevcut, bendeki ürün
+[PNY Android OTG](usbadaptor.jpg). Adaptor Android şekilli yapılmış,
+android kafası çevrilince mikro USB görülüyor, alt bölümde ise standard
+USB girişi var.
+
+Ayrı güç kaynağı powerbank kullanmak isteyenler amper çıkışı uygun
+olan bir ürün alabilir, mesela [şuradaki
+ürün](https://www.amazon.com.tr/S8000-8000mAh-Ta%C5%9F%C4%B1nabilir-Cihaz%C4%B1-Beyaz/dp/B07FM2GBYJ)
+işliyor.
+
 Paketten iki tane ek kablo çıkacak, bunlardan birinin ucunda bir ufak
 "dongle" var, üzerinde CE yazıyor, bu Wifi özelliği sağlıyor (dongle
 kabloya bağlı geliyor, o çıkartıldıktan sonra kabloya gerek yok),

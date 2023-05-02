@@ -18,8 +18,14 @@ OSMNX kullanıcının tanımladığı bölgeler içindeki yol yapısını dönd�
 kabiliyetine sahiptir, ve bu veriyi diskte önbellekleme yaparak
 saklayabilir, böylece aynı bölge için sonraki yükleme çağrılarının
 OSM'e bağlanması gerekmez. Eğer veride çizit yapısına uymayan yerler
-varsa bunlar döndürülmeden önce tamir edilir. Örnek olarak [1]'deki
-yere bakalım,
+varsa bunlar döndürülmeden önce tamir edilir.
+
+
+Kurmak icin Ubuntu uzerinde `gdal-bin`, `libgdal-dev`, `libspatialindex-dev`
+`apt install` ile kurulmali. Sonra `pip install`
+ile `scikit-learn` ve `osmnx`.
+
+Örnek olarak [1]'deki yere bakalım,
 
 ```python
 import matplotlib.pyplot as plt

@@ -279,13 +279,48 @@ GPU: 0.000274
 <p>GPU'nun 115 kat daha hızlı olduğunu görüyoruz. İlginç Nano üzerindeki
 çekirdek sayısı da 128 değil mi?</p>
 
+<h3>Tensorflow</h3>
+
+<p>Jetson üzerinde Tensorflow kurulumu için hangi Jetpack geliştirme ortamına
+sahip olduğumuza bakalım,</p>
+
+<pre><code>sudo apt-cache show nvidia-jetpack
+</code></pre>
+
+<p>Ben gördüğüm versiyona göre [10]'a danıştım, ve gerekli wheel <code>.whl</code>
+dosyasını indirdim,</p>
+
+<pre><code>wget https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+</code></pre>
+
+<p>Sonra bu dosyayı ayrı bir virtualenv içinde</p>
+
+<pre><code>pip3 install tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+</code></pre>
+
+<p>ile kurduk. </p>
+
+<h3>Bağlanmak</h3>
+
+<p>Komut Satırı</p>
+
+<p><code>ssh</code> ya da X programlarini kendi ekranimizda gormek icin <code>ssh
+user@host -X</code> kullanabiliriz. Pur metin bazli kullanim hizlidir; daha
+da hizlandirmak icin <code>sudo init 3</code> isletirsek Nano'nun masaustu
+idarecisini tamamen kapatmis oluruz, boylece makina sanki bir servis
+makinasiymis gibi isler.</p>
+
+<p>Pek cok program Unix uzerinde komut pur terminal bazli calisabilir,
+<code>emacs</code> bunlardan biri. <code>emacs -nw</code> ile text bazli editor
+baslatabiliriz.</p>
+
 <p>VNC</p>
 
 <p><code>ssh -X</code> ile bağlanınca Nano'da X programlarının çıktısını direk
 bağlandığımız diğer bir makinaya aktarabiliriz, fakat ne yazık ki
-ÖpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
+OpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
 görüyorsunuz (alttaki paragrafta bir uyarı daha var), fakat monitörle
-Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNÇ kullanmak.</p>
+Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNC kullanmak.</p>
 
 <p>Not: OpenGL içeren kodları arka plandaki çıktısını <code>ssh</code> üzerinden
 görmek istersek, ve <code>ssh -X</code> ile girdiysek grafik çağrıları
@@ -321,6 +356,8 @@ Nano üzerinde yapabiliriz. Nano tek başına oldukca kuvvetli bir
 bilgisayar, eh kendi Ubuntu'su var, tam tekmilli bir bilgisayar olarak
 kullanılabilir.</p>
 
+<h3>Ornekle</h3>
+
 <p>Örnek Cuda Kodları</p>
 
 <p>C++ üzerinden CUDA kodlamak için Nano üzerinde bolca örnek var. Bu
@@ -351,27 +388,6 @@ olduğu kadar çıkartılmış hali altta bulunabilir,</p>
 <a href="particles/particleSystem.cuh">particleSystem.cuh</a>,
 <a href="particles/particleSystem.h">particleSystem.h</a>,
 <a href="particles/view.py">view.py</a></p>
-
-<p>Tensorflow</p>
-
-<p>Jetson üzerinde Tensorflow kurulumu için hangi Jetpack geliştirme ortamına
-sahip olduğumüza bakalım,</p>
-
-<pre><code>sudo apt-cache show nvidia-jetpack
-</code></pre>
-
-<p>Ben gördüğüm versiyona göre [10]'a danıştım, ve gerekli wheel <code>.whl</code>
-dosyasını indirdim,</p>
-
-<pre><code>wget https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
-</code></pre>
-
-<p>Sonra bu dosyayı ayrı bir virtualenv içinde</p>
-
-<pre><code>pip3 install tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
-</code></pre>
-
-<p>ile kurduk. </p>
 
 <p>Kaynaklar</p>
 

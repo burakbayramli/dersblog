@@ -256,13 +256,51 @@ GPU: 0.000274
 GPU'nun 115 kat daha hızlı olduğunu görüyoruz. İlginç Nano üzerindeki
 çekirdek sayısı da 128 değil mi?
 
+### Tensorflow
+
+Jetson üzerinde Tensorflow kurulumu için hangi Jetpack geliştirme ortamına
+sahip olduğumuza bakalım,
+
+```
+sudo apt-cache show nvidia-jetpack
+```
+
+Ben gördüğüm versiyona göre [10]'a danıştım, ve gerekli wheel `.whl`
+dosyasını indirdim,
+
+```
+wget https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+```
+
+Sonra bu dosyayı ayrı bir virtualenv içinde
+
+```
+pip3 install tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
+```
+
+ile kurduk. 
+
+### Bağlanmak
+
+Komut Satırı
+
+`ssh` ya da X programlarini kendi ekranimizda gormek icin `ssh
+user@host -X` kullanabiliriz. Pur metin bazli kullanim hizlidir; daha
+da hizlandirmak icin `sudo init 3` isletirsek Nano'nun masaustu
+idarecisini tamamen kapatmis oluruz, boylece makina sanki bir servis
+makinasiymis gibi isler.
+
+Pek cok program Unix uzerinde komut pur terminal bazli calisabilir,
+`emacs` bunlardan biri. `emacs -nw` ile text bazli editor
+baslatabiliriz.
+
 VNC
 
 `ssh -X` ile bağlanınca Nano'da X programlarının çıktısını direk
 bağlandığımız diğer bir makinaya aktarabiliriz, fakat ne yazık ki
-ÖpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
+OpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
 görüyorsunuz (alttaki paragrafta bir uyarı daha var), fakat monitörle
-Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNÇ kullanmak.
+Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNC kullanmak.
 
 Not: OpenGL içeren kodları arka plandaki çıktısını `ssh` üzerinden
 görmek istersek, ve `ssh -X` ile girdiysek grafik çağrıları
@@ -298,6 +336,8 @@ Nano üzerinde yapabiliriz. Nano tek başına oldukca kuvvetli bir
 bilgisayar, eh kendi Ubuntu'su var, tam tekmilli bir bilgisayar olarak
 kullanılabilir.
 
+### Ornekle
+
 Örnek Cuda Kodları
 
 C++ üzerinden CUDA kodlamak için Nano üzerinde bolca örnek var. Bu
@@ -329,30 +369,6 @@ olduğu kadar çıkartılmış hali altta bulunabilir,
 [particleSystem.h](particles/particleSystem.h),
 [view.py](particles/view.py)
 
-Tensorflow
-
-Jetson üzerinde Tensorflow kurulumu için hangi Jetpack geliştirme ortamına
-sahip olduğumüza bakalım,
-
-```
-sudo apt-cache show nvidia-jetpack
-```
-
-Ben gördüğüm versiyona göre [10]'a danıştım, ve gerekli wheel `.whl`
-dosyasını indirdim,
-
-```
-wget https://developer.download.nvidia.com/compute/redist/jp/v44/tensorflow/tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
-```
-
-Sonra bu dosyayı ayrı bir virtualenv içinde
-
-```
-pip3 install tensorflow-2.2.0+nv20.7-cp36-cp36m-linux_aarch64.whl
-```
-
-ile kurduk. 
-
 Kaynaklar
 
 [1] https://imadelhanafi.com/posts/jetson_nano_setup/
@@ -374,7 +390,4 @@ Kaynaklar
 [9] https://www.youtube.com/watch?v=KROP46Wte4Q
 
 [10] [Forum](https://forums.developer.nvidia.com/t/correct-version-of-tensorflow-for-jetpack-4-4/149310/3)
-
-
-
 

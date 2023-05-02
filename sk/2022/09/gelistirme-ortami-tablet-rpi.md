@@ -28,15 +28,28 @@ için `None` seçiyoruz, böylece Assistant artık çıkmıyor.
 Tuş Değişimi
 
 Control tuşu Trust Bluetooth klavyelerinde rahat erişilen yerde değil,
-Vim, Emacs kullanıcıları bu tuşu çok kullanır, CAPS tuşunu CTRL
-yapabiliriz. Fakat Android seviyesinde değişiklik lazım. Şu [1]
-uygulama ile web üzerinde bir .apk ürettiriliyor (arka planda derleme
-vs işleri yapılıyor), bu .apk indirilip kurulunca (Android uyarılarını
-dikkate almayız) artık CAPS tuşu CTRL haline gelir. Üretimden önce
-seçeneklerde `Caps Lock as Left Ctrl` seçmiş olmak lazım, bu seçim
-`map key 58 CTRL_LEFT` komutunu alttaki kutuya ekler. Bu tanım daha
-sonra yaratılacak .apk içine koyulacak. Uygulamaya güvenmeyenler aynı
-sayfadaki bağlantıdan kaynak koduna gidip Android kodunu derleyebilir.
+Vim, Emacs kullanıcıları bu tuşu çok kullanır, ÇAPS tuşunu CTRL
+yapabiliriz, ek olarak benim tercihim SPACE yanindaki Command yazan
+tuşu Left Alt yapmak. Bunun için Android seviyesinde değişiklik
+lazım. Şu [1] uygulama ile yapılan seçimlere göre web üzerinde bir
+.apk ürettiriliyor (arka planda derleme vs işleri yapılıyor), bu .apk
+indirilip kurulunca (Android uyarılarını dikkate almayız) tus değişimi
+olur.
+
+Tanımları ilk ekrandan liste bazlı seçebiliriz, bahsettiğim Command
+(ki sisteme Meta Left olarak gözüküyor) Alt Left bağlantısı alttaki
+şekilde.
+
+![](tablrpi2.jpg)
+
+Bu tanım daha sonra yaratılacak .apk içine koyulacak, Download tuşuna
+tıklayınca apk alınır. Uygulamaya güvenmeyenler aynı sayfadaki
+bağlantıdan kaynak koduna gidip Android kodunu derleyebilir.
+
+Apk kurulduktan sonra tabii klavye seçiminin yeni programı görmesi
+lazım; Android'de System | Languages & İnput | Physical keyboard (mesela bir
+bluetooth klavye) seçtikten sonra Physical Keyboard altında bir layout seçimi
+var, buraya girip listeden "ExKeyMo Layout" seçmek lazım.
 
 SSH
 

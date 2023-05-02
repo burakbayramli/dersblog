@@ -286,7 +286,7 @@ Komut Satırı
 
 `ssh` ya da X programlarini kendi ekranimizda gormek icin `ssh
 user@host -X` kullanabiliriz. Pur metin bazli kullanim hizlidir; daha
-da hizlandirmak icin `sudo init 3` isletirsek Nano'nun masaustu
+da hizlandirmak icin `sudo init 3` isletirsek [11] Nano'nun masaustu
 idarecisini tamamen kapatmis oluruz, boylece makina sanki bir servis
 makinasiymis gibi isler.
 
@@ -390,4 +390,6 @@ Kaynaklar
 [9] https://www.youtube.com/watch?v=KROP46Wte4Q
 
 [10] [Forum](https://forums.developer.nvidia.com/t/correct-version-of-tensorflow-for-jetpack-4-4/149310/3)
+
+[11] https://www.forecr.io/blogs/bsp-development/how-to-disable-desktop-gui-on-jetson-modules
 

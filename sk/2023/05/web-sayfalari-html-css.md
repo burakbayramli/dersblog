@@ -124,7 +124,51 @@ o sayfaya tekabul eden kodlari gorebiliriz,
 
 ![](web2.jpg)
 
+Stil Blokları
 
+Üstte gördüğümüz örnekte stili `h1` ya da `a` gibi tüm etiket tiplerine
+uyguladık. Fakat `a`, `p` komutları HTML içinde çok yaygın uygulanan
+etiketlerdir, eğer bazı `p` blokları için bir stil diğerleri için
+farklı bir stil uygulamak istesek ne yapacağız?
+
+Burada CSS sözdizimi bize bazı seçenekler sunuyor. Tekil kimlik `id`
+bazlı, ya da bizim tanımladığımız bir sınıf `class` bazlı stil
+uygulayabiliriz. İbare `id` özgün bir etiketi hedeflemek için
+kullanılabilir, `class` tanımı ise birden fazla etikete
+uygulanabilecek stiller için uygundur.  CSS içinde bu blokların tanımı
+mesela bir bir `c1` için `.c1 { ... }` kimlik için ise mesela `i1`
+diyelim `#i1 { .. }` ile yapılır.
+
+Alttaki örnekte farklı `p` blokları için sınıf ve kimlik bazlı stil
+uygulamasını görüyoruz. İlk iki paragrafı aynı sınıfa dahil ettik,
+üçüncü ve dördüncü paragraflar ise ayrı kimliklere sahip, onları
+CSS içinde teker teker hedeflemek gerekti.
+
+```
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      h1 { background: #1abc9c; }
+      a { text-decoration:none; }
+      .p_stil_a { background: lightyellow; }
+      #p_stil_3 { background: lightblue; }
+      #p_stil_4 { background: lightgray; }
+    </style>
+  </head>
+</html>
+
+<body>
+  <h1>Başlık</h1>
+  <p class="p_stil_a">Satır 3</p>
+  <p class="p_stil_a">Satır 4</p>
+  <p id="p_stil_3">Satır 3</p>
+  <p id="p_stil_4">Satır 4</p>
+  <p><a href="https://joinmastodon.org">Mastodon Burada</a></p>
+</body>
+```
+
+[Link](webtest7.html)
 
 
 

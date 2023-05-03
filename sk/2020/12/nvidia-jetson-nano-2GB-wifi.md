@@ -296,11 +296,13 @@ ile kurduk.
 
 Komut Satırı
 
-`ssh` ya da X programlarini kendi ekranimizda gormek icin `ssh
-user@host -X` kullanabiliriz. Pur metin bazli kullanim hizlidir; daha
-da hizlandirmak icin `sudo init 3` isletirsek [11] Nano'nun masaustu
-idarecisini tamamen kapatmis oluruz, boylece makina sanki bir servis
-makinasiymis gibi isler.
+`ssh` ya da X programlarını kendi ekranımızda görmek için `ssh
+user@host -X` kullanabiliriz. Pür metin bazlı kullanım hızlıdır; daha
+da hızlandırmak için `sudo init 3` işletirsek [11] Nano'nun masaüstü
+idarecisini tamamen kapatmış oluruz, böylece makina sanki bir servis
+makinasıymış gibi işler. Eğer her başlangıçta masaüstü iptal olsun
+istiyorsak `sudo systemctl set-default multi-user.target` işletiriz,
+eski duruma dönmek için `sudo systemctl set-default graphical.target`.
 
 Pek cok program Unix uzerinde komut pur terminal bazli calisabilir,
 `emacs` bunlardan biri. `emacs -nw` ile text bazli editor

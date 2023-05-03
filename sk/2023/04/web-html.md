@@ -16,5 +16,3 @@
 
 [HTML -> Ajax -> AppEngine](../../2010/04/html-ajax-appengine.html)
 
-
-

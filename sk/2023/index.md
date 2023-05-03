@@ -86,5 +86,9 @@
 
 [Yapay Sinir Ağları Video](03/yapay-sinir-aglari-neural-network-video.html)
 
+[Web, HTML](04/web-html.html)
+
 [En Kısa Yol Algoritması, Yol Ağı, OSMNX](04/yol-bolmak-osm-osmnx.html)
+
+[Web Sayfaları, HTML ve CSS](05/web-sayfalari-html-css.html)
 

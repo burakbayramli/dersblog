@@ -2,12 +2,12 @@
 
 Görsel HTML sayfalarının arkasında aslında pür metin bazlı bir komut
 serisi var. Bu komutları düz dosyaya (text) yazabilen herkes bir
-görsel Web programcısı olabilir. Mevcut sayfalarda bu kodlari
-gorebiliriz, mesela Chrome, Firefox gibi tarayicilarda Ctrl+U tuslarina
-basinca View Source isletilir ve HTML kaynagi burada gorulebilir.
-Mesela bu blog'un ana sayfasinin HTML kodları soyle,
+görsel Web programcısı olabilir. Mevcut sayfalarda bu kodları
+görebiliriz, mesela Chrome, Firefox gibi tarayıcılarda Ctrl+U
+tuşlarına basınca View Source isletilir ve HTML kaynağı burada
+görülebilir. Bu blog'un ana sayfasının HTML kodları şöyle,
 
-[Çıktı](web1.jpg)
+[Link](web1.jpg)
 
 Sıfırdan bir HTML yaratalım;
 
@@ -262,4 +262,6 @@ ile tanımladık.
 [Link](webtest3.html)
 
 ![](web3.jpg)
+
+
 

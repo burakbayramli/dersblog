@@ -12,9 +12,9 @@ Mesela bu blog'un ana sayfasinin HTML kodları soyle,
 Sıfırdan bir HTML yaratalım;
 
 ```
-<h1>Merhaba Dunya</h1>
-<p>Burada bazi yazilar</p>
-<p>Satir 2</p>
+<h1>Merhaba Dünya</h1>
+<p>Burada bazı yazılar</p>
+<p>Satır 2</p>
 ```
 
 Windows üzerinde Notepad var, üsttekileri oraya yazıp `index.html`
@@ -119,8 +119,8 @@ yeterli, stili `style6.css` içine yazalım,
 
 [Link](webtest6.html)
 
-Tabii her noktada ustteki ciktilari tarayicida gosterirken Ctrl+U ile
-o sayfaya tekabul eden kodlari gorebiliriz,
+Tabii her noktada üstteki çıktıları tarayıcıda gösterirken Ctrl+U ile
+o sayfaya tekabül eden kodları görebiliriz,
 
 ![](web2.jpg)
 
@@ -160,8 +160,8 @@ CSS içinde teker teker hedeflemek gerekti.
 
 <body>
   <h1>Başlık</h1>
-  <p class="p_stil_a">Satır 3</p>
-  <p class="p_stil_a">Satır 4</p>
+  <p class="p_stil_a">Satır 1</p>
+  <p class="p_stil_a">Satır 2</p>
   <p id="p_stil_3">Satır 3</p>
   <p id="p_stil_4">Satır 4</p>
   <p><a href="https://joinmastodon.org">Mastodon Burada</a></p>
@@ -170,8 +170,96 @@ CSS içinde teker teker hedeflemek gerekti.
 
 [Link](webtest7.html)
 
+`DIV` Blok Tanımı
 
+Eğer bazı etiketlere bulundukları yere göre, hangi blok içinde
+olduklarına bakarak özellikler atamak istersek `<div>` komutunu
+kullanabiliriz, bu komutun görsel bir özelliği yoktur, sadece gruplamak
+için kullanılır.
 
+```
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      h1 { background: #1abc9c; }
+      a { text-decoration:none; }
+      #d_1 { background: lightblue; }
+      #d_2 { background: lightgray; }
+    </style>
+  </head>
+</html>
 
-[devam edecek]
+<body>
+  <h1>Başlık</h1>
+  <div id="d_1">
+    <p>Satır 1</p>
+    <p>Satır 2</p>
+    <a href="https://www.kernel.org/category/releases.html">Bağlantı</a>
+  </div>
+  <div id="d_2">
+    <p>Satır 3</p>
+    <p>Satır 4</p>
+  </div>
+  <p><a href="https://joinmastodon.org">Mastodon Burada</a></p>
+</body>
+```
+
+[Link](webtest8.html)
+
+Şimdi tüm üsttekileri bir araya koyalım, standart bir site görüntüsü
+yaratmaya uğraşalım, en üstte geniş bir alanda site ismi, altında bir
+açıklama, ve sonraki bölümde düz yazılar olsun.
+
+Başlığı yaratmak için dikkat edersek HTML içinde ortalama, boşluk
+bırakma yapmadık, tüm bu görüntüsel işler CSS içinde yapıldı. "Benim
+Site" başlığı gayet basit `<h1>Benim Site</h1>` olarak gösterildi;
+fakat onun etrafında `padding` ile 80 piksellik ekstra yer açtık,
+yazıyı `text-alığn` ile ortaladık ve arka plan rengini `background`
+ile tanımladık.
+
+```
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      .header {
+      padding: 60px;
+      text-align: center;
+      background: #1abc9c;
+      color: white;
+      font-size: 30px;
+      }
+    </style>
+  </head>
+</html>
+
+<body>
+  <div class="header">
+    <h1>Benim Site</h1>
+    <p>Çok havalı başlığım</p>
+  </div>
+  <div id="main">
+    <p>
+      Burada yazilar
+    </p>
+    <p>
+      Burada yazilar
+    </p>
+    <p>
+      Burada yazilar
+    </p>
+    <p>
+      Burada yazilar
+    </p>
+    <p>
+      Burada yazilar
+    </p>
+  </div>
+</body>
+```
+
+[Link](webtest3.html)
+
+![](web3.jpg)
 

@@ -119,5 +119,9 @@ HTML'i kazıyıp içindeki veriyi ortaya çıkartıyoruz. Bu işlem için
 düzenli ifadeler (regular expression, regex) kullandık. Tüm yazılım
 mühendislerine öğrenmelerini şiddetle tavsiye ettiğimiz bir teknik.
 
+Kaynaklar
+
+[1] https://github.com/burakbayramli/kod/tree/master/dand
+
 
 

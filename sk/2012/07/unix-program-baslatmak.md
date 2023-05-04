@@ -236,8 +236,4 @@ bu seçenek ile "print" gibi stdout'a çıkan ifadeler derhal "dışarı
 atılıyor (flushed)". Bu yapılmazsa çocuk süreç işliyor ve ekrana mesaj
 basıyor olsa bile log'da hiç bir şey gözükmeyecektir.
 
-Ekler
-
-Bizim yazdığımız [dand](https://github.com/burakbayramlı/kod/tree/master/dand) adlı
-program benzer işlevi gerçekleştiriyor.
 

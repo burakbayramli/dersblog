@@ -491,6 +491,4 @@ Kaynaklar
 
 [2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)
 
-[3] [Dand](https://github.com/burakbayramli/kod/tree/master/dand)
-
 [4] [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)

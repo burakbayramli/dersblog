@@ -44,13 +44,13 @@ Kaynaklar [1] adresinde, kurulus tarifi [2]. Onceden bazi paketleri
 kurmak lazim, bizim uyguladigimiz komutlar,
 
 ```
-sudo apt install libxslt1-dev zlib1g-dev libxapian-dev libx11-dev
+sudo apt install libxslt1-dev zlib1g-dev libxapian-dev libx11-dev libaspell-dev
 ```
 
 Ardından recoll açılmış zip dizinine gidilir, ve
 
 ```
-./configure --disable-qtgui ekle --disable-python-chm
+./configure --disable-qtgui --disable-python-chm
 ```
 
 Bu bir Makefile hazırlayacak, aynı zamanda Python paketini de kurulmaya
@@ -114,9 +114,3 @@ Kaynaklar
 [1] [LesBonsComptes Download](https://www.lesbonscomptes.com/recoll/pages/download.html)
 
 [2] [LesBonsComptes Install](https://www.lesbonscomptes.com/recoll/usermanual/usermanual.html#RCL.INSTALL)
-
-
-
-
-
-

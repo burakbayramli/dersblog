@@ -215,7 +215,7 @@ Başlığı yaratmak için dikkat edersek HTML içinde ortalama, boşluk
 bırakma yapmadık, tüm bu görüntüsel işler CSS içinde yapıldı. "Benim
 Site" başlığı gayet basit `<h1>Benim Site</h1>` olarak gösterildi;
 fakat onun etrafında `padding` ile 80 piksellik ekstra yer açtık,
-yazıyı `text-alığn` ile ortaladık ve arka plan rengini `background`
+yazıyı `text-align` ile ortaladık ve arka plan rengini `background`
 ile tanımladık.
 
 ```
@@ -262,6 +262,4 @@ ile tanımladık.
 [Link](webtest3.html)
 
 ![](web3.jpg)
-
-
 

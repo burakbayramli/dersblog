@@ -148,7 +148,21 @@ teker erisebilirdi mesela,
 
 [Sayfa](sayfa2.txt)
 
-gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz. 
+gibi. HTML ve kodun nasıl içiçe geçebildiğini görüyoruz.
+
+Birden Fazla Aksiyon
+
+Eğer form içerisinde iki tane düğme koymak istiyorsak ne yaparız? Bu
+durumda her iki `input` için aynı ismi ama farklı `value` değerleri
+verebiliriz, mesela
+
+```
+<input type="submit" name="action" value="Aksiyon 1"/>
+<input type="submit" name="action" value="Aksiyon 2"/>
+```
+
+ve sonraki Python kodu içinde hangi aksiyona tıklanmış olduğunu
+`request.form['action']` ile okuyabiliriz.
 
 ### Form Verisi Secenek Listesi (Dropdown List)
 

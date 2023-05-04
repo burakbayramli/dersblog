@@ -124,50 +124,6 @@ gidilir orada her kisayol icin bir `<keybind>.. </keybind>` bolumu
 var, bizi ilgilendiren tanima gidip onu silebiliriz. RPi tekrar
 baslatilir ve degisim devreye girmis olur.
 
-### Servisler
-
-Eğer kendi yazdığımız bir program RPi başlayınca otomatik başlasın
-istiyorsak `systemd` yöntemini kullanabiliriz [5]. Örnek olarak mesela
-bir python Flask servisinin başlatılmasını istiyoruz, program
-`/home/pi/run.py` altında. Bir `systemd` ayar dosyası yaratmak lazım,
-ona `flask` ismi verelim,
-
-```
-sudo nano /etc/systemd/system/flask.service
-```
-
-İçine sunları yazabiliriz,
-
-```
-[Unit]
-Description=Flask Service
-After=multi-user.target
-
-[Service]
-Type=idle
-User=pi
-ExecStart=/home/pi/myenv/bin/python3 /home/pi/flask.py
-Restart=no
-
-[Install]
-WantedBy=multi-user.target
-```
-
-```
-sudo chmod 644 /etc/systemd/system/flask.service
-```
-
-```
-sudo systemctl daemon-reload
-sudo systemctl enable flask.service
-```
-
-RPi tekrar başlayınca servisimizin işletildiğini göreceğiz.
-
-Dikkat direk sistem seviyesindeki Python'u değil `/home/pi/myenv`
-altındakini işlettik, bu geliştirme ortamı virtualenv ile alakalı,
-detayları o yazıda bulabiliriz.
-
 ### Taşınabilir RPi
 
 Çok az miktarda elektronik aletle, mesela kampta vs, seyahat etmek
@@ -300,3 +256,5 @@ Kaynaklar
 [4] https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md
 
 [5] https://www.thedigitalpictureframe.com/ultimate-guide-systemd-autostart-scripts-raspberry-pi/
+
+[6] 

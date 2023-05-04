@@ -85,10 +85,10 @@ dosyasının dizin içinde olup olmaması bir tür statüdür; eğer orada ise
 o işlem tamamlanmıştır.
 
 Çöküş ardından tekrar başlatım için pek çok Unix bazlı takip edici
-programlar var; mesela supervisord - bizim tercihimiz dand. Bu takip
-edici araçlar sayesinde komut satırından elle biz program
-başlatmıyoruz, takip edici programlarımızı başlatıyor, onları izliyor,
-çökmüs ise tekrar başlatıyor, vs.
+programlar var; mesela supervisord. Bu takip edici araçlar sayesinde
+komut satırından elle biz program başlatmıyoruz, takip edici
+programlarımızı başlatıyor, onları izliyor, çökmüs ise tekrar
+başlatıyor, vs.
 
 Paralel, Satır Bazlı Dosya İşlemek
 

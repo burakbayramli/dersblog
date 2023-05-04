@@ -90,6 +90,8 @@
 
 [supervisord](07/supervisord.html)
 
+[Otomatik Program Başlamak, Unix, Linux](07/unix-program-baslatmak.html)
+
 [Aradeğerleme (Interpolation)](08/aradegerleme-interpolation.html)
 
 [Klavye Tusunu Mouse Tiklamasi Haline Getirmek](08/klavye-tusunu-mouse-tiklamasi-haline.html)

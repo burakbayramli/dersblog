@@ -202,8 +202,6 @@ Referans
 
 [chmod](chmod.html)
 
-[Unix, Servisleri Nasıl Başlatıyor?](../..//2002/10/unix-servisleri-nasl-baslatyor.html)
-
 [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)
 
 [Lokal Dosya Arama - recoll](../../2011/08/lokal-dosya-arama-recoll.html)
@@ -216,7 +214,7 @@ Referans
 
 [Unix Rsync - Makineler Arası Dosya Kopyalamanın Hızlı Yolu](../../2003/10/unix-rsync-makineleraras-dosya.html)
 
-[supervisord](../../2012/07/supervisord.html)
+[Otomatik Program Başlamak, Unix, Linux](../../2012/07/unix-program-baslatmak.html)
 
 [Dosya Kodlamasi (File Encoding)](../../2020/10/dosya-kodlamasi-encoding.html)
 

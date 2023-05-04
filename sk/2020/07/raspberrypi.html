@@ -157,46 +157,6 @@ gidilir orada her kisayol icin bir <code>&lt;keybind&gt;.. &lt;/keybind&gt;</cod
 var, bizi ilgilendiren tanima gidip onu silebiliriz. RPi tekrar
 baslatilir ve degisim devreye girmis olur.</p>
 
-<h3>Servisler</h3>
-
-<p>Eğer kendi yazdığımız bir program RPi başlayınca otomatik başlasın
-istiyorsak <code>systemd</code> yöntemini kullanabiliriz [5]. Örnek olarak mesela
-bir python Flask servisinin başlatılmasını istiyoruz, program
-<code>/home/pi/run.py</code> altında. Bir <code>systemd</code> ayar dosyası yaratmak lazım,
-ona <code>flask</code> ismi verelim,</p>
-
-<pre><code>sudo nano /etc/systemd/system/flask.service
-</code></pre>
-
-<p>İçine sunları yazabiliriz,</p>
-
-<pre><code>[Unit]
-Description=Flask Service
-After=multi-user.target
-
-[Service]
-Type=idle
-User=pi
-ExecStart=/home/pi/myenv/bin/python3 /home/pi/flask.py
-Restart=no
-
-[Install]
-WantedBy=multi-user.target
-</code></pre>
-
-<pre><code>sudo chmod 644 /etc/systemd/system/flask.service
-</code></pre>
-
-<pre><code>sudo systemctl daemon-reload
-sudo systemctl enable flask.service
-</code></pre>
-
-<p>RPi tekrar başlayınca servisimizin işletildiğini göreceğiz.</p>
-
-<p>Dikkat direk sistem seviyesindeki Python'u değil <code>/home/pi/myenv</code>
-altındakini işlettik, bu geliştirme ortamı virtualenv ile alakalı,
-detayları o yazıda bulabiliriz.</p>
-
 <h3>Taşınabilir RPi</h3>
 
 <p>Çok az miktarda elektronik aletle, mesela kampta vs, seyahat etmek
@@ -320,6 +280,8 @@ söndüğünü göreceğiz.</p>
 <p>[4] https://www.raspberrypi.org/documentation/hardware/raspberrypi/power/README.md</p>
 
 <p>[5] https://www.thedigitalpictureframe.com/ultimate-guide-systemd-autostart-scripts-raspberry-pi/</p>
+
+<p>[6] </p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

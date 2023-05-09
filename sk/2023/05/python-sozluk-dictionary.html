@@ -117,18 +117,19 @@ anda başka bir liste / sözlük yaratma kabiliyeti sözlükler için de geçerl
 <p><code>i:x</code> ile anahtar/değer ikilisini başka bir listeyi gezerken tanımladık, ve
 bu tanımlar toparlanıp bir yeni sözlük yaratımı için kullanıldı.</p>
 
-<h3>Arka Plana Neler Oluyor?</h3>
+<h3>Sözlük İç Yapısı</h3>
 
-<p>Sozluklerin ic kodlanmasi nasil yapilmistir acaba? Bundan da bahsedelim, mulakat
-sorusu olabilir, zaten gorunmese de bu tur detaylari bilmek faydalidir.</p>
+<p>Sözlüklerin iç kodlanması nasıl yapılmıştır acaba? Bundan da
+bahsedelim, mülakat sorusu olabilir, zaten görünmese de bu tür
+detayları bilmek faydalıdır. Bir sözlük paketini kodlamak için en baz
+depolama veri yapısı olarak bir dizin (array) kullanabiliriz. Ama
+dizin erişimi tam sayı bazlıdır, üstelik baştan kaç öğe olduğu
+bellidir, anahtarı herhangi bir şey olabilecek sözlükleri bunun üstüne
+nasıl monte edeceğiz?</p>
 
-<p>Bir sözlük paketini kodlamak için en baz depolama veri yapısı olarak bir dizin
-(array) kullanabilirdik. Ama dizin erişimi tam sayı bazlıdır, üstelik baştan
-kaç öğe olduğu bellidir, anahtarı herhangi bir şey olabilecek sözlükleri bunun
-üstüne nasıl monte edeceğiz? </p>
-
-<p>Bölec (hash) kavramı yardıma yetişir. Harfler, alfanumerik herhangi
-bir veriyi <code>hash</code> ile sayısal forma çevirebiliyoruz,</p>
+<p>Böleç (hash) kavramı burada yardıma yetişir. Harfler, alfanumerik
+herhangi bir veriyi <code>hash</code> ile sayısal forma çevirebileceğimizi
+biliyoruz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;anahtar1&quot;</span><span class="p">)</span>
@@ -150,8 +151,9 @@ bir veriyi <code>hash</code> ile sayısal forma çevirebiliyoruz,</p>
 </code></pre>
 </div>
 
-<p>Eğer sözlüğün arkasında 10 büyüklüğünde bir listeyi depolama için kullanmak
-istiyorsak üstteki sayıların modülüs hesabını yaparız, </p>
+<p>Eğer sözlüğün deposu olarak 10 büyüklüğünde bir listeyi depolama için
+kullanmak istiyorsak üstteki sayıların 10 üzerinden modülüs hesabını
+yaparız,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;anahtar1&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span>
@@ -163,24 +165,26 @@ istiyorsak üstteki sayıların modülüs hesabını yaparız, </p>
 </code></pre>
 </div>
 
-<p>Eğer dizin büyüklüğüne kıyasla çok fazla anahtar değeri var ise birden fazla
-anahtar aynı dizin öğesine düşebilir, bu "çakışma (collision)" durumu yaratır,
-bu durumda çakışma olan öğede bir liste yaratırız (dizin içinde liste olur ama
-önemli değil), ve erişim için arama önce anahtar bazlı direk sonra liste bazlı
-teker teker gider. </p>
+<p>İşte bu sayı dizinde erişim için kullanılır.</p>
+
+<p>Eğer dizin büyüklüğüne kıyasla çok fazla anahtar değeri var ise birden
+fazla anahtar aynı dizin öğesine düşebilir, bu "çakışma (collision)"
+durumu yaratır, bu durumda çakışma olan öğede bir liste yaratırız
+(dizin içinde liste), ve erişim için arama önce anahtar bazlı direk
+sonra liste bazlı teker teker gider.</p>
 
 <h3>DiskDict</h3>
 
 <p>Paketten çıkan hali ile Python sözlükleri hafıza bazlıdır. Fakat eğer anahtar
 erişimi bizi bir disk deposuna götürsün istersek? Dikkat tüm işlemler hafızada
 yapıldıktan sonra işi bitmiş sözlüğü diske yazmaktan bahsetmiyorum, her anahtar
-erişimi, her depolama işleme tekil bazlı olarak işini disk bazlı yapmalı diyorum. </p>
+erişimi, her depolama işleme tekil bazlı olarak diske gitmeli diyorum. </p>
 
-<p>Bu ihtiyaç için bazı paketler var. Çoğu işin kodlama kısmını Python
-basit sözlük ile benzer tutmuşlar böylece kodlayan yeni bir erişim stili
+<p>Bu ihtiyaç için bazı paketler var. Çoğu dış arayüzünü Python basit
+sözlük ile benzer tutmuş böylece kodlayan yeni bir erişim stili
 öğrenmeye mecbur değil, tüm bildik sözlük işlemleri geçerli.</p>
 
-<p>İyi bir paket <code>diskdict</code> [3]. Kurmak için kaynaklar kullanılırsa iyi
+<p>Böyle bir paket <code>diskdict</code> [3]. Kurmak için kaynaklar kullanılırsa iyi
 olur, önce alttakiler,</p>
 
 <pre><code>sudo apt install python3-leveldb libleveldb-dev
@@ -190,17 +194,20 @@ pip install repoze.lru
 
 <p>Ardından <code>setup.py</code> ile kurulum yapılır. Örnek,</p>
 
-<p>from diskdict import DiskDict</p>
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">diskdict</span> <span class="kn">import</span> <span class="n">DiskDict</span>
 
-<p>dict3 = DiskDict('/tmp/diskdict')</p>
+<span class="n">dict3</span> <span class="o">=</span> <span class="n">DiskDict</span><span class="p">(</span><span class="s1">&#39;/tmp/diskdict&#39;</span><span class="p">)</span>
 
-<p>dict3['anahtar3'] = 'deger3'
-```</p>
+<span class="n">dict3</span><span class="p">[</span><span class="s1">&#39;anahtar3&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;deger3&#39;</span>
+</code></pre>
+</div>
 
-<p>Bu işlemler sonrası <code>/tmp/diskdict</code> dizini altında bazı dosyaların yaratılmış
-olduğunu göreceğiz. Sözlüğün disksel erişim işlemleri bu dosyalar üzerinden
-yapılıyor, her erişim her depolama direk bu dosyalara gidiyor (dosyaların formatı
-muhakkak hızlı erişim için ayarlanmış halde).</p>
+<p>Bu işlemler sonrası <code>/tmp/diskdict</code> dizini altında bazı dosyaların
+yaratılmış olduğunu göreceğiz. Sözlüğün disksel erişim işlemleri bu
+dosyalar üzerinden yapılıyor, her erişim her depolama direk bu
+dosyalara gidiyor (dosyaların ikisel formatı muhakkak hızlı erişim
+için ayarlanmış halde).</p>
 
 <p>Kaynaklar</p>
 

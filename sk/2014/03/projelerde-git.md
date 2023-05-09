@@ -182,7 +182,8 @@ dosyalar commit edilmiştir, her ne kadar onların git rm ile silmişsek
 bile, hala tarihte duruyor olurlar, bu da .git dosyalarını
 şişirir. Onları tarihten silebiliriz tabii, ama bazılarını kaçırmiş
 olabiliriz. Her halükarda sıfırdan başlamak için pek çok sebep
-olabilir. Bunu yapmak için
+olabilir. Bunu yapmak için kullanici `burakbayramli` icin ve
+`classnotes` projesi icin,
 
 ```
 cd [PROJE DIZINI]
@@ -190,7 +191,7 @@ cd [PROJE DIZINI]
 git init
 git add .
 git commit -m 'Initial commit'
-git remote add origin  - burada  git@github.com:kullanici/proje.git .. diye giden projenize ait olan url
+git remote add origin git@github.com:burakbayramli/classnotes.git 
 git push --force --set-upstream origin master
 ```
 

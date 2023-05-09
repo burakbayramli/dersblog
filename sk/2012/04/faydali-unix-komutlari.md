@@ -27,7 +27,8 @@ Sadece bastaki satiri gostermek
 head -1 [DOSYA]
 ```
 
-Bir dosyanin son N satirini atlamak / gostermemek (silme amacli olabillir), mesela son iki satir icin 
+Bir dosyanin son N satirini atlamak / gostermemek (silme amacli
+olabillir), mesela son iki satir icin
 
 ```
 head -n-2 [DOSYA]

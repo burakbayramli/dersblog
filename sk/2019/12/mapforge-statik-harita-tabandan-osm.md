@@ -253,6 +253,7 @@ SaveTiles $1 $2 $3 $4
 Üç tane nokta bastık, sonucu altta görüyoruz,
 
 ![](https://1.bp.blogspot.com/-itpSxUWRF7M/XfDrlJICRSI/AAAAAAAAB4s/bPyoev5BE4gO8vLEyBt6vQtA_gApWa3QACLcBGAsYHQ/s320/ist1.png)
+
 ![](ist1.png)
 
 

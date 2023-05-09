@@ -100,10 +100,15 @@ https://pypi.org/
 
 adresinde, kodumuzu herkesin kullanımına açmak için oraya da
 gönderebiliriz [1]. Eğer `setup.py` kurulumu tam yapılmışsa,
-`python setup.py sdist bdist_wheel` ile PyPi için gerekli dosyaları da üretmek
-mümkün, bu dosyalar `dist` dizini altında konuluyor. Dikkat, önce
-`python install` komutu işletin, sonra üsttekini, `dist` altında üç
-tane dosya lazım, `.egg`, `.zip` ve `.whl`.
+
+```
+python setup.py sdist bdist_wheel
+```
+
+ile PyPi için gerekli dosyaları da üretmek mümkün, bu dosyalar `dist`
+dizini altında konuluyor. Dikkat, önce `python setup.py install`
+komutu işletin, sonra üsttekini, `dist` altında üç tane dosya lazım,
+`.egg`, `.zip` ve `.whl`.
 
 Nihai paketin PyPi'a gönderilmesi için PyPi'a üye olunması lazım, ve  `twine` adlı
 araç gerekli, onu

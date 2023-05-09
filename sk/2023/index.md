@@ -90,5 +90,7 @@
 
 [En Kısa Yol Algoritması, Yol Ağı, OSMNX](04/yol-bolmak-osm-osmnx.html)
 
+[Python Sözlük (Dictionary) Veri Yapısı](05/python-sozluk-dictionary.html)
+
 [Web Sayfaları, HTML ve CSS](05/web-sayfalari-html-css.html)
 

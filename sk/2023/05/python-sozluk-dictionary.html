@@ -1,0 +1,132 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Python Sözlük (Dictionary) Veri Yapısı</h1>
+
+<p>Python sözlük yapısı hafızada anahtar bazlı veriye direk erişim
+sağlar.  Basit anahtar - değer ikilisini depolamaya yarar, fakat değer
+olarak depolanan şey herhangi bir obje olabilir. Bu özellik sözlüklere
+geniş kullanım alanı sağlar.</p>
+
+<p>En basit kullanım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># bos sozluk yarat</span>
+<span class="n">dict1</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="c1"># depola</span>
+<span class="n">dict1</span><span class="p">[</span><span class="s1">&#39;anahtar1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;deger1&quot;</span>
+
+<span class="c1"># erisim yap</span>
+<span class="n">dict1</span><span class="p">[</span><span class="s1">&#39;anahtar1&#39;</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: &#39;deger1&#39;
+</code></pre>
+</div>
+
+<p>Herhangi bir obje depolanır demiştik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dict1</span><span class="p">[</span><span class="s1">&#39;anahtar2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])</span>
+<span class="n">dict1</span><span class="p">[</span><span class="s1">&#39;anahtar2&#39;</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: array([1, 2, 3])
+</code></pre>
+</div>
+
+<p>Tüm anahtarları göstermek için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dict1</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: dict_keys([&#39;anahtar1&#39;, &#39;anahtar2&#39;])
+</code></pre>
+</div>
+
+<p>Bu liste gezilebilir, ve bu sırada anahtar kullanılıp değer ekrana basılabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dict1</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">dict1</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>deger1
+[1 2 3]
+</code></pre>
+</div>
+
+<p>Kavrama (comprehension) yani [1] tek satirda hem baska bir listeyi gezip ayni
+anda baska bir liste / sozluk yaratma kabiliyeti sozlukler icin de gecerli,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dict2</span> <span class="o">=</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;ali&#39;</span><span class="p">,</span><span class="s1">&#39;veli&#39;</span><span class="p">,</span><span class="s1">&#39;ahmet&#39;</span><span class="p">])</span> <span class="p">}</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dict2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{0: &#39;ali&#39;, 1: &#39;veli&#39;, 2: &#39;ahmet&#39;}
+</code></pre>
+</div>
+
+<p><code>i:x</code> ile anahtar/değer ikilisini başka bir listeyi gezerken tanımladık, ve
+bu tanımlar toparlanıp bir yeni sözlük yaratımı için kullanıldı.</p>
+
+<h3>DiskDict</h3>
+
+<p>Kaynaklar</p>
+
+<p>[1] [Python Liste Kavraması (List Comprehension)](../../2021/12/python-list-comprehension.html)</p>
+
+<p>[2] [NoSQL](../../2022/11/nosql-diy-python.html)</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

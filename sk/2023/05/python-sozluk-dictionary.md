@@ -266,8 +266,6 @@ listeyi donduren bir diger sozluk tipi `collections.OrderedDict`.
 ```python
 import collections
 
-#creating an OrderedDict
-
 dict5 = collections.OrderedDict()
 dict5["A"]=1
 dict5["B"]=2
@@ -284,13 +282,14 @@ for i in dict5.items(): print(i)
 ```
 
 Sonuca bakıyoruz, liste aynen eklenme sırasını yansıtıyor. Normal bir
-sözlük bu sonucu garantilemez, sıralama rasgele olabilir.
-
+sözlük bu sonucu garantilemez, sıralama rasgele olabilirdi.
 
 Kaynaklar
 
-[1] <a name="../../2021/12/python-list-comprehension.html">Python Liste Kavraması (List Comprehension)</a>
+[1] <a href="../../2021/12/python-list-comprehension.html">Python Liste Kavraması (List Comprehension)</a>
 
-[2] <a name="../../2022/11/nosql-diy-python.html">NoSQL</a>
+[2] <a href="../../2022/11/nosql-diy-python.html">NoSQL</a>
 
 [3] https://github.com/deep-compute/diskdict
+
+

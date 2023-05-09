@@ -191,6 +191,16 @@ dosyalar üzerinden yapılıyor, her erişim her depolama direk bu
 dosyalara gidiyor (dosyaların ikisel formatı muhakkak hızlı erişim
 için ayarlanmış halde).
 
+Diğer Disk Bazlı Seçenekler
+
+Eğer disk bazlı sözlük erişimini ayrı bir servise ayırıp ona REST APİ
+bazlı erişim sağlasak bir nevi anahtar/değer veri tabanı (key-value
+store) kavramına erişmiş olurduk. MongoDB gibi yazılımlar bir bakıma
+bu servisi sağlıyorlar, daha yüksek ölçekte ek bazı servislerle beraber
+fakat sonuçta yaptıkları disk bazlı bir sözlük servisi sağlamaktır.
+
+Konu hakkında önceki bir yazı şurada [2].
+
 ### Olağan Değerler, Sıralanma
 
 Olağan Değerler
@@ -216,7 +226,7 @@ tekabül eden listelere öğe eklemek istediğimiz zamandır. Pek çok problemde
 belli anahtarlara tekabül eden liste değerleri gezeriz, onları bir listeye
 döngü içinde eklemek isteriz fakat her anahtar için "eğer bu anahtar varsa
 listeye ekle, yoksa boş liste yarat, ondan sonra ekle" mantığı kod fazlalığı
-oluşturabilir, `defaultdıçt(list)` kullanırsak her anahtarın olağan değeri
+oluşturabilir, `defaultdict(list)` kullanırsak her anahtarın olağan değeri
 boş liste olacağı için bir anahtar var mı yok mu bakmadan direk o anahtarın
 listesine ekleme yapabiliriz çünkü o anahtarın listesi yoksa nasıl olsa
 yaratılacaktır. Örnek,
@@ -284,6 +294,3 @@ Kaynaklar
 [2] <a name="../../2022/11/nosql-diy-python.html">NoSQL</a>
 
 [3] https://github.com/deep-compute/diskdict
-
-
-

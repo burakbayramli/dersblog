@@ -191,7 +191,9 @@ dosyalar üzerinden yapılıyor, her erişim her depolama direk bu
 dosyalara gidiyor (dosyaların ikisel formatı muhakkak hızlı erişim
 için ayarlanmış halde).
 
-### Olagan Degerler, Siralanma
+### Olağan Değerler, Sıralanma
+
+Olağan Değerler
 
 Pek çok ihtiyaca yardım etmeye uğraşan ek sözlük tipleri de
 vardır. Bunlardan biri olmayan bir değere erişildiğinde o anahtar için
@@ -246,9 +248,33 @@ defaultdict(list,
 Gördüğümüz gibi `cities_by_state[state]` üzerinde direk `.append`
 yapabildik çünkü listenin orada olacağını varsayabiliyoruz.
 
+Eklenme Sırasını Hatırlayan Sözlük
 
+Anahtarin eklenme sirasini hatirlayip degerler istendiginde ona gore
+listeyi donduren bir diger sozluk tipi `collections.OrderedDict`.
 
+```python
+import collections
 
+#creating an OrderedDict
+
+dict5 = collections.OrderedDict()
+dict5["A"]=1
+dict5["B"]=2
+dict5["D"]=4
+dict5["C"]=3
+for i in dict5.items(): print(i)
+```
+
+```text
+('A', 1)
+('B', 2)
+('D', 4)
+('C', 3)
+```
+
+Sonuca bakıyoruz, liste aynen eklenme sırasını yansıtıyor. Normal bir
+sözlük bu sonucu garantilemez, sıralama rasgele olabilir.
 
 
 Kaynaklar

@@ -38,10 +38,10 @@
         <h1></h1>
 <h1>Python Sözlük (Dictionary) Veri Yapısı</h1>
 
-<p>Python sözlük yapısı hafızada anahtar bazlı veriye direk erişim
-sağlar.  Basit anahtar - değer ikilisini depolamaya yarar, fakat değer
-olarak depolanan şey herhangi bir obje olabilir. Bu özellik sözlüklere
-geniş kullanım alanı sağlar.</p>
+<p>Python sözlük yapısı hafızada anahtar bazlı veriye direk erişim (dizin
+erişimi kadar hızlı) sağlar.  Basit anahtar - değer ikilisini
+depolayabiliriz, fakat değer olarak depolanan şey herhangi bir obje
+olabilir. Bu özellik sözlüklere geniş kullanım alanı sağlar.</p>
 
 <p>En basit kullanım,</p>
 
@@ -100,8 +100,8 @@ geniş kullanım alanı sağlar.</p>
 </code></pre>
 </div>
 
-<p>Kavrama (comprehension) yani [1] tek satirda hem baska bir listeyi gezip ayni
-anda baska bir liste / sozluk yaratma kabiliyeti sozlukler icin de gecerli,</p>
+<p>Kavrama (comprehension) yani [1] tek satırda hem başka bir listeyi gezip aynı
+anda başka bir liste / sözlük yaratma kabiliyeti sözlükler için de geçerli,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">dict2</span> <span class="o">=</span> <span class="p">{</span> <span class="n">i</span><span class="p">:</span><span class="n">x</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="s1">&#39;ali&#39;</span><span class="p">,</span><span class="s1">&#39;veli&#39;</span><span class="p">,</span><span class="s1">&#39;ahmet&#39;</span><span class="p">])</span> <span class="p">}</span>
@@ -117,13 +117,98 @@ anda baska bir liste / sozluk yaratma kabiliyeti sozlukler icin de gecerli,</p>
 <p><code>i:x</code> ile anahtar/değer ikilisini başka bir listeyi gezerken tanımladık, ve
 bu tanımlar toparlanıp bir yeni sözlük yaratımı için kullanıldı.</p>
 
+<h3>Arka Plana Neler Oluyor?</h3>
+
+<p>Sozluklerin ic kodlanmasi nasil yapilmistir acaba? Bundan da bahsedelim, mulakat
+sorusu olabilir, zaten gorunmese de bu tur detaylari bilmek faydalidir.</p>
+
+<p>Bir sözlük paketini kodlamak için en baz depolama veri yapısı olarak bir dizin
+(array) kullanabilirdik. Ama dizin erişimi tam sayı bazlıdır, üstelik baştan
+kaç öğe olduğu bellidir, anahtarı herhangi bir şey olabilecek sözlükleri bunun
+üstüne nasıl monte edeceğiz? </p>
+
+<p>Bölec (hash) kavramı yardıma yetişir. Harfler, alfanumerik herhangi
+bir veriyi <code>hash</code> ile sayısal forma çevirebiliyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;anahtar1&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 6762465535002540417
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;anahtar2&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 1439585439643666777
+</code></pre>
+</div>
+
+<p>Eğer sözlüğün arkasında 10 büyüklüğünde bir listeyi depolama için kullanmak
+istiyorsak üstteki sayıların modülüs hesabını yaparız, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">hash</span><span class="p">(</span><span class="s2">&quot;anahtar1&quot;</span><span class="p">)</span> <span class="o">%</span> <span class="mi">10</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 7
+</code></pre>
+</div>
+
+<p>Eğer dizin büyüklüğüne kıyasla çok fazla anahtar değeri var ise birden fazla
+anahtar aynı dizin öğesine düşebilir, bu "çakışma (collision)" durumu yaratır,
+bu durumda çakışma olan öğede bir liste yaratırız (dizin içinde liste olur ama
+önemli değil), ve erişim için arama önce anahtar bazlı direk sonra liste bazlı
+teker teker gider. </p>
+
 <h3>DiskDict</h3>
+
+<p>Paketten çıkan hali ile Python sözlükleri hafıza bazlıdır. Fakat eğer anahtar
+erişimi bizi bir disk deposuna götürsün istersek? Dikkat tüm işlemler hafızada
+yapıldıktan sonra işi bitmiş sözlüğü diske yazmaktan bahsetmiyorum, her anahtar
+erişimi, her depolama işleme tekil bazlı olarak işini disk bazlı yapmalı diyorum. </p>
+
+<p>Bu ihtiyaç için bazı paketler var. Çoğu işin kodlama kısmını Python
+basit sözlük ile benzer tutmuşlar böylece kodlayan yeni bir erişim stili
+öğrenmeye mecbur değil, tüm bildik sözlük işlemleri geçerli.</p>
+
+<p>İyi bir paket <code>diskdict</code> [3]. Kurmak için kaynaklar kullanılırsa iyi
+olur, önce alttakiler,</p>
+
+<pre><code>sudo apt install python3-leveldb libleveldb-dev
+
+pip install repoze.lru
+</code></pre>
+
+<p>Ardından <code>setup.py</code> ile kurulum yapılır. Örnek,</p>
+
+<p>from diskdict import DiskDict</p>
+
+<p>dict3 = DiskDict('/tmp/diskdict')</p>
+
+<p>dict3['anahtar3'] = 'deger3'
+```</p>
+
+<p>Bu işlemler sonrası <code>/tmp/diskdict</code> dizini altında bazı dosyaların yaratılmış
+olduğunu göreceğiz. Sözlüğün disksel erişim işlemleri bu dosyalar üzerinden
+yapılıyor, her erişim her depolama direk bu dosyalara gidiyor (dosyaların formatı
+muhakkak hızlı erişim için ayarlanmış halde).</p>
 
 <p>Kaynaklar</p>
 
 <p>[1] [Python Liste Kavraması (List Comprehension)](../../2021/12/python-list-comprehension.html)</p>
 
 <p>[2] [NoSQL](../../2022/11/nosql-diy-python.html)</p>
+
+<p>[3] https://github.com/deep-compute/diskdict</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

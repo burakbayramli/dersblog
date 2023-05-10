@@ -285,6 +285,63 @@ for i in dict5.items(): print(i)
 Sonuca bakıyoruz, liste aynen eklenme sırasını yansıtıyor. Normal bir
 sözlük bu sonucu garantilemez, sıralama rasgele olabilirdi.
 
+# Anahtar Çeşitleri
+
+"Depolanan şey herhangi bir obje olabilir" dedik, buna ek olarak,
+belli şartlara uymak kaydıyla anahtar çoğu baz Python objeleri bile
+olabilir. Mesela tüpler (tuples),
+
+```python
+tuple1 = ((2,3),(4,5))
+tuple2 = ((8,1),(9,9))
+dict6 = {}
+dict6[tuple1] = "bazi degerler burada"
+dict6[tuple2] = "baska degerler"
+print (dict6[tuple1])
+print (dict6[tuple2])
+```
+
+```text
+bazi degerler burada
+baska degerler
+```
+
+Anahtar olabilecek temel tipler değiştirilemeyen (ımmutable)
+nesnelerdir, bunlar String, int, tuple tipleri. Fakat daha önce
+bahsettiğimiz gibi bir anahtar sonuçta böleclenen bir şey, o zaman bir
+bölec fonksiyonu sağlayan her nesne, kullanıcı tanımlı bile olsa
+anahtar olabilir.
+
+```python
+class C:
+    def __init__(self, a1, a2):
+        self.a1 = a1
+        self.a2 = a2
+
+    def __hash__(self):
+        return hash((self.a1, self.a2))
+
+    def __eq__(self, other):
+        return (self.a1, self.a2) == (other.a1, other.a2)
+
+object_a = C("a", 1)
+object_b = C("a", 1)
+object_c = C("b", 2)
+
+a_dictionary = {object_a : 3, object_b : 4, object_c : 5}
+
+print(a_dictionary[object_a])
+```
+
+```text
+4
+```
+
+Görüldüğü gibi `object_a` objesinin tamamını bir anahtar olarak kullandık
+ve doğru değere erisebildik çünkü sınıf üzerinde `__hash__` tanımlandı
+perde arkasında Python sözlük kodu bu fonksiyonu çağırarak gerekli değeri
+oradan alabiliyor.
+
 Kaynaklar
 
 [1] <a href="../../2021/12/python-list-comprehension.html">Python Liste Kavraması (List Comprehension)</a>

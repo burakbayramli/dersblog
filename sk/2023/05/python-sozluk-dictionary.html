@@ -350,6 +350,67 @@ listeyi donduren bir diger sozluk tipi <code>collections.OrderedDict</code>.</p>
 <p>Sonuca bakıyoruz, liste aynen eklenme sırasını yansıtıyor. Normal bir
 sözlük bu sonucu garantilemez, sıralama rasgele olabilirdi.</p>
 
+<h1>Anahtar Çeşitleri</h1>
+
+<p>"Depolanan şey herhangi bir obje olabilir" dedik, buna ek olarak,
+belli şartlara uymak kaydıyla anahtar çoğu baz Python objeleri bile
+olabilir. Mesela tüpler (tuples),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">tuple1</span> <span class="o">=</span> <span class="p">((</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">),(</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">tuple2</span> <span class="o">=</span> <span class="p">((</span><span class="mi">8</span><span class="p">,</span><span class="mi">1</span><span class="p">),(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">))</span>
+<span class="n">dict6</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">dict6</span><span class="p">[</span><span class="n">tuple1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;bazi degerler burada&quot;</span>
+<span class="n">dict6</span><span class="p">[</span><span class="n">tuple2</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;baska degerler&quot;</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dict6</span><span class="p">[</span><span class="n">tuple1</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dict6</span><span class="p">[</span><span class="n">tuple2</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>bazi degerler burada
+baska degerler
+</code></pre>
+</div>
+
+<p>Anahtar olabilecek temel tipler değiştirilemeyen (ımmutable)
+nesnelerdir, bunlar String, int, tuple tipleri. Fakat daha önce
+bahsettiğimiz gibi bir anahtar sonuçta böleclenen bir şey, o zaman bir
+bölec fonksiyonu sağlayan her nesne, kullanıcı tanımlı bile olsa
+anahtar olabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">class</span> <span class="nc">C</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a1</span><span class="p">,</span> <span class="n">a2</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a1</span> <span class="o">=</span> <span class="n">a1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a2</span> <span class="o">=</span> <span class="n">a2</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">a1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a2</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">a1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">a2</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">a1</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">a2</span><span class="p">)</span>
+
+<span class="n">object_a</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">object_b</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">object_c</span> <span class="o">=</span> <span class="n">C</span><span class="p">(</span><span class="s2">&quot;b&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">a_dictionary</span> <span class="o">=</span> <span class="p">{</span><span class="n">object_a</span> <span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="n">object_b</span> <span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="n">object_c</span> <span class="p">:</span> <span class="mi">5</span><span class="p">}</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">a_dictionary</span><span class="p">[</span><span class="n">object_a</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>4
+</code></pre>
+</div>
+
+<p>Görüldüğü gibi <code>object_a</code> objesinin tamamını bir anahtar olarak kullandık
+ve doğru değere erisebildik çünkü sınıf üzerinde <code>__hash__</code> tanımlandı
+perde arkasında Python sözlük kodu bu fonksiyonu çağırarak gerekli değeri
+oradan alabiliyor.</p>
+
 <p>Kaynaklar</p>
 
 <p>[1] <a href="../../2021/12/python-list-comprehension.html">Python Liste Kavraması (List Comprehension)</a></p>

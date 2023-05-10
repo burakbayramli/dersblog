@@ -1,9 +1,10 @@
 # Python Sözlük (Dictionary) Veri Yapısı
 
-Python sözlük yapısı hafızada anahtar bazlı veriye direk erişim (dizin
-erişimi kadar hızlı) sağlar.  Basit anahtar - değer ikilisini
-depolayabiliriz, fakat değer olarak depolanan şey herhangi bir obje
-olabilir. Bu özellik sözlüklere geniş kullanım alanı sağlar.
+Python sözlük yapısı hafızada anahtar bazlı veriye direk erişim (dizi
+/ vektör / sayı indisli liste erişimi kadar hızlı) sağlar.  Basit
+anahtar - değer ikilisini depolayabiliriz, fakat değer olarak
+depolanan şey herhangi bir obje olabilir. Bu özellik sözlüklere geniş
+kullanım alanı sağlar.
 
 En basit kullanım,
 
@@ -110,10 +111,10 @@ bu tanımlar toparlanıp bir yeni sözlük yaratımı için kullanıldı.
 Sözlüklerin iç kodlanması nasıl yapılmıştır acaba? Bundan da
 bahsedelim, mülakat sorusu olabilir, zaten görünmese de bu tür
 detayları bilmek faydalıdır. Bir sözlük paketini kodlamak için en baz
-depolama veri yapısı olarak bir dizin (array) kullanabiliriz. Ama
-dizin erişimi tam sayı bazlıdır, üstelik baştan kaç öğe olduğu
-bellidir, anahtarı herhangi bir şey olabilecek sözlükleri bunun üstüne
-nasıl monte edeceğiz?
+depolama veri yapısı olarak bir dizi (array) kullanabiliriz. Ama dizi
+erişimi tam sayı bazlıdır, üstelik baştan kaç öğe olduğu bellidir,
+anahtarı herhangi bir şey olabilecek sözlükleri bunun üstüne nasıl
+monte edeceğiz?
 
 Böleç (hash) kavramı burada yardıma yetişir. Harfler, alfanumerik
 herhangi bir veriyi `hash` ile sayısal forma çevirebileceğimizi
@@ -147,12 +148,12 @@ hash("anahtar1") % 10
 Out[1]: 7
 ```
 
-İşte bu sayı dizinde erişim için kullanılır.
+İşte bu sayı dizide erişim için kullanılır.
 
-Eğer dizin büyüklüğüne kıyasla çok fazla anahtar değeri var ise birden
-fazla anahtar aynı dizin öğesine düşebilir, bu "çakışma (collision)"
+Eğer dizi büyüklüğüne kıyasla çok fazla anahtar değeri var ise birden
+fazla anahtar aynı dizi öğesine düşebilir, bu "çakışma (collision)"
 durumu yaratır, bu durumda çakışma olan öğede bir liste yaratırız
-(dizin içinde liste), ve erişim için arama önce anahtar bazlı direk
+(dizi içinde liste), ve erişim için arama önce anahtar bazlı direk
 sonra liste bazlı teker teker gider.
 
 ### DiskDict
@@ -185,7 +186,7 @@ dict3 = DiskDict('/tmp/diskdict')
 dict3['anahtar3'] = 'deger3'
 ```
 
-Bu işlemler sonrası `/tmp/diskdict` dizini altında bazı dosyaların
+Bu işlemler sonrası `/tmp/diskdict` dizi altında bazı dosyaların
 yaratılmış olduğunu göreceğiz. Sözlüğün disksel erişim işlemleri bu
 dosyalar üzerinden yapılıyor, her erişim her depolama direk bu
 dosyalara gidiyor (dosyaların ikisel formatı muhakkak hızlı erişim

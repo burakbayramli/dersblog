@@ -35,11 +35,11 @@ Basit, dağıtık çalışabilen bir NoSQL taban tasarımı şöyle olabilir.
 
 - Listeleme: bu özellik için ayrı bir SQL tablosu yaratırız, bir
   kolonunda liste ismi, diğerinde obje anahtarı olacak şekilde. Liste
-  ismi satırlarda tekrarlanabilir böylece çoka bir ilişki
-  kuruyoruz. Listeyi istemciden almak için o isim üzerinde `where`
-  işletiliriz. Sayfalama özelliği SQL LIMIT üzerinden sağlanır,
-  çağıran tarafta liste obje anahtarlarını objeye çevirmek için
-  servise tekrar sormak gerekecektir.
+  ismi satırlarda tekrarlanabilir böylece çoka-bir (many to one)
+  ilişki kuruyoruz. Listeyi servisten almak için o isim üzerinde
+  `where` işletiliriz. Sayfalama özelliği SQL LIMIT üzerinden
+  sağlanır, çağıran tarafta liste obje anahtarlarını objeye çevirmek
+  için servise tekrar sormak gerekecektir.
 
 ### Servis
 

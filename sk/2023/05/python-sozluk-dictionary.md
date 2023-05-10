@@ -342,6 +342,22 @@ ve doğru değere erisebildik çünkü sınıf üzerinde `__hash__` tanımlandı
 perde arkasında Python sözlük kodu bu fonksiyonu çağırarak gerekli değeri
 oradan alabiliyor.
 
+Dikkat edersek `object_b` aynı değerleri taşıdığı için aynı böleci
+üretir, o zaman sözlük açısından aynı anahtar değeridir. `object_c`
+farklı değerleri olduğu için farklı bir anahtardır.
+
+```python
+print(a_dictionary[object_b])
+print(a_dictionary[object_c])
+```
+
+```text
+4
+5
+```
+
+Değer `4` iki üstteki ile aynı, ama `5` farklı.
+
 Kaynaklar
 
 [1] <a href="../../2021/12/python-list-comprehension.html">Python Liste Kavraması (List Comprehension)</a>

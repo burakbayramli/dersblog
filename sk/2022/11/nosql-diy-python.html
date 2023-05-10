@@ -158,6 +158,12 @@ için servise tekrar sormak gerekecektir.</p></li>
 (singleton) içinde muhafaza ediliyor. Arkadaki sqlite tabanına
 eşzamanlı erişim olmadığı için birden fazla bağlantıya da gerek yok.</p>
 
+<p>Not: Fakat baz taban daha kuvvetli bir taban seçilirse (bir tablonun
+tamamını kitlemeden ayrı satırlara paralel erişim desteği sağlayan
+türden) birden fazla taban bağlantısı idare edilebilir. Bunun için
+üstteki kodda ufak bir değişim yeterli (tekil obje yerine bir bağlantı
+havuzu kullanımı mesela)</p>
+
 <p>Metot <code>set</code> içinde <code>insert or replace into</code> komutunu kullandık, bu SQL
 çağrısı bir satır varsa onu günceller yoksa yeni satır ekler,
 İngilizce deyimle insert ve update karışımı olan "upsert" işlemini
@@ -173,7 +179,7 @@ düz SQL komutları üzerinden yapıyoruz. Unutmayalım SQL sadece ekleme,
 silme gibi "CRUD" operasyonlarından ibaret değil, ilişkisel veriler
 literatürü çok daha kapsamlı. NoSQL dışarıya bu tür ilişkisel bir
 arayüz vermiyor, arka planda da SQL basit depolama amaçlı olarak
-kullanılıyor ve onun ilişkisel özelliklerine de dokunulmuyor.</p>
+kullanılıyor ve onun ilişkisel özelliklerine dokunulmuyor.</p>
 
 <p>Servisi başlatırken üstteki script'e komut satırından 0,1,2.. gibi bir
 sayı veririz, bu sayı o servisin no'su olur. Bu no taban ismine

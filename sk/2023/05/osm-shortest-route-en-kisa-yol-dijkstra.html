@@ -328,6 +328,7 @@ uzaklığını sözlük içindeki sözlüğe ekliyoruz.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">diskdict</span> <span class="kn">import</span> <span class="n">DiskDict</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">shutil</span>
 
 <span class="n">dictdir</span> <span class="o">=</span> <span class="s2">&quot;walkdict&quot;</span>
 
@@ -392,11 +393,129 @@ satir 7000
 </code></pre>
 </div>
 
-<p>Oldu mu acaba?</p>
+<p>Oldu mu acaba? Biraz once yukarida buldugumuz iki OSM id icin kontrol edebilirim,</p>
 
-<p><img src="osm2.jpg" alt="" /></p>
+<div class="codehilite">
+<pre><span></span><code><span class="n">dd</span> <span class="o">=</span> <span class="n">DiskDict</span><span class="p">(</span><span class="n">dictdir</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;5241652028&#39;</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">dd</span><span class="p">[</span><span class="s1">&#39;5241649212&#39;</span><span class="p">])</span>
+<span class="n">dd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
 
-<p>[devam edecek]</p>
+<div class="codehilite">
+<pre><span></span><code>{&#39;5241649212&#39;: &#39;457.3817484566977&#39;}
+{&#39;4777625846&#39;: &#39;53.01967846005421&#39;, &#39;4777625831&#39;: &#39;290.6337430695447&#39;, &#39;5241652028&#39;: &#39;457.3817484566977&#39;}
+</code></pre>
+</div>
+
+<p>İşliyor gibi gözüküyor. Şimdi kısa yol algoritmasina gelelim, bu algoritmayi [7]'de
+işledik ve bu yazıdaki formu direk [8] bağlantısından aldık. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">priodict</span> <span class="kn">import</span> <span class="n">priorityDictionary</span>
+
+<span class="k">def</span> <span class="nf">Dijkstra</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="p">{}</span>  
+    <span class="n">P</span> <span class="o">=</span> <span class="p">{}</span>  
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">priorityDictionary</span><span class="p">()</span>  
+    <span class="n">Q</span><span class="p">[</span><span class="n">start</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">Q</span><span class="p">:</span>
+        <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">Q</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="o">==</span> <span class="n">end</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">G</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
+            <span class="n">vwLength</span> <span class="o">=</span> <span class="n">D</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">G</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">w</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">D</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">vwLength</span> <span class="o">&lt;</span> <span class="n">D</span><span class="p">[</span><span class="n">w</span><span class="p">]:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Dijkstra: found better path to already-final vertex&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">w</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">Q</span> <span class="ow">or</span> <span class="n">vwLength</span> <span class="o">&lt;</span> <span class="n">Q</span><span class="p">[</span><span class="n">w</span><span class="p">]:</span>
+                <span class="n">Q</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">vwLength</span>
+                <span class="n">P</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">shortestPath</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+
+    <span class="n">D</span><span class="p">,</span> <span class="n">P</span> <span class="o">=</span> <span class="n">Dijkstra</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="n">Path</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">Path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">end</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">P</span><span class="p">[</span><span class="n">end</span><span class="p">]</span>
+    <span class="n">Path</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Path</span>
+</code></pre>
+</div>
+
+<p>Şimdi başlangıç ve bitiş noktası olarak önceden bulduğumuz değerleri geçelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">dd</span> <span class="o">=</span> <span class="n">DiskDict</span><span class="p">(</span><span class="n">dictdir</span><span class="p">)</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">shortestPath</span><span class="p">(</span><span class="n">dd</span><span class="p">,</span><span class="s1">&#39;5241652028&#39;</span><span class="p">,</span><span class="s1">&#39;8059195265&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">path</span><span class="p">)</span>
+<span class="n">dd</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[&#39;5241652028&#39;, &#39;5241649212&#39;, &#39;4777625846&#39;, &#39;405266842&#39;, &#39;3802966016&#39;, &#39;405266742&#39;, &#39;405266728&#39;, &#39;6431706479&#39;, &#39;305690088&#39;, &#39;305690096&#39;, &#39;305690111&#39;, &#39;3802965784&#39;, &#39;3802965685&#39;, &#39;305690121&#39;, &#39;2354805430&#39;, &#39;1614295880&#39;, &#39;1864118317&#39;, &#39;305691481&#39;, &#39;3802965494&#39;, &#39;305691485&#39;, &#39;3802965479&#39;, &#39;305691491&#39;, &#39;1417297967&#39;, &#39;305691500&#39;, &#39;305691521&#39;, &#39;2802777348&#39;, &#39;305691544&#39;, &#39;7382949169&#39;, &#39;7382949164&#39;, &#39;305691549&#39;, &#39;6437197545&#39;, &#39;305691560&#39;, &#39;305691563&#39;, &#39;2802805342&#39;, &#39;305691567&#39;, &#39;439186462&#39;, &#39;305691570&#39;, &#39;305691582&#39;, &#39;305691586&#39;, &#39;6437232101&#39;, &#39;305691589&#39;, &#39;6437232098&#39;, &#39;2573268555&#39;, &#39;1864118244&#39;, &#39;1864118235&#39;, &#39;8918610006&#39;, &#39;9225502574&#39;, &#39;305691605&#39;, &#39;2802788703&#39;, &#39;6437269807&#39;, &#39;6437269803&#39;, &#39;305691623&#39;, &#39;305691629&#39;, &#39;305691642&#39;, &#39;306655753&#39;, &#39;306655762&#39;, &#39;3049391257&#39;, &#39;306655819&#39;, &#39;9926906798&#39;, &#39;2379086156&#39;, &#39;6437318872&#39;, &#39;395271770&#39;, &#39;3190260407&#39;, &#39;398384289&#39;, &#39;6437348771&#39;, &#39;2008248197&#39;, &#39;5517625607&#39;, &#39;9233918566&#39;, &#39;398384449&#39;, &#39;1198102870&#39;, &#39;1198102890&#39;, &#39;1198114558&#39;, &#39;1198114523&#39;, &#39;8059195265&#39;]
+</code></pre>
+</div>
+
+<p>Bir yol bulundu gibi duruyor. Yol tabii ki osm id bazında listelendi, bu düğüm
+noktalarının kordinat değerlerini bulup grafiklersek yolu göstermiş oluruz.
+İD kullanıp enlem/boylam almak için bir fonksiyon yazalım, ve çevrimi yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<span class="k">def</span> <span class="nf">get_osm_info</span><span class="p">(</span><span class="n">osmid</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbfile</span><span class="p">)</span>
+    <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;select lat,lon from osm_nodes where id==?&quot;</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">,(</span><span class="n">osmid</span><span class="p">,)))</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">):</span> <span class="k">return</span> <span class="n">rows</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span> <span class="k">return</span> <span class="kc">None</span>
+
+<span class="n">coords</span> <span class="o">=</span> <span class="p">[</span><span class="n">get_osm_info</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">path</span><span class="p">]</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[(-4.70279, 55.48997), (-4.70551, 55.48911), (-4.70569, 55.48953), (-4.70713, 55.48649), (-4.70891, 55.48444), (-4.709, 55.48432), (-4.70993, 55.48329), (-4.71002, 55.48308), (-4.71015, 55.4822), (-4.7085, 55.48134), (-4.7061, 55.47901), (-4.70493, 55.47804), (-4.70463, 55.4777), (-4.70448, 55.47744), (-4.70366, 55.47573), (-4.70364, 55.47552), (-4.70336, 55.47385), (-4.70314, 55.47369), (-4.70277, 55.47336), (-4.70254, 55.47284), (-4.70254, 55.47236), (-4.70209, 55.47161), (-4.70093, 55.47065), (-4.70084, 55.47013), (-4.69627, 55.46672), (-4.69475, 55.46378), (-4.69253, 55.45959), (-4.69241, 55.4595), (-4.69203, 55.45931), (-4.68996, 55.45863), (-4.68702, 55.45828), (-4.68583, 55.45778), (-4.68453, 55.45697), (-4.68374, 55.45639), (-4.6831, 55.45592), (-4.68242, 55.45582), (-4.68233, 55.45581), (-4.67872, 55.45434), (-4.67745, 55.45379), (-4.67726, 55.45357), (-4.67709, 55.4533), (-4.67696, 55.45289), (-4.67691, 55.45276), (-4.67621, 55.45166), (-4.67587, 55.44956), (-4.67601, 55.44818), (-4.6759, 55.44788), (-4.67579, 55.44757), (-4.67471, 55.44478), (-4.6757, 55.44405), (-4.67501, 55.44215), (-4.67492, 55.44157), (-4.67399, 55.43991), (-4.67281, 55.4375), (-4.67236, 55.43661), (-4.67216, 55.43551), (-4.66865, 55.43009), (-4.66709, 55.42912), (-4.66642, 55.41922), (-4.666, 55.41862), (-4.66509, 55.41826), (-4.66414, 55.41694), (-4.66352, 55.4152), (-4.66316, 55.41373), (-4.6613, 55.41093), (-4.65905, 55.4105), (-4.65834, 55.41054), (-4.65791, 55.41036), (-4.65772, 55.41026), (-4.65711, 55.40959), (-4.65512, 55.40988), (-4.6484, 55.41474), (-4.63796, 55.40797), (-4.63801, 55.40781)]
+</code></pre>
+</div>
+
+<p>Artık bu kordinatları bir haritada gösterebiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">fr</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;seychelles-route.html&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="seychelles-route.html">Sonuç</a></p>
+
+<p>Yol üstteki haritada gösteriliyor. Kısa bir yol. Google yol tarifi
+algoritmasinin bulduğu sonuç <a href="osm2.jpg">şurada</a>. İkisi de kullanışlı
+bence.</p>
+
+<p>Üstteki teknolojiler, tasarım seçimleri sayesinde açık kaynak verisi
+OSM ile hızlı bir şekilde ürettiğimiz SQL tabanı ve <code>diskdict</code> sözlüğü
+ile direk disk bazlı hızlı kısa yol hesabı yapabiliyoruz. İşin en iyi
+tarafı Djikstra kısa yol algoritması üzerinde hiçbir değişiklik
+yapmadan onu olduğu gibi işletebilmemiz, çünkü onun farzettiği sözlük
+yapısına uygun bir kod sağladık ve algoritma direk çalıştı. Kodlar az
+hafıza gerektiriyor çünkü veri erişimini çoğu yerde noktasal atış,
+direk kimlik bazlı erişime indirgedik.</p>
 
 <p>Kaynaklar</p>
 

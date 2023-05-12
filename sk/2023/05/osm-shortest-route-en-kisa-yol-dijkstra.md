@@ -282,6 +282,7 @@ uzaklığını sözlük içindeki sözlüğe ekliyoruz.
 
 ```python
 from diskdict import DiskDict
+import os, csv, shutil
 
 dictdir = "walkdict"
 
@@ -344,13 +345,121 @@ satir 6000
 satir 7000
 ```
 
-Oldu mu acaba?
+Oldu mu acaba? Biraz once yukarida buldugumuz iki OSM id icin kontrol edebilirim,
 
+```python
+dd = DiskDict(dictdir)
+print (dd['5241652028'])
+print (dd['5241649212'])
+dd.close()
+```
 
+```text
+{'5241649212': '457.3817484566977'}
+{'4777625846': '53.01967846005421', '4777625831': '290.6337430695447', '5241652028': '457.3817484566977'}
+```
 
-![](osm2.jpg)
+İşliyor gibi gözüküyor. Şimdi kısa yol algoritmasina gelelim, bu algoritmayi [7]'de
+işledik ve bu yazıdaki formu direk [8] bağlantısından aldık. 
 
-[devam edecek]
+```python
+from priodict import priorityDictionary
+
+def Dijkstra(G, start, end=None):
+    D = {}  
+    P = {}  
+    Q = priorityDictionary()  
+    Q[start] = 0
+
+    for v in Q:
+        D[v] = Q[v]
+        if v == end:
+            break
+
+        for w in G[v]:
+            vwLength = D[v] + float(G[v][w])
+            if w in D:
+                if vwLength < D[w]:
+                    raise ValueError("Dijkstra: found better path to already-final vertex")
+            elif w not in Q or vwLength < Q[w]:
+                Q[w] = vwLength
+                P[w] = v
+
+    return (D, P)
+
+def shortestPath(G, start, end):
+
+    D, P = Dijkstra(G, start, end)
+    Path = []
+    while 1:
+        Path.append(end)
+        if end == start:
+            break
+        end = P[end]
+    Path.reverse()
+    return Path
+```
+
+Şimdi başlangıç ve bitiş noktası olarak önceden bulduğumuz değerleri geçelim,
+
+```python
+dd = DiskDict(dictdir)
+path = shortestPath(dd,'5241652028','8059195265')
+print (path)
+dd.close()
+```
+
+```text
+['5241652028', '5241649212', '4777625846', '405266842', '3802966016', '405266742', '405266728', '6431706479', '305690088', '305690096', '305690111', '3802965784', '3802965685', '305690121', '2354805430', '1614295880', '1864118317', '305691481', '3802965494', '305691485', '3802965479', '305691491', '1417297967', '305691500', '305691521', '2802777348', '305691544', '7382949169', '7382949164', '305691549', '6437197545', '305691560', '305691563', '2802805342', '305691567', '439186462', '305691570', '305691582', '305691586', '6437232101', '305691589', '6437232098', '2573268555', '1864118244', '1864118235', '8918610006', '9225502574', '305691605', '2802788703', '6437269807', '6437269803', '305691623', '305691629', '305691642', '306655753', '306655762', '3049391257', '306655819', '9926906798', '2379086156', '6437318872', '395271770', '3190260407', '398384289', '6437348771', '2008248197', '5517625607', '9233918566', '398384449', '1198102870', '1198102890', '1198114558', '1198114523', '8059195265']
+```
+
+Bir yol bulundu gibi duruyor. Yol tabii ki osm id bazında listelendi, bu düğüm
+noktalarının kordinat değerlerini bulup grafiklersek yolu göstermiş oluruz.
+İD kullanıp enlem/boylam almak için bir fonksiyon yazalım, ve çevrimi yapalım,
+
+```python
+import sqlite3
+
+def get_osm_info(osmid):
+    conn = sqlite3.connect(dbfile)
+    sql = "select lat,lon from osm_nodes where id==?"
+    c = conn.cursor()
+    rows = list(c.execute(sql,(osmid,)))
+    if (len(rows)==1): return rows[0]
+    else: return None
+       
+coords = [get_osm_info(x) for x in path]
+
+print (coords)
+```
+
+```text
+[(-4.70279, 55.48997), (-4.70551, 55.48911), (-4.70569, 55.48953), (-4.70713, 55.48649), (-4.70891, 55.48444), (-4.709, 55.48432), (-4.70993, 55.48329), (-4.71002, 55.48308), (-4.71015, 55.4822), (-4.7085, 55.48134), (-4.7061, 55.47901), (-4.70493, 55.47804), (-4.70463, 55.4777), (-4.70448, 55.47744), (-4.70366, 55.47573), (-4.70364, 55.47552), (-4.70336, 55.47385), (-4.70314, 55.47369), (-4.70277, 55.47336), (-4.70254, 55.47284), (-4.70254, 55.47236), (-4.70209, 55.47161), (-4.70093, 55.47065), (-4.70084, 55.47013), (-4.69627, 55.46672), (-4.69475, 55.46378), (-4.69253, 55.45959), (-4.69241, 55.4595), (-4.69203, 55.45931), (-4.68996, 55.45863), (-4.68702, 55.45828), (-4.68583, 55.45778), (-4.68453, 55.45697), (-4.68374, 55.45639), (-4.6831, 55.45592), (-4.68242, 55.45582), (-4.68233, 55.45581), (-4.67872, 55.45434), (-4.67745, 55.45379), (-4.67726, 55.45357), (-4.67709, 55.4533), (-4.67696, 55.45289), (-4.67691, 55.45276), (-4.67621, 55.45166), (-4.67587, 55.44956), (-4.67601, 55.44818), (-4.6759, 55.44788), (-4.67579, 55.44757), (-4.67471, 55.44478), (-4.6757, 55.44405), (-4.67501, 55.44215), (-4.67492, 55.44157), (-4.67399, 55.43991), (-4.67281, 55.4375), (-4.67236, 55.43661), (-4.67216, 55.43551), (-4.66865, 55.43009), (-4.66709, 55.42912), (-4.66642, 55.41922), (-4.666, 55.41862), (-4.66509, 55.41826), (-4.66414, 55.41694), (-4.66352, 55.4152), (-4.66316, 55.41373), (-4.6613, 55.41093), (-4.65905, 55.4105), (-4.65834, 55.41054), (-4.65791, 55.41036), (-4.65772, 55.41026), (-4.65711, 55.40959), (-4.65512, 55.40988), (-4.6484, 55.41474), (-4.63796, 55.40797), (-4.63801, 55.40781)]
+```
+
+Artık bu kordinatları bir haritada gösterebiliriz,
+
+```python
+import folium
+m = folium.Map(location=fr, zoom_start=12)
+folium.PolyLine(locations=coords, color="red").add_to(m)
+m.save("seychelles-route.html")
+```
+
+[Sonuç](seychelles-route.html)
+
+Yol üstteki haritada gösteriliyor. Kısa bir yol. Google yol tarifi
+algoritmasinin bulduğu sonuç [şurada](osm2.jpg). İkisi de kullanışlı
+bence.
+
+Üstteki teknolojiler, tasarım seçimleri sayesinde açık kaynak verisi
+OSM ile hızlı bir şekilde ürettiğimiz SQL tabanı ve `diskdict` sözlüğü
+ile direk disk bazlı hızlı kısa yol hesabı yapabiliyoruz. İşin en iyi
+tarafı Djikstra kısa yol algoritması üzerinde hiçbir değişiklik
+yapmadan onu olduğu gibi işletebilmemiz, çünkü onun farzettiği sözlük
+yapısına uygun bir kod sağladık ve algoritma direk çalıştı. Kodlar az
+hafıza gerektiriyor çünkü veri erişimini çoğu yerde noktasal atış,
+direk kimlik bazlı erişime indirgedik.
 
 Kaynaklar
 

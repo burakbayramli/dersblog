@@ -415,7 +415,7 @@ dd.close()
 
 Bir yol bulundu gibi duruyor. Yol tabii ki osm id bazında listelendi, bu düğüm
 noktalarının kordinat değerlerini bulup grafiklersek yolu göstermiş oluruz.
-İD kullanıp enlem/boylam almak için bir fonksiyon yazalım, ve çevrimi yapalım,
+ID kullanıp enlem/boylam almak için bir fonksiyon yazalım, ve çevrimi yapalım,
 
 ```python
 import sqlite3
@@ -455,19 +455,23 @@ bence.
 Üstteki teknolojiler, tasarım seçimleri sayesinde açık kaynak verisi
 OSM ile hızlı bir şekilde ürettiğimiz SQL tabanı ve `diskdict` sözlüğü
 ile direk disk bazlı hızlı kısa yol hesabı yapabiliyoruz. İşin en iyi
-tarafı Djikstra kısa yol algoritması üzerinde hiçbir değişiklik
+tarafı Djikstra kısa yol algoritmasi üzerinde hiçbir değişiklik
 yapmadan onu olduğu gibi işletebilmemiz, çünkü onun farzettiği sözlük
 yapısına uygun bir kod sağladık ve algoritma direk çalıştı. Kodlar az
 hafıza gerektiriyor çünkü veri erişimini çoğu yerde noktasal atış,
-direk kimlik bazlı erişime indirgedik.
+direk kimlik bazlı erişime indirgedik. Üstteki tabanları daha büyük
+haritalar üzerine işletince çıktının çok yer tutmadığını görebiliriz,
+mesela TR için `diskdict` tabanı 300 MB'dan daha az. Ayrıca erişim
+disk bazlı olduğu için tüm taban hafızaya taşınmayacak, gerekli yerlerine
+erişim yapılacak.
 
 Kaynaklar
 
-[1] http://download.geofabrik.de/index.html
+[1] <a href="http://download.geofabrik.de/index.html">GEOFabrik</a>
 
-[2] ../../2016/11/yol-tarifi-harita-bilgisi-osrm-backend.html
+[2] <a href="../../2016/11/yol-tarifi-harita-bilgisi-osrm-backend.html">Yol Tarifi, Harita Bilgisi: osrm-backend</a>
 
-[3] ../../2023/04/yol-bolmak-osm-osmnx.html
+[3] <a href="../../2023/04/yol-bolmak-osm-osmnx.html">En Kısa Yol Algoritması, Yol Ağı, OSMNX</a>
 
 [4] https://github.com/Tristramg/osm4routing2
 

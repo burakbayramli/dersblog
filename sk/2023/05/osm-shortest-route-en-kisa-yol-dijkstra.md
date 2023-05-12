@@ -75,20 +75,21 @@ olmadığı yol bilgisi içinde mevcut.
 
 ### Veri Yapisi, Tasarimi
 
-Kisa yol algoritmasi isletmek icin bize neler lazim? Yol tarifi isterken bir
-baslangic ve bitis noktasi enlem/boylam olarak verilir, bu iki noktanin
-OSM dugum noktalarina eslenmesi gerekiyor, aynen [3] yazisinda oldugu gibi
-once verilen kordinatlara en yakin OSM noktasi bulunur, ve oradan sonra
-dugum, kenar, sonraki dugum vs diye yol arama algoritmasi isleyebilir.
+Kısa yol algoritması işletmek için bize neler lazım? Yol tarifi isterken bir
+başlangıç ve bitiş noktası enlem/boylam olarak verilir, bu iki noktanın
+OSM düğüm noktalarına eşlenmesi gerekiyor, aynen [3] yazısında olduğu gibi
+önce verilen kordinatlara en yakın OSM noktası bulunur, ve oradan sonra
+düğüm, kenar, sonraki düğüm vs diye yol arama algoritması işleyebilir.
 
-Fakat "en yakın nokta bulmak" performans acisindan o kadar kolay bir
-is degil; örnek olarak burada ufak veri kullandık ama mesela TR
+Fakat "en yakın nokta bulmak" performans açısından o kadar kolay bir
+iş değil; örnek olarak burada ufak veri kullandık ama mesela TR
 boyutunda bir haritada milyonlarca nokta ve onların arasında bağlantı
-olacaktir. Milyonlarca satır içinden en yakın olanını bulmak eğer tüm
-verilere teker teker bakılıyorsa uzun sürebilir.
+olacaktır. Milyonlarca satır içinden en yakın olanını bulmak eğer tüm
+verilere teker teker bakılıyorsa uzun sürebilir. Bize bir tür
+indeksleme (indexing) mekanizması gerekiyor.
 
-İlk akla gelebilecek çözüm QuadTree, KDTree gibi seçenekler, bu
-çözümlerin çoğu bellek bazlı işler; etrafta bulunabilecek mevcut
+İlk akla gelebilecek çözümler QuadTree, KDTree gibi seçenekler, fakat
+bu çözümlerin çoğu bellek bazlı işler; etrafta bulunabilecek mevcut
 kodlar milyonlarca veri noktasını alıp bir indislenmiş ağaç yapısı
 oluşturabilir ama bunu veri yapısını hafıza tuturak yapar. İdeal
 olarak nokta bulmak, kısa yol hesaplama algoritmasının ufak bilgisayar
@@ -96,6 +97,108 @@ olarak nokta bulmak, kısa yol hesaplama algoritmasının ufak bilgisayar
 geri aldığımızda gigabayt seviyesinde olmamalı). Eğer ağır işlem
 bedeli ödenecekse onun baştan, veri hazırlığı evresinde ödenmesi daha
 iyi olacaktır.
+
+Şöyle bir çözüm olabilir, harita üzerinde bir izgara oluştururum, 4 x
+4, ya da 3 x 4 boyutunda olabilir, bu bana 12 izgara noktası verir,
+sonra veriyi baştan sonra işlerken elimdeki her düğüm için onun en
+yakın olduğu iki izgara noktasını bulurum ve yeni bir tabanda
+kaydederim. Bu yeni dosyayı bir SQL tabanına yazarım, her satırda
+yakın izgara noktaları mesela kolonlar `ç1` ve `c2` olabilir ve yeni
+tabloyu bu kolonlar bazlı indekslerim, böylece `c1` ve `c2` bazlı
+filtreleme işlemi hızlanır.
+
+Izgara noktalarını bir pickle içinde kaydederim, böylece sonradan
+isteyen yükleyebilir, ve artık herhangi bir nokta için aynı izgara
+yakınlığı işletilir, mesela `c1=3`, `c2=5` bulundu diyelim ve SQL
+tabanından ya 3 ya da 5 değerine sahip olan düğümleri `SELECT` ile
+alırım, ve bu noktalar üzerinde detaylı yakınlık hesabı
+işletirim. Böylece gerçek mesafe hesabı yapacağım veri miktarını
+azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere ayırmış oldum,
+eğer elimde Karadeniz bölgesinden bir nokta varsa Akdeniz bölgesindeki
+noktalara bakmaya ne gerek var?
+
+Burada seçilen teknolojilerin özelliklerine, kuvvetlerine dikkat;
+ızgara noktası bazlı filtreleme için SQL kullandık çünkü tam sayı
+bazlı filtreleme işlerini hem disk bazlı (herşeyi hafızaya almadan) ve
+çok hızlı yapar. Izgara ataması yaparken `nodes.csv` satır satır
+işlenecek, ve o sırada satır satır SQL tabanına yazım yapılacak, bu da
+hızlı, mesafe hesabı yapılıyor ama sadece 12 ızgara noktası için
+yapıldığı için çok performans kaybı yok.
+
+```python
+import csv, numpy as np, re, os, shutil, pickle, sqlite3
+from pygeodesy.sphericalNvector import LatLon
+from scipy.spatial.distance import cdist
+import pandas as pd
+
+dbfile = "nodes.db"
+
+def grid_assign_centers(corner1,corner2):
+    
+    p1 = LatLon(corner1[0],corner1[1])
+    p2 = LatLon(corner2[0],corner2[1])
+
+    lowlat = np.min([p1.lat,p2.lat])
+    lowlon = np.min([p1.lon,p2.lon])
+    hilat = np.max([p1.lat,p2.lat])
+    hilon = np.max([p1.lon,p2.lon])
+
+    x = np.linspace(lowlon,hilon,3)
+    y = np.linspace(lowlat,hilat,4)
+
+    xx,yy = np.meshgrid(x,y)
+    mids = []
+    for x,y in zip(xx.flatten(), yy.flatten()):
+        mids.append([x,y])       
+    mids = np.array(mids)
+        
+    pickle.dump(mids, open('centers.pkl', 'wb'))        
+
+    if os.path.exists(dbfile): os.remove(dbfile)    
+    db = sqlite3.connect(dbfile)
+    cursor = db.cursor()
+    cursor.execute('''CREATE TABLE osm_nodes(id INTEGER PRIMARY KEY, 
+                      lat NUMERIC, lon NUMERIC, c1 INTEGER, c2 INTEGER)
+                      ''')
+    db.commit()
+    
+    cursor = db.cursor()
+    with open('nodes.csv') as csvfile:
+        rd = csv.reader(csvfile,delimiter=',')
+        headers = {k: v for v, k in enumerate(next(rd))}
+        for i,row in enumerate(rd):        
+            id,lat,lon = row[headers['id']],row[headers['lat']],row[headers['lon']]
+            ds = cdist(mids,np.array([[lon,lat]]))
+            res = list(np.argsort(ds,axis=0).T[0][:2])
+            cursor.execute('''INSERT INTO osm_nodes(id, lat, lon, c1, c2)
+                      VALUES(?,?,?,?,?)''', (id,lat[:8],lon[:8],int(res[0]),int(res[1])))            
+            if i % 1000 == 0:
+                print ('satir',i)
+                db.commit()
+
+    cursor = db.cursor()
+    cmd = "CREATE INDEX index1 ON osm_nodes(c1)"
+    cursor.execute(cmd)
+    cmd = "CREATE INDEX index2 ON osm_nodes(c2)"
+    cursor.execute(cmd)
+    db.commit()
+
+# iki tane kose noktasini haritadan elle sectik
+grid_assign_centers((-4.807419070202981, 55.364345234773644),
+                    (-4.549969190633921, 55.566362543604434))
+
+```
+
+```text
+satir 0
+satir 1000
+satir 2000
+satir 3000
+satir 4000
+satir 5000
+satir 6000
+```
+
 
 
 

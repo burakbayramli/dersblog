@@ -4,7 +4,10 @@ Eğer yollar ağını içeren OSM haritasını kendimiz işleyip çıktı
 dosyalarını rahat okunabilir düz CSV formatında tutmak istersek bu
 mümkündür. Sonuçta OSM dosyaları [1] sitesinde bedava paylaşılıyor, ve
 bahsedilen işlemi yapabilecek bir kod Rust [5] ile yazılmış
-`osm4routing` kodudur. Kurmak için
+`osm4routing` kodudur. Amacımız iki nokta arasında bir kısa yol
+algoritması yazmak olacak.
+
+`osm4routing` kurmak için
 
 ```
 cargo install osm4routing
@@ -69,6 +72,32 @@ olmadığı yol bilgisi içinde mevcut.
 <img width='300' src='osm1.jpg'/> 
 
 ![](osm2.jpg)
+
+### Veri Yapisi, Tasarimi
+
+Kisa yol algoritmasi isletmek icin bize neler lazim? Yol tarifi isterken bir
+baslangic ve bitis noktasi enlem/boylam olarak verilir, bu iki noktanin
+OSM dugum noktalarina eslenmesi gerekiyor, aynen [3] yazisinda oldugu gibi
+once verilen kordinatlara en yakin OSM noktasi bulunur, ve oradan sonra
+dugum, kenar, sonraki dugum vs diye yol arama algoritmasi isleyebilir.
+
+Fakat "en yakın nokta bulmak" performans acisindan o kadar kolay bir
+is degil; örnek olarak burada ufak veri kullandık ama mesela TR
+boyutunda bir haritada milyonlarca nokta ve onların arasında bağlantı
+olacaktir. Milyonlarca satır içinden en yakın olanını bulmak eğer tüm
+verilere teker teker bakılıyorsa uzun sürebilir.
+
+İlk akla gelebilecek çözüm QuadTree, KDTree gibi seçenekler, bu
+çözümlerin çoğu bellek bazlı işler; etrafta bulunabilecek mevcut
+kodlar milyonlarca veri noktasını alıp bir indislenmiş ağaç yapısı
+oluşturabilir ama bunu veri yapısını hafıza tuturak yapar. İdeal
+olarak nokta bulmak, kısa yol hesaplama algoritmasının ufak bilgisayar
+üzerinde işleyebilmesi tercihimiz (bir ağaç yapısını hafızaya diskten
+geri aldığımızda gigabayt seviyesinde olmamalı). Eğer ağır işlem
+bedeli ödenecekse onun baştan, veri hazırlığı evresinde ödenmesi daha
+iyi olacaktır.
+
+
 
 
 [devam edecek]

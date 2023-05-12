@@ -69,11 +69,7 @@ bir yolun yürümeye elverişli olup olmadığı (`foot` kolonunda `Allowed`
 değeri var ise), aynı şekilde araba, bisiklet kullanımına uygun olup
 olmadığı yol bilgisi içinde mevcut. 
 
-<img width='300' src='osm1.jpg'/> 
-
-![](osm2.jpg)
-
-### Veri Yapisi, Tasarimi
+### Düğüm Veri Yapısı, Yakın Nokta Bulmak
 
 Kısa yol algoritması işletmek için bize neler lazım? Yol tarifi isterken bir
 başlangıç ve bitiş noktası enlem/boylam olarak verilir, bu iki noktanın
@@ -199,9 +195,160 @@ satir 5000
 satir 6000
 ```
 
+Tablo `osm_nodes` yaratıldı. Dikkat, indeksler tüm satırlar eklendikten
+*sonra* yaratıldı. Eğer tablo yaratıldığında indeksleri yaratmış olsak
+bu `INSERT` işlemlerini yavaşlatırdı. 
+
+Seçilen köşe ve hesaplanan ızgara noktaları altta grafikleniyor,
+
+<img width='300' src='osm1.jpg'/> 
+
+Şimdi bu ızgara noktalarını kullanarak bize "kordinata en yakın olan
+OSM id'sini bul" mantığını kodlayabiliriz.
+
+```python
+def find_closest_node(lat,lon):
+    mids = pickle.load(open("centers.pkl","rb"))
+
+    conn = sqlite3.connect(dbfile)
+
+    frvec = np.array([lon,lat]).reshape(1,2)
+    ds = cdist(mids,frvec)
+    fr_closest_mid = list(np.argsort(ds,axis=0).T[0][:2])
+    frres = []
+    sql = "select id,lat,lon from osm_nodes where c1==? or c1==? or c2==? or c2==?"
+    c = conn.cursor()
+    rows = c.execute(sql,(int(fr_closest_mid[0]),
+                          int(fr_closest_mid[1]),
+                          int(fr_closest_mid[0]),
+                          int(fr_closest_mid[1])))
+    for row in rows: frres.append(row)
+
+    df = pd.DataFrame(frres); df.columns = ['id','lat','lon']
+
+    frres = cdist(df[['lon','lat']], frvec)
+    res = df.iloc[np.argmin(frres)][['id','lat','lon']]
+    return list(res)
+```
+
+Altta iki nokta seçtik, bunları birazdan yol hesabı için başlangıç
+bitiş noktaları olarak kullanacağız, 
+
+```python
+fr=(-4.699287820423064, 55.49185927728346)
+to=(-4.6364140603708925, 55.406975784999176)
+
+find_closest_node(fr[0],fr[1])
+```
+
+```text
+Out[1]: [5241652028.0, -4.70279, 55.48997]
+```
+
+```python
+find_closest_node(to[0],to[1])
+```
+
+```text
+Out[1]: [8059195265.0, -4.63801, 55.40781]
+```
+
+Bu noktalar hakikaten de benim seçtiğim yerlere yakın. Demek ki
+listedeki ilk sayı, OSM kimliğini kullanabilirim.
+
+### Bağlantılar
+
+İkinci teknoloji seçimine gelelim, bu bir önceki konu kadar önemli,
+yolları temsil eden çiziti, yani düğümler ve aralarındaki bağlantıları
+nasıl temsil edeceğiz? Bu seçimi yaparken aklımda bazı tercihler ve
+bilgiler var. Mesela [7] yazısında anlatılan kısa yol algoritmasının
+Python sözlüğü bazlı çalıştığını biliyorum, çiziti bir "sözlük içinde
+sözlük" yapısında olmasını bekliyor, yani çizit `G` ise mesela
+`G['a']` ile `G` sözlüğünden ikinci bir sözlük elde ediyoruz, bu
+sözlükte hedef düğümü geçiyoruz, bu bize yolun ağırlığını / uzaklığını
+veriyor, mesela `G['a']['b']` ile `a` düğümünün `b` düğümüne
+uzaklığını elde ediyorum. Bu elde var.
+
+İkinci tercih daha önceki durumda olduğu gibi herşeyi hafızaya
+almaktan kaçınmak. Mümkün olduğu kadar herşeyi disk bazlı yapmak.  Bu
+bizi nihai teknoloji tercihine götürüyor - disk bazlı bir sözlük!
+Daha önceki bir yazıda [6] bunu görmüştük, `diskdict`. O zaman kenar
+verilerini bir `diskdict` sözlüğüne ekleyerek ikinci veri yapısını
+elde edebilirim.
+
+Algoritmayı yazalım, `edges.csv` dosyasını satır satır gezerken
+her çıkış düğümü `source` ile bitiş noktası `target` arasında `length`
+uzaklığını sözlük içindeki sözlüğe ekliyoruz.
+
+```python
+from diskdict import DiskDict
+
+dictdir = "walkdict"
+
+def diskdict():
+
+    if os.path.exists(dictdir): shutil.rmtree(dictdir)
+    print ('bos hucreleri yarat')
+    dd = DiskDict(dictdir)
+    with open('edges.csv') as csvfile:
+        rd = csv.reader(csvfile,delimiter=',')
+        headers = {k: v for v, k in enumerate(next(rd))}
+        for i,row in enumerate(rd):        
+            if i % 1000 == 0: print ('satir', i)
+            if row[headers['foot']] == 'Allowed':
+                dd[row[headers['source']]] = {}
+                dd[row[headers['target']]] = {}
+
+    dd.close()
+
+    print ('baglantilari ekle')
+    dd = DiskDict(dictdir)
+    with open('edges.csv') as csvfile:
+        rd = csv.reader(csvfile,delimiter=',')
+        headers = {k: v for v, k in enumerate(next(rd))}
+        for i,row in enumerate(rd):        
+            if i % 1000 == 0: print ('satir',i)
+            if row[headers['foot']] == 'Allowed':
+
+                tmp = dd[row[headers['source']]]
+                tmp[row[headers['target']]] = row[headers['length']]
+                dd[row[headers['source']]] = tmp
+
+                tmp = dd[row[headers['target']]]
+                tmp[row[headers['source']]] = row[headers['length']]
+                dd[row[headers['target']]] = tmp
+
+    dd.close()
+
+diskdict()
+```
+
+```text
+bos hucreleri yarat
+satir 0
+satir 1000
+satir 2000
+satir 3000
+satir 4000
+satir 5000
+satir 6000
+satir 7000
+baglantilari ekle
+satir 0
+satir 1000
+satir 2000
+satir 3000
+satir 4000
+satir 5000
+satir 6000
+satir 7000
+```
+
+Oldu mu acaba?
 
 
 
+![](osm2.jpg)
 
 [devam edecek]
 

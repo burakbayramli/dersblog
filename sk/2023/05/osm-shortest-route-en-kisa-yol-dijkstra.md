@@ -52,37 +52,39 @@ id,osm_id,source,target,length,foot,car_forward,car_backward,bike_forward,bike_b
 26771422-1,26771422,1159221829,2330448860,71.52456370873085,Allowed,Secondary,Secondary,Allowed,Allowed,Forbidden,"LINESTRING(55.7608735 -4.3469255, 55.7613600 -4.3469271, 55.7614284 -4.3469290, 55.7614753 -4.3469333, 55.7615168 -4.3469417)"
 ```
 
-Çizit (graph) teorisi açısından bakarsak üstte veri bir ağ / çizit
-yapısı var, ilk dosyadakiler düğümler (nodes) ikincidekiler ise
-kenarlar (edges). Düğümler yeryüzünde bazı noktalar, bir durak
-olabilir, yol ağzı olabilir, ya da yol üzerindeki bir nokta. Her
-düğümün bir `id` kimliği var, ve bu `id` ile o noktanın kordinat
-değerlerine enlem boylam üzerinden erişebiliyoruz. Kenarlar bir düğümü
-bir diğerine bağlayan yollar gibi görülebilir, bağlantı parçaları. Her
-kenarın da bir kimliği var, ve ayrıca çıkış noktası `source` bitiş
-noktası `target` bilgisini taşıyor. Bu iki kolon tabii ki düğüm
-verisindeki `id` değerlerine tekabül ediyor, kenar bir düğümden çıkıp
-diğerinde bitiyor.
+Çizit (graph) teorisi açısından bakarsak üstte bir ağ / çizit yapısı
+var, ilk dosyadakiler düğümler (nodes) ikincidekiler ise kenarlar
+(edges). Düğümler yeryüzünde bazı noktalar, bir durak olabilir, yol
+ağzı olabilir, ya da yol üzerindeki bir nokta. Her düğümün bir `id`
+kimliği var, ve bu `id` ile o noktanın kordinat değerlerine enlem
+boylam üzerinden erişebiliyoruz. Kenarlar bir düğümü bir diğerine
+bağlayan yollar gibi görülebilir, bağlantı parçaları. Her kenarın da
+bir kimliği var, ve ayrıca çıkış noktası `source` bitiş noktası
+`target` bilgisini taşıyor. Bu iki kolon tabii ki düğüm verisindeki
+`id` değerlerine tekabül ediyor, kenar bir düğümden çıkıp diğerinde
+bitiyor.
 
 Kenarların, yani yolların taşıdığı bazı ek önemli bilgiler var; mesela
 bir yolun yürümeye elverişli olup olmadığı (`foot` kolonunda `Allowed`
 değeri var ise), aynı şekilde araba, bisiklet kullanımına uygun olup
-olmadığı yol bilgisi içinde mevcut. 
+olmadığı ve nihai olarak ne kadar uzun olduğu (`length`) yol bilgisi
+içinde mevcut.
 
 ### Düğüm Veri Yapısı, Yakın Nokta Bulmak
 
-Kısa yol algoritması işletmek için bize neler lazım? Yol tarifi isterken bir
-başlangıç ve bitiş noktası enlem/boylam olarak verilir, bu iki noktanın
-OSM düğüm noktalarına eşlenmesi gerekiyor, aynen [3] yazısında olduğu gibi
-önce verilen kordinatlara en yakın OSM noktası bulunur, ve oradan sonra
-düğüm, kenar, sonraki düğüm vs diye yol arama algoritması işleyebilir.
+Kısa yol algoritması işletmek için bize neler lazım? Yol tarifi
+isterken bir başlangıç ve bitiş noktası enlem/boylam olarak verilir,
+bu iki noktanın OSM düğüm noktalarına eşlenmesi gerekiyor, aynen [3]
+yazısında olduğu gibi önce verilen kordinatlara en yakın OSM noktası
+bulunmalı, ve oradan sonra düğüm, kenar, sonraki düğüm vs diye yol
+arama algoritması işleyebilir.
 
 Fakat "en yakın nokta bulmak" performans açısından o kadar kolay bir
 iş değil; örnek olarak burada ufak veri kullandık ama mesela TR
-boyutunda bir haritada milyonlarca nokta ve onların arasında bağlantı
-olacaktır. Milyonlarca satır içinden en yakın olanını bulmak eğer tüm
-verilere teker teker bakılıyorsa uzun sürebilir. Bize bir tür
-indeksleme (indexing) mekanizması gerekiyor.
+boyutunda bir haritada milyonlarca nokta ve onların arasında
+bağlantılar olacaktır. Milyonlarca satır içinden en yakın olanını
+bulmak eğer tüm verilere teker teker bakılıyorsa uzun sürebilir. Bize
+bir tür indeksleme (indexing) mekanizması gerekiyor.
 
 İlk akla gelebilecek çözümler QuadTree, KDTree gibi seçenekler, fakat
 bu çözümlerin çoğu bellek bazlı işler; etrafta bulunabilecek mevcut
@@ -94,24 +96,24 @@ geri aldığımızda gigabayt seviyesinde olmamalı). Eğer ağır işlem
 bedeli ödenecekse onun baştan, veri hazırlığı evresinde ödenmesi daha
 iyi olacaktır.
 
-Şöyle bir çözüm olabilir, harita üzerinde bir izgara oluştururum, 4 x
-4, ya da 3 x 4 boyutunda olabilir, bu bana 12 izgara noktası verir,
-sonra veriyi baştan sonra işlerken elimdeki her düğüm için onun en
-yakın olduğu iki izgara noktasını bulurum ve yeni bir tabanda
-kaydederim. Bu yeni dosyayı bir SQL tabanına yazarım, her satırda
-yakın izgara noktaları mesela kolonlar `ç1` ve `c2` olabilir ve yeni
-tabloyu bu kolonlar bazlı indekslerim, böylece `c1` ve `c2` bazlı
-filtreleme işlemi hızlanır.
+Şöyle bir çözüm olabilir, harita üzerinde bir ızgara (grid)
+oluştururum, 4 x 4, ya da 3 x 4 boyutunda olabilir, bu bana 12 ızgara
+noktası verir, sonra veriyi baştan sonra işlerken elimdeki her düğüm
+için onun en yakın olduğu iki ızgara noktasını bulurum ve yeni bir
+tabanda kaydederim. Bu yeni dosyayı bir SQL tabanına yazarım, her
+satırda yakın ızgara noktaları mesela kolonlar `c1` ve `c2` olabilir
+ve yeni tabloyu bu kolonlar bazlı indekslerim, böylece `c1` ve `c2`
+bazlı filtreleme işlemi hızlanır.
 
-Izgara noktalarını bir pickle içinde kaydederim, böylece sonradan
-isteyen yükleyebilir, ve artık herhangi bir nokta için aynı izgara
-yakınlığı işletilir, mesela `c1=3`, `c2=5` bulundu diyelim ve SQL
-tabanından ya 3 ya da 5 değerine sahip olan düğümleri `SELECT` ile
+Izgara noktalarını bir `pickle` içinde kaydedebilirim, böylece
+sonradan isteyen yükleyebilir, ve artık herhangi bir nokta için aynı
+yakınlık hesabı işletilir, mesela `c1=3`, `c2=5` bulundu diyelim ve
+SQL tabanından ya 3 ya da 5 değerine sahip olan düğümleri `SELECT` ile
 alırım, ve bu noktalar üzerinde detaylı yakınlık hesabı
 işletirim. Böylece gerçek mesafe hesabı yapacağım veri miktarını
-azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere ayırmış oldum,
-eğer elimde Karadeniz bölgesinden bir nokta varsa Akdeniz bölgesindeki
-noktalara bakmaya ne gerek var?
+azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere ayırıyorum bir
+bakıma, eğer elimde Karadeniz bölgesinden bir nokta varsa Akdeniz
+bölgesindeki noktalara bakmaya ne gerek var?
 
 Burada seçilen teknolojilerin özelliklerine, kuvvetlerine dikkat;
 ızgara noktası bazlı filtreleme için SQL kullandık çünkü tam sayı
@@ -195,9 +197,12 @@ satir 5000
 satir 6000
 ```
 
-Tablo `osm_nodes` yaratıldı. Dikkat, indeksler tüm satırlar eklendikten
-*sonra* yaratıldı. Eğer tablo yaratıldığında indeksleri yaratmış olsak
-bu `INSERT` işlemlerini yavaşlatırdı. 
+Tablo `osm_nodes` yaratıldı. Dikkat, `c1` ve `c2` üzerindeki indeksler
+tüm satırlar eklendikten *sonra* yaratıldı. Eğer boş tablo üzerinde bu
+indeksleri yaratmış olsak `INSERT` işlemleri yavaşlardı. Toptan
+`INSERT` yaparken indekslere ihtiyaç yok çünkü bir toptan veri
+hareketi işlemi bu, indeksler sonradan lazım olacak. Bu tipik bir
+mühendislik al-ver hesabı (trade-off).
 
 Seçilen köşe ve hesaplanan ızgara noktaları altta grafikleniyor,
 
@@ -254,7 +259,7 @@ Out[1]: [8059195265.0, -4.63801, 55.40781]
 ```
 
 Bu noktalar hakikaten de benim seçtiğim yerlere yakın. Demek ki
-listedeki ilk sayı, OSM kimliğini kullanabilirim.
+verilen OSM kimliğini (listedeki üç sayıdan ilki) kullanabilirim.
 
 ### Bağlantılar
 
@@ -266,15 +271,15 @@ Python sözlüğü bazlı çalıştığını biliyorum, çiziti bir "sözlük i�
 sözlük" yapısında olmasını bekliyor, yani çizit `G` ise mesela
 `G['a']` ile `G` sözlüğünden ikinci bir sözlük elde ediyoruz, bu
 sözlükte hedef düğümü geçiyoruz, bu bize yolun ağırlığını / uzaklığını
-veriyor, mesela `G['a']['b']` ile `a` düğümünün `b` düğümüne
-uzaklığını elde ediyorum. Bu elde var.
+veriyor, yani `G['a']['b']` ile `a` düğümünün `b` düğümüne uzaklığını
+elde ediyorum. 
 
 İkinci tercih daha önceki durumda olduğu gibi herşeyi hafızaya
 almaktan kaçınmak. Mümkün olduğu kadar herşeyi disk bazlı yapmak.  Bu
 bizi nihai teknoloji tercihine götürüyor - disk bazlı bir sözlük!
-Daha önceki bir yazıda [6] bunu görmüştük, `diskdict`. O zaman kenar
-verilerini bir `diskdict` sözlüğüne ekleyerek ikinci veri yapısını
-elde edebilirim.
+Daha önceki bir yazıda [6] bunu görmüştük, `diskdict` hızlı çalışan
+bir paket. O zaman kenar verilerini bir `diskdict` sözlüğüne ekleyerek
+ikinci veri yapısını elde edebilirim.
 
 Algoritmayı yazalım, `edges.csv` dosyasını satır satır gezerken
 her çıkış düğümü `source` ile bitiş noktası `target` arasında `length`

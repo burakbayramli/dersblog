@@ -105,8 +105,8 @@ satırda yakın ızgara noktaları mesela kolonlar `c1` ve `c2` olabilir
 ve yeni tabloyu bu kolonlar bazlı indekslerim, böylece `c1` ve `c2`
 bazlı filtreleme işlemi hızlanır.
 
-Izgara noktalarını (3 x 4 için 12 tane) bir `pickle` içinde
-kaydedebilirim, böylece sonradan isteyen yükleyebilir, ve artık
+Referans ızgara noktalarını (3 x 4 için 12 tane zaten) bir `pickle`
+içinde kaydedebilirim, böylece sonradan isteyen yükleyebilir, ve artık
 herhangi bir nokta için aynı yakınlık hesabı işletilir, mesela `c1=3`,
 `c2=5` bulundu diyelim ve SQL tabanından ya 3 ya da 5 değerine sahip
 olan düğümleri `SELECT` ile alırım, ve bu noktalar üzerinde detaylı
@@ -264,15 +264,15 @@ verilen OSM kimliğini (listedeki üç sayıdan ilki) kullanabilirim.
 ### Bağlantılar
 
 İkinci teknoloji seçimine gelelim, bu bir önceki konu kadar önemli,
-yolları temsil eden çiziti, yani düğümler ve aralarındaki bağlantıları
+yolları temsil eden çiziti, düğümler ve aralarındaki bağlantıları
 nasıl temsil edeceğiz? Bu seçimi yaparken aklımda bazı tercihler ve
 bilgiler var. Mesela [7] yazısında anlatılan kısa yol algoritmasının
 Python sözlüğü bazlı çalıştığını biliyorum, çiziti bir "sözlük içinde
 sözlük" yapısında olmasını bekliyor, yani çizit `G` ise mesela
 `G['a']` ile `G` sözlüğünden ikinci bir sözlük elde ediyoruz, bu
 sözlükte hedef düğümü geçiyoruz, bu bize yolun ağırlığını / uzaklığını
-veriyor, yani `G['a']['b']` ile `a` düğümünün `b` düğümüne uzaklığını
-elde ediyorum. 
+veriyor, `G['a']['b']` ile `a` düğümünün `b` düğümüne uzaklığını elde
+ediyorum.
 
 İkinci tercih daha önceki durumda olduğu gibi herşeyi hafızaya
 almaktan kaçınmak. Mümkün olduğu kadar herşeyi disk bazlı yapmak.  Bu

@@ -202,7 +202,7 @@ tüm satırlar eklendikten *sonra* yaratıldı. Eğer boş tablo üzerinde bu
 indeksleri yaratmış olsak `INSERT` işlemleri yavaşlardı. Toptan
 `INSERT` yaparken indekslere ihtiyaç yok çünkü bir toptan veri
 hareketi işlemi bu, indeksler sonradan lazım olacak. Bu tipik bir
-mühendislik al-ver hesabı (trade-off).
+mühendislik kar/zarar denge hesabı (trade-off).
 
 Seçilen köşe ve hesaplanan ızgara noktaları altta grafikleniyor,
 
@@ -432,7 +432,7 @@ def get_osm_info(osmid):
     rows = list(c.execute(sql,(osmid,)))
     if (len(rows)==1): return rows[0]
     else: return None
-       
+
 coords = [get_osm_info(x) for x in path]
 
 print (coords)

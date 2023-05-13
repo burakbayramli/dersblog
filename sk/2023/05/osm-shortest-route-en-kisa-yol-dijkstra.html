@@ -145,15 +145,15 @@ satırda yakın ızgara noktaları mesela kolonlar <code>c1</code> ve <code>c2</
 ve yeni tabloyu bu kolonlar bazlı indekslerim, böylece <code>c1</code> ve <code>c2</code>
 bazlı filtreleme işlemi hızlanır.</p>
 
-<p>Izgara noktalarını bir <code>pickle</code> içinde kaydedebilirim, böylece
-sonradan isteyen yükleyebilir, ve artık herhangi bir nokta için aynı
-yakınlık hesabı işletilir, mesela <code>c1=3</code>, <code>c2=5</code> bulundu diyelim ve
-SQL tabanından ya 3 ya da 5 değerine sahip olan düğümleri <code>SELECT</code> ile
-alırım, ve bu noktalar üzerinde detaylı yakınlık hesabı
-işletirim. Böylece gerçek mesafe hesabı yapacağım veri miktarını
-azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere ayırıyorum bir
-bakıma, eğer elimde Karadeniz bölgesinden bir nokta varsa Akdeniz
-bölgesindeki noktalara bakmaya ne gerek var?</p>
+<p>Izgara noktalarını (3 x 4 için 12 tane) bir <code>pickle</code> içinde
+kaydedebilirim, böylece sonradan isteyen yükleyebilir, ve artık
+herhangi bir nokta için aynı yakınlık hesabı işletilir, mesela <code>c1=3</code>,
+<code>c2=5</code> bulundu diyelim ve SQL tabanından ya 3 ya da 5 değerine sahip
+olan düğümleri <code>SELECT</code> ile alırım, ve bu noktalar üzerinde detaylı
+yakınlık hesabı işletirim. Böylece gerçek mesafe hesabı yapacağım veri
+miktarını azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere
+ayırıyorum bir bakıma, eğer elimde Karadeniz bölgesinden bir nokta
+varsa Akdeniz bölgesindeki noktalara bakmaya ne gerek var?</p>
 
 <p>Burada seçilen teknolojilerin özelliklerine, kuvvetlerine dikkat;
 ızgara noktası bazlı filtreleme için SQL kullandık çünkü tam sayı
@@ -327,9 +327,11 @@ Daha önceki bir yazıda [6] bunu görmüştük, <code>diskdict</code> hızlı �
 bir paket. O zaman kenar verilerini bir <code>diskdict</code> sözlüğüne ekleyerek
 ikinci veri yapısını elde edebilirim.</p>
 
-<p>Algoritmayı yazalım, <code>edges.csv</code> dosyasını satır satır gezerken
-her çıkış düğümü <code>source</code> ile bitiş noktası <code>target</code> arasında <code>length</code>
-uzaklığını sözlük içindeki sözlüğe ekliyoruz.</p>
+<p>Algoritmayı yazalım, <code>edges.csv</code> dosyasını satır satır gezerken her
+çıkış düğümü <code>source</code> ile bitiş noktası <code>target</code> arasında <code>length</code>
+uzaklığını sözlük içindeki sözlüğe ekliyoruz. Not: Çizitimizi yürüyüş
+için hazırlayacağız, yani <code>car</code>, <code>bıke</code> gibi seçenekleri olan ama
+yürüyüşe izin vermeyen yollar alınmayacak.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">diskdict</span> <span class="kn">import</span> <span class="n">DiskDict</span>

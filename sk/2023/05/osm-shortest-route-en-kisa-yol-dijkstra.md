@@ -105,15 +105,15 @@ satırda yakın ızgara noktaları mesela kolonlar `c1` ve `c2` olabilir
 ve yeni tabloyu bu kolonlar bazlı indekslerim, böylece `c1` ve `c2`
 bazlı filtreleme işlemi hızlanır.
 
-Izgara noktalarını bir `pickle` içinde kaydedebilirim, böylece
-sonradan isteyen yükleyebilir, ve artık herhangi bir nokta için aynı
-yakınlık hesabı işletilir, mesela `c1=3`, `c2=5` bulundu diyelim ve
-SQL tabanından ya 3 ya da 5 değerine sahip olan düğümleri `SELECT` ile
-alırım, ve bu noktalar üzerinde detaylı yakınlık hesabı
-işletirim. Böylece gerçek mesafe hesabı yapacağım veri miktarını
-azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere ayırıyorum bir
-bakıma, eğer elimde Karadeniz bölgesinden bir nokta varsa Akdeniz
-bölgesindeki noktalara bakmaya ne gerek var?
+Izgara noktalarını (3 x 4 için 12 tane) bir `pickle` içinde
+kaydedebilirim, böylece sonradan isteyen yükleyebilir, ve artık
+herhangi bir nokta için aynı yakınlık hesabı işletilir, mesela `c1=3`,
+`c2=5` bulundu diyelim ve SQL tabanından ya 3 ya da 5 değerine sahip
+olan düğümleri `SELECT` ile alırım, ve bu noktalar üzerinde detaylı
+yakınlık hesabı işletirim. Böylece gerçek mesafe hesabı yapacağım veri
+miktarını azaltmış oldum.  Bu mantıklı olmalı, haritayı bölgelere
+ayırıyorum bir bakıma, eğer elimde Karadeniz bölgesinden bir nokta
+varsa Akdeniz bölgesindeki noktalara bakmaya ne gerek var?
 
 Burada seçilen teknolojilerin özelliklerine, kuvvetlerine dikkat;
 ızgara noktası bazlı filtreleme için SQL kullandık çünkü tam sayı
@@ -281,9 +281,12 @@ Daha önceki bir yazıda [6] bunu görmüştük, `diskdict` hızlı çalışan
 bir paket. O zaman kenar verilerini bir `diskdict` sözlüğüne ekleyerek
 ikinci veri yapısını elde edebilirim.
 
-Algoritmayı yazalım, `edges.csv` dosyasını satır satır gezerken
-her çıkış düğümü `source` ile bitiş noktası `target` arasında `length`
-uzaklığını sözlük içindeki sözlüğe ekliyoruz.
+Algoritmayı yazalım, `edges.csv` dosyasını satır satır gezerken her
+çıkış düğümü `source` ile bitiş noktası `target` arasında `length`
+uzaklığını sözlük içindeki sözlüğe ekliyoruz. Not: Çizitimizi yürüyüş
+için hazırlayacağız, yani `car`, `bıke` gibi seçenekleri olan ama
+yürüyüşe izin vermeyen yollar alınmayacak.
+
 
 ```python
 from diskdict import DiskDict

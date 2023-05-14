@@ -1,11 +1,11 @@
 # OSM Haritaları, PBF Dosyaları, En Kısa Yol, Djikstra  
 
-Eğer yollar ağını içeren OSM haritasını kendimiz işleyip çıktı
-dosyalarını rahat okunabilir düz CSV formatında tutmak istersek bu
-mümkündür. Sonuçta OSM dosyaları [1] sitesinde bedava paylaşılıyor, ve
-bahsedilen işlemi yapabilecek bir kod Rust [5] ile yazılmış
-`osm4routing` kodudur. Amacımız iki nokta arasında bir kısa yol
-algoritması yazmak olacak.
+Yol ağını içeren OSM haritasını kendimiz işleyip erişimi hızlı
+istediğimiz formata çevirmek istersek bu mümkündür, OSM dosyaları [1]
+sitesinde bedava paylaşılıyor, ve çevrimin ilk aşaması OSM -> düz text
+CSV bazlı dönüşüm Rust [5] ile yazılmış `osm4routing` kodunda var. Bu
+yazıda amaç iki nokta arasında kısa yol algoritması bulan algoritma
+yazmak olacak.
 
 `osm4routing` kurmak için
 

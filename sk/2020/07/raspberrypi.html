@@ -144,18 +144,17 @@ ayarlarını yapabiliriz.</p>
 aynı network'un içindeyiz demektir ve aynı network içinde makinalar
 birbirlerini bulabilirler.</p>
 
-<p>Bazı Ayarlar</p>
+<p>Eğer başlangıçta masaüstü başlatılmasın istiyorsak <code>raspı-config</code> deriz
+ve alttaki seçimleri yapınca </p>
 
-<p>Bazi klavye kisayollari iptal etmek isteyebiliriz, mesela biz Alt-Space
-tusunu Emacs uzerinde ozel bir amacla kullaniyoruz, fakat bu RPi
-uzerinde bir pencere menusu acmak icin kisayol yapilmis. Iptal icin</p>
+<p><a href="https://www.digikey.com/-/media/MakerIO/Images/blogs/2018/How%20to%20Boot%20to%20Command%20Line%20and%20SSH%20on%20Raspberry%20Pi/Fig-3.jpg">ekran 1</a>
+<a href="https://www.digikey.com/-/media/MakerIO/Images/blogs/2018/How%20to%20Boot%20to%20Command%20Line%20and%20SSH%20on%20Raspberry%20Pi/Fig-4.jpg">ekran 2</a>
+<a href="https://www.digikey.com/-/media/MakerIO/Images/blogs/2018/How%20to%20Boot%20to%20Command%20Line%20and%20SSH%20on%20Raspberry%20Pi/Fig-5.jpg">ekran 3</a></p>
 
-<p><code>sudo nano /etc/xdg/openbox/lxde-pi-rc.xml</code></p>
-
-<p>ile dosya acilir ve <code>Keybindings for running applications</code> bolumune
-gidilir orada her kisayol icin bir <code>&lt;keybind&gt;.. &lt;/keybind&gt;</code> bolumu
-var, bizi ilgilendiren tanima gidip onu silebiliriz. RPi tekrar
-baslatilir ve degisim devreye girmis olur.</p>
+<p>bir sonraki başlatımda sadece konsol bazlı bir RPi işliyor olacaktır.
+Eğer RPi sadece otomatik kontrol ya da servis bazlı amaçlar için
+kullanılıyorsa, bellek sarfiyetini azaltma bakımından bu seçim faydalı
+olur.</p>
 
 <h3>Taşınabilir RPi</h3>
 
@@ -169,32 +168,18 @@ olarak herhangi bir taşınabilir pil, powerbank, RPi işletebiliyor. Pi
 Pi çok rahat şekilde (Ubuntu olduğu için) her türlü harici diske
 erisebilir. Kablosuz klavye ile RPi'ye bağlanabiliyoruz, bu durumda
 neredeyse dizüstü bilgisayara eşdeğer bir sistem elde edebilmiş
-oluruz. </p>
+oluruz.</p>
 
-<p>Eğer ufak monitörlerle uğraşılmak istenmezse bir seçenek RPi üzerinde
-masaüstü paylaşımı VNC programını aktif hale getirmek, ve bu servise
-mesela bir Android VNC istemci (client) ile bağlanmak. Böylece tüm
-masaüstünü Android üzerinden görebiliriz. <code>Pi | Preferences | RPi Configuration | Interfaces</code>
-menüsünden VNC aktif yapılır, Android üzerinde VNC (RealVNC) programı
-kurulur. Bu programa kullanıcı / şifre gerekli, realvnc.com adresinde
-üye olunur, ve istemciye girildiğinde + işareti ile yeni bir IP
-adresi eklenir. Direk İP ile bağlanmak en iyisi.</p>
+<p>Mobil sistem şöyle olabilir demek ki, Android Hotstpot ile İnternet
+bağlantısını paylaşır, bunu yaparken DHCP üzerinden IP adresi de
+yaratmaktadır, bu adresi <code>ifconfig -a</code> ile bulup (192.168.x.x gibi
+olur çoğunlukla) ona ya SSH ile bağlanabiliriz. Powerbank ile RPi
+isletilebilir, bundan bahsettik, zaten telefonun pili de benzer
+sekilde doldurulabilmektedir.</p>
 
-<p>Mobil sistem şöyle olabilir demek ki, Android Hotstpot ile İnternet bağlantısını
-paylaşır, bunu yaparken DHCP üzerinden İP adresi de yaratmaktadır,
-bu adresi <code>ifconfig -a</code> ile bulup (192.168.x.x gibi olur çoğunlukla)
-ona ya SSH ya da VNC ile bağlanabiliriz. Powerbank ile RPi isletilebilir,
-bundan bahsettik, zaten telefonun pili de benzer sekilde doldurulabilmektedir.</p>
-
-<p>Eğer tüm VNC masaüstü ekranda görülmüyorsa RPi düşük çözünürlükle
-açılış yapmış olabilir, <code>/boot/config.txt</code> içinde</p>
-
-<pre><code>framebuffer_width=1280
-framebuffer_height=720
-</code></pre>
-
-<p>satırlarını aktif yaparsak RPi başlayınca belli bir çözünürlüğü
-zorlamış oluruz.</p>
+<p>Android uzerinde Termux <code>ssh</code> var ise, ve bir X-Server programi [6]
+isliyorsa, Termux'tan <code>ssh -X</code> ile RPi'a baglaninca gorsel X
+programlari Android uzerinde gorebiliriz.</p>
 
 <h3>Donanım Programcılığı</h3>
 
@@ -281,7 +266,7 @@ söndüğünü göreceğiz.</p>
 
 <p>[5] https://www.thedigitalpictureframe.com/ultimate-guide-systemd-autostart-scripts-raspberry-pi/</p>
 
-<p>[6] </p>
+<p>[6] https://play.google.com/store/apps/details?id=x.org.server&amp;hl=en_GB</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

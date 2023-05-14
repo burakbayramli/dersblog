@@ -284,7 +284,7 @@ ikinci veri yapısını elde edebilirim.
 Algoritmayı yazalım, `edges.csv` dosyasını satır satır gezerken her
 çıkış düğümü `source` ile bitiş noktası `target` arasında `length`
 uzaklığını sözlük içindeki sözlüğe ekliyoruz. Not: Çizitimizi yürüyüş
-için hazırlayacağız, yani `car`, `bıke` gibi seçenekleri olan ama
+için hazırlayacağız, yani `car`, `bike` gibi seçenekleri olan ama
 yürüyüşe izin vermeyen yollar alınmayacak.
 
 
@@ -353,7 +353,7 @@ satir 6000
 satir 7000
 ```
 
-Oldu mu acaba? Biraz once yukarida buldugumuz iki OSM id icin kontrol edebilirim,
+Oldu mu acaba? Biraz önce yukarıda bulduğumuz iki OSM id için kontrol edebilirim,
 
 ```python
 dd = DiskDict(dictdir)
@@ -490,4 +490,7 @@ Kaynaklar
 [7] <a href="https://burakbayramli.github.io/dersblog/algs/algs_035_dijks/dijkstra_algoritmasi_ile_en_kisa_yol.html">Dijkstra Algoritması ile En Kısa Yol</a>
 
 [8] <a href="https://www.ics.uci.edu/~eppstein/161/python/">University of California Bilgisayar Bilim Kodları</a>
+
+
+
 

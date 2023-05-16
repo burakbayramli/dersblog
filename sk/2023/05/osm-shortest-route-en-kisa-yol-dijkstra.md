@@ -206,7 +206,7 @@ mühendislik kar/zarar denge hesabı (trade-off).
 
 Seçilen köşe ve hesaplanan ızgara noktaları altta grafikleniyor,
 
-<img width='300' src='osm1.jpg'/> 
+![](osm1.jpg)
 
 Şimdi bu ızgara noktalarını kullanarak bize "kordinata en yakın olan
 OSM id'sini bul" mantığını kodlayabiliriz.
@@ -455,6 +455,8 @@ m.save("seychelles-route.html")
 ```
 
 [Sonuç](seychelles-route.html)
+
+![](osm3.jpg)
 
 Yol üstteki haritada gösteriliyor. Kısa bir yol. Google yol tarifi
 algoritmasinin bulduğu sonuç [şurada](osm2.jpg). İkisi de kullanışlı

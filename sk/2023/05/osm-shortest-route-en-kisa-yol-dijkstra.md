@@ -458,7 +458,7 @@ m.save("seychelles-route.html")
 
 Yol üstteki haritada gösteriliyor. Kısa bir yol. Google yol tarifi
 algoritmasinin bulduğu sonuç [şurada](osm2.jpg). İkisi de kullanışlı
-bence.
+duruyor. 
 
 Üstteki teknolojiler, tasarım seçimleri sayesinde açık kaynak verisi
 OSM ile hızlı bir şekilde ürettiğimiz SQL tabanı ve `diskdict` sözlüğü
@@ -472,6 +472,14 @@ haritalar üzerine işletince çıktının çok yer tutmadığını görebiliriz
 mesela TR için `diskdict` tabanı 300 MB'dan daha az. Ayrıca erişim
 disk bazlı olduğu için tüm taban hafızaya taşınmayacak, gerekli yerlerine
 erişim yapılacak.
+
+Not: Üstteki kod yolu sadece bir düğümler serisi olarak gösterdi;
+nihai bir ürün için yol parça kordinatlarını kenar objelerinin
+kendisinden almak daha iyi olur, bu bilgi `nodes.csv` içinde her kenar
+için mevcut zaten, bir `LİNESTRİNG` olarak belirtiliyor. Bu bilgi veri
+hazırlama evresinde `length` ile beraber `diskdict` içine yazılabilir,
+ya da ayrı bir veri tabanında tutulup `id` ile sorgulanabilir. İşin bu
+kısmını okuyucuya bırakıyoruz.
 
 Kaynaklar
 

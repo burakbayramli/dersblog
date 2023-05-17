@@ -7,7 +7,12 @@ degistirmek mumkun degil. Bunlardan biri border degisimi mesela, siz
 CSS'e hangi komutu koyarsaniz koyun, IE 6 uzerinde select o garip uc
 boyutumsu golgeli sInIrlI goruntuyu kaybedemiyor.
 
-Bu sebeple klasik select..option yerine, CSS/DHTML/Javascript bazli alternatif bir Combobox kullanmak daha yerinde olacak. Bu alternatif kodlar <div> temelli olacak ve bu kodlar Javascript bazli event'leri kullanarak bir normal combobox isleyisini taklit edecekler.  Bu birimler direk en temel DHTML ogeleri ile is yaptigi icin, onun herhangi bir gorsel ogesi ile oynamak serbest olabilecek.
+Bu sebeple klasik select..option yerine, CSS/DHTML/Javascript bazli
+alternatif bir Combobox kullanmak daha yerinde olacak. Bu alternatif
+kodlar <div> temelli olacak ve bu kodlar Javascript bazli event'leri
+kullanarak bir normal combobox isleyisini taklit edecekler.  Bu
+birimler direk en temel DHTML ogeleri ile is yaptigi icin, onun
+herhangi bir gorsel ogesi ile oynamak serbest olabilecek.
 
 Peki hangi paketi kullanmak en iyisi? Etrafta pek cok Javascript bazli
 combobox kodu var. Hem combobox hem de diger veri giris ogelerinin
@@ -16,11 +21,14 @@ paket dhtmlxcombo adinda bir pakettir. Bu paket, duz HTML temelli olan
 select'i alip onu combolastiriyor, ya da sadece bos bir <div> blogunu
 da alip combo haline getirebiliyor.
 
-Bu kutuphaneyi kullanarak yazdigimiz ornek kodlari altta bulabilirsiniz. Onemli noktalardan biri combo'nun asagi gosteren ok imajini bulabilmesi icin <script> tagi icinde window.dhx_globalImgPath="/imaj/dizin/ismi"; ile ok imajinin yerini vermeniz. test.html icinde bunu gorebilirsiniz.
+Bu kutuphaneyi kullanarak yazdigimiz ornek kodlari altta
+bulabilirsiniz. Onemli noktalardan biri combo'nun asagi gosteren ok
+imajini bulabilmesi icin `<script>` tagi icinde `window.dhx_globalImgPath="/imaj/dizin/ismi";`
+ile ok imajinin yerini vermeniz. test.html icinde bunu gorebilirsiniz.
 
 Dosyalar
 
-dhtmlxcombo.js ve dhtmlxcommon.js ustteki kaynaklardan indirilebilir,
+`dhtmlxcombo.js` ve dhtmlxcommon.js ustteki kaynaklardan indirilebilir,
 ayrica bir blank.gif ve combo_select.gif lazim.
 
 dhtmlxcombo.css
@@ -173,9 +181,3 @@ test.html
 
 </html>
 ```
-
-
-
-
-
-

@@ -18,8 +18,6 @@
 
 [Projeleri Kurtaran Nedir?](10/projeleri-kurtaran-nedir.html)
 
-[Unix, Servisleri Nasıl Başlatıyor?](10/unix-servisleri-nasl-baslatyor.html)
-
 [Yazılım Çeşitleri](10/yazlm-cesitleri.html)
 
 [Kontrol Edilmeyen (Unchecked) Exception'lar](11/kontrol-edilmeyen-unchecked-exception.html)

@@ -1,7 +1,5 @@
 # 2023
 
-[Toplam, Parçaların Toplamından Fazla - Bilim ve Teknolojide Tasarım](01/bilim-teknoloji-tasarim.html)
-
 [IETT Verileri, SOAP](01/iett-ibb-otobus-verisi.html)
 
 [Rust Programlama Dili](01/rust.html)

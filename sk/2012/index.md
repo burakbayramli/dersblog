@@ -88,8 +88,6 @@
 
 [Kelime Benzerligi - Levenshtein Mesafesi](07/kelime-benzerligi-levenshtein-mesafesi.html)
 
-[supervisord](07/supervisord.html)
-
 [Otomatik Program Başlamak, Unix, Linux](07/unix-program-baslatmak.html)
 
 [Aradeğerleme (Interpolation)](08/aradegerleme-interpolation.html)

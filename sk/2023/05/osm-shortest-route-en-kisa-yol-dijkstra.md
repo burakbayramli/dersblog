@@ -484,6 +484,18 @@ iyi olur, bu bilgi `nodes.csv` içinde her kenar için mevcut zaten, bir
 tabanında tutulup `id` ile sorgulanabilir. İşin bu kısmını okuyucuya
 bırakıyoruz.
 
+Not: Mesafe hesabı olarak `cdist` kullanımı var, bu hesap bilindiği
+gibi Öklitsel mesafe hesaplar, yani $\sqrt{\Delta x^2 - \Delta y^2}$.
+Muhakkak enlem, boylam açısal değerlerdir, tam anlamıyla iki boyutlu
+bir düzlem üzerindeki x,y değerleri değillerdir, fakat kısa
+mesafelerde, aynen boylam=x ve enlem=y deyip kabaca bir grafikleme
+yapabildiğimiz gibi, burada da sınırlı bir alan içinde benzer bir
+yaklaşıksal hesap yapabiliyoruz. Ayrıca dikkat, hiçbir yerde `cdist`
+sonucunu gerçek bir mesafe ile karşılaştırmıyoruz, "acaba 10 km'den
+küçük mü büyük mü" gibi, onu sadece belli bir liste içindeki
+noktalardan en yakınını bulmak için kullandık. 
+
+
 Kaynaklar
 
 [1] <a href="http://download.geofabrik.de/index.html">GEOFabrik</a>

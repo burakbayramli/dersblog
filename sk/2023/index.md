@@ -92,5 +92,7 @@
 
 [Python Sözlük (Dictionary) Veri Yapısı](05/python-sozluk-dictionary.html)
 
+[Ubuntu 22](05/ubuntu-22.html)
+
 [Web Sayfaları, HTML ve CSS](05/web-sayfalari-html-css.html)
 

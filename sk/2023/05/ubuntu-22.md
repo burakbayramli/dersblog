@@ -1,16 +1,17 @@
 # Ubuntu 22
 
-Kurulum için
+Daha onceki bazi versiyonlarin yazilari [surada](ubuntu.html)
+
+Versiyon 22 kurulumu için
 
 http://releases.ubuntu.com/22.04/
 
 adresinden 64-bit iso ya da iso için torrent indirilir, iso'yu USB
-flash disk'e "yakmak" için [3].
-
-Bios'a bilgisayar başlarken F2'yi basılı tutarak girebiliriz,
-girdikten sonra başlangıç şeklini "Legacy Mode" haline getirmek lazım,
-ve USB dışkı yükleme sırasında en üste getirmek lazım. F10 ile
-kaydedilir, tekrar başlatılır ve Ubuntu kurulur. 
+flash disk'e "yakmak" için [3]. Bios'a bilgisayar başlarken F2'yi
+basılı tutarak girebiliriz, girdikten sonra başlangıç şeklini "Legacy
+Mode" haline getirmek lazım, ve USB diski yükleme sırasında en üste
+getirmek lazım. F10 ile kaydedilir, tekrar başlatılır ve Ubuntu
+kurulur.
 
 Kurulum ardından hemen
 
@@ -26,7 +27,7 @@ için System Tools | System Settings | Keyboard ve Shortçüts | Windows
 bölümunde "Activate the window menü" için Alt+Space seçilmiş, bu
 satıra gidip çift tıklama yapın ve Silme (backspace) düğmesine basın.
 
-Diger Tuslar
+Diğer Tuşlar
 
 Biz CAPS tuşunu CTRL, varsa Windows tuşunu Alt olarak kullanıyoruz.
 Package Manager'da "gnome tweaks" kurulur. `Additional Layout Options`
@@ -42,32 +43,42 @@ Benimki `$HOME/Documents` altında,
 virtualenv -p /usr/bin/python3 env3
 ```
 
+`source env3/bin/activate` ile ortama girdikten sonra
+
+```
+pip install ipython matplotlib 
+```
+
 Şimdi `.bashrc` içinde bazı iyi kısayol komutlar,
 
+```
 alias env3='source /home/burak/Documents/env3/bin/activate'
 alias em='source /home/burak/Documents/env3/bin/activate; emacs & disown'
 alias emnw='source /home/burak/Documents/env3/bin/activate; emacs -nw '
+```
 
 ### Pymacs
+
+Emacs eklentilerini Python ile yazmayı sağlayan paket Pymacs. Kodlar
 
 ```
 git clone git@github.com:/pinard/Pymacs.git
 ```
 
-Dizinde `make` ve `python setup.py build` ve `python setup.py install`.
+ile alınır. Dizinde `make` ve `python setup.py build` ve `python
+setup.py install` işletilir. Fakat Ubuntu 22 olağan kurulum Python
+versiyon 3.10.6 ile yapıyor, Pymacs'in bu versiyon ile ufak bir
+problemi var, ya geriye 3.6 versiyonuna gidilir, ya da hemen Pymacs
+kodu üzerinde ufak bir degisiklik,
 
-Fakat Ubuntu 22 olağan kurulum Python versiyon 3.10.6 yapar, Pymacs'in
-bu versiyon ile ufak bir problemi var, ya geriye 3.6 versiyonuna
-gidilir, ya da hemen kod uzerinde ufak bir degisiklik,
-
-Satir 43
+Satır 43
 
 ```python
 def callable(value):
     return isinstance(value, collections.Callable)
 ```
 
-alttaki satıra değiştirilir [2],
+alttakine değiştirilir [2],
 
 ```python
 def callable(value):

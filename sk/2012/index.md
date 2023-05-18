@@ -18,6 +18,8 @@
 
 [Regex ve Postgresql](03/regex-ve-postgresql.html)
 
+[SQL'in Temeli](03/sql-temeli.html)
+
 [SQL](03/sql.html)
 
 [Acik Kaynakli Araclarla Veri Analizi - P. Janert](04/acik-kaynakli-araclarla-veri-analizi-p.html)

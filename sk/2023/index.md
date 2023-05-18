@@ -92,7 +92,11 @@
 
 [Python Sözlük (Dictionary) Veri Yapısı](05/python-sozluk-dictionary.html)
 
+[Tablet Uzerinde Termux](05/tablet-termux-lenovo.html)
+
 [Ubuntu 22](05/ubuntu-22.html)
+
+[Ubuntu](05/ubuntu.html)
 
 [Web Sayfaları, HTML ve CSS](05/web-sayfalari-html-css.html)
 

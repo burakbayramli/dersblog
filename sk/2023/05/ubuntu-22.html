@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu 22</h1>
+
+<p>Kurulum için</p>
+
+<p>http://releases.ubuntu.com/22.04/</p>
+
+<p>adresinden 64-bit iso ya da iso için torrent indirilir, iso'yu USB
+flash disk'e "yakmak" için [3].</p>
+
+<p>Bios'a bilgisayar başlarken F2'yi basılı tutarak girebiliriz,
+girdikten sonra başlangıç şeklini "Legacy Mode" haline getirmek lazım,
+ve USB dışkı yükleme sırasında en üste getirmek lazım. F10 ile
+kaydedilir, tekrar başlatılır ve Ubuntu kurulur. </p>
+
+<p>Kurulum ardından hemen</p>
+
+<pre><code>sudo apt install emacs git build-essential python3 openssh-server python3-virtualenv
+</code></pre>
+
+<p>Alt+Space Problemi</p>
+
+<p>Emacs üzerinde Alt-Space çok kullanıyoruz, fakat bu kombinasyon Ubuntu
+tarafından "kapılmış". Bu kombinasyonu Ubuntu seviyesinde iptal etmek
+için System Tools | System Settings | Keyboard ve Shortçüts | Windows
+bölümunde "Activate the window menü" için Alt+Space seçilmiş, bu
+satıra gidip çift tıklama yapın ve Silme (backspace) düğmesine basın.</p>
+
+<p>Diger Tuslar</p>
+
+<p>Biz CAPS tuşunu CTRL, varsa Windows tuşunu Alt olarak kullanıyoruz.
+Package Manager'da "gnome tweaks" kurulur. <code>Additional Layout Options</code>
+içinde <code>Alt and Win behaviour</code> altında <code>Alt is mapped to Win and the
+usual Alt</code> seçilir. <code>Caps Lock behavior</code> altında <code>Make CAPS an
+additional Ctrl</code>.</p>
+
+<p>Python ile çok iş yapılacak, hemen sistem ve neredeyse tüm programcılık
+işlerinin kullanacağı kütüphaneler için bir sanal ortam yaratmak iyidir.
+Benimki <code>$HOME/Documents</code> altında,</p>
+
+<pre><code>virtualenv -p /usr/bin/python3 env3
+</code></pre>
+
+<p>Şimdi <code>.bashrc</code> içinde bazı iyi kısayol komutlar,</p>
+
+<p>alias env3='source /home/burak/Documents/env3/bin/activate'
+alias em='source /home/burak/Documents/env3/bin/activate; emacs &amp; disown'
+alias emnw='source /home/burak/Documents/env3/bin/activate; emacs -nw '</p>
+
+<h3>Pymacs</h3>
+
+<pre><code>git clone git@github.com:/pinard/Pymacs.git
+</code></pre>
+
+<p>Dizinde <code>make</code> ve <code>python setup.py build</code> ve <code>python setup.py install</code>.</p>
+
+<p>Fakat Ubuntu 22 olağan kurulum Python versiyon 3.10.6 yapar, Pymacs'in
+bu versiyon ile ufak bir problemi var, ya geriye 3.6 versiyonuna
+gidilir, ya da hemen kod uzerinde ufak bir degisiklik,</p>
+
+<p>Satir 43</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">callable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>alttaki satıra değiştirilir [2],</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">callable</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">abc</span><span class="o">.</span><span class="n">Callable</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://fostips.com/remap-keys-ubuntu-22-04/</p>
+
+<p>[2] https://stackoverflow.com/questions/69515086/error-attributeerror-collections-has-no-attribute-callable-using-beautifu</p>
+
+<p>[3] http://www.pendrivelinux.com/universal-usb-installer-easy-as-1-2-3/</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

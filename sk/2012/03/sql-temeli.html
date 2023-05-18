@@ -1,0 +1,823 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>SQL'in Temeli</h1>
+
+<p>SQL ilişkisel tabanları sorgulamak için kullanılır. İlişkisel model,
+ve giriş bilgileri [1]'de bulunabilir.</p>
+
+<p>2010'lu yıllarda anahtar/değer (key/value) tabanları ön plana çıkmış
+olsa da, SQL hala popüler olmaya devam ediyor. Burada SQL'un
+tasarlanma felsefesi rol oynamış olabilir, SQL ne istendiğini tarif
+eder nasıl alınacağının tarif etmez. Bu tür bir yapıyı istenen ölçeğe
+uygulamak mümkündür, hatta Google'un BigQuery dili de aynen bunu yapıyor. </p>
+
+<p>Chinook</p>
+
+<p>Bu tabanın sqlite ortamında nasıl kurulacağını [2]'de anlattık, nihai
+taban dosyasi için [17]. Chinook iTunes gibi bir dijital medya satış şirketi
+için hazırlanmış bir taban, verilerin bazıları gerçek iTunes'dan
+alınmış, müşterilerle alakalı kısımları yapay.</p>
+
+<p><img src="chinook_er.jpeg" alt="" /></p>
+
+<p>Varlık-İlişki (Entity-Relationship -ER-) diyagramına bakınca ana
+ilişkileri görebiliyoruz. ER diyagramları çokluğu belirtmek icin
+bazı semboller kullanır [12], bunlar,</p>
+
+<p><img src="er.png" alt="" /></p>
+
+<p>Bazı yardımcı fonksiyonlar,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="n">DB</span> <span class="o">=</span> <span class="s1">&#39;/tmp/chinook.db&#39;</span>
+
+<span class="k">def</span> <span class="nf">runsql</span><span class="p">(</span><span class="n">sql</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DB</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">psql</span><span class="p">(</span><span class="n">sql</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">DB</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="o">.</span><span class="n">fetchall</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">runsql</span><span class="p">(</span><span class="s2">&quot;SELECT LastName, Title FROM Employee limit 5&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(&#39;Adams&#39;, &#39;General Manager&#39;)
+(&#39;Edwards&#39;, &#39;Sales Manager&#39;)
+(&#39;Peacock&#39;, &#39;Sales Support Agent&#39;)
+(&#39;Park&#39;, &#39;Sales Support Agent&#39;)
+(&#39;Johnson&#39;, &#39;Sales Support Agent&#39;)
+</code></pre>
+</div>
+
+<p>Pandas ile</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="n">sql</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+         0                    1
+0    Adams      General Manager
+1  Edwards        Sales Manager
+2  Peacock  Sales Support Agent
+3     Park  Sales Support Agent
+4  Johnson  Sales Support Agent
+</code></pre>
+</div>
+
+<p>Bu fonksiyonları ile Python üzerinden SQL işletebilmek için kullandık,
+fakat yine [2]'de tarif edilen <code>sqlitebrowser</code> programı üzerinden de
+bu sorguları işletebiliriz.</p>
+
+<p><img src="chinook-browser.png" alt="" /></p>
+
+<p>Basit</p>
+
+<p><code>SELECT</code> ile satır seçimi yapılır, hangi satırlar, hangi kolonlar
+olacağı bu komutun seçeneklerindendir. En basit olan her şeyi seçmek,
+her kolon, her satırı (gerçi 10 tane ile sınırladık aslında ama
+<code>LIMIT</code> olmasa her şey gelir),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT * FROM Artist LIMIT 10&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+    0                     1
+0   1                 AC/DC
+1   2                Accept
+2   3             Aerosmith
+3   4     Alanis Morissette
+4   5       Alice In Chains
+5   6  Antônio Carlos Jobim
+6   7          Apocalyptica
+7   8            Audioslave
+8   9              BackBeat
+9  10          Billy Cobham
+</code></pre>
+</div>
+
+<p>Bu tablonun şeması,</p>
+
+<pre><code>CREATE TABLE [Artist]
+(
+[ArtistId] INTEGER  NOT NULL,
+[Name] NVARCHAR(120),
+CONSTRAINT [PK_Artist] PRIMARY KEY  ([ArtistId])
+);
+</code></pre>
+
+<p>Yani <code>ArtistId</code> ve <code>Name</code> almış olduk.</p>
+
+<p>En basit sorgulardan bir diğeri satır saymak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">runsql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT count(*) FROM Artist&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(275,)
+</code></pre>
+</div>
+
+<p>Belli bir kolondaki büyüklüğe göre sıralama yapmak isteyebiliriz [9],</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT Lastname, Firstname, Birthdate FROM Employee ORDER BY BirthDate&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+          0         1                    2
+0      Park  Margaret  1947-09-19 00:00:00
+1   Edwards     Nancy  1958-12-08 00:00:00
+2     Adams    Andrew  1962-02-18 00:00:00
+3   Johnson     Steve  1965-03-03 00:00:00
+4  Callahan     Laura  1968-01-09 00:00:00
+5      King    Robert  1970-05-29 00:00:00
+6  Mitchell   Michael  1973-07-01 00:00:00
+7   Peacock      Jane  1973-08-29 00:00:00
+</code></pre>
+</div>
+
+<p><code>WHERE</code> ile filtreleme yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT EmployeeId, Lastname, Firstname, Birthdate FROM Employee</span>
+<span class="s2">where  EmployeeID &gt;= 6</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+   0         1        2                    3
+0  6  Mitchell  Michael  1973-07-01 00:00:00
+1  7      King   Robert  1970-05-29 00:00:00
+2  8  Callahan    Laura  1968-01-09 00:00:00
+</code></pre>
+</div>
+
+<p>Bu kavramları beraber kullanabilirim, mesela fatura miktarı 10
+dolardan yüksek olan tüm faturaları göster, ve miktara göre sırala [13],</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT InvoiceId, InvoiceDate, Total  </span>
+<span class="s2">FROM Invoice  </span>
+<span class="s2">WHERE Total &gt; 10  </span>
+<span class="s2">ORDER BY Total LIMIT 10&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+     0                    1      2
+0  298  2012-07-31 00:00:00  10.91
+1  312  2012-10-01 00:00:00  10.91
+2  311  2012-09-28 00:00:00  11.94
+3    5  2009-01-11 00:00:00  13.86
+4   12  2009-02-11 00:00:00  13.86
+5   19  2009-03-14 00:00:00  13.86
+6   26  2009-04-14 00:00:00  13.86
+7   33  2009-05-15 00:00:00  13.86
+8   40  2009-06-15 00:00:00  13.86
+9   47  2009-07-16 00:00:00  13.86
+</code></pre>
+</div>
+
+<p><code>WHERE</code> için birden fazla şartı zincirlemek mümkün, <code>AND</code> ve <code>OR</code> ile
+bunu yapabilirim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">runsql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT count(*)</span>
+<span class="s2">FROM Invoice  </span>
+<span class="s2">WHERE BillingState IS NOT NULL  </span>
+<span class="s2">AND BillingState = &#39;AZ&#39;  </span>
+<span class="s2">OR BillingState = &#39;CA&#39;  </span>
+<span class="s2">AND Total &gt; 4 &quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(16,)
+</code></pre>
+</div>
+
+<p>Hic sart vermeseydim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">runsql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT count(*) FROM Invoice  &quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(412,)
+</code></pre>
+</div>
+
+<p>Gruplama</p>
+
+<p>Bir tablodaki, ya da birleştirimler üzerinden oluşturulmuş bir sonuç
+kümesindeki kolonlar üzerinde gruplama yapmak mümkündür. Mesela fatura
+tablosunda ülkeler üzerinden gruplama yapabilirim, ve her grubun satır
+sayısını raporlamak isteyebilirim.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT BillingCountry, COUNT(InvoiceId)</span>
+<span class="s2">FROM Invoice</span>
+<span class="s2">GROUP BY BillingCountry</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                 0   1
+0        Argentina   7
+1        Australia   7
+2          Austria   7
+3          Belgium   7
+4           Brazil  35
+5           Canada  56
+6            Chile   7
+7   Czech Republic  14
+8          Denmark   7
+9          Finland   7
+10          France  35
+11         Germany  28
+12         Hungary   7
+13           India  13
+14         Ireland   7
+15           Italy   7
+16     Netherlands   7
+17          Norway   7
+18          Poland   7
+19        Portugal  14
+20           Spain   7
+21          Sweden   7
+22             USA  91
+23  United Kingdom  21
+</code></pre>
+</div>
+
+<p>Önemli not, <code>SELECT</code> içinde sadece üzerinden gruplama yaptığım
+kolonlardan seçebilirim. Üzerinden gruplama yapmadığım şeylerden
+seçmek anlamsız olurdu, çünkü o şeyler gruplamanın ima ettiği nicelik
+sayısında (cardinality), toplam seviyesinde değiller. </p>
+
+<p>Gruplar üzerinde uygulanabilen özetleme hesapları vardır, <code>COUNT</code>,
+<code>MAX</code>, <code>MIN</code> bunlardan.</p>
+
+<p><code>HAVING</code> ile gruplar üzerinde filtreleme yapabilirim, mesela üstteki
+sonuçlarda sadece 10 taneden daha fazla olan grupları görmek
+isteyebilirim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT BillingCountry, COUNT(InvoiceId)</span>
+<span class="s2">FROM Invoice</span>
+<span class="s2">GROUP BY BillingCountry</span>
+<span class="s2">HAVING COUNT(InvoiceId) &gt; 10</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                0   1
+0          Brazil  35
+1          Canada  56
+2  Czech Republic  14
+3          France  35
+4         Germany  28
+5           India  13
+6        Portugal  14
+7             USA  91
+8  United Kingdom  21
+</code></pre>
+</div>
+
+<p>Birleştirim (Join)</p>
+
+<p>Basit bir birleştirme işlemi ile devam edelim. Tüm şarkılar <code>Track</code>
+tablosunda, o şarkının hangi türe ait olduğu <code>Genre</code>
+tablosunda. Aradaki bağlantı <code>Track</code> üzerinde duran bir yabancı
+anahtar, <code>GenreId</code>. O zaman her şarkının ait olduğu tür için <code>GenreId</code>
+üzerinden bir birleştirme gerekiyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT t.Name AS track_name,</span>
+<span class="s2">g.name AS genre_name</span>
+<span class="s2">FROM Track t</span>
+<span class="s2">JOIN Genre g</span>
+<span class="s2">ON t.GenreId = g.GenreId</span>
+<span class="s2">LIMIT 5&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                                         0     1
+0  For Those About To Rock (We Salute You)  Rock
+1                        Balls to the Wall  Rock
+2                          Fast As a Shark  Rock
+3                        Restless and Wild  Rock
+4                     Princess of the Dawn  Rock
+</code></pre>
+</div>
+
+<p>Sonuçları gene sınırladık <code>LIMIT 5</code> ile.</p>
+
+<p>Biraz önce bir iç birleşim (inner join) yapmış olduk. Bu tür
+birleşimde eğer üzerinden birleştirilen kimlik iki tarafta da yoksa,
+sonuca alınmaz. Buna iç birleşim (inner join) ismi verilir. Fakat bu
+derece harfiyen bir uyum olmasını her zaman istemeyebilirdik. Diyelim
+ki şarkıları o şarkının ait olabileceği (dikkat, olabileceği) bir
+fatura detay <code>InvoiceLine</code> satırıyla eşlemek istiyoruz. Eğer bir şarkı
+hiçbir zaman satılmadıysa fatura detayında olmayabilir. Ama biz tüm
+şarkıları yine de görmek istiyoruz, ve faturalamanın bizi
+sınırlamasını istemiyoruz. Bu durumda bir sol birleşim <code>LEFT JOİN</code>
+yaparız, o zaman soldaki tablo asal tablo olur, onun tüm satırları her
+zaman geri döndürülür, ama sağda uyum yoksa fatura detay için boş
+değer gelir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT t.name, t.composer, i.InvoiceLineId</span>
+<span class="s2">FROM Track t</span>
+<span class="s2">LEFT JOIN InvoiceLine i</span>
+<span class="s2">ON t.TrackId = i.TrackId</span>
+<span class="s2">LIMIT 8&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                                         0                                                  1       2
+0  For Those About To Rock (We Salute You)          Angus Young, Malcolm Young, Brian Johnson   579.0
+1                        Balls to the Wall                                               None     1.0
+2                        Balls to the Wall                                               None  1154.0
+3                          Fast As a Shark  F. Baltes, S. Kaufman, U. Dirkscneider &amp; W. Ho...  1728.0
+4                        Restless and Wild  F. Baltes, R.A. Smith-Diesel, S. Kaufman, U. D...     2.0
+5                     Princess of the Dawn                         Deaffy &amp; R.A. Smith-Diesel   580.0
+6                    Put The Finger On You          Angus Young, Malcolm Young, Brian Johnson     3.0
+7                          Let&#39;s Get It Up          Angus Young, Malcolm Young, Brian Johnson     NaN
+</code></pre>
+</div>
+
+<p>Sonuçlarda <code>Let's Get It Up</code> şarkısının ait olduğu hiçbir
+<code>InvoiceLine</code> yok. Bu durumda o kimlik için boş değer var, NaN
+diyor. </p>
+
+<p>Kendisiyle Birleşim (Self Join); Bir tabloyu kendisiyle de
+birleştirebilirdik. Diyelim bir çalışanın tüm ismini ve onun amirinin
+tüm ismini raporlamak istiyoruz. Bu durumda <code>ReportTo</code> kolonu tablonun
+kendisine işaret ediyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT a.FirstName || &#39; &#39; || a.LastName AS employee,</span>
+<span class="s2">       b.FirstName || &#39; &#39; || b.LastName AS supervisor</span>
+<span class="s2">  FROM Employee a</span>
+<span class="s2">  JOIN Employee b</span>
+<span class="s2">    ON a.ReportsTo = b.EmployeeId&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                  0                 1
+0     Nancy Edwards      Andrew Adams
+1      Jane Peacock     Nancy Edwards
+2     Margaret Park     Nancy Edwards
+3     Steve Johnson     Nancy Edwards
+4  Michael Mitchell      Andrew Adams
+5       Robert King  Michael Mitchell
+6    Laura Callahan  Michael Mitchell
+</code></pre>
+</div>
+
+<p>Bu arada dikkat çektiyse <code>||</code> komutu var, bu komut kolon değeri
+birleştirmek için kullanılır. İsim ve soyisimi birleştirebilirim,
+arasına bir boşluk koyarak yeni bir kolon oluşturmuş olurum. Bu kolona
+<code>AS ...</code> ile bir isim de verirsem, çıktılar buna göre
+düzenlenir. Hatta altsorgularda bile tanımlanan bu tür kolonlar üst
+sorgular tarafından kullanılabilir.</p>
+
+<p>Altsorgu (Subquery)</p>
+
+<p>Bir altsorgu ana sorgunun içinde işleyen bir geçici sorgudur. Kendi
+başına işleyebilen bir sorgu olmalıdır, bu iyidir, çünkü bu şekilde
+ayrı test edilebilir. Mesela her ülkeden gelen hasılatı yüzdesini
+hesaplamak için önce tüm hasılatı bilmek gerekir, bu bir altsorgu olur.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT BillingCountry,</span>
+<span class="s2">(SUM(Total)/(SELECT SUM(Total) FROM Invoice))*100 AS Perc_Rev</span>
+<span class="s2">FROM Invoice</span>
+<span class="s2">GROUP BY BillingCountry&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                 0          1
+0        Argentina   1.615563
+1        Australia   1.615563
+2          Austria   1.830284
+3          Belgium   1.615563
+4           Brazil   8.163704
+5           Canada  13.053337
+6            Chile   2.002061
+7   Czech Republic   3.875290
+8          Denmark   1.615563
+9          Finland   1.787340
+10          France   8.378425
+11         Germany   6.719918
+12         Hungary   1.959117
+13           India   3.231985
+14         Ireland   1.959117
+15           Italy   1.615563
+16     Netherlands   1.744396
+17          Norway   1.701452
+18          Poland   1.615563
+19        Portugal   3.317015
+20           Spain   1.615563
+21          Sweden   1.658507
+22             USA  22.462424
+23  United Kingdom   4.846689
+</code></pre>
+</div>
+
+<p>Bu sorgu işletilmeden önce altsorgu işletilir, ardından geri kalan işletilir.</p>
+
+<p>Bir altsorguyu bir geçici tablo olarak bile kullanabiliriz, mesela
+<code>FROM</code> içinde parantezler arasında bir sorgu işletip ona bir isim
+verirsek, bu isme dış sorguda sanki bir tabloymuş gibi erişebiliriz.</p>
+
+<p>Örnek isminde <code>The</code> kelimesi olan sanatçıların listelemek istesek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT names_with_the.*</span>
+<span class="s2">FROM (SELECT Name </span>
+<span class="s2">       FROM Artist </span>
+<span class="s2">       WHERE Name LIKE &#39;%The%&#39;) AS names_with_the</span>
+<span class="s2">LIMIT 10&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                               0
+0    Santana Feat. Dave Matthews
+1  Santana Feat. The Project G&amp;B
+2               The Black Crowes
+3                      The Clash
+4                       The Cult
+5                      The Doors
+6                     The Police
+7             The Rolling Stones
+8                  The Tea Party
+9                        The Who
+</code></pre>
+</div>
+
+<p>Gerçi dış sorguda fazla sükseli işlemler yapmadık ama yapabilirdik.</p>
+
+<p><code>WHERE</code> kısmında da altsorgu kullanılabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT FirstName, LastName, BirthDate</span>
+<span class="s2">FROM Employee</span>
+<span class="s2">WHERE BirthDate IN (</span>
+<span class="s2">  SELECT BirthDate FROM Employee ORDER BY BirthDate</span>
+<span class="s2">)</span>
+<span class="s2">LIMIT 10  </span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+          0         1                    2
+0    Andrew     Adams  1962-02-18 00:00:00
+1     Nancy   Edwards  1958-12-08 00:00:00
+2      Jane   Peacock  1973-08-29 00:00:00
+3  Margaret      Park  1947-09-19 00:00:00
+4     Steve   Johnson  1965-03-03 00:00:00
+5   Michael  Mitchell  1973-07-01 00:00:00
+6    Robert      King  1970-05-29 00:00:00
+7     Laura  Callahan  1968-01-09 00:00:00
+</code></pre>
+</div>
+
+<p>Bu sorgu bize en yaşlı 10 çalışanın ismini verdi.</p>
+
+<p><code>WHERE</code> içinde <code>BirthDate İN</code> görülüyor, yani <code>BirthDate</code> kolonunun
+<code>IN</code> den sonra tarif edilen küme içinde olma şartını koymuş
+oluyoruz. Bazen birleşim ve eşitlik şartı yerine bu tür tarif daha
+rahat oluyor.</p>
+
+<p>İlginç bir altsorgu daha, hangi ülkenin müşteri en çok ödeme yaptı?
+[7]'den top_country.sql. Bunun için önce tüm ülkeler bazında satış
+toplamı alıyoruz, dış sorguda ise toplamların içinden maksimum olanını
+çekip çıkartıyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT Country, MAX(Total_Sales_For_Country) as Total_Spent</span>
+<span class="s2">FROM</span>
+<span class="s2">   (SELECT BillingCountry as Country , SUM(Total) as Total_Sales_For_Country</span>
+<span class="s2">    FROM Invoice</span>
+<span class="s2">    GROUP BY BillingCountry)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+     0       1
+0  USA  523.06
+</code></pre>
+</div>
+
+<p>Daha çetrefil birleşimler görelim, [7]'den
+line<em>item</em>track_artist.sql. Burada her fatura detayı için şarkı ve
+sanatçı isimlerinin dahil edilmesini istiyoruz.  Bu bilgi normalde
+fatura detayında yok, o zaman bir bir dörtlü birleşim (four way join)
+gerekiyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT InvoiceLineId, t.name as &quot;Song&quot;, ar.Name as &quot;Artist&quot;</span>
+<span class="s2">FROM InvoiceLine i </span>
+<span class="s2">JOIN Track t</span>
+<span class="s2">ON t.TrackId = i.TrackId</span>
+<span class="s2">JOIN Album a </span>
+<span class="s2">ON a.AlbumId = t.AlbumId</span>
+<span class="s2">JOIN Artist ar </span>
+<span class="s2">ON ar.ArtistId = a.ArtistId</span>
+<span class="s2">ORDER BY t.TrackId</span>
+<span class="s2">LIMIT 10</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+      0                                        1       2
+0   579  For Those About To Rock (We Salute You)   AC/DC
+1     1                        Balls to the Wall  Accept
+2  1154                        Balls to the Wall  Accept
+3  1728                          Fast As a Shark  Accept
+4     2                        Restless and Wild  Accept
+5   580                     Princess of the Dawn  Accept
+6     3                    Put The Finger On You   AC/DC
+7     4                         Inject The Venom   AC/DC
+8  1155                         Inject The Venom   AC/DC
+9   581                               Snowballed   AC/DC
+</code></pre>
+</div>
+
+<p>Case When [6]</p>
+
+<p><code>CASE WHEN</code> ifadeleri ile seçilmiş her satır üzerinde koşulsal yan
+işlemler yapmak mümkündür. Mesela hem sene hem de ülke bazlı toplam
+almak istesek, ülke ismi, sene metninde <code>CASE WHEN</code> uygulayıp <code>SUM</code>
+alabilirdik,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> \
+<span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;SELECT CAST(strftime(&#39;%Y&#39;, invoice_.&quot;InvoiceDate&quot;) AS BIGINT) AS &quot;Year&quot;,</span>
+<span class="s2">   SUM(CASE WHEN invoice_.&quot;BillingCountry&quot; = &#39;USA&#39;</span>
+<span class="s2">      THEN invoice_.&quot;Total&quot; END) AS &quot;USA&quot;,</span>
+<span class="s2">   SUM(CASE WHEN invoice_.&quot;BillingCountry&quot; = &#39;United Kingdom&#39;</span>
+<span class="s2">      THEN invoice_.&quot;Total&quot; END) AS &quot;United Kingdom&quot;,</span>
+<span class="s2">   SUM(CASE WHEN invoice_.&quot;BillingCountry&quot; = &#39;Canada&#39;</span>
+<span class="s2">      THEN invoice_.&quot;Total&quot; END) AS &quot;Canada&quot;</span>
+<span class="s2">FROM &quot;Invoice&quot; AS invoice_</span>
+<span class="s2">WHERE invoice_.&quot;BillingCountry&quot; IN (&#39;USA&#39;, &#39;United Kingdom&#39;, &#39;Canada&#39;)</span>
+<span class="s2">GROUP BY 1</span>
+<span class="s2">ORDER BY 1 DESC&quot;&quot;&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Year&#39;</span><span class="p">,</span><span class="s1">&#39;USA&#39;</span><span class="p">,</span> <span class="s1">&#39;United Kingdom&#39;</span><span class="p">,</span> <span class="s1">&#39;Canada&#39;</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>   Year     USA  United Kingdom  Canada
+0  2013   85.14           28.71   72.27
+1  2012  127.98            9.90   42.57
+2  2011  103.01           17.82   55.44
+3  2010  102.98           30.69   76.26
+4  2009  103.95           25.74   57.42
+</code></pre>
+</div>
+
+<p>Her ülke için en popüler müzik türünü seçmek istiyoruz. Yani en fazla
+alım olan şarkıları ülke bazında gruplamak lazım. Altta <code>WITH</code> ile bir
+altsorgu yaratılıyor, bu sonuca bir isim veriliyor, <code>t1</code>, ve bu sonuç
+bir diğer alt sorguyla <code>t2</code> üzerinden birleştiriliyor [10]. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">WITH t1 AS (</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        COUNT(i.InvoiceId) Purchases, c.Country, g.Name, g.GenreId</span>
+<span class="s2">    FROM Invoice i</span>
+<span class="s2">        JOIN Customer c ON i.CustomerId = c.CustomerId</span>
+<span class="s2">        JOIN InvoiceLine il ON il.Invoiceid = i.InvoiceId</span>
+<span class="s2">        JOIN Track t ON t.TrackId = il.Trackid</span>
+<span class="s2">        JOIN Genre g ON t.GenreId = g.GenreId</span>
+<span class="s2">    GROUP BY c.Country, g.Name</span>
+<span class="s2">    ORDER BY c.Country, Purchases DESC</span>
+<span class="s2">    )</span>
+
+<span class="s2">SELECT t1.*</span>
+<span class="s2">FROM t1</span>
+<span class="s2">JOIN (</span>
+<span class="s2">    SELECT MAX(Purchases) AS MaxPurchases, Country, Name, GenreId</span>
+<span class="s2">    FROM t1</span>
+<span class="s2">    GROUP BY Country</span>
+<span class="s2">    ) t2</span>
+<span class="s2">ON t1.Country = t2.Country</span>
+<span class="s2">WHERE t1.Purchases = t2.MaxPurchases&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+      0               1                   2  3
+0     9       Argentina  Alternative &amp; Punk  4
+1     9       Argentina                Rock  1
+2    22       Australia                Rock  1
+3    15         Austria                Rock  1
+4    21         Belgium                Rock  1
+5    81          Brazil                Rock  1
+6   107          Canada                Rock  1
+7     9           Chile                Rock  1
+8    25  Czech Republic                Rock  1
+9    21         Denmark                Rock  1
+10   18         Finland                Rock  1
+11   65          France                Rock  1
+12   62         Germany                Rock  1
+13   11         Hungary                Rock  1
+14   25           India                Rock  1
+15   12         Ireland                Rock  1
+16   18           Italy                Rock  1
+17   18     Netherlands                Rock  1
+18   17          Norway                Rock  1
+19   22          Poland                Rock  1
+20   31        Portugal                Rock  1
+21   22           Spain                Rock  1
+22   12          Sweden               Latin  7
+23  157             USA                Rock  1
+24   37  United Kingdom                Rock  1
+</code></pre>
+</div>
+
+<p>Averaj şarkı isminden daha uzun olan şarkıları geri döndür. Yine bir
+altsorgu, averaj şarkı uzunluğunu hesaplamak için [10].</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">psql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">SELECT Name, Milliseconds FROM (</span>
+<span class="s2">    SELECT t.Name, t.Milliseconds, (SELECT AVG(Milliseconds) FROM Track) AS AvgLenght</span>
+<span class="s2">    FROM Track t</span>
+<span class="s2">    WHERE AvgLenght &lt; t.Milliseconds</span>
+<span class="s2">    ORDER BY t.Milliseconds DESC  )</span>
+<span class="s2">LIMIT 10    </span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+                             0        1
+0       Occupation / Precipice  5286953
+1      Through a Looking Glass  5088838
+2  Greetings from Earth, Pt. 1  2960293
+3      The Man With Nine Lives  2956998
+4  Battlestar Galactica, Pt. 2  2956081
+5  Battlestar Galactica, Pt. 1  2952702
+6    Murder On the Rising Star  2935894
+7  Battlestar Galactica, Pt. 3  2927802
+8            Take the Celestra  2927677
+9                Fire In Space  2926593
+</code></pre>
+</div>
+
+<p>Referans</p>
+
+<p>[1] Veri Tabanları, Kurumsal Java 2005 Kitabından, <a href="https://github.com/burakbayramli/classnotes/raw/master/sk/2012/03/db-kj.pdf">PDF</a></p>
+
+<p>[2] <a href="../../2018/03/sqlite-basit-sekilde-hzl-diske-deger-yazma.html">sqlite</a></p>
+
+<p>[3] <a href="../../2012/06/psycopg2.html">psycopg2</a></p>
+
+<p>[4] https://github.com/Olamiotan/PythonStarter</p>
+
+<p>[5] https://database.guide/2-sample-databases-sqlite/</p>
+
+<p>[6] https://data-xtractor.com/knowledgebase/chinook-database-sample/</p>
+
+<p>[7] https://github.com/KAPrueved/Chinook-SQL-Exercise</p>
+
+<p>[8] Mando Iwanaga</p>
+
+<ul>
+<li>https://medium.com/@mandoiwanaga08/introduction-to-sql-beginner-level-7acb59286e7b</li>
+<li>https://medium.com/@mandoiwanaga08/sql-continued-3ff70f613d96</li>
+<li>https://medium.com/@mandoiwanaga08/sql-part-3-a1a3730b7624</li>
+<li>https://medium.com/@mandoiwanaga08/sql-part-4-1d61ada63b5</li>
+<li>https://github.com/mandoiwanaga/sql_practice</li>
+<li>https://github.com/mamineofficial/Query-a-Digital-Music-Store-Part-I-SQL</li>
+</ul>
+
+<p>[9] https://shichaoji.com/2016/10/10/database-python-connection-basic/</p>
+
+<p>[10] https://github.com/douglasnavarro/chinook-analysis</p>
+
+<p>[11] <a href="../../2012/03/postgresql.html">Postgresql</a></p>
+
+<p>[12] https://www.guru99.com/er-diagram-tutorial-dbms.html</p>
+
+<p>[13] https://www.c-sharpcorner.com/article/diving-into-basics-of-sql-server/</p>
+
+<p>[14] <a href="../../2014/05/mongodb.html">MongoDB</a></p>
+
+<p>[15] <a href="../../2001/10/sql-nasl-kullanlmal.html">SQL Nasıl Kullanılmalı</a></p>
+
+<p>[16] <a href="../../2001/10/sql-veri-analizi-nasl-hzlandrlr.html">SQL veri analizi nasıl hızlandırılır</a></p>
+
+<p>[17] <a href="https://drive.google.com/uc?export=view&amp;id=1bbr8y45VXla4wRf_7kJVa0Xj7r8PBTOD">Chinook.db ZIP</a></p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

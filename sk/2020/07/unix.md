@@ -1,6 +1,6 @@
 # Unix
 
-[Unix'e Giriş](unix.html)
+[Unix'e Giriş](unix-giris.html)
 
 [Faydalı Unix Komutları](../../2012/04/faydali-unix-komutlari.html)
 

@@ -20,6 +20,8 @@
 
 [Ubuntu 18, Acer Swift](07/ubuntu-18-acer-swift.html)
 
+[Unix'e Giris](07/unix-giris.html)
+
 [Unix](07/unix.html)
 
 [Video Islemleri](07/video-islemleri.html)

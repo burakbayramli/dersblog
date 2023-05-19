@@ -3,7 +3,7 @@
 
 ## En Son
 
-28/4 - [Ubuntu 22](https://burakbayramli.github.io/dersblog/sk/2023/05/ubuntu-22.html)
+19/5 - [Ubuntu 22](https://burakbayramli.github.io/dersblog/sk/2023/05/ubuntu-22.html)
 
 13/5 - [OSM Haritaları, PBF Dosyaları, En Kısa Yol, Djikstra](https://burakbayramli.github.io/dersblog/sk/2023/05/osm-shortest-route-en-kisa-yol-dijkstra.html)
 
@@ -48,6 +48,4 @@
 [Sene](year.html)
 
 [Ara](ara.html)
-
-
 

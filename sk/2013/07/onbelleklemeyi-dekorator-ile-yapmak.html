@@ -48,8 +48,10 @@ bir değişken dummy ekledik, bazı püf noktaları gösterebilmek için),</p>
 
 <p>Bu fonksiyonu</p>
 
-<pre><code>kare("filan", 3)
+<div class="codehilite">
+<pre><span></span><code><span class="n">kare</span><span class="p">(</span><span class="s2">&quot;filan&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
 </code></pre>
+</div>
 
 <p>diye çağırıyoruz ve sonuç olarak 9 gelmesini bekliyoruz. </p>
 
@@ -62,10 +64,13 @@ edelim).</p>
 <p>Bu kod uzerinde onbelleklemeyi eski usulle yapsaydik, kod suna
 benzerdi:</p>
 
-<pre><code>cache = {}def kare(dummy, a):
-    if not a in cache: cache[a] = a*a
-    return cache[a]
+<div class="codehilite">
+<pre><span></span><code><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">def</span> <span class="nf">kare</span><span class="p">(</span><span class="n">dummy</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span> <span class="n">cache</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">a</span>
+    <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
 </code></pre>
+</div>
 
 <p>Değişken cache bir Python dictionary'dir ve onbelleğimiz onun
 üzerinde  duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek
@@ -84,23 +89,27 @@ verebilir. Sözdizim açısından da temiz dururlar, çünkü dekoratör
 fonksiyon üzerinde '@' ile tanımlanan bir şeydir, başka bir eke
 ihtiyaç yoktur. O zaman (önce dekoratörün kendisi)</p>
 
-<pre><code>def cache(function):  memo = {}
-  def wrapper(*args):
-    if args[1] in memo:
-      print "cache hit"
-      return memo[args[1]]
-    else:
-      print "cache miss"
-      rv = function(*args)
-      memo[args[1]] = rv
-      return rv  return wrapper
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>  <span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
+      <span class="nb">print</span> <span class="s2">&quot;cache hit&quot;</span>
+      <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="nb">print</span> <span class="s2">&quot;cache miss&quot;</span>
+      <span class="n">rv</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+      <span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rv</span>
+      <span class="k">return</span> <span class="n">rv</span>  <span class="k">return</span> <span class="n">wrapper</span>
 </code></pre>
+</div>
 
 <p>Üstteki kod ana kodunuzdan ayrı bir yerde, bir dosyada durabilir
 mesela, sadece bir kere yazılır zaten, ve kullanılması gerektiği zaman
 şu ibare yeterlidir,</p>
 
-<pre><code>@cachedef kare(dummy, a):    return a*a
+<pre><code>@cache
+def kare(dummy, a):
+   return a*a
 </code></pre>
 
 <p>Görüldüğü gibi gayet temiz. Onbellek kodu hiç etrafta gözükmüyor, bu
@@ -117,12 +126,13 @@ sadece ikinci argümana baktık mesela.</p>
 
 <p>Diyelim ki mevcut bir kod parcasi var,</p>
 
-<pre><code>import randomclass Foo:
-    def f(self,x):
-        x = random.random()
-        return xo = Foo()
-
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">randomclass</span> <span class="n">Foo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xo</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
 </code></pre>
+</div>
 
 <p>Biz bu kodun <code>f()</code> çağrısını "yakalayıp" ona ek bir şeyler yaptırtmak
 istiyoruz, ve mevcut koda hiç dokunmadan bunu yapmak istiyoruz. Belki
@@ -131,20 +141,24 @@ ederek bunu yapabiliriz, fakat mevcut fonksiyon koduna dokunmak
 istemediğimiz için metot üstünde @birdekoratör gibi bir kullanım
 yapamayız. Bu durumda başka bir seçenek sudur,</p>
 
-<pre><code>def decorated_f(fn):
-    def new_f(*args, **kwargs):
-        res = fn(*args, **kwargs)
-        setattr(args[0], "was", res)
-        return res
-    return new_f
-Foo.f = decorated_f(Foo.f)
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">decorated_f</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">new_f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;was&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">new_f</span>
+<span class="n">Foo</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">decorated_f</span><span class="p">(</span><span class="n">Foo</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
 </code></pre>
+</div>
 
 <p>Simdi</p>
 
-<pre><code>print "o", o.f(0)
-print "was", o.was
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;was&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">was</span>
 </code></pre>
+</div>
 
 <p>Yeni ekleri de işletecek, bu ek Foo üzerinde yeni bir öğe yarattı, ve
 bu öğeye <code>o.was</code> diye erişiyoruz.</p>

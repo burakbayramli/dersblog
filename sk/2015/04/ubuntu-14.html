@@ -61,11 +61,16 @@ icinden, boylece bazi tuslar mouse tiklamasi haline gelir.</p>
 
 <p>.bashrc icinde</p>
 
-<p>setxkbmap -option ctrl:nocaps</p>
+<pre><code>setxkbmap -option ctrl:nocaps
+</code></pre>
 
 <p>Bazi tuslari sol ve sag fare tiklamasi yapmak icin</p>
 
-<p>xmodmap -e "keycode 133 = Pointer<em>Button1"xmodmap -e "keycode 108 = Pointer</em>Button1"xmodmap -e "keycode 135 = Pointer_Button3"xkbset m</p>
+<pre><code>xmodmap -e "keycode 133 = Pointer_Button1"
+xmodmap -e "keycode 108 = Pointer_Button1"
+xmodmap -e "keycode 135 = Pointer_Button3"
+xkbset m
+</code></pre>
 
 <p>ustteki iki blok kodu bir sh dosyasi icine yazip .bashrc icinden de
 cagirabilirsiniz. Eger farkli tuslar kullanmak istenilirse xev ile bu
@@ -85,21 +90,34 @@ cikmaz.</p>
 
 <p>Baslangic Davul Sesini Yokedin</p>
 
-<p>sudo rm /usr/share/sounds/ubuntu/stereo/system-ready.ogg</p>
+<pre><code>sudo rm /usr/share/sounds/ubuntu/stereo/system-ready.ogg
+</code></pre>
 
 <p>Balon tavsiyelerini yoketmek icin</p>
 
-<p>sudo mv /usr/share/dbus-1/services/org.freedesktop.Notifications.service</p>
+<pre><code>sudo mv /usr/share/dbus-1/services/org.freedesktop.Notifications.service
 
-<p>/usr/share/dbus-1/services/org.freedesktop.Notifications.service.disabled  </p>
+/usr/share/dbus-1/services/org.freedesktop.Notifications.service.disabled  
+</code></pre>
 
-<p>Uyuma (sleep) ve tekrar geri gelme sonrasi (resume) eger Wifi / network baglanmiyorsa,</p>
+<p>Uyuma (sleep) ve tekrar geri gelme sonrasi (resume) eger Wifi /
+network baglanmiyorsa,</p>
 
-<p>sudo touch /etc/pm/sleep.d/wakenet.shsudo chmod +x /etc/pm/sleep.d/wakenet.shsudo gedit -H /etc/pm/sleep.d/wakenet.sh </p>
+<pre><code>sudo touch /etc/pm/sleep.d/wakenet.shsudo chmod +x /etc/pm/sleep.d/wakenet.shsudo gedit -H /etc/pm/sleep.d/wakenet.sh
+</code></pre>
 
 <p>Dosya icine</p>
 
-<h1>!/bin/bashcase "$1" inthaw|resume)nmcli nm sleep false;;*);;esacexit $?</h1>
+<pre><code>#!/bin/bash
+
+case "$1" in
+
+    thaw|resume)
+      nmcli nm sleep false;;*);;
+  esac
+
+exit $?
+</code></pre>
 
 <p>Sag ust kosedeki kisayollar</p>
 
@@ -113,8 +131,6 @@ tiklamasi yapilir ve "Remove from Panel" secilir. Ya da
 internal error ..." gibi bir diyalog kutusu ekrana geliyor. Bunu iptal
 etmek icin sudo gedit /etc/default/apport ile ayar dosyasina girin
 ve enabled=0 haline getirin, bilgisayari tekrar baslatin.</p>
-
-<p>Yaziya ekler olacak</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

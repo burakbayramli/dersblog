@@ -92,7 +92,7 @@
 
 [Python Sözlük (Dictionary) Veri Yapısı](05/python-sozluk-dictionary.html)
 
-[Lenovo Tablet Uzerinde Termux](05/tablet-termux-lenovo.html)
+[Lenovo Tablet Üzerinde Termux](05/tablet-termux-lenovo.html)
 
 [Ubuntu 22](05/ubuntu-22.html)
 

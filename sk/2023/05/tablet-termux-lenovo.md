@@ -71,7 +71,7 @@ geçeriz.
 Alttaki paketler üzerinde `pkg install`.
 
 ```
-python3 openssh build-essential python-numpy emacs libxml2 libxslt cmake freetype binutils
+python3 git openssh build-essential python-numpy emacs libxml2 libxslt cmake freetype binutils
 ```
 
 Bazen kurulum patlayabilir, birkaç deneme problemi çözer. Üsttekiler
@@ -163,9 +163,9 @@ alias gp='git push origin master'
 alias ga="git add . "
 ```
 
-Görüldüğü gibi `$HOME/Documents/env3` bir izole Python 3 ortamı var, editör
-başlatmadan önce onu başlatıyoruz, böylece orada kurulmuş tüm paketler
-editör içindeki komutlar tarafından görülebiliyor.
+Görüldüğü gibi `$HOME/Documents/env3` içinde bir izole Python 3 ortamı
+var, editör başlatmadan önce onu başlatıyoruz, böylece orada kurulmuş
+tüm paketler editör içindeki komutlar tarafından görülebiliyor.
 
 Kaynaklar
 

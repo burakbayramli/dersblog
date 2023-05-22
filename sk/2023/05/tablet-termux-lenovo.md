@@ -1,7 +1,7 @@
 # Lenovo Tablet Üzerinde Termux
 
 Android üzerinde tam tekmilli Unix olabilir mi? Olabilir. Termux ile
-mümkun. Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur
+mümkün. Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur
 yazmıştık [1]. Şimdi aynı işlemi bir Lenovo tablet için
 deneyelim. Amacımız numpy, scipy, emacs ve flask gibi programları,
 paketleri işletebilmek olacak.
@@ -33,7 +33,8 @@ oluruz ve
 adb install com.termux_117.apk
 ```
 
-ile apk kurulumu yapabilir. 
+ile apk kurulumu yapabilir, yani üstteki dizüstünde işletilecek ve
+kurulum Android tablet üzeinde yapılacak.
 
 Termux kurulduktan sonra Android üzerinde
 
@@ -45,16 +46,18 @@ yapmak iyi olur. Bu `$HOME` altında bir `storage` dizini
 oluşturuyor. Dizin içinde Android'in bildik `downloads` `dcim` gibi
 dizinlerine sembolik bağlantılar var.
 
-Artık dizüstünden direk USB kablosu ile dosya gönderebiliriz, mesela
+Dizüstünden direk USB kablosu ile dosya da gönderilebilir, mesela
 
 ```
 adb push filanca.tar.gz /storage/emulated/0/Download/
 ```
 
-Termux komut satırında ekran klavyesi ile komutlar girilebilir.
-Bluetooth klavyesi olanlar onu da kullanabilir. Ekran altındaki Ctrl,
-ESC gibi tuşların ekrandan basılmasını sağlayan kısmı iptal etmek için
-Ses Açmak + q tuşları.
+Bazı durumlarda faydalı olabilir, bunu da paylaşalım.
+
+Tablet üzerindeki Termux komut satırında ekran klavyesi ile komutlar
+girilebilir. Bluetooth klavyesi olanlar onu da kullanabilir. Ekran
+altındaki Ctrl, ESC gibi tuşların ekrandan basılmasını sağlayan kısmı
+iptal etmek için Ses Açmak + q tuşları yeterli.
 
 Şimdi tablet Termux üzerindeki işlemlere gelelim.
 
@@ -71,10 +74,9 @@ Alttaki paketler üzerinde `pkg install`.
 python3 openssh build-essential python-numpy emacs libxml2 libxslt cmake freetype binutils
 ```
 
-Bazen kurulum patlayabilir, birkaç deneme iyi olabilir.
-
-Üsttekiler tamamsa `matplotlib` üzerinde `pkg install` denenmeli. Eğer yardımcı
-paketlerde problem çıkarsa bunları ayrı ayrı başına 
+Bazen kurulum patlayabilir, birkaç deneme problemi çözer. Üsttekiler
+tamamsa `matplotlib` üzerinde `pkg install` denenmeli. Eğer yardımcı
+paketlerde problem çıkarsa bunları ayrı ayrı başına
 
 ```
 LDFLAGS="-L/system/lib64" CFLAGS="-I/data/data/com.termux/files/usr/include" pip install

@@ -39,7 +39,7 @@
 <h1>Lenovo Tablet Üzerinde Termux</h1>
 
 <p>Android üzerinde tam tekmilli Unix olabilir mi? Olabilir. Termux ile
-mümkun. Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur
+mümkün. Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur
 yazmıştık [1]. Şimdi aynı işlemi bir Lenovo tablet için
 deneyelim. Amacımız numpy, scipy, emacs ve flask gibi programları,
 paketleri işletebilmek olacak.</p>
@@ -69,7 +69,8 @@ oluruz ve</p>
 <pre><code>adb install com.termux_117.apk
 </code></pre>
 
-<p>ile apk kurulumu yapabilir. </p>
+<p>ile apk kurulumu yapabilir, yani üstteki dizüstünde işletilecek ve
+kurulum Android tablet üzeinde yapılacak.</p>
 
 <p>Termux kurulduktan sonra Android üzerinde</p>
 
@@ -80,15 +81,17 @@ oluruz ve</p>
 oluşturuyor. Dizin içinde Android'in bildik <code>downloads</code> <code>dcim</code> gibi
 dizinlerine sembolik bağlantılar var.</p>
 
-<p>Artık dizüstünden direk USB kablosu ile dosya gönderebiliriz, mesela</p>
+<p>Dizüstünden direk USB kablosu ile dosya da gönderilebilir, mesela</p>
 
 <pre><code>adb push filanca.tar.gz /storage/emulated/0/Download/
 </code></pre>
 
-<p>Termux komut satırında ekran klavyesi ile komutlar girilebilir.
-Bluetooth klavyesi olanlar onu da kullanabilir. Ekran altındaki Ctrl,
-ESC gibi tuşların ekrandan basılmasını sağlayan kısmı iptal etmek için
-Ses Açmak + q tuşları.</p>
+<p>Bazı durumlarda faydalı olabilir, bunu da paylaşalım.</p>
+
+<p>Tablet üzerindeki Termux komut satırında ekran klavyesi ile komutlar
+girilebilir. Bluetooth klavyesi olanlar onu da kullanabilir. Ekran
+altındaki Ctrl, ESC gibi tuşların ekrandan basılmasını sağlayan kısmı
+iptal etmek için Ses Açmak + q tuşları yeterli.</p>
 
 <p>Şimdi tablet Termux üzerindeki işlemlere gelelim.</p>
 
@@ -103,10 +106,9 @@ geçeriz.</p>
 <pre><code>python3 openssh build-essential python-numpy emacs libxml2 libxslt cmake freetype binutils
 </code></pre>
 
-<p>Bazen kurulum patlayabilir, birkaç deneme iyi olabilir.</p>
-
-<p>Üsttekiler tamamsa <code>matplotlib</code> üzerinde <code>pkg install</code> denenmeli. Eğer yardımcı
-paketlerde problem çıkarsa bunları ayrı ayrı başına </p>
+<p>Bazen kurulum patlayabilir, birkaç deneme problemi çözer. Üsttekiler
+tamamsa <code>matplotlib</code> üzerinde <code>pkg install</code> denenmeli. Eğer yardımcı
+paketlerde problem çıkarsa bunları ayrı ayrı başına</p>
 
 <pre><code>LDFLAGS="-L/system/lib64" CFLAGS="-I/data/data/com.termux/files/usr/include" pip install
 </code></pre>

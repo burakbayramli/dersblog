@@ -161,7 +161,7 @@ editör içindeki komutlar tarafından görülebiliyor.
 
 Kaynaklar
 
-[1] <a href="../../2018/09/android-uzerinde-linux-termux.html">Android Uzerinde Linux - Termux, Samsun J6</a>
+[1] <a href="../../2018/09/android-uzerinde-linux-termux.html">Android Uzerinde Linux - Termux, Samsung J6</a>
 
 [2] <a href="https://f-droid.org/en/packages/com.termux/">F-Droid Termux</a>
 

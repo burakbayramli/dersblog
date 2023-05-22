@@ -1,9 +1,10 @@
 # Lenovo Tablet Üzerinde Termux
 
-Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur yazmıştık
-[1]. Şimdi aynı işlemi bir Lenovo tablet için deneyelim. Amacımız
-numpy, scipy, emacs ve flask gibi programları, paketleri işletebilmek
-olacak.
+Android üzerinde tam tekmilli Unix olabilir mi? Olabilir. Termux ile
+mümkun. Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur
+yazmıştık [1]. Şimdi aynı işlemi bir Lenovo tablet için
+deneyelim. Amacımız numpy, scipy, emacs ve flask gibi programları,
+paketleri işletebilmek olacak.
 
 Termux'un Android üzerinde işlemediği hakkında bazı şikayetler var,
 bunlar Android versiyon 12 için. Bizim kullandığımız versiyonların
@@ -11,22 +12,22 @@ hepsi 10 ve altında, bu sürümler için Termux problem çıkartmamalı,
 problem varsa erişilemeyen dosya servisi problemi olabilir, tekrar
 denemek problemi çözebilir, ya da gerektiği yerde `LDFLAGS` kullanımı
 (altta), ve python paketleri sıfırdan derlemek yerine mevcut derlenmiş
-programları kullanmak daha rahat olabilir.
+programları kullanmak seçenek olabilir.
 
 ### Kuruluş
 
 Google Play Store'daki Termux problem çıkartabilir. En iyisi [2]
-adresinden apk dosyasını indirip kurmak. Ya dosyaya tıklanır, ya da
-System | About Phone | Build number'a birkaç kere tıklandıktan sonra
-geliştirici mod'una geçip Developer Options altında USB Debugging
-hazır hale getirmek, bundan sonra Ubuntu dizüstünde
+adresinden apk dosyasını indirip kurmak. İndirilip ya dosyaya
+tıklanır, ya da System | About Phone | Build number'a birkaç kere
+tıklandıktan sonra geliştirici mod'una geçip Developer Options altında
+USB Debugging hazır hale getirilir, ve Ubuntu dizüstünde
 
 ```
 sudo apt install adb
 ```
 
-dersek Android'e USB kablosu üzerinden erisebilen bir ortam kurmuş
-oluruz. Artık
+ile Android'e USB kablosu üzerinden erişilebilen bir ortam kurmuş
+oluruz ve
 
 ```
 adb install com.termux_117.apk
@@ -41,7 +42,7 @@ termux-setup-storage
 ```
 
 yapmak iyi olur. Bu `$HOME` altında bir `storage` dizini
-oluşturur. Dizin içinde Android'in bildik `downloads` `dcim` gibi
+oluşturuyor. Dizin içinde Android'in bildik `downloads` `dcim` gibi
 dizinlerine sembolik bağlantılar var.
 
 Artık dizüstünden direk USB kablosu ile dosya gönderebiliriz, mesela
@@ -49,6 +50,11 @@ Artık dizüstünden direk USB kablosu ile dosya gönderebiliriz, mesela
 ```
 adb push filanca.tar.gz /storage/emulated/0/Download/
 ```
+
+Termux komut satırında ekran klavyesi ile komutlar girilebilir.
+Bluetooth klavyesi olanlar onu da kullanabilir. Ekran altındaki Ctrl,
+ESC gibi tuşların ekrandan basılmasını sağlayan kısmı iptal etmek için
+Ses Açmak + q tuşları.
 
 Şimdi tablet Termux üzerindeki işlemlere gelelim.
 
@@ -76,13 +82,14 @@ LDFLAGS="-L/system/lib64" CFLAGS="-I/data/data/com.termux/files/usr/include" pip
 
 ekleyerek `pip` ile kurmayı deneyebiliriz.
 
-Dikkat: Kurulum tüm sistem bazında yapılıyor, hala bir izole [4] ortam yaratmadık.
-Buradaki sebep ``python-numpy` kurulumunun sistem bazlı olması, diğer baz paketler
-de onu izlerse sistem bazlı işler daha rahatlaşıyor.
-
-Bir kez temel paketler kurulunca, artık izole ortamlar mevcut olan
-paketler için sistem bazlı olanı kullanabilir, ek yapılan `pip
-ınstall` kurulumları hala izole ortamda kalabilir. Şimdi,
+Dikkat: Kurulum tüm sistem bazında yapılıyor, hala bir izole [4] ortam
+yaratmadık.  Buradaki sebep ``python-numpy` kurulumunun sistem bazlı
+olması, diğer baz paketler de onu temel alarak yapılırsa bazlı işler
+daha rahatlaşıyor, bu durumda temel paketler sistem bazlı
+oluyor. Fakat problem değil, bir kez temel paketler kurulunca, artık
+izole ortamlar mevcut olan paketler için sistem bazlı olana referans
+yapabilir, ek `pip install` paketleri hala ayrı izole ortamda
+kalabilir. 
 
 ```
 pip3 install virtualenv
@@ -94,9 +101,11 @@ Ve `env3` adlı ilk ortamımızı yaratalım,
 virtualenv --system-site-packages -p /data/data/com.termux/files/usr/bin/python3 env3
 ```
 
-Artık `source env3/bin/activate` ile ortama girilebilir.
+Sistem referansı `--system-site-packages` ile yapıldı.
 
-Ek kurulumlar ortam icinde `pip` ile,
+Artık `source env3/bin/activate` ile yeni ortama girilebilir.
+
+Ek kurulumlar bu ortam icinde `pip` ile,
 
 ```
 pip install Pillow bs4 flask folium geopy ipython 
@@ -104,19 +113,16 @@ pip install Pillow bs4 flask folium geopy ipython
 
 ### Tuş Değişimi
 
-En alttaki Ctrl, ESC gibi tuşların ekrandan basılmasını sağlayan kısmı
-iptal etmek için Ses Açmak + q tuşları. Control tuşu Trust Bluetooth
-klavyelerinde rahat erişilen yerde değil, Vim, Emacs kullanıcıları bu
-tuşu çok kullanır, ÇAPS tuşunu CTRL yapabiliriz, ek olarak benim
-tercihim SPACE yanındaki Command yazan tuşu Left Alt yapmak. Bunun
-için Android seviyesinde değişiklik lazım. Şu [3] uygulama ile web
-üzerinde isteğe göre üretilen bir .apk bu değişimi yapabiliyor. APK
-üretimi arka planda derleme ile üretiliyor muhakkak, bu .apk indirilip
-kurulunca (Android uyarılarını dikkate almayız) tus değişimi olur.
-
-Web sitede tanımları liste bazlı seçebiliriz, bahsettiğim Command (ki
-sisteme Meta Left olarak gözüküyor) Alt Left bağlantısı yapmak alttaki
-şekilde.
+Control tuşu Trust Bluetooth klavyelerinde rahat erişilen yerde değil,
+Vim, Emacs kullanıcıları bu tuşu çok kullanır, CAPS tuşunu CTRL
+yapabiliriz, ek olarak benim tercihim SPACE yanındaki Command yazan
+tuşu Left Alt yapmak. Bunun için Android seviyesinde değişiklik
+lazım. Şu [3] uygulama ile web üzerinde isteğe göre üretilen bir .apk
+bu değişimi yapabiliyor. APK üretimi arka planda derleme ile
+üretiliyor muhakkak, bu .apk indirilip kurulunca (Android uyarılarını
+dikkate almayız) tuş değişimi olur. Web sitesinde tanımları liste
+bazlı seçebiliriz, bahsettiğim Command (ki sisteme Meta Left olarak
+gözüküyor) Alt Left bağlantısı yapmak alttaki şekilde.
 
 ![](exkeymo.jpg)
 

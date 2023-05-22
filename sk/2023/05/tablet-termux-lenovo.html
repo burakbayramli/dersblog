@@ -38,10 +38,11 @@
         <h1></h1>
 <h1>Lenovo Tablet Üzerinde Termux</h1>
 
-<p>Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur yazmıştık
-[1]. Şimdi aynı işlemi bir Lenovo tablet için deneyelim. Amacımız
-numpy, scipy, emacs ve flask gibi programları, paketleri işletebilmek
-olacak.</p>
+<p>Android üzerinde tam tekmilli Unix olabilir mi? Olabilir. Termux ile
+mümkun. Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur
+yazmıştık [1]. Şimdi aynı işlemi bir Lenovo tablet için
+deneyelim. Amacımız numpy, scipy, emacs ve flask gibi programları,
+paketleri işletebilmek olacak.</p>
 
 <p>Termux'un Android üzerinde işlemediği hakkında bazı şikayetler var,
 bunlar Android versiyon 12 için. Bizim kullandığımız versiyonların
@@ -49,21 +50,21 @@ hepsi 10 ve altında, bu sürümler için Termux problem çıkartmamalı,
 problem varsa erişilemeyen dosya servisi problemi olabilir, tekrar
 denemek problemi çözebilir, ya da gerektiği yerde <code>LDFLAGS</code> kullanımı
 (altta), ve python paketleri sıfırdan derlemek yerine mevcut derlenmiş
-programları kullanmak daha rahat olabilir.</p>
+programları kullanmak seçenek olabilir.</p>
 
 <h3>Kuruluş</h3>
 
 <p>Google Play Store'daki Termux problem çıkartabilir. En iyisi [2]
-adresinden apk dosyasını indirip kurmak. Ya dosyaya tıklanır, ya da
-System | About Phone | Build number'a birkaç kere tıklandıktan sonra
-geliştirici mod'una geçip Developer Options altında USB Debugging
-hazır hale getirmek, bundan sonra Ubuntu dizüstünde</p>
+adresinden apk dosyasını indirip kurmak. İndirilip ya dosyaya
+tıklanır, ya da System | About Phone | Build number'a birkaç kere
+tıklandıktan sonra geliştirici mod'una geçip Developer Options altında
+USB Debugging hazır hale getirilir, ve Ubuntu dizüstünde</p>
 
 <pre><code>sudo apt install adb
 </code></pre>
 
-<p>dersek Android'e USB kablosu üzerinden erisebilen bir ortam kurmuş
-oluruz. Artık</p>
+<p>ile Android'e USB kablosu üzerinden erişilebilen bir ortam kurmuş
+oluruz ve</p>
 
 <pre><code>adb install com.termux_117.apk
 </code></pre>
@@ -76,13 +77,18 @@ oluruz. Artık</p>
 </code></pre>
 
 <p>yapmak iyi olur. Bu <code>$HOME</code> altında bir <code>storage</code> dizini
-oluşturur. Dizin içinde Android'in bildik <code>downloads</code> <code>dcim</code> gibi
+oluşturuyor. Dizin içinde Android'in bildik <code>downloads</code> <code>dcim</code> gibi
 dizinlerine sembolik bağlantılar var.</p>
 
 <p>Artık dizüstünden direk USB kablosu ile dosya gönderebiliriz, mesela</p>
 
 <pre><code>adb push filanca.tar.gz /storage/emulated/0/Download/
 </code></pre>
+
+<p>Termux komut satırında ekran klavyesi ile komutlar girilebilir.
+Bluetooth klavyesi olanlar onu da kullanabilir. Ekran altındaki Ctrl,
+ESC gibi tuşların ekrandan basılmasını sağlayan kısmı iptal etmek için
+Ses Açmak + q tuşları.</p>
 
 <p>Şimdi tablet Termux üzerindeki işlemlere gelelim.</p>
 
@@ -107,13 +113,14 @@ paketlerde problem çıkarsa bunları ayrı ayrı başına </p>
 
 <p>ekleyerek <code>pip</code> ile kurmayı deneyebiliriz.</p>
 
-<p>Dikkat: Kurulum tüm sistem bazında yapılıyor, hala bir izole [4] ortam yaratmadık.
-Buradaki sebep `<code>python-numpy</code> kurulumunun sistem bazlı olması, diğer baz paketler
-de onu izlerse sistem bazlı işler daha rahatlaşıyor.</p>
-
-<p>Bir kez temel paketler kurulunca, artık izole ortamlar mevcut olan
-paketler için sistem bazlı olanı kullanabilir, ek yapılan <code>pip
-ınstall</code> kurulumları hala izole ortamda kalabilir. Şimdi,</p>
+<p>Dikkat: Kurulum tüm sistem bazında yapılıyor, hala bir izole [4] ortam
+yaratmadık.  Buradaki sebep `<code>python-numpy</code> kurulumunun sistem bazlı
+olması, diğer baz paketler de onu temel alarak yapılırsa bazlı işler
+daha rahatlaşıyor, bu durumda temel paketler sistem bazlı
+oluyor. Fakat problem değil, bir kez temel paketler kurulunca, artık
+izole ortamlar mevcut olan paketler için sistem bazlı olana referans
+yapabilir, ek <code>pip install</code> paketleri hala ayrı izole ortamda
+kalabilir. </p>
 
 <pre><code>pip3 install virtualenv
 </code></pre>
@@ -123,28 +130,27 @@ paketler için sistem bazlı olanı kullanabilir, ek yapılan <code>pip
 <pre><code>virtualenv --system-site-packages -p /data/data/com.termux/files/usr/bin/python3 env3
 </code></pre>
 
-<p>Artık <code>source env3/bin/activate</code> ile ortama girilebilir.</p>
+<p>Sistem referansı <code>--system-site-packages</code> ile yapıldı.</p>
 
-<p>Ek kurulumlar ortam icinde <code>pip</code> ile,</p>
+<p>Artık <code>source env3/bin/activate</code> ile yeni ortama girilebilir.</p>
+
+<p>Ek kurulumlar bu ortam icinde <code>pip</code> ile,</p>
 
 <pre><code>pip install Pillow bs4 flask folium geopy ipython 
 </code></pre>
 
 <h3>Tuş Değişimi</h3>
 
-<p>En alttaki Ctrl, ESC gibi tuşların ekrandan basılmasını sağlayan kısmı
-iptal etmek için Ses Açmak + q tuşları. Control tuşu Trust Bluetooth
-klavyelerinde rahat erişilen yerde değil, Vim, Emacs kullanıcıları bu
-tuşu çok kullanır, ÇAPS tuşunu CTRL yapabiliriz, ek olarak benim
-tercihim SPACE yanındaki Command yazan tuşu Left Alt yapmak. Bunun
-için Android seviyesinde değişiklik lazım. Şu [3] uygulama ile web
-üzerinde isteğe göre üretilen bir .apk bu değişimi yapabiliyor. APK
-üretimi arka planda derleme ile üretiliyor muhakkak, bu .apk indirilip
-kurulunca (Android uyarılarını dikkate almayız) tus değişimi olur.</p>
-
-<p>Web sitede tanımları liste bazlı seçebiliriz, bahsettiğim Command (ki
-sisteme Meta Left olarak gözüküyor) Alt Left bağlantısı yapmak alttaki
-şekilde.</p>
+<p>Control tuşu Trust Bluetooth klavyelerinde rahat erişilen yerde değil,
+Vim, Emacs kullanıcıları bu tuşu çok kullanır, CAPS tuşunu CTRL
+yapabiliriz, ek olarak benim tercihim SPACE yanındaki Command yazan
+tuşu Left Alt yapmak. Bunun için Android seviyesinde değişiklik
+lazım. Şu [3] uygulama ile web üzerinde isteğe göre üretilen bir .apk
+bu değişimi yapabiliyor. APK üretimi arka planda derleme ile
+üretiliyor muhakkak, bu .apk indirilip kurulunca (Android uyarılarını
+dikkate almayız) tuş değişimi olur. Web sitesinde tanımları liste
+bazlı seçebiliriz, bahsettiğim Command (ki sisteme Meta Left olarak
+gözüküyor) Alt Left bağlantısı yapmak alttaki şekilde.</p>
 
 <p><img src="exkeymo.jpg" alt="" /></p>
 

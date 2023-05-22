@@ -1,4 +1,4 @@
-# Android Uzerinde Linux - Termux, Samsun J6
+# Android Uzerinde Linux - Termux, Samsung J6
 
 Android işletim sisteminin temeli Linux işletim sistemidir, en azından
 çekirdek seviyesinde bu böyle. Peki madem böyle niye Ubuntu'da, ya da

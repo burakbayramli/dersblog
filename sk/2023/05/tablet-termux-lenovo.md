@@ -123,6 +123,14 @@ Nihayet Termux ekranından `emacs -nw` ile favori editörümüzü başlatıyoruz
 
 ![](emacs-termux.jpg)
 
+Termux'un Android üzerinde işlemediği hakkında bazı şikayetler var,
+bunlar Android versiyon 12 için. Bizim kullandığımız versiyonların
+hepsi 10 ve altında, bu sürümler için Termux problem çıkartmamalı,
+problem varsa erişilemeyen dosya servisi problemi olabilir, tekrar
+denemek problemi çözebilir, ya da gerektiği yerde `LDFLAGS` kullanımı,
+ve python paketleri sıfırdan derlemek yerine mevcut derlenmiş
+programları kullanmak daha rahat olabilir.
+
 Kaynaklar
 
 [1] <a href="../../2018/09/android-uzerinde-linux-termux.html">Android Uzerinde Linux - Termux, Samsun J6</a>

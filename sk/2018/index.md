@@ -32,7 +32,7 @@
 
 [virtualenv, Python İzole, Sanal Çalışma Alanı (Python Virtual Environment)](08/virtualenv-python-izole-sanal-calsma.html)
 
-[Android Uzerinde Linux - Termux](09/android-uzerinde-linux-termux.html)
+[Android Uzerinde Linux - Termux, Samsun J6](09/android-uzerinde-linux-termux.html)
 
 [Docker](09/docker.html)
 

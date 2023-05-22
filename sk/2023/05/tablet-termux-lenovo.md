@@ -119,6 +119,19 @@ lazım; Android'de System | Languages & İnput | Physical keyboard (mesela bir
 bluetooth klavye) seçtikten sonra Physical Keyboard altında bir layout seçimi
 var, buraya girip listeden "ExKeyMo Layout" seçmek lazım.
 
+### Emacs
+
+Emacs başlatmak için `$HOME` altında `.emacs` yazılır, tabii ev dizini
+Termux'ta farklı bir yerde, `/data/data/com.termux/files/home` altında,
+fakat `cd` hala direk buraya gider. Benim standart `.emacs` dosyam
+
+```
+(load-file "/falan/filan/emacs-ayarlar-1.el")
+```
+
+gibi tek bir satırdan ibarettir. Tüm ayarlar `load-file` ile yüklenen
+ikinci `.el` dosyasındadır.
+
 Nihayet Termux ekranından `emacs -nw` ile favori editörümüzü başlatıyoruz,
 
 ![](emacs-termux.jpg)
@@ -130,6 +143,15 @@ problem varsa erişilemeyen dosya servisi problemi olabilir, tekrar
 denemek problemi çözebilir, ya da gerektiği yerde `LDFLAGS` kullanımı,
 ve python paketleri sıfırdan derlemek yerine mevcut derlenmiş
 programları kullanmak daha rahat olabilir.
+
+`.bashrc`
+
+```
+alias env3='source $HOME/Documents/env3/bin/activate'
+alias emnw='source $HOME/Documents/env3/bin/activate; emacs -nw '
+alias gp='git push origin master'
+alias ga="git add . "
+```
 
 Kaynaklar
 

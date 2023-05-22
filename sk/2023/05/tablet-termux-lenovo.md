@@ -5,6 +5,16 @@ Daha önce bir Samsung telefon üzerinde Termux nasıl kurulur yazmıştık
 numpy, scipy, emacs ve flask gibi programları, paketleri işletebilmek
 olacak.
 
+Termux'un Android üzerinde işlemediği hakkında bazı şikayetler var,
+bunlar Android versiyon 12 için. Bizim kullandığımız versiyonların
+hepsi 10 ve altında, bu sürümler için Termux problem çıkartmamalı,
+problem varsa erişilemeyen dosya servisi problemi olabilir, tekrar
+denemek problemi çözebilir, ya da gerektiği yerde `LDFLAGS` kullanımı
+(altta), ve python paketleri sıfırdan derlemek yerine mevcut derlenmiş
+programları kullanmak daha rahat olabilir.
+
+### Kuruluş
+
 Google Play Store'daki Termux problem çıkartabilir. En iyisi [2]
 adresinden apk dosyasını indirip kurmak. Ya dosyaya tıklanır, ya da
 System | About Phone | Build number'a birkaç kere tıklandıktan sonra
@@ -136,15 +146,7 @@ Nihayet Termux ekranından `emacs -nw` ile favori editörümüzü başlatıyoruz
 
 ![](emacs-termux.jpg)
 
-Termux'un Android üzerinde işlemediği hakkında bazı şikayetler var,
-bunlar Android versiyon 12 için. Bizim kullandığımız versiyonların
-hepsi 10 ve altında, bu sürümler için Termux problem çıkartmamalı,
-problem varsa erişilemeyen dosya servisi problemi olabilir, tekrar
-denemek problemi çözebilir, ya da gerektiği yerde `LDFLAGS` kullanımı,
-ve python paketleri sıfırdan derlemek yerine mevcut derlenmiş
-programları kullanmak daha rahat olabilir.
-
-`.bashrc`
+Bazı `.bashrc` ayarları
 
 ```
 alias env3='source $HOME/Documents/env3/bin/activate'
@@ -152,6 +154,10 @@ alias emnw='source $HOME/Documents/env3/bin/activate; emacs -nw '
 alias gp='git push origin master'
 alias ga="git add . "
 ```
+
+Görüldüğü gibi `$HOME/Documents/env3` bir izole Python 3 ortamı var, editör
+başlatmadan önce onu başlatıyoruz, böylece orada kurulmuş tüm paketler
+editör içindeki komutlar tarafından görülebiliyor.
 
 Kaynaklar
 

@@ -261,6 +261,26 @@ fakat sonuçta yaptıkları disk bazlı bir sözlük servisi sağlamaktır.</p>
 
 <p>Konu hakkında önceki bir yazı şurada [2].</p>
 
+<h3>SQliteDict</h3>
+
+<p>Ustteki <code>diskdict</code> kurulumu problem cikartirsa erisimi bir o kadar hizli
+<code>sqlitedict</code> paketi olabilir. Bu paket ile</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">sqlitedict</span> <span class="kn">import</span> <span class="n">SqliteDict</span>
+
+<span class="n">dd</span> <span class="o">=</span> <span class="n">SqliteDict</span><span class="p">(</span><span class="s1">&#39;walkdict.sqlite&#39;</span><span class="p">,</span> <span class="n">autocommit</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>ile bir disk bazlı, daha doğrusu sqlite taban bazlı bir sözlük
+yaratıyoruz, ardından <code>dd['anahtar'] = 'değer'</code> ve <code>dd.commit()</code>
+türündeki çağrılar diskteki sözlüğü güncelliyor. Erişim için
+<code>SqliteDict</code> objesi aynı dosya ismi için tekrar oluşturuluyor ve
+<code>dd[anahtar']</code> bize gerekli değeri geri veriyor. Arka planda paket
+anahtarları muhakkak SQL tablosunda bir ana anahtar olarak kullammış,
+erişimim hızlı indisler üzerinden ve her şeyi bellege taşımadan yapacaktır.</p>
+
 <h3>Olağan Değerler, Sıralanma</h3>
 
 <p>Olağan Değerler</p>
@@ -324,8 +344,8 @@ yapabildik çünkü listenin orada olacağını varsayabiliyoruz.</p>
 
 <p>Eklenme Sırasını Hatırlayan Sözlük</p>
 
-<p>Anahtarin eklenme sirasini hatirlayip degerler istendiginde ona gore
-listeyi donduren bir diger sozluk tipi <code>collections.OrderedDict</code>.</p>
+<p>Anahtarın eklenme sırasını hatırlayıp değerler istendiğinde ona göre
+listeyi döndüren bir diğer sözlük tipi <code>collections.OrderedDict</code>.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">collections</span>
@@ -373,10 +393,10 @@ baska degerler
 </code></pre>
 </div>
 
-<p>Anahtar olabilecek temel tipler değiştirilemeyen (ımmutable)
+<p>Anahtar olabilecek temel tipler değiştirilemeyen (immutable)
 nesnelerdir, bunlar String, int, tuple tipleri. Fakat daha önce
-bahsettiğimiz gibi bir anahtar sonuçta böleclenen bir şey, o zaman bir
-bölec fonksiyonu sağlayan her nesne, kullanıcı tanımlı bile olsa
+bahsettiğimiz gibi bir anahtar sonuçta böleçlenen bir şey, o zaman bir
+böleç fonksiyonu sağlayan her nesne, kullanıcı tanımlı bile olsa
 anahtar olabilir.</p>
 
 <div class="codehilite">

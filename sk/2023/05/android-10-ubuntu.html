@@ -1,0 +1,93 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu, Android 10</h1>
+
+<p>Geliştiriciler için bilfiil Android app geliştirmesi için olmasa bile
+faydalı olabilecek bazı programlar.</p>
+
+<p>Dizüstünden program kurmak, büyük dosyaları kopyalamak için önce
+tablet ya da telefon Android üzerinde System | About Phone | Build
+number'a birkaç kere tıklandıktan sonra geliştirici mod'una geçip
+Developer Options altında USB Debugging hazır hale getirilir, ve
+Ubuntu dizüstünde</p>
+
+<pre><code>sudo apt install adb
+</code></pre>
+
+<p>ile Android'e ÜSB kablosu üzerinden erişilebilen bir ortam kurmuş
+oluruz. Kablonun bir ucu standart USB diğer ucu mikro USB. Bağlanınca
+izin verip vermediğimizi soracak, "allow" seçeriz, ve her şey hazır
+olur.</p>
+
+<p>Program kurmak için apk dosyaları lazım, tabii ki güvenilir yerlerden
+almak en iyisi, mesela F-Droid [1] bunlardan biri. APK alınınca mesela
+app1.apk diyelim, kurmak için</p>
+
+<pre><code>adb install app1.apk
+</code></pre>
+
+<p>Dosya göndermek için</p>
+
+<pre><code>adb push dosya1.zip /storage/emulated/0/Download/
+</code></pre>
+
+<p>Bu dosya telefon SD kart üzerinde Internal Storage | Download altına
+gidecek. Eğer dizüstü ve Android arasında bir dizini senkronize etmek
+istiyorsam, bunu ittirme (push) çekme (pull) bazlı yapabilirim. Mesela
+ittirme örneği dizüstünde <code>/home/user1/Downloads/work</code> adlı bir dizin
+Android'de Download | work dizini ile senkronize edilsin, dizüstünde
+olan eklenmiş, değişmiş dosyalar ittirilsin / gönderilsin istiyorsam,</p>
+
+<pre><code>adb push --sync /home/user1/Downloads/work/ /storage/emulated/0/Download/
+</code></pre>
+
+<p>diyebilirim. Dikkat <code>work</code> ibaresi hedef dizinine koyulmadı, bunu
+<code>adb</code> ekliyor, karışıklık yaratabilir ama sistemi böyle kurmuşlar.</p>
+
+<p>Benzer şekilde <code>pull</code> var, bir de her iki işlemi yapan <code>sync</code> var.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://f-droid.org/en/packages/com.termux/">F-Droid Termux</a></p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

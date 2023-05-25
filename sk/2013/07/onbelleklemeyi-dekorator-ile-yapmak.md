@@ -84,7 +84,7 @@ kullanıldı. Başka türlü sözlükler de var, bu sözlükler ayrıca
 önbellekleme stratejisini değiştirmemize yarıyor. Mesela "sadece en
 son 2 konulan öğe hatırlansın" istiyorsam, yani büyüklüğü 2'den fazla
 olmasın, ve üçüncü öğeyi koymaya çalışırsam ilk eklediğim atılsın
-istiyorsam, bu bir ilk giren son çıkar (first in first out -FİFO-)
+istiyorsam, bu bir ilk giren ilk çıkar (first in first out -FİFO-)
 mantığıdır, ve böyle bir sözlük tipi vardır, `FIFOCache`.
 
 
@@ -261,4 +261,6 @@ Kaynaklar
 [1] https://pypi.org/project/cachetools/
 
 [2] https://cachetools.readthedocs.io/en/latest/
+
+
 

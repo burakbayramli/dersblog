@@ -36,3 +36,5 @@
 
 [Lenovo Tablet Üzerinde Termux](../../2023/05/tablet-termux-lenovo.html)
 
+[Ubuntu, Android 10](android-10-ubuntu.html)
+

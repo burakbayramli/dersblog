@@ -12,7 +12,7 @@
 
 [Algılayıcı Ölçümleri, Video, Android, GPS, Haritalama](02/algilayici-olcumleri-video-android.html)
 
-[Baz Istasyonu ile Yer Bulma, Android](03/baz-istasyonu-ile-yer-bulma.html)
+[Baz İstasyonu ile Yer Bulma, Android](03/baz-istasyonu-ile-yer-bulma.html)
 
 [Bulut Uzerinde Unix: GCloud](03/bulut-uzerinde-unix-gcloud.html)
 

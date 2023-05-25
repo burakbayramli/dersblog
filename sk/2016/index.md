@@ -38,11 +38,11 @@
 
 [Ubuntu 16 ve Acer Aspire R11](10/ubuntu-16-ve-acer-aspire-r11.html)
 
-[Android, Gelistirme, Kurmak, Komut Satiri](11/android-gelistirme-kurmak-komut-satiri.html)
+[Android, Geliştirme, Kurmak, Komut Satırı](11/android-gelistirme-kurmak-komut-satiri.html)
 
-[Android, Kamera, Yon, GPS Verisini Kaydetmek](11/android-kamera-yon-gps-verisini.html)
+[Android, Kamera, Yön, GPS Verisini Kaydetmek](11/android-kamera-yon-gps-verisini.html)
 
-[Bilgisayari Konusturmak,  Metinden Konusma (Text-to-Speech)](11/androidi-konusturmak-metinden-konusmaya.html)
+[Bilgisayarı Konuşturmak,  Metinden Konuşma (Text-to-Speech)](11/androidi-konusturmak-metinden-konusmaya.html)
 
 [Yol Tarifi, Harita Bilgisi: osrm-backend](11/yol-tarifi-harita-bilgisi-osrm-backend.html)
 

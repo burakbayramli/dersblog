@@ -18,7 +18,7 @@
 
 [Flask, Kullanıcı Giriş (Login), Şifre, Oturum İdaresi, Flask-User](07/fla-login.html)
 
-[JAMA - Java ile Matris Islemleri](07/jama-java-ile-matris-islemleri.html)
+[JAMA - Java ile Matris İşlemleri](07/jama-java-ile-matris-islemleri.html)
 
 [Roket İnişi, Kontrol, OpenAI Gym](07/roket-inisi-kontrol-openai-gym.html)
 

@@ -70,15 +70,15 @@
 
 [SrPy](11/srpy.html)
 
-[Aktiviteler Arasi Gecis](12/aktiviteler-arasi-gecis.html)
+[Aktiviteler Arası Geçiş](12/aktiviteler-arasi-gecis.html)
 
-[Android Gelistirme Ortami](12/android-kurulumu.html)
+[Android Geliştirme Ortamı](12/android-kurulumu.html)
 
-[Android ve Statik Dosyalari Okumak](12/android-ve-statik-dosyalari-okumak.html)
+[Android ve Statik Dosyaları Okumak](12/android-ve-statik-dosyalari-okumak.html)
 
 [Asagi Kaydirilabilen (Scroll) TextView](12/asagi-kaydirilabilen-scroll-textview.html)
 
-[Dinamik Resource Erisimi](12/dinamik-resource-erisimi.html)
+[Dinamik Resource Erişimi](12/dinamik-resource-erisimi.html)
 
 [Icon](12/icon.html)
 

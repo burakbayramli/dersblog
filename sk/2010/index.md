@@ -4,9 +4,9 @@
 
 [Cok Fazla Meta Data](02/cok-fazla-meta-data.html)
 
-[Android ve Liste Secimi (Dropdown List)](03/android-ve-liste-secimi-dropdown-list.html)
+[Android ve Liste Seçimi (Dropdown List)](03/android-ve-liste-secimi-dropdown-list.html)
 
-[Bekleme Isareti (ProgressDialog)](03/bekleme-isareti-progressdialog.html)
+[Bekleme İşareti (ProgressDialog)](03/bekleme-isareti-progressdialog.html)
 
 [GAE Tabanina Veri Yuklemek](03/gae-tabanina-veri-yuklemek.html)
 
@@ -18,9 +18,9 @@
 
 [WebView ve CSS](03/webview-ve-css.html)
 
-[Android -> AppEngine Baglantisi, Tekil Kullanicilar](04/android-appengine-baglantisi-tekil.html)
+[Android -> AppEngine Bağlantısı, Tekil Kullanıcılar](04/android-appengine-baglantisi-tekil.html)
 
-[Android Üzerinde Veri Tabani Kullanımı - sqllite](04/android-uzerinde-database-kullanm.html)
+[Android Üzerinde Veri Tabanı Kullanımı - sqllite](04/android-uzerinde-database-kullanm.html)
 
 [HTML -> Ajax -> AppEngine](04/html-ajax-appengine.html)
 

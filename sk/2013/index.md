@@ -32,7 +32,7 @@
 
 [Oracle SQL ile Orneklemek (Sampling)](06/oracle-sql-ile-orneklemek-sampling.html)
 
-[Dekoratörler, Onbellek Kodlaması, Fonksiyon Değiştirmek](07/onbelleklemeyi-dekorator-ile-yapmak.html)
+[Dekoratörler, Önbellek Kodlaması, Fonksiyon Değiştirmek](07/onbelleklemeyi-dekorator-ile-yapmak.html)
 
 [Oracle, Pandas, HDF5](07/oracle-pandas-hdf5.html)
 

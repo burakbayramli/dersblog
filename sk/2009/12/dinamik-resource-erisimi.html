@@ -36,23 +36,25 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<p>n# Dinamik Resource Erisimi</p>
+<h1>Dinamik Resource Erişimi</h1>
 
-<p>Android'de referans bilgilerini bir dosya icinde tutabiliriz; bu
-dosyalara erismek icin onlari res/raw altinda tutuyoruz. Eger
-erisilecek dosya ismi dinamik bir sekilde uretiliyor ise, o zaman
-String tipinden bir sekilde R.java dosyasi icinde static olarak
-tanimli int ogelere eslemena yapmamiz lazim. Bnnun icin Java Reflection
-kullanacagiz:</p>
+<p>Android'de referans bilgilerini bir dosya içinde tutabiliriz; bu
+dosyalara erişmek için onları res/raw altında tutuyoruz. Eğer
+erişilecek dosya ismi dinamik bir şekilde üretiliyor ise, o zaman
+String tipinden bir şekilde R.java dosyası içinde static olarak
+tanımlı ınt ögelere eşlemena yapmamız lazım. Bnnun için Java Reflection
+kullanacağız:</p>
 
-<pre><code>import java.lang.reflect.Field;
-import java.io.InputStream;
-Field id = R.raw.class.getDeclaredField([string tipinde dinamik oge ismi]);
-R.raw rr = new R.raw();
-int i = id.getInt(rr);
-InputStream in = getResources().openRawResource(i);
-...
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">java.lang.reflect.Field</span><span class="p">;</span>
+<span class="kn">import</span> <span class="nn">java.io.InputStream</span><span class="p">;</span>
+<span class="n">Field</span> <span class="n">id</span> <span class="o">=</span> <span class="n">R</span><span class="p">.</span><span class="na">raw</span><span class="p">.</span><span class="na">class</span><span class="p">.</span><span class="na">getDeclaredField</span><span class="p">(</span><span class="o">[</span><span class="n">string</span> <span class="n">tipinde</span> <span class="n">dinamik</span> <span class="n">oge</span> <span class="n">ismi</span><span class="o">]</span><span class="p">);</span>
+<span class="n">R</span><span class="p">.</span><span class="na">raw</span> <span class="n">rr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">R</span><span class="p">.</span><span class="na">raw</span><span class="p">();</span>
+<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">id</span><span class="p">.</span><span class="na">getInt</span><span class="p">(</span><span class="n">rr</span><span class="p">);</span>
+<span class="n">InputStream</span> <span class="n">in</span> <span class="o">=</span> <span class="n">getResources</span><span class="p">().</span><span class="na">openRawResource</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+<span class="p">...</span>
 </code></pre>
+</div>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

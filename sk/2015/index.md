@@ -6,7 +6,7 @@
 
 [Julia](02/julia.html)
 
-[Python Bazli Tasinabilir Mobil UI Kodlari - Kivy](02/python-bazli-tasinabilir-mobil-ui.html)
+[Python Bazlı Taşınabilir Mobil UI Kodları - Kivy](02/python-bazli-tasinabilir-mobil-ui.html)
 
 [Adium](03/adium.html)
 

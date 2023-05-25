@@ -84,7 +84,7 @@ kullanıldı. Başka türlü sözlükler de var, bu sözlükler ayrıca
 önbellekleme stratejisini değiştirmemize yarıyor. Mesela "sadece en
 son 2 konulan öğe hatırlansın" istiyorsam, yani büyüklüğü 2'den fazla
 olmasın, ve üçüncü öğeyi koymaya çalışırsam ilk eklediğim atılsın
-istiyorsam, bu bir ilk giren ilk çıkar (first in first out -FİFO-)
+istiyorsam, bu bir ilk giren ilk çıkar (first in first out -FIFO-)
 mantığıdır, ve böyle bir sözlük tipi vardır, `FIFOCache`.
 
 
@@ -124,11 +124,11 @@ print ('5 Toplami', n_topla2(5))
 20,10 toplamları hatırlandı, ama 5 için tekrar hesap yapıldı çünkü büyüklüğü 2
 olan `FIFOCache` o sonuçları atmıştı.
 
-Diğer bazı onbellek tipleri mesela `LRUCache` en az kullanılan
+Diğer bazı önbellek tipleri mesela `LRUCache` en az kullanılan
 objeleri atar. `TTLCache` ise konulan her obje üzerinde bir zaman
 aşımını kontrol eder, bunu `ttl` parametresi ile saniye üzerinden
 kullanıcı ayarlayabilir, mesela `ttl=600` ile objeler konulduktan 10
-dakika sonra önbellekten çıkartılırlar, "eskimiş" olurlar.
+dakika sonra onbellekten çıkartılırlar, "eskimiş" olurlar.
 
 Diğer önbellek tipleri için [2].
 
@@ -261,6 +261,4 @@ Kaynaklar
 [1] https://pypi.org/project/cachetools/
 
 [2] https://cachetools.readthedocs.io/en/latest/
-
-
 

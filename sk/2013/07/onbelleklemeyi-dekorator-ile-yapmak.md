@@ -26,8 +26,8 @@ print (n_topla1(10))
 55
 ```
 
-Toplam 1 + 2 + 3 + .. + 10 diye 10'a kadar olan sayıları topladı ve döndürdü.
-Sonra 5 için aynı teknik kullanıldı.
+Toplam 1 + 2 + 3 + .. + 10 diye 10'a kadar olan sayıları topladı ve
+döndürdü.  Sonra 5 ve tekrar 10 için aynı teknik kullanıldı.
 
 Fakat diyelim ki bu fonksiyon pek çok kez ardı ardına çağırmak
 gerekiyor, ve çağrıların çoğu benzer parametreleri kullanacak, mesela
@@ -35,14 +35,14 @@ gerekiyor, ve çağrıların çoğu benzer parametreleri kullanacak, mesela
 toplam işlemini bir kez yapıp ikinci, üçüncü çağrılarda aynı hesabı
 döndürsek olmaz mı?
 
-Koda boyle bir ek yapilabilir. Mesela `n_topla1` fonksiyonunda daha
-baska bir sey yapmadan once parametreleri biraraya koyarak bir tur
-anahtar olusturabiliriz, bu anahtari bir sozlukte arama icin
-kullaniriz, eger deger bulunursa birisi onceden o hesabi yapip oraya
-koymus demektir, fonksiyonda devam etmek yerine sozlukteki degeri
-dondururuz, hesaba gerek kalmaz. Tabii ki eger sozlukte o deger yoksa,
-hesabi yapip sozluge bizim koymamiz gerekir, boylece bir sonraki cagri
-yapan o degerleri bulsun.
+Koda böyle bir ek yapılabilir. Mesela `n_topla1` fonksiyonunda daha
+başka bir şey yapmadan önce parametreleri biraraya koyarak bir tür
+anahtar oluşturabiliriz, bu anahtarı bir sözlükte arama için
+kullanırız, eğer değer bulunursa birisi önceden o hesabı yapıp oraya
+koymuş demektir, fonksiyonda devam etmek yerine sözlükteki değeri
+döndürürüz, hesaba gerek kalmaz. Tabii ki eğer sözlükte o değer yoksa,
+hesabı yapıp sözlüğe bizim koymamız gerekir, böylece bir sonraki çağrı
+yapan o değerleri bulsun.
 
 "Parametrelerden anahtar oluşturmak", "varsa döndürmek yoksa oraya
 koymak" - burada bir sürü hamaliyesi fazla kodlama var. Bu kodları bir

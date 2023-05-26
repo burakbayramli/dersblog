@@ -87,7 +87,7 @@ yapan o değerleri bulsun.</p>
 <p>"Parametrelerden anahtar oluşturmak", "varsa döndürmek yoksa oraya
 koymak" - burada bir sürü hamaliyesi fazla kodlama var. Bu kodları bir
 paket üzerinden, hatta bir fonksiyon başına koyulacak bir etiket /
-işaret üzerinden Python'a yaptırsak iyi olacak.</p>
+işaret / dekoratör üzerinden Python'a yaptırsak iyi olacak.</p>
 
 <h3>Hazır Paket Kullanarak</h3>
 
@@ -194,7 +194,7 @@ değişken dummy ekledik, bazı püf noktaları gösterebilmek için),</p>
 
 <p>diye çağırıyoruz ve sonuç olarak 9 gelmesini bekliyoruz. </p>
 
-<p>Onbellekleme için, diyelim ki, eğer a değeri önceden görülmüşse, kare
+<p>Önbellekleme için, diyelim ki, eğer a değeri önceden görülmüşse, kare
 işlemi sonucunun tekrar hesaplanmasını istemiyoruz, onu onbellekten
 bulup hızlı bir şekilde geri döndürmek tercihimiz (tabii çarpım işlemi
 de çok hızlı işler, ama bu örnek için yavaş olabileceğini hayal
@@ -211,14 +211,12 @@ benzerdi:</p>
 </code></pre>
 </div>
 
-<p>Değişken cache bir Python dictionary'dir ve onbelleğimiz onun
-üzerinde  duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek
-objesi alanen ortada, ayrıca ıf gibi çok ciddi bir ibareyi koda
-sokuşturmak zorunda kaldık :) Genellikle bu ifade önemli bir işlem
-mantığı var ise kullanılır - en azından kod okunabilirliği açısından
-böyle olması daha iyidir.</p>
-
-<p>Peki bu isi daha temiz bir sekilde yapamaz miydik?</p>
+<p>Değişken cache bir Python sözlüğüdür ve onbelleğimiz onun üzerinde
+duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek objesi
+alanen ortada, ayrıca ıf gibi çok ciddi bir ibareyi koda sokuşturmak
+zorunda kaldık. Genellikle bu ifade önemli bir işlem mantığı var ise
+kullanılır - en azından kod okunabilirliği açısından böyle olması daha
+iyidir. Peki bu isi daha temiz bir sekilde yapamaz miydik?</p>
 
 <p>Python dekoratör fonksiyonları işte tam burada ise yarar. Bir
 dekoratör bir fonsiyonu "sarmalayabilir (wrap)", ve o fonksiyona giren

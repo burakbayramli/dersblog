@@ -88,6 +88,8 @@
 
 [En Kısa Yol Algoritması, Yol Ağı, OSMNX](04/yol-bolmak-osm-osmnx.html)
 
+[Ubuntu, Android 10](05/android-10-ubuntu.html)
+
 [Android](05/android.html)
 
 [OSM Haritaları, PBF Dosyaları, En Kısa Yol, Djikstra](05/osm-shortest-route-en-kisa-yol-dijkstra.html)

@@ -352,11 +352,10 @@ plt.savefig('aradegerleme-interpolation_05.png')
 
 Kaynaklar
 
-[1] [Eğri Uydurma, Aradeğerleme (Interpolation) - 1](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit1/egri_uydurma_aradegerleme__interpolation___1.html)
+[1] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit1/egri_uydurma_aradegerleme__interpolation___1.html">Eğri Uydurma, Aradeğerleme (Interpolation) - 1</a>
 
-[2] [Eğri Uydurma, Aradeğerleme (Interpolation) - 2](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit2/egri_uydurma_aradegerleme__interpolation___2.html)
+[2] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit2/egri_uydurma_aradegerleme__interpolation___2.html">Eğri Uydurma, Aradeğerleme (Interpolation) - 2</a>
 
-[3] [Eğri Uydurma, Aradeğerleme (Interpolation) - 3](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit3/egri_uydurma_aradegerleme__interpolation___3.html)
+[3] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit3/egri_uydurma_aradegerleme__interpolation___3.html">Eğri Uydurma, Aradeğerleme (Interpolation) - 3</a>
 
-[4] [Aradeğerleme (Interpolation) - 4 - Dairesel Baz Fonksiyonları (Radial Basis Functions -RBF-)](https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit4/aradegerleme__interpolation___4__dairesel_baz_fonksiyonlari__radial_basis_functions_rbf_.html)
-
+[4] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit4/aradegerleme__interpolation___4__dairesel_baz_fonksiyonlari__radial_basis_functions_rbf_.html">Aradeğerleme (Interpolation) - 4 - Dairesel Baz Fonksiyonları (Radial Basis Functions -RBF-)</a>

@@ -241,8 +241,7 @@ def func(x, y):
     g1 = np.exp( -4 *np.log(2) * ((x-x1)**2+(y-y1)**2) / s1**2)
     g2 = np.exp( -2 *np.log(2) * ((x-x2)**2+(y-y2)**2) / s2**2)    
     return g1 + g2 
-D = 50
-S = 100
+D = 20
 x = np.linspace(36,37,D)
 y = np.linspace(32,33,D)
 xx,yy = np.meshgrid(x,y)
@@ -258,15 +257,14 @@ plt.savefig('aradegerleme-interpolation_04.png')
 ```python
 def find_corners(xi,yi):
     idx1 = np.searchsorted(x, xi, side="left")
-    idx2 = np.searchsorted(y, yi, side="left")
     idx1 = len(x)-idx1-1
+    idx2 = np.searchsorted(y, yi, side="left")
     idx2 = len(y)-idx2-1
-    return [(idx1-1,idx2),(idx1,idx2-1),(idx1,idx2),(idx1-1,idx2-1)]
+    return [(idx1-1,idx2-1),(idx1-1,idx2-2),(idx1-2,idx2-1),(idx1-2,idx2-2)]
 
 def cdist(p1,p2):    
     distances = np.linalg.norm(p1 - p2, axis=1)
     return distances
-
 ```
 
 Örnek bir noktanın içinde olduğu hücrenin indis değerleri,
@@ -277,7 +275,7 @@ print (cs)
 ```
 
 ```text
-[(23, 29), (24, 28), (24, 29), (23, 28)]
+[(9, 11), (9, 10), (8, 11), (8, 10)]
 ```
 
 ```python
@@ -321,10 +319,10 @@ test(36.111,32.711)
 ```
 
 ```text
-aradeg 0.6640613091991291 gercek 0.5624999999999915
-aradeg 0.004360662694774617 gercek 0.014328188407904384
-aradeg 0.0005783369645848658 gercek 0.0006370371360601354
-aradeg 0.7356644967566631 gercek 0.9326947927222742
+aradeg 0.5203198060581533 gercek 0.5624999999999915
+aradeg 0.012292103603170563 gercek 0.014328188407904384
+aradeg 0.000476645535074579 gercek 0.0006370371360601354
+aradeg 0.9209512999874692 gercek 0.9326947927222742
 ```
 
 Altta yardımcı olabilecek bir grafikleme fonksiyonu, yeni nokta için onun
@@ -345,6 +343,19 @@ def plot_corners(intx,inty):
 
 plot_corners(36.5,32.4)
 plt.savefig('aradegerleme-interpolation_05.png')
+```
+
+```text
+10
+[36.         36.05263158 36.10526316 36.15789474 36.21052632 36.26315789
+ 36.31578947 36.36842105 36.42105263 36.47368421 36.52631579 36.57894737
+ 36.63157895 36.68421053 36.73684211 36.78947368 36.84210526 36.89473684
+ 36.94736842 37.        ]
+8
+[32.         32.05263158 32.10526316 32.15789474 32.21052632 32.26315789
+ 32.31578947 32.36842105 32.42105263 32.47368421 32.52631579 32.57894737
+ 32.63157895 32.68421053 32.73684211 32.78947368 32.84210526 32.89473684
+ 32.94736842 33.        ]
 ```
 
 ![](aradegerleme-interpolation_05.png)

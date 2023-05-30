@@ -216,6 +216,132 @@ objesi 30 parçalık izgara üzerinden yaratılmıştı; böylece elde olmayan
 bir sürü değeri sormuş olduk ama nihai grafik hala orijinale
 benziyor. Ayrıca Clough/Tocher yaklaşımı çok hızlı işler.
 
+### Izgara İçinde En Yakın Değer Aradeğerlemesi
+
+Aradeğerleme çoğunlukla bir ızgara bazlı yapılır, elde ayrıksal bir
+ızgaradaki noktalara tekabül eden veri vardır, bu veriyi temel alarak
+diğer noktaları kestirmek gerekir. Bir teknik şöyle: eğer ızgara
+içinde düştüğümüz hücreyi bulabilirsek, o hücrenin dört köşesinin
+x,y,z değerleri ile aradeğerleme yapılabilir. Burada iki lineerli
+(bilinear) aradeğerleme tekniği var, her kenara olan uzaklığı ölçüp
+bunlarla bir ağırlık değeri yaratıyor ve o ağırlıklara göre 4 bilinen
+z değerini kullanıp yeni z değerini üretiyor. Buna benzer bir
+yaklaşımla biz de kendi tekniğimizi yaratabiliriz, mesela içine
+düştüğümüz hücrenin dört kenarına olan bir basit uzaklık hesabı
+yaparız, uzaklığı benzerliğe çeviririz (yakın olan daha önemli olsun
+diye) ve bu ağırlıklarla dört köşe z değerinin ağırlıklı ortalamasını
+alırız.
+
+![](aradegerleme-interpolation_06.png)
+
+Resme göre anlatırsak A'nin x,y değerleri 0.2,0.8 sol üst köşeye daha
+yakındır, o zaman A için bir z değeri ortalaması hesaplamak
+gerekiyorsa sol üst köşenin z değeri (7 olarak gösteriliyor) diğer üç
+köşedeki z değerlerinden (0,3,5) ortalamada daha fazla etkili
+olmalıdır. Bir algoritma bu yakınlıkları dört köşe için ayrı ayrı
+hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.
+
+Örnek veriyi yaratalım,
+
+```python
+from matplotlib import cm
+np.random.seed(0)
+def func(x, y):
+    s1 = 0.2; x1 = 36.5; y1 = 32.5
+    s2 = 0.4; x2 = 36.1; y2 = 32.8
+    g1 = np.exp( -4 *np.log(2) * ((x-x1)**2+(y-y1)**2) / s1**2)
+    g2 = np.exp( -2 *np.log(2) * ((x-x2)**2+(y-y2)**2) / s2**2)    
+    return g1 + g2 
+D = 20
+x = np.linspace(36,37,D)
+y = np.linspace(32,33,D)
+xx,yy = np.meshgrid(x,y)
+zz = func(xx,yy)
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf = ax.plot_surface(xx, yy, zz, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+plt.savefig('aradegerleme-interpolation_04.png')
+```
+
+![](aradegerleme-interpolation_04.png)
+
+```python
+def find_corners(xi,yi):
+    idx1 = np.searchsorted(x, xi, side="left")
+    idx2 = np.searchsorted(y, yi, side="left")
+    cs = [(idx1,idx2),(idx1,idx2-1),(idx1-1,idx2),(idx1-1,idx2-1)]
+    return cs
+```
+
+Örnek bir noktanın içinde olduğu hücrenin indis değerleri,
+
+```python
+cs = find_corners(36.5,32.4)
+print (cs)
+```
+
+```text
+[(10, 8), (10, 7), (9, 8), (9, 7)]
+```
+
+```python
+def cdist(p1,p2):    
+    distances = np.linalg.norm(p1 - p2, axis=1)
+    return distances
+
+def cell_interp(x, y, points):
+    a = np.array([x,y]).reshape(-1,2)
+    b = np.array(points)[:,:2]
+    ds = cdist(a,b)
+    ds = ds / np.sum(ds)
+    ds = 1. - ds
+    c = np.array(points)[:,2]
+    iz = np.sum(c * ds) / np.sum(ds)
+    return iz
+
+def grid_interp(intx,inty):
+    cs = find_corners(intx,inty)
+
+    i,j = cs[0][0],cs[0][1]
+    i,j = cs[1][0],cs[1][1]
+    i,j = cs[2][0],cs[2][1]
+    i,j = cs[3][0],cs[3][1]
+    
+    i0,j0 = cs[0][0],cs[0][1]
+    i1,j1 = cs[1][0],cs[1][1]
+    i2,j2 = cs[2][0],cs[2][1]
+    i3,j3 = cs[3][0],cs[3][1]
+    
+    introw = [(xx[i0,j0],yy[i0,j0],zz[i0,j0]),
+              (xx[i1,j1],yy[i1,j1],zz[i1,j1]),
+              (xx[i2,j2],yy[i2,j2],zz[i2,j2]),
+              (xx[i3,j3],yy[i3,j3],zz[i3,j3])]
+    return cell_interp(intx,inty,introw)
+```
+
+
+```python
+x2 = np.linspace(36.0001,36.9999,D*2)
+y2 = np.linspace(32.0001,32.9999,D*2)
+xx2,yy2 = np.meshgrid(x2,y2)
+zz2 = func(xx2,yy2)
+
+grid_interp_vec = np.vectorize(grid_interp,otypes=[np.float])
+zz2_grid = grid_interp_vec(xx2,yy2).T
+print (np.mean(np.square(zz2-zz2_grid)))
+```
+
+```text
+0.0007539498751741862
+```
+
+```python
+fig = plt.figure()
+ax = fig.gca(projection='3d')
+surf = ax.plot_surface(xx2, yy2, zz2_grid, cmap=cm.coolwarm,linewidth=0, antialiased=False)
+plt.savefig('aradegerleme-interpolation_05.png')
+```
+
 
 Kaynaklar
 

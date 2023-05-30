@@ -49,6 +49,8 @@ yazılarımız altta,
 
 [izip](../../2010/06/izip.html)
 
+[Döngü Yazmamak, Fonksiyonel Diller](../../2012/07/dongu-yazmamak-fonksiyonel-diller-python.html)
+
 [Closure](../../2009/05/closure.html)
 
 [String Birlestirmek](../../2011/03/string-birlestirmek.html)

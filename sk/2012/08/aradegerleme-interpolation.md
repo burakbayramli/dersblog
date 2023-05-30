@@ -289,7 +289,7 @@ düz dizi `x`,`y` içinde aramak daha iyi.
 def find_corners(xi,yi):
     idx1 = np.searchsorted(x, xi, side="left")
     idx2 = np.searchsorted(y, yi, side="left")
-    cs = [(idx1,idx2),(idx1,idx2-1),(idx1-1,idx2),(idx1-1,idx2-1)]
+    cs = [(idx2,idx1),(idx2-1,idx1),(idx2,idx1-1),(idx2-1,idx1-1)]
     return cs
 ```
 
@@ -301,7 +301,7 @@ print (cs)
 ```
 
 ```text
-[(10, 8), (10, 7), (9, 8), (9, 7)]
+[(8, 10), (7, 10), (8, 9), (7, 9)]
 ```
 
 Noktanın içine düştüğü hücre kenarları bulununca onlara olan uzaklık
@@ -356,12 +356,12 @@ xx2,yy2 = np.meshgrid(x2,y2)
 zz2 = func(xx2,yy2)
 
 grid_interp_vec = np.vectorize(grid_interp,otypes=[np.float])
-zz2_grid = grid_interp_vec(xx2,yy2).T
+zz2_grid = grid_interp_vec(xx2,yy2)
 print (np.mean(np.square(zz2-zz2_grid)))
 ```
 
 ```text
-0.0007539498751741862
+0.0006008344674974951
 ```
 
 Oldukça yakın. Ayrıca çağrı hızlı işledi. Grafikleyelim,
@@ -375,6 +375,44 @@ plt.savefig('aradegerleme-interpolation_05.png')
 
 [Sonuç](aradegerleme-interpolation_05.png)
 
+### QuadTree
+
+Üzerinden aradeğerleme yapılacak değerler düzgün izgara şeklinde ise
+üstteki teknik iyidir. Fakat bazen dağınık bir halde, içinde
+boşluklar, eksik verisi olan bir öbek elde olabilir, bu durumda hangi
+hücre içine düşüldüğü, dört köşe bulunması, vb. manevralar etkili
+olmaz.
+
+Eksik değerlerle iş yapabilmek için mevcut veriyi düz liste olarak
+kabul edip (izgara olup olmadığına bakmadan) x,y kordinatları
+üzerinden en yakın noktaları hızlı bir şekilde bize döndüren bir veri
+yapısı kullanmamız gerekir. Bu tür yapılardan bazılarının detaylarını,
+KDTree, BallTree gibi, [6]'da gördük. Bu yazıda QuadTree denen bir teknik
+kullanacağız, paket `quads` içinde.
+
+```python
+class QuadTreeInterpolator:
+    def __init__(self, x, y, z):
+        self.tree = quads.QuadTree((np.mean(x), np.mean(y)), 100, 100)
+        for xx,yy,zz in zip(x,y,z):
+            self.tree.insert((xx,yy),data=zz)
+            
+    def interpolate(self,x,y):
+        res = self.tree.nearest_neighbors((x,y), count=4)
+        points = np.array([[c.x, c.y, c.data] for c in res])
+        return cell_interp(x, y, points)               
+
+q = QuadTreeInterpolator(xx.flatten(), yy.flatten(), zz.flatten())    
+qinterp = np.vectorize(q.interpolate,otypes=[np.float])
+zz2_quad = qinterp(xx2,yy2)
+print (np.mean(np.square(zz2-zz2_quad)))
+```
+
+```
+0.0005101521958506852
+```
+
+Bu teknik te iyi sonuç verdi.
 
 Kaynaklar
 
@@ -387,3 +425,6 @@ Kaynaklar
 [4] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit4/aradegerleme__interpolation___4__dairesel_baz_fonksiyonlari__radial_basis_functions_rbf_.html">Aradeğerleme (Interpolation) - 4 - Dairesel Baz Fonksiyonları (Radial Basis Functions -RBF-)</a>
 
 [5] https://www.bottomscience.com/bilinear-interpolation-method-python/
+
+[6] <a href="https://burakbayramli.github.io/dersblog/algs/algs_070_knn/en_yakin_kkomsu__knearest_neighbor__geometrik_yakinlik_hesabi.html">En Yakın k-Komşu (k-Nearest Neighbor), Geometrik Yakınlık Hesabı</a>
+

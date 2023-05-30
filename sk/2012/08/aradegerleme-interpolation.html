@@ -276,12 +276,27 @@ içinde düştüğümüz hücreyi bulabilirsek, o hücrenin dört köşesinin
 x,y,z değerleri ile aradeğerleme yapılabilir. Burada iki lineerli
 (bilinear) aradeğerleme tekniği var, her kenara olan uzaklığı ölçüp
 bunlarla bir ağırlık değeri yaratıyor ve o ağırlıklara göre 4 bilinen
-z değerini kullanıp yeni z değerini üretiyor. Buna benzer bir
-yaklaşımla biz de kendi tekniğimizi yaratabiliriz, mesela içine
-düştüğümüz hücrenin dört kenarına olan bir basit uzaklık hesabı
-yaparız, uzaklığı benzerliğe çeviririz (yakın olan daha önemli olsun
-diye) ve bu ağırlıklarla dört köşe z değerinin ağırlıklı ortalamasını
-alırız.</p>
+z değerini kullanıp yeni z değerini üretiyor. [5] bağlantısından
+adapte edilen bir kod alttadır, <code>x</code>,<code>y</code> içinde <code>linspace</code> sonucu dizi
+<code>zz</code> içinde ise gerçek fonksiyon sonucu <code>meshgrid</code> değerleri olduğunu
+varsayıyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">bilinear_interpolator</span><span class="p">(</span><span class="n">x_new</span><span class="p">,</span><span class="n">y_new</span><span class="p">):</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_new</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_new</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">wx</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x_new</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="n">wy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y_new</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+    <span class="n">Pn</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">wx</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">wy</span><span class="p">)</span><span class="o">*</span><span class="n">zz</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">wx</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">wy</span><span class="p">)</span><span class="o">*</span><span class="n">zz</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">wx</span><span class="p">)</span><span class="o">*</span><span class="n">wy</span><span class="o">*</span><span class="n">zz</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">wx</span><span class="o">*</span><span class="n">wy</span><span class="o">*</span><span class="n">zz</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">Pn</span>
+</code></pre>
+</div>
+
+<p>Buna benzer bir yaklaşımla biz de kendi tekniğimizi yaratabiliriz,
+mesela içine düştüğümüz hücrenin dört kenarına olan bir basit uzaklık
+hesabı yaparız, uzaklığı benzerliğe çeviririz (yakın olan daha önemli
+olsun diye) ve bu ağırlıklarla dört köşe z değerinin ağırlıklı
+ortalamasını alırız.</p>
 
 <p><img src="aradegerleme-interpolation_06.png" alt="" /></p>
 
@@ -317,6 +332,12 @@ hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.</p>
 
 <p><img src="aradegerleme-interpolation_04.png" alt="" /></p>
 
+<p>Verili x,y noktasının hangi hücre içinde olduğunu bulalım önce, burada
+<code>np.searchsorted</code> cağrısı yapıldı, bu çağrı sıralı bir dizi içinde
+aranan öğenin hangi aralığa düştüğünü hesaplıyor. Tüm <code>meshgrid</code>
+çağrısından gelen ızgara içinde aramak yerine daha az noktası olan
+düz dizi <code>x</code>,<code>y</code> içinde aramak daha iyi.</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">find_corners</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span><span class="n">yi</span><span class="p">):</span>
     <span class="n">idx1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">searchsorted</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">xi</span><span class="p">,</span> <span class="n">side</span><span class="o">=</span><span class="s2">&quot;left&quot;</span><span class="p">)</span>
@@ -338,6 +359,10 @@ hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.</p>
 <pre><span></span><code>[(10, 8), (10, 7), (9, 8), (9, 7)]
 </code></pre>
 </div>
+
+<p>Noktanın içine düştüğü hücre kenarları bulununca onlara olan uzaklık
+hesaplanır, uzaklık bir yakınlık / benzerlik hesabına çevrilir, ve bu
+hesap her köşenin z değeri üzerinden bir ağırlıklı ortalama için kullanılır.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">cdist</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">):</span>    
@@ -375,6 +400,12 @@ hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.</p>
 </code></pre>
 </div>
 
+<p>Test amaçlı olarak yeni, daha yoğun bir izgara yaratalım,
+<code>np.vectorize</code> ile aradeğerleme fonksiyonumuzu tüm matris üzerinde
+uygulanabilir hale çevirebiliriz, ve hesabı yapıp gerçek değerler ile
+tahmin arasında bir hata karesi ortalaması (mean square error) hesabı
+yaparız,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">36.0001</span><span class="p">,</span><span class="mf">36.9999</span><span class="p">,</span><span class="n">D</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
 <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">32.0001</span><span class="p">,</span><span class="mf">32.9999</span><span class="p">,</span><span class="n">D</span><span class="o">*</span><span class="mi">2</span><span class="p">)</span>
@@ -392,6 +423,8 @@ hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.</p>
 </code></pre>
 </div>
 
+<p>Oldukça yakın. Ayrıca çağrı hızlı işledi. Grafikleyelim,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
@@ -399,6 +432,8 @@ hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;aradegerleme-interpolation_05.png&#39;</span><span class="p">)</span>
 </code></pre>
 </div>
+
+<p><a href="aradegerleme-interpolation_05.png">Sonuç</a></p>
 
 <p>Kaynaklar</p>
 
@@ -409,6 +444,8 @@ hesaplayabilir, ve bir ağırlıklama tekniği oluşturur.</p>
 <p>[3] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit3/egri_uydurma_aradegerleme__interpolation___3.html">Eğri Uydurma, Aradeğerleme (Interpolation) - 3</a></p>
 
 <p>[4] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit4/aradegerleme__interpolation___4__dairesel_baz_fonksiyonlari__radial_basis_functions_rbf_.html">Aradeğerleme (Interpolation) - 4 - Dairesel Baz Fonksiyonları (Radial Basis Functions -RBF-)</a></p>
+
+<p>[5] https://www.bottomscience.com/bilinear-interpolation-method-python/</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

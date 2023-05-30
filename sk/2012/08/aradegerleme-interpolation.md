@@ -225,12 +225,26 @@ içinde düştüğümüz hücreyi bulabilirsek, o hücrenin dört köşesinin
 x,y,z değerleri ile aradeğerleme yapılabilir. Burada iki lineerli
 (bilinear) aradeğerleme tekniği var, her kenara olan uzaklığı ölçüp
 bunlarla bir ağırlık değeri yaratıyor ve o ağırlıklara göre 4 bilinen
-z değerini kullanıp yeni z değerini üretiyor. Buna benzer bir
-yaklaşımla biz de kendi tekniğimizi yaratabiliriz, mesela içine
-düştüğümüz hücrenin dört kenarına olan bir basit uzaklık hesabı
-yaparız, uzaklığı benzerliğe çeviririz (yakın olan daha önemli olsun
-diye) ve bu ağırlıklarla dört köşe z değerinin ağırlıklı ortalamasını
-alırız.
+z değerini kullanıp yeni z değerini üretiyor. [5] bağlantısından
+adapte edilen bir kod alttadır, `x`,`y` içinde `linspace` sonucu dizi
+`zz` içinde ise gerçek fonksiyon sonucu `meshgrid` değerleri olduğunu
+varsayıyor.
+
+```python
+def bilinear_interpolator(x_new,y_new):
+    i = np.searchsorted(x, x_new) - 1
+    j = np.searchsorted(y, y_new) - 1
+    wx = (x[i+1] - x_new) / (x[i+1] - x[i])
+    wy = (y[j+1] - y_new) / (y[j+1] - y[j])
+    Pn = (1 - wx)*(1 - wy)*zz[i,j] + wx*(1 - wy)*zz[i+1,j] + (1 - wx)*wy*zz[i,j+1] + wx*wy*zz[i+1,j+1]
+    return Pn
+```
+
+Buna benzer bir yaklaşımla biz de kendi tekniğimizi yaratabiliriz,
+mesela içine düştüğümüz hücrenin dört kenarına olan bir basit uzaklık
+hesabı yaparız, uzaklığı benzerliğe çeviririz (yakın olan daha önemli
+olsun diye) ve bu ağırlıklarla dört köşe z değerinin ağırlıklı
+ortalamasını alırız.
 
 ![](aradegerleme-interpolation_06.png)
 
@@ -265,6 +279,12 @@ plt.savefig('aradegerleme-interpolation_04.png')
 
 ![](aradegerleme-interpolation_04.png)
 
+Verili x,y noktasının hangi hücre içinde olduğunu bulalım önce, burada
+`np.searchsorted` cağrısı yapıldı, bu çağrı sıralı bir dizi içinde
+aranan öğenin hangi aralığa düştüğünü hesaplıyor. Tüm `meshgrid`
+çağrısından gelen ızgara içinde aramak yerine daha az noktası olan
+düz dizi `x`,`y` içinde aramak daha iyi.
+
 ```python
 def find_corners(xi,yi):
     idx1 = np.searchsorted(x, xi, side="left")
@@ -283,6 +303,10 @@ print (cs)
 ```text
 [(10, 8), (10, 7), (9, 8), (9, 7)]
 ```
+
+Noktanın içine düştüğü hücre kenarları bulununca onlara olan uzaklık
+hesaplanır, uzaklık bir yakınlık / benzerlik hesabına çevrilir, ve bu
+hesap her köşenin z değeri üzerinden bir ağırlıklı ortalama için kullanılır.
 
 ```python
 def cdist(p1,p2):    
@@ -319,6 +343,11 @@ def grid_interp(intx,inty):
     return cell_interp(intx,inty,introw)
 ```
 
+Test amaçlı olarak yeni, daha yoğun bir izgara yaratalım,
+`np.vectorize` ile aradeğerleme fonksiyonumuzu tüm matris üzerinde
+uygulanabilir hale çevirebiliriz, ve hesabı yapıp gerçek değerler ile
+tahmin arasında bir hata karesi ortalaması (mean square error) hesabı
+yaparız,
 
 ```python
 x2 = np.linspace(36.0001,36.9999,D*2)
@@ -335,12 +364,16 @@ print (np.mean(np.square(zz2-zz2_grid)))
 0.0007539498751741862
 ```
 
+Oldukça yakın. Ayrıca çağrı hızlı işledi. Grafikleyelim,
+
 ```python
 fig = plt.figure()
 ax = fig.gca(projection='3d')
 surf = ax.plot_surface(xx2, yy2, zz2_grid, cmap=cm.coolwarm,linewidth=0, antialiased=False)
 plt.savefig('aradegerleme-interpolation_05.png')
 ```
+
+[Sonuç](aradegerleme-interpolation_05.png)
 
 
 Kaynaklar
@@ -352,3 +385,5 @@ Kaynaklar
 [3] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit3/egri_uydurma_aradegerleme__interpolation___3.html">Eğri Uydurma, Aradeğerleme (Interpolation) - 3</a>
 
 [4] <a href="https://burakbayramli.github.io/dersblog/compscieng/compscieng_app20cfit4/aradegerleme__interpolation___4__dairesel_baz_fonksiyonlari__radial_basis_functions_rbf_.html">Aradeğerleme (Interpolation) - 4 - Dairesel Baz Fonksiyonları (Radial Basis Functions -RBF-)</a>
+
+[5] https://www.bottomscience.com/bilinear-interpolation-method-python/

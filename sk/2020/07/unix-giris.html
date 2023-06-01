@@ -43,7 +43,7 @@ yıllarda başlayan ve C programlama diline yakın oluşuyla daha da
 yayılan bu sistem çekirdeksel olarak şu anda cep telefonlar dahil
 olmak üzere milyarlarca makina üzerinde işliyor.</p>
 
-<p>Süreçler</p>
+<h3>Süreçler</h3>
 
 <p>Unix'i Unix yapan pek çok kavram var. Kullanıcıya pek gözükmeyen sahne
 arkasındaki programları denetleyen, işleten çekirdek seviyesinde
@@ -68,7 +68,7 @@ bkz <a href="../../2012/04/faydali-unix-komutlari.md">Faydalı Unix Komutları</
 
 <p>Süreç listesini daha renkli olarak htop komutu ile görebiliriz (bağlantı altta). </p>
 
-<p>Komut Satırı, Kabuk</p>
+<h3>Komut Satırı, Kabuk</h3>
 
 <p>Unix'te çoğu işlem komut satırı etrafında döner, en azından usta
 admin, kullanıcılar onu tercih eder. Programları başlatmak, idare
@@ -196,7 +196,7 @@ tutulur. Basit bir metin dosyasıdır, ama tabii ki herkes göremez,
 <p>Dosya sahibi (admin) hariç başka kimsenin dosyaya yazma hakkı
 olmadığını görüyoruz.</p>
 
-<p>Izinleri değiştirmek icin <a href="chmod.html">chmod</a> kullanılır.</p>
+<p>İzinleri değiştirmek icin <a href="chmod.html">chmod</a> kullanılır.</p>
 
 <p>Pek çok şey kabuk etrafında döner dedik, program başlatmak bunlardan
 en önemlisi. Bir program ismini yazarak onu komut satırından
@@ -219,6 +219,35 @@ oradan <code>emacs &amp;</code> ile editörü başlattım, konsolu kapatırsam, 
 programı da kapanacaktır. O zaman başlatanda "evlatlık reddi" yapmak
 lazım, yani <code>emacs &amp; disown</code>. O zaman aradaki bağlantı kopar, başlatan
 ölürse başlatılan ölmez.</p>
+
+<h3>Başlangıç Ayarları</h3>
+
+<p>Komut satiri metin bazli bir ortam oldugu icin eger bazi komutlari surekli
+klavyede giriyorsak onlari kisa temsil eden bir kisayol (alias) yaratmak
+faydali olabilir. Mesela surekli <code>ssh user1@192.168.44.33</code> ile bir makinaya
+ssh girisi yapiyorum, bu komutu</p>
+
+<pre><code>alias myssh='ssh user1@192.168.44.33`
+</code></pre>
+
+<p>ile özetleyebilirim. Artık <code>myssh</code> yazınca belirtilen <code>ssh</code> komutu
+işler. Bir alias sonrası gelen seçenekler, ek komutlar alias açılımı
+sonuna eklenir, eğer <code>myssh -X</code> diyorsam bu komut <code>ssh user1@192.168.44.33 -X</code>
+olarak açılacaktır.</p>
+
+<p>Peki ya alias <em>ortasına</em> bir ek parametre geçmek istesem? Diyelim ki standard
+bir <code>fınd /usr -name '*.txt'</code> komutu uyguladım, fakat aramanın başladığı
+dizini <code>/usr</code> değil bir değişken üzerinden tanımlamak istiyorum. Bu durumda
+düz alias işlemez, ama bir bash fonksiyonu işler,</p>
+
+<pre><code>function myfind() {
+  convert -sharpen 0x10 -quality 70 -scale 70%   out.jpg
+  find "$@" -name '*.txt'
+}
+</code></pre>
+
+<p>Bu kısayolu <code>myfind /tmp</code> şeklinde kullanabilirim, verdiğim parametre <code>fınd</code>
+komutunun <code>"$@"</code> kısmına eklenecektir. </p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

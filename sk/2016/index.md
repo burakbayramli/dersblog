@@ -8,6 +8,8 @@
 
 [Python ile Finans Verileri](01/python-ile-finans-verileri.html)
 
+[Python](01/python.html)
+
 [Shalizi Kitabı](01/shalizi-kitabi.html)
 
 [Düzenli İfadeler, Python, Regex (Regular Expressions)](02/duzenli-ifadeler-python-regex-regular.html)

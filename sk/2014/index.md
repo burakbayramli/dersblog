@@ -4,7 +4,7 @@
 
 [Web ve JSON ile Servis Arayuzu, UWSGI](03/web-ve-json-ile-yazilim-servisi-saglamak.html)
 
-[Bir Bilgisayarin Klavye ve Mouse'unu Digeri Icin Kullanmak](04/bir-bilgisayarin-klavye-ve-mouseunu.html)
+[Bir Bilgisayarın Klavye ve Mouse'unu Diğeri İçin Kullanmak](04/bir-bilgisayarin-klavye-ve-mouseunu.html)
 
 [GraphChi](04/graphchi.html)
 

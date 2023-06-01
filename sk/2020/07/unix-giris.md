@@ -214,7 +214,6 @@ düz alias işlemez, ama bir bash fonksiyonu işler,
 
 ```
 function myfind() {
-  convert -sharpen 0x10 -quality 70 -scale 70%   out.jpg
   find "$@" -name '*.txt'
 }
 ```

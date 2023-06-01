@@ -1,4 +1,4 @@
-# Unix'e Giris
+# Unix'e Giriş
 
 İşletim sistemlerinin kralı tartışmasız Unix. Geliştirilmesi 70'li
 yıllarda başlayan ve C programlama diline yakın oluşuyla daha da
@@ -193,10 +193,10 @@ lazım, yani `emacs & disown`. O zaman aradaki bağlantı kopar, başlatan
 
 ### Başlangıç Ayarları
 
-Komut satiri metin bazli bir ortam oldugu icin eger bazi komutlari surekli
-klavyede giriyorsak onlari kisa temsil eden bir kisayol (alias) yaratmak
-faydali olabilir. Mesela surekli `ssh user1@192.168.44.33` ile bir makinaya
-ssh girisi yapiyorum, bu komutu
+Komut satırı metin bazlı bir ortam olduğu için eğer bazı komutları sürekli
+klavyede giriyorsak onları kısa temsil eden bir kısayol (alias) yaratmak
+faydalı olabilir. Mesela sürekli `ssh user1@192.168.44.33` ile bir makinaya
+ssh girişi yapıyorum, bu komutu
 
 ```
 alias myssh='ssh user1@192.168.44.33`
@@ -221,4 +221,7 @@ function myfind() {
 
 Bu kısayolu `myfind /tmp` şeklinde kullanabilirim, verdiğim parametre `fınd`
 komutunun `"$@"` kısmına eklenecektir. 
+
+
+
 

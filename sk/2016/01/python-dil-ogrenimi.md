@@ -20,7 +20,7 @@ vardır. Ubuntu üzerinde `Applications | Accessories | Terminal` ile
 başlatılabilir. Kodları ve dökümanları nereye açtıysanız, o dizine
 komut satırından `cd [dizin ismi]` ile gidebilirsiniz.
 
-[Virtualenv sanal ortami](../../2018/08/virtualenv-python-izole-sanal-calsma.html).
+[Virtualenv sanal ortami](../../2018/08/virtualenv-python-izole-sanal-calsma.html)
 
 [Python](python.html)
 

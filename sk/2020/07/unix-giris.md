@@ -219,7 +219,7 @@ function myfind() {
 ```
 
 Bu kısayolu `myfind /tmp` şeklinde kullanabilirim, verdiğim parametre `fınd`
-komutunun `"$@"` kısmına eklenecektir. 
+komutunun `"$@"` kısmına enjekte edilecektir. 
 
 
 

@@ -43,10 +43,10 @@ bağlantısındaki metotlarla alınabilir.</p>
 
 <p>Önce tarihsel verilere bakalım. [1]'den indirilebilecek bazi dosyalar
 <code>HadISDH.landq</code> ile ya da <code>HadISDH.landRH</code> ile baslayan dosyalar,
-bunlar sirasiyla bir kg islak hava icinde ne kadar g bazinda buhar
-oldugunu gosteren g/kg birimindeki spesifik nemlilik <code>q</code>, ya da birim
-hacimdeki buharin o sicaklikta tutulabilecek maksimum buhara olan
-yuzde olarak oranini gosteren izafi nemlilik <code>rh</code>.</p>
+bunlar sırasıyla bir kg ıslak hava içinde ne kadar g bazında buhar
+olduğunu gosteren g/kg birimindeki spesifik nemlilik <code>q</code>, ya da birim
+hacimdeki buharın o sıcaklıkta tutulabilecek maksimum buhara olan
+yüzde olarak oranını gosteren izafi nemlilik <code>rh</code>.</p>
 
 <p>Veri indirilip</p>
 
@@ -78,18 +78,22 @@ yuzde olarak oranini gosteren izafi nemlilik <code>rh</code>.</p>
 </div>
 
 <p>ile işlenebilir. Okunan dosya formatı biraz garip aslında, tarihler ay
-olarak bir blok üzerine düz tarih olarak yazılıyor, ve dosyanın en
+olarak bir blok üzerine düz tarih olarak yazılmış, ve dosyanın en
 sonunda her bloğun kolonlarının ve satırlarının tekabül ettiği enlem,
 boylam ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya
 alışık olduğumuz için her satırda gerekli bilgiyi içeren normalize
 edilmiş verilerle iş yapmaya daha alışkınız, bizim ürettiğimiz
 çıktının formatında sene/ay bilgisi ayrı kolonlarda, ve her satırda
 veriliyor, tarih başlık değil ve en sondaki iki satır atlanıyor.
-Böylece sene/ay için filtreleme yapılınca gerekli veri bloğu
-alınır, dünyanın belli noktalarını temsil eden bu blok 76 x 32
-boyutlu bir matris olacaktır. O matristeki hücrelerin hangi
-enlem/boylamlara tekabül ettiğini kod içine sabit değerler olarak
-gömebiliriz, veriye dahil etmeye gerek yok.</p>
+Böylece sene/ay için filtreleme yapılınca gerekli veri bloğu alınır,
+dünyanın belli noktalarını temsil eden bu blok 72 x 36 boyutlu bir
+matris olacaktır. O matristeki hücrelerin hangi enlem/boylamlara
+tekabül ettiğini kod içine sabit değerler olarak gömebiliriz, veriye
+dahil etmeye gerek yok. Enlem değerleri -/+87.5 arasında eşit aralığa
+bölünmüş 36 satırda, boylam değerleri ise -+177.5 arasında 72 aralığa
+bölünmüş kolonlarda olacak.</p>
+
+<p>Şimdi işlenmiş yeni verideki bir aya bakalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">util</span> 
@@ -106,13 +110,126 @@ gömebiliriz, veriye dahil etmeye gerek yok.</p>
 
 <p><img src="iklim01.jpg" alt="" /></p>
 
-<p>[devam edecek]</p>
+<p>Fakat eldeki verininin pek detaylı olmadığını biliyoruz çünkü 72 x 36 boyutlu
+bir ızgara pek çok alanı atlamış olacaktır. Mesela TR üzerinde odaklanırsak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">year</span><span class="p">,</span><span class="n">month</span> <span class="o">=</span> <span class="mi">2019</span><span class="p">,</span><span class="mi">8</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_pd</span><span class="p">()</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/tmp/q.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">year</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">month</span><span class="p">)]</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">177.50</span><span class="p">,</span><span class="mf">177.50</span><span class="p">,</span><span class="mi">72</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">87.50</span><span class="p">,</span><span class="mf">87.50</span><span class="p">,</span><span class="mi">36</span><span class="p">))</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">xx</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span>
+<span class="n">yy</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span>
+<span class="n">zz</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_qti</span><span class="p">()(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">zz</span><span class="p">)</span>
+<span class="n">interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">interpolate</span><span class="p">,</span><span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span>
+<span class="n">zi</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">util</span><span class="o">.</span><span class="n">get_sm</span><span class="p">()</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">zi</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;iklim02.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="iklim02.jpg" alt="" /></p>
+
+<p>gibi bir sonuç alıyoruz.</p>
+
+<p>Günlük Daha Detaylı Veri</p>
+
+<p>O günün verisini kullanarak daha detaylı nemlilik verisini
+OpenWeatherMap ile alabiliriz [2]. Gerçi OWM'in tarihi veri servisi de
+var fakat bu servis paralı, belli kota altındaki anlık veri alımı
+bedava, bu yazı için onu kullanalım. Onları önceden rasgele seçilmiş
+belli noktalar için alacağız, <code>util.coords</code> içinde,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">year</span><span class="p">,</span><span class="n">month</span> <span class="o">=</span> <span class="mi">2019</span><span class="p">,</span><span class="mi">8</span>
+<span class="n">util</span><span class="o">.</span><span class="n">get_sm</span><span class="p">()</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">cs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;iklim03.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="iklim03.jpg">Noktalar</a></p>
+
+<p>Bugünün verisini alalım, erişim için OWM anahtarının alınmış olduğunu
+farzediyoruz, bizimki <code>$HOME</code> altında <code>.nomterr.conf</code> adlı bir JSON
+dosyasında, <code>weatherapi</code> anahtarına tekabül ediyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;http://api.openweathermap.org/data/2.5/weather?&#39;</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/.nomterr.conf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+
+<span class="n">n</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">hums</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span><span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;weatherapi&#39;</span><span class="p">]</span> <span class="p">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span> 
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">()]</span>
+    <span class="n">hums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;main&#39;</span><span class="p">][</span><span class="s1">&#39;humidity&#39;</span><span class="p">]))</span>
+
+<span class="n">line</span> <span class="o">=</span> <span class="n">ns</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hums</span><span class="p">)</span> 
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;trall.csv&quot;</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Üstteki çağrılar önceden seçilmiş noktalar için o günün verilerini
+alıp yeni bir satır olarak çıktı CSV dosyası <code>trall.csv</code> ya ekleyecektir.
+Grafiklersek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">util</span><span class="o">.</span><span class="n">get_sm</span><span class="p">()</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_pd</span><span class="p">()</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;trall.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">cs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">cs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">))])[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">xi</span><span class="p">,</span><span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_qti</span><span class="p">()(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
+<span class="n">interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">interpolate</span><span class="p">,</span><span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span>
+<span class="n">zi</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">yi</span><span class="p">,</span><span class="n">xi</span><span class="p">,</span><span class="n">zi</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;iklim04.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="iklim04.jpg" alt="" /></p>
+
+<p>Aradeğerleme için [3]'te anlatılan bir tekniği kullandık. Aradeğerleme
+gerekiyor çünkü veri için rasgele noktalar seçtik, fakat grafikleme
+için daha detaylı bir ızgara bekleyen <code>pcolormesh</code> çağrısı gerekiyor.</p>
+
+<p>Grafikte Kütahya, Denizli, Uşak etrafında az nemli bir bölge
+görülüyor, Karadenizde yüksek nemli bazı bölgeler var, doğuda ise nem
+daha az.</p>
 
 <p>Kaynaklar</p>
 
-<p>https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html</p>
+<p>[1] https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html</p>
 
-<p>2017/09/meteoroloji-verileri.md-ecmwf-noaa-openweathermap.html</p>
+<p>[2] ../../2017/09/meteoroloji-verileri.md-ecmwf-noaa-openweathermap.html</p>
+
+<p>[3] ../../2012/08/aradegerleme-interpolation.html</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

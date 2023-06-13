@@ -3,12 +3,12 @@
 Havanın nemlilik oranı ay bazlı tarihsel olarak [1] ya da anlık olarak [2]
 bağlantısındaki metotlarla alınabilir.
 
-Önce tarihsel verilere bakalım. [1]'den indirilebilecek bazi dosyalar
-`HadISDH.landq` ile ya da `HadISDH.landRH` ile baslayan dosyalar,
-bunlar sırasıyla bir kg ıslak hava içinde ne kadar g bazında buhar
-olduğunu gosteren g/kg birimindeki spesifik nemlilik `q`, ya da birim
-hacimdeki buharın o sıcaklıkta tutulabilecek maksimum buhara olan
-yüzde olarak oranını gosteren izafi nemlilik `rh`.
+Önce tarihsel verilere bakalım. [1]'den indirilebilecek bazı veriler
+`HadISDH.landq` ile ya da `.landRH` ile baslayan dosyalar, bunlar
+sırasıyla bir kg ıslak hava içinde ne kadar g bazında buhar olduğunu
+gosteren g/kg birimindeki spesifik nemlilik `q`, ya da birim hacimdeki
+buharın o sıcaklıkta tutulabilecek maksimum buhara olan yüzde olarak
+oranını gosteren izafi nemlilik `rh`.
 
 Veri indirilip
 
@@ -38,19 +38,19 @@ for i in range(47*12):
     fout.flush()
 ```
 
-ile işlenebilir. Okunan dosya formatı biraz garip aslında, tarihler ay
-olarak bir blok üzerine düz tarih olarak yazılmış, ve dosyanın en
-sonunda her bloğun kolonlarının ve satırlarının tekabül ettiği enlem,
-boylam ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya
-alışık olduğumuz için her satırda gerekli bilgiyi içeren normalize
-edilmiş verilerle iş yapmaya daha alışkınız, bizim ürettiğimiz
-çıktının formatında sene/ay bilgisi ayrı kolonlarda, ve her satırda
-veriliyor, tarih başlık değil ve en sondaki iki satır atlanıyor.
-Böylece sene/ay için filtreleme yapılınca gerekli veri bloğu alınır,
-dünyanın belli noktalarını temsil eden bu blok 72 x 36 boyutlu bir
-matris olacaktır. O matristeki hücrelerin hangi enlem/boylamlara
-tekabül ettiğini kod içine sabit değerler olarak gömebiliriz, veriye
-dahil etmeye gerek yok. Enlem değerleri -/+87.5 arasında eşit aralığa
+ile işlenebilir. Okunan dosya formatı biraz garip, tarihler ay olarak
+bir blok üzerine düz tarih olarak yazılmış, ve dosyanın en sonunda her
+bloğun kolonlarının ve satırlarının tekabül ettiği enlem, boylam
+ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya alışık
+olduğumuz için her satırda gerekli bilgiyi içeren normalize edilmiş
+verilerle iş yapmaya daha alışkınız, bizim ürettiğimiz çıktının
+formatında sene/ay bilgisi ayrı kolonlarda, ve her satırda veriliyor,
+tarih başlık değil ve en sondaki iki satır atlanıyor.  Böylece sene/ay
+için filtreleme yapılınca gerekli veri bloğu alınır, dünyanın belli
+noktalarını temsil eden bu blok 72 x 36 boyutlu bir matris
+olacaktır. O matristeki hücrelerin hangi enlem/boylamlara tekabül
+ettiğini kod içine sabit değerler olarak gömebiliriz, veriye dahil
+etmeye gerek yok. Enlem değerleri -/+87.5 arasında eşit aralığa
 bölünmüş 36 satırda, boylam değerleri ise -+177.5 arasında 72 aralığa
 bölünmüş kolonlarda olacak.
 
@@ -181,7 +181,7 @@ daha az.
 
 Kaynaklar
 
-[1] https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html
+[1] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html">MetOffice</a>
 
 [2] <a href="../../2017/09/meteoroloji-verileri-ecmwf-noaa-openweathermap.html">OWM</a>
 

@@ -10,36 +10,9 @@ gosteren g/kg birimindeki spesifik nemlilik `q`, ya da birim hacimdeki
 buharın o sıcaklıkta tutulabilecek maksimum buhara olan yüzde olarak
 oranını gosteren izafi nemlilik `rh`.
 
-Veri indirilip
-
-```python
-import csv, pandas as pd, re
-fin = open("/tmp/HadISDH.landq.4.4.0.2021f_FLATgridHOM5by5_anoms9120_actuals.dat")
-rd = csv.reader(fin)
-fout = open("/tmp/q.csv","w")
-for i in range(47*12):
-    print ('i',i)
-    date_line = next(rd)
-    date_line = date_line[0].split(" ")
-    dt = date_line[1] + "-" + date_line[0]
-    dt = pd.to_datetime(dt)
-    for j in range(36):
-        print ('j',j)
-        line = next(rd)
-        line = line[0]
-        line = re.split('\s*',line)
-        line = line[1:]
-        line = [str(dt.year), str(dt.month)] + line
-        res = ";".join(line)
-        res = res.replace("-9999.99","")
-        fout.write(res)
-        fout.write("\n")
-        fout.flush()
-    fout.flush()
-```
-
-ile işlenebilir. Okunan dosya formatı biraz garip, tarihler ay olarak
-bir blok üzerine düz tarih olarak yazılmış, ve dosyanın en sonunda her
+Veri indirilip `util.py` icindeki `hadisdh_process` ile
+işlenebilir. Okunan dosya formatı biraz garip, tarihler ay olarak bir
+blok üzerine düz tarih olarak yazılmış, ve dosyanın en sonunda her
 bloğun kolonlarının ve satırlarının tekabül ettiği enlem, boylam
 ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya alışık
 olduğumuz için her satırda gerekli bilgiyi içeren normalize edilmiş

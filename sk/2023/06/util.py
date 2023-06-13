@@ -1,6 +1,7 @@
 from simplegeomap.util import QuadTreeInterpolator as QTI
 import requests, json, os, datetime
 import simplegeomap as sm
+import csv, pandas as pd, re
 import pandas as pd
 
 def get_pd(): return pd
@@ -38,3 +39,27 @@ coords = [[41.66660574372402, 27.597843572891335], \
           [39.93075475946135, 43.184987971740945]]
 
 
+def hadisdh_process():
+    fin = open("/tmp/HadISDH.landq.4.4.0.2021f_FLATgridHOM5by5_anoms9120_actuals.dat")
+    rd = csv.reader(fin)
+    fout = open("/tmp/q.csv","w")
+    for i in range(47*12):
+        print ('i',i)
+        date_line = next(rd)
+        date_line = date_line[0].split(" ")
+        dt = date_line[1] + "-" + date_line[0]
+        dt = pd.to_datetime(dt)
+        for j in range(36):
+            print ('j',j)
+            line = next(rd)
+            line = line[0]
+            line = re.split('\s*',line)
+            line = line[1:]
+            line = [str(dt.year), str(dt.month)] + line
+            res = ";".join(line)
+            res = res.replace("-9999.99","")
+            fout.write(res)
+            fout.write("\n")
+            fout.flush()
+        fout.flush()
+        

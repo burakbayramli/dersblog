@@ -48,37 +48,9 @@ gosteren g/kg birimindeki spesifik nemlilik <code>q</code>, ya da birim hacimdek
 buharın o sıcaklıkta tutulabilecek maksimum buhara olan yüzde olarak
 oranını gosteren izafi nemlilik <code>rh</code>.</p>
 
-<p>Veri indirilip</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">re</span>
-<span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/HadISDH.landq.4.4.0.2021f_FLATgridHOM5by5_anoms9120_actuals.dat&quot;</span><span class="p">)</span>
-<span class="n">rd</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
-<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/q.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">47</span><span class="o">*</span><span class="mi">12</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">date_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
-    <span class="n">date_line</span> <span class="o">=</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">36</span><span class="p">):</span>
-        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s*&#39;</span><span class="p">,</span><span class="n">line</span><span class="p">)</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="p">)]</span> <span class="o">+</span> <span class="n">line</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
-        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-9999.99&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-    <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-</code></pre>
-</div>
-
-<p>ile işlenebilir. Okunan dosya formatı biraz garip, tarihler ay olarak
-bir blok üzerine düz tarih olarak yazılmış, ve dosyanın en sonunda her
+<p>Veri indirilip <code>util.py</code> icindeki <code>hadisdh_process</code> ile
+işlenebilir. Okunan dosya formatı biraz garip, tarihler ay olarak bir
+blok üzerine düz tarih olarak yazılmış, ve dosyanın en sonunda her
 bloğun kolonlarının ve satırlarının tekabül ettiği enlem, boylam
 ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya alışık
 olduğumuz için her satırda gerekli bilgiyi içeren normalize edilmiş

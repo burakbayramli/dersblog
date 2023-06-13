@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>İklim, Nem Verileri</h1>
+
+<p>Havanın nemlilik oranı ay bazlı tarihsel olarak [1] ya da anlık olarak [2]
+bağlantısındaki metotlarla alınabilir.</p>
+
+<p>Önce tarihsel verilere bakalım. [1]'den indirilebilecek bazi dosyalar
+<code>HadISDH.landq</code> ile ya da <code>HadISDH.landRH</code> ile baslayan dosyalar,
+bunlar sirasiyla bir kg islak hava icinde ne kadar g bazinda buhar
+oldugunu gosteren g/kg birimindeki spesifik nemlilik <code>q</code>, ya da birim
+hacimdeki buharin o sicaklikta tutulabilecek maksimum buhara olan
+yuzde olarak oranini gosteren izafi nemlilik <code>rh</code>.</p>
+
+<p>Veri indirilip</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">re</span>
+<span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/HadISDH.landq.4.4.0.2021f_FLATgridHOM5by5_anoms9120_actuals.dat&quot;</span><span class="p">)</span>
+<span class="n">rd</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/q.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">47</span><span class="o">*</span><span class="mi">12</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+    <span class="n">date_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+    <span class="n">date_line</span> <span class="o">=</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">36</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s*&#39;</span><span class="p">,</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="n">line</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="p">)]</span> <span class="o">+</span> <span class="n">line</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-9999.99&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>ile işlenebilir. Okunan dosya formatı biraz garip aslında, tarihler ay
+olarak bir blok üzerine düz tarih olarak yazılıyor, ve dosyanın en
+sonunda her bloğun kolonlarının ve satırlarının tekabül ettiği enlem,
+boylam ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya
+alışık olduğumuz için her satırda gerekli bilgiyi içeren normalize
+edilmiş verilerle iş yapmaya daha alışkınız, bizim ürettiğimiz
+çıktının formatında sene/ay bilgisi ayrı kolonlarda, ve her satırda
+veriliyor, tarih başlık değil ve en sondaki iki satır atlanıyor.
+Böylece sene/ay için filtreleme yapılınca gerekli veri bloğu
+alınır, dünyanın belli noktalarını temsil eden bu blok 76 x 32
+boyutlu bir matris olacaktır. O matristeki hücrelerin hangi
+enlem/boylamlara tekabül ettiğini kod içine sabit değerler olarak
+gömebiliriz, veriye dahil etmeye gerek yok.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">util</span> 
+<span class="n">year</span> <span class="o">=</span> <span class="mi">2019</span><span class="p">;</span> <span class="n">month</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_pd</span><span class="p">()</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/tmp/q.csv&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">year</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">month</span><span class="p">)]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">2</span><span class="p">:]</span>
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">177.50</span><span class="p">,</span><span class="mf">177.50</span><span class="p">,</span><span class="mi">72</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">87.50</span><span class="p">,</span><span class="mf">87.50</span><span class="p">,</span><span class="mi">36</span><span class="p">))</span>
+<span class="n">util</span><span class="o">.</span><span class="n">get_sm</span><span class="p">()</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;green&#39;</span><span class="p">,</span> <span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">df</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;iklim01.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="iklim01.jpg" alt="" /></p>
+
+<p>[devam edecek]</p>
+
+<p>Kaynaklar</p>
+
+<p>https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html</p>
+
+<p>2017/09/meteoroloji-verileri.md-ecmwf-noaa-openweathermap.html</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

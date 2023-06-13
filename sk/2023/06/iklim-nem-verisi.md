@@ -183,7 +183,7 @@ Kaynaklar
 
 [1] https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html
 
-[2] <a href="../../2017/09/meteoroloji-verileri.md-ecmwf-noaa-openweathermap.html">OWM</a>
+[2] <a href="../../2017/09/meteoroloji-verileri-ecmwf-noaa-openweathermap.html">OWM</a>
 
 [3] <a href="../../2012/08/aradegerleme-interpolation.html">Aradeğerleme</a>
 

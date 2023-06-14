@@ -93,14 +93,14 @@ ns = n.strftime("%Y-%m-%d")
 hums = []
 for i in range(len(coords)):
     print (i)
-    payload = { 'lat': str(coords[i][0]), 'lon': str(coords[i][1]),'appid': params['weatherapi'] }
+    payload = {'units': 'metric', 'lat': str(coords[i][0]), 'lon': str(coords[i][1]),'appid': params['weatherapi'] }
     r = requests.get(base_url, params=payload) 
     res = [json.loads(x.decode()) for x in r.iter_lines()]
     hums.append(str(res[0]['main']['humidity']))
 
-line = ns + "," + ",".join(hums) 
-fout = open("trall.csv","a")
-fout.write(line)
+hline = ns + "," + ",".join(hums) 
+fout = open("trhumid.csv","a")
+fout.write(hline)
 fout.write("\n")
 fout.close()
 ```

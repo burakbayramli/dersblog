@@ -114,6 +114,7 @@ util.get_sm().plot_continents(40, 35, zoom=1, incolor='red', outcolor='white', f
 
 df = util.get_pd().read_csv('trall.csv',header=None)
 df = df.tail(1)
+cs = np.array(util.coords)
 x = cs[:,0]
 y = cs[:,1]
 z = np.array(df[list(range(1,28))])[0]

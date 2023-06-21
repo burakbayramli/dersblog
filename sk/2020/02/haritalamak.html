@@ -237,6 +237,35 @@ y = np.linspace(lowlat,hilat,4)
 xx,yy = np.meshgrid(x,y)
 </code></pre>
 
+<p>Eğer bir merkez nokta etrafında tek bir mesafe uzaklığı baz alıp bir ızgara
+yaratmak istiyorsak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="p">)</span>
+<span class="n">EARTH_RAD</span> <span class="o">=</span> <span class="mi">6371</span>
+<span class="n">upright</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">EARTH_RAD</span><span class="p">)</span>
+<span class="n">lowleft</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="mi">225</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">EARTH_RAD</span><span class="p">)</span>
+<span class="n">latmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">lowleft</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">upright</span><span class="o">.</span><span class="n">lat</span><span class="p">])</span>
+<span class="n">latmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">lowleft</span><span class="o">.</span><span class="n">lat</span><span class="p">,</span> <span class="n">upright</span><span class="o">.</span><span class="n">lat</span><span class="p">])</span>
+<span class="n">lonmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">lowleft</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">upright</span><span class="o">.</span><span class="n">lon</span><span class="p">])</span>
+<span class="n">lonmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">lowleft</span><span class="o">.</span><span class="n">lon</span><span class="p">,</span> <span class="n">upright</span><span class="o">.</span><span class="n">lon</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lonmin</span><span class="p">,</span><span class="n">lonmax</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">latmin</span><span class="p">,</span><span class="n">latmax</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">latints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
+<span class="n">lonints</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Bu kod 45 derece kuzeydoğu 225 derece güneybatıya <code>dist</code> mesafesi
+kadar adım atıp o noktaları sağ üst, sol alt köşe olarak kabul etti ve
+bu dikdörtgeni baz alıp bir <code>N*N</code> noktalı bir ızgara yarattı. Ayrıca o
+ızgara noktalarındaki tüm kordinatların enlem, boylam değerlerinin tam
+sayı bazlı bir listesini de hesapladı, bu bilgi pek çok uygulamada
+lazım olabiliyor (mesela tam sayı enlem/boylam bazlı bazı bilgiler
+önbellekte, tabanda tutulmuş olabilir, ve üstteki tam sayılar ile
+bu bölgesel bilgiler tabandan alınabilir).</p>
+
 <p><img src="har4.jpg" alt="" /></p>
 
 <p>Oklar, Quiver</p>

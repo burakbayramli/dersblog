@@ -38,7 +38,7 @@
         <h1></h1>
 <h1>ffmpeg, moviepy</h1>
 
-<p>Bazi ffmpeg, komutlari</p>
+<h3>Bazı ffmpeg, komutları</h3>
 
 <p>Bir video dosyasinin belli zaman araligindaki parcasini cikartmak icin
 (baslangictan 4 saniyelik kisim)</p>
@@ -46,10 +46,10 @@
 <pre><code>ffmpeg -ss 00:00:00 -i girdi.mp4 -t 00:00:04 -c copy cikti.mp4
 </code></pre>
 
-<p>Bir video'nun belli bir parcasini nasil animasyon gif dosyasi haline
-ceviririz? Bir frames alt dizini yaratalim, sonra 20. saniyeden
-baslayip 10 saniyelik kismi cikartalim. Once sadece goruntu dosyalari
-alacagiz,</p>
+<p>Bir video'nun belli bir parçasını nasıl animasyon gif dosyası haline
+çeviririz? Bir frames alt dizini yaratalım, sonra 20. saniyeden
+başlayıp 10 saniyelik kısmı çıkartalım. Önce sadece görüntü dosyaları
+alacağız,</p>
 
 <pre><code>ffmpeg -ss 00:00:20 -t 00:00:10 -i [video dosyasi]  -vf \
    scale=320:-1:flags=lanczos,fps=10  frames/ffout-%03d.png
@@ -85,8 +85,8 @@ alacagiz,</p>
 <pre><code>ffmpeg -ss 30 -t 3 -i [DOSYA] -filter_complex "fps=10,scale=720:-1:flags=lanczos,drawtext=enable='between(t,0,1)':fontfile=font3.ttf:text='word':fontsize=24:fontcolor=white:x=(w-tw)/2:y=(h/PHI)+th,drawtext=enable='between(t,1,2)':fontfile=font3.ttf:text='word what':fontsize=24:fontcolor=white:x=(w-tw)/2:y=(h/PHI)+th,split[x1][x2];[x1]palettegen[p];[x2][p]paletteuse" output.gif
 </code></pre>
 
-<p>Format degisimi, kucultmek, mumkun oldugu kadar kaliteyi istenen
-sekilde tutmak, 440 yuksekliginde, genislik izafi, kalite 23 (en
+<p>Format değişimi, küçültmek, mümkün olduğu kadar kaliteyi istenen
+şekilde tutmak, 440 yüksekliğinde, genişlik izafi, kalite 23 (en
 kaliteli 0)</p>
 
 <pre><code>ffmpeg -i input.mkv -vf scale=-1:440 -crf 23  output.avi
@@ -154,7 +154,7 @@ final_clip = concatenate_videoclips([clip1,clip2])
 final_clip.write_videofile("out.mp4")
 </code></pre>
 
-<p>mencoder</p>
+<h3>mencoder</h3>
 
 <p>Bir AVI video'nun parcasini kesip cikartmak icin</p>
 
@@ -167,14 +167,67 @@ parca cikartip parca.avi dosyasina kaydediyor. Dikkat: Ustteki
 seceneklerde "endpos" ibaresinin tercumesi "bitis noktasi" olmasina
 ragmen komut "reklam edildigi gibi" islemiyor.</p>
 
-<p>Video'dan Ses Cikartmak</p>
+<h3>Video'dan Ses Cikartmak</h3>
 
 <pre><code>ffmpeg -y -ss 00:02:10 -i vid.mp4 -t 00:00:04 -q:a 0 -map a out.mp3
 </code></pre>
 
+<h3>Pek Çok Parça, Altyazı</h3>
+
+<p>Bazen birden fazla video'nun birden fazla parcasini cekip cikarip birlestirip
+hepsine zaman indisi verilerek altyazi koymak isteyebiliriz. Alttaki kod
+ImageMagick <code>convert</code> ve <code>ffmpeg</code> cagrisini sarmalayarak bu islemleri yapiyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">avigif</span><span class="p">(</span><span class="n">pieces</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="n">files</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">file</span><span class="p">,</span><span class="n">start</span><span class="p">,</span><span class="n">dur</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pieces</span><span class="p">):</span>
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;ffmpeg -y -ss </span><span class="si">%s</span><span class="s1"> -i </span><span class="si">%s</span><span class="s1"> -t </span><span class="si">%s</span><span class="s1"> -c copy /tmp/out-</span><span class="si">%d</span><span class="s1">.mp4&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">dur</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>       
+        <span class="n">cmd</span> <span class="o">=</span> <span class="s1">&#39;ffmpeg -y -i /tmp/out-</span><span class="si">%d</span><span class="s1">.mp4 -filter_complex &quot;fps=10,scale=360:-1:flags=lanczos,split[x1][x2];[x1]palettegen[p];[x2][p]paletteuse&quot; /tmp/out-</span><span class="si">%d</span><span class="s1">.gif&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
+        <span class="n">files</span> <span class="o">+=</span> <span class="s2">&quot;/tmp/out-</span><span class="si">%d</span><span class="s2">.gif &quot;</span> <span class="o">%</span> <span class="n">i</span> 
+        <span class="nb">print</span> <span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;convert </span><span class="si">%s</span><span class="s2"> /tmp/output1.gif&quot;</span> <span class="o">%</span> <span class="n">files</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+
+    <span class="n">w</span> <span class="o">=</span> <span class="s1">&#39;&quot;fps=10,scale=360:-1:flags=lanczos,&#39;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,(</span><span class="n">start</span><span class="p">,</span><span class="n">finish</span><span class="p">,</span><span class="n">text</span><span class="p">,</span><span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>  
+        <span class="n">w</span> <span class="o">+=</span> <span class="s2">&quot;drawtext=enable=&#39;between(t,</span><span class="si">%s</span><span class="s2">,</span><span class="si">%s</span><span class="s2">)&#39;:fontfile=font3.ttf:text=&#39;</span><span class="si">%s</span><span class="s2">&#39;:fontsize=15:fontcolor=white:x=</span><span class="si">%s</span><span class="s2">:y=</span><span class="si">%s</span><span class="s2">,&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">finish</span><span class="p">,</span><span class="n">text</span><span class="p">,</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">w</span> <span class="o">+=</span> <span class="s1">&#39;split[x1][x2];[x1]palettegen[p];[x2][p]paletteuse&quot;&#39;</span>
+    <span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;/usr/bin/ffmpeg -y -i /tmp/output1.gif -filter_complex &quot;</span> <span class="o">+</span> <span class="n">w</span> <span class="o">+</span> <span class="s2">&quot; /tmp/output2.gif&quot;</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>       
+</code></pre>
+</div>
+
+<p>Örnek olarak [2]'deki video'yu kullanalım, tek bir mp4 video
+dosyasından tek parça çıkartıyoruz, 2'inci ve 6'inci saniye arasındaki
+parça bu, ve ilk iki saniyeye bir yazı, sonrakine başka bir yazı
+yazıyoruz. Eğer isteseydik bu listeleri büyütebilirdik, farklı
+video'lardan farklı parçalar daha fazla alt yazı
+olabilirdi. <code>(100,170)</code> diye gösterilen GİF içindeki ekran
+kordinatıdır, yazının nereye konulacağını kontrol eder.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">ps</span> <span class="o">=</span> <span class="p">[[</span><span class="s1">&#39;/tmp/bwalk1.mp4&#39;</span><span class="p">,</span><span class="s1">&#39;00:00:02&#39;</span><span class="p">,</span><span class="s1">&#39;00:00:4&#39;</span><span class="p">]]</span>
+<span class="n">text</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;Ilk Yazi&#39;</span><span class="p">,(</span><span class="mi">100</span><span class="p">,</span><span class="mi">170</span><span class="p">)],</span>
+        <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="s1">&#39;Sonraki Yazi&#39;</span><span class="p">,(</span><span class="mi">80</span><span class="p">,</span><span class="mi">170</span><span class="p">)]]</span>
+
+<span class="n">avigif</span><span class="p">(</span><span class="n">ps</span><span class="p">,</span><span class="n">text</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>Kaynaklar</p>
 
-<p>https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/</p>
+<p>[1] https://engineering.giphy.com/how-to-make-gifs-with-ffmpeg/</p>
+
+<p>[2] [Ornek Video](https://drive.google.com/uc?export=view&amp;id=1nR4E7SYLfKhm8nO0BEfFcw0pwWmMNm19)</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

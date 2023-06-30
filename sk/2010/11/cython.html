@@ -38,14 +38,14 @@
         <h1></h1>
 <h1>Cython</h1>
 
-<p>Python icinden C cagirmanin, Python kodunu C'ye cevirmenin yani daha
-hizli isler hale getirmenin yollarindan olan Cython'un populerligi
-artiyor. Bu arac ile Python icinde, Python sozdizimine benzer bir
-sekilde yazdiginiz kodlardan C kodu uretilmesi mumkun. Bir fark, bu
-kodu derlemek icin "python" cagrisi yerine "cython" cagrisi kullanmak
-gerekli. Bu cagri sonrasi .c dosyasi uretilecek, bu dosya gcc ile .o
-sonra .so dosyasina derlenecek. Elde edilen .so dosyasi artik pur
-Python tarafindan "import" edilebilir bir modul olacaktir.</p>
+<p>Python içinden C çağırmanın, Python kodunu C'ye çevirmenin yani daha
+hızlı işler hale getirmenin yollarından olan Cython'un popülerliği
+artıyor. Bu araç ile Python içinde, Python sözdizimine benzer bir
+şekilde yazdığınız kodlardan C kodu üretilmesi mümkün. Bir fark, bu
+kodu derlemek için "python" çağrısı yerine "cython" çağrısı kullanmak
+gerekli. Bu çağrı sonrası .c dosyası üretilecek, bu dosya gcc ile .o
+sonra .sö döşyasına derlenecek. Elde edilen .so dosyası artık pür
+Python tarafından "import" edilebilir bir modül olacaktır.</p>
 
 <p>Kurmak icin</p>
 
@@ -67,70 +67,80 @@ isimdeki so kutuphanesine derlenmesi gereklidir.</p>
 
 <p>c1.pyx</p>
 
-<pre><code>import math
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">math</span>
 
-def great_circle(float lon1,float lat1,float lon2,float lat2):
-    cdef float radius = 3956.0
-    cdef float pi = 3.14159265
-    cdef float x = pi/180.0
-    cdef float a,b,theta,c
+<span class="k">def</span> <span class="nf">great_circle</span><span class="p">(</span><span class="nb">float</span> <span class="n">lon1</span><span class="p">,</span><span class="nb">float</span> <span class="n">lat1</span><span class="p">,</span><span class="nb">float</span> <span class="n">lon2</span><span class="p">,</span><span class="nb">float</span> <span class="n">lat2</span><span class="p">):</span>
+    <span class="n">cdef</span> <span class="nb">float</span> <span class="n">radius</span> <span class="o">=</span> <span class="mf">3956.0</span>
+    <span class="n">cdef</span> <span class="nb">float</span> <span class="n">pi</span> <span class="o">=</span> <span class="mf">3.14159265</span>
+    <span class="n">cdef</span> <span class="nb">float</span> <span class="n">x</span> <span class="o">=</span> <span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span>
+    <span class="n">cdef</span> <span class="nb">float</span> <span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">theta</span><span class="p">,</span><span class="n">c</span>
 
-    a = (90.0-lat1)*(x)
-    b = (90.0-lat2)*(x)
-    theta = (lon2-lon1)*(x)
-    c = math.acos((math.cos(a)*math.cos(b)) + (math.sin(a)*math.sin(b)*math.cos(theta)))
-    return radius*c
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span><span class="o">-</span><span class="n">lat1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span><span class="o">-</span><span class="n">lat2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="n">lon2</span><span class="o">-</span><span class="n">lon1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">((</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">radius</span><span class="o">*</span><span class="n">c</span>
 </code></pre>
+</div>
 
-<pre><code>import timeit  
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">timeit</span>  
 
-lon1, lat1, lon2, lat2 = -72.345, 34.323, -61.823, 54.826
-num = 500000
+<span class="n">lon1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lon2</span><span class="p">,</span> <span class="n">lat2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">72.345</span><span class="p">,</span> <span class="mf">34.323</span><span class="p">,</span> <span class="o">-</span><span class="mf">61.823</span><span class="p">,</span> <span class="mf">54.826</span>
+<span class="n">num</span> <span class="o">=</span> <span class="mi">500000</span>
 
-t = timeit.Timer("p1.great_circle(%f,%f,%f,%f)" % (lon1,lat1,lon2,lat2),
-                       "import p1")
-print "Pure python function", t.timeit(num), "sec"
+<span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="s2">&quot;p1.great_circle(</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon2</span><span class="p">,</span><span class="n">lat2</span><span class="p">),</span>
+                       <span class="s2">&quot;import p1&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;Pure python function&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span>
 </code></pre>
+</div>
 
 <p>c1-main.py</p>
 
-<pre><code>import timeit
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">timeit</span>
 
-lon1, lat1, lon2, lat2 = -72.345, 34.323, -61.823, 54.826
-num = 500000
+<span class="n">lon1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lon2</span><span class="p">,</span> <span class="n">lat2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">72.345</span><span class="p">,</span> <span class="mf">34.323</span><span class="p">,</span> <span class="o">-</span><span class="mf">61.823</span><span class="p">,</span> <span class="mf">54.826</span>
+<span class="n">num</span> <span class="o">=</span> <span class="mi">500000</span>
 
-t = timeit.Timer("c1.great_circle(%f,%f,%f,%f)" % (lon1,lat1,lon2,lat2),
-                  "import c1")
-print "Cython function (still using python math)", t.timeit(num), "sec"
+<span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="s2">&quot;c1.great_circle(</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon2</span><span class="p">,</span><span class="n">lat2</span><span class="p">),</span>
+                  <span class="s2">&quot;import c1&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;Cython function (still using python math)&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span>
 </code></pre>
+</div>
 
 <p>p1.py</p>
 
-<pre><code>import math
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">math</span>
 
-def great_circle(lon1,lat1,lon2,lat2):
-    radius = 3956 #miles
-    x = math.pi/180.0
-    a = (90.0-lat1)*(x)
-    b = (90.0-lat2)*(x)
-    theta = (lon2-lon1)*(x)
-    c = math.acos((math.cos(a)*math.cos(b)) +
-                  (math.sin(a)*math.sin(b)*math.cos(theta)))
+<span class="k">def</span> <span class="nf">great_circle</span><span class="p">(</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon2</span><span class="p">,</span><span class="n">lat2</span><span class="p">):</span>
+    <span class="n">radius</span> <span class="o">=</span> <span class="mi">3956</span> <span class="c1">#miles</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span><span class="o">-</span><span class="n">lat1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="mf">90.0</span><span class="o">-</span><span class="n">lat2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="p">(</span><span class="n">lon2</span><span class="o">-</span><span class="n">lon1</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">acos</span><span class="p">((</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">b</span><span class="p">))</span> <span class="o">+</span>
+                  <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">b</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)))</span>
 
-    return radius*c
+    <span class="k">return</span> <span class="n">radius</span><span class="o">*</span><span class="n">c</span>
 </code></pre>
+</div>
 
-<pre><code>import timeit  
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">timeit</span>  
 
-lon1, lat1, lon2, lat2 = -72.345, 34.323, -61.823, 54.826
-num = 500000
+<span class="n">lon1</span><span class="p">,</span> <span class="n">lat1</span><span class="p">,</span> <span class="n">lon2</span><span class="p">,</span> <span class="n">lat2</span> <span class="o">=</span> <span class="o">-</span><span class="mf">72.345</span><span class="p">,</span> <span class="mf">34.323</span><span class="p">,</span> <span class="o">-</span><span class="mf">61.823</span><span class="p">,</span> <span class="mf">54.826</span>
+<span class="n">num</span> <span class="o">=</span> <span class="mi">500000</span>
 
-t = timeit.Timer("p1.great_circle(%f,%f,%f,%f)" % (lon1,lat1,lon2,lat2),
+<span class="n">t</span> <span class="o">=</span> <span class="n">timeit</span><span class="o">.</span><span class="n">Timer</span><span class="p">(</span><span class="s2">&quot;p1.great_circle(</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">lon1</span><span class="p">,</span><span class="n">lat1</span><span class="p">,</span><span class="n">lon2</span><span class="p">,</span><span class="n">lat2</span><span class="p">),</span>
 
-                       "import p1")
+                       <span class="s2">&quot;import p1&quot;</span><span class="p">)</span>
 
-print "Pure python function", t.timeit(num), "sec"
+<span class="nb">print</span> <span class="s2">&quot;Pure python function&quot;</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">num</span><span class="p">),</span> <span class="s2">&quot;sec&quot;</span>
 </code></pre>
+</div>
 
 <p>make.sh</p>
 

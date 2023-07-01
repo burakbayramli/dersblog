@@ -8,9 +8,7 @@
 
 [imap](02/imap.html)
 
-[meshgrid](02/meshgrid.html)
-
-[Operatorler](02/operatorler.html)
+[Operatörler](02/operatorler.html)
 
 [JSON](03/json.html)
 

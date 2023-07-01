@@ -104,6 +104,8 @@
 
 [Web Sayfaları, HTML ve CSS](05/web-sayfalari-html-css.html)
 
+[Google Tercümesi, googletrans](06/googletrans.html)
+
 [İklim, Nem Verileri](06/iklim-nem-verisi.html)
 
 [İmaj / Görüntü İşleme Teknikleri](06/imaj-isleme-teknikleri.html)

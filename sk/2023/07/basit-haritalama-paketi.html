@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yeni Haritalama Paketi</h1>
+
+<p>Çorbada bizim de tuzumuz olsun; İnternet bağlantısı gerektirmeyen,
+gerekli verisini paket kurulum dosyalarında taşıyan haritalama paketi
+bulamadık, kendimiz yazdık - <code>simplegeomap</code>.  Açık yazılım olarak
+paylaşılıyor [1], ve PyPi üzerinde kurulmaya hazır whl dosyası var,
+<code>pip install simplegeomap</code> ile kurulabilir.</p>
+
+<p>Simplegeomap temel ihtiyaçları basit, hızlı bir şekilde cevaplaması
+için yazılmıştır, bu ihtiyaçlar en azından bizim için istenen bir
+bölge içine düşen kıta, ülke sınırlarını çizebilmek, sınırlar
+dışındaki denizleri belli bir renkte vermek, çok detaylı olmasa da
+yükseklik (dağlar) ve şu alanları (nehir, gol gibi) haritalamanın,
+raporlamanın mümkün olması.</p>
+
+<p>Smgm yuvarlık olan yerkürenin farklı şekildeki iki boyuta yansıtma
+tekniklerini kullanmıyor, en temel yaklaşım olan boylamı x, enlemi y
+kordinatı kabul edip grafiklemeyi bu şekilde yapmayı seçiyor. Bu
+yaklaşım her çok uzun mesafelerde kesin olmayabilir, fakat yakın
+mesafeler ve objelerin genel yerlerini göstermesi açısından
+yeterlidir.</p>
+
+<h2>Kıtalar, Ülkeler</h2>
+
+<p>En temel cizimle baslayalim. Bir kordinate merkez alip belli bir
+odak (zoom) seviyesine gore o noktadaki kita sinirlarini cizelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_01.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_01.jpg" alt="" /></p>
+
+<p>Farklı yerlere odaklanabiliriz, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sm</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_02.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_02.jpg" alt="" /></p>
+
+<p>Smgm üstteki türden haritalama için iç renk ve dış renk (<code>incolor</code>,
+<code>outcolor</code>) kavramlarını kullanır. Sınırları olan alanlar, kıtalar, ya
+da ülkelerin içi <code>incolor</code> ile dışarıda kalan herşey <code>outcolor</code> ile
+renklenir. Mesela ic kahverengimsi, dis daha koyu mavi istersek bunu
+yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sm</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span><span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;yellow&#39;</span><span class="p">,</span><span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_03.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_03.jpg" alt="" /></p>
+
+<p>Olağan (default) değerler iç <code>lightyellow</code> dış <code>lightblue</code> kullanıyor.</p>
+
+<p>Ülkeler için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sm</span><span class="o">.</span><span class="n">plot_countries</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_04.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_04.jpg" alt="" /></p>
+
+<p>Görüldüğü gibi gösterilen bölgenin içine düşen tüm ülke sınırları çizildi. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://github.com/burakbayramli/simplegeomap</p>
+
+<p>[2] https://pypi.org/project/simplegeomap/</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

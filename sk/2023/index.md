@@ -110,3 +110,5 @@
 
 [İmaj / Görüntü İşleme Teknikleri](06/imaj-isleme-teknikleri.html)
 
+[Yeni Haritalama Paketi](07/basit-haritalama-paketi.html)
+

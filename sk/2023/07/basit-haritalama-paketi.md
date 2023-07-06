@@ -68,7 +68,10 @@ plt.savefig('sm_04.jpg',quality=40)
 
 ![](sm_04.jpg)
 
-Görüldüğü gibi gösterilen bölgenin içine düşen tüm ülke sınırları çizildi. 
+Görüldüğü gibi gösterilen bölgenin içine düşen tüm ülke sınırları çizildi.
+Tekrar belirtmek gerekirse, kıta sınırları, ülke sınırlarını içeren veri
+dosyaları paketin bir parçası, bu dosyalar kurulum ile beraber geliyorlar
+ve her an erişime hazırlar, İnternet bağlantısına gerek yok.
 
 
 Kaynaklar
@@ -76,3 +79,4 @@ Kaynaklar
 [1] https://github.com/burakbayramli/simplegeomap
 
 [2] https://pypi.org/project/simplegeomap/
+

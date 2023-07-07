@@ -38,30 +38,30 @@
         <h1></h1>
 <h1>Yeni Haritalama Paketi</h1>
 
-<p>Çorbada bizim de tuzumuz olsun; İnternet bağlantısı gerektirmeyen,
-gerekli verisini paket kurulum dosyalarında taşıyan haritalama paketi
-bulamadık, kendimiz yazdık - <code>simplegeomap</code>.  Açık yazılım olarak
-paylaşılıyor [1], ve PyPi üzerinde kurulmaya hazır whl dosyası var,
-<code>pip install simplegeomap</code> ile kurulabilir.</p>
+<p>İnternet bağlantısı gerektirmeyen, gerekli verisini paket kurulum
+dosyalarında taşıyan haritalama paketi revaçta yoktu, yazmak zorunda
+kaldık - <code>simplegeomap</code>.  Açık yazılım olarak paylaşılıyor [1], ve
+PyPi üzerinde kurulmaya hazır whl dosyası var, <code>pip ınstall
+simplegeomap</code> ile kurulabilir.</p>
 
 <p>Simplegeomap temel ihtiyaçları basit, hızlı bir şekilde cevaplaması
 için yazılmıştır, bu ihtiyaçlar en azından bizim için istenen bir
-bölge içine düşen kıta, ülke sınırlarını çizebilmek, sınırlar
-dışındaki denizleri belli bir renkte vermek, çok detaylı olmasa da
-yükseklik (dağlar) ve şu alanları (nehir, gol gibi) haritalamanın,
-raporlamanın mümkün olması.</p>
+bölge içine düşen kıta, ülke sınırlarını çabuk bir şekilde çizebilmek,
+sınırlar dışında kalanları (mesela denizler) belli bir renkte vermek,
+çok detaylı olmasa da yükseklik (dağlar) ve su alanları (nehir, gol
+gibi) haritalamanın, raporlamanın mümkün olması.</p>
 
-<p>Smgm yuvarlık olan yerkürenin farklı şekildeki iki boyuta yansıtma
+<p>Smgm yuvarlak olan yerkürenin farklı şekildeki iki boyuta yansıtma
 tekniklerini kullanmıyor, en temel yaklaşım olan boylamı x, enlemi y
-kordinatı kabul edip grafiklemeyi bu şekilde yapmayı seçiyor. Bu
-yaklaşım her çok uzun mesafelerde kesin olmayabilir, fakat yakın
-mesafeler ve objelerin genel yerlerini göstermesi açısından
+kordinatı kabul edip veriyi direk kartezyen hale getirme teknigini
+seçiyor. Bu yaklaşım her çok uzun mesafelerde kesin olmayabilir, fakat
+yakın mesafeler ve objelerin genel yerlerini göstermesi açısından
 yeterlidir.</p>
 
 <h2>Kıtalar, Ülkeler</h2>
 
-<p>En temel cizimle baslayalim. Bir kordinate merkez alip belli bir
-odak (zoom) seviyesine gore o noktadaki kita sinirlarini cizelim,</p>
+<p>En temel çizimle başlayalım. Bir kordinatı merkez alıp belli bir
+odak (zoom) seviyesine göre o noktadaki kıta sınırlarını çizelim,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span>
@@ -86,7 +86,7 @@ odak (zoom) seviyesine gore o noktadaki kita sinirlarini cizelim,</p>
 <p>Smgm üstteki türden haritalama için iç renk ve dış renk (<code>incolor</code>,
 <code>outcolor</code>) kavramlarını kullanır. Sınırları olan alanlar, kıtalar, ya
 da ülkelerin içi <code>incolor</code> ile dışarıda kalan herşey <code>outcolor</code> ile
-renklenir. Mesela ic kahverengimsi, dis daha koyu mavi istersek bunu
+renklenir. Mesela iç kahverengimsi, dış daha koyu mavi istersek bunu
 yapabiliriz,</p>
 
 <div class="codehilite">
@@ -97,9 +97,10 @@ yapabiliriz,</p>
 
 <p><img src="sm_03.jpg" alt="" /></p>
 
-<p>Olağan (default) değerler iç <code>lightyellow</code> dış <code>lightblue</code> kullanıyor.</p>
+<p>Olağan (default) değerler iç <code>lightyellow</code> dış <code>lightblue</code>. Kullanici bu degerleri
+goruldugu gibi degistirebiliyor.</p>
 
-<p>Ülkeler için</p>
+<p>Ülkeler,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">sm</span><span class="o">.</span><span class="n">plot_countries</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
@@ -109,10 +110,58 @@ yapabiliriz,</p>
 
 <p><img src="sm_04.jpg" alt="" /></p>
 
-<p>Görüldüğü gibi gösterilen bölgenin içine düşen tüm ülke sınırları çizildi.
-Tekrar belirtmek gerekirse, kıta sınırları, ülke sınırlarını içeren veri
-dosyaları paketin bir parçası, bu dosyalar kurulum ile beraber geliyorlar
-ve her an erişime hazırlar, İnternet bağlantısına gerek yok.</p>
+<p>Görüldüğü gibi gösterilen bölgenin içine düşen tüm ülke sınırları
+çizildi.  Tekrar belirtmek gerekirse, kıta sınırları, ülke sınırlarını
+içeren veri dosyaları paketin bir parçasıdır, bu dosyalar kurulum ile
+beraber gelirler ve her an erişime hazır olacaklardır, İnternet
+bağlantısına ihtiyaçları yoktur.</p>
+
+<p>Paket grafiklemesini yaparken temel <code>matplotlib</code> kavramlarını
+kullanır, zaten enlem/boylam bilgisini boylam/enlem olarak x,y
+noktaları olarak kullandığımızı söylemiştik, bu durumda, eğer ek
+bilgileri haritaya konuşlandırmak istersek bunu hala <code>matplotlib</code>
+yapılarıyla x,y kordinatlarını kullanarak yapabiliriz. Mesela üstteki
+haritada Mısır'da enlem=28, boylam=30 noktasını göstermek istiyorum,
+oraya bir kırmızı 'elmas' şekli koyabilirim, altına yazı yazabilirim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sm</span><span class="o">.</span><span class="n">plot_countries</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="s1">&#39;rd&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span><span class="mf">28.5</span><span class="p">,</span><span class="s1">&#39;Buraya dikkat&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_05.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_05.jpg" alt="" /></p>
+
+<p>Bolgeler, Cizgiler</p>
+
+<p>Bir kordinat listesi ile bir eğri, çizgi göstermek mümkündür. Çizgiyi
+temsil eden noktaları liste olarak smgm'e verince çizgi gösterilir.</p>
+
+<p>Eğer kapalı bölge istersem verilen listenin son kordinatı ilk
+kordinatına bağlı kabul edilecektir, ve alan kapatılacaktır.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">40</span><span class="p">,</span><span class="mi">10</span><span class="p">],[</span><span class="mi">43</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">43</span><span class="p">,</span><span class="mi">15</span><span class="p">]])</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_countries</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_line</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_06.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_06.jpg" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_countries</span><span class="p">(</span><span class="n">clat</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">clon</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_region</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span><span class="n">ax</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;lightpink&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;sm_07.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="sm_07.jpg" alt="" /></p>
 
 <p>Kaynaklar</p>
 

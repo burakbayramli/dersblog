@@ -102,8 +102,8 @@ m.save("43r.html")
 
 Eğer kısayol algoritmaları işletmek istersek, ki bunun için
 düğüm/kenar verisini (yani durak/hat) bir sözlük içinde tutmak lazım,
-bu sözlük `d['elements']` listesini gezerken alttaki gibi
-yaratılabilir,
+bu sözlük `d['elements']` listesini gezerken bir `G` sözlüğü için
+alttaki gibi yaratılabilir,
 
 ```python
   ...

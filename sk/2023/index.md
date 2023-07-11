@@ -1,6 +1,6 @@
 # 2023
 
-[IETT Verileri, SOAP](01/iett-ibb-otobus-verisi.html)
+[IETT Verileri, OSM, SOAP](01/iett-ibb-otobus-verisi.html)
 
 [Rust Programlama Dili](01/rust.html)
 

@@ -32,7 +32,7 @@ sm.plot_continents(clat=0,clon=0,zoom=20)
 plt.savefig('sm_01.jpg',quality=40)
 ```
 
-Bu grafikleme için gereken veri smgm içinde mevcut `continents.zıp`
+Bu grafikleme için gereken veri smgm içinde mevcut `continents.zip`
 dosyasından geliyor, kıta sınırları bir JSON içinde, 300K
 büyüklüğünde. İnternet bağlantısına gerek yok.
 
@@ -158,6 +158,34 @@ plt.savefig('sm_08.jpg',quality=40)
 ```
 
 ![](sm_08.jpg)
+
+Nehirler, Göller  
+
+Odaklanan bölge içine duen şu öbekleri için `plot_water` var,
+
+```python
+clat,clon = 48, 33
+zoom = 0.5
+fig, ax = plt.subplots() 
+sm.plot_countries(clat,clon,zoom=zoom,ax=ax,force_include=['RUS'])
+sm.plot_water(clat,clon,zoom=zoom,ax=ax)
+plt.savefig('sm_09.jpg',quality=40)
+```
+
+![](sm_09.jpg)
+
+Dağlar, Yükseklik Verisi
+
+```python
+clat,clon = 39, 43; zoom = 0.12
+fig, ax = plt.subplots() 
+sm.plot_countries(clat,clon,zoom=zoom,ax=ax)
+sm.plot_elevation(clat,clon,zoom=zoom,ax=ax)
+plt.savefig('sm_10.jpg',quality=40)
+```
+
+![](sm_10.jpg)
+
 
 Kaynaklar
 

@@ -184,8 +184,7 @@ sm.plot_elevation(clat,clon,zoom=zoom,ax=ax)
 plt.savefig('sm_10.jpg',quality=40)
 ```
 
-![](sm_10.jpg)
-
+Sonuç kontur çizgileri olarak gösterilecektir.
 
 Kaynaklar
 

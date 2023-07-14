@@ -114,9 +114,9 @@ haritaya tekrar 'dahil' edebiliriz.
 Bölgeler, Çizgiler
 
 Bir kordinat listesi ile bir eğri, çizgi göstermek mümkündür. Çizgiyi
-temsil eden noktaları liste olarak smgm'e verince çizgi basılır. Eğer
-kapalı bölge istersem verilen listenin son kordinatı ilk kordinatına
-bağlı kabul edilecektir, ve alan kapatılacaktır.
+temsil eden noktaları liste olarak smgm'e verince çizgi parçaları
+basılır. Eğer kapalı bölge istersem verilen listenin son kordinatı ilk
+kordinatına bağlı kabul edilecektir, ve alan kapatılacaktır.
 
 ```python
 pts = np.array([[40,10],[43,10], [43,15]])

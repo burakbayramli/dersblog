@@ -96,6 +96,10 @@ plt.savefig('sm_05.jpg',quality=40)
 
 ![](sm_05.jpg)
 
+Muhakkak `matplotlib` paketinin içinde pek çok diğer çağrı var, mesela
+oklarla bir vektör alanı `quiver` ile, her türlü `plot` şekli üstteki
+grafikte `plt` ya da `ax` objeleri üzerinden direk kullanılabilirdi.
+
 Odak, Uzak Ülkeler
 
 Paket, verilen merkez nokta ve odak (zoom) üzerinden haritalama

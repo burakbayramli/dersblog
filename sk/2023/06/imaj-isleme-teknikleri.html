@@ -52,14 +52,14 @@ kullanarak kod ornekleri verilecek.</p>
 <pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;img3.jpg&#39;</span><span class="p">)</span>
 <span class="n">new_img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">)</span>
-<span class="n">new_img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_2.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">new_img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_2.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <p><img src="img3_2.jpg" alt="" /></p>
 
-<p>Boyut değişimi yapılırken <code>ANTİALİAS</code>, <code>BİCUBİÇ</code>, <code>BİLİNEAR</code> ve
-<code>CUBİÇ</code> seçenekleri kullanılabilir. Küçültme, büyültme farketmez, aynı
+<p>Boyut değişimi yapılırken <code>ANTIALIAS</code>, <code>BICUBIC</code>, <code>BILINEAR</code> ve
+<code>CUBIC</code> seçenekleri kullanılabilir. Küçültme, büyültme farketmez, aynı
 seçenekler var, büyültürken muhakkak aradeğerleme (interpolation)
 yapılması lazım, bahsedilen seçenekler bu aradeğerlemenin nasıl
 yapılacağını kontrol ediyor.</p>
@@ -68,7 +68,7 @@ yapılacağını kontrol ediyor.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">new_img3</span> <span class="o">=</span> <span class="n">new_img</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">340</span><span class="p">,</span><span class="mi">340</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">)</span>
-<span class="n">new_img3</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_3.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">new_img3</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_3.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -77,7 +77,20 @@ yapılacağını kontrol ediyor.</p>
 <p>Biraz kalite kaybı oldu muhakkak bu küçültme yaparken yaşanan veri kaybı
 yüzünden.</p>
 
-<h1>Pürüzsüzleştirme (Smoothing)</h1>
+<h3>Bölge Kesip Çıkartmak (Crop)</h3>
+
+<p>x=100,y=100 ile x=200,y=200 noktalarının oluşturduğu kareyi çekip çıkartmak
+istersem,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">new_img4</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">crop</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">))</span>
+<span class="n">new_img4</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_4.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="img3_4.jpg" alt="" /></p>
+
+<h3>Pürüzsüzleştirme (Smoothing)</h3>
 
 <p>Pürüzsüzleştirme, ya da bulanıklaştırma işlemi yapmak için bir <code>scipy</code> bazlı
 bir de pür <code>numpy</code> bazlı bir teknik göreceğiz. İşlenecek resim demirbaş

@@ -14,23 +14,22 @@ kullanarak kod ornekleri verilecek.
 from PIL import Image
 img = Image.open('img3.jpg')
 new_img = img.resize((100,100), Image.BICUBIC)
-new_img.save("img3_2.jpg", "JPEG", quality=40)
+new_img.save("img3_2.jpg", "JPEG")
 ```
 
 ![](img3_2.jpg)
 
-Boyut değişimi yapılırken `ANTİALİAS`, `BİCUBİÇ`, `BİLİNEAR` ve
-`CUBİÇ` seçenekleri kullanılabilir. Küçültme, büyültme farketmez, aynı
+Boyut değişimi yapılırken `ANTIALIAS`, `BICUBIC`, `BILINEAR` ve
+`CUBIC` seçenekleri kullanılabilir. Küçültme, büyültme farketmez, aynı
 seçenekler var, büyültürken muhakkak aradeğerleme (interpolation)
 yapılması lazım, bahsedilen seçenekler bu aradeğerlemenin nasıl
 yapılacağını kontrol ediyor.
 
 Biraz önce küçültülen resmi şimdi geri büyültmelim,
 
-
 ```python
 new_img3 = new_img.resize((340,340), Image.BICUBIC)
-new_img3.save("img3_3.jpg", "JPEG", quality=40)
+new_img3.save("img3_3.jpg", "JPEG")
 ```
 
 ![](img3_3.jpg)
@@ -38,7 +37,19 @@ new_img3.save("img3_3.jpg", "JPEG", quality=40)
 Biraz kalite kaybı oldu muhakkak bu küçültme yaparken yaşanan veri kaybı
 yüzünden.
 
-# Pürüzsüzleştirme (Smoothing)
+### Bölge Kesip Çıkartmak (Crop)
+
+x=100,y=100 ile x=200,y=200 noktalarının oluşturduğu kareyi çekip çıkartmak
+istersem,
+
+```python
+new_img4 = img.crop((100, 100, 200, 200))
+new_img4.save("img3_4.jpg", "JPEG")
+```
+
+![](img3_4.jpg)
+
+### Pürüzsüzleştirme (Smoothing)
 
 Pürüzsüzleştirme, ya da bulanıklaştırma işlemi yapmak için bir `scipy` bazlı
 bir de pür `numpy` bazlı bir teknik göreceğiz. İşlenecek resim demirbaş

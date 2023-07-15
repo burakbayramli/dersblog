@@ -38,6 +38,45 @@
         <h1></h1>
 <h1>İmaj / Görüntü İşleme Teknikleri</h1>
 
+<p>Standart bazi sayisal goruntu isleme tekniklerini listeleyecegiz,
+referans amacli, mumkun oldugu kadar yaygin bilinen kutuphaneleri
+kullanarak kod ornekleri verilecek.</p>
+
+<h3>Küçültmek, Büyütmek</h3>
+
+<p>Ünlü kameracı görüntüsü üzerinde küçültme yapalım,</p>
+
+<p><img src="img3.jpg" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;img3.jpg&#39;</span><span class="p">)</span>
+<span class="n">new_img</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">)</span>
+<span class="n">new_img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_2.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="img3_2.jpg" alt="" /></p>
+
+<p>Boyut değişimi yapılırken <code>ANTİALİAS</code>, <code>BİCUBİÇ</code>, <code>BİLİNEAR</code> ve
+<code>CUBİÇ</code> seçenekleri kullanılabilir. Küçültme, büyültme farketmez, aynı
+seçenekler var, büyültürken muhakkak aradeğerleme (interpolation)
+yapılması lazım, bahsedilen seçenekler bu aradeğerlemenin nasıl
+yapılacağını kontrol ediyor.</p>
+
+<p>Biraz önce küçültülen resmi şimdi geri büyültmelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">new_img3</span> <span class="o">=</span> <span class="n">new_img</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="mi">340</span><span class="p">,</span><span class="mi">340</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">)</span>
+<span class="n">new_img3</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;img3_3.jpg&quot;</span><span class="p">,</span> <span class="s2">&quot;JPEG&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="img3_3.jpg" alt="" /></p>
+
+<p>Biraz kalite kaybı oldu muhakkak bu küçültme yaparken yaşanan veri kaybı
+yüzünden.</p>
+
 <h1>Pürüzsüzleştirme (Smoothing)</h1>
 
 <p>Pürüzsüzleştirme, ya da bulanıklaştırma işlemi yapmak için bir <code>scipy</code> bazlı

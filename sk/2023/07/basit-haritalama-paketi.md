@@ -165,7 +165,7 @@ plt.savefig('sm_08.jpg',quality=40)
 
 Nehirler, Göller  
 
-Odaklanan bölge içine duen su öbekleri için `plot_water` var,
+Odaklanan bölge içine düşen su öbekleri için `plot_water` var,
 
 ```python
 clat,clon = 48, 35
@@ -188,14 +188,11 @@ sm.plot_elevation(clat,clon,zoom=zoom,ax=ax)
 plt.savefig('sm_10.jpg',quality=40)
 ```
 
-```text
-dist 2000.0
-```
 ![](sm_10.jpg)
 
-
-
-Sonuç kontur çizgileri olarak gösterilecektir.
+Eğer kontur seviyelerini biz tanımlamak istersek bunu `levels=[100,200,..]`
+şeklinde bir parametre geçerek smgm kodlarına bildirebiliriz, bu durumda 100 metre,
+200 metre, vs kontur çizgileri basılacaktır. 
 
 Kaynaklar
 

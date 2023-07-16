@@ -274,9 +274,7 @@ file" seçeneği. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
 olacaktır, bazıları daha az, altta her bölgenin boyutları var.</p>
 
 <p>Zip dosyasını açalım, alttaki kod <code>g10g</code> bölgesini okuyup haritalıyor,
-[5] kodu örnek alındı, <code>downsample</code> ile veriyi daha da azalttığımızı
-görebiliyoruz, istemeyenler bu satırı çıkartıp ya da <code>downsample=1</code>
-ile veriyi olduğu gibi kullanabilir.</p>
+[5] kodu örnek alındı. </p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">gltiles</span> <span class="o">=</span> <span class="p">{</span>
@@ -326,6 +324,50 @@ ile veriyi olduğu gibi kullanabilir.</p>
 
 <p><img src="gltiles1.png" alt="" /></p>
 
+<p>Eger belli bir bolgeyi cekip cikartmak istiyorsak biraz daha ek islem
+gerekli. Mesela sol alt kose 35,25 sag ust kose 42,46 olacak sekilde
+(TR bolgesi) bir dikdortgenin icine dusen yukseklikleri istiyoruz. Bu
+durumda <code>lat</code>, <code>lon</code> vektorleri icindeki o alana dusen kordinat
+indislerini bulup, onlara gore <code>zm</code> matrisi icindeki o veriyi almak
+gerekir.</p>
+
+<p>Burada bize yardımcı olabilecek bir kod türü aslında görüntü işlem
+kodlarıdır. Eğer yükseklik verisini gri görüntüdeki piksel değerleri
+gibi görürsek görüntü işlem kütüphanelerinin küçültme, büyültme, bölge
+çekip çıkartma gibi pek çok yardımcı fonksiyonlarını kullanabiliriz [7].</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">lon</span> <span class="o">=</span> <span class="n">lon_min</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">lat_max</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+
+<span class="n">latidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="p">(</span><span class="n">lat</span> <span class="o">&gt;</span> <span class="mi">35</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lat</span> <span class="o">&lt;</span> <span class="mi">42</span><span class="p">)</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">latidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">latidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">lonidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="p">(</span><span class="n">lon</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lon</span> <span class="o">&lt;</span> <span class="mi">46</span><span class="p">)</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lonidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lonidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">zm</span><span class="p">[</span><span class="n">zm</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">zm</span><span class="p">)</span>
+
+<span class="n">img2</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">crop</span><span class="p">((</span><span class="n">lonidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">latidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">lonidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">latidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span> <span class="n">H</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">new_img</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">W</span><span class="p">,</span><span class="n">H</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">)</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_img</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="n">lonidx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">lon</span><span class="p">[</span><span class="n">lonidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">W</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="n">latidx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">lat</span><span class="p">[</span><span class="n">latidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">H</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">CS</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">arr</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">binary</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gltiles2.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="gltiles2.jpg" alt="" /></p>
+
 <p>Kaynaklar</p>
 
 <p>[1] [RBF](https://burakbayramli.github.io/dersblog/stat/stat<em>175</em>rbf/dairesel<em>baz</em>fonksiyonlari<strong>radial<em>basis</em>functions<em>rbf</strong>yukseklik</em>verisi_daglar.html)</p>
@@ -339,6 +381,8 @@ ile veriyi olduğu gibi kullanabilir.</p>
 <p>[5] https://github.com/developmentseed/landsat-util</p>
 
 <p>[6] [Yükseklik Verisini Kontur olarak Folium Haritasında Göstermek](../../2021/11/yukseklik-kontur-folium-harita.html)</p>
+
+<p>[7] [İmaj / Görüntü İşleme Teknikleri](https://burakbayramli.github.io/dersblog/sk/2023/06/imaj-isleme-teknikleri.html)</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

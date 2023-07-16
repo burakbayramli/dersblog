@@ -10,8 +10,8 @@ Simplegeomap temel ihtiyaçları basit, hızlı bir şekilde cevaplaması
 için yazılmıştır, bu ihtiyaçlar en azından bizim için istenen bir
 bölge içine düşen kıta, ülke sınırlarını çabuk bir şekilde çizebilmek,
 sınırlar dışında kalanları (mesela denizler) belli bir renkte vermek,
-çok detaylı olmasa da yükseklik (dağlar) ve su alanları (nehir, göl
-gibi) haritalamanın, raporlamanın mümkün olması.
+yükseklik (dağlar) ve su alanları (nehir, göl gibi) haritalamanın,
+raporlamanın mümkün olması.
 
 Smgm yuvarlak olan yerkürenin farklı şekildeki iki boyuta yansıtma
 tekniklerini kullanmıyor, en temel yaklaşım olan boylamı x, enlemi y

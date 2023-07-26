@@ -242,6 +242,91 @@ $$</p>
 <p>$$
 \epsilon_z = \frac{\sigma_z}{E} - \frac{v \sigma_x}{E} - \frac{v \sigma_y}{E} 
 $$</p>
+<p>Son üç denklemi birleştirip stresler solda olacak şekilde düzenlersek,</p>
+<p>$$
+\sigma_x = \frac{E}{(1+v)(1-2v)} [\epsilon_x (1-v) + v \epsilon_y + v \epsilon_z ]
+$$</p>
+<p>$$
+\sigma_y = \frac{E}{(1+v)(1-2v)} [ v \epsilon_x + \epsilon_y (1-v) + v \epsilon_z  ]
+$$</p>
+<p>$$
+\sigma_z = \frac{E}{(1+v)(1-2v)} [v \epsilon_x + v \epsilon_y + \epsilon_z (1-v)  ]
+$$</p>
+<p>Ayrıca normal stresler için kullanılan Hooke Kanunu $\sigma = E \epsilon$ benzer
+bir şekilde kaykılma stresi ve kaykılma gerinimi için de geçerlidir, ama sabit
+$E$ yerine $G$ kullanılır,</p>
+<p>$$
+\tau = G \gamma
+$$</p>
+<p>$G$ sabitine Kaykılma Genliği (Shear Modulus) ismi veriliyor. 0 zaman üç boyutta
+ortaya çıkabilecek üç kaykılma stresi</p>
+<p>$$
+\tau_{xy} = G \gamma_{xy} \qquad 
+\tau_{yz} = G \gamma_{yz} \qquad 
+\tau_{zx} = G \gamma_{zx}
+$$</p>
+<p>$G$ ile $E$ arasında bir ilişki var, bu formül</p>
+<p>$$
+G = \frac{E}{2(1+v)}
+$$</p>
+<p>Bu formülün türetilmesi için [3, sf. 70]'e bakılabilir.</p>
+<p>Şimdi üstteki tüm formülleri matris formunda bir araya koyabiliriz,</p>
+<p>$$
+\left[\begin{array}{c}
+\sigma_x \\ \sigma_y \\ \sigma_z \\ \tau_{xy} \\ \tau_{yz} \\ \tau_{zx}
+\end{array}\right] =
+\frac{E}{(1+v)(1-2v)}
+\left[\begin{array}{cccccc}
+1-v &amp;  v  &amp;  v  &amp;            0      &amp;               0  &amp;  0  \\
+ v  &amp; 1-v &amp;  v  &amp;            0      &amp;               0  &amp;  0  \\
+ v  &amp;  v  &amp; 1-v &amp;            0      &amp;               0  &amp;  0  \\
+ 0  &amp;  0  &amp;  0  &amp; \dfrac{1-2v}{2}   &amp;               0  &amp;  0  \\
+ 0  &amp;  0  &amp;  0  &amp;            0      &amp;  \dfrac{1-2v}{2} &amp;  0  \\
+ 0  &amp;  0  &amp;  0  &amp;            0      &amp;               0  &amp;  \dfrac{1-2v}{2} 
+\end{array}\right]
+\left[\begin{array}{c}
+\epsilon_x \\ \epsilon_y \\ \epsilon_z \\ \gamma_{xy} \\ \gamma_{yz} \\ \gamma_{zx}
+\end{array}\right]
+$$</p>
+<p>Matrisin sol alt kısmı doldurulmadı orası simetri sebebiyle sağ üst kısım ile
+aynı.</p>
+<p>Eğer gerinim değişkenlerini eşitliğin solunda stresleri sağda tutmak istersek,
+üstteki matrisin tersini bulmamız lazım [7, sf. 161], sembolik ters alma
+işlemini <code>sympy</code> ile yapabiliriz,</p>
+<pre><code class="python">import sympy as sym
+E, v = sym.symbols('E v')
+matrix = E/((1+v)*(1-2*v))*sym.Matrix([[1-v,v,v,0,0,0],
+                     [v,1-v,v,0,0,0],
+             [v,v,1-v,0,0,0],
+             [0,0,0,(1-2*v)/2,0,0],
+                     [0,0,0,0,(1-2*v)/2,0],
+             [0,0,0,0,0,(1-2*v)/2]])
+sym.latex(matrix.inv())
+</code></pre>
+
+<p>$$
+\left[\begin{matrix}\dfrac{1}{E} &amp; - \dfrac{v}{E} &amp; - \dfrac{v}{E} &amp; 0 &amp; 0 &amp; 0\\- \dfrac{v}{E} &amp; \dfrac{1}{E} &amp; - \dfrac{v}{E} &amp; 0 &amp; 0 &amp; 0\\- \dfrac{v}{E} &amp; - \dfrac{v}{E} &amp; \dfrac{1}{E} &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; \dfrac{2 v + 2}{E} &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0 &amp; \dfrac{2 v + 2}{E} &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; \dfrac{2 v + 2}{E}\end{matrix}\right]
+$$</p>
+<p>Bir basitleştirme daha yapılabilir, bunu kendimiz görebiliyoruz, $1/E$ dışarı
+çekelim, hepsini bir araya koyalım,</p>
+<p>$$
+\left[\begin{array}{c}
+\epsilon_x \\ \epsilon_y \\ \epsilon_z \\ \gamma_{xy} \\ \gamma_{yz} \\ \gamma_{zx}
+\end{array}\right] =
+\frac{1}{E}
+\left[\begin{array}{cccccc}
+1 &amp; -v &amp; -v &amp; 0 &amp; 0 &amp; 0 \\
+-v &amp; 1 &amp; -v &amp; 0 &amp; 0 &amp; 0 \\
+-v &amp; -v &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 2(1+v) &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 2(1+v) &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 2(1+v)
+\end{array}\right]
+\left[\begin{array}{c}
+\sigma_x \\ \sigma_y \\ \sigma_z \\ \tau_{xy} \\ \tau_{yz} \\ \tau_{zx}
+\end{array}\right]
+$$</p>
+<p>Düzlem Stresi (Plane Stres)</p>
 <p>[devam edecek]</p>
 <p>Gerinim Enerji Yoğunluğu (Strain Energy Density)</p>
 <p>Yapılan iş ve enerji arasındaki bağlantıyı [5] yazısında işledik. Şimdi bir
@@ -318,6 +403,7 @@ enerji yoğunluğunu veriyor bize.</p>
 <p>[4] Kelly, <em>University of Auckland, Solid Mechanics, Part I</em></p>
 <p>[5] Bayramlı, <em>Fizik, Temel Fizik 1</em></p>
 <p>[6] Logan, <em>A First Course in the FEM, 5th Ed</em></p>
+<p>[7] Khennane, <em>Introduction to Finite Element Analysis using Matlab and Abaqus</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

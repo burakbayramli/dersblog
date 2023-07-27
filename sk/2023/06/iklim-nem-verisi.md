@@ -173,7 +173,40 @@ Out[1]: 35.12274652837743 <Unit('degree_Celsius')>
 Yani izafi nem 50% (normal) 1000 hPa basıncında 46 derece ölümcül ıslak termometre
 sıcaklığı 35 C'ye geliyor.
 
+Dunya bazinda bu olcutu grafiklesek nasil cikardi acaba? Dosya listesi
+[1]'den ASCII bazli olan `HadISDH.landRH` ve `HadISDH.landT`
+dosyalarini alabiliriz. Bu dosyalar uzerinde `hadisdh_process(..,..)` isletiriz,
+
+```python
+year = 2019; month = 7
+
+T = util.get_pd().read_csv('T.csv',sep=';',header=None)
+T = T[(T[0] == year) & (T[1] == month)]
+T = T.iloc[:,2:]
+T = np.array(T)
+
+Rh = util.get_pd().read_csv('Rh.csv',sep=';',header=None)
+Rh = Rh[(Rh[0] == year) & (Rh[1] == month)]
+Rh = Rh.iloc[:,2:]
+Rh = np.array(Rh)
+
+wet = [wet_bulb_temperature(P * units.hPa, t * units.degC, dewpoint_from_relative_humidity(t * units.degC, h * units.percent)).magnitude for t, h in np.nditer([T,Rh],order='C') ]
+wet = np.array(wet).reshape(Rh.shape,order='C')
+
+wet[wet<19] = -10
+
+x,y = np.meshgrid(np.linspace(-177.50,177.50,72),np.linspace(-87.50,87.50,36))
+util.get_sm().plot_continents(0, 20, zoom=18, incolor='black', outcolor='white', fill=False)
+plt.pcolormesh(x,y,wet,shading='auto',cmap='Reds')
+```
+
 ![](iklim05.jpg)
+
+Bu kodla sadece 19 derece üstündeki İTS gösteriliyor, şahsi
+gözlemlerimiz 20 C üstünün rahatsız edici olması filtrelemeyi ona gore
+yaptik. Sonuca bakınca Uzakdoğu'da, Akdeniz, Karadeniz etrafında bazi
+bölgeler görülüyor.
+
 
 Kaynaklar
 

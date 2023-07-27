@@ -140,6 +140,41 @@ Grafikte Kütahya, Denizli, Uşak etrafında az nemli bir bölge
 görülüyor, Karadenizde yüksek nemli bazı bölgeler var, doğuda ise nem
 daha az.
 
+Islak Termometre Sıcaklığı (Wet-Bulb Temperature)
+
+Çok yüksek derecedeki bazı sıcaklıkların mesela çöl ortamında bile
+nispeten dayanilabilir olduğunu biliyoruz, daha düşük sıcaklık farklı
+yerlerde dayanilmaz olabiliyor. Sebep nedir? Çöl ortamındaki kuru
+iklim (nem azlığı) burada rol oynamakta. Diğer yerlerde daha düşük
+sıcaklıkta yüksek nem etkili oluyor, insan bedeni yüksek sıcakta ter
+atarak serinler, fakat yüksek nemli ortamda bu atış işlemez olur
+(dışarıdaki hava içinde çok fazla sıvı var) ve bu sıcaklığın etkisini
+arttırır.
+
+Sıcaklık ve nem ölçülerini birleştirip tek bir ölçüt haline getiren
+bir hesap ıslak termometre sıcaklığı. Bu bize irdeleme açısından tek
+bir ölçüt veriyor, bilimsel makalelere göre 35 derece (Çelcius) hatta
+son bazı araştırmalara göre 31 C bile ölümcül olabiliyor.
+
+Hesabı yapmak için `MetPy` paketini kullanabiliriz,
+
+```python
+from metpy.calc import dewpoint_from_relative_humidity, wet_bulb_temperature
+from metpy.units import units
+
+dew = dewpoint_from_relative_humidity(46 * units.degC, 50 * units.percent)
+wet_bulb_temperature(1000 * units.hPa, 46 * units.degC, dew)
+```
+
+```text
+Out[1]: 35.12274652837743 <Unit('degree_Celsius')>
+```
+
+Yani izafi nem 50% (normal) 1000 hPa basıncında 46 derece ölümcül ıslak termometre
+sıcaklığı 35 C'ye geliyor.
+
+![](iklim05.jpg)
+
 Kaynaklar
 
 [1] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html">MetOffice</a>
@@ -147,4 +182,8 @@ Kaynaklar
 [2] <a href="../../2017/09/meteoroloji-verileri-ecmwf-noaa-openweathermap.html">OWM</a>
 
 [3] <a href="../../2012/08/aradegerleme-interpolation.html">Aradeğerleme</a>
+
+[4] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh">Hadisdh Degerler Listesi</a>
+
+[5] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadEXTREMES.html">Hadisdh Ekstrem Degerler</a>
 

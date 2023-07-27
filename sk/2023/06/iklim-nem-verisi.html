@@ -182,6 +182,43 @@ için daha detaylı bir ızgara bekleyen <code>pcolormesh</code> çağrısı ger
 görülüyor, Karadenizde yüksek nemli bazı bölgeler var, doğuda ise nem
 daha az.</p>
 
+<p>Islak Termometre Sıcaklığı (Wet-Bulb Temperature)</p>
+
+<p>Çok yüksek derecedeki bazı sıcaklıkların mesela çöl ortamında bile
+nispeten dayanilabilir olduğunu biliyoruz, daha düşük sıcaklık farklı
+yerlerde dayanilmaz olabiliyor. Sebep nedir? Çöl ortamındaki kuru
+iklim (nem azlığı) burada rol oynamakta. Diğer yerlerde daha düşük
+sıcaklıkta yüksek nem etkili oluyor, insan bedeni yüksek sıcakta ter
+atarak serinler, fakat yüksek nemli ortamda bu atış işlemez olur
+(dışarıdaki hava içinde çok fazla sıvı var) ve bu sıcaklığın etkisini
+arttırır.</p>
+
+<p>Sıcaklık ve nem ölçülerini birleştirip tek bir ölçüt haline getiren
+bir hesap ıslak termometre sıcaklığı. Bu bize irdeleme açısından tek
+bir ölçüt veriyor, bilimsel makalelere göre 35 derece (Çelcius) hatta
+son bazı araştırmalara göre 31 C bile ölümcül olabiliyor.</p>
+
+<p>Hesabı yapmak için <code>MetPy</code> paketini kullanabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">metpy.calc</span> <span class="kn">import</span> <span class="n">dewpoint_from_relative_humidity</span><span class="p">,</span> <span class="n">wet_bulb_temperature</span>
+<span class="kn">from</span> <span class="nn">metpy.units</span> <span class="kn">import</span> <span class="n">units</span>
+
+<span class="n">dew</span> <span class="o">=</span> <span class="n">dewpoint_from_relative_humidity</span><span class="p">(</span><span class="mi">46</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">degC</span><span class="p">,</span> <span class="mi">50</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">percent</span><span class="p">)</span>
+<span class="n">wet_bulb_temperature</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">hPa</span><span class="p">,</span> <span class="mi">46</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">degC</span><span class="p">,</span> <span class="n">dew</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 35.12274652837743 &lt;Unit(&#39;degree_Celsius&#39;)&gt;
+</code></pre>
+</div>
+
+<p>Yani izafi nem 50% (normal) 1000 hPa basıncında 46 derece ölümcül ıslak termometre
+sıcaklığı 35 C'ye geliyor.</p>
+
+<p><img src="iklim05.jpg" alt="" /></p>
+
 <p>Kaynaklar</p>
 
 <p>[1] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html">MetOffice</a></p>
@@ -189,6 +226,10 @@ daha az.</p>
 <p>[2] <a href="../../2017/09/meteoroloji-verileri-ecmwf-noaa-openweathermap.html">OWM</a></p>
 
 <p>[3] <a href="../../2012/08/aradegerleme-interpolation.html">Aradeğerleme</a></p>
+
+<p>[4] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh">Hadisdh Degerler Listesi</a></p>
+
+<p>[5] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadEXTREMES.html">Hadisdh Ekstrem Degerler</a></p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

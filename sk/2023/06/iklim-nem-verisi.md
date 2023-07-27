@@ -170,6 +170,18 @@ wet_bulb_temperature(1000 * units.hPa, 46 * units.degC, dew)
 Out[1]: 35.12274652837743 <Unit('degree_Celsius')>
 ```
 
+Alternatif bir [kod](wetbulb.py),
+
+```python
+import wetbulb
+
+wetbulb.wet_bulb(46, 1000*100, 50.)
+```
+
+```text
+Out[1]: 36.034835648928826
+```
+
 Yani izafi nem 50% (normal) 1000 hPa basıncında 46 derece ölümcül ıslak termometre
 sıcaklığı 35 C'ye geliyor.
 
@@ -210,6 +222,7 @@ bölgeler görülüyor. Tayland, Singapur'a gidenler yüksek nemli günlerde
 dışarıda durmanın zorluğunu farketmiştir. Not: Analiz 2019 yılı Temmuz
 ayı için yapıldı, bu ay kuzey yarımküre için yaz sezounu, ekvator
 altındaki sonuçlara bakarken bunu aklımızda tutalım.
+
 
 
 Kaynaklar

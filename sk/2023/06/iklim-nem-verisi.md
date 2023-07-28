@@ -170,6 +170,9 @@ wet_bulb_temperature(1000 * units.hPa, 46 * units.degC, dew)
 Out[1]: 35.12274652837743 <Unit('degree_Celsius')>
 ```
 
+Yani izafi nem 50% (normal) 1000 hPa basıncında 46 derece ölümcül ıslak termometre
+sıcaklığı 35 C'ye geliyor.
+
 Alternatif bir [kod](wetbulb.py),
 
 ```python
@@ -181,9 +184,6 @@ wetbulb.wet_bulb(46, 1000*100, 50.)
 ```text
 Out[1]: 36.034835648928826
 ```
-
-Yani izafi nem 50% (normal) 1000 hPa basıncında 46 derece ölümcül ıslak termometre
-sıcaklığı 35 C'ye geliyor.
 
 Dünya bazında bu ölçütü grafiklesek nasıl çıkardı acaba? Dosya listesi
 [1]'den ASCII bazlı olan `HadISDH.landRH` ve `HadISDH.landT`
@@ -236,4 +236,7 @@ Kaynaklar
 [4] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh">Hadisdh Degerler Listesi</a>
 
 [5] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadEXTREMES.html">Hadisdh Ekstrem Degerler</a>
+
+
+
 

@@ -46,13 +46,39 @@ bağlantısındaki metotlarla alınabilir.</p>
 sırasıyla bir kg ıslak hava içinde ne kadar g bazında buhar olduğunu
 gosteren g/kg birimindeki spesifik nemlilik <code>q</code>, ya da birim hacimdeki
 buharın o sıcaklıkta tutulabilecek maksimum buhara olan yüzde olarak
-oranını gosteren izafi nemlilik <code>rh</code>.</p>
+oranını gosteren izafi nemlilik <code>rh</code>. Veri indirilip alttaki icindeki
+<code>hadisdh_process</code> ile işlenebilir.</p>
 
-<p>Veri indirilip <code>util.py</code> icindeki <code>hadisdh_process</code> ile
-işlenebilir. Okunan dosya formatı biraz garip, tarihler ay olarak bir
-blok üzerine düz tarih olarak yazılmış, ve dosyanın en sonunda her
-bloğun kolonlarının ve satırlarının tekabül ettiği enlem, boylam
-ızgara noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya alışık
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">hadisdh_process</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span><span class="n">outfile</span><span class="p">):</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+    <span class="n">rd</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">47</span><span class="o">*</span><span class="mi">12</span><span class="p">):</span>
+        <span class="n">date_line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+        <span class="n">date_line</span> <span class="o">=</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="n">date_line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">dt</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">36</span><span class="p">):</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;j&#39;</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;\s*&#39;</span><span class="p">,</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">year</span><span class="p">),</span> <span class="nb">str</span><span class="p">(</span><span class="n">dt</span><span class="o">.</span><span class="n">month</span><span class="p">)]</span> <span class="o">+</span> <span class="n">line</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="s2">&quot;;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+            <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-9999.99&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Okunan dosya formatı biraz garip, tarihler ay olarak bir blok üzerine
+düz tarih olarak yazılmış, ve dosyanın en sonunda her bloğun
+kolonlarının ve satırlarının tekabül ettiği enlem, boylam ızgara
+noktaları verilmiş. Biz Pandas gibi ürünlerle çalışmaya alışık
 olduğumuz için her satırda gerekli bilgiyi içeren normalize edilmiş
 verilerle iş yapmaya daha alışkınız, bizim ürettiğimiz çıktının
 formatında sene/ay bilgisi ayrı kolonlarda, ve her satırda veriliyor,

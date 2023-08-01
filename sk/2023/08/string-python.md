@@ -94,6 +94,46 @@ print ("bir" in s5)
 True
 ```
 
+### Bir Dizin Olarak String
+
+Fakat sonuçta `str` tipinin bir harf dizini olduğunu unutmayalım. Eğer bu dizini
+aynen bir listeyi gezer gibi gezmek istersek bunu yapabiliriz,
+
+```python
+for s in s5: print (s)
+```
+
+```text
+b
+i
+r
+ 
+k
+e
+l
+i
+m
+e
+```
+
+Ve doğal olarak indis bazlı erişim de işleyecektir,
+
+```python
+s5[4]
+```
+
+```text
+Out[1]: 'k'
+```
+
+```python
+s5[-1]
+```
+
+```text
+Out[1]: 'e'
+```
+
 ### Harf Bloklarını Değiştirmek
 
 Bu işlem için `replace` çağrısı yeterli,

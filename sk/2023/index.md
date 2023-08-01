@@ -114,3 +114,5 @@
 
 [Yeni Haritalama Paketi](07/basit-haritalama-paketi.html)
 
+[String Yapısı ve Python](08/string-python.html)
+

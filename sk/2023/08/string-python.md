@@ -51,13 +51,10 @@ print (s3)
 Burada bir float deger var: 3.434550
 ```
 
-Bu örnekte 3.43455 değeri `%f` yerine koyulmuş olacak ve ekrana
-`Burada bir float değer var: 3.434550` basılacak. `%f` daha sofistike
-şekilde de kullanılabilir. Mesela: `s = "Burada bir float değer var: %3.2f" % (3.43455)`
-
-Bu formatlamaya göre float değerini noktadan sonra sadece 2 basamak
-olacak şekilde ayarladık. O zaman sonuç: `Burada bir float değer var: 3.43`
-olacaktır
+`%f` daha sofistike şekilde de kullanılabilir. Mesela: `s = "Burada
+bir float değer var: %3.2f" % (3.43455)`. Bu formatlamaya göre float
+değerini noktadan sonra sadece 2 basamak olacak şekilde ayarladık. O
+zaman sonuç: `Burada bir float değer var: 3.43` olacaktır
 
 ### Eşitlik
 
@@ -182,7 +179,7 @@ Out[1]: 15
 
 ### ASCII Haline Getirmek
 
-Her dilden farklı karakterleri ascii haline çevirmek için, unidecode
+Her dilden farklı karakterleri ascii haline çevirmek için, `unidecode`
 paketi var,
 
 ```python

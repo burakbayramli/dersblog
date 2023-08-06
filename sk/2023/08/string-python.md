@@ -35,11 +35,10 @@ print (s2)
 aaa-bbb-ccc
 ```
 
-`s2` ekrana basıldığında ilk örnekle aynı sonucu göreceğiz. Bu
-kullanımın birkaç avantajı var, String tipini temsil eden `%s` yerine
-diğer tipler de kullanılabilir, mesela float'ları temsil eden `%f`. O
-zaman hem String birleştirme hem de tiplere göre formatlama aynı anda
-yapılabilecektir.
+Bu kullanımın birkaç avantajı var, String tipini temsil eden `%s`
+yerine diğer tipler de kullanılabilir, mesela float'ları temsil eden
+`%f`. O zaman hem String birleştirme hem de tiplere göre formatlama
+aynı anda yapılabilecektir.
 
 Örnek
 

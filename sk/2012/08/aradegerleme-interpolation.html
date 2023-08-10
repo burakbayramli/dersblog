@@ -246,8 +246,6 @@ matris olarak verdik (tek boyutlu vektör de işliyor), RBF objesi
 </code></pre>
 </div>
 
-<p>Benzer bir sonuc elde ettik.</p>
-
 <div class="codehilite">
 <pre><span></span><code><span class="n">x2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
 <span class="n">y2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">50</span><span class="p">)</span>
@@ -266,6 +264,25 @@ matris olarak verdik (tek boyutlu vektör de işliyor), RBF objesi
 objesi 30 parçalık izgara üzerinden yaratılmıştı; böylece elde olmayan
 bir sürü değeri sormuş olduk ama nihai grafik hala orijinale
 benziyor. Ayrıca Clough/Tocher yaklaşımı çok hızlı işler.</p>
+
+<h3>NearestNDInterpolator</h3>
+
+<p>En yakın değerleri kullanarak aradeğerleme yapan bir araçtır. Bazı
+durumlarda üstteki daha çetrefil yaklaşımlardan daha iyi sonuç
+verebilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">NearestNDInterpolator</span>
+
+<span class="n">interp</span> <span class="o">=</span> <span class="n">NearestNDInterpolator</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">xx</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">yy</span><span class="o">.</span><span class="n">flatten</span><span class="p">())),</span> <span class="n">zz</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">interp</span><span class="p">([</span><span class="mi">4</span><span class="p">],[</span><span class="mi">4</span><span class="p">]))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[0.63261986]
+</code></pre>
+</div>
 
 <h3>Izgara İçinde En Yakın Değer Aradeğerlemesi</h3>
 

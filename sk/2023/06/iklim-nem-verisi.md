@@ -260,4 +260,5 @@ Kaynaklar
 
 [5] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadEXTREMES.html">Hadisdh Ekstrem Degerler</a>
 
-[6] <a href="../../2021/12/netcdf-wind-historical-noaa-iklim-veri.md">Iklim Verileri</a>
+[6] <a href="../../2021/12/netcdf-wind-historical-noaa-iklim-veri.html">Iklim Verileri</a>
+

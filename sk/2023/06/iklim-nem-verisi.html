@@ -226,18 +226,18 @@ altındaki sonuçlara bakarken bunu aklımızda tutalım.</p>
 
 <h3>NOAA Verisi</h3>
 
-<p>[6] gunluk NOAA verileri tarihi iklim uzerinde ve dunyanin herhangi
-bir noktasinin islik termometre sicakligi hesabi icin kullanilabilir.
-Herhangi bir sene icin, 2022 diyelim, tum istasyonlarin verisini aliriz,
-<code>/tmp/data/2022</code> altinda diyelim,</p>
+<p>[6] günlük NOAA verileri tarihi iklim üzerinde ve dünyanin herhangi
+bir noktasının ıslak termometre sıcaklığı hesabı için kullanılabilir.
+Herhangi bir sene için, 2022 diyelim, tüm istasyonların verisini alırız,
+mesela <code>/tmp/data/2022</code>,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">metpy.calc</span> <span class="kn">import</span> <span class="n">dewpoint_from_relative_humidity</span><span class="p">,</span> <span class="n">wet_bulb_temperature</span>
 <span class="kn">from</span> <span class="nn">metpy.units</span> <span class="kn">import</span> <span class="n">units</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">glob</span>
 
-<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;wbt_max.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;2022/*.csv&quot;</span><span class="p">):</span>
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/data/wbt_max.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;/tmp/data/2022/*.csv&quot;</span><span class="p">):</span>
     <span class="nb">print</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span>
     <span class="n">dfh</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
@@ -253,12 +253,12 @@ Herhangi bir sene icin, 2022 diyelim, tum istasyonlarin verisini aliriz,
 </code></pre>
 </div>
 
-<p>Ustteki kod 2022'deki Agustos ayi icin her istasyonun kaydetmis oldugu
-maksimum islak termometre sicakligini bir dosyaya yaziyor, isi bitince
-tek bir dosya elde edilecek, bu dosyada her istasyonun kaydetmis
-oldugu ITS o istasyonun cografi yeri ile beraber paylasilmis olacak.
-Sonra bu dosyayi alip herhangi bir noktaya en yakin olan istasyonlari
-alip renksel haritalama yapabiliriz, mesela yine TR ornegi olsun,</p>
+<p>Üstteki kod 2022'deki Ağustos ayı için her istasyonun kaydetmiş olduğu
+maksimum ıslak termometre sıcaklığını bir dosyaya yazıyor, işi bitince
+tek bir dosya elde edilecek, bu dosyada her istasyonun kaydetmiş
+olduğu ITS o istasyonun coğrafi yeri ile beraber paylaşılmış olacak.
+Sonra bu dosyayı alıp herhangi bir noktaya en yakın olan istasyonları
+toparlayıp renksel haritalama yapabiliriz, TR örneği,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span><span class="o">,</span> <span class="nn">quads</span>
@@ -268,7 +268,7 @@ alip renksel haritalama yapabiliriz, mesela yine TR ornegi olsun,</p>
     <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">distances</span>
 
-<span class="k">class</span> <span class="nc">QuadTreeInterpolator2</span><span class="p">:</span>
+<span class="k">class</span> <span class="nc">QuadTreeInterpolator</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">quads</span><span class="o">.</span><span class="n">QuadTree</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
 
@@ -302,7 +302,7 @@ alip renksel haritalama yapabiliriz, mesela yine TR ornegi olsun,</p>
 
 <span class="n">stats</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">s</span><span class="p">[:</span><span class="mi">140</span><span class="p">]]</span>
 
-<span class="n">q</span> <span class="o">=</span> <span class="n">QuadTreeInterpolator2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lon</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lat</span><span class="p">))</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">QuadTreeInterpolator</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lon</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lat</span><span class="p">))</span>
 
 <span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lon</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">wbt</span><span class="p">))</span>
 <span class="n">interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">interpolate</span><span class="p">,</span><span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span>

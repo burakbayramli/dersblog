@@ -248,6 +248,24 @@ plt.savefig('iklim03.jpg')
 
 ![](iklim03.jpg)
 
+Tüm dünya için
+
+```python
+fig, ax = plt.subplots(figsize=(20,12))
+...
+stats = pd.read_csv('wbt_max.csv')
+stats = stats.dropna()
+interp = NearestNDInterpolator(list(zip(stats.lon, stats.lat)), stats.wbt)
+xi,yi = np.meshgrid(np.linspace(-180,180,640),np.linspace(0,90,480))
+zi = interp(xi, yi)
+im = ax.pcolormesh(xi,yi,zi,cmap='Blues',shading='auto')
+plt.colorbar(im)
+plt.ylim(0,80)
+plt.xlim(-180,180)
+```
+
+gibi bir kod işletilebilir.
+
 Kaynaklar
 
 [1] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html">MetOffice</a>

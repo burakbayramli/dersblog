@@ -216,33 +216,11 @@ toparlayıp renksel haritalama yapabiliriz, TR örneği,
 ```python
 import numpy as np, glob, simplegeomap as sm, quads
 import pandas as pd, os, matplotlib.pyplot as plt
+from scipy.interpolate import NearestNDInterpolator, CloughTocher2DInterpolator
 
 def cdist(p1,p2):    
     distances = np.linalg.norm(p1 - p2, axis=1)
     return distances
-
-class QuadTreeInterpolator:
-    def __init__(self, x, y):
-        self.tree = quads.QuadTree((np.mean(x), np.mean(y)), 100, 100)
-
-    def cell_interp(self, x, y, points):
-        a = np.array([x,y]).reshape(-1,2)
-        b = np.array(points)[:,:2]
-        ds = cdist(a,b)
-        ds = ds / np.sum(ds)
-        ds = 1. - ds
-        c = np.array(points)[:,2]
-        iz = np.sum(c * ds) / np.sum(ds)
-        return iz
-
-    def append(self, x, y, z):
-        for xx,yy,zz in zip(x,y,z):
-            self.tree.insert((xx,yy),data=zz)
-            
-    def interpolate(self,x,y):
-        res = self.tree.nearest_neighbors((x,y), count=4)
-        points = np.array([[c.x, c.y, c.data] for c in res])
-        return self.cell_interp(x, y, points)               
 
 clat,clon,zoom = 39,34,2
 
@@ -255,10 +233,8 @@ sm.plot_continents(clat,clon,zoom=zoom,outcolor='white', fill=False)
 
 stats = df.loc[s[:140]]
 
-q = QuadTreeInterpolator(np.array(stats.lon), np.array(stats.lat))
+interp = CloughTocher2DInterpolator(list(zip(stats.lon, stats.lat)), stats.wbt)
 
-q.append(np.array(stats.lon), np.array(stats.lat), np.array(stats.wbt))
-interp = np.vectorize(q.interpolate,otypes=[np.float64])
 xi,yi = np.meshgrid(np.linspace(26,44,20),np.linspace(35,42,20))
 zi = interp(xi, yi)
 

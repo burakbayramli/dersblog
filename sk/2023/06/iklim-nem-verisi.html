@@ -136,78 +136,6 @@ bir ızgara pek çok alanı atlamış olacaktır. Mesela TR üzerinde odaklanır
 
 <p><img src="iklim02.jpg" alt="" /></p>
 
-<p>gibi bir sonuç alıyoruz.</p>
-
-<p>Günlük Daha Detaylı Veri</p>
-
-<p>O günün verisini kullanarak daha detaylı nemlilik verisini
-OpenWeatherMap ile alabiliriz [2]. Gerçi OWM'in tarihi veri servisi de
-var fakat bu servis paralı, belli kota altındaki anlık veri alımı
-bedava, bu yazı için onu kullanalım. Onları önceden rasgele seçilmiş
-belli noktalar için alacağız, <code>util.coords</code> içinde. Bugünün verisini
-alalım, erişim için OWM anahtarının alınmış olduğunu farzediyoruz,
-bizimki <code>$HOME</code> altında <code>.nomterr.conf</code> adlı bir JSON dosyasında,
-<code>weatherapi</code> anahtarına tekabül ediyor,</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;http://api.openweathermap.org/data/2.5/weather?&#39;</span>
-
-<span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/.nomterr.conf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
-<span class="n">n</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-<span class="n">ns</span> <span class="o">=</span> <span class="n">n</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">hums</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">coords</span><span class="p">)):</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="n">i</span><span class="p">)</span>
-    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;units&#39;</span><span class="p">:</span> <span class="s1">&#39;metric&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">coords</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span><span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;weatherapi&#39;</span><span class="p">]</span> <span class="p">}</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span> 
-    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">()]</span>
-    <span class="n">hums</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;main&#39;</span><span class="p">][</span><span class="s1">&#39;humidity&#39;</span><span class="p">]))</span>
-
-<span class="n">hline</span> <span class="o">=</span> <span class="n">ns</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">hums</span><span class="p">)</span> 
-<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;trhumid.csv&quot;</span><span class="p">,</span><span class="s2">&quot;a&quot;</span><span class="p">)</span>
-<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">hline</span><span class="p">)</span>
-<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</code></pre>
-</div>
-
-<p>Üstteki çağrılar önceden seçilmiş noktalar için o günün verilerini
-alıp yeni bir satır olarak çıktı CSV dosyası <code>trall.csv</code> ya ekleyecektir.
-Grafiklersek,</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="n">util</span><span class="o">.</span><span class="n">get_sm</span><span class="p">()</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_pd</span><span class="p">()</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;trall.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">cs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">cs</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">cs</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">))])[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="n">xi</span><span class="p">,</span><span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
-
-<span class="n">q</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_qti</span><span class="p">()(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">)</span>
-<span class="n">interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">interpolate</span><span class="p">,</span><span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span>
-<span class="n">zi</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">yi</span><span class="p">,</span><span class="n">xi</span><span class="p">,</span><span class="n">zi</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;iklim04.jpg&#39;</span><span class="p">)</span>
-</code></pre>
-</div>
-
-<p><img src="iklim04.jpg" alt="" /></p>
-
-<p>Aradeğerleme için [3]'te anlatılan bir tekniği kullandık. Aradeğerleme
-gerekiyor çünkü veri için rasgele noktalar seçtik, fakat grafikleme
-için daha detaylı bir ızgara bekleyen <code>pcolormesh</code> çağrısı gerekiyor.</p>
-
-<p>Grafikte Kütahya, Denizli, Uşak etrafında az nemli bir bölge
-görülüyor, Karadenizde yüksek nemli bazı bölgeler var, doğuda ise nem
-daha az.</p>
-
 <p>Islak Termometre Sıcaklığı (Wet-Bulb Temperature)</p>
 
 <p>Çok yüksek derecedeki bazı sıcaklıkların mesela çöl ortamında bile
@@ -296,6 +224,102 @@ dışarıda durmanın zorluğunu farketmiştir. Not: Analiz 2019 yılı Temmuz
 ayı için yapıldı, bu ay kuzey yarımküre için yaz sezonu, ekvator
 altındaki sonuçlara bakarken bunu aklımızda tutalım.</p>
 
+<h3>NOAA Verisi</h3>
+
+<p>[6] gunluk NOAA verileri tarihi iklim uzerinde ve dunyanin herhangi
+bir noktasinin islik termometre sicakligi hesabi icin kullanilabilir.
+Herhangi bir sene icin, 2022 diyelim, tum istasyonlarin verisini aliriz,
+<code>/tmp/data/2022</code> altinda diyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">metpy.calc</span> <span class="kn">import</span> <span class="n">dewpoint_from_relative_humidity</span><span class="p">,</span> <span class="n">wet_bulb_temperature</span>
+<span class="kn">from</span> <span class="nn">metpy.units</span> <span class="kn">import</span> <span class="n">units</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">glob</span>
+
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;wbt_max.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;2022/*.csv&quot;</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;DATE&#39;</span><span class="p">)</span>
+    <span class="n">dfh</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">dfh</span><span class="o">.</span><span class="n">LATITUDE</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span><span class="nb">list</span><span class="p">(</span><span class="n">dfh</span><span class="o">.</span><span class="n">LONGITUDE</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">SLP</span> <span class="o">&lt;</span> <span class="mf">9999.9</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">TEMP</span> <span class="o">&lt;</span> <span class="mf">9999.9</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">DEWP</span> <span class="o">&lt;</span> <span class="mf">9999.9</span><span class="p">)</span> <span class="o">&amp;</span>
+             <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&gt;</span> <span class="s1">&#39;2022-07-31&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">&lt;</span> <span class="s1">&#39;2022-09-01&#39;</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="k">continue</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">wet_bulb_temperature</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;SLP&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">units</span><span class="o">.</span><span class="n">hPa</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;TEMP&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">units</span><span class="o">.</span><span class="n">degF</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;DEWP&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">units</span><span class="o">.</span><span class="n">degF</span><span class="p">)</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">units</span><span class="o">.</span><span class="n">degC</span><span class="p">)</span><span class="o">.</span><span class="n">magnitude</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">st</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;2022/&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">,</span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">st</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">,</span><span class="n">res</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Ustteki kod 2022'deki Agustos ayi icin her istasyonun kaydetmis oldugu
+maksimum islak termometre sicakligini bir dosyaya yaziyor, isi bitince
+tek bir dosya elde edilecek, bu dosyada her istasyonun kaydetmis
+oldugu ITS o istasyonun cografi yeri ile beraber paylasilmis olacak.
+Sonra bu dosyayi alip herhangi bir noktaya en yakin olan istasyonlari
+alip renksel haritalama yapabiliriz, mesela yine TR ornegi olsun,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span><span class="o">,</span> <span class="nn">quads</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="k">def</span> <span class="nf">cdist</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span><span class="n">p2</span><span class="p">):</span>    
+    <span class="n">distances</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p1</span> <span class="o">-</span> <span class="n">p2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">distances</span>
+
+<span class="k">class</span> <span class="nc">QuadTreeInterpolator2</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tree</span> <span class="o">=</span> <span class="n">quads</span><span class="o">.</span><span class="n">QuadTree</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">cell_interp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">points</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)[:,:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="n">ds</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+        <span class="n">ds</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">ds</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)[:,</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">iz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">ds</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">ds</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">iz</span>
+
+    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">zz</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">insert</span><span class="p">((</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">),</span><span class="n">data</span><span class="o">=</span><span class="n">zz</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">interpolate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tree</span><span class="o">.</span><span class="n">nearest_neighbors</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">),</span> <span class="n">count</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">c</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">data</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">res</span><span class="p">])</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">cell_interp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">points</span><span class="p">)</span>               
+
+<span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="p">,</span><span class="n">zoom</span> <span class="o">=</span> <span class="mi">39</span><span class="p">,</span><span class="mi">34</span><span class="p">,</span><span class="mi">2</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;/tmp/data/wbt_max.csv&#39;</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">cdist</span> <span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">]],</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="p">]))</span>
+<span class="n">s</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">argsort</span><span class="p">()</span>
+
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="n">clat</span><span class="p">,</span><span class="n">clon</span><span class="p">,</span><span class="n">zoom</span><span class="o">=</span><span class="n">zoom</span><span class="p">,</span><span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">stats</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">s</span><span class="p">[:</span><span class="mi">140</span><span class="p">]]</span>
+
+<span class="n">q</span> <span class="o">=</span> <span class="n">QuadTreeInterpolator2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lon</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lat</span><span class="p">))</span>
+
+<span class="n">q</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lon</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">lat</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">wbt</span><span class="p">))</span>
+<span class="n">interp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">interpolate</span><span class="p">,</span><span class="n">otypes</span><span class="o">=</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span>
+<span class="n">xi</span><span class="p">,</span><span class="n">yi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">,</span><span class="mi">20</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">,</span><span class="mi">20</span><span class="p">))</span>
+<span class="n">zi</span> <span class="o">=</span> <span class="n">interp</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">26</span><span class="p">,</span><span class="mi">44</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">35</span><span class="p">,</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span><span class="n">yi</span><span class="p">,</span><span class="n">zi</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Blues&#39;</span><span class="p">,</span><span class="n">shading</span><span class="o">=</span><span class="s1">&#39;auto&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;iklim03.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="iklim03.jpg" alt="" /></p>
+
 <p>Kaynaklar</p>
 
 <p>[1] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadLAND.html">MetOffice</a></p>
@@ -307,6 +331,8 @@ altındaki sonuçlara bakarken bunu aklımızda tutalım.</p>
 <p>[4] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh">Hadisdh Degerler Listesi</a></p>
 
 <p>[5] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadEXTREMES.html">Hadisdh Ekstrem Degerler</a></p>
+
+<p>[6] <a href="../../2021/12/netcdf-wind-historical-noaa-iklim-veri.md">Iklim Verileri</a></p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

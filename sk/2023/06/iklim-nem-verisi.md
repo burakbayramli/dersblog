@@ -95,76 +95,6 @@ plt.savefig('iklim02.jpg',quality=40)
 
 ![](iklim02.jpg)
 
-gibi bir sonuç alıyoruz.
-
-Günlük Daha Detaylı Veri
-
-O günün verisini kullanarak daha detaylı nemlilik verisini
-OpenWeatherMap ile alabiliriz [2]. Gerçi OWM'in tarihi veri servisi de
-var fakat bu servis paralı, belli kota altındaki anlık veri alımı
-bedava, bu yazı için onu kullanalım. Onları önceden rasgele seçilmiş
-belli noktalar için alacağız, `util.coords` içinde. Bugünün verisini
-alalım, erişim için OWM anahtarının alınmış olduğunu farzediyoruz,
-bizimki `$HOME` altında `.nomterr.conf` adlı bir JSON dosyasında,
-`weatherapi` anahtarına tekabül ediyor,
-
-```python
-base_url = 'http://api.openweathermap.org/data/2.5/weather?'
-
-params = json.loads(open(os.environ['HOME'] + "/.nomterr.conf").read())
-
-n = datetime.datetime.now()
-ns = n.strftime("%Y-%m-%d")
-hums = []
-for i in range(len(coords)):
-    print (i)
-    payload = {'units': 'metric', 'lat': str(coords[i][0]), 'lon': str(coords[i][1]),'appid': params['weatherapi'] }
-    r = requests.get(base_url, params=payload) 
-    res = [json.loads(x.decode()) for x in r.iter_lines()]
-    hums.append(str(res[0]['main']['humidity']))
-
-hline = ns + "," + ",".join(hums) 
-fout = open("trhumid.csv","a")
-fout.write(hline)
-fout.write("\n")
-fout.close()
-```
-
-Üstteki çağrılar önceden seçilmiş noktalar için o günün verilerini
-alıp yeni bir satır olarak çıktı CSV dosyası `trall.csv` ya ekleyecektir.
-Grafiklersek,
-
-```python
-util.get_sm().plot_continents(40, 35, zoom=1, incolor='red', outcolor='white', fill=False)
-
-df = util.get_pd().read_csv('trall.csv',header=None)
-df = df.tail(1)
-cs = np.array(util.coords)
-x = cs[:,0]
-y = cs[:,1]
-z = np.array(df[list(range(1,28))])[0]
-
-xi,yi = np.meshgrid(np.linspace(35,42,20),np.linspace(26,44,20))
-
-q = util.get_qti()(x,y,z)
-interp = np.vectorize(q.interpolate,otypes=[np.float64])
-zi = interp(xi, yi)
-plt.xlim(26,44)
-plt.ylim(35,42)
-plt.pcolormesh(yi,xi,zi,cmap='Blues')
-plt.savefig('iklim04.jpg')
-```
-
-![](iklim04.jpg)
-
-Aradeğerleme için [3]'te anlatılan bir tekniği kullandık. Aradeğerleme
-gerekiyor çünkü veri için rasgele noktalar seçtik, fakat grafikleme
-için daha detaylı bir ızgara bekleyen `pcolormesh` çağrısı gerekiyor.
-
-Grafikte Kütahya, Denizli, Uşak etrafında az nemli bir bölge
-görülüyor, Karadenizde yüksek nemli bazı bölgeler var, doğuda ise nem
-daha az.
-
 Islak Termometre Sıcaklığı (Wet-Bulb Temperature)
 
 Çok yüksek derecedeki bazı sıcaklıkların mesela çöl ortamında bile
@@ -248,7 +178,99 @@ dışarıda durmanın zorluğunu farketmiştir. Not: Analiz 2019 yılı Temmuz
 ayı için yapıldı, bu ay kuzey yarımküre için yaz sezonu, ekvator
 altındaki sonuçlara bakarken bunu aklımızda tutalım.
 
+### NOAA Verisi
 
+[6] gunluk NOAA verileri tarihi iklim uzerinde ve dunyanin herhangi
+bir noktasinin islik termometre sicakligi hesabi icin kullanilabilir.
+Herhangi bir sene icin, 2022 diyelim, tum istasyonlarin verisini aliriz,
+`/tmp/data/2022` altinda diyelim,
+
+```python
+from metpy.calc import dewpoint_from_relative_humidity, wet_bulb_temperature
+from metpy.units import units
+import pandas as pd, numpy as np, glob
+
+fout = open("wbt_max.csv","w")
+for f in glob.glob("2022/*.csv"):
+    print (f)
+    df = pd.read_csv(f,index_col='DATE')
+    dfh = df.head(1)
+    lat,lon = list(dfh.LATITUDE)[0],list(dfh.LONGITUDE)[0]
+    df1 = df[(df.SLP < 9999.9) & (df.TEMP < 9999.9) & (df.DEWP < 9999.9) &
+             (df.index > '2022-07-31') & (df.index < '2022-09-01')]
+    if len(df1) == 0: continue
+    res = df1.apply(lambda x: wet_bulb_temperature(x['SLP'] * units.hPa, x['TEMP']*units.degF, x['DEWP']*units.degF).to(units.degC).magnitude,axis=1)
+    st = f.replace("2022/","").replace(".csv","")
+    fout.write ("%s,%f,%f,%f" % (st,lat,lon,res.max()))
+    fout.write("\n")
+    fout.flush()
+```
+
+Ustteki kod 2022'deki Agustos ayi icin her istasyonun kaydetmis oldugu
+maksimum islak termometre sicakligini bir dosyaya yaziyor, isi bitince
+tek bir dosya elde edilecek, bu dosyada her istasyonun kaydetmis
+oldugu ITS o istasyonun cografi yeri ile beraber paylasilmis olacak.
+Sonra bu dosyayi alip herhangi bir noktaya en yakin olan istasyonlari
+alip renksel haritalama yapabiliriz, mesela yine TR ornegi olsun,
+
+```python
+import numpy as np, glob, simplegeomap as sm, quads
+import pandas as pd, os, matplotlib.pyplot as plt
+
+def cdist(p1,p2):    
+    distances = np.linalg.norm(p1 - p2, axis=1)
+    return distances
+
+class QuadTreeInterpolator2:
+    def __init__(self, x, y):
+        self.tree = quads.QuadTree((np.mean(x), np.mean(y)), 100, 100)
+
+    def cell_interp(self, x, y, points):
+        a = np.array([x,y]).reshape(-1,2)
+        b = np.array(points)[:,:2]
+        ds = cdist(a,b)
+        ds = ds / np.sum(ds)
+        ds = 1. - ds
+        c = np.array(points)[:,2]
+        iz = np.sum(c * ds) / np.sum(ds)
+        return iz
+
+    def append(self, x, y, z):
+        for xx,yy,zz in zip(x,y,z):
+            self.tree.insert((xx,yy),data=zz)
+            
+    def interpolate(self,x,y):
+        res = self.tree.nearest_neighbors((x,y), count=4)
+        points = np.array([[c.x, c.y, c.data] for c in res])
+        return self.cell_interp(x, y, points)               
+
+clat,clon,zoom = 39,34,2
+
+df = pd.read_csv('/tmp/data/wbt_max.csv')
+
+res = cdist (df[['lat','lon']],np.array([clat,clon]))
+s = res.argsort()
+
+sm.plot_continents(clat,clon,zoom=zoom,outcolor='white', fill=False)
+
+stats = df.loc[s[:140]]
+
+q = QuadTreeInterpolator2(np.array(stats.lon), np.array(stats.lat))
+
+q.append(np.array(stats.lon), np.array(stats.lat), np.array(stats.wbt))
+interp = np.vectorize(q.interpolate,otypes=[np.float64])
+xi,yi = np.meshgrid(np.linspace(26,44,20),np.linspace(35,42,20))
+zi = interp(xi, yi)
+
+plt.xlim(26,44)
+plt.ylim(35,42)
+im = plt.pcolormesh(xi,yi,zi,cmap='Blues',shading='auto')
+plt.colorbar(im)
+
+plt.savefig('iklim03.jpg')
+```
+
+![](iklim03.jpg)
 
 Kaynaklar
 
@@ -262,3 +284,4 @@ Kaynaklar
 
 [5] <a href="https://www.metoffice.gov.uk/hadobs/hadisdh/downloadEXTREMES.html">Hadisdh Ekstrem Degerler</a>
 
+[6] <a href="../../2021/12/netcdf-wind-historical-noaa-iklim-veri.md">Iklim Verileri</a>

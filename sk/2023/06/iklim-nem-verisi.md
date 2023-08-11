@@ -235,7 +235,7 @@ stats = df.loc[s[:140]]
 
 interp = CloughTocher2DInterpolator(list(zip(stats.lon, stats.lat)), stats.wbt)
 
-xi,yi = np.meshgrid(np.linspace(26,44,20),np.linspace(35,42,20))
+xi,yi = np.meshgrid(np.linspace(26,44,640),np.linspace(35,42,480))
 zi = interp(xi, yi)
 
 plt.xlim(26,44)

@@ -73,7 +73,19 @@ kontrol eder.</p>
 </code></pre>
 </div>
 
-<p>Network üzerinden akış işlemi için smart_open var,</p>
+<p>Gzip ile sıkıştırılmış tar dosyaları bile satır satır okunabilir,</p>
+
+<pre><code>with tarfile.open(dir + "dosya.tar.gz",mode="r:gz") as tar:
+    for member in tar:
+        if member.isreg():      # Is it a regular file?
+            csv_file = io.StringIO(tar.extractfile(member).read().decode('ascii'))
+            rd = csv.reader(csv_file)
+            headers = {k: v for v, k in enumerate(next(rd))}
+            for row in enumerate(rd):
+                print (row[headers['KOLON1']])
+</code></pre>
+
+<p>Network üzerinden akış işlemi için <code>smart_open</code> var,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">boto.s3.connection</span> <span class="kn">import</span> <span class="n">S3Connection</span>

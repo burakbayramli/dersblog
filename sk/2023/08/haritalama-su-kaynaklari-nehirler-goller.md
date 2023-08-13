@@ -28,9 +28,12 @@ mevcut. Bu alt dizinlerin kodlaması şöyle,
 `c`: Kaba çözünürlük. Bir indirim daha, bu en düşük çözünürlük, en
      küçük veri büyüklüğü burada.
 
-Her dosya ismi `WDBII_river_<çözünürlük>_L<seviye>.*` olarak
-kodlanmıştır, seviye (level) hangi 'tip' su öbeğinin veriye dahil
-edildiğini kontrol eder.
+Her dosya ismi
+
+`WDBII_river_<çözünürlük>_L<seviye>.*`
+
+olarak kodlanmıştır, seviye (level) hangi 'tip' su öbeğinin veriye
+dahil edildiğini kontrol eder.
 
 Nehirler için,
 
@@ -111,18 +114,18 @@ def plot_rivers():
 
 ```python
 plot_rivers()
-plt.text(35.1461994056707,47.82578151155012,"Zaporizhza")
-plt.text(34.58240228690867,48.542927718410105,"Kamianske")
+plt.text(35.14619940,47.8257815,"Zaporizhza")
+plt.text(34.58240228,48.5429277,"Kamianske")
 plt.xlim(29,37)
 plt.ylim(47,55)
 plt.savefig('su1.jpg',quality=30)
 ```
 
-şuradaki gibi bir görüntü ortaya çıkacaktır. Ana nehirleri seçtik,
-detay `c` seviyesi, kabaca olsa bile bir nehir görüntüsünün ortaya
-çıkmasını bekledik, fakat olmadı. Burada eksik olan GSHHG verisinin
-Dnieper'in bazı bölümlerini göl olarak kaydetmiş olmasıdır.  O zaman
-hem nehir hem göl grafiklemesi gerekir,
+Bu kodla [şuradaki gibi](su1.jpg) bir görüntü ortaya çıkacaktır. Ana
+nehirleri seçtik, detay `c` seviyesi, kabaca olsa bile bir nehir
+görüntüsünün ortaya çıkmasını bekledik, fakat olmadı. Niye? Burada
+eksik olan GSHHG verisinin Dnieper'in bazı bölümlerini göl olarak
+kaydetmiş olmasıdır. O zaman hem nehir hem göl grafiklemesi gerekir,
 
 ```python
 def plot_lakes():
@@ -146,8 +149,8 @@ def plot_lakes():
 
 plot_rivers()
 plot_lakes()
-plt.text(35.1461994056707,47.82578151155012,"Zaporizhza")
-plt.text(34.58240228690867,48.542927718410105,"Kamianske")
+plt.text(35.14619940,47.8257815,"Zaporizhza")
+plt.text(34.58240228,48.5429277,"Kamianske")
 plt.xlim(29,37)
 plt.ylim(47,55)
 plt.savefig('/tmp/out2.jpg',quality=30)
@@ -155,7 +158,7 @@ plt.savefig('/tmp/out2.jpg',quality=30)
 
 ![](su2.jpg)
 
-Bu daha net bir nehir görüntüsü ortaya çıkardı. 
+Bu daha net bir Dnieper görüntüsü ortaya çıkardı. 
 
 Kaynaklar
 

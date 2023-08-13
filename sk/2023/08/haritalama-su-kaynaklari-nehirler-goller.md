@@ -1,9 +1,9 @@
 # Haritalama, Nehirler, Göller
 
-SHP dosyasi olarak farkli detaylarda nehirlerin, gollerin yerlerini
-gosteren veri dosyalar GSHHG verisinde bulunabilir. SHP dosyalarinin
-nasil islenecegini [2] yazisinda gormustuk. Su alanlari verisi tek bir
-zip [1] olarak indirilebilir, acilinca
+SHP dosyası olarak farklı detaylarda nehirlerin, gollerin yerlerini
+gösteren veri dosyalar GSHHG verisinde bulunabilir. SHP dosyalarının
+nasıl işleneceğini [2] yazısında görmüştük. Şu alanları verisi tek bir
+zip [1] olarak indirilebilir, açılinca
 
 GSHHS_shp
 
@@ -153,7 +153,7 @@ plt.text(35.14619940,47.8257815,"Zaporizhza")
 plt.text(34.58240228,48.5429277,"Kamianske")
 plt.xlim(29,37)
 plt.ylim(47,55)
-plt.savefig('/tmp/out2.jpg',quality=30)
+plt.savefig('su2.jpg',quality=30)
 ```
 
 ![](su2.jpg)
@@ -165,3 +165,4 @@ Kaynaklar
 [1] https://www.ngdc.noaa.gov/mgg/shorelines/data/gshhg/latest/
 
 [2] ../../2020/02/haritalamak.html
+

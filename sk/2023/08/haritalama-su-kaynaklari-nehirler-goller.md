@@ -63,7 +63,7 @@ Göller için,
 
 GSHHS_<resolution>_L<level>.*
 
-Seviye 1: Continental land masses and ocean islands, except Antarctica.
+Seviye 1: Kıtasal satıhlar ve Antartica haricindeki okyanus adaları
 
 Seviye 2: Göller
 
@@ -73,7 +73,7 @@ Seviye 4: Göller içindeki adalardaki ufak göller
 
 Seviye 5: Buz kütlelerine göre Antarctika sınırı
 
-Seviye 6: Temel kıta sathına göre Antarctika sınırı
+Seviye 6: Kıta sathına göre Antarctika sınırı
 
 Gerekli detaylılık, bilgi tipine göre üstteki seçeneklerden herhangi biri
 devreye sokulabilir.

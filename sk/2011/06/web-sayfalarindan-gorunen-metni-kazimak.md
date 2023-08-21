@@ -227,7 +227,8 @@ import urllib.request, os
 
 url = "https://vs.vs.com"
 f = 'dosya.csv'
-if not os.path.isfile("/tmp/" + f):
-    urllib.request.urlretrieve(url + "/" + f, "/tmp/" + f)
+target_file = "/tmp/" + f
+if not os.path.isfile("/tmp/" + f):    
+    urllib.request.urlretrieve(url + "/" + f, target_file)
 ```
 

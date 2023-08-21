@@ -256,7 +256,23 @@ beyani gerekti,</p>
 </code></pre>
 </div>
 
-<p>10 tane kopek imaji indirilip dataset dizini altina yazilacak.</p>
+<p>10 tane köpek imajı indirilip dataset dizini altına yazılacak.</p>
+
+<p>Varsa Indir Yoksa Indirme</p>
+
+<p>Alttaki kalip faydali olabilir, ayrica <code>urllib.request</code> kullanimini gostermesi
+acisindan faydali, diyelim ki <code>https://vs.vs.com/dosya.csv</code> diye bir dosya var,
+eger bu dosya <code>/tmp</code> altinda varsa indirme, yoksa indir kodunu soyle yazabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">urllib.request</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://vs.vs.com&quot;</span>
+<span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;dosya.csv&#39;</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s2">&quot;/tmp/&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="p">):</span>
+    <span class="n">urllib</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">urlretrieve</span><span class="p">(</span><span class="n">url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;/tmp/&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+</code></pre>
+</div>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

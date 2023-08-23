@@ -114,5 +114,7 @@
 
 [Yeni Haritalama Paketi](07/basit-haritalama-paketi.html)
 
+[Haritalama, Nehirler, Göller](08/haritalama-su-kaynaklari-nehirler-goller.html)
+
 [String Yapısı ve Python](08/string-python.html)
 

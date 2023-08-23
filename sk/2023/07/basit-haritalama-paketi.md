@@ -178,7 +178,7 @@ plt.savefig('sm_08.jpg',quality=40)
 
 ![](sm_08.jpg)
 
-Nehirler, Göller  
+### Nehirler, Göller  
 
 Odaklanan bölge içine düşen su öbekleri için `plot_water` var,
 
@@ -193,7 +193,9 @@ plt.savefig('sm_09.jpg',quality=40)
 
 ![](sm_09.jpg)
 
-Dağlar, Yükseklik Verisi
+Kullanılan veri kaynağı hakkında daha detaylı bilgi şurada [3].
+
+### Dağlar, Yükseklik Verisi
 
 ```python
 clat,clon=39, 35; zoom = 1.0
@@ -209,11 +211,25 @@ Eğer kontur seviyelerini biz tanımlamak istersek bunu `levels=[100,200,..]`
 şeklinde bir parametre geçerek smgm kodlarına bildirebiliriz, bu durumda 100 metre,
 200 metre, vs kontur çizgileri basılacaktır. 
 
+Yükseklik verisi [4] bağlantısından geliyor. Bu veri kaynağında 1 x 1
+derece çözünürlüğündeki dikdörtgen köşelerinin yükseklik verisi
+var. Bu verinin tamamını hafızaya getirmek her seferinde külfetli
+olacağı için odak parametresine göre gerekli yerlerini çekip
+çıkartıyoruz. Yükseklik verisi aslında gri imaj verisi gibi
+görülebilir, grilik seviyesi yükseklik seviyesi gibidir, değerler eşit
+aralıklı ızgara bazlıdır, bu sebeple zaten hızlı işleyen görüntü işlem
+tekniklerini yükseklik için kullanmmak mümkündür. Herhangi bir
+bölgenin yükseklik verisini çekip çıkartmak mesela imaj bölgesini
+kesip çıkartmak (crop) ve o bölgeyi büyütmek (resize) işlemi olarak
+yapılıyor.
+
 Kaynaklar
 
 [1] https://github.com/burakbayramli/simplegeomap
 
 [2] https://pypi.org/project/simplegeomap/
 
+[3] [Haritalama, Nehirler, Göller](../../2023/08/haritalama-su-kaynaklari-nehirler-goller.html)
 
+[4] [GL Tiles](https://www.ngdc.noaa.gov/mgg/topo/gltiles.html)
 

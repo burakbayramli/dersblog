@@ -218,18 +218,20 @@ olacağı için odak parametresine göre gerekli yerlerini çekip
 çıkartıyoruz. Yükseklik verisi aslında gri imaj verisi gibi
 görülebilir, grilik seviyesi yükseklik seviyesi gibidir, değerler eşit
 aralıklı ızgara bazlıdır, bu sebeple zaten hızlı işleyen görüntü işlem
-tekniklerini yükseklik için kullanmmak mümkündür. Herhangi bir
+tekniklerini yükseklik için kullanmak mümkündür. Herhangi bir
 bölgenin yükseklik verisini çekip çıkartmak mesela imaj bölgesini
 kesip çıkartmak (crop) ve o bölgeyi büyütmek (resize) işlemi olarak
 yapılıyor.
 
 Kaynaklar
 
-[1] https://github.com/burakbayramli/simplegeomap
+(1) https://github.com/burakbayramli/simplegeomap
 
-[2] https://pypi.org/project/simplegeomap/
+(2) https://pypi.org/project/simplegeomap/
 
-[3] [Haritalama, Nehirler, Göller](../../2023/08/haritalama-su-kaynaklari-nehirler-goller.html)
+(3) [Haritalama, Nehirler, Göller](../../2023/08/haritalama-su-kaynaklari-nehirler-goller.html)
 
-[4] [GL Tiles](https://www.ngdc.noaa.gov/mgg/topo/gltiles.html)
+(4) [GL Tiles](https://www.ngdc.noaa.gov/mgg/topo/gltiles.html)
+
+
 

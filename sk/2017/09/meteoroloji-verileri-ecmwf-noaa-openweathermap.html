@@ -219,8 +219,59 @@ bizimki <code>$HOME</code> altında <code>.nomterr.conf</code> adlı bir JSON do
 
 <h3>ECMWF</h3>
 
+<p>Önce günlük, bedava kaynaklara bakalım. Kurulmasi gereken paketler,</p>
+
+<pre><code>ecmwf-data ecmwf-opendata magpye
+</code></pre>
+
+<p>Örnek kod, [7] adresinden,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">ecmwf.data</span> <span class="k">as</span> <span class="nn">ecdata</span>
+<span class="kn">from</span> <span class="nn">magpye</span> <span class="kn">import</span> <span class="n">GeoMap</span>
+<span class="kn">from</span> <span class="nn">ecmwf.opendata</span> <span class="kn">import</span> <span class="n">Client</span>
+<span class="n">client</span> <span class="o">=</span> <span class="n">Client</span><span class="p">(</span><span class="s2">&quot;ecmwf&quot;</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">parameters</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;10u&#39;</span><span class="p">,</span> <span class="s1">&#39;10v&#39;</span><span class="p">,</span><span class="s1">&#39;2t&#39;</span><span class="p">]</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/tmp/medium-2t-wind.grib&#39;</span>
+
+<span class="n">client</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span>
+    <span class="n">date</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">time</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+    <span class="n">step</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">stream</span><span class="o">=</span><span class="s2">&quot;oper&quot;</span><span class="p">,</span>
+    <span class="nb">type</span><span class="o">=</span><span class="s2">&quot;fc&quot;</span><span class="p">,</span>
+    <span class="n">levtype</span><span class="o">=</span><span class="s2">&quot;sfc&quot;</span><span class="p">,</span>
+    <span class="n">param</span><span class="o">=</span><span class="n">parameters</span><span class="p">,</span>
+    <span class="n">target</span><span class="o">=</span><span class="n">filename</span>
+<span class="p">)</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">ecdata</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<span class="n">t2m</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">shortName</span><span class="o">=</span> <span class="s2">&quot;2t&quot;</span><span class="p">)</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">shortName</span><span class="o">=</span> <span class="s2">&quot;10u&quot;</span><span class="p">)</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">shortName</span><span class="o">=</span> <span class="s2">&quot;10v&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">latitudes</span><span class="p">())</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">longitudes</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[-4.91452026 -4.91452026 -4.91452026 ... -4.35202026 -4.35202026
+ -4.35202026]
+[ 90.  90.  90. ... -90. -90. -90.]
+[-180.  -179.6 -179.2 ...  178.8  179.2  179.6]
+</code></pre>
+</div>
+
 <p>Hava verisi uzerinde yapay ogrenim ile tahminler yapmak isteyenler ham
-veriyi almak icin alttaki siteye basvurabilir.</p>
+veriyi almak icin alttaki siteye basvurabilir. </p>
 
 <p>https://www.ecmwf.int/</p>
 
@@ -307,6 +358,8 @@ ornegi alttaki kodlarda bulunabilir,</p>
 <p>[5] http://apps.ecmwf.int/datasets/licences/tigge/</p>
 
 <p>[6] http://apps.ecmwf.int/datasets/licences/general</p>
+
+<p>[7] https://github.com/ecmwf/notebook-examples/blob/master/opencharts/medium-2t-wind.ipynb</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

@@ -223,10 +223,10 @@ orada akış sıfır demiştik, orası iptal.
 Yayınım
 
 Denklemler ile formüller arasındaki bağlantıyı daha iyi anlayabilmek için
-Yayınım (Diffusion) Denklemine bakalım. Bu denklem bir sıvıya eklenen bir dış
-maddenin sıvıda nasıl yayıldığını formülize eder, mesela havada dumanın
-yayılması, ya da şu içinde mürekkebin yayılması. Yayınım denklemi bir kısmı
-diferansiyel denklemdir, bilinmeyen $u$ değişkeni, bir noktadaki dış madde
+Yayınım (Diffusion) Denklemine bakalım. Bu denklem (hareket etmeyen) bir sıvıya
+eklenen bir dış maddenin sıvıda nasıl yayıldığını formülize eder, mesela havada
+dumanın yayılması, ya da şu içinde mürekkebin yayılması. Yayınım denklemi bir
+kısmı diferansiyel denklemdir, bilinmeyen $u$ değişkeni, bir noktadaki dış madde
 konsantrasyonu bu, üç boyuttaki nokta $x,y,z$ için, muhakkak zaman da bir
 faktör, $t$ var, o zaman $u(x,y,z,t)$.
 
@@ -252,7 +252,52 @@ $$
 \right)
 $$
 
+Üstteki denklem bu arada Isı Denklemi (Heat Equation) olarak ta bilinir, çünkü
+bir dış maddenin sıvı içinde yayınımı işinin bir madde içinde yayılması ile
+benzer mantığı takip eder. Isı Denklemi için $u$ sıcaklık seviyesi olur.
 
+Yayınıma dönersek, onun açıklaması nedir? Önceden gördüğümüz kavramları
+düşünelim, elimizde bir vektör alanı olmalı. Eğer havadaki dumanın yayınımına
+bakıyorsam, $\vec{F}$'yi belli bir noktadaki duman akışı olarak görebilirim,
+$x,y,z$'deki bir vektör olacak bu, ve bana dumanın hangi yönde ne hızda aktığını
+söyleyecek.
+
+Akışın hızını kontrol eden faktör nedir? Bu faktör bölgeler arasındaki duman
+yoğunluk farkıdır, duman çok olan yerden az olan yere gitmeye meyilli olacaktır.
+Hem fiziksel hem de kabaca biraz zihinsel egzersiz bize bunu söyler. Duman
+yüksek konsantrasyonlu bölgelerden düşük konsantrasyonlu bölgelere akacaktır.
+Konsantrasyon $u$ demiştik, demek ki gidişat, akış $u$'nun en hızlı azaldığı
+yöne doğru olmalı. ``En hızlı azalmak'' ne demek? Gradyanın negatifi.  O zaman
+$\vec{F}$ gidişatı $-\nabla u$ yönünde olmalı, aradaki bağlantıyı direk
+orantısal olarak kurabiliriz, bir sabit üzerinden mesela.
+
+Bir diğer ilişki değişimin nasıl halledileceği, eğer konsantrasyon farkı
+sebebiyle akış varsa, bu akış sonrasında sistem nasıl etkilenir? Akış çıktığı
+yerdeki konstrasyonu azaltacaktır, vardığı yerdeki konstrasyonu arttıracaktır.
+Bu durumu $\vec{F}$ ile $\frac{\partial u}{\partial t}$ arasındaki bir
+bağlantıyla temsil etmek gerekir. Uzaklaşım Teorisi burada devreye girecek.
+
+Yine $D$ bölgesi ve onun etrafındaki $S$ yüzeyini düşünürsek ve önümüzdeki
+problem için
+
+$$
+\int \int_S \vec{F} \cdot \vec{n} \ud S
+$$
+
+formülü birim zamanda $S$ yüzeyinden geçen duman miktarını hesaplayabilir.  Bu
+akışı nasıl hesaplanır? Uzaklaşım Teorisi tam da bunu söylüyor zaten, $D$ içine
+bakıyorum, oradaki değişimin ne kadar olduğunu hesaplıyorum, bu hesap, sınırdan
+akan miktar yani üstteki formül ile aynı olmalıdır.
+
+$$
+- \frac{\ud }{\ud t} \left(
+\int \int \int_D u \ud V
+\right)
+$$
+
+Ekşi işareti koyuldu çünkü çift entegrallı akis yüzey dışına gidişatı pozitif
+kabul ediyor, o zaman bölge içindeki değişimi eksi yapmam gerekir, bu
+birim zamanda kaybettiğimiz dumanı bize verir.
 
 
 [devam edecek]

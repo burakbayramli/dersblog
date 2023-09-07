@@ -214,6 +214,25 @@ oldu!</p>
 </code></pre>
 </div>
 
+<p>Bu matris ile kendi beğenilerimizi temsile eden bir vektör arasında kosinüs
+uzaklığı şöyle hesaplayabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">sklearn.metrics.pairwise</span> <span class="kn">import</span> <span class="n">cosine_similarity</span>
+
+<span class="n">my_ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="n">utility_csr</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+<span class="n">my_ratings</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">movId1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rating1</span>
+<span class="n">my_ratings</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">movId2</span><span class="p">]</span> <span class="o">=</span> <span class="n">rating2</span>
+<span class="o">...</span>
+<span class="n">similarities</span> <span class="o">=</span> <span class="n">cosine_similarity</span><span class="p">(</span><span class="n">utility_csr</span><span class="p">,</span> <span class="n">tst</span><span class="p">)</span>
+<span class="n">close_people</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">similarities</span><span class="p">[:,</span><span class="mi">0</span><span class="p">])</span>
+<span class="o">...</span>
+</code></pre>
+</div>
+
+<p>Bizim beğenilerle bize en yakın seyircileri bulduktan sonra o seyircilerin
+en yüksek not verdiği filmleri tavsiye olarak listeleyebiliriz.</p>
+
 <p>JSON</p>
 
 <p>Bir diğer seyrek sayılabilecek format her satırda ayrı kullanıcı için

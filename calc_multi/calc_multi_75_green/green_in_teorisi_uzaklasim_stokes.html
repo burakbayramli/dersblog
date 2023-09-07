@@ -38,6 +38,84 @@
         <h1>Green'in Teorisi, Uzaklaşım, Stokes
 </h1>
 
+<p>Green'in Teorisi</p>
+<p>Bu teorinin detayları, ispatı [2]'de bulunabilir. Tekrar üzerinden geçmek
+gerekirse, [4, sf. 429] bazlı anlatalım, iki boyutta elimizde bir $D$ bölgesi
+etrafındaki $C$ eğrisi var, ve $F(x,y) = M(x,y) <em>i</em> + N(x,y) <em>j</em>$
+$D$ içinde vektör alanı olsun, o zaman alttaki ifade doğrudur,</p>
+<p>$$
+\int_C M \mathrm{d} x + N \mathrm{d} Y =
+\int \int_D \left(
+  \frac{\partial N}{\partial x} - \frac{\partial M}{\partial y}
+  \mathrm{d} x \mathrm{d} y
+\right)
+$$</p>
+<p>$\int_C$ ki bazen $\oint_C$ ile gösterilir, bir eğri üzerinden alınan bir
+entegraldır. Eşitliğin sol tarafı bazen bir $\mathrm{d}\vec{s}$ üzerinden de
+sunulabilir,</p>
+<p>$$
+\int_C \vec{F} \cdot \mathrm{d}\vec{s} = \int_C M \mathrm{d} x + N \mathrm{d} Y 
+$$</p>
+<p>Bu cebirsel bir özet sadece, $\mathrm{d}{\vec{s}} = [\begin{array}{cc} \mathrm{d} x &amp; \mathrm{d} y \end{array}]^T$
+sonuçta ve noktasal çarpım bize iki üstteki ifadeyi verecektir.</p>
+<p>olarak ta gösterilebilir.</p>
+<p>Örnek</p>
+<p>Bir vektör alanı $\vec{F} = xy <em>i</em> + y^2 <em>j</em>$ olsun, ve bu alanda
+birinci dörtlük içinde $y = x$ çizgisi ve $y=x^2$ parabölü arasındaki bölgeyi
+düşünelim. Bu bölge ve alan üzerinden Green'in Teorisini doğrulamaya uğraşalım.</p>
+<p>Grafik şu şekilde,</p>
+<p><img alt="" src="calc_multi_75_green_02.jpg" /></p>
+<p>Vektör alanı (100 ile çarpıp vektörleri büyüttük gözüksün diye),</p>
+<pre><code class="python">x = np.linspace(0,1.,10)
+y = np.linspace(0,1.,10)
+x,y = np.meshgrid(x,y)
+SCALE = 100.0
+u = x*y*SCALE; v = (y**2)*SCALE
+v = np.zeros(y.shape)
+q = plt.quiver(x,y,u,v,angles='xy',scale=1000,color='r')
+p = plt.quiverkey(q,1,16.5,50,&quot;50 m/s&quot;,coordinates='data',color='r')
+plt.savefig('calc_multi_75_green_01.jpg')
+</code></pre>
+
+<p><img alt="" src="calc_multi_75_green_01.jpg" /></p>
+<p>Eğri iki parça olarak analiz edilecek, $C_1$ ve $C_2$.  Eğri üzerinden gereken
+tüm entegral,</p>
+<p>$$
+\int_C \vec{F} \cdot \mathrm{d}{\vec{s}} = \int_C xy \mathrm{d} x + y^2 \mathrm{d} y
+$$</p>
+<p>Bu entegral iki parça üzerinden alınmalı ve sonuç toplanmalı,</p>
+<p>$$
+= \int_{C_1} xy \mathrm{d} x + y^2 \mathrm{d} y + \int_{C_2} xy \mathrm{d} x + y^2 \mathrm{d} y
+\label{2}
+$$</p>
+<p>Eğriyi parametrize edelim, böylece $\mathrm{d} x$, $\mathrm{d} y$ üzerinden entegraller
+kolaylaşsın,</p>
+<p>$$
+C_1: x = t, y = t^2, \quad 0 \le t \le 1
+$$</p>
+<p>$$
+C_2: x = 1-t, y = 1-t, \quad 0 \le t \le 1
+$$</p>
+<p>$C_1$,$C_2$ gidişat yönlerine dikkat, mesela eğri ile yukarı çıkış var, ama düz
+eğri ile aşağı ınıyoruz, bu sebeple $t$ sıfırdan başlarken $x,y$ değerleri
+$(1,1)$, öyle ayarladık, ve en sonda $t=1$ olduğu anda $x,y$ değerleri $(0,0)$
+oluyor. </p>
+<p>Şimdi parametrize edilmiş değişkenlerle (2) formülünü tekrar yazalım,</p>
+<p>$$
+= \int_{0}^{1} ( t \cdot t^2 + t^4 \cdot 2t ) \mathrm{d} t +
+\int_{0}^{1} ((1-t)^2 + (1-t)^2) (-\mathrm{d} t)
+$$</p>
+<p>$$
+= \int_{0}^{1} (t^3 + 2t^5) \mathrm{d} t + \int _{0}^{1} 2 (1-t)^2 (-\mathrm{d} t)
+$$</p>
+<p>$$
+= (\frac{1}{4} t^4 + \frac{2}{6} t^6) \big\vert_{0}^{1} +
+(\frac{2}{3} (1-t)^3 ) \big\vert_{0}^{1}
+$$</p>
+<p>$$
+= \frac{1}{4} + \frac{2}{6} - \frac{2}{3} = -\frac{1}{12}
+$$</p>
+<p>[devam edecek]</p>
 <p>Gauss-Green Eşitliği</p>
 <p>Gauss-Green eşitliği iki boyutta şu şekilde gösterilebilir [1, sf. 262],</p>
 <p>$$
@@ -116,6 +194,7 @@ $$</p>
 <p>[1] Strang, <em>Computational Science and Engineering</em></p>
 <p>[2] Bayramli, <em>Cok Degiskenli Calculus, Ders 23</em></p>
 <p>[3] Bayramlı, <em>Diferansiyel Denklemler, Ekler</em></p>
+<p>[4] Colley, <em>Vector Calculus</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

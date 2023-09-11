@@ -35,7 +35,7 @@ def index_dir():
             ftex = subdir + ".tex"
             if ftex=='dict.tex': continue
             title = util.get_title_from_tex(dir + "/" + subdir + "/" + ftex)
-            html =  "/" + dir + "/" + subdir + "/" + util.filename_from_title(title) + ".html"
+            html =  "/dersblog/" + dir + "/" + subdir + "/" + util.filename_from_title(title) + ".html"
             tex = dir + "/" + subdir + "/" + ftex
             tex_html_map[tex] = html
             files2.append(tex)
@@ -48,7 +48,7 @@ def index_dir():
             word = unidecode(word).lower()
             if len(word) < 2: continue
             if ".tex" in doc: doc = tex_html_map[doc]
-            if ".md" in doc: doc = doc.replace(".md",".html")
+            if ".md" in doc: doc = '/dersblog' + doc.replace(".md",".html")
             invidx[word][doc] += 1
         print (doc)
 

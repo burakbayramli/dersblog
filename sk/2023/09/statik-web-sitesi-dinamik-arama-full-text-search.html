@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Statik Sitelerde Dinamik Kelime Arama Sistemi</h1>
+
+<p>from collections import defaultdict
+from unidecode import unidecode
+import re, json, glob</p>
+
+<p>WORD = re.compile(r'\w+')</p>
+
+<p>def clean<em>text(text):
+    text = text.replace("\n"," ").replace("\r"," ")
+    punc</em>list = '!"#$%^()*+,-./:;&lt;=&gt;?@[]^<em>{|}~' + '0123456789'
+    t = str.maketrans(dict.fromkeys(punc</em>list, " "))
+    text = text.translate(t)
+    t = str.maketrans(dict.fromkeys("'`",""))
+    text = text.translate(t)
+    return text</p>
+
+<p>def reg<em>tokenize(text):
+    text = clean</em>text(text)
+    words = WORD.findall(text)
+    return words</p>
+
+<p>invidx = defaultdict(lambda: defaultdict(int))
+dir = "[DIR]"</p>
+
+<p>files = glob.glob(dir + "/<strong>/</strong>/*.md")
+files = sorted(files)
+for file in enumerate(files):
+    doc = file[1].replace(dir,"") <br />
+    for word in reg_tokenize(open(file[1]).read()):
+        word = unidecode(word).lower()
+        invidx[word][doc] += 1
+    print (doc)</p>
+
+<p>fout = open("data/invidx.json","w")
+fout.write(json.dumps(invidx))
+fout.close()</p>
+
+<p>invidx = json.loads(open("data/invidx.json").read())
+invidx_dict = {}</p>
+
+<p>for c in  string.ascii<em>lowercase:
+    invidx</em>dict[c] = defaultdict(lambda: defaultdict(int))</p>
+
+<p>for k,v in invidx.items():
+    first<em>letter = k[0]
+    if first</em>letter in string.ascii<em>lowercase:
+        invidx</em>dict[first_letter][k] = v</p>
+
+<p>for k,v in invidx_dict.items():
+    fout = open("data/invidx-%s.json" % k,"w")
+    fout.write(json.dumps(v))
+    fout.close()    </p>
+
+<h1>points = [0, 12, 9]</h1>
+
+<h1>res = sorted(range(len(points)), key=lambda x: points[x])</h1>
+
+<h1>print(res)</h1>
+
+<h1>exit()</h1>
+
+<h1>a = [1, 2, 3, 4]; b = [2, 3, 4, 5]; c = [3, 4, 5, 6]; d = [4, 1, 3, 9]</h1>
+
+<h1>u = set.intersection(set(a),set(b),set(c),set(d))</h1>
+
+<h1>print (u)</h1>
+
+<p>search = "green ammonia"</p>
+
+<p>stok = search.split()</p>
+
+<p>stok_hits = {}</p>
+
+<p>results = []
+for tok in stok:
+    stok<em>hits[tok] = json.loads(open("data/invidx-%s.json" % tok[0]).read())[tok]
+    results.append(set(stok</em>hits[tok]))</p>
+
+<p>u = set.intersection(*results)</p>
+
+<p>hits = []
+for f in u:
+    hits.append([f,sum([stok_hits[tok][f] for tok in stok])])</p>
+
+<p>sorted_hits = sorted(range(len(hits)), key=lambda x: hits[x][1], reverse=True)</p>
+
+<p>for i in range(20):
+    print (hits[sorted_hits[i]])</p>
+
+<p><head>
+    <script defer src="pyscript.js"></script>
+</head>
+<body> <br />
+      <py-script>
+        from pyodide.http import open_url
+        from collections import defaultdict
+        import json</p>
+
+<pre><code>    search = "green ammonia"
+
+    stok = search.split()
+
+    stok_hits = {}
+
+    results = []
+
+    for tok in stok:
+       url = 'http://192.168.43.49:5000/static/invidx-%s.json' % tok[0]
+       df = open_url(url)        
+       stok_hits[tok] = json.loads(df.getvalue())[tok]
+       results.append(set(stok_hits[tok]))
+
+
+    u = set.intersection(*results)
+
+    hits = []
+
+    for f in u:
+       hits.append([f,sum([stok_hits[tok][f] for tok in stok])])
+
+    sorted_hits = sorted(range(len(hits)), key=lambda x: hits[x][1], reverse=True)
+
+    for i in range(20):
+       display (hits[sorted_hits[i]])
+
+  &lt;/py-script&gt;
+</code></pre>
+
+<p></body>
+</html></p>
+
+<div id="output"></div>
+
+<p><py-script>
+  def write<em>to</em>page():
+     manual<em>div = Element("output")
+     inp = Element("search")
+     manual</em>div.element.innerText = inp.element.value
+</py-script></p>
+
+<p>
+ <input type="text" name="search" id="search"/>
+</p>
+
+<p>
+  <button py-click="write_to_page()" id="manual">Search</button>
+</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

@@ -13,7 +13,32 @@ yaklaşımı en temiz, basit, hızlı yöntem, sayfa içinde iki dosya dahil
 ediliyor, ve bundan sonra tam tekmilli Python kodlarını sayfa içine
 koymak mümkün oluyor.
 
-
+```html
+<html>
+  <head>
+  <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css"/>
+  <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+  </head>
+  <body>
+    <div id="output"></div>
+    
+    <py-script>
+      def write_to_page():
+         manual_div = Element("output")
+         inp = Element("search")
+         manual_div.element.innerText = inp.element.value
+    </py-script>
+    
+    <p>
+     <input type="text" name="search" id="search"/>
+    </p>
+    <p>
+      <button py-click="write_to_page()" id="manual">OK</button>
+    </p>
+    
+  </body>
+</html>
+```
 
 
 

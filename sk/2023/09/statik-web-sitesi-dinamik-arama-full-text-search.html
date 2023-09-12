@@ -49,152 +49,163 @@ bağlanana gönderilir, Javascript dilindeki bu kodlar prezentasyon
 mümkün, hatta bir süredir Ajax ile serviste direk fonksiyon çağrısı
 bile yapılabiliyor.</p>
 
-<p>from collections import defaultdict
-from unidecode import unidecode
-import re, json, glob</p>
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
+<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">glob</span>
 
-<p>WORD = re.compile(r'\w+')</p>
+<span class="n">WORD</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span>
 
-<p>def clean<em>text(text):
-    text = text.replace("\n"," ").replace("\r"," ")
-    punc</em>list = '!"#$%^()*+,-./:;&lt;=&gt;?@[]^<em>{|}~' + '0123456789'
-    t = str.maketrans(dict.fromkeys(punc</em>list, " "))
-    text = text.translate(t)
-    t = str.maketrans(dict.fromkeys("'`",""))
-    text = text.translate(t)
-    return text</p>
+<span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">punc_list</span> <span class="o">=</span> <span class="s1">&#39;!&quot;#$%^()*+,-./:;&lt;=&gt;?@[\]^_{|}~&#39;</span> <span class="o">+</span> <span class="s1">&#39;0123456789&#39;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">punc_list</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="s2">&quot;&#39;`&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
 
-<p>def reg<em>tokenize(text):
-    text = clean</em>text(text)
-    words = WORD.findall(text)
-    return words</p>
+<span class="k">def</span> <span class="nf">reg_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">WORD</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">words</span>
 
-<p>invidx = defaultdict(lambda: defaultdict(int))
-dir = "[DIR]"</p>
+<span class="n">invidx</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+<span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;[DIR]&quot;</span>
 
-<p>files = glob.glob(dir + "/<strong>/</strong>/*.md")
-files = sorted(files)
-for file in enumerate(files):
-    doc = file[1].replace(dir,"") <br />
-    for word in reg_tokenize(open(file[1]).read()):
-        word = unidecode(word).lower()
-        invidx[word][doc] += 1
-    print (doc)</p>
+<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/**/**/*.md&quot;</span><span class="p">)</span>
+<span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>    
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reg_tokenize</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()):</span>
+        <span class="n">word</span> <span class="o">=</span> <span class="n">unidecode</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">invidx</span><span class="p">[</span><span class="n">word</span><span class="p">][</span><span class="n">doc</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">doc</span><span class="p">)</span>
 
-<p>fout = open("data/invidx.json","w")
-fout.write(json.dumps(invidx))
-fout.close()</p>
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">invidx</span><span class="p">))</span>
+<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
 
-<p>invidx = json.loads(open("data/invidx.json").read())
-invidx_dict = {}</p>
+<div class="codehilite">
+<pre><span></span><code><span class="n">invidx</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">invidx_dict</span> <span class="o">=</span> <span class="p">{}</span>
 
-<p>for c in  string.ascii<em>lowercase:
-    invidx</em>dict[c] = defaultdict(lambda: defaultdict(int))</p>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span>  <span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">:</span>
+    <span class="n">invidx_dict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
 
-<p>for k,v in invidx.items():
-    first<em>letter = k[0]
-    if first</em>letter in string.ascii<em>lowercase:
-        invidx</em>dict[first_letter][k] = v</p>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">invidx</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">first_letter</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">first_letter</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">:</span>
+        <span class="n">invidx_dict</span><span class="p">[</span><span class="n">first_letter</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 
-<p>for k,v in invidx_dict.items():
-    fout = open("data/invidx-%s.json" % k,"w")
-    fout.write(json.dumps(v))
-    fout.close()    </p>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">invidx_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx-</span><span class="si">%s</span><span class="s2">.json&quot;</span> <span class="o">%</span> <span class="n">k</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    
+</code></pre>
+</div>
 
-<h1>points = [0, 12, 9]</h1>
+<div class="codehilite">
+<pre><span></span><code><span class="c1">#points = [0, 12, 9]</span>
+<span class="c1">#res = sorted(range(len(points)), key=lambda x: points[x])</span>
+<span class="c1">#print(res)</span>
+</code></pre>
+</div>
 
-<h1>res = sorted(range(len(points)), key=lambda x: points[x])</h1>
+<div class="codehilite">
+<pre><span></span><code><span class="c1">#a = [1, 2, 3, 4]; b = [2, 3, 4, 5]; c = [3, 4, 5, 6]; d = [4, 1, 3, 9]</span>
+<span class="c1">#u = set.intersection(set(a),set(b),set(c),set(d))</span>
+<span class="c1">#print (u)</span>
 
-<h1>print(res)</h1>
+<span class="n">search</span> <span class="o">=</span> <span class="s2">&quot;green ammonia&quot;</span>
 
-<h1>exit()</h1>
+<span class="n">stok</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
-<h1>a = [1, 2, 3, 4]; b = [2, 3, 4, 5]; c = [3, 4, 5, 6]; d = [4, 1, 3, 9]</h1>
+<span class="n">stok_hits</span> <span class="o">=</span> <span class="p">{}</span>
 
-<h1>u = set.intersection(set(a),set(b),set(c),set(d))</h1>
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">stok</span><span class="p">:</span>
+    <span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx-</span><span class="si">%s</span><span class="s2">.json&quot;</span> <span class="o">%</span> <span class="n">tok</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">())[</span><span class="n">tok</span><span class="p">]</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">]))</span>
 
-<h1>print (u)</h1>
+<span class="n">u</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
 
-<p>search = "green ammonia"</p>
+<span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+    <span class="n">hits</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">,</span><span class="nb">sum</span><span class="p">([</span><span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">][</span><span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">stok</span><span class="p">])])</span>
 
-<p>stok = search.split()</p>
+<span class="n">sorted_hits</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hits</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<p>stok_hits = {}</p>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">hits</span><span class="p">[</span><span class="n">sorted_hits</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
+</code></pre>
+</div>
 
-<p>results = []
-for tok in stok:
-    stok<em>hits[tok] = json.loads(open("data/invidx-%s.json" % tok[0]).read())[tok]
-    results.append(set(stok</em>hits[tok]))</p>
-
-<p>u = set.intersection(*results)</p>
-
-<p>hits = []
-for f in u:
-    hits.append([f,sum([stok_hits[tok][f] for tok in stok])])</p>
-
-<p>sorted_hits = sorted(range(len(hits)), key=lambda x: hits[x][1], reverse=True)</p>
-
-<p>for i in range(20):
-    print (hits[sorted_hits[i]])</p>
-
-<p><head>
-    <script defer src="pyscript.js"></script>
-</head>
-<body> <br />
-      <py-script>
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">defer</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;pyscript.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>    
+      <span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
         from pyodide.http import open_url
         from collections import defaultdict
-        import json</p>
+        import json
 
-<pre><code>    search = "green ammonia"
+        search = &quot;green ammonia&quot;
 
-    stok = search.split()
+        stok = search.split()
 
-    stok_hits = {}
+        stok_hits = {}
 
-    results = []
+        results = []
 
-    for tok in stok:
-       url = 'http://192.168.43.49:5000/static/invidx-%s.json' % tok[0]
-       df = open_url(url)        
-       stok_hits[tok] = json.loads(df.getvalue())[tok]
-       results.append(set(stok_hits[tok]))
+        for tok in stok:
+           url = &#39;http://192.168.43.49:5000/static/invidx-%s.json&#39; % tok[0]
+           df = open_url(url)        
+           stok_hits[tok] = json.loads(df.getvalue())[tok]
+           results.append(set(stok_hits[tok]))
 
 
-    u = set.intersection(*results)
+        u = set.intersection(*results)
 
-    hits = []
+        hits = []
 
-    for f in u:
-       hits.append([f,sum([stok_hits[tok][f] for tok in stok])])
+        for f in u:
+           hits.append([f,sum([stok_hits[tok][f] for tok in stok])])
 
-    sorted_hits = sorted(range(len(hits)), key=lambda x: hits[x][1], reverse=True)
+        sorted_hits = sorted(range(len(hits)), key=lambda x: hits[x][1], reverse=True)
 
-    for i in range(20):
-       display (hits[sorted_hits[i]])
+        for i in range(20):
+           display (hits[sorted_hits[i]])
 
-  &lt;/py-script&gt;
+      <span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre>
+</div>
 
-<p></body>
-</html></p>
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;output&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
 
-<div id="output"></div>
+<span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
+  def write_to_page():
+     manual_div = Element(&quot;output&quot;)
+     inp = Element(&quot;search&quot;)
+     manual_div.element.innerText = inp.element.value
+<span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
 
-<p><py-script>
-  def write<em>to</em>page():
-     manual<em>div = Element("output")
-     inp = Element("search")
-     manual</em>div.element.innerText = inp.element.value
-</py-script></p>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+ <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;search&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;search&quot;</span><span class="p">/&gt;</span>
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">py-click</span><span class="o">=</span><span class="s">&quot;write_to_page()&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;manual&quot;</span><span class="p">&gt;</span>Search<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+</code></pre>
+</div>
 
-<p>
- <input type="text" name="search" id="search"/>
-</p>
-
-<p>
-  <button py-click="write_to_page()" id="manual">Search</button>
-</p>
+<p>[devam edecek]</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

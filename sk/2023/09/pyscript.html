@@ -51,6 +51,8 @@ yaklaşımı en temiz, basit, hızlı yöntem, sayfa içinde iki dosya dahil
 ediliyor, ve bundan sonra tam tekmilli Python kodlarını sayfa içine
 koymak mümkün oluyor.</p>
 
+<h3>Başlangıç</h3>
+
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
   <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
@@ -80,13 +82,145 @@ koymak mümkün oluyor.</p>
 </code></pre>
 </div>
 
+<p>Test etmek icin ustteki kodlari mesela bir <code>tst1.html</code> dosyasina yazariz,
+ve o dizinde </p>
+
 <pre><code>python -m http.server 8080 --bind 127.0.0.1
 </code></pre>
+
+<p>komutunu isletiriz, <code>http.server</code> Python icindeki hafif bir Web
+servisidir, Flask yapabilirdik o da cok basit ama ustteki yontem daha
+da basit. Simdi</p>
 
 <pre><code>http://localhost:8080/tst1.html
 </code></pre>
 
-<p>pyscript_01.jpg</p>
+<p>adresini ziyaret ederiz, sayfa yüklenirken <code>pyscript.js</code> yüklenecek,
+birkaç saniye alabilir, <a href="pyscript_01.jpg">şöyle</a> bir ekran gösterilir
+o sırada, önemli değil, yükleme bitince OK düğmesine tıklanır ve sonuç
+görülür.</p>
+
+<p>Gerekli <code>.js</code>, <code>.css</code> dosyalarını pyscript.net yerine aynı dizinden
+servis edebilirdik, bu durumda <code>pyscript.js</code> ve <code>pyscript.css</code>
+indirilir, dizine koyulur sayfa kodunun <code>&lt;head&gt;</code> bölümu şöyle
+değiştirilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code>  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;pyscript.css&quot;</span><span class="p">/&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">defer</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;pyscript.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<h3>HTML Üretmek</h3>
+
+<p>Pyscript kodunda <code>element.innerText</code> çağrısı ile bir metni sayfaya yazabildik.
+Eğer HTML gösterilsin istiyorsak, mesela bağlantılar, renkli yazılar, listeler
+gibi daha çetrefilli çıktılar için `.innerHTML kullanabiliriz.</p>
+
+<p>Bir örnekte görelim, 0 ila 9 arasındaki sayıları gezip URL bağlantılarını
+dinamik olarak değiştirip sayfaya o şekilde basacağız,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  ...
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;output&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
+      def write_to_page():
+         line = &quot;&quot;
+         for i in range(10):
+            s = &#39;<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;https://blah.blah%d.com&quot;</span><span class="p">&gt;</span>Link %d<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>&#39; % (i,i)
+            line = line + s
+         Element(&quot;output&quot;).element.innerHTML = line
+    <span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
+
+     <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">button</span> <span class="na">py-click</span><span class="o">=</span><span class="s">&quot;write_to_page()&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;btn1&quot;</span><span class="p">&gt;</span>OK<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>Düğmeye basınca bu kod 10 tane bağlantı üretmeli, Link 0, Link 1 gibi..</p>
+
+<h3>Http ile Uzaktaki Dosyayı Okumak, İşlemek</h3>
+
+<p>Aynen Javascript ile olduğu gibi PyScript bir dosya servisindeki bir
+dosyayı URL ile okuyup işleyebilir. Alttaki örnek için üstteki basit
+web servisi işlemez, ama Flask işler. Aynı dizinde bir de <code>test1.json</code>
+dosyası yarattık ve içinde <code>{"a": 1, "b": 2}</code> değerleri var, dosyayı
+HTML sayfası ile berabe Flask <code>static</code> dizini içine koyduk.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;pyscript.css&quot;</span><span class="p">/&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">defer</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;pyscript.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>    
+      <span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
+          from pyodide.http import open_url
+          url = &#39;http://localhost:5000/static/test1.json&#39;
+          df = open_url(url)
+          display(df.getvalue())
+      <span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>Sayfayı yükleyince bu değerlerin ekrana basıldığını göreceğiz.</p>
+
+<p>Eğer ham JSON dosyasını indirebiliyorsak bu dosya içeriğini JSON paketi
+ile işlemek nasıl olurdu? Böylece içeriğe bildiğimiz sözlük, liste kavramları
+ile erisebilirdik, üstteki kodu şöyle değiştirelim,</p>
+
+<pre><code>from pyodide.http import open_url
+import json
+...
+df = open_url(url)
+d = json.loads(df.getvalue())
+display(d['a'])
+</code></pre>
+
+<p>Bu kod ekrana sadece <code>1</code> değeri basacak.</p>
+
+<p>Web üzerinden dosya erişimi pek çok fayda sağlar, mesela 5-10 MB veri
+dosyalarını gerektiği yerde indirip içeriklerini ek işlemlere tabi
+tutmak, ve sonuçları HTML olarak göstermek mümkün.</p>
+
+<p>Karşılaştırma amacıyla aynı işlemi (JSON işleme kısmi yok) Javascript ile
+yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="kd">function</span> <span class="nx">doit</span><span class="p">()</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">xmlHttp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+      <span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://192.168.43.49:5000/static/test1.json&#39;</span><span class="p">,</span> <span class="kc">false</span> <span class="p">);</span> 
+      <span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span> <span class="kc">null</span> <span class="p">);</span>
+      <span class="nx">alert</span><span class="p">(</span><span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+    <span class="p">}</span>
+
+  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
+      <span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&quot;doit()&quot;</span><span class="p">&gt;</span>OK<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
 
 <p>[devam edecek]</p>
 

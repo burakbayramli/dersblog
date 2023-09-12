@@ -36,18 +36,119 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Statik Sitelerde Dinamik Kelime Arama Sistemi</h1>
+<h1>Statik Sitelerde Arama Motoru</h1>
 
-<p>Dinamik Web siteleri bilindiği gibi üç katmana sahiptir, istemci /
-müşteri tarayıcı ile bağlanır, buradan gelen istekle (requests) servis
-tarafında karşılanır, servis tarafındaki kodlar işlem mantığı
-koşturur, bir veri tabanına bağlanıp veri alışveri yapabilir, ve
-sonuçta sayfa üretilir, ve kullanıcıya gösterilir. Tarayıcı içinde de
-müşteri odaklı ek kodlar işletilebiliyor, bu kodlar sayfa ile beraber
-bağlanana gönderilir, Javascript dilindeki bu kodlar prezentasyon
-üzerinde ek işlemler yapabilir, bir sürü görsel işlem Javascript ile
-mümkün, hatta bir süredir Ajax ile serviste direk fonksiyon çağrısı
-bile yapılabiliyor.</p>
+<p>Bu yazıdaki amacımız bir statik dizini aranır hale getirmek ve bunu
+orta katman olmadan yapabilmek.</p>
+
+<p>Dinamik Web siteleri üç katmana sahiptir. 1'inci katmanda istemci,
+müşteri tarayıcısı ile 2'inci katmandaki servise bağlanır, müşteri
+isteği (request) orada karşılamak için işlem mantığı koştulur, mesela
+3'üncü katmandaki bir veri tabanına bağlanıp veri alışveri yapmak
+gibi, ve sonuçta sayfa üretilir, kullanıcıya gösterilir.</p>
+
+<p>Tarayıcı içindeki mekanizma o kadar aptal değildir, orada da kodlar
+işletilebiliyor, bu katmandaki Javascript oldukça kuvvetli bir
+dil. Javascript kodları sayfa içeriği ile beraber bağlanana
+gönderilir, Javascript dilindeki bu kodlar prezentasyon üzerinde ek
+işlemler yapabilir, bir sürü görsel işlem Javascript ile mümkün, hatta
+bir süredir Ajax ile serviste direk fonksiyon çağrısı bile
+yapılabiliyor.</p>
+
+<p>Orta katman bir sürü işlem yapabiliyor, fakat eğer gereken kabiliyet
+pür okuma bazlı ise ve gerekli veri dosyalarını hızlı erişilebilir
+halde önceden hazırlamışsak, Tarayıcı -> Statik Dosya erişimi ile pek
+çok işi yapmak mümkündür.</p>
+
+<p>Arama motorunu işte bu şekilde kodlayacağız. Javascript, ya da bu
+yazıda onun yerine PyScript [1], kodları tarayıcıda işleyecek,
+çetrefil bir arayüz mantığı orada kodlanacak.. Bu mantık gerektiği
+yerde gerekli kelimeler için belli indis dosyalarına bağlanacak,
+onların içeriğine ek işlemler yapıp birleştirecek, ve sonuçları
+sunacak. Bunun pür dosyalar ile nasıl yapılabileceğini anlamak için
+önce tüm metni arama (full-text search) teknolojisine bakalım, ve bizim
+yapacağımız eklerden bahsedelim.</p>
+
+<h1>Tam Metin Arama</h1>
+
+<p>Doküman arama kelime bazlı yapılır, arama için girdiğimiz kelimeler
+teker teker bir indis içinde bulunarak onların bağlı olduğu dokümanlar
+getirilmeye uğraşılır. Verili bir doküman içindeki kelimeleri bulmak
+mümkün, bir anlamda döküman bir kelime listesidir, ve doküman ID
+verilip döküman bulunup içindeki kelime listesi dökülebilir. Tam metin
+aramanın yaptığı bunun tersidir, kelime verilip içinde geçtiği
+doküman(lar) bulunmaya uğraşılır, yani ters yönde gidiyoruz. Bunun
+için farklı bir indis gerekir, bu indis yapısına uygun bir şekilde
+tersyüz edilmiş indis (inverted index) ismi veriliyor.</p>
+
+<p>Tam metin arama için tersyüz edilmiş indisi yaratmak gerekir, bunun
+için tüm dokümanlar gezilir, dokümanlar alt kelimelerine, simgelere
+(token) ayrılır, ve bu kelimelerden içinde geçtiği dokümanlara bir
+işaret konur. Bunu bir sözlük yapısı içinde gerçekleştirebiliriz,
+sözlük anahtarı kelime, değeri ise ikinci bir sözlük, bu sözlük içinde
+o kelimenin hangi dokümanda kaç kez geçtiği olacak. Mesela bütün dokümanlar
+içinde "araba" kelimesi doküman1 içinde 4 kere doküman2 içinde 7 kere
+geçmişse, <code>{"araba": {"döküman1": 4, "doküman2": 7}.... }</code> gibi bir
+sözlük yapısı görmeliyiz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">WORD</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">punc_list</span> <span class="o">=</span> <span class="s1">&#39;!&quot;#$%^()*+,-./:;&lt;=&gt;?@[\]^_{|}~&#39;</span> <span class="o">+</span> <span class="s1">&#39;0123456789&#39;</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">punc_list</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="s2">&quot;&#39;`&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+
+<span class="k">def</span> <span class="nf">reg_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">words</span> <span class="o">=</span> <span class="n">WORD</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">words</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;Search engine optimization is the process of improving the quality and quantity of website traffic to a website or a web page from search engines. SEO targets unpaid traffic rather than direct traffic or paid traffic.&quot;</span>
+<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;Note: This standard is not intended to dictate the internal formats used by sites for optimization, the specific message system features that they are expected to support, or any of the characteristics of user interface programs&quot;</span>
+
+<span class="n">invidx</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">di</span><span class="p">,</span><span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">text1</span><span class="p">,</span><span class="n">text2</span><span class="p">]):</span>
+    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reg_tokenize</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">invidx</span><span class="p">[</span><span class="n">word</span><span class="p">][</span><span class="n">di</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">invidx</span><span class="p">))</span> 
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&quot;Search&quot;: {&quot;0&quot;: 1}, &quot;engine&quot;: {&quot;0&quot;: 1}, &quot;optimization&quot;: {&quot;0&quot;: 1, &quot;1&quot;:
+1}, &quot;is&quot;: {&quot;0&quot;: 1, &quot;1&quot;: 1}, &quot;the&quot;: {&quot;0&quot;: 2, &quot;1&quot;: 3}, &quot;process&quot;: {&quot;0&quot;:
+1}, &quot;of&quot;: {&quot;0&quot;: 2, &quot;1&quot;: 2}, &quot;improving&quot;: {&quot;0&quot;: 1}, &quot;quality&quot;: {&quot;0&quot;:
+1}, &quot;and&quot;: {&quot;0&quot;: 1}, &quot;quantity&quot;: {&quot;0&quot;: 1}, &quot;website&quot;: {&quot;0&quot;: 2},
+&quot;traffic&quot;: {&quot;0&quot;: 4}, &quot;to&quot;: {&quot;0&quot;: 1, &quot;1&quot;: 2}, &quot;or&quot;: {&quot;0&quot;: 2, &quot;1&quot;: 1},
+&quot;web&quot;: {&quot;0&quot;: 1}, &quot;page&quot;: {&quot;0&quot;: 1}, &quot;from&quot;: {&quot;0&quot;: 1}, &quot;search&quot;: {&quot;0&quot;:
+1}, &quot;engines&quot;: {&quot;0&quot;: 1}, &quot;SEO&quot;: {&quot;0&quot;: 1}, &quot;targets&quot;: {&quot;0&quot;: 1},
+&quot;unpaid&quot;: {&quot;0&quot;: 1}, &quot;rather&quot;: {&quot;0&quot;: 1}, &quot;than&quot;: {&quot;0&quot;: 1}, &quot;direct&quot;:
+{&quot;0&quot;: 1}, &quot;paid&quot;: {&quot;0&quot;: 1}, &quot;Note&quot;: {&quot;1&quot;: 1}, &quot;This&quot;: {&quot;1&quot;: 1},
+&quot;standard&quot;: {&quot;1&quot;: 1}, &quot;not&quot;: {&quot;1&quot;: 1}, &quot;intended&quot;: {&quot;1&quot;: 1},
+&quot;dictate&quot;: {&quot;1&quot;: 1}, &quot;internal&quot;: {&quot;1&quot;: 1}, &quot;formats&quot;: {&quot;1&quot;: 1},
+&quot;used&quot;: {&quot;1&quot;: 1}, &quot;by&quot;: {&quot;1&quot;: 1}, &quot;sites&quot;: {&quot;1&quot;: 1}, &quot;for&quot;: {&quot;1&quot;: 1},
+&quot;specific&quot;: {&quot;1&quot;: 1}, &quot;message&quot;: {&quot;1&quot;: 1}, &quot;system&quot;: {&quot;1&quot;: 1},
+&quot;features&quot;: {&quot;1&quot;: 1}, &quot;that&quot;: {&quot;1&quot;: 1}, &quot;they&quot;: {&quot;1&quot;: 1}, &quot;are&quot;: {&quot;1&quot;:
+1}, &quot;expected&quot;: {&quot;1&quot;: 1}, &quot;support&quot;: {&quot;1&quot;: 1}, &quot;any&quot;: {&quot;1&quot;: 1},
+&quot;characteristics&quot;: {&quot;1&quot;: 1}, &quot;user&quot;: {&quot;1&quot;: 1}, &quot;interface&quot;: {&quot;1&quot;: 1},
+&quot;programs&quot;: {&quot;1&quot;: 1}}
+</code></pre>
+</div>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
@@ -206,6 +307,10 @@ bile yapılabiliyor.</p>
 </div>
 
 <p>[devam edecek]</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="pyscript.html">PyScript</a></p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

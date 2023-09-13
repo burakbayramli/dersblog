@@ -120,5 +120,5 @@
 
 [Javascript Yerine Tarayıcıda Python, PyScript](09/pyscript.html)
 
-[Statik Sitelerde Dinamik Kelime Arama Sistemi](09/statik-web-sitesi-dinamik-arama-full-text-search.html)
+[Statik Sitelerde Arama Motoru](09/statik-web-sitesi-dinamik-arama-full-text-search.html)
 

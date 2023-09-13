@@ -173,7 +173,7 @@ print(res)
 [0, 2, 1]
 ```
 
-### Web Kodlamasi
+### Web Kodlaması
 
 Eğer üstteki arama metotunu uygulama servisi (app server) olmadan
 kodlamak istiyorsak, yani sadece PyScript (ya da Javascript) ve servis
@@ -202,3 +202,4 @@ Kaynaklar
 [2] <a href="">Blog Arama Sayfasi</a>
 
 [3] https://github.com/burakbayramli/classnotes
+

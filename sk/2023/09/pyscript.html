@@ -231,6 +231,45 @@ yapalım,</p>
 </code></pre>
 </div>
 
+<h3>Diger Paketler</h3>
+
+<p>Fakat kabiliyetler bunlarla sınırlı değil. PyScript taklit bir Python
+ortamı değil, tam tekmilli bir Python ortamı. Amacı bildik Python
+yorumlayıcısını tamamen Javascript bazlı işletmek. Bu sebeple mesela
+dış paket yüklemesi de pek çok paket için işliyor. Mesela altta
+<code>pandaş</code> paketinin kurulduğu ve bir CSV verisini işlediği örneği
+görüyoruz. Daha fazla örnekler [1]'de bulunabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;pyscript.css&quot;</span><span class="p">/&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">defer</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;pyscript.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>    
+    <span class="p">&lt;</span><span class="nt">py-config</span><span class="p">&gt;</span>
+      packages = [&quot;pandas&quot;]
+    <span class="p">&lt;/</span><span class="nt">py-config</span><span class="p">&gt;</span>
+
+    <span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
+      import pandas as pd
+
+      from pyodide.http import open_url
+
+      url = (&quot;https://raw.githubusercontent.com/Cheukting/pyscript-ice-cream/main/bj-products.csv&quot;)
+      ice_data = pd.read_csv(open_url(url))
+      display(ice_data)
+    <span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
+
+  <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p><img src="pyscript_02.jpg" alt="" /></p>
+
 <p>Kaynaklar</p>
 
 <p>[1] PyScript, https://docs.pyscript.net/latest/tutorials/getting-started.html</p>

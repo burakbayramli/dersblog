@@ -191,6 +191,44 @@ yapalım,
 </html>
 ```
 
+### Diger Paketler
+
+Fakat kabiliyetler bunlarla sınırlı değil. PyScript taklit bir Python
+ortamı değil, tam tekmilli bir Python ortamı. Amacı bildik Python
+yorumlayıcısını tamamen Javascript bazlı işletmek. Bu sebeple mesela
+dış paket yüklemesi de pek çok paket için işliyor. Mesela altta
+`pandaş` paketinin kurulduğu ve bir CSV verisini işlediği örneği
+görüyoruz. Daha fazla örnekler [1]'de bulunabilir.
+
+```html
+<html>
+  <head>
+  <link rel="stylesheet" href="pyscript.css"/>
+  <script defer src="pyscript.js"></script>
+  </head>
+
+<body>    
+    <py-config>
+      packages = ["pandas"]
+    </py-config>
+
+    <py-script>
+      import pandas as pd
+
+      from pyodide.http import open_url
+
+      url = ("https://raw.githubusercontent.com/Cheukting/pyscript-ice-cream/main/bj-products.csv")
+      ice_data = pd.read_csv(open_url(url))
+      display(ice_data)
+    </py-script>
+
+  </body>
+  
+</html>
+```
+
+![](pyscript_02.jpg)
+
 Kaynaklar
 
 [1] PyScript, https://docs.pyscript.net/latest/tutorials/getting-started.html

@@ -122,3 +122,5 @@
 
 [Statik Sitelerde Arama Motoru](09/statik-web-sitesi-dinamik-arama-full-text-search.html)
 
+[Tarayıcı, Statik Dosya Yapısı](09/tarayici-statik-dosya-mimarisi.html)
+

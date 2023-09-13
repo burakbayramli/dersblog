@@ -45,13 +45,13 @@ index) ismi veriliyor.
 
 Tam metin arama için bu indisi yaratmak gerekir, o amaçla tüm
 dokümanlar gezilir, gezilirken her doküman alt kelimelerine, simgelere
-(token) ayrılır, ve bu kelimelerden içinde geçtiği dokümanlara bir
+(token) ayrılır [4], ve bu kelimelerden içinde geçtiği dokümanlara bir
 işaret konur. Bunu bir sözlük yapısı içinde gerçekleştirebiliriz,
 sözlük içinde sözlük olacak, anahtar kelime, değeri ise ikinci bir
 sözlük, bu sözlük içinde o kelimenin hangi dokümanda kaç kez geçtiği
-olur. Mesela bütün dokümanlar içinde "araba" kelimesi doküman1
-içinde 4 kere doküman2 içinde 7 kere geçmişse, `{"araba": {"döküman1":
-4, "doküman2": 7}.... }` gibi bir sözlük yapısı görmeliyiz.
+olur. Mesela bütün dokümanlar içinde "araba" kelimesi doküman1 içinde
+4 kere doküman2 içinde 7 kere geçmişse, `{"araba": {"döküman1": 4,
+"doküman2": 7}.... }` gibi bir sözlük yapısı görmeliyiz.
 
 Daha sonra arama yaparken her arama kelimesi tersyüz edilmiş indise
 geçilir, o kelimenin hangi dokümanlarda kaç kez geçtiğini hemen
@@ -189,7 +189,11 @@ indisi kelime ilk harfini baz alarak parçalara bölmek. Mesela 'a' ile
 başlayan tüm kelimelerin tersyüz edilmiş indis dosyası
 `invidx-a.json`, 'b' için `invidx-b.json`, böyle gidiyor.
 
-Bu yaklaşımı bu site için kodladık, sonuçları [2]'de görebiliriz.
+Bölünmüş indis dosyaları çoğunlukla 0.5 MB civarı olacaktır. Eğer iki
+kelime aranıyorsa bu ortalama 1 MB JSON dosya indirilmesi demektir,
+hızlı bir şekilde yapılabilir.
+
+Bahsedilen yaklaşımı bu site için kodladık, sonuçları [2]'de görebiliriz.
 
 Kodlar Github deposunda [3] `invidx.py` ve `sk/ara.html` dosyaları
 içinde.
@@ -199,10 +203,9 @@ Kaynaklar
 
 [1] <a href="pyscript.html">PyScript</a>
 
-[2] <a href="">Blog Arama Sayfasi</a>
+[2] <a href="../../ara.html">Blog Arama Sayfasi</a>
 
-[3] https://github.com/burakbayramli/classnotes
+[3] <a href="https://github.com/burakbayramli/classnotes">Github</a>
 
-
-
+[4] <a href="https://towardsdatascience.com/benchmarking-python-nlp-tokenizers-3ac4735100c5">Benchmarking Python NLP Tokenizers</a>
 

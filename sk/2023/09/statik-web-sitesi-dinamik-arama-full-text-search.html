@@ -63,41 +63,56 @@ halde önceden hazırlamışsak, Tarayıcı -> Statik Dosya erişimi ile pek
 <p>Arama motorunu işte bu şekilde kodlayacağız. Javascript, ya da bu
 yazıda onun yerine PyScript [1], kodları tarayıcıda işleyecek,
 çetrefil bir arayüz mantığı orada kodlanacak.. Bu mantık gerektiği
-yerde gerekli kelimeler için belli indis dosyalarına bağlanacak,
-onların içeriğine ek işlemler yapıp birleştirecek, ve sonuçları
+yerde gerekli kelimeler için belli indis dosyalarını okuyacak, bu
+okuduğu içeriğe ek işlemler uygulayıp birleştirecek, ve sonuçları
 sunacak. Bunun pür dosyalar ile nasıl yapılabileceğini anlamak için
-önce tüm metni arama (full-text search) teknolojisine bakalım, ve bizim
-yapacağımız eklerden bahsedelim.</p>
+önce tüm metni arama (full-text search) teknolojisine bakalım, ve
+bizim yapacağımız eklerden bahsedelim.</p>
 
 <h1>Tam Metin Arama</h1>
 
 <p>Doküman arama kelime bazlı yapılır, arama için girdiğimiz kelimeler
 teker teker bir indis içinde bulunarak onların bağlı olduğu dokümanlar
-getirilmeye uğraşılır. Verili bir doküman içindeki kelimeleri bulmak
-mümkün, bir anlamda döküman bir kelime listesidir, ve doküman ID
-verilip döküman bulunup içindeki kelime listesi dökülebilir. Tam metin
-aramanın yaptığı bunun tersidir, kelime verilip içinde geçtiği
-doküman(lar) bulunmaya uğraşılır, yani ters yönde gidiyoruz. Bunun
-için farklı bir indis gerekir, bu indis yapısına uygun bir şekilde
-tersyüz edilmiş indis (inverted index) ismi veriliyor.</p>
+getirilmeye uğraşılır. Genel olarak bir dokümandaki kelimeleri almak
+kolay, sonuçta döküman bir kelime listesi, doküman ID verilip döküman
+bulunup içindeki kelime listesi dökülebilir. Tam metin aramanın
+yaptığı bunun tersidir, kelime verilip içinde geçtiği doküman(lar)
+bulunmaya uğraşılır, yani ters yönde gidiyoruz. Bunun için farklı bir
+indis gerekir, bu indis yapısına tersyüz edilmiş indis (inverted
+index) ismi veriliyor.</p>
 
-<p>Tam metin arama için tersyüz edilmiş indisi yaratmak gerekir, bunun
-için tüm dokümanlar gezilir, dokümanlar alt kelimelerine, simgelere
+<p>Tam metin arama için bu indisi yaratmak gerekir, o amaçla tüm
+dokümanlar gezilir, gezilirken her doküman alt kelimelerine, simgelere
 (token) ayrılır, ve bu kelimelerden içinde geçtiği dokümanlara bir
 işaret konur. Bunu bir sözlük yapısı içinde gerçekleştirebiliriz,
-sözlük anahtarı kelime, değeri ise ikinci bir sözlük, bu sözlük içinde
-o kelimenin hangi dokümanda kaç kez geçtiği olacak. Mesela bütün dokümanlar
-içinde "araba" kelimesi doküman1 içinde 4 kere doküman2 içinde 7 kere
-geçmişse, <code>{"araba": {"döküman1": 4, "doküman2": 7}.... }</code> gibi bir
-sözlük yapısı görmeliyiz.</p>
+sözlük içinde sözlük olacak, anahtar kelime, değeri ise ikinci bir
+sözlük, bu sözlük içinde o kelimenin hangi dokümanda kaç kez geçtiği
+olur. Mesela bütün dokümanlar içinde "araba" kelimesi doküman1
+içinde 4 kere doküman2 içinde 7 kere geçmişse, <code>{"araba": {"döküman1":
+4, "doküman2": 7}.... }</code> gibi bir sözlük yapısı görmeliyiz.</p>
+
+<p>Daha sonra arama yaparken her arama kelimesi tersyüz edilmiş indise
+geçilir, o kelimenin hangi dokümanlarda kaç kez geçtiğini hemen
+bulabiliriz. Eğer birden fazla arama kelimesi var ise, her kelime için
+alınan doküman listelerinin bir "kesişim kümesi" hesaplanabilir
+mesela, yani katı bir şart koşulabilir, tüm arama kelimelerinin
+beraber geçtiği dokümanları böylece buluruz. Daha gevşek sonuç
+kriterleri kullanılabilir, mesela iki kelime ile arama yapıldı ise
+"ya biri ya öteki" gibi, farklı kriterler düşünülebilir.</p>
+
+<p>Simgelere Ayırma</p>
+
+<p>İlk önce belgeyi kelimelere ayırma (tokenization) işlemine bakalım. Bu
+aşamada nokta, virgül ve diğer özel karakterler çıkartılabilir, tüm kelimeler
+küçük hale getirilebilir, dil TR durumunda ascii çevirimi yapılabilir.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<pre><span></span><code><span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">unidecode</span>
 
 <span class="n">WORD</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="n">unidecode</span><span class="o">.</span><span class="n">unidecode</span><span class="p">(</span><span class="n">text</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
     <span class="n">punc_list</span> <span class="o">=</span> <span class="s1">&#39;!&quot;#$%^()*+,-./:;&lt;=&gt;?@[\]^_{|}~&#39;</span> <span class="o">+</span> <span class="s1">&#39;0123456789&#39;</span>
     <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">punc_list</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
     <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
@@ -112,201 +127,112 @@ sözlük yapısı görmeliyiz.</p>
 </code></pre>
 </div>
 
+<p>Ardından indisı yaratabiliriz,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
 <span class="kn">import</span> <span class="nn">json</span>
 
-<span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;Search engine optimization is the process of improving the quality and quantity of website traffic to a website or a web page from search engines. SEO targets unpaid traffic rather than direct traffic or paid traffic.&quot;</span>
-<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;Note: This standard is not intended to dictate the internal formats used by sites for optimization, the specific message system features that they are expected to support, or any of the characteristics of user interface programs&quot;</span>
+<span class="n">text1</span> <span class="o">=</span> <span class="s2">&quot;Otomobillerin genellikle otobanda ve şehirlerarası yolda seyir halinde iken karşılaştıkları sorun aracın ön camının dışarıdan gelen bir cisimle çatlamasıdır. Araba hareket halindeyken yoldan ya da öndeki araçtan ön cama gelen taş veya sert bir cisim ön camı çatlatır&quot;</span>
+<span class="n">text2</span> <span class="o">=</span> <span class="s2">&quot;Araç sahipleri yolda araba sorunu yasamamak için genellikle ellerinden geleni yaparlar. Çatlağın durdurulmaması görüntünün her geçen gün kötüleşmesi anlamına gelir. Bu durumu hiçbir sürücü istemez.&quot;</span>
 
 <span class="n">invidx</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
 
-<span class="k">for</span> <span class="n">di</span><span class="p">,</span><span class="n">doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="n">text1</span><span class="p">,</span><span class="n">text2</span><span class="p">]):</span>
-    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reg_tokenize</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">invidx</span><span class="p">[</span><span class="n">word</span><span class="p">][</span><span class="n">di</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reg_tokenize</span><span class="p">(</span><span class="n">text1</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">invidx</span><span class="p">[</span><span class="n">word</span><span class="p">][</span><span class="s1">&#39;doc1&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reg_tokenize</span><span class="p">(</span><span class="n">text2</span><span class="p">):</span>
+   <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">invidx</span><span class="p">[</span><span class="n">word</span><span class="p">][</span><span class="s1">&#39;doc2&#39;</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
 
 <span class="nb">print</span> <span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">invidx</span><span class="p">))</span> 
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>{&quot;Search&quot;: {&quot;0&quot;: 1}, &quot;engine&quot;: {&quot;0&quot;: 1}, &quot;optimization&quot;: {&quot;0&quot;: 1, &quot;1&quot;:
-1}, &quot;is&quot;: {&quot;0&quot;: 1, &quot;1&quot;: 1}, &quot;the&quot;: {&quot;0&quot;: 2, &quot;1&quot;: 3}, &quot;process&quot;: {&quot;0&quot;:
-1}, &quot;of&quot;: {&quot;0&quot;: 2, &quot;1&quot;: 2}, &quot;improving&quot;: {&quot;0&quot;: 1}, &quot;quality&quot;: {&quot;0&quot;:
-1}, &quot;and&quot;: {&quot;0&quot;: 1}, &quot;quantity&quot;: {&quot;0&quot;: 1}, &quot;website&quot;: {&quot;0&quot;: 2},
-&quot;traffic&quot;: {&quot;0&quot;: 4}, &quot;to&quot;: {&quot;0&quot;: 1, &quot;1&quot;: 2}, &quot;or&quot;: {&quot;0&quot;: 2, &quot;1&quot;: 1},
-&quot;web&quot;: {&quot;0&quot;: 1}, &quot;page&quot;: {&quot;0&quot;: 1}, &quot;from&quot;: {&quot;0&quot;: 1}, &quot;search&quot;: {&quot;0&quot;:
-1}, &quot;engines&quot;: {&quot;0&quot;: 1}, &quot;SEO&quot;: {&quot;0&quot;: 1}, &quot;targets&quot;: {&quot;0&quot;: 1},
-&quot;unpaid&quot;: {&quot;0&quot;: 1}, &quot;rather&quot;: {&quot;0&quot;: 1}, &quot;than&quot;: {&quot;0&quot;: 1}, &quot;direct&quot;:
-{&quot;0&quot;: 1}, &quot;paid&quot;: {&quot;0&quot;: 1}, &quot;Note&quot;: {&quot;1&quot;: 1}, &quot;This&quot;: {&quot;1&quot;: 1},
-&quot;standard&quot;: {&quot;1&quot;: 1}, &quot;not&quot;: {&quot;1&quot;: 1}, &quot;intended&quot;: {&quot;1&quot;: 1},
-&quot;dictate&quot;: {&quot;1&quot;: 1}, &quot;internal&quot;: {&quot;1&quot;: 1}, &quot;formats&quot;: {&quot;1&quot;: 1},
-&quot;used&quot;: {&quot;1&quot;: 1}, &quot;by&quot;: {&quot;1&quot;: 1}, &quot;sites&quot;: {&quot;1&quot;: 1}, &quot;for&quot;: {&quot;1&quot;: 1},
-&quot;specific&quot;: {&quot;1&quot;: 1}, &quot;message&quot;: {&quot;1&quot;: 1}, &quot;system&quot;: {&quot;1&quot;: 1},
-&quot;features&quot;: {&quot;1&quot;: 1}, &quot;that&quot;: {&quot;1&quot;: 1}, &quot;they&quot;: {&quot;1&quot;: 1}, &quot;are&quot;: {&quot;1&quot;:
-1}, &quot;expected&quot;: {&quot;1&quot;: 1}, &quot;support&quot;: {&quot;1&quot;: 1}, &quot;any&quot;: {&quot;1&quot;: 1},
-&quot;characteristics&quot;: {&quot;1&quot;: 1}, &quot;user&quot;: {&quot;1&quot;: 1}, &quot;interface&quot;: {&quot;1&quot;: 1},
-&quot;programs&quot;: {&quot;1&quot;: 1}}
+<pre><span></span><code>{&quot;otomobillerin&quot;: {&quot;doc1&quot;: 1}, &quot;genellikle&quot;: {&quot;doc1&quot;: 1, &quot;doc2&quot;: 1},
+&quot;otobanda&quot;: {&quot;doc1&quot;: 1}, &quot;ve&quot;: {&quot;doc1&quot;: 1}, &quot;sehirlerarasi&quot;: {&quot;doc1&quot;:
+1}, &quot;yolda&quot;: {&quot;doc1&quot;: 1, &quot;doc2&quot;: 1}, &quot;seyir&quot;: {&quot;doc1&quot;: 1}, &quot;halinde&quot;:
+{&quot;doc1&quot;: 1}, &quot;iken&quot;: {&quot;doc1&quot;: 1}, &quot;karsilastiklari&quot;: {&quot;doc1&quot;: 1},
+&quot;sorun&quot;: {&quot;doc1&quot;: 1}, &quot;aracin&quot;: {&quot;doc1&quot;: 1}, &quot;on&quot;: {&quot;doc1&quot;: 3},
+&quot;caminin&quot;: {&quot;doc1&quot;: 1}, &quot;disaridan&quot;: {&quot;doc1&quot;: 1}, &quot;gelen&quot;: {&quot;doc1&quot;:
+2}, &quot;bir&quot;: {&quot;doc1&quot;: 2}, &quot;cisimle&quot;: {&quot;doc1&quot;: 1}, &quot;catlamasidir&quot;:
+{&quot;doc1&quot;: 1}, &quot;araba&quot;: {&quot;doc1&quot;: 1, &quot;doc2&quot;: 1}, &quot;hareket&quot;: {&quot;doc1&quot;: 1},
+&quot;halindeyken&quot;: {&quot;doc1&quot;: 1}, &quot;yoldan&quot;: {&quot;doc1&quot;: 1}, &quot;ya&quot;: {&quot;doc1&quot;: 1},
+&quot;da&quot;: {&quot;doc1&quot;: 1}, &quot;ondeki&quot;: {&quot;doc1&quot;: 1}, &quot;aractan&quot;: {&quot;doc1&quot;: 1},
+&quot;cama&quot;: {&quot;doc1&quot;: 1}, &quot;tas&quot;: {&quot;doc1&quot;: 1}, &quot;veya&quot;: {&quot;doc1&quot;: 1}, &quot;sert&quot;:
+{&quot;doc1&quot;: 1}, &quot;cisim&quot;: {&quot;doc1&quot;: 1}, &quot;cami&quot;: {&quot;doc1&quot;: 1}, &quot;catlatir&quot;:
+{&quot;doc1&quot;: 1}, &quot;arac&quot;: {&quot;doc2&quot;: 1}, &quot;sahipleri&quot;: {&quot;doc2&quot;: 1}, &quot;sorunu&quot;:
+{&quot;doc2&quot;: 1}, &quot;yasamamak&quot;: {&quot;doc2&quot;: 1}, &quot;icin&quot;: {&quot;doc2&quot;: 1},
+&quot;ellerinden&quot;: {&quot;doc2&quot;: 1}, &quot;geleni&quot;: {&quot;doc2&quot;: 1}, &quot;yaparlar&quot;: {&quot;doc2&quot;:
+1}, &quot;catlagin&quot;: {&quot;doc2&quot;: 1}, &quot;durdurulmamasi&quot;: {&quot;doc2&quot;: 1},
+&quot;goruntunun&quot;: {&quot;doc2&quot;: 1}, &quot;her&quot;: {&quot;doc2&quot;: 1}, &quot;gecen&quot;: {&quot;doc2&quot;: 1},
+&quot;gun&quot;: {&quot;doc2&quot;: 1}, &quot;kotulesmesi&quot;: {&quot;doc2&quot;: 1}, &quot;anlamina&quot;: {&quot;doc2&quot;:
+1}, &quot;gelir&quot;: {&quot;doc2&quot;: 1}, &quot;bu&quot;: {&quot;doc2&quot;: 1}, &quot;durumu&quot;: {&quot;doc2&quot;: 1},
+&quot;hicbir&quot;: {&quot;doc2&quot;: 1}, &quot;surucu&quot;: {&quot;doc2&quot;: 1}, &quot;istemez&quot;: {&quot;doc2&quot;: 1}}
+</code></pre>
+</div>
+
+<p>Arama kodlaması oldukca basit, indise direk olarak o kelimeyi
+soruyoruz, tabii arama kutusuna girilen kelimeler üzerinde de üstteki
+temizleme, simgeleme yapıldıktan sonra. Bunların yapıldığını
+farzedelim, ve tek bir kelimeyi soralım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">invidx</span><span class="p">[</span><span class="s1">&#39;araba&#39;</span><span class="p">]</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
-<span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
-<span class="kn">import</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">glob</span>
+<pre><span></span><code>Out[1]: defaultdict(int, {&#39;doc1&#39;: 1, &#39;doc2&#39;: 1})
+</code></pre>
+</div>
 
-<span class="n">WORD</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;\w+&#39;</span><span class="p">)</span>
+<p>Bu kadar. Birden fazla kelime için sonuç listelerinin <code>set.ıntersection</code> ile
+kesişimini bulabiliriz, bir örnek alttadır,</p>
 
-<span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
-    <span class="n">punc_list</span> <span class="o">=</span> <span class="s1">&#39;!&quot;#$%^()*+,-./:;&lt;=&gt;?@[\]^_{|}~&#39;</span> <span class="o">+</span> <span class="s1">&#39;0123456789&#39;</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">punc_list</span><span class="p">,</span> <span class="s2">&quot; &quot;</span><span class="p">))</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">maketrans</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="s2">&quot;&#39;`&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">text</span>
-
-<span class="k">def</span> <span class="nf">reg_tokenize</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="n">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="n">words</span> <span class="o">=</span> <span class="n">WORD</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">words</span>
-
-<span class="n">invidx</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
-<span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;[DIR]&quot;</span>
-
-<span class="n">files</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/**/**/*.md&quot;</span><span class="p">)</span>
-<span class="n">files</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">files</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">files</span><span class="p">):</span>
-    <span class="n">doc</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>    
-    <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">reg_tokenize</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">file</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">()):</span>
-        <span class="n">word</span> <span class="o">=</span> <span class="n">unidecode</span><span class="p">(</span><span class="n">word</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-        <span class="n">invidx</span><span class="p">[</span><span class="n">word</span><span class="p">][</span><span class="n">doc</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="n">doc</span><span class="p">)</span>
-
-<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
-<span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">invidx</span><span class="p">))</span>
-<span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<div class="codehilite">
+<pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">];</span> <span class="n">b</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">];</span> <span class="n">c</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">];</span> <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="n">u</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">c</span><span class="p">),</span><span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">u</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">invidx</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-<span class="n">invidx_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<pre><span></span><code>{3, 4}
+</code></pre>
+</div>
 
-<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span>  <span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">:</span>
-    <span class="n">invidx_dict</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+<p>Sıralama amaçlı şunu yaparız, her kelime için mesela "araba" kelimesi
+doç1 içinde 2 kere, "cami" kelimesi aynı doç1 içinde 1 kere geçtiyse
+doç1 için 2+1 = 3 ağırlık vardır, doç1 için 3 döndürürüz, ve tüm liste
+üzerinde bu ağırlık bazlı sıralama yaparız.</p>
 
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">invidx</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">first_letter</span> <span class="o">=</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="k">if</span> <span class="n">first_letter</span> <span class="ow">in</span> <span class="n">string</span><span class="o">.</span><span class="n">ascii_lowercase</span><span class="p">:</span>
-        <span class="n">invidx_dict</span><span class="p">[</span><span class="n">first_letter</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
-
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">invidx_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx-</span><span class="si">%s</span><span class="s2">.json&quot;</span> <span class="o">%</span> <span class="n">k</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
-    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
-    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>    
+<div class="codehilite">
+<pre><span></span><code><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">points</span><span class="p">[</span><span class="n">x</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="c1">#points = [0, 12, 9]</span>
-<span class="c1">#res = sorted(range(len(points)), key=lambda x: points[x])</span>
-<span class="c1">#print(res)</span>
+<pre><span></span><code>[0, 2, 1]
 </code></pre>
 </div>
 
-<div class="codehilite">
-<pre><span></span><code><span class="c1">#a = [1, 2, 3, 4]; b = [2, 3, 4, 5]; c = [3, 4, 5, 6]; d = [4, 1, 3, 9]</span>
-<span class="c1">#u = set.intersection(set(a),set(b),set(c),set(d))</span>
-<span class="c1">#print (u)</span>
+<h3>Web Kodlamasi</h3>
 
-<span class="n">search</span> <span class="o">=</span> <span class="s2">&quot;green ammonia&quot;</span>
+<p>Eğer üstteki arama metotunu uygulama servisi (app server) olmadan
+kodlamak istiyorsak, yani sadece PyScript (ya da Javascript) ve servis
+tarafında bir takım dosyaların olduğu yaklaşım, kodlamayı şöyle
+yapabiliriz.</p>
 
-<span class="n">stok</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
-
-<span class="n">stok_hits</span> <span class="o">=</span> <span class="p">{}</span>
-
-<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">stok</span><span class="p">:</span>
-    <span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/invidx-</span><span class="si">%s</span><span class="s2">.json&quot;</span> <span class="o">%</span> <span class="n">tok</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">read</span><span class="p">())[</span><span class="n">tok</span><span class="p">]</span>
-    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">]))</span>
-
-<span class="n">u</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
-
-<span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
-    <span class="n">hits</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">,</span><span class="nb">sum</span><span class="p">([</span><span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">][</span><span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">stok</span><span class="p">])])</span>
-
-<span class="n">sorted_hits</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hits</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="n">hits</span><span class="p">[</span><span class="n">sorted_hits</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span>
-</code></pre>
-</div>
-
-<div class="codehilite">
-<pre><span></span><code><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
-    <span class="p">&lt;</span><span class="nt">script</span> <span class="na">defer</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;pyscript.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>    
-      <span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
-        from pyodide.http import open_url
-        from collections import defaultdict
-        import json
-
-        search = &quot;green ammonia&quot;
-
-        stok = search.split()
-
-        stok_hits = {}
-
-        results = []
-
-        for tok in stok:
-           url = &#39;http://192.168.43.49:5000/static/invidx-%s.json&#39; % tok[0]
-           df = open_url(url)        
-           stok_hits[tok] = json.loads(df.getvalue())[tok]
-           results.append(set(stok_hits[tok]))
-
-
-        u = set.intersection(*results)
-
-        hits = []
-
-        for f in u:
-           hits.append([f,sum([stok_hits[tok][f] for tok in stok])])
-
-        sorted_hits = sorted(range(len(hits)), key=lambda x: hits[x][1], reverse=True)
-
-        for i in range(20):
-           display (hits[sorted_hits[i]])
-
-      <span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
-</code></pre>
-</div>
-
-<div class="codehilite">
-<pre><span></span><code><span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;output&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">py-script</span><span class="p">&gt;</span>
-  def write_to_page():
-     manual_div = Element(&quot;output&quot;)
-     inp = Element(&quot;search&quot;)
-     manual_div.element.innerText = inp.element.value
-<span class="p">&lt;/</span><span class="nt">py-script</span><span class="p">&gt;</span>
-
-<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
- <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;search&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;search&quot;</span><span class="p">/&gt;</span>
-<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>
-  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">py-click</span><span class="o">=</span><span class="s">&quot;write_to_page()&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;manual&quot;</span><span class="p">&gt;</span>Search<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
-<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
-</code></pre>
-</div>
-
-<p>[devam edecek]</p>
+<p>İlk akla gelen tersyüz edilmiş indisi dizüstü geliştirme ortamında tek
+bir JSON olarak kaydetmek, onu web servisine koymak, ve bu dosyanın
+gerektiğinde istemciden <code>öpen_ürl</code> ile https adresinden alinip sözlük
+olarak tarayıcıda işlenmesidir. Tek problem tek JSON dosyasının büyük
+olma ihtimali, bizim site için mesela bu dosya 10-15 MB. Çözüm şudur,
+indisi kelime ilk harfini baz alarak parçalara bölmek. Mesela 'a' ile
+başlayan tüm kelimelerin tersyüz edilmiş indis dosyası
+<code>ınvidx-a.json</code>, 'b' için <code>ınvidx-b.json</code>, böyle gidiyor.</p>
 
 <p>Kaynaklar</p>
 

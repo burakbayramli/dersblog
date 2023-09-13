@@ -41,33 +41,34 @@
 <p>Bu yazıdaki amacımız bir statik dizini aranır hale getirmek ve bunu
 orta katman olmadan yapabilmek.</p>
 
-<p>Dinamik Web siteleri üç katmana sahiptir. 1'inci katmanda istemci,
-müşteri tarayıcısı ile 2'inci katmandaki servise bağlanır, müşteri
-isteği (request) orada karşılamak için işlem mantığı koştulur, mesela
-3'üncü katmandaki bir veri tabanına bağlanıp veri alışveri yapmak
-gibi, ve sonuçta sayfa üretilir, kullanıcıya gösterilir.</p>
+<p>Dinamik Web siteleri üç katmana sahiptir. 1'inci katmanda istemci
+vardır, müşteri tarayıcısı ile 2'inci katmandaki servise bağlanır,
+müşteri isteğini (request) orada karşılamak için işlem mantığı
+koşturulur, mesela 3'üncü katmandaki bir veri tabanına bağlanıp veri
+alışveri yapmak gibi, ve sonuçta sayfa üretilir, kullanıcıya
+gösterilir.</p>
 
-<p>Tarayıcı içindeki mekanizma o kadar aptal değildir, orada da kodlar
+<p>Tarayıcı içindeki mekanizma o kadar nötr değildir, orada da kodlar
 işletilebiliyor, bu katmandaki Javascript oldukça kuvvetli bir
 dil. Javascript kodları sayfa içeriği ile beraber bağlanana
-gönderilir, Javascript dilindeki bu kodlar prezentasyon üzerinde ek
-işlemler yapabilir, bir sürü görsel işlem Javascript ile mümkün, hatta
-bir süredir Ajax ile serviste direk fonksiyon çağrısı bile
-yapılabiliyor.</p>
+gönderilir, fakat tarayıcı içinde koşturulur, ve bu tür kodlar
+prezentasyon üzerinde ek işlemler yapabilir, bir sürü görsel işlem
+yapılabilir, ve hatta bir süredir Ajax ile serviste direk fonksiyon
+çağrısı bile yapılabilmektedir.</p>
 
-<p>Orta katman bir sürü işlem yapabiliyor, fakat eğer gereken kabiliyet
-pür okuma bazlı ise ve gerekli veri dosyalarını hızlı erişilebilir
-halde önceden hazırlamışsak, Tarayıcı -> Statik Dosya erişimi ile pek
-çok işi yapmak mümkündür.</p>
+<p>Orta katman da pek çok işlem, hesap yapabilir, fakat eğer gereken
+kabiliyet pür okuma bazlı ise ve gerekli veri dosyalarını hızlı
+erişilebilir halde önceden hazırlamışsak, Tarayıcı -> Statik Dosya
+erişimi ile envai türden servisi sağlamak mümkündür.</p>
 
 <p>Arama motorunu işte bu şekilde kodlayacağız. Javascript, ya da bu
 yazıda onun yerine PyScript [1], kodları tarayıcıda işleyecek,
 çetrefil bir arayüz mantığı orada kodlanacak.. Bu mantık gerektiği
 yerde gerekli kelimeler için belli indis dosyalarını okuyacak, bu
 okuduğu içeriğe ek işlemler uygulayıp birleştirecek, ve sonuçları
-sunacak. Bunun pür dosyalar ile nasıl yapılabileceğini anlamak için
-önce tüm metni arama (full-text search) teknolojisine bakalım, ve
-bizim yapacağımız eklerden bahsedelim.</p>
+sunacak. Bunun servis tarafında statik, pür dosyalar ile nasıl
+yapılabileceğini anlamak için önce tüm metin arama (full-text search)
+teknolojisine bakalım, ve bizim yapacağımız eklerden sonra bahsedelim.</p>
 
 <h1>Tam Metin Arama</h1>
 
@@ -85,20 +86,21 @@ index) ismi veriliyor.</p>
 dokümanlar gezilir, gezilirken her doküman alt kelimelerine, simgelere
 (token) ayrılır [4], ve bu kelimelerden içinde geçtiği dokümanlara bir
 işaret konur. Bunu bir sözlük yapısı içinde gerçekleştirebiliriz,
-sözlük içinde sözlük olacak, anahtar kelime, değeri ise ikinci bir
-sözlük, bu sözlük içinde o kelimenin hangi dokümanda kaç kez geçtiği
-olur. Mesela bütün dokümanlar içinde "araba" kelimesi doküman1 içinde
-4 kere doküman2 içinde 7 kere geçmişse, <code>{"araba": {"döküman1": 4,
-"doküman2": 7}.... }</code> gibi bir sözlük yapısı görmeliyiz.</p>
+sözlük içinde sözlük olacak, anahtar (key) bir kelime, değer (value)
+ise ikinci bir sözlük, bu sözlük içinde o kelimenin hangi dokümanda
+kaç kez geçtiği olacak. Mesela bütün dokümanlar içinde "araba"
+kelimesi doküman1 içinde 4 kere doküman2 içinde 7 kere geçmişse,
+<code>{"araba": {"döküman1": 4, "doküman2": 7}.... }</code> gibi bir sözlük
+yapısı görmeliyiz.</p>
 
 <p>Daha sonra arama yaparken her arama kelimesi tersyüz edilmiş indise
-geçilir, o kelimenin hangi dokümanlarda kaç kez geçtiğini hemen
+sorulur, o kelimenin hangi dokümanlarda kaç kez geçtiğini hemen
 bulabiliriz. Eğer birden fazla arama kelimesi var ise, her kelime için
 alınan doküman listelerinin bir "kesişim kümesi" hesaplanabilir
-mesela, yani katı bir şart koşulabilir, tüm arama kelimelerinin
+mesela, bu biraz katı bir şart olabilir tabii, tüm arama kelimelerinin
 beraber geçtiği dokümanları böylece buluruz. Daha gevşek sonuç
-kriterleri kullanılabilir, mesela iki kelime ile arama yapıldı ise
-"ya biri ya öteki" gibi, farklı kriterler düşünülebilir.</p>
+kriterleri kullanılabilir, mesela iki kelime ile arama yapıldı ise "ya
+biri ya öteki" gibi, bunun gibi farklı kriterler düşünülebilir.</p>
 
 <p>Simgelere Ayırma</p>
 
@@ -186,7 +188,7 @@ farzedelim, ve tek bir kelimeyi soralım,</p>
 </code></pre>
 </div>
 
-<p>Bu kadar. Birden fazla kelime için sonuç listelerinin <code>set.ıntersection</code> ile
+<p>Bu kadar. Birden fazla kelime için sonuç listelerinin <code>set.intersection</code> ile
 kesişimini bulabiliriz, bir örnek alttadır,</p>
 
 <div class="codehilite">
@@ -202,9 +204,9 @@ kesişimini bulabiliriz, bir örnek alttadır,</p>
 </div>
 
 <p>Sıralama amaçlı şunu yaparız, her kelime için mesela "araba" kelimesi
-doç1 içinde 2 kere, "cami" kelimesi aynı doç1 içinde 1 kere geçtiyse
-doç1 için 2+1 = 3 ağırlık vardır, doç1 için 3 döndürürüz, ve tüm liste
-üzerinde bu ağırlık bazlı sıralama yaparız.</p>
+<code>doc1</code> içinde 2 kere, "cami" kelimesi aynı doç1 içinde 1 kere geçtiyse
+<code>doc1</code> için 2+1 = 3 ağırlık vardır, <code>doc1</code> için 3 döndürürüz, ve tüm
+liste üzerinde bu ağırlık bazlı sıralama yaparız.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>

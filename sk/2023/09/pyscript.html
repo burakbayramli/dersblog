@@ -39,26 +39,25 @@
 <h1>Javascript Yerine Tarayıcıda Python, PyScript</h1>
 
 <p>Tarayıcı tarafında kullanılan dil Javascript adlı bir dil, Java'nın
-daha dinamik, güçlü tipleme gerektirmeyen bir hali denebilir. Bu dil
-oldukca güçlüdür, müşteri tarafında gereken neredeyse her işlemi,
-hesabı yapabilir. Önemli nokta, Javascript işlediğinde bu kodları
-tarayıcı işletilir yani bağlanan kişinin CPU'şu bu kodları
-işletmektedir, servis tarafı değil.</p>
+daha dinamik, tipleme gerektirmeyen bir hali denebilir. Bu dil oldukca
+güçlüdür, müşteri tarafında gereken neredeyse her işlemi, hesabı
+yapabilir. Önemli nokta, Javascript işlediğinde bu kodları tarayıcı
+işletilir yani bağlanan kişinin CPU'su bu kodları işletmektedir.</p>
 
 <p>Peki tarayıcıda başka diller mümkün mü? Farklı dilleri WebAssembly
 altyapısı üzerinen Javascript'e derlemek mümkün. Fakat PyScript [1]
-yaklaşımı en temiz, basit, hızlı yöntem, sayfa içinde iki dosya dahil
+yaklaşımı en basit, hızlı yöntem, sayfa içinde iki dosya dahil
 ediliyor, ve bundan sonra tam tekmilli Python kodlarını sayfa içine
 koymak mümkün oluyor.</p>
 
 <h3>Başlangıç</h3>
 
 <p>Basit bir kodu altta görüyoruz. Bu sayfada tek bir metin kutusu var,
-bir de düğme. Kutuya girilen yazı OK tuşuna basınca aynı sayfa
-üzerinde gösterilecek. Kodun gösterdiği kabiliyetler form öğeleri ile
-iletişim kurabilme, ve sayfaya bilgi yazabilmek, bunun için DOM
-objelerine erişmek, mesela <code>output</code> kimlikli <code>&lt;div&gt;</code> HTML objesi içine
-çıktı veriliyor.</p>
+bir de düğme. Kutuya girilen yazı düğmeye basınca aynı sayfa üzerinde
+gösterilecek. Kodun gösterdiği kabiliyetler form öğeleri ile iletişim
+kurabilme, ve sayfaya bilgi yazabilmek, bunun için DOM objelerine
+erişmek, mesela <code>output</code> kimlikli <code>&lt;div&gt;</code> HTML objesi içine çıktı
+veriliyor.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -96,8 +95,8 @@ ve o dizinde </p>
 </code></pre>
 
 <p>komutunu işletiriz, <code>http.server</code> Python içindeki hafif bir Web
-servisidir, Flask yapabilirdik o da çok kolay ama üstteki yöntem daha
-da basit. Şimdi,</p>
+servisidir, Flask yapabilirdik o da çok kolay ama üstteki yöntem de
+işler. Şimdi,</p>
 
 <pre><code>http://localhost:8080/tst1.html
 </code></pre>
@@ -120,9 +119,9 @@ değiştirilir,</p>
 
 <h3>HTML Üretmek</h3>
 
-<p>Pyscript kodunda <code>element.innerText</code> çağrısı ile bir metni sayfaya yazabildik.
+<p>Pyscript kodunda <code>element.innerText</code> çağrısı ile bir metni sayfaya yazdık.
 Eğer HTML gösterilsin istiyorsak, mesela bağlantılar, renkli yazılar, listeler
-gibi daha çetrefilli çıktılar için <code>.innerHTML</code> kullanabiliriz.</p>
+gibi daha çetrefilli çıktılar için <code>.innerHTML</code> var.</p>
 
 <p>Bir örnekte görelim, 0 ila 9 arasındaki sayıları gezip URL bağlantılarını
 dinamik olarak değiştirip sayfaya o şekilde basacağız,</p>
@@ -187,9 +186,10 @@ koyduk.</p>
 <p>Sayfayı yükleyince bu değerlerin ekrana basıldığını göreceğiz.</p>
 
 <p>Eğer ham JSON dosyasını indirebiliyorsak bu dosya içeriğini JSON
-paketi ile işlemek te mümkün olacak muhakkak? Böylece içeriğe
-bildiğimiz sözlük, liste kavramları ile erisebiliriz, üstteki kodu
-şöyle değiştirelim,</p>
+paketi ile işlemek te mümkün olacak muhakkak? Problem değil, PyScript
+tam bir Python sistemı olduğu için bildiğimiz <code>json</code> paketini dahil
+edip tarayıcıda kullanabiliriz.  Böylece içeriğe alışık olunan sözlük,
+liste kavramları ile erisebiliriz, üstteki kodu şöyle değiştirelim,</p>
 
 <pre><code>from pyodide.http import open_url
 import json
@@ -203,10 +203,11 @@ display(d['a'])
 
 <p>Web üzerinden dosya erişimi pek çok fayda sağlar, mesela 5-10 MB veri
 dosyalarını gerektiği yerde indirip içeriklerini ek işlemlere tabi
-tutmak mümkün.</p>
+tutmak mümkün. Büyük dosyaları parçalara ayırarak gerekli olanı
+indirmek neredeyse pek çok okuma bazlı uygulama için yeterli.</p>
 
-<p>Karşılaştırma amacıyla aynı işlemi (JSON işleme kısmı yok) Javascript ile
-yapalım,</p>
+<p>Dosya indirme işlemini karşılaştırma amacıyla (JSON işleme kısmı yok)
+Javascript ile yapalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -234,10 +235,9 @@ yapalım,</p>
 <h3>Diger Paketler</h3>
 
 <p>Fakat kabiliyetler bunlarla sınırlı değil. PyScript taklit bir Python
-ortamı değil, tam tekmilli bir Python ortamı. Amacı bildik Python
-yorumlayıcısını tamamen Javascript bazlı işletmek. Bu sebeple mesela
-dış paket yüklemesi de pek çok paket için işliyor. Mesela altta
-<code>pandaş</code> paketinin kurulduğu ve bir CSV verisini işlediği örneği
+ortamı olduğu için bir sürü paket kullanımına hazır çünkü amacı bildik
+Python yorumlayıcısını tamamen Javascript bazlı işletmek. Mesela altta
+<code>pandas</code> paketinin kurulduğu ve bir CSV verisini işlediği örneği
 görüyoruz. Daha fazla örnekler [1]'de bulunabilir.</p>
 
 <div class="codehilite">

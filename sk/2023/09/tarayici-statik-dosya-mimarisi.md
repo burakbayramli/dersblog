@@ -1,4 +1,4 @@
-# Tarayıcı, Statik Dosya Yapısı
+# Tarayıcı ve Statik Dosya Servisi ile Uygulama 
 
 Pek çok uygulama, eğer sadece okuma gerektiren türden iseler,
 tarayıcının statik json, ya da farklı türden metin hatta ikisel

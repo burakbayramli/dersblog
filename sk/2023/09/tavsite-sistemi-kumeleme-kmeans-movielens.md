@@ -76,3 +76,5 @@ Kaynaklar
 
 [2] <a href="../../../stat/stat_137_collab/toplu_tavsiye__collaborative_filtering__filmler_svd_ile_boyut_indirgeme.html)">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a>
 
+
+

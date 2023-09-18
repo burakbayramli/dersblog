@@ -124,3 +124,5 @@
 
 [Tarayıcı ve Statik Dosya Servisi ile Uygulama](09/tarayici-statik-dosya-mimarisi.html)
 
+[Kumeleme (Clustering) ile Tavsiye Sistemi](09/tavsite-sistemi-kumeleme-kmeans-movielens.html)
+

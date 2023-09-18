@@ -36,21 +36,61 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Kumeleme (Clustering) ile Tavsiye Sistemi</h1>
+<h1>Kümeleme (Clustering) ile Tavsiye Sistemi</h1>
 
-<p>ml-latest-small.zip</p>
+<p>Tavsiye sistemlerini kodlamanın klasik yolu kullanıcı-ürün matrisinde
+(ki matris ögeleri beğeni notunu taşır) arama yapmaktır. Kendi
+beğenilerim bu matris sidinda ayrı bir satır olarak düşünülebilir,
+satırın tüm kullanıcılara olan mesafeisini [2] hesaplarım, bana en
+yakın kullanıcıların en iyi not verdiği ürünleri tavsiye alırım.</p>
 
-<p>ml-25m.zip</p>
+<p>Bu teknik tüm matrisi tarar, onun tüm satırlarına bakar. Beğeni
+matrisi seyrektir tabii ki bu aramayı hızlandırır fakat yine de
+tavsiye sistemi tüm veriye sahip olmalıdır. </p>
+
+<p>Bir diğer yöntem kullanıcı satırlarını kümelere ayırarak beğenileri
+birbirine benzeyen kişileri aynı grup altında toplamak. Böylece her
+küme için onu temsil eden bir küme merkezi vektörü elde edebiliriz, ve
+yeni kullanıcının bu merkezlere olan mesafesini hesaplarız sadece,
+10-20 tane küme için, ve sonra kümedeki kullanıcıları listeleyip
+onların beğenilerini tavsiye olarak veririz.</p>
+
+<p>Ornek veri [1] sitesinden, oradaki <code>ml-latest-small.zip</code> verisini alacagiz.
+Daha buyuk bir veri seti <code>ml-25m.zip</code> icinde.</p>
+
+<p>Fakat veri setinde ratings.csv dosyasi su formatta,</p>
+
+<pre><code>userId,movieId,rating,timestamp
+1,296,5.0,1147880044
+1,306,3.5,1147868817
+1,307,5.0,1147868828
+1,665,5.0,1147878820
+</code></pre>
+
+<p>Aynı kullanıcı kimliği birden fazla farklı satırda çıkıyor. Satır
+satır işleme bazlı yapan yaklaşımlar için bir kullanıcının tüm
+verisini aynı satırda almak daha iyi olabilir, böylece azar azar
+(incremental) işlem birimi kullanıcı haline gelir, ayrıca parallel
+işlem gerektiğinde aynı kullanıcı veisinin farklı işlemlere
+dağıtılması gerekmez, bunun kordinasyonu zor olurdu. O zaman üstteki
+veriyi kullanıcı satırı haline getirelim, ayrıca verinin seyrekliğini
+gözönünde bulundurursak, not verilen filmlerin bir sözlük öğesi olarak
+görmek uygun olabilir. Sözlük metin formatta JSON olarak tutulabilir.
+Yani yeni veride iki kolon olacak, birinci <code>userİd</code> ikinci bir JSON
+metni. Değişimi yapalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">csv</span>
-<span class="n">d</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span>
-<span class="n">fin</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="s2">&quot;/ratings.csv&quot;</span>
-<span class="n">fout</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="s2">&quot;/ratings-json.csv&quot;</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/ml-latest-small&quot;</span>
+<span class="n">outdir</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span>
+<span class="n">infile</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="s2">&quot;/ratings.csv&quot;</span>
+<span class="n">outfile</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/ratings-json.csv&quot;</span>
 <span class="n">curruser</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">row_dict</span> <span class="o">=</span> <span class="p">{}</span>
-<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">fout</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fin</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>   
+
+<span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">infile</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>   
     <span class="n">rd</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
     <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">rd</span><span class="p">))}</span>
     <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">rd</span><span class="p">:</span>
@@ -63,6 +103,26 @@
             <span class="n">row_dict</span> <span class="o">=</span> <span class="p">{}</span>       
         <span class="n">row_dict</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;movieId&#39;</span><span class="p">]])]</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="n">headers</span><span class="p">[</span><span class="s1">&#39;rating&#39;</span><span class="p">]])</span>
 <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">show_out</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">m</span><span class="p">):</span>
+    <span class="n">fin</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fin</span><span class="o">.</span><span class="n">readlines</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">&gt;=</span><span class="n">n</span> <span class="ow">and</span> <span class="n">i</span><span class="o">&lt;=</span> <span class="n">m</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">line</span><span class="p">[:</span><span class="mi">30</span><span class="p">],</span><span class="s2">&quot;..&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">&gt;</span><span class="n">m</span><span class="p">:</span> <span class="k">break</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">show_out</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>2|{&quot;318&quot;: 3.0, &quot;333&quot;: 4.0, &quot;17 ..
+3|{&quot;31&quot;: 0.5, &quot;527&quot;: 0.5, &quot;647 ..
+4|{&quot;21&quot;: 3.0, &quot;32&quot;: 2.0, &quot;45&quot;: ..
+5|{&quot;1&quot;: 4.0, &quot;21&quot;: 4.0, &quot;34&quot;:  ..
+6|{&quot;2&quot;: 4.0, &quot;3&quot;: 5.0, &quot;4&quot;: 3. ..
 </code></pre>
 </div>
 
@@ -102,7 +162,7 @@ Dunkirk (2017),2
 
 <p>[1] https://grouplens.org/datasets/movielens/</p>
 
-<p>[2] <a href="../../../stat/stat_137_collab/toplu_tavsiye__collaborative_filtering__filmler_svd_ile_boyut_indirgeme.html)">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a></p>
+<p>[2] <a href="../../../stat/stat_137_collab/toplu_tavsiye__collaborative_filtering__filmler_svd_ile_boyut_indirgeme.html">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a></p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

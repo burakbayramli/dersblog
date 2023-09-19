@@ -244,6 +244,181 @@ p = plt.quiverkey(q,1,16.5,50,&quot;50 m/s&quot;,coordinates='data',color='r')
 xl = plt.xlabel(&quot;x (km)&quot;)
 yl = plt.ylabel(&quot;y (km)&quot;)
 </code></pre>
+
+<p>Ekler</p>
+<p>Green'in Teorisi, Uzaklaşım, Stokes</p>
+<p>Green'in Teorisi</p>
+<p>Bu teorinin detayları, ispatı [2]'de bulunabilir. Tekrar üzerinden geçmek
+gerekirse, [4, sf. 429] bazlı anlatalım, iki boyutta elimizde bir $D$ bölgesi
+etrafındaki $C$ eğrisi var, ve $F(x,y) = M(x,y) i + N(x,y) j$
+$D$ içinde vektör alanı olsun, o zaman alttaki ifade doğrudur,</p>
+<p>$$
+\int_C M \mathrm{d} x + N \mathrm{d} Y =
+\int \int_D \left(
+  \frac{\partial N}{\partial x} - \frac{\partial M}{\partial y}
+  \mathrm{d} x \mathrm{d} y
+\right)
+$$</p>
+<p>$\int_C$ ki bazen $\oint_C$ ile gösterilir, bir eğri üzerinden alınan bir
+entegraldır. Eşitliğin sol tarafı bazen bir $\mathrm{d}\vec{s}$ üzerinden de
+sunulabilir,</p>
+<p>$$
+\int_C \vec{F} \cdot \mathrm{d}\vec{s} = \int_C M \mathrm{d} x + N \mathrm{d} Y 
+$$</p>
+<p>Bu cebirsel bir özet sadece, $\mathrm{d}{\vec{s}} = [\begin{array}{cc} \mathrm{d} x &amp; \mathrm{d} y \end{array}]^T$
+sonuçta ve noktasal çarpım bize iki üstteki ifadeyi verecektir.</p>
+<p>olarak ta gösterilebilir.</p>
+<p>Örnek</p>
+<p>Bir vektör alanı $ \vec{F} = xy i + y^2 j $ olsun, ve bu alanda
+birinci dörtlük içinde $y = x$ çizgisi ve $y=x^2$ parabölü arasındaki bölgeyi
+düşünelim. Bu bölge ve alan üzerinden Green'in Teorisini doğrulamaya uğraşalım.</p>
+<p>Grafik şu şekilde,</p>
+<p><img alt="" src="calc_multi_75_green_02.jpg" /></p>
+<p>Vektör alanı (100 ile çarpıp vektörleri büyüttük gözüksün diye),</p>
+<pre><code class="python">x = np.linspace(0,1.,10)
+y = np.linspace(0,1.,10)
+x,y = np.meshgrid(x,y)
+SCALE = 100.0
+u = x*y*SCALE; v = (y**2)*SCALE
+v = np.zeros(y.shape)
+q = plt.quiver(x,y,u,v,angles='xy',scale=1000,color='r')
+p = plt.quiverkey(q,1,16.5,50,&quot;50 m/s&quot;,coordinates='data',color='r')
+plt.savefig('calc_multi_75_green_01.jpg')
+</code></pre>
+
+<p><img alt="" src="calc_multi_75_green_01.jpg" /></p>
+<p>Eğri iki parça olarak analiz edilecek, $C_1$ ve $C_2$.  Eğri üzerinden gereken
+tüm entegral,</p>
+<p>$$
+\int_C \vec{F} \cdot \mathrm{d}{\vec{s}} = \int_C xy \mathrm{d} x + y^2 \mathrm{d} y
+$$</p>
+<p>Bu entegral iki parça üzerinden alınmalı ve sonuç toplanmalı,</p>
+<p>$$
+= \int_{C_1} xy \mathrm{d} x + y^2 \mathrm{d} y + \int_{C_2} xy \mathrm{d} x + y^2 \mathrm{d} y
+\label{2}
+$$</p>
+<p>Eğriyi parametrize edelim, böylece $\mathrm{d} x$, $\mathrm{d} y$ üzerinden entegraller
+kolaylaşsın,</p>
+<p>$$
+C_1: x = t, y = t^2, \quad 0 \le t \le 1
+$$</p>
+<p>$$
+C_2: x = 1-t, y = 1-t, \quad 0 \le t \le 1
+$$</p>
+<p>$C_1$,$C_2$ gidişat yönlerine dikkat, mesela eğri ile yukarı çıkış var, ama düz
+eğri ile aşağı ınıyoruz, bu sebeple $t$ sıfırdan başlarken $x,y$ değerleri
+$(1,1)$, öyle ayarladık, ve en sonda $t=1$ olduğu anda $x,y$ değerleri $(0,0)$
+oluyor. </p>
+<p>Şimdi parametrize edilmiş değişkenlerle (2) formülünü tekrar yazalım,</p>
+<p>$$
+= \int_{0}^{1} ( t \cdot t^2 + t^4 \cdot 2t ) \mathrm{d} t +
+\int_{0}^{1} ((1-t)^2 + (1-t)^2) (-\mathrm{d} t)
+$$</p>
+<p>$$
+= \int_{0}^{1} (t^3 + 2t^5) \mathrm{d} t + \int _{0}^{1} 2 (1-t)^2 (-\mathrm{d} t)
+$$</p>
+<p>$$
+= (\frac{1}{4} t^4 + \frac{2}{6} t^6) \big\vert_{0}^{1} +
+(\frac{2}{3} (1-t)^3 ) \big\vert_{0}^{1}
+$$</p>
+<p>$$
+= \frac{1}{4} + \frac{2}{6} - \frac{2}{3} = -\frac{1}{12}
+$$</p>
+<p>Green'in Teorisinin sağ tarafına bakalım şimdi, </p>
+<p>$$
+\int \int_D \frac{\partial N}{\partial x} - \frac{\partial M}{\partial y} \mathrm{d} x \mathrm{d} y =
+\int \int_D \left(
+\frac{\partial }{\partial x}(y^2) - \frac{\partial }{\partial y}(xy) \mathrm{d} x \mathrm{d} y
+\right)
+$$</p>
+<p>$$
+= \int_{0}^{1} \int_{x^2}^{x} -x \mathrm{d} y \mathrm{d} x =
+\int_{0}^{1} -x (x-x^2) \mathrm{d} x =
+\int_{0}^{1} (x^3 - x^2) \mathrm{d} x = (\frac{1}{4} x^4 - \frac{1}{3} x^3 ) \bigg\vert_{0}^{1}
+$$</p>
+<p>$$
+= \frac{1}{4} - \frac{1}{3} = -\frac{1}{12}
+$$</p>
+<p>Aynı sonuca eriştik.</p>
+<p>[devam edecek]</p>
+<p>Gauss-Green Eşitliği</p>
+<p>Gauss-Green eşitliği iki boyutta şu şekilde gösterilebilir [1, sf. 262],</p>
+<p>$$
+\iint_R (\nabla u ) \cdot w \mathrm{d} x \mathrm{d} y =
+\iint_R u (- \mathrm{div} w) \mathrm{d} x \mathrm{d} y + \int_C u w \cdot n \mathrm{d} s
+$$</p>
+<p>Türetmek için başlangıç noktası $uv$ üzerinde uzaklaşım almak. Aslında
+ileride göreceğimiz gibi çok boyutta parçalı entegral tekniği Gauss-Green'in
+uzantısı bir bakıma ve tek boyutta gördük ki [3] parçalı entegrale erişmek
+için de Calculus'un çarpım kuralından başlanmıştı.</p>
+<p>$$
+\mathrm{div} (uw) = \mathrm{div} (u w_1 + u w_2) =
+\frac{\partial u}{\partial x} w_1 +
+\frac{\partial w_1}{\partial x} u +
+\frac{\partial u}{\partial y} w_2 +
+\frac{\partial w_2}{\partial y} u 
+$$</p>
+<p>Gruplarsak,</p>
+<p>$$
+= \left( 
+\frac{\partial u}{\partial x} w_1 +
+\frac{\partial u}{\partial y} w_2 \right) +
+\left( 
+\frac{\partial w_1}{\partial x} u +
+\frac{\partial w_2}{\partial y} u \right)
+$$</p>
+<p>Daha kısa şekilde,</p>
+<p>$$
+\mathrm{div} (uw) = \nabla u \cdot w + u \mathrm{div}(w)
+$$</p>
+<p>Üstteki ifade üzerinde Uzaklaşım Teorisi'ni uygulayalım. Önce
+$\iint_R \mathrm{div} (uw)$,</p>
+<p>$$
+\iint_R \mathrm{div} (uw) \mathrm{d} x \mathrm{d} y= \iint_R \nabla u \cdot w + u \mathrm{div}(w) \mathrm{d} x \mathrm{d} y
+$$</p>
+<p>$$
+= \iint_R \nabla u \cdot w  \mathrm{d} x \mathrm{d} y + \iint_R u \mathrm{div}(w) \mathrm{d} x \mathrm{d} y
+$$</p>
+<p>Uzaklaşım Teorisi'ne göre sağ taraf $\int_C uw \cdot n \mathrm{d} s$ olmalı, yani</p>
+<p>$$
+\iint_R \nabla u \cdot w  \mathrm{d} x \mathrm{d} y + \iint_R u \mathrm{div}(w) \mathrm{d} x \mathrm{d} y = \int_C uw \cdot n \mathrm{d} s
+$$</p>
+<p>Eşitliğin sol tarafındaki ikinci terimi sağa geçirirsek,</p>
+<p>$$
+\iint_R \nabla u \cdot w  \mathrm{d} x \mathrm{d} y =
+\iint_R u (-\mathrm{div} w) \mathrm{d} x \mathrm{d} y + \int_C uw \cdot n \mathrm{d} s
+$$</p>
+<p>[1] notasyonu ile $\nabla$ yerine $\mathrm{grad}$,</p>
+<p>$$
+\iint_R \mathrm{grad} u \cdot w  \mathrm{d} x \mathrm{d} y =
+\iint_R u (-\mathrm{div} w) \mathrm{d} x \mathrm{d} y + \int_C uw \cdot n \mathrm{d} s
+\qquad (3)
+$$</p>
+<p>Böylece Gauss-Green eşitliğine erişmiş olduk.</p>
+<p>Green'in İlk Eşitliği </p>
+<p>Eğer (3) içinde $w$ için $\mathrm{grad} u$ sokarsak, bu bize Green'in İlk Eşitliği (Green's First
+İdentity) denen formülü veriyor [1, sf. 281], </p>
+<p>$$
+\iint_R \mathrm{grad} u \cdot \mathrm{grad} u  \mathrm{d} x \mathrm{d} y =
+\iint_R u (-\mathrm{div} \mathrm{grad} u) \mathrm{d} x \mathrm{d} y + \int_C u \mathrm{grad} u \cdot n \mathrm{d} s
+$$</p>
+<p>Gradyanın uzaklaşımı bazen $\Delta$ notasyonu ile gösterilir, öyle yapalım,</p>
+<p>$$
+\iint_R | \mathrm{grad} u |^2  \mathrm{d} x \mathrm{d} y = - \iint_R u (\Delta u) \mathrm{d} x \mathrm{d} y +
+\int_C u \mathrm{grad} u \cdot n \mathrm{d} s
+$$</p>
+<p>Eşitliğin sağından, solundan birkaç yer değişim sonrası,</p>
+<p>$$
+\iint_R u (\Delta u) \mathrm{d} x \mathrm{d} y =
+- \iint_R | \mathrm{grad} u |^2  \mathrm{d} x \mathrm{d} y
++ \int_C u \mathrm{grad} u \cdot n \mathrm{d} s
+$$</p>
+<p>Böylece [1, sf. 281]'daki forma erişmiş olduk. Bu Green'in İlk Eşitliği.</p>
+<p>Kaynaklar</p>
+<p>[1] Strang, <em>Computational Science and Engineering</em></p>
+<p>[2] Bayramli, <em>Cok Degiskenli Calculus, Ders 23</em></p>
+<p>[3] Bayramlı, <em>Diferansiyel Denklemler, Ekler</em></p>
+<p>[4] Colley, <em>Vector Calculus</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

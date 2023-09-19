@@ -55,10 +55,10 @@ yeni kullanıcının bu merkezlere olan mesafesini hesaplarız sadece,
 10-20 tane küme için, ve sonra kümedeki kullanıcıları listeleyip
 onların beğenilerini tavsiye olarak veririz.</p>
 
-<p>Ornek veri [1] sitesinden, oradaki <code>ml-latest-small.zip</code> verisini alacagiz.
-Daha buyuk bir veri seti <code>ml-25m.zip</code> icinde.</p>
+<p>Örnek veri [1] sitesinden, oradaki <code>ml-latest-small.zıp</code> verisini
+alacağız.  Daha büyük bir veri seti <code>ml-25m.zıp</code> içinde.</p>
 
-<p>Fakat veri setinde ratings.csv dosyasi su formatta,</p>
+<p>Fakat veri setinde <code>ratings.csv</code> dosyası şu formatta,</p>
 
 <pre><code>userId,movieId,rating,timestamp
 1,296,5.0,1147880044
@@ -67,24 +67,25 @@ Daha buyuk bir veri seti <code>ml-25m.zip</code> icinde.</p>
 1,665,5.0,1147878820
 </code></pre>
 
-<p>Aynı kullanıcı kimliği birden fazla farklı satırda çıkıyor. Satır
-satır işleme bazlı yapan yaklaşımlar için bir kullanıcının tüm
-verisini aynı satırda almak daha iyi olabilir, böylece azar azar
-(incremental) işlem birimi kullanıcı haline gelir, ayrıca parallel
-işlem gerektiğinde aynı kullanıcı veisinin farklı işlemlere
-dağıtılması gerekmez, bunun kordinasyonu zor olurdu. O zaman üstteki
-veriyi kullanıcı satırı haline getirelim, ayrıca verinin seyrekliğini
-gözönünde bulundurursak, not verilen filmlerin bir sözlük öğesi olarak
-görmek uygun olabilir. Sözlük metin formatta JSON olarak tutulabilir.
-Yani yeni veride iki kolon olacak, birinci <code>userİd</code> ikinci bir JSON
-metni. Değişimi yapalım,</p>
+<p>Aynı kullanıcı kimliği birden fazla farklı satıra yayılmış
+halde. Satır satır işleme bazlı yapan yaklaşımlar için bir
+kullanıcının tüm verisini aynı satırda almak daha iyidir, böylece azar
+azar (incremental) işlem birimi kullanıcı olur, tek satır okuyunca tek
+bir kullanıcı işlemiş oluruz. Ayrıca parallel işlem gerektiğinde aynı
+kullanıcı veisinin farklı süreçlere dağıtılması gerekmez, bunun
+kordinasyonu zor olurdu. O zaman üstteki veriyi kullanıcı bazlı hale
+getirelim, ayrıca verinin seyrekliğini gözönünde bulundurursak, not
+verilen filmlerin bir sözlük öğesi yapalım. Sözlük, metin formatta
+JSON olarak tutulabilir, dosyaya böyle yazılır.  Yeni veride iki kolon
+olacak, birincisi <code>userId</code>, ikincisi ise bir JSON metni. Değişimi
+yapalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">csv</span>
 
-<span class="n">d</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/ml-latest-small&quot;</span>
+<span class="n">indir</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/ml-latest-small&quot;</span>
 <span class="n">outdir</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span>
-<span class="n">infile</span> <span class="o">=</span> <span class="n">d</span> <span class="o">+</span> <span class="s2">&quot;/ratings.csv&quot;</span>
+<span class="n">infile</span> <span class="o">=</span> <span class="n">indir</span> <span class="o">+</span> <span class="s2">&quot;/ratings.csv&quot;</span>
 <span class="n">outfile</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/ratings-json.csv&quot;</span>
 <span class="n">curruser</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">row_dict</span> <span class="o">=</span> <span class="p">{}</span>
@@ -123,6 +124,56 @@ metni. Değişimi yapalım,</p>
 4|{&quot;21&quot;: 3.0, &quot;32&quot;: 2.0, &quot;45&quot;: ..
 5|{&quot;1&quot;: 4.0, &quot;21&quot;: 4.0, &quot;34&quot;:  ..
 6|{&quot;2&quot;: 4.0, &quot;3&quot;: 5.0, &quot;4&quot;: 3. ..
+</code></pre>
+</div>
+
+<p>Kullanici <code>4</code> film <code>21</code> icin 3 notunu vermis.. boyle gidiyor.</p>
+
+<h3>Kumeleme</h3>
+
+<p>K-Means algoritmasinin, ana mantığı, paralel versiyonu [3,4]'te işlendi.</p>
+
+<p>Algoritmaya geçmeden önce bazı hazırlık işlemleri yapalım. Filmlerin tabandaki
+kimlik no'ları matris üzerinde kullanıma hazır değil, onlara 0'dan başlayan bir
+artarak giden kimliği biz atayacağız, ve aradaki eşlemeyi bir sözlük ile
+yapacağız, sözlükler <code>movie_id_ınt.json</code> ve <code>movie_tıtle_ınt.json</code> içinde
+olacak. </p>
+
+<p>Ayrıca K-Means'e bir başlangıç noktası gerekiyor, çünkü algoritma
+verili etiketler üzerinden küme merkezleri, verili küme merkezleri
+üzerinden etiket eşlemesi hesaplar, özyineli bir algoritmadir, tabii
+bu durumda bir yerden başlanılması gerekir, çoğu yaklaşım mesela küme
+merkezlerini rasgele atar. Bu örnekte küme merkezi yerine etiket
+ataması (hangi kullanıcı hangi kümeye ait) rasgele yapılırsa daha iyi,
+çünkü seyrek veri durumunda reel sayılar olan küme merkezlerini iyi
+seçememek mümkün. Belli bir aralıktaki tam sayı küme ataması daha basit,
+<code>cluster_ass</code> değişkeninde bu atama olacak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">K</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">9742</span>
+<span class="n">U</span> <span class="o">=</span> <span class="mi">610</span>
+
+<span class="k">def</span> <span class="nf">prepare</span><span class="p">():</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">indir</span> <span class="o">+</span> <span class="s2">&quot;/movies.csv&quot;</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;movieId&#39;</span><span class="p">)[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/movie_id_int.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">indir</span> <span class="o">+</span> <span class="s2">&quot;/movies.csv&quot;</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+    <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/movie_title_int.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">d</span><span class="p">))</span>
+    <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+    <span class="n">cluster_ass</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="n">K</span><span class="p">,</span><span class="n">size</span><span class="o">=</span><span class="n">U</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s1">&#39;/cluster-assignments-0&#39;</span><span class="p">,</span><span class="n">cluster_ass</span><span class="p">)</span>
+
+<span class="n">prepare</span><span class="p">()</span>
 </code></pre>
 </div>
 
@@ -165,6 +216,10 @@ Dunkirk (2017),2
 <p>[1] https://grouplens.org/datasets/movielens/</p>
 
 <p>[2] <a href="../../../stat/stat_137_collab/toplu_tavsiye__collaborative_filtering__filmler_svd_ile_boyut_indirgeme.html">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a></p>
+
+<p>[3] <a href="../../../algs/algs_080_kmeans/kmeans_kumeleme_metodu.html">K-Means Kümeleme Metodu</a> </p>
+
+<p>[4] <a href="../../2022/11/paralel-veri-analizi-istatistik.html">Paralel Veri Analizi, İstatistik</a></p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

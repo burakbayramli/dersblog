@@ -138,10 +138,99 @@ def prepare():
 prepare()
 ```
 
+```python
+import os
+
+def process(file_name,N,hookobj):
+    file_size = os.path.getsize(file_name)
+    beg = 0
+    chunks = []
+    for i in range(N):
+        with open(file_name, 'r') as f:
+            s = int((file_size / N)*(i+1))
+            f.seek(s)
+            f.readline()
+            end_chunk = f.tell()-1
+            chunks.append([beg,end_chunk])
+            f.close()
+        beg = end_chunk+1
+    c = chunks[hookobj.ci]
+    with open(file_name, 'r') as f:
+        f.seek(c[0])
+        i = 0
+        while True:
+            i += 1
+            line = f.readline()
+            hookobj.exec(line)
+            if f.tell() > c[1]: break
+        f.close()
+        hookobj.post()
+        
+```
 
 
+```python
+import numpy.linalg as lin
+fin1  = outdir + "/ratings-json.csv"
+
+np.random.seed(0)
+
+class KMeans1Job:
+    def __init__(self,ci,iter_no):
+        self.ci = ci
+        self.iter_no = iter_no
+        self.movie_id_int = json.loads(open(outdir + "/movie_id_int.json").read())
+        self.cluster_ass = np.load(outdir + "/cluster-assignments-%d.npz" % int(self.iter_no-1))['arr_0']
+        self.s = np.zeros((K,M))
+        self.N = np.zeros((K,M))
+                
+    def exec(self,line):
+        id,jsval = line.split("|")
+        ratings = json.loads(jsval)
+        my_k = int(self.cluster_ass[int(id)-1])
+        for mov,rating in ratings.items():
+            self.s[my_k, self.movie_id_int[mov]] += rating
+            self.N[my_k, self.movie_id_int[mov]] += 1.0
+                
+    def post(self):
+        means = np.divide(self.s, self.N, out=np.zeros_like(self.s), where=self.N>0)
+        np.savez(outdir + '/means-%d' % self.iter_no, means)
+        print ('KMeans1Job tamam')
+
+class KMeans2Job:
+    def __init__(self,ci,iter_no):
+        self.ci = ci
+        self.iter_no = iter_no
+        self.means = np.load(outdir + "/means-%d.npz" % int(self.iter_no))['arr_0']
+        self.movie_id_int = json.loads(open(outdir + "/movie_id_int.json").read())
+        self.cluster_ass = np.zeros((U,))
+
+        
+    def exec(self,line):
+        id,jsval = line.split("|")
+        ratings = json.loads(jsval)
+        vec = np.zeros((1,M))
+        for mov,rating in ratings.items():
+            vec[0,self.movie_id_int[str(mov)]] = rating
+        nearest = np.argmin(lin.norm(vec - self.means,axis=1))
+        self.cluster_ass[int(id)-1] = nearest
+        
+    def post(self):
+        np.savez(outdir + '/cluster-assignments-%d' % self.iter_no,self.cluster_ass)
+        print ('KMeans2Job tamam')
+        
+```
 
 
+```python
+process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans1Job(0,1))
+process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans2Job(0,1))
+```
+
+```text
+KMeans1Job tamam
+KMeans2Job tamam
+```
 
 
 

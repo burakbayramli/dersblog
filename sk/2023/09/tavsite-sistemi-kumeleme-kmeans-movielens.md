@@ -129,6 +129,8 @@ K = 5 # kume sayisi
 M = 9742 # film sayisi
 U = 610 # kullanici sayisi
 
+np.random.seed(0)
+
 def prepare():
 
     df = pd.read_csv(indir + "/movies.csv")
@@ -199,7 +201,7 @@ print (ca[:10], '...')
 
 ```text
 atamalar (610,)
-[1 1 1 1 3 2 3 3 1 4] ...
+[4 0 3 3 3 1 3 2 4 0] ...
 ```
 
 İkinci kod parçası atamaları kullanıp küme merkezlerini yaratır, bu
@@ -261,6 +263,8 @@ class KMeans2Job:
         
 ```
 
+Ortalamalar
+
 `KMeans1Job` kodunda ortalamalar için her küme için o küme altındaki
 kullanıcıların notları, yani vektörler toplanır, aynı sırada kaç not
 verilmiş olduğu takip edilir, ve toplam not not sayısına
@@ -278,12 +282,20 @@ N[0,2] = 2; N[1,1] = 4; N[2,1] = 7
 
 print (s)
 print (N)
-
+print ('\n')
 print (s/N)
 print (np.divide(s, N, out=np.zeros_like(N), where=N>0))
 ```
 
 ```text
+[[0. 0. 4.]
+ [0. 4. 0.]
+ [0. 7. 0.]]
+[[0. 0. 2.]
+ [0. 4. 0.]
+ [0. 7. 0.]]
+
+
 [[nan nan  2.]
  [nan  1. nan]
  [nan  1. nan]]
@@ -291,6 +303,28 @@ print (np.divide(s, N, out=np.zeros_like(N), where=N>0))
  [0. 1. 0.]
  [0. 1. 0.]]
 ```
+
+Mesafe
+
+Devam etmeden önce önemli bir konuya değinelim, bu da mesafe
+kavramı. K-Means kümelemesi Öklit (Euclidian) mesafe kullanır, bu
+mesafenin sıfır değerlerini nasıl kullandığına dikkat etmek
+gerekir. Sıfır değeri tabii ki bizim seçimlerimiz bağlamında
+"seyredilmemiş" demektir. Fakat Öklitsel mesafe hesaplıyorsam, mesela
+benim üç boyutlu vektörüm x1,y1,z1 ile başka bir x2,y2,z2 vektör
+arasında bu hesap (x1-x2) karesi artı (y1-y2) karesi vs diye devam
+ediyor. Sonra bu toplamın kareköku alınıyor. Fakat eğer bende x filmi
+seyredilmemişse, yoğun matris bağlamında orada sıfır vardır, ama küme
+merkezine uzaklık hesaplıyorsam bu merkezin x2,y2,z2,.. öğelerinde
+muhakkak bir değer vardır. Bu mevcut değere uzaklık hesaplarsam
+bendeki sıfır değeri mevcut değeri beni uzakmışım gibi
+gösterecektir. Fakat belki o filmi seyretsem belli bir kümenin
+değerine yakın not verirdim, o zaman ona yakın gözükürdüm. Demek ki
+bendeki boş değerler mesafesel olarak problem çıkartabilir. İşte bu
+sebeple `KMeans2Job` kodunda mesafe hesaplarken `vec[vec>0] -
+self.means[:,vec>0]` kodunu kullandık, yani `vec` üzerinde sıfır
+*olmayan* değerlerin `self.means` ile mesafesine bakılıyor. Diğerleri
+Öklit mesafesine dahil edilmiyor.
 
 Kodu işletelim şimdi, şimdilik iki kod parçasını tek bir döngü içinde çağıracağız,
 
@@ -316,6 +350,7 @@ b'total 2156
  140 movie_id_int.json
  344 movie_title_int.json
 1272 ratings-json.csv
+
 ```
 
 Görüldüğü gibi `-1.npz` ile biten dosyalar yaratıldı, bu dosyaların
@@ -335,16 +370,66 @@ kume merkezleri (5, 9742)
 
 ### Kullanım
 
+Döngüyü birkaç kez işletmek küme sonuçlarını ilerletir, bunu ödev
+olarak okuyucu yapabilir, fakat bu mevcut sonuçlarda bile bazı
+gözlemler yapabiliriz. Bazı notlar verelim şimdi, ve bu seçimlere
+yakın olan kümeyi bulalım,
 
-```
+
+```python
+picks = """
 movie,rating
 Swordfish (2001),5
 "Rock, The (1996)",5
 Dunkirk (2017),2
+"""
+
+import os, numpy as np, numpy.linalg as lin, io
+
+dt = json.loads(open(outdir + "/movie_title_int.json").read())
+
+picks = pd.read_csv(io.StringIO(picks),index_col=0).to_dict('index')
+vec = np.zeros(M)
+for mov,rating in picks.items():
+    if str(mov) in dt:
+        vec[dt[str(mov)]] = rating['rating']
+nearest = np.argmin(lin.norm(vec[vec>0] - means[:,vec>0],axis=1))
+print ('en yakin', nearest)
 ```
 
+```text
+en yakin 3
+```
 
-[devam edecek]
+En yakın kümeyi bulduk. Şimdi not verdiğimiz her filmin tüm kümelerde
+ortalama nasıl notlanmış olduğuna bakalım, acaba bizim notlarla uyumlu
+mu?
+
+```python
+means[:,dt['Swordfish (2001)']]
+```
+
+```text
+Out[1]: array([2.25      , 3.5       , 3.27272727, 3.2       , 3.1       ])
+```
+
+```python
+means[:,dt['Rock, The (1996)']]
+```
+
+```text
+Out[1]: array([3.82142857, 3.26315789, 3.60714286, 3.86956522, 3.54347826])
+```
+
+```python
+means[:,dt['Dunkirk (2017)']]
+```
+
+```text
+Out[1]: array([3.375     , 3.75      , 5.        , 3.16666667, 3.        ])
+```
+
+Uyumlu gözüküyor.
 
 Kaynaklar
 

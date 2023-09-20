@@ -326,7 +326,7 @@ self.means[:,vec>0]` kodunu kullandık, yani `vec` üzerinde sıfır
 *olmayan* değerlerin `self.means` ile mesafesine bakılıyor. Diğerleri
 Öklit mesafesine dahil edilmiyor.
 
-Kodu işletelim şimdi, şimdilik iki kod parçasını tek bir döngü içinde çağıracağız,
+Kodu işletelim, şimdilik iki kod parçasını tek bir döngü içinde çağıracağız,
 
 ```python
 process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans1Job(0,1))
@@ -370,7 +370,7 @@ kume merkezleri (5, 9742)
 
 ### Kullanım
 
-Döngüyü birkaç kez işletelim şimdi,
+Döngüyü birkaç kez işletelim,
 
 ```python
 for iter_no in range(1,10):
@@ -379,7 +379,7 @@ for iter_no in range(1,10):
 ```
 
 Bunu yapmak sonuçları iyileştirir. Kendi seçtiğimiz bazı filmlere
-notlar verelim şimdi, ve bu seçimlere yakın olan kümeyi bulalım,
+notlar verelim, ve bu seçimlere yakın olan kümeyi bulalım,
 
 ```python
 picks = """
@@ -460,6 +460,4 @@ Kaynaklar
 [3] <a href="../../../algs/algs_080_kmeans/kmeans_kumeleme_metodu.html">K-Means Kümeleme Metodu</a> 
 
 [4] <a href="../../2022/11/paralel-veri-analizi-istatistik.html">Paralel Veri Analizi, İstatistik</a>
-
-
 

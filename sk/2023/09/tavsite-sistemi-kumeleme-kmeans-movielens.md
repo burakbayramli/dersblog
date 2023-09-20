@@ -431,6 +431,20 @@ Out[1]: array([3.375     , 3.75      , 5.        , 3.16666667, 3.        ])
 
 Uyumlu gözüküyor.
 
+Paralel işletme kısmını da ödev bırakıyoruz, burada eklenecek kodların
+genel yaklaşımından bahsedelim.
+
+Ortalama için her paralel işletici kullanıcıların bir kısmını işler,
+ve o kısımla ilgili küme ortalamalarını hesaplar. İki tane süreç iki
+tane K x M ortalama yaratır, o zaman her döngüde paralel süreç
+ortalamaları bitince seri şekilde (paralel değil) bu ortalamaların
+ortalamaları alınır, o döngünün nihai ortalaması bu olur.
+
+Küme ataması daha bariz, çünkü zaten kullanıcı bazlı hesaplanan ve
+atanan bir değer, eh bizim paralel yaklaşım da kullanıcı bazlı
+işbölümü yaptığına göre burada tek yapılması gereken paralel atama
+bitince her süreçten gelen sonuçları birleştirmektir.
+
 Kaynaklar
 
 [1] https://grouplens.org/datasets/movielens/

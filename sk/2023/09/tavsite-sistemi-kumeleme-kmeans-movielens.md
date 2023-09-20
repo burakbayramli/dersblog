@@ -227,7 +227,7 @@ class KMeans1Job:
     def exec(self,line):
         id,jsval = line.split("|")
         ratings = json.loads(jsval)
-        my_k = int(self.cluster_ass[int(id)-1])
+        my_k = int(self.cluster_ass[int(id)])
         for mov,rating in ratings.items():
             self.s[my_k, self.movie_id_int[mov]] += rating
             self.N[my_k, self.movie_id_int[mov]] += 1.0
@@ -249,11 +249,11 @@ class KMeans2Job:
     def exec(self,line):
         id,jsval = line.split("|")
         ratings = json.loads(jsval)
-        vec = np.zeros((1,M))
+        vec = np.zeros(M)
         for mov,rating in ratings.items():
-            vec[0,self.movie_id_int[str(mov)]] = rating
-        nearest = np.argmin(lin.norm(vec - self.means,axis=1))
-        self.cluster_ass[int(id)-1] = nearest
+            vec[self.movie_id_int[str(mov)]] = rating
+        nearest = np.argmin(lin.norm(vec[vec>0] - self.means[:,vec>0],axis=1))
+        self.cluster_ass[int(id)] = nearest
         
     def post(self):
         np.savez(outdir + '/cluster-assignments-%d' % self.iter_no,self.cluster_ass)

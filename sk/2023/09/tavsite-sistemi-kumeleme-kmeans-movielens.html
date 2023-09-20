@@ -139,9 +139,10 @@ yapalım,</p>
 
 <p>Kullanıcı <code>4</code> film <code>21</code> için 3 notunu vermiş.. böyle gidiyor.</p>
 
-<h3>Kumeleme</h3>
+<h3>Kümeleme</h3>
 
-<p>K-Means algoritmasinin, ana mantığı, paralel versiyonu [3,4]'te işlendi.</p>
+<p>K-Means algoritmasının ana mantığı, paralel versiyonu [3,4]'te
+işlendi.</p>
 
 <p>Algoritmaya geçmeden önce bazı hazırlık işlemleri yapalım. Filmlerin tabandaki
 kimlik no'ları matris üzerinde kullanıma hazır değil, onlara 0'dan başlayan bir
@@ -188,9 +189,9 @@ olacak.</p>
 </code></pre>
 </div>
 
-<p>Bu kodu işlettikten sonra gerekli başlangıç dosyaları <code>outdır</code> içinde olmalı.
-Şimdi ileride paralel işletimi sağlayacak yardımcı kodu tekrar paylaşalım,
-detaylar [4] içinde bulunabilir,</p>
+<p>Bu kodu işlettikten sonra gerekli başlangıç dosyaları <code>outdir</code> içinde
+olmalı.  Şimdi işletimi sağlayacak yardımcı kodu paylaşalım, detaylar
+[4] içinde bulunabilir, ileride paralel işletimi de sağlayacak,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
@@ -218,18 +219,17 @@ detaylar [4] içinde bulunabilir,</p>
             <span class="n">hookobj</span><span class="o">.</span><span class="n">exec</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">f</span><span class="o">.</span><span class="n">tell</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span> <span class="k">break</span>
         <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">hookobj</span><span class="o">.</span><span class="n">post</span><span class="p">()</span>
+        <span class="n">hookobj</span><span class="o">.</span><span class="n">post</span><span class="p">()</span>        
 </code></pre>
 </div>
 
 <p>Artık işleyici kodları yazabiliriz. Bize iki tane ayrı kod bloğu
-gerekiyor, bunlardan ilki verili küme atamalarını kullanarak küme
-merkezlerini hesaplar. İkincisi küme merkezlerini kullanarak kullanıcı
-küme atamalarını yapar.</p>
-
-<p>Atama verisi basit tek bir vektör içinde, <code>U</code> tane kullanıcı
-(seyirci), <code>K</code> tane küme var, o zaman <code>(1,M)</code> boyutunda, içeriği 0 ile <code>K</code>
-arasında bir değer,</p>
+gerekiyor, bunlardan ilki daha önce söylediğimiz gibi verili küme
+atamalarını kullanarak küme merkezlerini hesaplar. İkincisi küme
+merkezlerini kullanarak kullanıcı küme atamalarını yapar. Atama verisi
+basit tek bir vektör içinde, <code>U</code> tane kullanıcı (seyirci), <code>K</code> tane
+küme var, o zaman <code>(1,M)</code> boyutunda, içeriği 0 ile <code>K</code> arasında bir
+değer, ilk atamaların rasgele yapıldığı vektöre bakalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">ca</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/cluster-assignments-0.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;arr_0&#39;</span><span class="p">]</span>
@@ -247,7 +247,8 @@ arasında bir değer,</p>
 <p>İkinci kod parçası atamaları kullanıp küme merkezlerini yaratır, bu
 merkez bir küme içindeki seyircilerin tüm filmlere verdiği notların
 ortalamasıdır, bu tüm kümeler için yapılır o zaman sonuç matrisinin
-boyutu <code>K</code> küme <code>M</code> film için K x M olmalı.</p>
+boyutu <code>K</code> küme <code>M</code> film için K x M olmalı. Her iki kod parçası
+alttadır,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">lin</span>
@@ -301,6 +302,40 @@ boyutu <code>K</code> küme <code>M</code> film için K x M olmalı.</p>
 </code></pre>
 </div>
 
+<p><code>KMeans1Job</code> kodunda ortalamalar için her küme için o küme altındaki
+kullanıcıların notları, yani vektörler toplanır, aynı sırada kaç not
+verilmiş olduğu takip edilir, ve toplam not not sayısına
+bölünur. Sıfır ile bölüm tehlikesi var muhakkak, bu durumda özel bir
+bölme çağrısı kullanacağız, <code>numpy.divide</code>, bir örnek altta,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,))</span>
+<span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,))</span>
+
+<span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">N</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">N</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">s</span><span class="o">/</span><span class="n">N</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">where</span><span class="o">=</span><span class="n">N</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[nan nan  2.]
+ [nan  1. nan]
+ [nan  1. nan]]
+[[0. 0. 2.]
+ [0. 1. 0.]
+ [0. 1. 0.]]
+</code></pre>
+</div>
+
+<p>Kodu işletelim şimdi, şimdilik iki kod parçasını tek bir döngü içinde çağıracağız,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="n">process</span><span class="p">(</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">+</span> <span class="s1">&#39;/ratings-json.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">KMeans1Job</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="n">process</span><span class="p">(</span><span class="n">file_name</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">+</span> <span class="s1">&#39;/ratings-json.csv&#39;</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">KMeans2Job</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
@@ -329,6 +364,9 @@ KMeans2Job tamam
 </code></pre>
 </div>
 
+<p>Görüldüğü gibi <code>-1.npz</code> ile biten dosyalar yaratıldı, bu dosyaların
+1'inci döngünün sonuçları. Boyutlara bakıyoruz,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="n">ca</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/cluster-assignments-1.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;arr_0&#39;</span><span class="p">]</span>
 <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/means-1.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;arr_0&#39;</span><span class="p">]</span>
@@ -343,31 +381,7 @@ kume merkezleri (5, 9742)
 </code></pre>
 </div>
 
-<div class="codehilite">
-<pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,))</span>
-<span class="n">N</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,))</span>
-
-<span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">s</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
-
-<span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">N</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">7</span>
-
-<span class="nb">print</span> <span class="p">(</span><span class="n">s</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">N</span><span class="p">)</span>
-
-<span class="nb">print</span> <span class="p">(</span><span class="n">s</span><span class="o">/</span><span class="n">N</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">N</span><span class="p">),</span> <span class="n">where</span><span class="o">=</span><span class="n">N</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">))</span>
-</code></pre>
-</div>
-
-<div class="codehilite">
-<pre><span></span><code>[[nan nan  2.]
- [nan  1. nan]
- [nan  1. nan]]
-[[0. 0. 2.]
- [0. 1. 0.]
- [0. 1. 0.]]
-</code></pre>
-</div>
+<h3>Kullanım</h3>
 
 <pre><code>movie,rating
 Swordfish (2001),5

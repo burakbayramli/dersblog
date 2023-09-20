@@ -100,9 +100,10 @@ show_out(2,6)
 
 Kullanıcı `4` film `21` için 3 notunu vermiş.. böyle gidiyor.
 
-### Kumeleme
+### Kümeleme
 
-K-Means algoritmasinin, ana mantığı, paralel versiyonu [3,4]'te işlendi.
+K-Means algoritmasının ana mantığı, paralel versiyonu [3,4]'te
+işlendi.
 
 Algoritmaya geçmeden önce bazı hazırlık işlemleri yapalım. Filmlerin tabandaki
 kimlik no'ları matris üzerinde kullanıma hazır değil, onlara 0'dan başlayan bir
@@ -148,9 +149,9 @@ def prepare():
 prepare()
 ```
 
-Bu kodu işlettikten sonra gerekli başlangıç dosyaları `outdır` içinde olmalı.
-Şimdi ileride paralel işletimi sağlayacak yardımcı kodu tekrar paylaşalım,
-detaylar [4] içinde bulunabilir,
+Bu kodu işlettikten sonra gerekli başlangıç dosyaları `outdir` içinde
+olmalı.  Şimdi işletimi sağlayacak yardımcı kodu paylaşalım, detaylar
+[4] içinde bulunabilir, ileride paralel işletimi de sağlayacak,
 
 
 ```python
@@ -179,18 +180,16 @@ def process(file_name,N,hookobj):
             hookobj.exec(line)
             if f.tell() > c[1]: break
         f.close()
-        hookobj.post()
-        
+        hookobj.post()        
 ```
 
 Artık işleyici kodları yazabiliriz. Bize iki tane ayrı kod bloğu
-gerekiyor, bunlardan ilki verili küme atamalarını kullanarak küme
-merkezlerini hesaplar. İkincisi küme merkezlerini kullanarak kullanıcı
-küme atamalarını yapar.
-
-Atama verisi basit tek bir vektör içinde, `U` tane kullanıcı
-(seyirci), `K` tane küme var, o zaman `(1,M)` boyutunda, içeriği 0 ile `K`
-arasında bir değer,
+gerekiyor, bunlardan ilki daha önce söylediğimiz gibi verili küme
+atamalarını kullanarak küme merkezlerini hesaplar. İkincisi küme
+merkezlerini kullanarak kullanıcı küme atamalarını yapar. Atama verisi
+basit tek bir vektör içinde, `U` tane kullanıcı (seyirci), `K` tane
+küme var, o zaman `(1,M)` boyutunda, içeriği 0 ile `K` arasında bir
+değer, ilk atamaların rasgele yapıldığı vektöre bakalım,
 
 ```python
 ca = np.load(outdir + "/cluster-assignments-0.npz")['arr_0']
@@ -206,7 +205,8 @@ atamalar (610,)
 İkinci kod parçası atamaları kullanıp küme merkezlerini yaratır, bu
 merkez bir küme içindeki seyircilerin tüm filmlere verdiği notların
 ortalamasıdır, bu tüm kümeler için yapılır o zaman sonuç matrisinin
-boyutu `K` küme `M` film için K x M olmalı.
+boyutu `K` küme `M` film için K x M olmalı. Her iki kod parçası
+alttadır,
 
 
 ```python
@@ -261,64 +261,11 @@ class KMeans2Job:
         
 ```
 
-
-```python
-process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans1Job(0,1))
-process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans2Job(0,1))
-```
-
-```text
-KMeans1Job tamam
-KMeans2Job tamam
-```
-
-```python
-ls (outdir)
-```
-
-```text
-b'total 2156
-   8 cluster-assignments-0.npz
-   8 cluster-assignments-1.npz
- 384 means-1.npz
- 140 movie_id_int.json
- 344 movie_title_int.json
-1272 ratings-json.csv
-```
-
-
-
-
-
-
-```python
-ca = np.load(outdir + "/cluster-assignments-1.npz")['arr_0']
-means = np.load(outdir + "/means-1.npz")['arr_0']
-print ('atamalar',ca.shape)
-print ('kume merkezleri',means.shape)
-```
-
-```text
-atamalar (610,)
-kume merkezleri (5, 9742)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+`KMeans1Job` kodunda ortalamalar için her küme için o küme altındaki
+kullanıcıların notları, yani vektörler toplanır, aynı sırada kaç not
+verilmiş olduğu takip edilir, ve toplam not not sayısına
+bölünur. Sıfır ile bölüm tehlikesi var muhakkak, bu durumda özel bir
+bölme çağrısı kullanacağız, `numpy.divide`, bir örnek altta,
 
 
 ```python
@@ -345,8 +292,48 @@ print (np.divide(s, N, out=np.zeros_like(N), where=N>0))
  [0. 1. 0.]]
 ```
 
+Kodu işletelim şimdi, şimdilik iki kod parçasını tek bir döngü içinde çağıracağız,
 
+```python
+process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans1Job(0,1))
+process(file_name = outdir + '/ratings-json.csv', N=1, hookobj = KMeans2Job(0,1))
+```
 
+```text
+KMeans1Job tamam
+KMeans2Job tamam
+```
+
+```python
+ls (outdir)
+```
+
+```text
+b'total 2156
+   8 cluster-assignments-0.npz
+   8 cluster-assignments-1.npz
+ 384 means-1.npz
+ 140 movie_id_int.json
+ 344 movie_title_int.json
+1272 ratings-json.csv
+```
+
+Görüldüğü gibi `-1.npz` ile biten dosyalar yaratıldı, bu dosyaların
+1'inci döngünün sonuçları. Boyutlara bakıyoruz,
+
+```python
+ca = np.load(outdir + "/cluster-assignments-1.npz")['arr_0']
+means = np.load(outdir + "/means-1.npz")['arr_0']
+print ('atamalar',ca.shape)
+print ('kume merkezleri',means.shape)
+```
+
+```text
+atamalar (610,)
+kume merkezleri (5, 9742)
+```
+
+### Kullanım
 
 
 ```
@@ -368,4 +355,6 @@ Kaynaklar
 [3] <a href="../../../algs/algs_080_kmeans/kmeans_kumeleme_metodu.html">K-Means Kümeleme Metodu</a> 
 
 [4] <a href="../../2022/11/paralel-veri-analizi-istatistik.html">Paralel Veri Analizi, İstatistik</a>
+
+
 

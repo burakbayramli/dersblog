@@ -417,10 +417,17 @@ kume merkezleri (5, 9742)
 
 <h3>Kullanım</h3>
 
-<p>Döngüyü birkaç kez işletmek küme sonuçlarını ilerletir, bunu ödev
-olarak okuyucu yapabilir, fakat bu mevcut sonuçlarda bile bazı
-gözlemler yapabiliriz. Bazı notlar verelim şimdi, ve bu seçimlere
-yakın olan kümeyi bulalım,</p>
+<p>Döngüyü birkaç kez işletelim şimdi,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">for</span> <span class="n">iter_no</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">fin1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">KMeans1Job</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">iter_no</span><span class="p">))</span>
+    <span class="n">process</span><span class="p">(</span><span class="n">file_name</span><span class="o">=</span><span class="n">fin1</span><span class="p">,</span> <span class="n">N</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hookobj</span> <span class="o">=</span> <span class="n">KMeans2Job</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">iter_no</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Bunu yapmak sonuçları iyileştirir. Kendi seçtiğimiz bazı filmlere
+notlar verelim şimdi, ve bu seçimlere yakın olan kümeyi bulalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">picks</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -430,10 +437,10 @@ yakın olan kümeyi bulalım,</p>
 <span class="s2">Dunkirk (2017),2</span>
 <span class="s2">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">lin</span><span class="o">,</span> <span class="nn">io</span>
+<span class="kn">import</span> <span class="nn">io</span>
 
 <span class="n">dt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/movie_title_int.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-
+<span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/means-9.npz&quot;</span><span class="p">)[</span><span class="s1">&#39;arr_0&#39;</span><span class="p">]</span>
 <span class="n">picks</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">(</span><span class="n">picks</span><span class="p">),</span><span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="s1">&#39;index&#39;</span><span class="p">)</span>
 <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">mov</span><span class="p">,</span><span class="n">rating</span> <span class="ow">in</span> <span class="n">picks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -459,7 +466,7 @@ mu?</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>Out[1]: array([2.25      , 3.5       , 3.27272727, 3.2       , 3.1       ])
+<pre><span></span><code>Out[1]: array([2.25      , 3.5       , 3.33333333, 3.2       , 2.875     ])
 </code></pre>
 </div>
 
@@ -469,7 +476,7 @@ mu?</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>Out[1]: array([3.82142857, 3.26315789, 3.60714286, 3.86956522, 3.54347826])
+<pre><span></span><code>Out[1]: array([3.8125    , 3.3125    , 3.58064516, 3.85714286, 3.5       ])
 </code></pre>
 </div>
 
@@ -485,7 +492,7 @@ mu?</p>
 
 <p>Uyumlu gözüküyor.</p>
 
-<p>Paralel işletme kısmını da ödev bırakıyoruz, burada eklenecek kodların
+<p>Paralel işletme kısmını ödev bırakıyoruz, burada eklenecek kodların
 genel yaklaşımından bahsedelim.</p>
 
 <p>Ortalama için her paralel işletici kullanıcıların bir kısmını işler,
@@ -497,7 +504,8 @@ ortalamaları alınır, o döngünün nihai ortalaması bu olur.</p>
 <p>Küme ataması daha bariz, çünkü zaten kullanıcı bazlı hesaplanan ve
 atanan bir değer, eh bizim paralel yaklaşım da kullanıcı bazlı
 işbölümü yaptığına göre burada tek yapılması gereken paralel atama
-bitince her süreçten gelen sonuçları birleştirmektir.</p>
+bitince her süreçten gelen sonuçları birleştirmektir, yani ucu uca
+getirip yapıştırmak (concatanate), bu kadar.</p>
 
 <p>Kaynaklar</p>
 

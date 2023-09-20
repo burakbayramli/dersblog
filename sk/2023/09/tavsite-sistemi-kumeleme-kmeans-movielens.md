@@ -370,11 +370,16 @@ kume merkezleri (5, 9742)
 
 ### Kullanım
 
-Döngüyü birkaç kez işletmek küme sonuçlarını ilerletir, bunu ödev
-olarak okuyucu yapabilir, fakat bu mevcut sonuçlarda bile bazı
-gözlemler yapabiliriz. Bazı notlar verelim şimdi, ve bu seçimlere
-yakın olan kümeyi bulalım,
+Döngüyü birkaç kez işletelim şimdi,
 
+```python
+for iter_no in range(1,10):
+    process(file_name=fin1, N=1, hookobj = KMeans1Job(0,iter_no))
+    process(file_name=fin1, N=1, hookobj = KMeans2Job(0,iter_no))
+```
+
+Bunu yapmak sonuçları iyileştirir. Kendi seçtiğimiz bazı filmlere
+notlar verelim şimdi, ve bu seçimlere yakın olan kümeyi bulalım,
 
 ```python
 picks = """
@@ -384,10 +389,10 @@ Swordfish (2001),5
 Dunkirk (2017),2
 """
 
-import os, numpy as np, numpy.linalg as lin, io
+import io
 
 dt = json.loads(open(outdir + "/movie_title_int.json").read())
-
+means = np.load(outdir + "/means-9.npz")['arr_0']
 picks = pd.read_csv(io.StringIO(picks),index_col=0).to_dict('index')
 vec = np.zeros(M)
 for mov,rating in picks.items():
@@ -410,7 +415,7 @@ means[:,dt['Swordfish (2001)']]
 ```
 
 ```text
-Out[1]: array([2.25      , 3.5       , 3.27272727, 3.2       , 3.1       ])
+Out[1]: array([2.25      , 3.5       , 3.33333333, 3.2       , 2.875     ])
 ```
 
 ```python
@@ -418,7 +423,7 @@ means[:,dt['Rock, The (1996)']]
 ```
 
 ```text
-Out[1]: array([3.82142857, 3.26315789, 3.60714286, 3.86956522, 3.54347826])
+Out[1]: array([3.8125    , 3.3125    , 3.58064516, 3.85714286, 3.5       ])
 ```
 
 ```python
@@ -431,7 +436,7 @@ Out[1]: array([3.375     , 3.75      , 5.        , 3.16666667, 3.        ])
 
 Uyumlu gözüküyor.
 
-Paralel işletme kısmını da ödev bırakıyoruz, burada eklenecek kodların
+Paralel işletme kısmını ödev bırakıyoruz, burada eklenecek kodların
 genel yaklaşımından bahsedelim.
 
 Ortalama için her paralel işletici kullanıcıların bir kısmını işler,
@@ -443,7 +448,8 @@ ortalamaları alınır, o döngünün nihai ortalaması bu olur.
 Küme ataması daha bariz, çünkü zaten kullanıcı bazlı hesaplanan ve
 atanan bir değer, eh bizim paralel yaklaşım da kullanıcı bazlı
 işbölümü yaptığına göre burada tek yapılması gereken paralel atama
-bitince her süreçten gelen sonuçları birleştirmektir.
+bitince her süreçten gelen sonuçları birleştirmektir, yani ucu uca
+getirip yapıştırmak (concatanate), bu kadar.
 
 Kaynaklar
 

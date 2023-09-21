@@ -9,19 +9,41 @@ ile dahil edin. Kod kullanimi oldukca basit, form uzerindeki tipi text
 olan input alaninin kimligini (id) alip, autocomplete koduna
 geciyoruz. Eger id "kimlik1" olsaydi, jQuery ile
 
-```
-$().ready(function() {
-   var liste = ...;
-   $("#kimlik1").setOptions({ max: 20 });
-   $("#kimlik1").focus().autocomplete(liste);
-});
+```html
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>jQuery UI Autocomplete - Default functionality</title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+  <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+  <script>
+  $( function() {
+    var availableTags = [
+      "ActionScript",
+      "AppleScript",
+      "Asp",
+      "BASIC"
+    ];
+    $( "#tags" ).autocomplete({
+      source: availableTags
+    });
+  } );
+  </script>
+</head>
+<body>
+ 
+<div class="ui-widget">
+  <label for="tags">Tags: </label>
+  <input id="tags">
+</div>
+  
+</body>
+</html>
 ```
 
 kullanabilirdik. Degisken "liste" bir Javascript dizinidir; JSON ile
 servis tarafindan alinmis olabilir, ya da yerel olarak gomulu
 (hardcoded) bir liste olabilir, vs.
-
-
-
-
 

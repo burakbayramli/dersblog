@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>jQuery</h1>
+
+<h3>jQuery ve Radyo Dugme Gruplari</h3>
+
+<p>Radyo dugmeleri icinden sadece biri isaretlenebilecek secenekler icin
+kullanilir. Fakat ayni sayfa uzerinde birden fazla grup istersek,
+mesela secmeli bir sinav sayfasi icin diyelim, o zaman radyo dugme
+gruplari kullaniriz. HTML ile:</p>
+
+<pre><code>&lt;div&gt;..&lt;p&gt;
+&lt;input type="radio" name="group0" value="1"/&gt;
+&lt;input type="radio" name="group0" value="2"/&gt;
+&lt;input type="radio" name="group0" value="3"/&gt;
+&lt;/p&gt;&lt;/div&gt;
+
+&lt;div&gt;...
+&lt;p&gt;
+&lt;input type="radio" name="group1" value="1"/&gt;
+&lt;input type="radio" name="group1" value="2"/&gt;
+&lt;input type="radio" name="group1" value="3"/&gt;
+&lt;/p&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>Gruplari birbirinden ayirmak icin "name" icin her grupta degisik
+olacak bir isim vermek yeterli.Peki jQuery ile bu secenekleri nasil
+okuruz? Soyle:</p>
+
+<pre><code>for (var i=0;i&lt;[GRUP SAYISI];i++){
+res = $("input[name='group"+i+"']:checked").val();...
+}
+</code></pre>
+
+<p>Dongu icinde tum gruplar gezilecek, ve her grubun secilmis dugmesinin
+degeri "res" icine atanacak.Deger atamasi nasil
+yapilir?</p>
+
+<pre><code>$('input[name=group1]:eq(2)').attr('checked', 'checked');
+</code></pre>
+
+<p>Bu kodla 'group1' dugme grubunde '2' no'lu dugmeyi seciyoruz.</p>
+
+<h3>jQuery ile Girdi Tamamlamak (Auto Complete)</h3>
+
+<p>Form uzerinde metin bazli alanlarda girilecek birkac harf sonrasi
+seceneklerin bize bir listede gosterilmesini istiyorsak (suggest,
+autocomplete), suradaki jQuery plug-in ise yarayacaktir. Indirip
+jquery.autocomplete.js ve jquery.autocomplete.css dosyalarini dizin
+yapiniza ekleyin ve HTML dosyalari icinden "link href" ve "script src"
+ile dahil edin. Kod kullanimi oldukca basit, form uzerindeki tipi text
+olan input alaninin kimligini (id) alip, autocomplete koduna
+geciyoruz. Eger id "kimlik1" olsaydi, jQuery ile</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;en&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width, initial-scale=1&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>jQuery UI Autocomplete - Default functionality<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">link</span> <span class="na">rel</span><span class="o">=</span><span class="s">&quot;stylesheet&quot;</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://code.jquery.com/jquery-3.6.0.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;https://code.jquery.com/ui/1.13.2/jquery-ui.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+  <span class="nx">$</span><span class="p">(</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">availableTags</span> <span class="o">=</span> <span class="p">[</span>
+      <span class="s2">&quot;ActionScript&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;AppleScript&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;Asp&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;BASIC&quot;</span>
+    <span class="p">];</span>
+    <span class="nx">$</span><span class="p">(</span> <span class="s2">&quot;#tags&quot;</span> <span class="p">).</span><span class="nx">autocomplete</span><span class="p">({</span>
+      <span class="nx">source</span><span class="o">:</span> <span class="nx">availableTags</span>
+    <span class="p">});</span>
+  <span class="p">}</span> <span class="p">);</span>
+  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;ui-widget&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">label</span> <span class="na">for</span><span class="o">=</span><span class="s">&quot;tags&quot;</span><span class="p">&gt;</span>Tags: <span class="p">&lt;/</span><span class="nt">label</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;tags&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>kullanabilirdik. Degisken "liste" bir Javascript dizinidir; JSON ile
+servis tarafindan alinmis olabilir, ya da yerel olarak gomulu
+(hardcoded) bir liste olabilir, vs.</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

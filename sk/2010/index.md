@@ -42,6 +42,8 @@
 
 [jQuery ile Girdi Tamamlamak (Auto Complete)](06/jquery-girdi-tamamlamak-auto-complete.html)
 
+[jQuery](06/jquery.html)
+
 [kdtree](06/kdtree.html)
 
 [Python -> C Dizin (Sequence) Gonderimi](06/python-c-dizin-sequence-gonderimi.html)

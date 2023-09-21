@@ -118,13 +118,13 @@
 
 [String Yapısı ve Python](08/string-python.html)
 
+[Javascript](09/javascript.html)
+
 [Javascript Yerine Tarayıcıda Python, PyScript](09/pyscript.html)
 
 [Statik Sitelerde Arama Motoru](09/statik-web-sitesi-dinamik-arama-full-text-search.html)
 
 [Tarayıcı ve Statik Dosya Servisi ile Uygulama](09/tarayici-statik-dosya-mimarisi.html)
 
-[Kumeleme (Clustering) ile Tavsiye Sistemi](09/tavsite-sistemi-kumeleme-kmeans-movielens.html)
-
-
+[Kümeleme (Clustering) ile Tavsiye Sistemi](09/tavsite-sistemi-kumeleme-kmeans-movielens.html)
 

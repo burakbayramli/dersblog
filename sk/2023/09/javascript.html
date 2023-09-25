@@ -38,6 +38,8 @@
         <h1></h1>
 <h1>Javascript</h1>
 
+<h3>Gelistirme Ortami</h3>
+
 <p><html>
   <head>
     <link rel="stylesheet" type="text/css" href="/static/main.css" media="screen" />
@@ -46,24 +48,90 @@
   <script>
   function foo() {
       document.getElementById("output").innerText = xmlHttp.responseText <br />
+  }</p>
+
+</script>
+
+  <body onload="foo()">
+    <div id="output">
+    </div>  
+  </body>
+
+</html>
+
+
+alert
+
+console.log(text)
+
+
+Cache
+
+You can click the settings icon on top right corner ... | More Tools |
+Developer Tools | Network | Disable cache (while DevTools is open)
+
+
+<h3>Temel Gorsel Islemler</h3>
+
+document.getElementById
+
+.innerText
+
+.innerHTML
+
+<h3>JSON</h3>
+
+var json1 =  '{ "key1": "val1", "key2": "value2" }';
+var json2 =  '[2,3,4,5]';
+
+json1 = JSON.parse(json1);
+json2 = JSON.parse(json2);
+
+console.log(json1['key1']);
+console.log(json2[2]);
+
+var l1 = [1,2,3,4];
+text = "";
+for (let i = 0; i < l1.length; i++) {
+  text += l1[i] + "<br>";
+}
+
+console.log(text);
+
+
+
+<h3>Cookie</h3>
+
+  <script>
+<pre><code>function add_movie() {
+  if (document.cookie.length &lt; 1) {
+     document.cookie = "[]"
   }
+  res = document.getElementById("myInput").value;
+  cook = JSON.parse(document.cookie);
+  cook.push(res);
+  alert(cook);
+  document.cookie = JSON.stringify(cook);
+}
+
+<p></code></pre>
 </script></p>
 
-<p><body onload="foo()">
-    <div id="output">
-    </div> <br />
-  </body></p>
+<form autocomplete="off">
+  <div class="autocomplete" style="width:300px;">
+    <input id="myInput" type="text" name="myCountry" placeholder="Movie">
+    <p><button onclick="add_movie()">Add</button></p>
+  </div>
+</form>
 
-<p></html></p>
-
-<p>alert</p>
-
-<p>console.log(text)</p>
+<h3>XMLHttpRequest</h3>
 
 <p>var xmlHttp = new XMLHttpRequest();
 xmlHttp.open( "GET", url = 'http://192.168.43.49:5000/static/recom/test2.csv', false ); 
 xmlHttp.send( null );
 document.getElementById("output").innerText = xmlHttp.responseText</p>
+
+<h3>Fetch Teknigi</h3>
 
 <p>function get_data() {</p>
 
@@ -84,9 +152,119 @@ document.getElementById("output").innerText = xmlHttp.responseText</p>
 
 <p>}</p>
 
+<h3>Girdi Tamamlamak (Autocomplete)</h3>
+
+<p><html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head> <br />
+<body></p>
+
+<h2>Autocomplete</h2>
+
+<p>Start typing:</p>
+
+<form autocomplete="off">
+  <div class="autocomplete" style="width:300px;">
+    <input id="myInput" type="text" name="myCountry" placeholder="Country">
+  </div>
+  <input type="submit">
+</form>
+
+<script src="test2.js"></script>
+
+<p></body>
+</html></p>
+
+<p>function autocomplete(inp) {</p>
+
+<pre><code>var arr = ['aa','bb','aaa']
+
+var currentFocus;
+inp.addEventListener("input", function(e) {
+var a, b, i, val = this.value;
+closeAllLists();
+if (!val) { return false;}
+currentFocus = -1;
+a = document.createElement("DIV");
+a.setAttribute("id", this.id + "autocomplete-list");
+a.setAttribute("class", "autocomplete-items");
+this.parentNode.appendChild(a);
+for (i = 0; i &lt; arr.length; i++) {
+        if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
+    b = document.createElement("DIV");
+    b.innerHTML = "&lt;strong&gt;" + arr[i].substr(0, val.length) + "&lt;/strong&gt;";
+    b.innerHTML += arr[i].substr(val.length);
+    b.innerHTML += "&lt;input type='hidden' value='" + arr[i] + "'&gt;";
+    b.addEventListener("click", function(e) {
+        inp.value = this.getElementsByTagName("input")[0].value;
+        closeAllLists();
+    });
+    a.appendChild(b);
+        }
+}
+});
+inp.addEventListener("keydown", function(e) {
+var x = document.getElementById(this.id + "autocomplete-list");
+if (x) x = x.getElementsByTagName("div");
+if (e.keyCode == 40) {
+        currentFocus++;
+        addActive(x);
+} else if (e.keyCode == 38) { //up
+        currentFocus--;
+        addActive(x);
+} else if (e.keyCode == 13) {
+        e.preventDefault();
+        if (currentFocus &gt; -1) {
+    if (x) x[currentFocus].click();
+        }
+}
+});
+function addActive(x) {
+if (!x) return false;
+removeActive(x);
+if (currentFocus &gt;= x.length) currentFocus = 0;
+if (currentFocus &lt; 0) currentFocus = (x.length - 1);
+x[currentFocus].classList.add("autocomplete-active");
+}
+function removeActive(x) {
+for (var i = 0; i &lt; x.length; i++) {
+    x[i].classList.remove("autocomplete-active");
+}
+}
+function closeAllLists(elmnt) {
+var x = document.getElementsByClassName("autocomplete-items");
+for (var i = 0; i &lt; x.length; i++) {
+    if (elmnt != x[i] &amp;&amp; elmnt != inp) {
+    x[i].parentNode.removeChild(x[i]);
+    }
+}
+}
+document.addEventListener("click", function (e) {
+closeAllLists(e.target);
+});
+</code></pre>
+
+<p>}</p>
+
+<p>autocomplete(document.getElementById("myInput"));</p>
+
+<h3>Node</h3>
+
+<pre><code>sudo apt install nodejs
+</code></pre>
+
+<pre><code>node code1.js
+</code></pre>
+
+<p>const fs = require('fs')</p>
+
+<p>file = fs.readFileSync(path1, 'utf8');
+const means = JSON.parse(file);</p>
+
 <p>Kaynaklar</p>
 
-<p>[1] https://www.w3schools.com/howto/howto<em>js</em>autocomplete.asp  </p>
+<p>[1] https://www.w3schools.com/howto/howto<em>js</em>autocomplete.asp</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

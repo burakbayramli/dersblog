@@ -41,6 +41,16 @@ document.getElementById
 
 .innerHTML
 
+### Strings
+
+let header = "Templates Literals";
+let tags = ["template literals", "javascript", "es6"];
+let html = `<h2>${header}</h2><ul>`;
+for (const x of tags) {
+  html += `<li>${x}</li>`;
+}
+html += `</ul>`;
+
 ### JSON
 
 
@@ -95,31 +105,6 @@ var xmlHttp = new XMLHttpRequest();
 xmlHttp.open( "GET", url = 'http://192.168.43.49:5000/static/recom/test2.csv', false ); 
 xmlHttp.send( null );
 document.getElementById("output").innerText = xmlHttp.responseText
-
-
-
-
-### Fetch Teknigi
-
-
-function get_data() {
-
-  url = "http://192.168.43.49:5000/static/recom/movie_title_int.json";
-  return fetch(url)
-         .then((response) => { if(response.ok)  return response.json(); })
-         .then((json) => {
-            const out = json['Jumanji (1995)']
-            return out;
-         });
-}
-       
-function foo() {
-
-  this.get_data().then((out) => {
-    document.getElementById("output").innerText = out
-   });
-
-}
 
 
 ### Girdi Tamamlamak (Autocomplete)

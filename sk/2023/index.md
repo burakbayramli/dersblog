@@ -128,3 +128,5 @@
 
 [Kümeleme (Clustering) ile Tavsiye Sistemi](09/tavsite-sistemi-kumeleme-kmeans-movielens.html)
 
+[Tavsiye Sistemi](09/tavsiye-sistemi-anons.html)
+

@@ -168,7 +168,71 @@ Cuda compilation tools, release 10.2, V10.2.89
 mümkün, alttaki video'da anlatılıyor, macera isteyenler bunu
 seçebilir, o zaman monitör vs bağlantısına gerek kalmaz.</p>
 
-<p>PyCuda</p>
+<h3>Uygulamalar</h3>
+
+<p>Komut Satırı</p>
+
+<p><code>ssh</code> ya da X programlarını kendi ekranımızda görmek için <code>ssh
+user@host -X</code> kullanabiliriz. Pür metin bazlı kullanım hızlıdır; daha
+da hızlandırmak için <code>sudo init 3</code> işletirsek [11] Nano'nun masaüstü
+idarecisini tamamen kapatmış oluruz, böylece makina sanki bir servis
+makinasıymış gibi işler. Eğer her başlangıçta masaüstü iptal olsun
+istiyorsak <code>sudo systemctl set-default multi-user.target</code> işletiriz,
+eski duruma dönmek için <code>sudo systemctl set-default graphical.target</code>.</p>
+
+<p>Pek cok program Unix uzerinde komut pur terminal bazli calisabilir,
+<code>emacs</code> bunlardan biri. <code>emacs -nw</code> ile text bazli editor
+baslatabiliriz.</p>
+
+<p>Video</p>
+
+<p>VLC programi ne yazik ki calismiyor. Video icin en iyi bulabildigim
+program Totem programi.
+Bağlanmak</p>
+
+<p>VNC</p>
+
+<p><code>ssh -X</code> ile bağlanınca Nano'da X programlarının çıktısını direk
+bağlandığımız diğer bir makinaya aktarabiliriz, fakat ne yazık ki
+OpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
+görüyorsunuz (alttaki paragrafta bir uyarı daha var), fakat monitörle
+Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNC kullanmak.</p>
+
+<p>Not: OpenGL içeren kodları arka plandaki çıktısını <code>ssh</code> üzerinden
+görmek istersek, ve <code>ssh -X</code> ile girdiysek grafik çağrıları
+patlar. Grafik çağrıların yok sayılmasını sağlamak için (ki böylece
+<code>cout</code> ile eklenen log mesajlarını görebilelim) pür <code>ssh</code> ile girmek
+lazım. </p>
+
+<p>VNC programlarını kullanmışızdır, bu programlar ile bir bilgisayarın
+tüm masaüstünü kendi makinamızda görebiliriz. Nano'da bunu yapmak için
+birkaç adımı uygulamak lazım, [6,7,8] kaynaklarına bakabiliriz. Yanlız
+dikkat, sadece [8] yöntemi vino servisi eğer monitör bağlı değilse
+işlemiyor (VNC'nin tüm faydaları sıfırlanmış oluyor yani). VNC düzgün
+işlemesi için Nano Unix kullanıcınızın otomatik olarak sistem
+başlayınca login olmasını sağlamak lazım, bkz [6,7]. Ubuntu <code>User
+Accounts</code> penceresinden <code>Automatic Login</code> aktif edilmeli. Tabii bu
+ekrana gelebilmek için de masaüstü idarecisi Unity olmalı, diğer
+idarecilerle buraya ulaşamadık. Eğer o değilse Unity'ye geçmek için
+monitorle bağlandığımız Nano Ubuntu'dan kullanıcı çıkışı (logout)
+yaparız, sonra tekrar giriş sırasında şifre girilen kutunun yanında
+ayak izi ikonu var, ona tıklayınca orada idareci seçenekleri çıkacak,
+burada Unity seçeriz, ve sisteme böyle gireriz. Servis tarafı böyle
+ayarlanır.</p>
+
+<p>Nihayet müşteri tarafı bağlanmasına geldik, dizüstü bilgisayarında
+benim Ubuntu 18'de <code>remmina</code> programı var, bu programa İP adresini
+verip bağlanma metotu olarak VNC seçersek, artık Nano'ya görsel olarak
+bağlanabiliriz.</p>
+
+<p>Bir diğer seçenek, aynen Raspberry Pi durumunda olduğu gibi, ufak bir
+elle tutulan HDMI monitör ve dongle'li klavye/mouse donanımı almak, bu
+ikisini direk Nano'ya bağlayınca her şeyi, hiç dizüstünden geçmeden,
+Nano üzerinde yapabiliriz. Nano tek başına oldukca kuvvetli bir
+bilgisayar, eh kendi Ubuntu'su var, tam tekmilli bir bilgisayar olarak
+kullanılabilir.</p>
+
+<h3>PyCuda</h3>
 
 <p>Alttaki komutları yine Nano komut satırında işletiyoruz,</p>
 
@@ -311,66 +375,6 @@ dosyasını indirdim,</p>
 </code></pre>
 
 <p>ile kurduk. </p>
-
-<h3>Bağlanmak</h3>
-
-<p>Komut Satırı</p>
-
-<p><code>ssh</code> ya da X programlarını kendi ekranımızda görmek için <code>ssh
-user@host -X</code> kullanabiliriz. Pür metin bazlı kullanım hızlıdır; daha
-da hızlandırmak için <code>sudo init 3</code> işletirsek [11] Nano'nun masaüstü
-idarecisini tamamen kapatmış oluruz, böylece makina sanki bir servis
-makinasıymış gibi işler. Eğer her başlangıçta masaüstü iptal olsun
-istiyorsak <code>sudo systemctl set-default multi-user.target</code> işletiriz,
-eski duruma dönmek için <code>sudo systemctl set-default graphical.target</code>.</p>
-
-<p>Pek cok program Unix uzerinde komut pur terminal bazli calisabilir,
-<code>emacs</code> bunlardan biri. <code>emacs -nw</code> ile text bazli editor
-baslatabiliriz.</p>
-
-<p>VNC</p>
-
-<p><code>ssh -X</code> ile bağlanınca Nano'da X programlarının çıktısını direk
-bağlandığımız diğer bir makinaya aktarabiliriz, fakat ne yazık ki
-OpenGL görüntüleri bu şekilde aktarılamıyor. Acaip hatalar
-görüyorsunuz (alttaki paragrafta bir uyarı daha var), fakat monitörle
-Nano'ya bağlanınca herşey iyi işliyor. Burada çözüm VNC kullanmak.</p>
-
-<p>Not: OpenGL içeren kodları arka plandaki çıktısını <code>ssh</code> üzerinden
-görmek istersek, ve <code>ssh -X</code> ile girdiysek grafik çağrıları
-patlar. Grafik çağrıların yok sayılmasını sağlamak için (ki böylece
-<code>cout</code> ile eklenen log mesajlarını görebilelim) pür <code>ssh</code> ile girmek
-lazım. </p>
-
-<p>VNC programlarını kullanmışızdır, bu programlar ile bir bilgisayarın
-tüm masaüstünü kendi makinamızda görebiliriz. Nano'da bunu yapmak için
-birkaç adımı uygulamak lazım, [6,7,8] kaynaklarına bakabiliriz. Yanlız
-dikkat, sadece [8] yöntemi vino servisi eğer monitör bağlı değilse
-işlemiyor (VNC'nin tüm faydaları sıfırlanmış oluyor yani). VNC düzgün
-işlemesi için Nano Unix kullanıcınızın otomatik olarak sistem
-başlayınca login olmasını sağlamak lazım, bkz [6,7]. Ubuntu <code>User
-Accounts</code> penceresinden <code>Automatic Login</code> aktif edilmeli. Tabii bu
-ekrana gelebilmek için de masaüstü idarecisi Unity olmalı, diğer
-idarecilerle buraya ulaşamadık. Eğer o değilse Unity'ye geçmek için
-monitorle bağlandığımız Nano Ubuntu'dan kullanıcı çıkışı (logout)
-yaparız, sonra tekrar giriş sırasında şifre girilen kutunun yanında
-ayak izi ikonu var, ona tıklayınca orada idareci seçenekleri çıkacak,
-burada Unity seçeriz, ve sisteme böyle gireriz. Servis tarafı böyle
-ayarlanır.</p>
-
-<p>Nihayet müşteri tarafı bağlanmasına geldik, dizüstü bilgisayarında
-benim Ubuntu 18'de <code>remmina</code> programı var, bu programa İP adresini
-verip bağlanma metotu olarak VNC seçersek, artık Nano'ya görsel olarak
-bağlanabiliriz.</p>
-
-<p>Bir diğer seçenek, aynen Raspberry Pi durumunda olduğu gibi, ufak bir
-elle tutulan HDMI monitör ve dongle'li klavye/mouse donanımı almak, bu
-ikisini direk Nano'ya bağlayınca her şeyi, hiç dizüstünden geçmeden,
-Nano üzerinde yapabiliriz. Nano tek başına oldukca kuvvetli bir
-bilgisayar, eh kendi Ubuntu'su var, tam tekmilli bir bilgisayar olarak
-kullanılabilir.</p>
-
-<h3>Ornekle</h3>
 
 <p>Örnek Cuda Kodları</p>
 

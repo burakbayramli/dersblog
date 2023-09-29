@@ -8,7 +8,7 @@ o HTML üzerinde değişiklik yapılabilir. Bir girdi kutusuna girilen bilgi
 yeni bir liste yaratılmasını sağlayabilir mesela, her türlü ekleme, çıkarma,
 düzeltme işlemi kullanıcı tarafında halledilebilir.
 
-### Gelistirme Ortami
+### Geliştirme Ortamı
 
 Javascript geliştirme her zaman bir uygulama servisi gerektirmeyebilir
 sonuçta bir HTML kodlanıyor ve bu kodlar tarayıcıda düz dosya olarak
@@ -44,15 +44,35 @@ Bu dosyada bir JS fonksiyonunu HTML içine gömdük, bu fonksiyon HTML
 yüklenir yüklenmez çağrılacaktır. Fonksiyon `foo` yu `body onload`
 çengeline takarak bunu yapmış olduk. 
 
+Eğer kod işletimi sırasında bazı değerleri log bırakmak açısından düz metin
+olarak basmak istiyorsak, bunu `console.log(..)` ile yapabiliriz. Çıktıları görmek
+için Chrome içinde üst sağ köşede tıklama yapıp `More tools` ve `Developer tools`
+seçimi yaparız. Bu araç tarayıcının sağ kenarında çıkar, üstteki tab içinde
+`Console` seçimi yaparak log çıktılarını görmek mümkündür. 
 
-alert
+Bir diğer mesaj basma yöntemi `alert` çağrısı, fakat bu çağrı bir
+diyalog kutusu yaratır, tıklama yapıp kapatmak gerektiği için her
+yerde kullanılmıyor.
 
-console.log(text)
+Kodlama direk sayfa içine Javascript gömerek, ya da ayrı bir `js`
+dosyasını sayfaya dahil edilerek yapabiliriz. İkinci yöntem kod
+idaresi açısından daha rahattır. HTML içine
 
-Cache
+```
+<script src="funcs.js"></script>
+```
 
-You can click the settings icon on top right corner ... | More Tools |
-Developer Tools | Network | Disable cache (while DevTools is open)
+koyunca `funcs.js` otomatik olarak dahil edilecektir.
+
+Fakat dikkat, eğer onbellekleme (cache) açık ise, ki olağan durum
+budur, js dosyasında yapılan değişiklikler HTML tarayıcıda tekrar
+yüklense bile etki etmeyebilir, o zaman `Developer tools`, `Network`
+ve oradan `Dışable cache` seçimi yapılırsa bu sayfa için onbelleklenme
+kapatılmış olur, kod her seferinde tekrar yüklenir. Tabi Web'de her
+kullanıcının bunu yapmasını bekleyemeyiz, o zaman yeni kod sürümü
+yapacaksak yeni kod için yeni bir js dosya ismi kullanmak bir çözüm
+olabilir.
+
 
 Node
 

@@ -44,16 +44,6 @@ Bu dosyada bir JS fonksiyonunu HTML içine gömdük, bu fonksiyon HTML
 yüklenir yüklenmez çağrılacaktır. Fonksiyon `foo` yu `body onload`
 çengeline takarak bunu yapmış olduk. 
 
-Eğer kod işletimi sırasında bazı değerleri log bırakmak açısından düz metin
-olarak basmak istiyorsak, bunu `console.log(..)` ile yapabiliriz. Çıktıları görmek
-için Chrome içinde üst sağ köşede tıklama yapıp `More tools` ve `Developer tools`
-seçimi yaparız. Bu araç tarayıcının sağ kenarında çıkar, üstteki tab içinde
-`Console` seçimi yaparak log çıktılarını görmek mümkündür. 
-
-Bir diğer mesaj basma yöntemi `alert` çağrısı, fakat bu çağrı bir
-diyalog kutusu yaratır, tıklama yapıp kapatmak gerektiği için her
-yerde kullanılmıyor.
-
 Kodlama direk sayfa içine Javascript gömerek, ya da ayrı bir `js`
 dosyasını sayfaya dahil edilerek yapabiliriz. İkinci yöntem kod
 idaresi açısından daha rahattır. HTML içine
@@ -64,33 +54,88 @@ idaresi açısından daha rahattır. HTML içine
 
 koyunca `funcs.js` otomatik olarak dahil edilecektir.
 
-Fakat dikkat, eğer onbellekleme (cache) açık ise, ki olağan durum
+Fakat dikkat, eğer önbellekleme (cache) açık ise, ki olağan durum
 budur, js dosyasında yapılan değişiklikler HTML tarayıcıda tekrar
 yüklense bile etki etmeyebilir, o zaman `Developer tools`, `Network`
-ve oradan `Dışable cache` seçimi yapılırsa bu sayfa için onbelleklenme
+ve oradan `Disable cache` seçimi yapılırsa bu sayfa için önbelleklenme
 kapatılmış olur, kod her seferinde tekrar yüklenir. Tabi Web'de her
 kullanıcının bunu yapmasını bekleyemeyiz, o zaman yeni kod sürümü
 yapacaksak yeni kod için yeni bir js dosya ismi kullanmak bir çözüm
 olabilir.
 
+Log
+
+Eğer kod işletimi sırasında bazı değerleri log bırakmak açısından düz metin
+olarak basmak istiyorsak, bunu `console.log(..)` ile yapabiliriz. Çıktıları görmek
+için Chrome içinde üst sağ köşede tıklama yapıp `More tools` ve `Developer tools`
+seçimi yaparız. Bu araç tarayıcının sağ kenarında çıkar, üstteki tab içinde
+`Console` seçimi yaparak log çıktılarını görmek mümkündür. 
+
+Bir diğer mesaj basma yöntemi `alert` çağrısı, fakat bu çağrı bir
+diyalog kutusu yaratır, tıklama yapıp kapatmak gerektiği için her
+yerde kullanılmıyor.
 
 Node
+
+Görsel kodlamada ilerlemeden önemli bir konuya değinelim, çünkü
+ileride JS kodlarını test etmek için faydalı olabilir. Node
+teknolojisi ünlü, bu servis tarafında Javascript anlamına geliyor. V8
+motoruyla beraber JS kodlarının işletimi hızlandı, neredeyse C++
+seviyesine geldi, ve bazıları da düşündü ki "ben motoru alıp servis
+tarafında koştururum, böylece hem görsel hem servis kodlarını aynı
+dilde yazabilmiş olurum". Node buradan çıktı. Biz şu anda servis
+tarafı kodlamasını işlemiyoruz, fakat pür istemci için olsa bile bazı
+Javascript kodları hala görsel olmayan mantık içerebilir, ve bu
+kodları ayırıp, node üzerinden test etmek mümkündür, böylece sürekli
+tarayıcıyı açmak gerekmez, komut satırından Javascript test
+edebiliriz.
+
+Kurmak için,
 
 ```
 sudo apt install nodejs
 ```
 
+Simdi mesela bir `test1.js` icinde
+
+```javascript
+function add(a, b){
+    return a+b;
+}
+
+console.log(add(3,4));
 ```
-node code1.js
+
+Bu kodu
+
 ```
+node test1.js
+```
+
+ile işletince `7` değeri basılacaktır. Dikkat edersek görsel kod içinde kullanılan
+aynı `console.log` çağrısı var, ve bu çağrı otomatik olarak komut satırı ekranına
+çıktıyı basacağını bildi.
+
+Node kodlarından dosya yüklemek bile mümkün,
 
 ```javascript
 const fs = require('fs')
 
-file = fs.readFileSync(path1, 'utf8');
-const means = JSON.parse(file);
+file = fs.readFileSync("/home/user1/dir/dosya.json", 'utf8');
+const res = JSON.parse(file);
 ```
 
+Tabii üstteki kod görsel kodlama için uygun değil çünkü tarayıcı içindeki
+Javascript yerel dizindeki dosyalara erisemez, İnternet üzerinden dosya
+okumak için `XMLHttpRequest` gerekir, o konuya geliyoruz, fakat test
+amacıyla üstteki çağrı hala faydalıdır. 
+
+### Çengeller
+
+Javascript fonksiyonları her türlü kullanıcı aksiyonu sayesinde çağrılabilir.
+Mesela bir ÜRL bağlantısına tıklanınca bir fonksiyon çağrılsın istiyorsak
+`a href='#' önclıck='funç2()`...`  diyebiliriz. Diğer pek çok çengel noktası,
+vardır bunlar bir HTML referansından öğrenilebilir.
 
 ### Temel Gorsel Islemler
 
@@ -100,7 +145,9 @@ document.getElementById
 
 .innerHTML
 
-### Strings
+### Temel Programlama Yapilari
+
+dict, liste, for, foreach, if, else, 
 
 ```javascript
 let header = "Templates Literals";
@@ -136,29 +183,22 @@ console.log(text);
 
 ### Cookie
 
-```html
-  <script>
 
-    function add_movie() {
-      if (document.cookie.length < 1) {
-         document.cookie = "[]"
-      }
-      res = document.getElementById("myInput").value;
-      cook = JSON.parse(document.cookie);
-      cook.push(res);
-      alert(cook);
-      document.cookie = JSON.stringify(cook);
-    }
-   
-</script>
 
-<form autocomplete="off">
-  <div class="autocomplete" style="width:300px;">
-    <input id="myInput" type="text" name="myCountry" placeholder="Movie">
-    <p><button onclick="add_movie()">Add</button></p>
-  </div>
-</form>
+
+
+### XMLHttpRequest
+
+Statik Dosya
+
+```javascript
+var xmlHttp = new XMLHttpRequest();
+xmlHttp.open( "GET", url = 'http://192.168.43.49:5000/static/recom/test2.csv', false ); 
+xmlHttp.send( null );
+document.getElementById("output").innerText = xmlHttp.responseText
 ```
+
+Ajax
 
 ```python
 from flask import Flask, url_for, jsonify, request
@@ -187,20 +227,6 @@ if __name__ == "__main__":
     app.run(host="localhost", port=8080)   
 ```
 
-
-
-### XMLHttpRequest
-
-Statik Dosya
-
-```javascript
-var xmlHttp = new XMLHttpRequest();
-xmlHttp.open( "GET", url = 'http://192.168.43.49:5000/static/recom/test2.csv', false ); 
-xmlHttp.send( null );
-document.getElementById("output").innerText = xmlHttp.responseText
-```
-
-Ajax
 
 ```html
 <html>

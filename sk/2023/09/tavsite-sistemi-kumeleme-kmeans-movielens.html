@@ -40,7 +40,7 @@
 
 <p>Tavsiye sistemlerini kodlamanın klasik yolu kullanıcı-ürün matrisinde
 (ki matris ögeleri beğeni notunu taşır) arama yapmaktır. Kendi
-beğenilerim bu matris dışında one benzer ama ayrı bir satır olarak
+beğenilerim bu matris dışında ona benzer ama ayrı bir satır olarak
 düşünülebilir, bu satırın tüm kullanıcılara olan mesafesini [2]
 hesaplarım, bana en yakın kullanıcıları bulurum, ve onların en
 beğendiği ürünleri tavsiye alırım.</p>
@@ -57,8 +57,8 @@ yeni kullanıcının bu merkezlere olan mesafesini hesaplarız sadece,
 onların beğenilerini tavsiye olarak veririz.</p>
 
 <p>Örnek veri [1] sitesinden, oradaki <code>ml-latest-small.zip</code> verisini
-alacağız.  Daha büyük bir veri seti <code>ml-25m.zip</code> içinde. Bazı
-değişimler hala lazım, veri setinde <code>ratings.csv</code> dosyası mesela şu
+alacağız.  Daha büyük bir veri seti <code>ml-25m.zip</code> içinde. Veride bazı
+önişlemler hala lazım, veri setinde <code>ratings.csv</code> dosyası mesela şu
 formatta,</p>
 
 <pre><code>userId,movieId,rating,timestamp
@@ -153,13 +153,13 @@ olacak. </p>
 <p>Ayrıca K-Means'te bir ilk fitilin yakılması, önyükleme (boostrap)
 gerekir, çünkü algoritma verili etiketler üzerinden küme merkezleri,
 verili küme merkezleri üzerinden etiket eşlemesi hesaplar, özyineli
-bir algoritmadir, tabii bu durumda bir yerden başlanılması gerekir,
-çoğu yaklaşım mesela küme merkezlerini rasgele atar. Bu örnekte küme
-merkezi yerine etiket ataması (hangi kullanıcı hangi kümeye ait)
-rasgele yapılırsa daha iyi, çünkü seyrek veri durumunda reel sayılar
-olan küme merkezlerini iyi seçememek mümkün. Belli bir aralıktaki tam
-sayı küme ataması daha basit, <code>cluster_ass</code> değişkeninde bu atama
-olacak.</p>
+bir algoritmadir, fakat ilk başlangıçta bu iki bilgide mevcut
+değildir, bu durumda bir yerden başlanılması gerekir, çoğu yaklaşım
+mesela küme merkezlerini rasgele atar. Bu örnekte küme merkezi yerine
+etiket ataması (hangi kullanıcı hangi kümeye ait) rasgele yapılırsa
+daha iyi, çünkü seyrek veri durumunda reel sayılar olan küme
+merkezlerini iyi seçememek mümkün. Belli bir aralıktaki tam sayı küme
+ataması daha basit, <code>cluster_ass</code> değişkeninde bu atama olacak.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -506,6 +506,13 @@ atanan bir değer, eh bizim paralel yaklaşım da kullanıcı bazlı
 işbölümü yaptığına göre burada tek yapılması gereken paralel atama
 bitince her süreçten gelen sonuçları birleştirmektir, yani ucu uca
 getirip yapıştırmak (concatanate), bu kadar.</p>
+
+<p>Not: K-Means algoritmasi nereden başlanırsa başlansın yakınsama
+yapabilen (convergent), bir optimal noktaya muhakkak ulaşır. Fakat bu
+optimal nokta yerel (local) optima olabilir, genel, kullanışlı optima
+olmayabilir. Bu durumda farklı yerlerden (birkaç farklı rasgele
+noktadan) algoritmaya birkaç kere işletip nereye ulaştığına bakmak bir
+yöntemdir.</p>
 
 <p>Kaynaklar</p>
 

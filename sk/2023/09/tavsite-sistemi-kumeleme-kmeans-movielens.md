@@ -2,7 +2,7 @@
 
 Tavsiye sistemlerini kodlamanın klasik yolu kullanıcı-ürün matrisinde
 (ki matris ögeleri beğeni notunu taşır) arama yapmaktır. Kendi
-beğenilerim bu matris dışında one benzer ama ayrı bir satır olarak
+beğenilerim bu matris dışında ona benzer ama ayrı bir satır olarak
 düşünülebilir, bu satırın tüm kullanıcılara olan mesafesini [2]
 hesaplarım, bana en yakın kullanıcıları bulurum, ve onların en
 beğendiği ürünleri tavsiye alırım.
@@ -19,8 +19,8 @@ yeni kullanıcının bu merkezlere olan mesafesini hesaplarız sadece,
 onların beğenilerini tavsiye olarak veririz.
 
 Örnek veri [1] sitesinden, oradaki `ml-latest-small.zip` verisini
-alacağız.  Daha büyük bir veri seti `ml-25m.zip` içinde. Bazı
-değişimler hala lazım, veri setinde `ratings.csv` dosyası mesela şu
+alacağız.  Daha büyük bir veri seti `ml-25m.zip` içinde. Veride bazı
+önişlemler hala lazım, veri setinde `ratings.csv` dosyası mesela şu
 formatta,
 
 ```
@@ -114,13 +114,13 @@ olacak.
 Ayrıca K-Means'te bir ilk fitilin yakılması, önyükleme (boostrap)
 gerekir, çünkü algoritma verili etiketler üzerinden küme merkezleri,
 verili küme merkezleri üzerinden etiket eşlemesi hesaplar, özyineli
-bir algoritmadir, tabii bu durumda bir yerden başlanılması gerekir,
-çoğu yaklaşım mesela küme merkezlerini rasgele atar. Bu örnekte küme
-merkezi yerine etiket ataması (hangi kullanıcı hangi kümeye ait)
-rasgele yapılırsa daha iyi, çünkü seyrek veri durumunda reel sayılar
-olan küme merkezlerini iyi seçememek mümkün. Belli bir aralıktaki tam
-sayı küme ataması daha basit, `cluster_ass` değişkeninde bu atama
-olacak.
+bir algoritmadir, fakat ilk başlangıçta bu iki bilgide mevcut
+değildir, bu durumda bir yerden başlanılması gerekir, çoğu yaklaşım
+mesela küme merkezlerini rasgele atar. Bu örnekte küme merkezi yerine
+etiket ataması (hangi kullanıcı hangi kümeye ait) rasgele yapılırsa
+daha iyi, çünkü seyrek veri durumunda reel sayılar olan küme
+merkezlerini iyi seçememek mümkün. Belli bir aralıktaki tam sayı küme
+ataması daha basit, `cluster_ass` değişkeninde bu atama olacak.
 
 ```python
 import os, numpy as np, json, pandas as pd
@@ -451,6 +451,13 @@ işbölümü yaptığına göre burada tek yapılması gereken paralel atama
 bitince her süreçten gelen sonuçları birleştirmektir, yani ucu uca
 getirip yapıştırmak (concatanate), bu kadar.
 
+Not: K-Means algoritmasi nereden başlanırsa başlansın yakınsama
+yapabilen (convergent), bir optimal noktaya muhakkak ulaşır. Fakat bu
+optimal nokta yerel (local) optima olabilir, genel, kullanışlı optima
+olmayabilir. Bu durumda farklı yerlerden (birkaç farklı rasgele
+noktadan) algoritmaya birkaç kere işletip nereye ulaştığına bakmak bir
+yöntemdir.
+
 Kaynaklar
 
 [1] https://grouplens.org/datasets/movielens/
@@ -460,4 +467,6 @@ Kaynaklar
 [3] <a href="../../../algs/algs_080_kmeans/kmeans_kumeleme_metodu.html">K-Means Kümeleme Metodu</a> 
 
 [4] <a href="../../2022/11/paralel-veri-analizi-istatistik.html">Paralel Veri Analizi, İstatistik</a>
+
+
 

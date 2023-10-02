@@ -451,11 +451,11 @@ bitince her süreçten gelen sonuçları birleştirmektir, yani ucu uca
 getirip yapıştırmak (concatanate), bu kadar.
 
 Not: K-Means algoritmasi nereden başlanırsa başlansın yakınsama
-yapabilen (convergent), bir optimal noktaya muhakkak ulaşır. Fakat bu
-optimal nokta yerel (local) optima olabilir, genel, kullanışlı optima
-olmayabilir. Bu durumda farklı yerlerden (birkaç farklı rasgele
-noktadan) algoritmaya birkaç kere işletip nereye ulaştığına bakmak bir
-yöntemdir.
+yapabilen (convergent) bir algoritmadır, bir optimal noktaya muhakkak
+ulaşır. Fakat bu optimal nokta yerel (local) optima olabilir, genel,
+kullanışlı optima olmayabilir. Bu durumda farklı yerlerden (birkaç
+farklı rasgele noktadan) algoritmaya birkaç kere işletip nereye
+ulaştığına bakmak bir ek yöntem olabilir.
 
 Kaynaklar
 

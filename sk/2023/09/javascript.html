@@ -390,15 +390,25 @@ ile çereze koydum. Çerez okurken</p>
 
 <p>Statik Dosya</p>
 
+<p>Uzaktaki bir JSON dosyasını alıp okumak istiyorsak,</p>
+
 <div class="codehilite">
-<pre><span></span><code><span class="kd">var</span> <span class="nx">xmlHttp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
-<span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="nx">url</span> <span class="o">=</span> <span class="s1">&#39;http://192.168.43.49:5000/static/recom/test2.csv&#39;</span><span class="p">,</span> <span class="kc">false</span> <span class="p">);</span> 
+<pre><span></span><code><span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://www.filanca.com/dir/file1.json&quot;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">xmlHttp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">XMLHttpRequest</span><span class="p">();</span>
+<span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">open</span><span class="p">(</span> <span class="s2">&quot;GET&quot;</span><span class="p">,</span> <span class="nx">url</span> <span class="o">=</span> <span class="nx">url</span><span class="p">,</span> <span class="kc">false</span> <span class="p">);</span> 
 <span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span> <span class="kc">null</span> <span class="p">);</span>
-<span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">).</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">responseText</span>
+<span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">responseText</span><span class="p">);</span>
+<span class="p">...</span>
 </code></pre>
 </div>
 
 <p>Ajax</p>
+
+<p>XMLHttpRequest ile Ajax çağrısı yapmak ta mümkündür. Diyelim ki bir
+taban yarattım ona bir servis arayüzü üzerinden iletişim vermek
+istiyorum, <code>get</code> ile geçilen anahtar değeri tabanda bakılıp
+döndürülecek, <code>set</code> ile verilen değer ve anahtar tabana yazılacak.
+Servis tarafını Flask ile yazalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
@@ -427,6 +437,8 @@ ile çereze koydum. Çerez okurken</p>
     <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">8080</span><span class="p">)</span>   
 </code></pre>
 </div>
+
+<p>HTML/Javascript şöyle olabilir,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -476,6 +488,8 @@ ile çereze koydum. Çerez okurken</p>
 
 <h3>Girdi Tamamlamak (Autocomplete)</h3>
 
+<p>HTML şöyle,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
 <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
@@ -500,6 +514,8 @@ ile çereze koydum. Çerez okurken</p>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre>
 </div>
+
+<p>Javascript kodlari <code>common.js</code> icinde</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kd">function</span> <span class="nx">autocomplete</span><span class="p">(</span><span class="nx">inp</span><span class="p">)</span> <span class="p">{</span>

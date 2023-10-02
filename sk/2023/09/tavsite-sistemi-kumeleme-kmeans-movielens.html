@@ -308,9 +308,9 @@ alttadır,</p>
 
 <p><code>KMeans1Job</code> kodunda ortalamalar için her küme için o küme altındaki
 kullanıcıların notları, yani vektörler toplanır, aynı sırada kaç not
-verilmiş olduğu takip edilir, ve toplam not not sayısına
-bölünur. Sıfır ile bölüm tehlikesi var muhakkak, bu durumda özel bir
-bölme çağrısı kullanacağız, <code>numpy.divide</code>, bir örnek altta,</p>
+verilmiş olduğu takip edilir, ve toplam not sayısına bölünür. Sıfır
+ile bölüm tehlikesi var muhakkak, bu durumda özel bir bölme çağrısı
+kullanacağız, <code>numpy.divide</code>, bir örnek altta,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">,))</span>
@@ -355,11 +355,11 @@ gerekir. Sıfır değeri tabii ki bizim seçimlerimiz bağlamında
 "seyredilmemiş" demektir. Fakat Öklitsel mesafe hesaplıyorsam, mesela
 benim üç boyutlu vektörüm x1,y1,z1 ile başka bir x2,y2,z2 vektör
 arasında bu hesap (x1-x2) karesi artı (y1-y2) karesi vs diye devam
-ediyor. Sonra bu toplamın kareköku alınıyor. Fakat eğer bende x filmi
+ediyor. Sonra bu toplamın karekökü alınıyor. Fakat eğer bende x filmi
 seyredilmemişse, yoğun matris bağlamında orada sıfır vardır, ama küme
-merkezine uzaklık hesaplıyorsam bu merkezin x2,y2,z2,.. öğelerinde
-muhakkak bir değer vardır. Bu mevcut değere uzaklık hesaplarsam
-bendeki sıfır değeri mevcut değeri beni uzakmışım gibi
+merkezine uzaklık hesaplıyorsam bu merkezin x2 (ve diğer
+y2,z2).. öğesinde muhakkak bir değer vardır. Bu mevcut değere uzaklık
+hesaplarsam bendeki sıfır değeri mevcut değeri beni uzakmışım gibi
 gösterecektir. Fakat belki o filmi seyretsem belli bir kümenin
 değerine yakın not verirdim, o zaman ona yakın gözükürdüm. Demek ki
 bendeki boş değerler mesafesel olarak problem çıkartabilir. İşte bu
@@ -493,13 +493,12 @@ mu?</p>
 <p>Uyumlu gözüküyor.</p>
 
 <p>Paralel işletme kısmını ödev bırakıyoruz, burada eklenecek kodların
-genel yaklaşımından bahsedelim.</p>
-
-<p>Ortalama için her paralel işletici kullanıcıların bir kısmını işler,
-ve o kısımla ilgili küme ortalamalarını hesaplar. İki tane süreç iki
-tane K x M ortalama yaratır, o zaman her döngüde paralel süreç
-ortalamaları bitince seri şekilde (paralel değil) bu ortalamaların
-ortalamaları alınır, o döngünün nihai ortalaması bu olur.</p>
+genel yaklaşımından bahsedelim. Ortalama için her paralel işletici
+kullanıcıların bir kısmını işler, ve o kısımla ilgili küme
+ortalamalarını hesaplar. İki tane süreç iki tane K x M ortalama
+yaratır, o zaman her döngüde paralel süreç ortalamaları bitince seri
+şekilde (paralel değil) bu ortalamaların ortalamaları alınır, o
+döngünün nihai ortalaması bu olur.</p>
 
 <p>Küme ataması daha bariz, çünkü zaten kullanıcı bazlı hesaplanan ve
 atanan bir değer, eh bizim paralel yaklaşım da kullanıcı bazlı

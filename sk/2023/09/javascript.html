@@ -207,14 +207,14 @@ fonksiyon içinden</p>
 
 <p>ile kutudaki değeri okuyabiliriz.</p>
 
-<h3>Temel Programlama Yapilari, Kapsam</h3>
+<h3>Temel Programlama Yapıları, Kapsam</h3>
 
-<p>Degisken tanimlarken onlarin kapsamini (scope) iyi bilmek lazim, yani
-degisken hangi bolgelerde tanimlidir, bir bolumde set edilince diger
-yerde gorunebilir mi, deger alimi yapilabilir mi?</p>
+<p>Değişken tanımlarken onların kapsamını (scope) iyi bilmek lazım, yani
+değişken hangi bölgelerde tanımlıdır, bir bölümde set edilince diğer
+yerde görünebilir mi, değer alımı yapılabilir mi?</p>
 
-<p>Javascript';in olagan davranisi eger degisken kapsami tanimlanmamissa, onun
-her yerde (global) kapsami olmasidir. Mesela</p>
+<p>Javascript'in olağan davranışı eğer değişken kapsamı tanımlanmamışsa,
+onun her yerde (global) kapsamı olmasıdır. Mesela</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kd">function</span> <span class="nx">func1</span><span class="p">()</span> <span class="p">{</span>
@@ -239,23 +239,102 @@ değer diğerinde görülebilmiştir.</p>
 
 <p>Diğer kapsamlar <code>let</code> ve <code>var</code> ile yapılır, bunlardan birincisi
 değişkeni içinde olduğu kapsama sınırlar, diğeri içinde olduğu
-fonksiyona sınırlar. Mesela üstteki kodda <code>funç1</code> içinde <code>let var2 = "bbbbbb"</code>
-tanımlasam ve <code>funç2</code> içinden erişmeye uğraşsam hata mesajı alırım. </p>
+fonksiyona sınırlar. Mesela üstteki kodda <code>func1</code> içinde <code>let var2 = "bbbbbb"</code>
+tanımlasam ve <code>func2</code> içinden erişmeye uğraşsam hata mesajı alırım. </p>
 
-<p>dict, liste, for, foreach, if, else, </p>
+<p>Tek anahtar hızlı erişilen sözlük (dictionary) yapısı pek çok diğer dilde
+olduğu gibi Javascript'te de mevcuttur. Yaratmak için direk kod içinde</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kd">let</span> <span class="nx">header</span> <span class="o">=</span> <span class="s2">&quot;Templates Literals&quot;</span><span class="p">;</span>
-<span class="kd">let</span> <span class="nx">tags</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;template literals&quot;</span><span class="p">,</span> <span class="s2">&quot;javascript&quot;</span><span class="p">,</span> <span class="s2">&quot;es6&quot;</span><span class="p">];</span>
-<span class="kd">let</span> <span class="nx">html</span> <span class="o">=</span> <span class="sb">`&lt;h2&gt;</span><span class="si">${</span><span class="nx">header</span><span class="si">}</span><span class="sb">&lt;/h2&gt;&lt;ul&gt;`</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kr">const</span> <span class="nx">x</span> <span class="k">of</span> <span class="nx">tags</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">html</span> <span class="o">+=</span> <span class="sb">`&lt;li&gt;</span><span class="si">${</span><span class="nx">x</span><span class="si">}</span><span class="sb">&lt;/li&gt;`</span><span class="p">;</span>
-<span class="p">}</span>
-<span class="nx">html</span> <span class="o">+=</span> <span class="sb">`&lt;/ul&gt;`</span><span class="p">;</span>
+<pre><span></span><code><span class="nx">d1</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;a&#39;</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span> <span class="s1">&#39;b&#39;</span><span class="o">:</span> <span class="mf">2</span><span class="p">}</span>
 </code></pre>
 </div>
 
+<p>diyebilirdim, erişmek için <code>console.log(d1['a']);</code> çağrısı 3 değerini basacaktır.
+Bir anahtar değer olarak bir liste, bir başka sözlük vs içerebilir. Eğer
+anahtarları gezmek (iterate) istersem,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">d1</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+<span class="p">})</span>
+</code></pre>
+</div>
+
+<p>Bu anahtarları kullanıp değerleri de alabilirdim muhakkak.</p>
+
+<p>Listeler benzer şekilde direk kod içinde yaratılabilir, bir tane yaratalım,
+ve eski usul C vari bir şekilde onu gezelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">l1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">4</span><span class="p">,</span> <span class="mf">6</span><span class="p">]</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span><span class="o">=</span><span class="mf">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">l1</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">l1</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Listeleri <code>forEach</code> mantigi ile de gezilebilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">l1</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">key</span><span class="p">);</span>
+<span class="p">})</span>
+</code></pre>
+</div>
+
+<p>Koşul komutları <code>if</code>, <code>else</code> tahmin edilebilecek şekilde ve C, Java da
+olduğu gibi işler.</p>
+
+<p>Metinler (String)</p>
+
+<p>Bir metin yaratmak icin yine direk kod icinde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">s1</span> <span class="o">=</span> <span class="s2">&quot;bir kelime&quot;</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>diyebilirdik. Kelimeye ekler yapmak arti isareti kullanabilir,</p>
+
+<pre><code>s2 = s1 + " arti bir sey";
+</code></pre>
+
+<p>gibi. Kelimeler üzerine Python'dan tanıdık <code>split</code> çağrısı var, mesela</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">s2</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">));</span>
+</code></pre>
+</div>
+
+<pre><code>[ 'bir', 'kelime', 'arti', 'bir', 'sey' ]
+</code></pre>
+
+<p>Şablon kullanımı için ilginç bir sözdizimi var, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">let</span> <span class="nx">header</span> <span class="o">=</span> <span class="s2">&quot;baslik&quot;</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">html</span> <span class="o">=</span> <span class="sb">`&lt;h2&gt;</span><span class="si">${</span><span class="nx">header</span><span class="si">}</span><span class="sb">&lt;/h2&gt;&lt;ul&gt;`</span><span class="p">;</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">html</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Bu kodlar ekrana <code>html</code> içindeki değerleri basar ve oradaki
+<code>${header}</code> için <code>header</code> değişkeninde görülen değer geçirilir. Yani
+<code>html</code> içindeki şablonda bir değer doldurması yapıyoruz, bu doldurma
+için geriye tek tırnak (backtick) içinde Javascript'teki değişken
+isimlerini kullanabiliyoruz.</p>
+
 <h3>JSON</h3>
+
+<p>Javascript'in dış dünya ile alışverisi en rahat JSON bazlı yapılır, bu
+sebeple kullanımını bilmek iyi olur. JSON sonuçta bir sözlük, ya da
+listenin metin halidir. Dışarıdan gelen JSON formatındaki metni Javascript'te
+görülebilen ona karşılık olan yapılara çevirmek için <code>JSON.parse</code> yapıları
+geri JSON'a çevirmek için <code>JSON.stringify</code> kullanılır. </p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kd">var</span> <span class="nx">json1</span> <span class="o">=</span>  <span class="s1">&#39;{ &quot;key1&quot;: &quot;val1&quot;, &quot;key2&quot;: &quot;value2&quot; }&#39;</span><span class="p">;</span>
@@ -266,18 +345,46 @@ tanımlasam ve <code>funç2</code> içinden erişmeye uğraşsam hata mesajı al
 
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">json1</span><span class="p">[</span><span class="s1">&#39;key1&#39;</span><span class="p">]);</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">json2</span><span class="p">[</span><span class="mf">2</span><span class="p">]);</span>
-
-<span class="kd">var</span> <span class="nx">l1</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1</span><span class="p">,</span><span class="mf">2</span><span class="p">,</span><span class="mf">3</span><span class="p">,</span><span class="mf">4</span><span class="p">];</span>
-<span class="nx">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
-<span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l1</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-  <span class="nx">text</span> <span class="o">+=</span> <span class="nx">l1</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&lt;br&gt;&quot;</span><span class="p">;</span>
-<span class="p">}</span>
-
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">text</span><span class="p">);</span>
 </code></pre>
 </div>
 
-<h3>Cookie</h3>
+<h3>Cerez (Cookie) Kullanimi</h3>
+
+<p>Cerezler sitelerin kullanici tarayisina yerel birakabildigi 'bilgi
+kirintilaridir', bilgi notlaridir. Cerezler sayesinde en basit statik
+HTML + Javascript bile kullanicinin o siteye ozel bazi bilgileri kendi
+bilgisayarinda depolamasini saglayabilir. Mesela bir kullanici favori
+filmlerini secer, Javascript o bilgiyi alip bir cereze koyar, sonraki
+ziyaretinde kullanici (bizim kod uzerinden) o cereze erisir, ve
+tarayicisinda o bilgiyi gorur. Boylece site tarafindan hatirlanmis
+olur, bu arayuz tasarimi acisindan iyi bir seydir. </p>
+
+<p>Javascript ile cerezlere erisim basittir, <code>document.cookie</code> ile tum
+cerezi alirim, ona bir deger yazdigimda cerezi degistirmis
+olurum. Tabi belli bir formati takip etmek iyidir, metin icinde ilk
+basta <code>isim=</code> tanimlarsak o cereze isim vermis oluyoruz. Sonda bir <code>;</code>
+sonrasi <code>expires=Wed, 05 Aug 2025 23:00:00 UTC</code> gibi bir tarih vermek
+o cereze bir zamanaşımı veriyor, bu zamandan sonra o cerez gecersiz
+oluyor, siliniyor.</p>
+
+<p>Benim bazı çerez kullanım kalıplarım şunlar, sitemi ziyaret edenlerin
+çerezini kontrol ederim, <code>document.cookie.length &lt; 1</code> ile, eğer çerez
+boş ise, hemen bir çerez atarım. Mesela film listesi için</p>
+
+<pre><code>empty = {"movies": {}}
+document.cookie = 'bb=' + JSON.stringify(empty) + '; expires=Wed, 05 Aug 2025 23:00:00 UTC';
+</code></pre>
+
+<p>Böylece film listesi için bir sözlük yarattım, onun JSON tanımını bir zamanaşımı
+ile çereze koydum. Çerez okurken</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">var</span> <span class="nx">elems</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">);</span>
+<span class="nx">movies</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">elems</span><span class="p">[</span><span class="mf">1</span><span class="p">]);</span>
+</code></pre>
+</div>
+
+<p>diyebilirim.</p>
 
 <h3>XMLHttpRequest</h3>
 

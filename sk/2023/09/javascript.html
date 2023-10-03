@@ -492,6 +492,49 @@ tabana yazılacak.  Servis tarafını Flask ile yazalım,</p>
 </code></pre>
 </div>
 
+<h3>Tarih Objeleri</h3>
+
+<p>Tarih objesi yaratmak için en rahat yöntem,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">dt1</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="s2">&quot;2022-03-25&quot;</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">dt1</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<pre><code>2022-03-25T00:00:00.000Z
+</code></pre>
+
+<p>Eğer yıl, ay, gün ayrı ayrı geçmek istersek biraz takla lazım, ay
+sıfır indisli, gün değil, alttaki gibi oluyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">dt1</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="mf">2022</span><span class="p">,</span> <span class="mf">3</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="mf">25</span><span class="o">+</span><span class="mf">1</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Bir tarihe gün ekleyip yeni tarih elde etmek için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">Date</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">addDays</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">days</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">date</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">valueOf</span><span class="p">());</span>
+    <span class="nx">date</span><span class="p">.</span><span class="nx">setDate</span><span class="p">(</span><span class="nx">date</span><span class="p">.</span><span class="nx">getDate</span><span class="p">()</span> <span class="o">+</span> <span class="nx">days</span><span class="p">);</span>
+    <span class="k">return</span> <span class="nx">date</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nx">dt2</span> <span class="o">=</span> <span class="nx">dt1</span><span class="p">.</span><span class="nx">addDays</span><span class="p">(</span><span class="mf">20</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>İki tarih arası gün farkı</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">diff</span> <span class="o">=</span> <span class="nx">dt2</span><span class="p">.</span><span class="nx">getTime</span><span class="p">()</span> <span class="o">-</span> <span class="nx">dt1</span><span class="p">.</span><span class="nx">getTime</span><span class="p">();</span>
+
+<span class="nx">step</span> <span class="o">=</span> <span class="nx">diff</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1000</span><span class="o">*</span><span class="mf">60</span><span class="o">*</span><span class="mf">60</span><span class="o">*</span><span class="mf">24</span><span class="p">);</span>
+</code></pre>
+</div>
+
 <h3>Girdi Tamamlamak (Autocomplete)</h3>
 
 <p>Javascript'in kabiliyetlerini göstermek açısından alttaki kod faydalı olur,

@@ -444,6 +444,45 @@ HTML/Javascript şöyle olabilir,
 </html>
 ```
 
+### Tarih Objeleri
+
+Tarih objesi yaratmak için en rahat yöntem,
+
+```javascript
+dt1 = new Date("2022-03-25");
+console.log(dt1);
+```
+
+```
+2022-03-25T00:00:00.000Z
+```
+
+Eğer yıl, ay, gün ayrı ayrı geçmek istersek biraz takla lazım, ay
+sıfır indisli, gün değil, alttaki gibi oluyor,
+
+```javascript
+dt1 = new Date(2022, 3-1, 25+1);
+```
+
+Bir tarihe gün ekleyip yeni tarih elde etmek için
+
+```javascript
+Date.prototype.addDays = function(days) {
+    var date = new Date(this.valueOf());
+    date.setDate(date.getDate() + days);
+    return date;
+}
+
+dt2 = dt1.addDays(20);
+```
+
+İki tarih arası gün farkı
+
+```javascript
+diff = dt2.getTime() - dt1.getTime();
+
+step = diff / (1000*60*60*24);
+```
 
 ### Girdi Tamamlamak (Autocomplete)
 

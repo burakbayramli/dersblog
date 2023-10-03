@@ -38,22 +38,23 @@
         <h1></h1>
 <h1>Javascript</h1>
 
-<p>Tamamen istemci, tarayıcı üzerinde işleyen kodlara ihtiyaç varsa Javascript
-kodlaması yaparız. Javascript kodları HTML içine bile gömülebilir, ve
-bu kodlar içinde olduğu HTML öğelerine erisebilirler. Bu sayede Uygulama/Web
-servisi bağlanana serviste üretilmiş bir HTML göndermiş olsa bile hala
-o HTML üzerinde değişiklik yapılabilir. Bir girdi kutusuna girilen bilgi
-yeni bir liste yaratılmasını sağlayabilir mesela, her türlü ekleme, çıkarma,
-düzeltme işlemi kullanıcı tarafında halledilebilir.</p>
+<p>Tamamen istemci, tarayıcı üzerinde işleyen kodlara ihtiyaç varsa
+Javascript kodlaması yaparız. Javascript kodları HTML içine bile
+gömülebilir, ve bu kodlar içinde olduğu HTML öğelerine
+erisebilirler. Bu sayede servis tarafında üretilmiş bir HTML
+gönderilmiş olsa bile hala o HTML üzerinde değişiklik yapılabilir. Bir
+girdi kutusuna girilen bilgi yeni bir liste yaratılmasını sağlayabilir
+mesela, her türlü ekleme, çıkarma, düzeltme işlemi kullanıcı tarafında
+halledilebilir. </p>
 
 <h3>Geliştirme Ortamı</h3>
 
 <p>Javascript geliştirme her zaman bir uygulama servisi gerektirmeyebilir
 sonuçta bir HTML kodlanıyor ve bu kodlar tarayıcıda düz dosya olarak
-yüklenebilirler, fakat daha ileri özellikler için gene de bir servis
-başlatılması iyi olur. Python bilenler için en iyisi Flask, bir <code>static</code>
-dizini yaratılabilir, ve düz HTML dosyaları buraya koyulur, ve
-<code>http://localhost:8080/static/dosya.html</code> şeklinde erişilebilir.</p>
+yüklenebilirler, fakat biz gene de bir tane başlatalım. Python
+bilenler için en iyisi Flask, bir <code>static</code> dizini yaratılabilir, ve
+düz HTML dosyaları buraya koyulur, ve <code>http://localhost:8080/static/dosya.html</code>
+şeklinde erişilebilir.</p>
 
 <p>Javascript ne zaman, nerede yüklenir, nasıl çağrılır? </p>
 
@@ -82,11 +83,11 @@ dizini yaratılabilir, ve düz HTML dosyaları buraya koyulur, ve
 yüklenir yüklenmez çağrılacaktır. Fonksiyon <code>foo</code> yu <code>body onload</code>
 çengeline takarak bunu yapmış olduk. Çengel derken İngilizce hook
 kavramına atıf yapılıyor, yani beni arama ben seni ararım tekniği, biz
-çağrılmasını istediğimiz fonksiyonu altyapıya veriyoruz, onun ne zaman
-çağrılacağını biz kontrol etmiyoruz, yeri gelince altyapı onu
-çağırıyor.</p>
+çağrılmasını istediğimiz fonksiyonu altyapıya veriyoruz (çengele
+takıyoruz), onun ne zaman çağrılacağını biz kontrol etmiyoruz, yeri
+gelince altyapı onu çağırıyor.</p>
 
-<p>Kodlamayi direk sayfa içine Javascript gömerek, ya da ayrı bir <code>js</code>
+<p>Kodlamayı direk sayfa içine Javascript gömerek, ya da ayrı bir <code>js</code>
 dosyasını sayfaya dahil ederek yapabiliriz. İkinci yöntem kod
 idaresi açısından daha rahattır. HTML içine</p>
 
@@ -405,11 +406,15 @@ ile çereze koydum. Çerez okurken</p>
 
 <p>Ajax</p>
 
-<p>XMLHttpRequest ile Ajax çağrısı yapmak ta mümkündür. Diyelim ki bir
-taban yarattım ona bir servis arayüzü üzerinden iletişim vermek
-istiyorum, <code>get</code> ile geçilen anahtar değeri tabanda bakılıp
-döndürülecek, <code>set</code> ile verilen değer ve anahtar tabana yazılacak.
-Servis tarafını Flask ile yazalım,</p>
+<p>XMLHttpRequest ile Ajax çağrısı yapmak ta mümkündür. İlk kez bu
+noktada bir pür uygulama servisi özelliği kullanacağız yani işlem
+kodlarının servis tarafında olduğu türden, üç katmanlı (three-tier)
+mimarinin orta katmanının gerekli olduğu yapı.</p>
+
+<p>Diyelim ki bir taban yarattım (üçüncü katman) ona bir servis arayüzü
+üzerinden iletişim vermek istiyorum, <code>get</code> ile geçilen anahtar değeri
+tabanda bakılıp döndürülecek, <code>set</code> ile verilen değer ve anahtar
+tabana yazılacak.  Servis tarafını Flask ile yazalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">url_for</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>

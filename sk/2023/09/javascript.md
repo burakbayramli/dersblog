@@ -1,21 +1,22 @@
 # Javascript
 
-Tamamen istemci, tarayıcı üzerinde işleyen kodlara ihtiyaç varsa Javascript
-kodlaması yaparız. Javascript kodları HTML içine bile gömülebilir, ve
-bu kodlar içinde olduğu HTML öğelerine erisebilirler. Bu sayede Uygulama/Web
-servisi bağlanana serviste üretilmiş bir HTML göndermiş olsa bile hala
-o HTML üzerinde değişiklik yapılabilir. Bir girdi kutusuna girilen bilgi
-yeni bir liste yaratılmasını sağlayabilir mesela, her türlü ekleme, çıkarma,
-düzeltme işlemi kullanıcı tarafında halledilebilir.
+Tamamen istemci, tarayıcı üzerinde işleyen kodlara ihtiyaç varsa
+Javascript kodlaması yaparız. Javascript kodları HTML içine bile
+gömülebilir, ve bu kodlar içinde olduğu HTML öğelerine
+erisebilirler. Bu sayede servis tarafında üretilmiş bir HTML
+gönderilmiş olsa bile hala o HTML üzerinde değişiklik yapılabilir. Bir
+girdi kutusuna girilen bilgi yeni bir liste yaratılmasını sağlayabilir
+mesela, her türlü ekleme, çıkarma, düzeltme işlemi kullanıcı tarafında
+halledilebilir. 
 
 ### Geliştirme Ortamı
 
 Javascript geliştirme her zaman bir uygulama servisi gerektirmeyebilir
 sonuçta bir HTML kodlanıyor ve bu kodlar tarayıcıda düz dosya olarak
-yüklenebilirler, fakat daha ileri özellikler için gene de bir servis
-başlatılması iyi olur. Python bilenler için en iyisi Flask, bir `static`
-dizini yaratılabilir, ve düz HTML dosyaları buraya koyulur, ve
-`http://localhost:8080/static/dosya.html` şeklinde erişilebilir.
+yüklenebilirler, fakat biz gene de bir tane başlatalım. Python
+bilenler için en iyisi Flask, bir `static` dizini yaratılabilir, ve
+düz HTML dosyaları buraya koyulur, ve `http://localhost:8080/static/dosya.html`
+şeklinde erişilebilir.
 
 Javascript ne zaman, nerede yüklenir, nasıl çağrılır? 
 
@@ -43,11 +44,11 @@ Bu dosyada bir JS fonksiyonunu HTML içine gömdük, bu fonksiyon HTML
 yüklenir yüklenmez çağrılacaktır. Fonksiyon `foo` yu `body onload`
 çengeline takarak bunu yapmış olduk. Çengel derken İngilizce hook
 kavramına atıf yapılıyor, yani beni arama ben seni ararım tekniği, biz
-çağrılmasını istediğimiz fonksiyonu altyapıya veriyoruz, onun ne zaman
-çağrılacağını biz kontrol etmiyoruz, yeri gelince altyapı onu
-çağırıyor.
+çağrılmasını istediğimiz fonksiyonu altyapıya veriyoruz (çengele
+takıyoruz), onun ne zaman çağrılacağını biz kontrol etmiyoruz, yeri
+gelince altyapı onu çağırıyor.
 
-Kodlamayi direk sayfa içine Javascript gömerek, ya da ayrı bir `js`
+Kodlamayı direk sayfa içine Javascript gömerek, ya da ayrı bir `js`
 dosyasını sayfaya dahil ederek yapabiliriz. İkinci yöntem kod
 idaresi açısından daha rahattır. HTML içine
 
@@ -359,11 +360,15 @@ var res = JSON.parse(xmlHttp.responseText);
 
 Ajax
 
-XMLHttpRequest ile Ajax çağrısı yapmak ta mümkündür. Diyelim ki bir
-taban yarattım ona bir servis arayüzü üzerinden iletişim vermek
-istiyorum, `get` ile geçilen anahtar değeri tabanda bakılıp
-döndürülecek, `set` ile verilen değer ve anahtar tabana yazılacak.
-Servis tarafını Flask ile yazalım,
+XMLHttpRequest ile Ajax çağrısı yapmak ta mümkündür. İlk kez bu
+noktada bir pür uygulama servisi özelliği kullanacağız yani işlem
+kodlarının servis tarafında olduğu türden, üç katmanlı (three-tier)
+mimarinin orta katmanının gerekli olduğu yapı.
+
+Diyelim ki bir taban yarattım (üçüncü katman) ona bir servis arayüzü
+üzerinden iletişim vermek istiyorum, `get` ile geçilen anahtar değeri
+tabanda bakılıp döndürülecek, `set` ile verilen değer ve anahtar
+tabana yazılacak.  Servis tarafını Flask ile yazalım,
 
 ```python
 from flask import Flask, url_for, jsonify, request

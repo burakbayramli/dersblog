@@ -66,7 +66,7 @@ dizini yaratılabilir, ve düz HTML dosyaları buraya koyulur, ve
   <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>  
   <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
     <span class="kd">function</span> <span class="nx">foo</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">).</span><span class="nx">innerText</span> <span class="o">=</span> <span class="nx">xmlHttp</span><span class="p">.</span><span class="nx">responseText</span>      
+        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">).</span><span class="nx">innerText</span> <span class="o">=</span> <span class="s2">&quot;vs vs vs&quot;</span><span class="p">;</span>
     <span class="p">}</span>
   <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>    
   <span class="p">&lt;</span><span class="nt">body</span> <span class="na">onload</span><span class="o">=</span><span class="s">&quot;foo()&quot;</span><span class="p">&gt;</span>
@@ -86,22 +86,21 @@ kavramına atıf yapılıyor, yani beni arama ben seni ararım tekniği, biz
 çağrılacağını biz kontrol etmiyoruz, yeri gelince altyapı onu
 çağırıyor.</p>
 
-<p>Kodlama direk sayfa içine Javascript gömerek, ya da ayrı bir <code>js</code>
-dosyasını sayfaya dahil edilerek yapabiliriz. İkinci yöntem kod
+<p>Kodlamayi direk sayfa içine Javascript gömerek, ya da ayrı bir <code>js</code>
+dosyasını sayfaya dahil ederek yapabiliriz. İkinci yöntem kod
 idaresi açısından daha rahattır. HTML içine</p>
 
 <pre><code>&lt;script src="funcs.js"&gt;&lt;/script&gt;
 </code></pre>
 
-<p>koyunca <code>funcs.js</code> otomatik olarak dahil edilecektir.</p>
-
-<p>Fakat dikkat, eğer önbellekleme (cache) açık ise, ki olağan durum
-budur, js dosyasında yapılan değişiklikler HTML tarayıcıda tekrar
-yüklense bile etki etmeyebilir, o zaman <code>Developer tools</code>, <code>Network</code>
-ve oradan <code>Disable cache</code> seçimi yapılırsa önbelleklenme kapatılmış
-olur, kod her seferinde tekrar yüklenir. Tabi Web'de her kullanıcının
-bunu yapmasını bekleyemeyiz, o zaman yeni kod sürümü yapacaksak yeni
-kod için yeni bir js dosya ismi kullanmak bir çözüm olabilir.</p>
+<p>koyunca <code>funcs.js</code> otomatik olarak dahil edilecektir.  Fakat dikkat,
+eğer tarayıcı önbelleklemesi (cache) açık ise, ki olağan durum budur,
+js dosyasında yapılan değişiklikler HTML tarayıcıda tekrar yüklense
+bile etki etmeyebilir, o zaman <code>Developer tools</code>, <code>Network</code> ve oradan
+<code>Disable cache</code> seçimi yapılırsa önbelleklenme kapatılmış olur, kod
+her seferinde tekrar yüklenir. Tabi Web'de her kullanıcının bunu
+yapmasını bekleyemeyiz, o zaman yeni kod sürümü yapacaksak yeni kod
+için yeni bir js dosya ismi kullanmak bir çözüm olabilir.</p>
 
 <p>Log</p>
 
@@ -179,9 +178,9 @@ vardır bunlar bir HTML referansından öğrenilebilir.</p>
 
 <h3>Temel Görsel İşlemler</h3>
 
-<p>Javascript icinden HTML sayfasinin gorsel ogelerine erisilebilir demistik,
-bu ogelerden bilgi alinabilir, ve geri bilgi yazilip goruntude degisim
-yapilabilir.</p>
+<p>Javascript içinden HTML sayfasının görsel öğelerine erişilebilir
+demiştik, bu öğelerden bilgi alınabilir, ve geri bilgi yazılıp
+görüntüde değişim yapılabilir.</p>
 
 <p>HTML içinde <code>id=".."</code> ile işaretlenen etiketlerin, mesela <code>&lt;div&gt;</code>
 etiketi olsun, ana objesini kimlik değeri geçerek
@@ -197,7 +196,7 @@ HTML de geçmek mümkündür, bunun için <code>.innerHTML</code>.</p>
 &lt;/form&gt;
 </code></pre>
 
-<p>Düğmeye basılınca bir <code>funç2()</code> Javascript çağrısı yapılmasını sağlarız, bu
+<p>Düğmeye basılınca bir <code>func2()</code> Javascript çağrısı yapılmasını sağlarız, bu
 fonksiyon içinden</p>
 
 <div class="codehilite">
@@ -234,8 +233,9 @@ onun her yerde (global) kapsamı olmasıdır. Mesela</p>
 </code></pre>
 </div>
 
-<p>script'i işleyince <code>var1</code> değeri basılır. Bir fonksiyon içinde tanımlanan
-değer diğerinde görülebilmiştir.</p>
+<p>script'i işleyince <code>func1</code> içinde set edilen <code>var1</code> değeri
+basılır. Bir fonksiyon içinde tanımlanan değer diğerinde
+görülebilmiştir.</p>
 
 <p>Diğer kapsamlar <code>let</code> ve <code>var</code> ile yapılır, bunlardan birincisi
 değişkeni içinde olduğu kapsama sınırlar, diğeri içinde olduğu
@@ -250,8 +250,8 @@ olduğu gibi Javascript'te de mevcuttur. Yaratmak için direk kod içinde</p>
 </code></pre>
 </div>
 
-<p>diyebilirdim, erişmek için <code>console.log(d1['a']);</code> çağrısı 3 değerini basacaktır.
-Bir anahtar değer olarak bir liste, bir başka sözlük vs içerebilir. Eğer
+<p>diyebilirdim, erişmek için <code>d1['a']</code> çağrısı 3 değerini verir. Sözlük
+değeri olarak bir liste, bir başka sözlük te kullanabilirdik. Eğer
 anahtarları gezmek (iterate) istersem,</p>
 
 <div class="codehilite">
@@ -275,7 +275,7 @@ ve eski usul C vari bir şekilde onu gezelim,</p>
 </code></pre>
 </div>
 
-<p>Listeleri <code>forEach</code> mantigi ile de gezilebilir,</p>
+<p>Listeler de <code>forEach</code> tekniği ile gezilebilir,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nx">l1</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
@@ -333,8 +333,8 @@ isimlerini kullanabiliyoruz.</p>
 <p>Javascript'in dış dünya ile alışverisi en rahat JSON bazlı yapılır, bu
 sebeple kullanımını bilmek iyi olur. JSON sonuçta bir sözlük, ya da
 listenin metin halidir. Dışarıdan gelen JSON formatındaki metni Javascript'te
-görülebilen ona karşılık olan yapılara çevirmek için <code>JSON.parse</code> yapıları
-geri JSON'a çevirmek için <code>JSON.stringify</code> kullanılır. </p>
+görülebilen ona karşılık olan yapılara çevirmek için <code>JSON.parse</code>, yapıları
+geri JSON metnine çevirmek için <code>JSON.stringify</code> kullanılır. </p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kd">var</span> <span class="nx">json1</span> <span class="o">=</span>  <span class="s1">&#39;{ &quot;key1&quot;: &quot;val1&quot;, &quot;key2&quot;: &quot;value2&quot; }&#39;</span><span class="p">;</span>
@@ -348,23 +348,24 @@ geri JSON'a çevirmek için <code>JSON.stringify</code> kullanılır. </p>
 </code></pre>
 </div>
 
-<h3>Cerez (Cookie) Kullanimi</h3>
+<h3>Çerez (Cookie) Kullanımı</h3>
 
-<p>Cerezler sitelerin kullanici tarayisina yerel birakabildigi 'bilgi
-kirintilaridir', bilgi notlaridir. Cerezler sayesinde en basit statik
-HTML + Javascript bile kullanicinin o siteye ozel bazi bilgileri kendi
-bilgisayarinda depolamasini saglayabilir. Mesela bir kullanici favori
-filmlerini secer, Javascript o bilgiyi alip bir cereze koyar, sonraki
-ziyaretinde kullanici (bizim kod uzerinden) o cereze erisir, ve
-tarayicisinda o bilgiyi gorur. Boylece site tarafindan hatirlanmis
-olur, bu arayuz tasarimi acisindan iyi bir seydir. </p>
+<p>Çerezler sitelerin kullanıcı tarayışına yerel bırakabildiği 'bilgi
+kırıntılarıdır', bilgi notlarıdır. Çerezler sayesinde en basit statik
+HTML + Javascript bile kullanıcının o siteye özel bazı bilgileri kendi
+bilgisayarında depolamasını sağlayabilir. Mesela bir kullanıcı favori
+filmlerini seçer, Javascript o bilgiyi alıp bir çereze koyar, sonraki
+ziyaretinde kullanıcı (bizim kod üzerinden) o çereze erişir, ve
+tarayıcısında o bilgiyi görür. Böylece site tarafından hatırlanmış
+olur, bu arayüz tasarımı açısından iyi bir şeydir. </p>
 
-<p>Javascript ile cerezlere erisim basittir, <code>document.cookie</code> ile tum
-cerezi alirim, ona bir deger yazdigimda cerezi degistirmis
-olurum. Tabi belli bir formati takip etmek iyidir, metin icinde ilk
-basta <code>isim=</code> tanimlarsak o cereze isim vermis oluyoruz. Sonda bir <code>;</code>
-sonrasi <code>expires=Wed, 05 Aug 2025 23:00:00 UTC</code> gibi bir tarih vermek
-o cereze bir zamanaşımı veriyor, bu zamandan sonra o cerez gecersiz
+<p>Javascript ile çerezlere erişim basittir, <code>document.cookie</code> ile
+kodladığım, kullanıcının ziyaret etmekte olduğu tüm çerezleri
+alabilirim, bu degiskene bir değer yazdığımda çerezi değiştirmiş
+olurum. Tabi belli bir formatı takip etmek iyidir, metin içinde ilk
+başta <code>isim=</code> tanımlarsak o çereze isim vermiş oluyoruz. Sonda bir <code>;</code>
+sonrası <code>expires=Wed, 05 Aug 2025 23:00:00 UTC</code> gibi bir tarih vermek
+o çereze bir zamanaşımı veriyor, bu zamandan sonra o çerez geçersiz
 oluyor, siliniyor.</p>
 
 <p>Benim bazı çerez kullanım kalıplarım şunlar, sitemi ziyaret edenlerin
@@ -488,7 +489,9 @@ Servis tarafını Flask ile yazalım,</p>
 
 <h3>Girdi Tamamlamak (Autocomplete)</h3>
 
-<p>HTML şöyle,</p>
+<p>Javascript'in kabiliyetlerini göstermek açısından alttaki kod faydalı olur,
+giriş kutusuna girilen birkaç kelime sonrası gerisini tamamlama amaçlı seçenek
+listesi veren (autocomplete) kodu altta görülüyor.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>

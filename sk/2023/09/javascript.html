@@ -388,6 +388,57 @@ ile çereze koydum. Çerez okurken</p>
 
 <p>diyebilirim.</p>
 
+<p>Site Çerezi</p>
+
+<p>Eğer farklı sayfalardan aynı çereze erişilebilsin istiyorsam üstteki
+çerez metnine zamanaşımı ibaresinden sonra bir <code>;path=/</code> ifadesi
+ekleyebilirim, böylece çerez "site çerezi" haline gelir, ve her sayfa
+tüm çereze erisebilir. Benim kendi kullandığım bazı yardımcı
+fonksiyonlar alttaki gibidir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">all_apps</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sayfa1&#39;</span><span class="p">,</span><span class="s1">&#39;sayfa2&#39;</span><span class="p">];</span>
+
+<span class="nx">expires_path</span> <span class="o">=</span> <span class="s1">&#39;; expires=Wed, 05 Aug 2025 23:00:00 UTC;path=/&#39;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">init_cookies</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;</span> <span class="mf">1</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">empty</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="nx">all_apps</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">empty</span><span class="p">[</span><span class="nx">app</span><span class="p">]</span> <span class="o">=</span> <span class="p">{};</span>
+    <span class="p">})</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="s1">&#39;bb=&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">empty</span><span class="p">)</span> <span class="o">+</span> <span class="nx">expires_path</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">elems</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">);</span>
+    <span class="nx">prefs</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">elems</span><span class="p">[</span><span class="mf">1</span><span class="p">]);</span>    
+    <span class="nx">all_apps</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span> <span class="nx">prefs</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">app</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nx">prefs</span><span class="p">[</span><span class="nx">app</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="p">}</span>
+    <span class="p">})</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="s1">&#39;bb=&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span> <span class="o">+</span> <span class="nx">expires_path</span><span class="p">;</span> 
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">get_prefs</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">elems</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s2">&quot;=&quot;</span><span class="p">);</span>
+    <span class="nx">prefs</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span><span class="nx">elems</span><span class="p">[</span><span class="mf">1</span><span class="p">]);</span>
+    <span class="k">return</span> <span class="nx">prefs</span><span class="p">;</span>   
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">save_cookie</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">cookie</span> <span class="o">=</span> <span class="s1">&#39;bb=&#39;</span> <span class="o">+</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">stringify</span><span class="p">(</span><span class="nx">prefs</span><span class="p">)</span> <span class="o">+</span> <span class="nx">expires_path</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Her sayfa başlangıcında <code>init_cookies</code> çağrılır, site çerezi ismi
+<code>bb</code>, bu çerez içinde <code>all_apps</code> de olan bölümler yoksa hemen eklenir
+(böylece yeni sayfa/uygulama ekleyince çerezlere hemen etki eder), ve
+her sayfa kendine ait bilgiye bir sözlük üzerinden erişir. Çerezleri
+almak için <code>get_prefs</code> geri yazmak için <code>save_cookie</code>.</p>
+
 <h3>XMLHttpRequest</h3>
 
 <p>Statik Dosya</p>

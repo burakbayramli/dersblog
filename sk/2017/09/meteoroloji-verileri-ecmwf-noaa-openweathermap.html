@@ -217,6 +217,47 @@ bizimki <code>$HOME</code> altında <code>.nomterr.conf</code> adlı bir JSON do
 </code></pre>
 </div>
 
+<p>Javascript</p>
+
+<p>OWM'den veri almanın Javascript şekli için bir örnek gösterelim, bu
+örnek önümüzdeki 5 gün için hava tahmin verisini alır ve bu verilerden
+sıcaklık ve izafi nem bilgisini basabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">function</span> <span class="nx">fetchForecast</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">endpoint</span> <span class="o">=</span> <span class="s2">&quot;https://api.openweathermap.org/data/2.5/onecall?lat=38.7267&amp;lon=-9.1403&amp;exclude=current,hourly,minutely,alerts&amp;units=metric&amp;appid=&quot;</span><span class="p">;</span>
+    <span class="nx">endpoint</span> <span class="o">=</span> <span class="nx">endpoint</span> <span class="o">+</span> <span class="s2">&quot;[OWM ANAHTARI BURAYA]&quot;</span>
+    <span class="nx">fetch</span><span class="p">(</span><span class="nx">endpoint</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mf">200</span> <span class="o">!==</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span>
+            <span class="s2">&quot;Looks like there was a problem. Status Code: &quot;</span> <span class="o">+</span> <span class="nx">response</span><span class="p">.</span><span class="nx">status</span>
+        <span class="p">);</span>
+        <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">data</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">fday</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">;</span>
+        <span class="nx">data</span><span class="p">.</span><span class="nx">daily</span><span class="p">.</span><span class="nx">forEach</span><span class="p">((</span><span class="nx">value</span><span class="p">,</span> <span class="nx">index</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">index</span> <span class="o">&gt;</span> <span class="mf">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kd">var</span> <span class="nx">dayname</span> <span class="o">=</span> <span class="k">new</span> <span class="nb">Date</span><span class="p">(</span><span class="nx">value</span><span class="p">.</span><span class="nx">dt</span> <span class="o">*</span> <span class="mf">1000</span><span class="p">).</span><span class="nx">toLocaleDateString</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="p">{</span>
+                <span class="nx">weekday</span><span class="o">:</span> <span class="s2">&quot;long&quot;</span><span class="p">,</span>
+            <span class="p">});</span>
+            <span class="kd">var</span> <span class="nx">temp</span> <span class="o">=</span> <span class="nx">value</span><span class="p">.</span><span class="nx">temp</span><span class="p">.</span><span class="nx">day</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+            <span class="kd">var</span> <span class="nx">hum</span> <span class="o">=</span> <span class="nx">value</span><span class="p">.</span><span class="nx">humidity</span><span class="p">.</span><span class="nx">toFixed</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">temp</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nx">hum</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+        <span class="p">});</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Fetch Error :-S&quot;</span><span class="p">,</span> <span class="nx">err</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
 <h3>ECMWF</h3>
 
 <p>Önce günlük, bedava kaynaklara bakalım. Kurulmasi gereken paketler,</p>

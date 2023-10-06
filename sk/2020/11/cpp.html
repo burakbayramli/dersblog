@@ -144,18 +144,18 @@ olacak,</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>#include &lt;iostream&gt;
-#include &lt;string&gt;
+<pre><span></span><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
 
-#include &quot;cat.h&quot;
+<span class="cp">#include</span> <span class="cpf">&quot;cat.h&quot;</span><span class="cp"></span>
 
-using namespace std;
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
 
-Cat::Cat(const string &amp; name):_name(name){}
-void Cat::speak()
-{
-    cout &lt;&lt; &quot;Miyav &quot; &lt;&lt; _name &lt;&lt; endl;
-}
+<span class="n">Cat</span><span class="o">::</span><span class="n">Cat</span><span class="p">(</span><span class="k">const</span> <span class="n">string</span> <span class="o">&amp;</span> <span class="n">name</span><span class="p">)</span><span class="o">:</span><span class="n">_name</span><span class="p">(</span><span class="n">name</span><span class="p">){}</span>
+<span class="kt">void</span> <span class="n">Cat</span><span class="o">::</span><span class="n">speak</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;Miyav &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">_name</span> <span class="o">&lt;&lt;</span> <span class="n">endl</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -192,19 +192,19 @@ bazı hızlandırma adımları böyle atılıyor.</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>#include &lt;iostream&gt;
-#include &lt;string&gt;
-#include &quot;cat.h&quot;
+<pre><span></span><code><span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&quot;cat.h&quot;</span><span class="cp"></span>
 
-using std::cout;using std::endl;using std::string;
-int main()
-{
-    string name = &quot;Ali&quot;;
-    cout&lt;&lt; &quot;Kedim burada, &quot; &lt;&lt; name &lt;&lt; &quot;!&quot; &lt;&lt;endl;
-    Cat kitty(name);
-    kitty.speak();
-    return 0;
-}
+<span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">;</span><span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span><span class="k">using</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">;</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">string</span> <span class="n">name</span> <span class="o">=</span> <span class="s">&quot;Ali&quot;</span><span class="p">;</span>
+    <span class="n">cout</span><span class="o">&lt;&lt;</span> <span class="s">&quot;Kedim burada, &quot;</span> <span class="o">&lt;&lt;</span> <span class="n">name</span> <span class="o">&lt;&lt;</span> <span class="s">&quot;!&quot;</span> <span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">Cat</span> <span class="n">kitty</span><span class="p">(</span><span class="n">name</span><span class="p">);</span>
+    <span class="n">kitty</span><span class="p">.</span><span class="n">speak</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
 </code></pre>
 </div>
 
@@ -275,7 +275,6 @@ arar. Bu dosyanın içeriği (üstteki örnek için) şuna benzeyebilir,</p>
 
 <pre><code>CC=g++
 CFLAGS=
-LIBS=-lm
 OBJ = cat.o ex2.o
 
 %.o: %.cpp
@@ -311,7 +310,7 @@ haline gelirdi.</p>
 
 <pre><code>g++ -c -o cat.o cat.cpp 
 g++ -c -o ex2.o ex2.cpp 
-g++ -o kedi.exe cat.o ex2.o -lm 
+g++ -o kedi.exe cat.o ex2.o  
 </code></pre>
 
 <p>görürüz, ve <code>kedi.exe</code> yaratılmış olur. Eğer tekrar işletsek,</p>
@@ -321,6 +320,55 @@ g++ -o kedi.exe cat.o ex2.o -lm
 
 <p>mesajını görürdük. Temizlik yapmak istersek, <code>.o</code>, <code>.exe</code> dosyalarını
 silmek için, <code>make clean</code> işletebiliriz.</p>
+
+<p>GNU derleyicilerinin birkaç çeşidi var, <code>g++</code> mesela arka planda <code>gcc</code>
+çağırır, fakat bazı ek seçenekleri otomatik olarak geçiyor
+olabilir. Matematik kütüphanesi <code>libm.so</code> otomatik bağlantılanması
+bunlardan biri. Örnek, düz bir C kodu <code>gcc</code> derleyip <code>libm.so</code> için
+<code>-lm</code> verilmeyince ne olacağını görelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">#include</span> <span class="cpf">&lt;math.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">float</span> <span class="n">floati</span><span class="p">,</span> <span class="n">pi</span><span class="p">;</span>
+        <span class="n">pi</span><span class="o">=</span> <span class="mf">3.141492653</span><span class="p">;</span>
+        <span class="n">floati</span> <span class="o">=</span> <span class="n">sinf</span><span class="p">(</span> <span class="n">pi</span><span class="o">-</span> <span class="mi">1</span> <span class="p">);</span>
+        <span class="n">printf</span> <span class="p">(</span><span class="s">&quot;sine of pi -1 = %f</span><span class="se">\n</span><span class="s">&quot;</span><span class="p">,</span> <span class="n">floati</span><span class="p">);</span>
+        <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<pre><code>CC=gcc
+CFLAGS=
+LIBS=-lm
+OBJ = test1.o
+
+%.o: %.cpp
+    $(CC)-c -o $@ $&lt; $(CFLAGS)
+
+test1.exe: $(OBJ)
+    $(CC) -o $@ $^ $(LIBS) 
+</code></pre>
+
+<p>Eger <code>LIBS=-lm</code> ibaresi olmasaydi</p>
+
+<pre><code>test1.o: In function `main':
+test1.c:(.text+0x27): undefined reference to `sinf'
+collect2: error: ld returned 1 exit status
+Makefile:10: recipe for target 'test1.exe' failed
+make: *** [test1.exe] Error 1
+</code></pre>
+
+<p>hatası görülecekti. Yani bir dış kodu kullanmak için başlık (header)
+<code>.h</code> dosyasını <code>#inçlude</code> ile dahil etmek yeterli değildir, başlıkta
+sadece fonksiyon tanımları vardır, o tanımların gerçek kodunu da
+(implementation) bağlantılama evresinde ana koda bağlamak
+gerekir. Dosyalar <code>.o</code>, <code>.so</code> ya da <code>.a</code> içinde işte bu tür gerçek
+işler kodlar vardır, o kodların çağırılabilmesi için onları bağlamak
+gerekir.</p>
 
 <p>Bağlantılar</p>
 

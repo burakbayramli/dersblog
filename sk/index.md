@@ -3,7 +3,7 @@
 
 ## En Son
 
-[Tavsiye Sistemi: Örnek](https://burakbayramli.github.io/dersblog/sk/2023/09/tavsite-sistemi-anons.html)
+9/10 - [Tavsiye Sistemi: Örnek](https://burakbayramli.github.io/dersblog/sk/2023/09/tavsiye-sistemi-anons.html)
 
 6/10 - [Javascript](https://burakbayramli.github.io/dersblog/sk/2023/09/javascript.html)
 

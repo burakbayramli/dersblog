@@ -50,12 +50,13 @@ bile eklemiş - açık yazılımın faydaları. Bazı örnekler altta.</p>
 kendimiz yapmamız gerekiyor,</p>
 
 <pre><code>import pandas as pd, datetime, time
+import urllib.request as urllib2
 from io import BytesIO
 
 end = datetime.datetime.now()
 start=end-datetime.timedelta(days=90)
-start = int(timelib.mktime(start.timetuple()))
-end = int(timelib.mktime(end.timetuple()))
+start = int(time.mktime(start.timetuple()))
+end = int(time.mktime(end.timetuple()))
 
 url = "https://query1.finance.yahoo.com/v7/finance/download/^IXIC?period1=" + str(start) + "&amp;period2=" + str(end) + "&amp;interval=1d&amp;events=history&amp;includeAdjustedClose=true"
 r = urllib2.urlopen(url).read()

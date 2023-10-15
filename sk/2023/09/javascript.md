@@ -82,15 +82,14 @@ Node
 Görsel kodlamada ilerlemeden önemli bir konuya değinelim, çünkü
 ileride JS kodlarını test etmek için faydalı olabilir. Node
 teknolojisi ünlü, bu servis tarafında Javascript anlamına geliyor. V8
-motoruyla beraber JS kodlarının işletimi hızlandı, neredeyse C++
-seviyesine geldi, ve bazıları da düşündü ki "ben motoru alıp servis
-tarafında koştururum, böylece hem görsel hem servis kodlarını aynı
-dilde yazabilmiş olurum". Node buradan çıktı. Biz şu anda servis
-tarafı kodlamasını işlemiyoruz, fakat pür istemci için olsa bile bazı
-Javascript kodları hala görsel olmayan mantık içerebilir, ve bu
-kodları ayırıp, node üzerinden test etmek mümkündür, böylece sürekli
-tarayıcıyı açmak gerekmez, komut satırından Javascript test
-edebiliriz.
+motoruyla beraber JS kodlarının işletimi hızlandı, ve bazıları da
+düşündü ki "ben motoru alıp servis tarafında koştururum, böylece hem
+görsel hem servis kodlarını aynı dilde yazabilmiş olurum". Node
+buradan çıktı. Biz şu anda servis tarafı kodlamasını işlemiyoruz,
+fakat pür istemci için olsa bile bazı Javascript kodları hala görsel
+olmayan mantık içerebilir, ve bu kodları ayırıp, node üzerinden test
+etmek mümkündür, böylece sürekli tarayıcıyı açmak gerekmez, komut
+satırından Javascript test edebiliriz.
 
 Kurmak için,
 

@@ -129,7 +129,22 @@ const res = JSON.parse(file);
 Tabii üstteki kod görsel kodlama için uygun değil çünkü tarayıcı içindeki
 Javascript yerel dizindeki dosyalara erisemez, İnternet üzerinden dosya
 okumak için `XMLHttpRequest` gerekir, o konuya geliyoruz, fakat test
-amacıyla üstteki çağrı hala faydalıdır. 
+amacıyla üstteki çağrı hala faydalıdır.
+
+Sayfa bazında Javascript'in `src include` ile yüklediği dış kütüphaneleri
+Node ile `require` kullanarak alabiliriz. Mesela [2]'deki matematik kodlarını
+kullanmak istiyorum, gerekli `math.js`  dosyasını indirip
+
+```
+var math = require('./math.js');
+let N = 20;
+A = math.round(math.random([N,N]),5);
+B = math.round(math.random([N,N]),5);
+
+C = math.multiply(A, B);
+```
+
+gibi bir kod işletebilirim. Üstte lineer cebir matris çarpım işlemi yapmış olduk.
 
 ### Çengeller
 
@@ -538,6 +553,18 @@ diff = dt2.getTime() - dt1.getTime();
 step = diff / (1000*60*60*24);
 ```
 
+Basit bir kronometre kodlaması,
+
+```javascript
+const start = Date.now();
+
+// burada bazi islemler...
+
+const end = Date.now();
+console.log("Islem zamani: " + (end - start)");
+```
+
+
 ### Girdi Tamamlamak (Autocomplete)
 
 Javascript'in kabiliyetlerini göstermek açısından alttaki kod faydalı olur,
@@ -648,5 +675,5 @@ Kaynaklar
 
 [1] https://www.w3schools.com/howto/howto_js_autocomplete.asp
 
-
+[2] https://mathjs.org/download.html
 

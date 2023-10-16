@@ -167,7 +167,21 @@ aynı <code>console.log</code> çağrısı var, ve bu çağrı otomatik olarak k
 <p>Tabii üstteki kod görsel kodlama için uygun değil çünkü tarayıcı içindeki
 Javascript yerel dizindeki dosyalara erisemez, İnternet üzerinden dosya
 okumak için <code>XMLHttpRequest</code> gerekir, o konuya geliyoruz, fakat test
-amacıyla üstteki çağrı hala faydalıdır. </p>
+amacıyla üstteki çağrı hala faydalıdır.</p>
+
+<p>Sayfa bazında Javascript'in <code>src include</code> ile yüklediği dış kütüphaneleri
+Node ile <code>require</code> kullanarak alabiliriz. Mesela [2]'deki matematik kodlarını
+kullanmak istiyorum, gerekli <code>math.js</code>  dosyasını indirip</p>
+
+<pre><code>var math = require('./math.js');
+let N = 20;
+A = math.round(math.random([N,N]),5);
+B = math.round(math.random([N,N]),5);
+
+C = math.multiply(A, B);
+</code></pre>
+
+<p>gibi bir kod işletebilirim. Üstte lineer cebir matris çarpım işlemi yapmış olduk.</p>
 
 <h3>Çengeller</h3>
 
@@ -590,6 +604,18 @@ sıfır indisli, gün değil, alttaki gibi oluyor,</p>
 </code></pre>
 </div>
 
+<p>Basit bir kronometre kodlaması,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kr">const</span> <span class="nx">start</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+
+<span class="c1">// burada bazi islemler...</span>
+
+<span class="kr">const</span> <span class="nx">end</span> <span class="o">=</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">();</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;Islem zamani: &quot;</span> <span class="o">+</span> <span class="p">(</span><span class="nx">end</span> <span class="o">-</span> <span class="nx">start</span><span class="p">)</span><span class="err">&quot;</span><span class="p">);</span>
+</code></pre>
+</div>
+
 <h3>Girdi Tamamlamak (Autocomplete)</h3>
 
 <p>Javascript'in kabiliyetlerini göstermek açısından alttaki kod faydalı olur,
@@ -700,6 +726,8 @@ listesi veren (autocomplete) kodu altta görülüyor.</p>
 <p>Kaynaklar</p>
 
 <p>[1] https://www.w3schools.com/howto/howto<em>js</em>autocomplete.asp</p>
+
+<p>[2] https://mathjs.org/download.html</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

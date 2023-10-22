@@ -211,8 +211,7 @@ servis adresimizi veririz,
 
 
 ```javascript
-...
-L.tileLayer('http://localhost:5000/tiles/{z}/{x}/{y}.jpg', {
+L.tileLayer('http://localhost:5000/tiles/{z}/{x}/{y}.jpg',...
 ```
 
 Ardından kendi servis kodlarımızı yazarız,

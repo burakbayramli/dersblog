@@ -187,9 +187,89 @@ path = [[40,31],[41,31],[41,30]];
 
 [HTML](leaf5.html)
 
+# Fayans Servisi
+
+Leaflet'in arka plandaki fayans servisi ile iletişimi nasıl oluyor?
+Mekanizma direk, temiz bir yaklaşım, `tileLayer` çağrısına geçilen
+parametreler haritanin belli bir parcasına nasıl erişileceğini tarif
+ediyor, bu erişim basit dizin / dosya üzerinden.. Makina ismi sonrası
+z,x,y parametrelerile bir URL oluşturuyor ve bu URL ile bir görüntü
+dosyası alınıyor, ki ünlü açık veri servisi OSM'nin zaten böyle bir
+servisi var. Adresi https://tile.openstreetmap.org, dosya servisinin
+dizin yapısında en üst dizinde büyüklük seviyesi, onun altındaki
+dizinde x (boylam) dizinleri onun altında y (enlem) kordinatına
+tekabül eden y.png dosyaları var. Bu bizi eğer mesela büyüklük seviyesi 4
+boylam 11 enlem 7 ise bir [https://tile.openstreetmap.org/4/11/7.png](https://tile.openstreetmap.org/4/11/7.png)
+dosyasına eriştirecektir, mümkün her parametre kombinasyonu için bu
+dosya servisinde imaj dosyaları vardır. 
+
+İşte bu erişim parametreleri üzerinden kendi fayans servisimizi de
+biz sağlayabiliriz. Flask ya da herhangi bir REST servisi ile
+makina/parametre1/parametre2/parametre3 gibi erişimleri parametre
+olarak işleyebileceğimizi biliyoruz. o zaman önce leaflet'e kendi
+servis adresimizi veririz,
+
+
+```javascript
+...
+L.tileLayer('http://localhost:5000/tiles/{z}/{x}/{y}.jpg', {
+```
+
+Ardından kendi servis kodlarımızı yazarız,
+
+
+```python
+from flask import Flask, send_file
+import os.path
+
+app = Flask(__name__, static_url_path='/static')
+
+@app.route('/tiles/<zoom>/<x>/<y>', methods=['GET', 'POST'])
+def tiles(zoom, x, y):
+    tile1 = os.getcwd() + '/static/tile1.jpg' 
+    tile2 = os.getcwd() + '/static/tile2.jpg'
+    print (tile1)
+    y = y.replace(".jpg","")
+    print ('zoom',zoom,'x',x,'y',y)
+    m = int(x+y+zoom) % 2
+    if m==0:
+        return send_file(tile1)
+    else:
+        return send_file(tile2)
+    
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    return app.send_static_file('index.html')
+
+if __name__ == '__main__':
+    app.run(debug=True, host='localhost', port=5000)
+```
+
+Kod icin gereken iki imaj altta,
+
+[tile1.jpg](tile1.jpg),[tile2.jpg](tile2.jpg)
+
+Bu dosyalar `index.html` ile bir `static` dizini altına yazılır,
+servis için gereken `app.py` bir üstteki dizindedir3, standard Flask
+yapısı bu.
+
+Başlatılınca kullanım herhangi bir leaflet haritası kullanır gibi,
+görüntü olarak bazen daire bazen kare resimleri göreceğiz, hangi
+resmin servis edildiği x,y,zoom parametreleri birleştirilip sayının
+tek/çift olduğuna bakılarak yapılıyor, örnek amaçlı bir yapı
+sadece. Sayı tek ise bir dosya, çift ise diğeri servis
+edilir. Leaflet'in mekanizmasını anlamak açısından faydalı
+olabilir. Profosyonel bir uygulama servise gönderilen x,y,z
+parametrelerini işleyerek bir veri tabanından gerekli bir bilgiyi alıp
+görüntüyü anında yaratıp istemciye verebilir, leaflet bu görüntüleri
+anında yapıştırıp akıcı bir harita tecrübesi yaratabilir. Veri belki
+dağlar, belki nehirler, belki şehir isimleri olabilir.
+
 Kaynaklar
 
 [1] [Haritalamak](../../2020/02/haritalamak.html)
 
 [2] https://stackoverflow.com/questions/28094649/add-option-for-blank-tilelayer-in-leaflet-layergroup
+
+[3] https://nithanaroy.medium.com/create-your-own-tile-server-and-map-client-5f7515fff28
 

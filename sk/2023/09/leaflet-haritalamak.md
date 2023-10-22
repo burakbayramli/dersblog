@@ -109,9 +109,9 @@ ekleyebilirdik, bunun için `L.marker` sonrası `.bindPopup("yazı").openPopup()
 çağrısı yeterli, bu çağrı yine bir işaretleyici objesi geri döndürüyor
 böylece o obje üzerinde hala `addTo(map)` çağrısı yapabiliriz. Örnek,
 
-### Çizgiler
-
 [HTML](leaf3.html)
+
+### Çizgiler, Poligonlar
 
 Kordinat listesi vererek o noktaları birleştiren çizgiler çizebiliriz,
 
@@ -124,6 +124,22 @@ line.addTo(map);
 ```
 
 [HTML](leaf4.html)
+
+Eğer verili noktalar bir poligon oluştursun istiyorsak leaflet bu
+noktaları bir kapalı alan olarak işleyebilir, listedeki son nokta ilk
+nokta ile birleştirilir, ve bizim verdiğimiz bir renk ile doldurulacak
+şekilde bir poligon çizebilir. Üstteki aynı noktaları kullanarak şunu
+yapabilirdik,
+
+```javascript
+var poly = new L.Polygon(path, {
+                   color: 'red', weight: 3, opacity: 0.5, smoothFactor: 1
+});
+poly.setStyle({fillColor: '#0000FF'});
+poly.addTo(map);      
+```
+
+[HTML](leaf6.html)
 
 ### Boş Fayans
 

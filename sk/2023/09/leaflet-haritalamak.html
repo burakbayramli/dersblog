@@ -234,28 +234,32 @@ böylece kendimizin sıfırdan oluşturduğu bir harita yaratmış oluruz.</p>
 Mekanizma direk, temiz bir yaklaşım, <code>tileLayer</code> çağrısına geçilen
 parametreler haritanin belli bir parcasına nasıl erişileceğini tarif
 ediyor, bu erişim basit dizin / dosya üzerinden.. Makina ismi sonrası
-z,x,y parametrelerile bir URL oluşturuyor ve bu URL ile bir görüntü
+z,x,y parametreleri ile bir URL oluşturuyor ve bu URL ile bir görüntü
 dosyası alınıyor, ki ünlü açık veri servisi OSM'nin zaten böyle bir
 servisi var. Adresi https://tile.openstreetmap.org, dosya servisinin
 dizin yapısında en üst dizinde büyüklük seviyesi, onun altındaki
 dizinde x (boylam) dizinleri onun altında y (enlem) kordinatına
-tekabül eden y.png dosyaları var. Bu bizi eğer mesela büyüklük seviyesi 4
-boylam 11 enlem 7 ise bir <a href="https://tile.openstreetmap.org/4/11/7.png">https://tile.openstreetmap.org/4/11/7.png</a>
-dosyasına eriştirecektir, mümkün her parametre kombinasyonu için bu
-dosya servisinde imaj dosyaları vardır. </p>
+tekabül eden y.png dosyaları var. Bu bizi eğer mesela büyüklük
+seviyesi 4 boylam 11 enlem 7 ise bir</p>
 
-<p>İşte bu erişim parametreleri üzerinden kendi fayans servisimizi de
-biz sağlayabiliriz. Flask ya da herhangi bir REST servisi ile
-makina/parametre1/parametre2/parametre3 gibi erişimleri parametre
-olarak işleyebileceğimizi biliyoruz. o zaman önce leaflet'e kendi
-servis adresimizi veririz,</p>
+<p><a href="https://tile.openstreetmap.org/4/11/7.png">https://tile.openstreetmap.org/4/11/7.png</a></p>
+
+<p>dosyasına eriştirecektir, mümkün her parametre kombinasyonu için bu
+dosya servisinde imaj dosyaları vardır.</p>
+
+<p>Fakat arka planda illa bir dosya servisi sart degil, erişim
+parametrelerini bir servis kodu ile 'yakalayarak' kendi fayans
+servisimizi kod ile sağlayabiliriz. Flask ya da herhangi bir REST
+servisi ile makina/parametre1/parametre2/parametre3 gibi erişimleri
+parametre olarak işleyebileceğimizi biliyoruz. o zaman önce leaflet'e
+kendi servis adresimizi veririz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nx">L</span><span class="p">.</span><span class="nx">tileLayer</span><span class="p">(</span><span class="s1">&#39;http://localhost:5000/tiles/{z}/{x}/{y}.jpg&#39;</span><span class="p">,...</span>
 </code></pre>
 </div>
 
-<p>Ardından kendi servis kodlarımızı yazarız,</p>
+<p>Ardından servis kodlarımızı yazarız,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">send_file</span>
@@ -290,7 +294,7 @@ servis adresimizi veririz,</p>
 <p><a href="tile1.jpg">tile1.jpg</a>,<a href="tile2.jpg">tile2.jpg</a></p>
 
 <p>Bu dosyalar <code>index.html</code> ile bir <code>static</code> dizini altına yazılır,
-servis için gereken <code>app.py</code> bir üstteki dizindedir3, standard Flask
+servis için gereken <code>app.py</code> bir üstteki dizindedir, standard Flask
 yapısı bu.</p>
 
 <p>Başlatılınca kullanım herhangi bir leaflet haritası kullanır gibi,
@@ -303,7 +307,9 @@ olabilir. Profosyonel bir uygulama servise gönderilen x,y,z
 parametrelerini işleyerek bir veri tabanından gerekli bir bilgiyi alıp
 görüntüyü anında yaratıp istemciye verebilir, leaflet bu görüntüleri
 anında yapıştırıp akıcı bir harita tecrübesi yaratabilir. Veri belki
-dağlar, belki nehirler, belki şehir isimleri olabilir.</p>
+dağlar, belki nehirler, belki şehir isimleridir, tüm mümkün
+görüntüleri önceden yaratmak yerine belki bu şekilde bir işlem metotu
+daha uygundur. </p>
 
 <p>Kaynaklar</p>
 

@@ -194,12 +194,12 @@ servisi ile iletişimi direk, temiz bir yaklaşım, `tileLayer` çağrısına
 geçilen parametreler haritanin belli bir parcasına nasıl erişileceğini
 tarif ediyor, bu erişim basit dizin / dosya üzerinden.. Makina ismi
 sonrası z,x,y parametreleri ile bir URL oluşturuyor ve bu URL ile bir
-görüntü dosyası alınıyor, ki ünlü açık veri servisi OSM'nin zaten
-böyle bir servisi var. Adresi https://tile.openstreetmap.org, dosya
-servisinin dizin yapısında en üst dizinde büyüklük seviyesi, onun
-altındaki dizinde x (boylam) dizinleri onun altında y (enlem)
-kordinatına tekabül eden y.png dosyaları var. Bu bizi eğer mesela
-büyüklük seviyesi 4 boylam 11 enlem 7 ise bir
+görüntü dosyası alınıyor (250x250 boyutunda), ki ünlü açık veri
+servisi OSM'nin zaten böyle bir servisi var. Adresi https://tile.openstreetmap.org,
+dosya servisinin dizin yapısında en üst dizinde büyüklük seviyesi, onun
+altındaki dizinde x (boylam) dizinleri onun altında y (enlem) kordinatına
+tekabül eden y.png dosyaları var. Bu bizi eğer mesela büyüklük seviyesi
+4 boylam 11 enlem 7 ise bir
 
 [https://tile.openstreetmap.org/4/11/7.png](https://tile.openstreetmap.org/4/11/7.png)
 
@@ -209,9 +209,9 @@ dosya servisinde imaj dosyaları vardır.
 Fakat arka planda illa bir dosya servisi sart degil, erişim
 parametrelerini bir servis kodu ile 'yakalayarak' kendi fayans
 servisimizi kod ile sağlayabiliriz. Flask ya da herhangi bir REST
-servisi ile makina/parametre1/parametre2/parametre3 gibi erişimleri
-parametre olarak işleyebileceğimizi biliyoruz. o zaman önce leaflet'e
-kendi servis adresimizi veririz,
+servisi ile makina / parametre1 / parametre2 / parametre3 gibi
+erişimleri parametre olarak işleyebileceğimizi biliyoruz. o zaman önce
+leaflet'e kendi servis adresimizi veririz,
 
 
 ```javascript

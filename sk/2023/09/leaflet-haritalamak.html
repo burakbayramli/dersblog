@@ -58,6 +58,8 @@ Fayanslar mesela dağları, nehirler gösteren bir doğa tabakası olabilir,
 ya da tüm caddeleri, dükkanları gösteren bir şehir tabakası olabilir.
 Kullanıcı istediği fayans tabakasını haritayı oluştururken seçebilir.</p>
 
+<h3>Giriş</h3>
+
 <p>En basit leaflet kodu alttaki gibi,</p>
 
 <div class="codehilite">
@@ -98,6 +100,8 @@ Kullanıcı istediği fayans tabakasını haritayı oluştururken seçebilir.</p
 
 <p><a href="leaf1.html">HTML</a></p>
 
+<h3>İşaretler</h3>
+
 <p>Bu haritaya gösterime sunmadan önce bazı ekler yapabiliriz. Mesela
 farklı renklerde işaretleyici (marker) kullanabiliriz. Bu işaretler
 için imaj dosyaları lazım, altta bu dosyalar bulunabilir,</p>
@@ -137,9 +141,18 @@ için imaj dosyaları lazım, altta bu dosyalar bulunabilir,</p>
 </code></pre>
 </div>
 
-<p>Kordinate listesi vererek o noktaları birleştiren çizgiler çizebiliriz,</p>
-
 <p><a href="leaf2.html">HTML</a></p>
+
+<p>Üstteki işaretlere tıklanınca ortaya çıkan (popup) yazılar da
+ekleyebilirdik, bunun için <code>L.marker</code> sonrası <code>.bindPopup("yazı").openPopup()</code>
+çağrısı yeterli, bu çağrı yine bir işaretleyici objesi geri döndürüyor
+böylece o obje üzerinde hala <code>addTo(map)</code> çağrısı yapabiliriz. Örnek,</p>
+
+<h3>Çizgiler</h3>
+
+<p><a href="leaf3.html">HTML</a></p>
+
+<p>Kordinat listesi vererek o noktaları birleştiren çizgiler çizebiliriz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nx">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">40</span><span class="p">,</span><span class="mf">31</span><span class="p">],[</span><span class="mf">41</span><span class="p">,</span><span class="mf">31</span><span class="p">],[</span><span class="mf">41</span><span class="p">,</span><span class="mf">30</span><span class="p">]];</span>
@@ -150,13 +163,59 @@ için imaj dosyaları lazım, altta bu dosyalar bulunabilir,</p>
 </code></pre>
 </div>
 
-<p><a href="leaf3.html">HTML</a></p>
+<p><a href="leaf4.html">HTML</a></p>
 
-<p>[devam edecek]</p>
+<h3>Boş Fayans</h3>
+
+<p>Arka planı yani fayans kısmını tamamen iptal edebiliriz, bunun faydası
+ne olur diye soranlar olabilir, fayda şurada, arka plan olmasa da
+sonradan eklenen çizgiler, noktalar hala büyütme, kaydırma kurallarına
+tabi oluyor, yani tamamen kendimizin yarattığı istenen yerine
+bakılabilen bir ağ yapısını burada çizebiliriz. Mesela ilk akla gelen
+örnek fayans iptal edilir, ve bir JSON dosyasından tüm dünya
+kıtalarının sınırları alınıp çizilir, başka istenen ekler de yapılır,
+böylece kendimizin sıfırdan oluşturduğu bir harita yaratmış oluruz.</p>
+
+<p>Basit bir boş fayans örneği için CSS içine</p>
+
+<pre><code>.leaflet-container { background-color: #109DE3; }
+</code></pre>
+
+<p>Kod seviyesinde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">avar</span> <span class="nx">base</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s1">&#39;Empty&#39;</span><span class="o">:</span> <span class="nx">L</span><span class="p">.</span><span class="nx">tileLayer</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;OpenStreetMap&#39;</span><span class="o">:</span> <span class="nx">L</span><span class="p">.</span><span class="nx">tileLayer</span><span class="p">(</span><span class="s1">&#39;http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png&#39;</span><span class="p">,</span> <span class="p">{</span>
+    <span class="s1">&#39;attribution&#39;</span><span class="o">:</span> <span class="s1">&#39;Map data &amp;copy; OpenStreetMap contributors&#39;</span>
+   <span class="p">})</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">map</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">,</span> <span class="p">{</span>
+       <span class="s1">&#39;center&#39;</span><span class="o">:</span> <span class="p">[</span><span class="mf">40</span><span class="p">,</span> <span class="mf">30</span><span class="p">],</span>
+       <span class="s1">&#39;zoom&#39;</span><span class="o">:</span> <span class="mf">7</span><span class="p">,</span>
+       <span class="s1">&#39;layers&#39;</span><span class="o">:</span> <span class="p">[</span>
+           <span class="nx">base</span><span class="p">.</span><span class="nx">Empty</span>
+        <span class="p">]</span>
+ <span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">control</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">control</span><span class="p">.</span><span class="nx">layers</span><span class="p">(</span><span class="nx">base</span><span class="p">).</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+
+<span class="nx">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">40</span><span class="p">,</span><span class="mf">31</span><span class="p">],[</span><span class="mf">41</span><span class="p">,</span><span class="mf">31</span><span class="p">],[</span><span class="mf">41</span><span class="p">,</span><span class="mf">30</span><span class="p">]];</span>
+  <span class="kd">var</span> <span class="nx">line</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">Polyline</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="p">{</span>
+                     <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="nx">weight</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span> <span class="nx">opacity</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nx">smoothFactor</span><span class="o">:</span> <span class="mf">1</span>
+      <span class="p">});</span>
+      <span class="nx">line</span><span class="p">.</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p><a href="leaf5.html">HTML</a></p>
 
 <p>Kaynaklar</p>
 
 <p>[1] [Haritalamak](../../2020/02/haritalamak.html)</p>
+
+<p>[2] https://stackoverflow.com/questions/28094649/add-option-for-blank-tilelayer-in-leaflet-layergroup</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

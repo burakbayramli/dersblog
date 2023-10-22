@@ -23,12 +23,26 @@
                 	attribution: 'OSM'
       }).addTo(map);
 
-      path = [[40,31],[41,31],[41,30]];
-    	var line = new L.Polyline(path, {
-		           color: 'red', weight: 3, opacity: 0.5, smoothFactor: 1
-	    });
-	    line.addTo(map);      
-     }
+    var LeafIcon = L.Icon.extend({
+           	options: {
+                 shadowUrl: 'marker-shadow.png',
+                 iconSize:     [20, 40],
+                 shadowSize:   [25, 30],
+                 iconAnchor:   [10, 45],
+                 shadowAnchor: [2, 30],
+                 popupAnchor:  [-1, -30]
+            	}
+    });
+       
+    var orangeIcon = new LeafIcon({iconUrl: 'marker-icon-2x-orange.png'});
+    var yellowIcon = new LeafIcon({iconUrl: 'marker-icon-2x-yellow.png'});
+    var greenIcon = new LeafIcon({iconUrl: 'marker-icon-2x-green.png'});
+    
+    L.marker([41,31], {icon: orangeIcon}).bindPopup("portakal").openPopup().addTo(map);
+    L.marker([41,32], {icon: yellowIcon}).bindPopup("sari").openPopup().addTo(map);
+    L.marker([42,32], {icon: greenIcon}).bindPopup("yesil").openPopup().addTo(map);
+
+   }
   </script>
   
   <body onload='init()'>

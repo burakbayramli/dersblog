@@ -20,6 +20,8 @@ Fayanslar mesela dağları, nehirler gösteren bir doğa tabakası olabilir,
 ya da tüm caddeleri, dükkanları gösteren bir şehir tabakası olabilir.
 Kullanıcı istediği fayans tabakasını haritayı oluştururken seçebilir.
 
+### Giriş
+
 En basit leaflet kodu alttaki gibi,
 
 ```html
@@ -58,6 +60,8 @@ En basit leaflet kodu alttaki gibi,
 ```
 
 [HTML](leaf1.html)
+
+### İşaretler
 
 Bu haritaya gösterime sunmadan önce bazı ekler yapabiliriz. Mesela
 farklı renklerde işaretleyici (marker) kullanabiliriz. Bu işaretler
@@ -98,9 +102,18 @@ L.marker([41,32], {icon: yellowIcon}).addTo(map);
 L.marker([42,32], {icon: greenIcon}).addTo(map);
 ```
 
-Kordinate listesi vererek o noktaları birleştiren çizgiler çizebiliriz,
-
 [HTML](leaf2.html)
+
+Üstteki işaretlere tıklanınca ortaya çıkan (popup) yazılar da
+ekleyebilirdik, bunun için `L.marker` sonrası `.bindPopup("yazı").openPopup()`
+çağrısı yeterli, bu çağrı yine bir işaretleyici objesi geri döndürüyor
+böylece o obje üzerinde hala `addTo(map)` çağrısı yapabiliriz. Örnek,
+
+### Çizgiler
+
+[HTML](leaf3.html)
+
+Kordinat listesi vererek o noktaları birleştiren çizgiler çizebiliriz,
 
 ```javascript
 path = [[40,31],[41,31],[41,30]];
@@ -110,16 +123,57 @@ var line = new L.Polyline(path, {
 line.addTo(map);
 ```
 
-[HTML](leaf3.html)
+[HTML](leaf4.html)
 
+### Boş Fayans
 
+Arka planı yani fayans kısmını tamamen iptal edebiliriz, bunun faydası
+ne olur diye soranlar olabilir, fayda şurada, arka plan olmasa da
+sonradan eklenen çizgiler, noktalar hala büyütme, kaydırma kurallarına
+tabi oluyor, yani tamamen kendimizin yarattığı istenen yerine
+bakılabilen bir ağ yapısını burada çizebiliriz. Mesela ilk akla gelen
+örnek fayans iptal edilir, ve bir JSON dosyasından tüm dünya
+kıtalarının sınırları alınıp çizilir, başka istenen ekler de yapılır,
+böylece kendimizin sıfırdan oluşturduğu bir harita yaratmış oluruz.
 
+Basit bir boş fayans örneği için CSS içine
 
+```
+.leaflet-container { background-color: #109DE3; }
+```
 
+Kod seviyesinde
 
+```javascript
+avar base = {
+  'Empty': L.tileLayer(''),
+    'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    'attribution': 'Map data &copy; OpenStreetMap contributors'
+   })
+};
 
-[devam edecek]
+var map = L.map('map', {
+       'center': [40, 30],
+       'zoom': 7,
+       'layers': [
+           base.Empty
+        ]
+ });
+
+var control = L.control.layers(base).addTo(map);
+
+path = [[40,31],[41,31],[41,30]];
+  var line = new L.Polyline(path, {
+                     color: 'red', weight: 3, opacity: 0.5, smoothFactor: 1
+      });
+      line.addTo(map);
+```
+
+[HTML](leaf5.html)
 
 Kaynaklar
 
 [1] [Haritalamak](../../2020/02/haritalamak.html)
+
+[2] https://stackoverflow.com/questions/28094649/add-option-for-blank-tilelayer-in-leaflet-layergroup
+

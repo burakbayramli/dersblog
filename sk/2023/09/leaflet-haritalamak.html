@@ -38,8 +38,27 @@
         <h1></h1>
 <h1>Leaflet ile Haritalamak</h1>
 
-<p>Python bazli haritalama paketi Folium yazilimindan daha once [1] bahsettik,
-aslinda Folium paketinin ilk cikisi Javascript bazli Leaflet yazilimidir.</p>
+<p>Python bazlı haritalama paketi Folium yazılımından daha önce [1]
+bahsettik, aslında Folium paketinin ilk çıkışı Javascript bazlı
+Leaflet yazılımıdır. Hatta Folium Python çağrıları sonrası <code>save</code> ile
+kaydedilebilen HTML dosyasına bakarsak orada leaflet Javascript
+çağrıları olduğunu göreceğiz. Yani Folium aslında Leaflet'i
+sarmalayan (wrap) ona arayüz sağlayan ince bir tabakadır.</p>
+
+<p>Leaflet'in en avantajlı tarafı Javascript bazlı, yani tarayıcıda
+işleyen kodları sayesinde dinamik görüntülenen haritaları
+yaratabilmesidir. Yakınlaştırma (zoom), sağa sola kaydırma gibi pek
+çok işlemi bir Leaflet haritası üzerinde yapabiliriz. Ayrıca leaflet
+arka planda "fayans (tile)" denen görüntüleri basabilir, bunlar mevcut
+bir haritalama veri tabanı tarafından önceden üretilmiş farklı
+yakınlık seviyelerindeki görüntülerdir, yakınlık seviyesi kullanıcı
+tarafından arttırıldıkça gerekli görüntü haritalama servisinden alinip
+arka plana koyulur. Leaflet tüm bu işlemleri otomatik olarak yapar.
+Fayanslar mesela dağları, nehirler gösteren bir doğa tabakası olabilir,
+ya da tüm caddeleri, dükkanları gösteren bir şehir tabakası olabilir.
+Kullanıcı istediği fayans tabakasını haritayı oluştururken seçebilir.</p>
+
+<p>En basit leaflet kodu alttaki gibi,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
@@ -63,8 +82,8 @@ aslinda Folium paketinin ilk cikisi Javascript bazli Leaflet yazilimidir.</p>
     <span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
       <span class="nx">map</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="s1">&#39;map&#39;</span><span class="p">).</span><span class="nx">setView</span><span class="p">([</span><span class="mf">40</span><span class="p">,</span><span class="mf">30</span><span class="p">],</span> <span class="mf">6</span><span class="p">);</span>
       <span class="nx">L</span><span class="p">.</span><span class="nx">tileLayer</span><span class="p">(</span><span class="s1">&#39;https://tile.openstreetmap.org/{z}/{x}/{y}.png&#39;</span><span class="p">,</span> <span class="p">{</span>
-                  <span class="nx">maxZoom</span><span class="o">:</span> <span class="mf">19</span><span class="p">,</span>
-                    <span class="nx">attribution</span><span class="o">:</span> <span class="s1">&#39;ddd&#39;</span>
+                   <span class="nx">maxZoom</span><span class="o">:</span> <span class="mf">19</span><span class="p">,</span>
+                   <span class="nx">attribution</span><span class="o">:</span> <span class="s1">&#39;OSM&#39;</span>
       <span class="p">}).</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
    <span class="p">}</span>
   <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
@@ -76,6 +95,62 @@ aslinda Folium paketinin ilk cikisi Javascript bazli Leaflet yazilimidir.</p>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre>
 </div>
+
+<p><a href="leaf1.html">HTML</a></p>
+
+<p>Bu haritaya gösterime sunmadan önce bazı ekler yapabiliriz. Mesela
+farklı renklerde işaretleyici (marker) kullanabiliriz. Bu işaretler
+için imaj dosyaları lazım, altta bu dosyalar bulunabilir,</p>
+
+<p><a href="marker-icon-2x-black.png">marker-icon-2x-black.png</a>,
+<a href="marker-icon-2x-blue.png">marker-icon-2x-blue.png</a>,
+<a href="marker-icon-2x-gold.png">marker-icon-2x-gold.png</a>,
+<a href="marker-icon-2x-green.png">marker-icon-2x-green.png</a>,
+<a href="marker-icon-2x-grey.png">marker-icon-2x-grey.png</a>,
+<a href="marker-icon-2x-orange.png">marker-icon-2x-orange.png</a>,
+<a href="marker-icon-2x-red.png">marker-icon-2x-red.png</a>,
+<a href="marker-icon-2x-violet.png">marker-icon-2x-violet.png</a>,
+<a href="marker-icon-2x-yellow.png">marker-icon-2x-yellow.png</a>,
+<a href="marker-shadow.png">marker-shadow.png</a></p>
+
+<p>İşaretleyici ekleme kodları,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">var</span> <span class="nx">LeafIcon</span> <span class="o">=</span> <span class="nx">L</span><span class="p">.</span><span class="nx">Icon</span><span class="p">.</span><span class="nx">extend</span><span class="p">({</span>
+        <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+             <span class="nx">shadowUrl</span><span class="o">:</span> <span class="s1">&#39;marker-shadow.png&#39;</span><span class="p">,</span>
+             <span class="nx">iconSize</span><span class="o">:</span>     <span class="p">[</span><span class="mf">20</span><span class="p">,</span> <span class="mf">40</span><span class="p">],</span>
+             <span class="nx">shadowSize</span><span class="o">:</span>   <span class="p">[</span><span class="mf">25</span><span class="p">,</span> <span class="mf">30</span><span class="p">],</span>
+             <span class="nx">iconAnchor</span><span class="o">:</span>   <span class="p">[</span><span class="mf">10</span><span class="p">,</span> <span class="mf">45</span><span class="p">],</span>
+             <span class="nx">shadowAnchor</span><span class="o">:</span> <span class="p">[</span><span class="mf">2</span><span class="p">,</span> <span class="mf">30</span><span class="p">],</span>
+             <span class="nx">popupAnchor</span><span class="o">:</span>  <span class="p">[</span><span class="o">-</span><span class="mf">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">30</span><span class="p">]</span>
+        <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="kd">var</span> <span class="nx">orangeIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LeafIcon</span><span class="p">({</span><span class="nx">iconUrl</span><span class="o">:</span> <span class="s1">&#39;marker-icon-2x-orange.png&#39;</span><span class="p">});</span>
+<span class="kd">var</span> <span class="nx">yellowIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LeafIcon</span><span class="p">({</span><span class="nx">iconUrl</span><span class="o">:</span> <span class="s1">&#39;marker-icon-2x-yellow.png&#39;</span><span class="p">});</span>
+<span class="kd">var</span> <span class="nx">greenIcon</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">LeafIcon</span><span class="p">({</span><span class="nx">iconUrl</span><span class="o">:</span> <span class="s1">&#39;marker-icon-2x-green.png&#39;</span><span class="p">});</span>
+
+<span class="nx">L</span><span class="p">.</span><span class="nx">marker</span><span class="p">([</span><span class="mf">41</span><span class="p">,</span><span class="mf">31</span><span class="p">],</span> <span class="p">{</span><span class="nx">icon</span><span class="o">:</span> <span class="nx">orangeIcon</span><span class="p">}).</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+<span class="nx">L</span><span class="p">.</span><span class="nx">marker</span><span class="p">([</span><span class="mf">41</span><span class="p">,</span><span class="mf">32</span><span class="p">],</span> <span class="p">{</span><span class="nx">icon</span><span class="o">:</span> <span class="nx">yellowIcon</span><span class="p">}).</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+<span class="nx">L</span><span class="p">.</span><span class="nx">marker</span><span class="p">([</span><span class="mf">42</span><span class="p">,</span><span class="mf">32</span><span class="p">],</span> <span class="p">{</span><span class="nx">icon</span><span class="o">:</span> <span class="nx">greenIcon</span><span class="p">}).</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Kordinate listesi vererek o noktaları birleştiren çizgiler çizebiliriz,</p>
+
+<p><a href="leaf2.html">HTML</a></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nx">path</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">40</span><span class="p">,</span><span class="mf">31</span><span class="p">],[</span><span class="mf">41</span><span class="p">,</span><span class="mf">31</span><span class="p">],[</span><span class="mf">41</span><span class="p">,</span><span class="mf">30</span><span class="p">]];</span>
+<span class="kd">var</span> <span class="nx">line</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">L</span><span class="p">.</span><span class="nx">Polyline</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="p">{</span>
+         <span class="nx">color</span><span class="o">:</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="nx">weight</span><span class="o">:</span> <span class="mf">3</span><span class="p">,</span> <span class="nx">opacity</span><span class="o">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="nx">smoothFactor</span><span class="o">:</span> <span class="mf">1</span>
+<span class="p">});</span>
+<span class="nx">line</span><span class="p">.</span><span class="nx">addTo</span><span class="p">(</span><span class="nx">map</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p><a href="leaf3.html">HTML</a></p>
 
 <p>[devam edecek]</p>
 

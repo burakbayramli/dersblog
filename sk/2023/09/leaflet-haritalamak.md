@@ -272,9 +272,9 @@ daha uygundur.
 
 Kaynaklar
 
-[1] [Haritalamak](../../2020/02/haritalamak.html)
+[1] <a href="../../2020/02/haritalamak.html">Haritalamak</a>
 
-[2] https://stackoverflow.com/questions/28094649/add-option-for-blank-tilelayer-in-leaflet-layergroup
+[2] <a href="https://stackoverflow.com/questions/28094649/add-option-for-blank-tilelayer-in-leaflet-layergroup">Stackoverflow</a>
 
-[3] https://nithanaroy.medium.com/create-your-own-tile-server-and-map-client-5f7515fff28
+[3] <a href="https://nithanaroy.medium.com/create-your-own-tile-server-and-map-client-5f7515fff28">Medium</a>
 

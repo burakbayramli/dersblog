@@ -183,6 +183,29 @@ C = math.multiply(A, B);
 
 <p>gibi bir kod işletebilirim. Üstte lineer cebir matris çarpım işlemi yapmış olduk.</p>
 
+<p>Eğer kendim dahil edilebilir kodlar yazmak istiyorsam, mesela <code>util.js</code> içinde
+bir <code>add</code> fonksiyonumun dışarıdan dahil edilebilir olmasını istiyorsam,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">function</span> <span class="nx">add</span><span class="p">(</span><span class="nx">x</span><span class="p">,</span><span class="nx">y</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">x</span><span class="o">+</span><span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kd">function</span> <span class="nx">subtract</span><span class="p">(..,...)</span> <span class="p">{</span>
+  <span class="k">return</span> <span class="nx">x</span><span class="o">-</span><span class="nx">y</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="nx">add</span><span class="o">:</span> <span class="nx">add</span><span class="p">,</span>
+    <span class="nx">subtract</span><span class="o">:</span> <span class="nx">subtract</span>
+<span class="p">};</span>
+</code></pre>
+</div>
+
+<p>Artık bu modülü üstteki tarif edildiği gibi dahil edip kullanabilirim,</p>
+
+<pre><code>var u = require("./util.js")
+u.add(...)
+</code></pre>
+
 <h3>Çengeller</h3>
 
 <p>Javascript fonksiyonları her türlü kullanıcı aksiyonu sayesinde çağrılabilir.

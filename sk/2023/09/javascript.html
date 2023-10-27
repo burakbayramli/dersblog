@@ -288,9 +288,12 @@ direk kod içinde</p>
 </code></pre>
 </div>
 
-<p>diyebilirdim, erişmek için <code>d1['a']</code> çağrısı 3 değerini verir. Sözlük
-değeri olarak bir liste, bir başka sözlük te kullanabilirdik. Eğer
-tüm anahtarları gezmek (iterate) istersem,</p>
+<p>diyebilirdim, erişmek için <code>d1['a']</code> çağrısı 3 değerini verir. Bir
+anahtarın sözlükte olup olmadığını kontrol için <code>hasOwnProperty</code>
+çağrısı var.</p>
+
+<p>Sözlük değeri olarak bir liste, bir başka sözlük te
+kullanabilirdik. Eğer tüm anahtarları gezmek (iterate) istersem,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">d1</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">key</span><span class="p">)</span> <span class="p">{</span>
@@ -349,7 +352,7 @@ olduğu gibi işler.</p>
 <pre><code>[ 'bir', 'kelime', 'arti', 'bir', 'sey' ]
 </code></pre>
 
-<p>Bir metnin diğeri içinde olup olmadığını kontrol için <code>inçludes</code>, mesela</p>
+<p>Bir metnin diğeri içinde olup olmadığını kontrol için <code>includes</code>, mesela</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;berber&quot;</span><span class="p">.</span><span class="nx">includes</span><span class="p">(</span><span class="s2">&quot;erb&quot;</span><span class="p">));</span>
@@ -648,6 +651,58 @@ sıfır indisli, gün değil, alttaki gibi oluyor,</p>
 </code></pre>
 </div>
 
+<h3>Islem Sirasinda Animasyon Gostermek</h3>
+
+<p>Uzun sürebilecek işlemler sırasında bir anımasyon GİF göstermek mümkündür.
+Bir teknik şudur, bir <code>&lt;div&gt;</code> içine koyulmuş bir anımasyon GİF var,
+bu <code>&lt;div&gt;</code> sayfa yüklendiğinde stili <code>dışplay: nöne;</code> ile kapalı tutulur,
+yani gösterilmez. İşlem için bir düğmeye basıldığında ilk önce stil
+<code>block</code> haline getirilir, yani anımasyon gösterilir, işlem bitince
+anımasyon yine kapatılır.</p>
+
+<p>Burada tek problem üstte sıralanan tüm işlemlerin aynı iş parçacığı
+(thread) içinde olacağı için kapatma/açılma işlemlerinin doğru
+gösterilmemesi. Fakat eğer uzun sürecek işlemi başka bir iş parçacığı
+içine asenkron olarak işletirsek [3], istenen görüntü elde
+edilir. Kullanılan animasyon gif <a href="busy.gif">şurada</a>.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="kd">function</span> <span class="nx">longLoop</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">count</span> <span class="o">=</span> <span class="mf">1000000000</span><span class="p">;</span>
+        <span class="kd">let</span> <span class="nx">result</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kd">let</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">1</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;=</span> <span class="nx">count</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+          <span class="nx">result</span> <span class="o">=</span> <span class="nx">i</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="kd">function</span> <span class="nx">go</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">let</span> <span class="nx">spinnerElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;spinner&#39;</span><span class="p">);</span>
+        <span class="kd">let</span> <span class="nx">resultElement</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">);</span>
+        <span class="nx">spinnerElement</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s1">&#39;block&#39;</span><span class="p">;</span>
+
+        <span class="k">new</span> <span class="nb">Promise</span><span class="p">(</span><span class="nx">resolve</span> <span class="p">=&gt;</span> <span class="nx">setTimeout</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">{</span>
+            <span class="nx">resolve</span><span class="p">(</span><span class="nx">longLoop</span><span class="p">())</span>
+        <span class="p">}))</span>
+      <span class="p">.</span><span class="nx">then</span><span class="p">((</span><span class="nx">result</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+          <span class="nx">spinnerElement</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">display</span> <span class="o">=</span> <span class="s1">&#39;none&#39;</span><span class="p">;</span>
+          <span class="nx">resultElement</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">result</span><span class="p">;</span>   
+      <span class="p">})</span>
+    <span class="p">}</span>
+  <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">button</span> <span class="na">onclick</span><span class="o">=</span><span class="s">&quot;go();&quot;</span><span class="p">&gt;</span>Go<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">span</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;result&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">img</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;display: none;&quot;</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;spinner&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;busy.gif&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">img</span><span class="p">&gt;</span>  
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
 <h3>Girdi Tamamlamak (Autocomplete)</h3>
 
 <p>Javascript'in kabiliyetlerini göstermek açısından alttaki kod faydalı olur,
@@ -760,6 +815,8 @@ listesi veren (autocomplete) kodu altta görülüyor.</p>
 <p>[1] https://www.w3schools.com/howto/howto<em>js</em>autocomplete.asp</p>
 
 <p>[2] https://mathjs.org/download.html</p>
+
+<p>[3] https://stackoverflow.com/questions/71943182/how-to-show-hide-animated-gif-during-the-execution-of-a-function/71944178#71944178</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

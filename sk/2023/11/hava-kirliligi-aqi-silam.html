@@ -36,10 +36,73 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Hava Kirliligi, SILAM, AQI</h1>
+<h1>Hava Kirliliği, SILAM, AQI</h1>
+
+<p>SILAM [2] adlı bir kurum hava kirlilik durumu verilerini paylaşıyor.
+Bu veriler kullanılarak hava kirliliğini belirten bir özet ölçüt AQI
+hesaplanabilir, bu bağlamda Ventusky uygulaması faydalı, zaten onlar da
+verisini SILAM'dan alıyor.</p>
+
+<p>https://www.ventusky.com/?p=40.93;32.41;6&amp;l=aqi</p>
+
+<p>OpenWeatherMap sitesinden de yeryüzündeki herhangi bir yer için anlık
+hava temizlik durumu alınabilir. Verilen bilgiler yer seviyesi ozon
+(O3), partikül kirliliği (PM2.5, PM10), çarbon monoxide (CO), sülfür
+diyoksit (s02), nitrogen diyoksit (no2). OWM sitesine bedava kayıt
+olup bir anahtar almak yeterli, bu anahtar</p>
+
+<pre><code>{
+  "weatherapi": "[anahtar buraya]",
+  ...
+}
+</code></pre>
+
+<p>şeklinde biz bir <code>.conf</code> dosyasına yazdık, JSON formatında, anahtarı alıp
+alttaki kodla bilgiyi alıyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">pollution</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">):</span>
+    <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://api.openweathermap.org/data/2.5/air_pollution?&#39;</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/.nomterr.conf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;weatherapi&#39;</span><span class="p">]</span> <span class="p">}</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">payload</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">decode</span><span class="p">())</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">iter_lines</span><span class="p">()]</span>
+    <span class="n">aqi</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;list&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;main&#39;</span><span class="p">]</span>
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;list&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;components&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">aqi</span><span class="p">,</span> <span class="n">comp</span>
+
+
+<span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="o">=</span> <span class="mf">28.667497225228697</span><span class="p">,</span> <span class="mf">77.04931436061617</span>
+<span class="n">pollution</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+({&#39;aqi&#39;: 5},
+ {&#39;co&#39;: 1642.23,
+  &#39;no&#39;: 4.81,
+  &#39;no2&#39;: 52.78,
+  &#39;o3&#39;: 151.63,
+  &#39;so2&#39;: 154.5,
+  &#39;pm2_5&#39;: 277.4,
+  &#39;pm10&#39;: 318.04,
+  &#39;nh3&#39;: 5.7})
+</code></pre>
+</div>
+
+<p>Üstteki sonuçlar Hindistan'ın başkenti Yeni Delhi için, bu sıralarda
+hava kirlilik problemi var, ve AQİ maksimum olan 5 seviyesinde çıktı.</p>
+
+<p>SILAM ile tüm dünya için geçmiş tarihteki kirlilik verisi bulunabilir, [1]
+bağlantısında dosyalar görülüyor, alttaki kodla <code>20231104</code> tarihi için
+olan nc4 dosyasını alıyoruz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">os</span>
+
 
 <span class="k">def</span> <span class="nf">download_silam</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://silam.fmi.fi/thredds/fileServer/dailysilam_glob06_v5_8/files/&quot;</span>
@@ -50,16 +113,96 @@
        <span class="nb">open</span><span class="p">(</span><span class="n">target_file</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="s1">&#39;SILAM-AQstat-glob06_v5_8_2023110400.nc4&#39;</span>
-<span class="n">outdir</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span>
-<span class="n">download_file</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">base_url</span><span class="p">,</span> <span class="n">outdir</span><span class="p">)</span>
+<span class="n">outdir</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/silam&quot;</span>
+<span class="n">download_silam</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">outdir</span><span class="p">)</span>
 </code></pre>
 </div>
+
+<p>Dosyada paylaşılan bilgilere bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">netCDF4</span>
+
+<span class="n">sf</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">sf</span><span class="o">.</span><span class="n">variables</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span> <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>air_dens
+daymax_cnc_PM10
+daymax_cnc_PM2_5
+daymax_vmr_CO
+daymax_vmr_NO
+daymax_vmr_NO2
+daymax_vmr_O3
+daymax_vmr_SO2
+daymean_cnc_PM10
+daymean_cnc_PM2_5
+daymean_vmr_CO
+daymean_vmr_NO
+daymean_vmr_NO2
+daymean_vmr_O3
+daymean_vmr_SO2
+hybrid
+lat
+lon
+time
+</code></pre>
+</div>
+
+<p>Bunlardan mesala ortalam PM 2.5 verisi <code>daymean_cnc_PM2_5</code>,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">sf</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;daymean_cnc_PM2_5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: (7, 1, 297, 600)
+</code></pre>
+</div>
+
+<p>Sonuç bir tensor olarak geldi. Bu tensor, yani çok boyutlu matris,
+görülen boyutlarda, bu boyutların ilki gün içindeki zaman kesiti en
+son ikisi sırasıyla enlem ve boylam. Maksimum enlem, boylamın -180,180
+ve -90,90 arasında olduğunu biliyoruz, bunları eldeki veri noktasına
+bölerek bir izgara yaratabiliriz, ve verileri bu izgarada basabiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">600</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">297</span><span class="p">))</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;daymax_cnc_PM2_5&#39;</span><span class="p">][</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,:]</span> 
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">z</span> <span class="o">*</span> <span class="mf">1e8</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+<span class="n">sm</span><span class="o">.</span><span class="n">plot_continents</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">incolor</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">,</span> <span class="n">outcolor</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;OrRd&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;hava1.jpg&#39;</span><span class="p">,</span><span class="n">pil_kwargs</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;quality&#39;</span><span class="p">:</span><span class="mi">40</span><span class="p">})</span>
+</code></pre>
+</div>
+
+<p><img src="hava1.jpg" alt="" /></p>
+
+<p>Dikkat log ile bir işlem yapmak gerekti çünkü verinin lineer olmayan
+bir sürecin sonucu, çok ekstrem değerler var, çoğu yerde çok düşük
+değerler var [3]. Grafikleme amaçlı olarak bir önişlem yapmak gerekti.</p>
+
+<p>OWM zaten bir özet AQI hesaplıyor, SILAM için eldeki bileşenler
+kullanılarak [4] bir AQI hesabı yapılabilir.</p>
 
 <p>[1] https://silam.fmi.fi/thredds/catalog/dailysilam<em>glob06</em>v5_8/files/catalog.html</p>
 
 <p>[2] https://silam.fmi.fi/aqforecast.html</p>
 
 <p>[3] https://github.com/fmidev/opendata-resources/blob/master/examples/python/timeseries-airquality.ipynb</p>
+
+<p>[4] https://www.health.act.gov.au/about-our-health-system/population-health/environmental-monitoring/air-quality/measuring-air</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

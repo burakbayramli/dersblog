@@ -153,7 +153,7 @@ poly.addTo(map);
 
 ### Tıklama Adresi
 
-Haritada3 tıklanan yerdeki enlem/boylam kordinalarını almak için
+Haritada tıklanan yerdeki enlem/boylam kordinalarını almak için
 
 ```javascript
 map.on('click', function(e){

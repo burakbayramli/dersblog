@@ -184,7 +184,7 @@ Basit bir boş fayans örneği için CSS içine
 Kod seviyesinde
 
 ```javascript
-avar base = {
+var base = {
   'Empty': L.tileLayer(''),
     'OpenStreetMap': L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     'attribution': 'Map data &copy; OpenStreetMap contributors'

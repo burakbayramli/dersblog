@@ -43,22 +43,22 @@ Bu veriler kullanılarak hava kirliliğini belirten bir özet ölçüt AQI
 hesaplanabilir, bu bağlamda Ventusky uygulaması faydalı, zaten onlar da
 verisini SILAM'dan alıyor.</p>
 
-<p>https://www.ventusky.com/?p=40.93;32.41;6&amp;l=aqi</p>
+<p><a href="https://www.ventusky.com/?p=40;32;6&l=aqi">https://www.ventusky.com/?p=40;32;6&amp;l=aqi</a></p>
 
 <p>OpenWeatherMap sitesinden de yeryüzündeki herhangi bir yer için anlık
 hava temizlik durumu alınabilir. Verilen bilgiler yer seviyesi ozon
-(O3), partikül kirliliği (PM2.5, PM10), çarbon monoxide (CO), sülfür
+(O3), partikül kirliliği (PM2.5, PM10), carbon monoxide (CO), sülfür
 diyoksit (s02), nitrogen diyoksit (no2). OWM sitesine bedava kayıt
-olup bir anahtar almak yeterli, bu anahtar</p>
+olup bir anahtar almak yeterli, biz anahtarı</p>
 
 <pre><code>{
-  "weatherapi": "[anahtar buraya]",
+  "weatherapi": "[anahtar]",
   ...
 }
 </code></pre>
 
-<p>şeklinde biz bir <code>.conf</code> dosyasına yazdık, JSON formatında, anahtarı alıp
-alttaki kodla bilgiyi alıyoruz,</p>
+<p>bir <code>.conf</code> dosyasına yazdık, JSON formatında, anahtarla alttaki kod üzerinden
+bilgiyi alıyoruz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">os</span>
@@ -93,12 +93,12 @@ alttaki kodla bilgiyi alıyoruz,</p>
 </code></pre>
 </div>
 
-<p>Üstteki sonuçlar Hindistan'ın başkenti Yeni Delhi için, bu sıralarda
-hava kirlilik problemi var, ve AQİ maksimum olan 5 seviyesinde çıktı.</p>
+<p>Rapor Hindistan'ın başkenti Yeni Delhi için, bu sıralarda hava
+kirlilik problemi var, ve AQI maksimum olan 5 seviyesinde çıktı.</p>
 
-<p>SILAM ile tüm dünya için geçmiş tarihteki kirlilik verisi bulunabilir, [1]
-bağlantısında dosyalar görülüyor, alttaki kodla <code>20231104</code> tarihi için
-olan nc4 dosyasını alıyoruz,</p>
+<p>SILAM ile tüm dünya için geçmiş tarihteki kirlilik verisi bulunabilir,
+[1] bağlantısında dosyalar görülüyor, alttaki kodla <code>20231104</code> tarihi
+için olan nc4 dosyasını alıyoruz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">os</span>
@@ -152,7 +152,7 @@ time
 </code></pre>
 </div>
 
-<p>Bunlardan mesala ortalam PM 2.5 verisi <code>daymean_cnc_PM2_5</code>,</p>
+<p>Bunlardan mesala ortalama PM 2.5 verisi <code>daymean_cnc_PM2_5</code></p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">sf</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;daymean_cnc_PM2_5&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
@@ -164,11 +164,11 @@ time
 </code></pre>
 </div>
 
-<p>Sonuç bir tensor olarak geldi. Bu tensor, yani çok boyutlu matris,
-görülen boyutlarda, bu boyutların ilki gün içindeki zaman kesiti en
-son ikisi sırasıyla enlem ve boylam. Maksimum enlem, boylamın -180,180
-ve -90,90 arasında olduğunu biliyoruz, bunları eldeki veri noktasına
-bölerek bir izgara yaratabiliriz, ve verileri bu izgarada basabiliriz.</p>
+<p>Bu bir tensor, yani çok boyutlu matris, görülen boyutlarda, bu
+boyutların ilki gün içindeki zaman kesiti en son ikisi sırasıyla enlem
+ve boylam. Maksimum enlem, boylamın -180,180 ve -90,90 arasında
+olduğunu biliyoruz, bunları eldeki veri noktasına bölerek bir ızgara
+(grid) yaratabiliriz, ve verileri bu ızgarada basabiliriz.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span>
@@ -189,12 +189,12 @@ bölerek bir izgara yaratabiliriz, ve verileri bu izgarada basabiliriz.</p>
 
 <p><img src="hava1.jpg" alt="" /></p>
 
-<p>Dikkat log ile bir işlem yapmak gerekti çünkü verinin lineer olmayan
-bir sürecin sonucu, çok ekstrem değerler var, çoğu yerde çok düşük
-değerler var [3]. Grafikleme amaçlı olarak bir önişlem yapmak gerekti.</p>
+<p>Dikkat log ile bir işlem yapmak gerekti çünkü veri lineer olmayan bir
+sürecin sonucu, çok ekstrem değerler var, çoğu yerde çok düşük
+değerler var [3]. Grafikleme amaçlı olarak bu önişlemi yapmak gerekti.</p>
 
-<p>OWM zaten bir özet AQI hesaplıyor, SILAM için eldeki bileşenler
-kullanılarak [4] bir AQI hesabı yapılabilir.</p>
+<p>OWM bir özet AQI hesaplar, SILAM için eldeki bileşenler kullanılarak
+[4] bir AQI hesabı yapılabilir.</p>
 
 <p>[1] https://silam.fmi.fi/thredds/catalog/dailysilam<em>glob06</em>v5_8/files/catalog.html</p>
 

@@ -5,24 +5,24 @@ Bu veriler kullanılarak hava kirliliğini belirten bir özet ölçüt AQI
 hesaplanabilir, bu bağlamda Ventusky uygulaması faydalı, zaten onlar da
 verisini SILAM'dan alıyor.
 
-https://www.ventusky.com/?p=40.93;32.41;6&l=aqi
+[https://www.ventusky.com/?p=40;32;6&l=aqi](https://www.ventusky.com/?p=40;32;6&l=aqi)
 
 
 OpenWeatherMap sitesinden de yeryüzündeki herhangi bir yer için anlık
 hava temizlik durumu alınabilir. Verilen bilgiler yer seviyesi ozon
-(O3), partikül kirliliği (PM2.5, PM10), çarbon monoxide (CO), sülfür
+(O3), partikül kirliliği (PM2.5, PM10), carbon monoxide (CO), sülfür
 diyoksit (s02), nitrogen diyoksit (no2). OWM sitesine bedava kayıt
-olup bir anahtar almak yeterli, bu anahtar
+olup bir anahtar almak yeterli, biz anahtarı
 
 ```
 {
-  "weatherapi": "[anahtar buraya]",
+  "weatherapi": "[anahtar]",
   ...
 }
 ```
 
-şeklinde biz bir `.conf` dosyasına yazdık, JSON formatında, anahtarı alıp
-alttaki kodla bilgiyi alıyoruz,
+bir `.conf` dosyasına yazdık, JSON formatında, anahtarla alttaki kod üzerinden
+bilgiyi alıyoruz,
 
 ```python
 import json, requests, os
@@ -55,12 +55,12 @@ Out[1]:
   'nh3': 5.7})
 ```
 
-Üstteki sonuçlar Hindistan'ın başkenti Yeni Delhi için, bu sıralarda
-hava kirlilik problemi var, ve AQİ maksimum olan 5 seviyesinde çıktı.
+Rapor Hindistan'ın başkenti Yeni Delhi için, bu sıralarda hava
+kirlilik problemi var, ve AQI maksimum olan 5 seviyesinde çıktı.
 
-SILAM ile tüm dünya için geçmiş tarihteki kirlilik verisi bulunabilir, [1]
-bağlantısında dosyalar görülüyor, alttaki kodla `20231104` tarihi için
-olan nc4 dosyasını alıyoruz,
+SILAM ile tüm dünya için geçmiş tarihteki kirlilik verisi bulunabilir,
+[1] bağlantısında dosyalar görülüyor, alttaki kodla `20231104` tarihi
+için olan nc4 dosyasını alıyoruz,
 
 
 ```python
@@ -112,7 +112,7 @@ lon
 time
 ```
 
-Bunlardan mesala ortalam PM 2.5 verisi `daymean_cnc_PM2_5`,
+Bunlardan mesala ortalama PM 2.5 verisi `daymean_cnc_PM2_5`
 
 ```python
 sf.variables['daymean_cnc_PM2_5'].shape
@@ -122,11 +122,11 @@ sf.variables['daymean_cnc_PM2_5'].shape
 Out[1]: (7, 1, 297, 600)
 ```
 
-Sonuç bir tensor olarak geldi. Bu tensor, yani çok boyutlu matris,
-görülen boyutlarda, bu boyutların ilki gün içindeki zaman kesiti en
-son ikisi sırasıyla enlem ve boylam. Maksimum enlem, boylamın -180,180
-ve -90,90 arasında olduğunu biliyoruz, bunları eldeki veri noktasına
-bölerek bir izgara yaratabiliriz, ve verileri bu izgarada basabiliriz.
+Bu bir tensor, yani çok boyutlu matris, görülen boyutlarda, bu
+boyutların ilki gün içindeki zaman kesiti en son ikisi sırasıyla enlem
+ve boylam. Maksimum enlem, boylamın -180,180 ve -90,90 arasında
+olduğunu biliyoruz, bunları eldeki veri noktasına bölerek bir ızgara
+(grid) yaratabiliriz, ve verileri bu ızgarada basabiliriz.
 
 ```python
 import simplegeomap as sm
@@ -146,12 +146,12 @@ plt.savefig('hava1.jpg',pil_kwargs={'quality':40})
 
 ![](hava1.jpg)
 
-Dikkat log ile bir işlem yapmak gerekti çünkü verinin lineer olmayan
-bir sürecin sonucu, çok ekstrem değerler var, çoğu yerde çok düşük
-değerler var [3]. Grafikleme amaçlı olarak bir önişlem yapmak gerekti.
+Dikkat log ile bir işlem yapmak gerekti çünkü veri lineer olmayan bir
+sürecin sonucu, çok ekstrem değerler var, çoğu yerde çok düşük
+değerler var [3]. Grafikleme amaçlı olarak bu önişlemi yapmak gerekti.
 
-OWM zaten bir özet AQI hesaplıyor, SILAM için eldeki bileşenler
-kullanılarak [4] bir AQI hesabı yapılabilir.
+OWM bir özet AQI hesaplar, SILAM için eldeki bileşenler kullanılarak
+[4] bir AQI hesabı yapılabilir.
 
 
 [1] https://silam.fmi.fi/thredds/catalog/dailysilam_glob06_v5_8/files/catalog.html

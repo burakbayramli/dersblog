@@ -1,0 +1,314 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Poligon Birlesimi, Çevreleyen Bölge</h1>
+
+<p>Poligon Birleşimi</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="kn">import</span> <span class="nn">geopandas</span> <span class="k">as</span> <span class="nn">gpd</span>
+<span class="kn">from</span> <span class="nn">shapely.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">poly1</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">)])</span>
+<span class="n">poly2</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
+<span class="n">poly3</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)])</span>
+<span class="n">poly4</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)])</span>
+<span class="n">polys</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly1</span><span class="p">,</span> <span class="n">poly2</span><span class="p">,</span> <span class="n">poly3</span><span class="p">,</span> <span class="n">poly4</span><span class="p">]</span>     
+
+<span class="kn">from</span> <span class="nn">shapely.ops</span> <span class="kn">import</span> <span class="n">unary_union</span>
+
+<span class="n">mergedPolys</span> <span class="o">=</span> <span class="n">unary_union</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">gpd</span><span class="o">.</span><span class="n">GeoSeries</span><span class="p">([</span><span class="n">mergedPolys</span><span class="p">])</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">rrr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rrr</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">rrr</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;nokta2.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="nokta2.jpg" alt="" /></p>
+
+<p>Üçgenleme, Delanuay (Triangulation)</p>
+
+<p>Delanuay tekniği bir nokta bulutunu veri alarak o noktaları birbiri ile
+bağlantılı üçgenler haline çevirmek için kullanışlıdır; bu tür noktalar hesapsal
+bilimde ortaya çıkabilir, diferansiyel denklem çözmek için sayısal hesaplara
+gereken ızgaralar Delanuay ile yaratılabilir. Noktalar verilir, üçgen bazlı
+ızgara ortaya çıkartılır, bu ızgara hücreleri baz alınarak hesabın gerisi
+işletilir.</p>
+
+<p>Kütüphane \verb!scipy! içinde Delanuay hesabı yapabilen kodlar var.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">Delaunay</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">101</span><span class="p">,</span> <span class="mi">237</span><span class="p">],</span> <span class="p">[</span><span class="mi">198</span><span class="p">,</span> <span class="mi">207</span><span class="p">],</span> <span class="p">[</span><span class="mi">316</span><span class="p">,</span> <span class="mi">214</span><span class="p">],</span> <span class="p">[</span> <span class="mi">58</span><span class="p">,</span> <span class="mi">179</span><span class="p">],</span> <span class="p">[</span><span class="mi">162</span><span class="p">,</span> <span class="mi">138</span><span class="p">],</span> 
+          <span class="p">[</span><span class="mi">217</span><span class="p">,</span> <span class="mi">120</span><span class="p">],</span> <span class="p">[</span><span class="mi">310</span><span class="p">,</span> <span class="mi">116</span><span class="p">],</span> <span class="p">[</span><span class="mi">153</span><span class="p">,</span>  <span class="mi">87</span><span class="p">],</span> <span class="p">[</span><span class="mi">257</span><span class="p">,</span>  <span class="mi">43</span><span class="p">]]</span>
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">furthest_site</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;algs_075_enc_12.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="algs_075_enc_12.png">Grafik</a></p>
+
+<p>Kodda \verb!tr.simplicies! icinde gorulen ucgenler kodlanmis, her kenar
+\verb!points! icindeki bir indisi degerine, bir noktaya isaret ediyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[4 0 3]
+ [7 4 3]
+ [5 7 8]
+ [7 5 4]
+ [5 6 2]
+ [6 5 8]
+ [1 5 2]
+ [5 1 4]
+ [0 1 2]
+ [1 0 4]]
+</code></pre>
+</div>
+
+<p>Temel olarak Delaunay ile yapılan ızgaraları oluşturan üçgenlerin açılarını
+minimum tutmak, içiçe üçgen oluşturmamak ve yakın noktaların birbiri ile
+bağlantılı olmasına uğraşmak [7]. Algoritma bu şartların sonucu olarak görülen
+ızgaraya doğru evrilir.</p>
+
+<p>Fakat bazı ilerlemeler hala mümkün; mesela bir insana sadece ham noktalar
+verilse ve hangi şekilden geldiğini söylemesi istense, büyük ihtimalle en
+üstteki kenarı oraya koymayacaktı. O kenar Delaunay'ın dışbükeylige meyili
+sebebiyle ortaya çıkıyor. O zaman biz de bir ek işlem yaparak o kenarı
+çıkartabiliriz. Görülen ek kenar aşırı büyük açısı olan bir üçgenin kenarı
+(Delanuay açıları az tutmaya uğraşmasına rağmen), bir artişlem (postprocessing)
+adımı içinde ``içinde çok büyük açı taşıyan'' üçgenleri çıkartabiliriz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">newsimp</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">:</span>
+  <span class="c1"># ucgen kenar noktalari</span>
+  <span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">points</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="n">points</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+  <span class="c1"># A-B ve A-C vektorunu hesapla, aradaki aciyi kosinus uzaklik uzerinden bul</span>
+  <span class="n">e1</span> <span class="o">=</span> <span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">;</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">C</span><span class="o">-</span><span class="n">A</span>
+  <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+  <span class="n">denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e2</span><span class="p">)</span>
+  <span class="n">d1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">denom</span><span class="p">))</span>
+  <span class="c1"># B-C ve B-A ayni sekilde</span>
+  <span class="n">e1</span> <span class="o">=</span> <span class="n">C</span><span class="o">-</span><span class="n">B</span><span class="p">;</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">A</span><span class="o">-</span><span class="n">B</span>
+  <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+  <span class="n">denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e2</span><span class="p">)</span>
+  <span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">denom</span><span class="p">))</span>
+  <span class="c1"># ucuncu aciyi vektorle hesaplamaya gerek yok, toplami 180&#39;den cikart</span>
+  <span class="n">d3</span> <span class="o">=</span> <span class="mi">180</span><span class="o">-</span><span class="n">d1</span><span class="o">-</span><span class="n">d2</span>
+  <span class="n">degs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">d1</span><span class="p">,</span><span class="n">d2</span><span class="p">,</span><span class="n">d3</span><span class="p">])</span>
+  <span class="c1"># ucgenin herhangi bir acisi 110 dan buyukse o ucgeni atla</span>
+  <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">degs</span> <span class="o">&gt;</span> <span class="mi">110</span><span class="p">):</span> <span class="k">continue</span>
+  <span class="n">newsimp</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">newsimp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;algs_075_enc_13.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="algs_075_enc_13.png">Grafik</a></p>
+
+<p>Farklı bir şekle bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;cres.csv&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;algs_075_enc_14.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="algs_075_enc_14.png">Grafik</a></p>
+
+<p>Bu nokta bulutu üzerinde Delanuay uygularsak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">furthest_site</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;algs_075_enc_15.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="algs_075_enc_15.png">Grafik</a></p>
+
+<p>Bu veride büyük açılı üçgenleri çıkartsak bile hala geriye iç kısımdaki bazı çok
+uzun çizgiler kalacak. Eğer aşırı uzun bağlantıları, çizgileri çıkartırsak belki
+istenilen objeye yaklaşabiliriz. ``Çok uzun'' tanımını izafi olarak tanımlamak
+lazım tabii ki, kod içine kafamıza göre gelişigüzel seçtiğimiz bir takım sihirli
+sabit sayılar koymak istemiyoruz, filtreyi şöyle tanımlayalım, eğer bir çizgi
+diğer tüm bağlantıların ortalamasından bir sapmadan fazla uzaktaysa o çizgiyi
+içeren üçgen çok büyük olarak kabul edilir ve çıkartılır. Büyük açı mantığını
+hala tutuyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">tri</span> <span class="o">=</span> <span class="n">Delaunay</span><span class="p">(</span><span class="n">points</span><span class="p">,</span><span class="n">furthest_site</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">:</span>
+  <span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">,</span><span class="n">C</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">points</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span><span class="n">points</span><span class="p">[</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+  <span class="n">e1</span> <span class="o">=</span> <span class="n">B</span><span class="o">-</span><span class="n">A</span><span class="p">;</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">C</span><span class="o">-</span><span class="n">A</span>
+  <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+  <span class="n">n1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">);</span> <span class="n">n2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e2</span><span class="p">)</span>
+  <span class="n">denom</span> <span class="o">=</span>  <span class="n">n1</span> <span class="o">*</span> <span class="n">n2</span>
+  <span class="n">d1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">denom</span><span class="p">))</span>
+  <span class="n">e1</span> <span class="o">=</span> <span class="n">C</span><span class="o">-</span><span class="n">B</span><span class="p">;</span> <span class="n">e2</span> <span class="o">=</span> <span class="n">A</span><span class="o">-</span><span class="n">B</span>
+  <span class="n">num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">e1</span><span class="p">,</span> <span class="n">e2</span><span class="p">)</span>
+  <span class="n">denom</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e2</span><span class="p">)</span>
+  <span class="n">d2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">num</span><span class="o">/</span><span class="n">denom</span><span class="p">))</span>
+  <span class="n">d3</span> <span class="o">=</span> <span class="mi">180</span><span class="o">-</span><span class="n">d1</span><span class="o">-</span><span class="n">d2</span>
+  <span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">n1</span><span class="p">,</span><span class="n">n2</span><span class="p">,</span><span class="n">d1</span><span class="p">,</span><span class="n">d2</span><span class="p">,</span><span class="n">d3</span><span class="p">])</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">res</span><span class="p">[:,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="n">res</span><span class="p">[:,[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">res</span><span class="p">[:,[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span> <span class="o">&gt;</span> <span class="mi">110</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">res</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">m</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">res</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">m</span> <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">triplot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="n">tri</span><span class="o">.</span><span class="n">simplices</span><span class="p">[</span><span class="n">mask</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;algs_075_enc_16.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="algs_075_enc_16.png">Grafik</a></p>
+
+<p>Bu güzel bir şekil oldu.</p>
+
+<p>Dışbükey Zarf (Convex Hull)</p>
+
+<p>Verili herhangi bir boyuttaki bir nokta bulutunu düşünelim. Bu noktalar
+mesela bir yapay görüş uygulamasında bir görüntüsel bölgeyi (blob) temsil
+ediyor olabilir, ki gerçek dünyada o bölge bir obje olabilir. Ya da uzaklık
+ölçümü yapan algılayıcıdan kordinatlar aldık, bu kordinatlar arasındaki bir
+grubun etrafını tanımlayan sınırları bilmek istiyoruz. Bu bölgenin
+özellikle dışbükey olmasını istiyoruz.</p>
+
+<p>Dışbükeylik özellikle istenen bir özellik, çünkü gerçek dünya objelerinin
+kabaca dış çeperleri dışbükey olmaya meyillidir. Ya da veri içinde dıştan
+izole, dışa kapalı bölgeler dışbükey gözükebilir. Bu bölgeleri bulmak ve
+dış hatlarını raporlamak faydalı.</p>
+
+<p>Şöyle bir nokta bulutu olsun, </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">ConvexHull</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;quadri.csv&#39;</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">12</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;enc_09.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="enc_09.png">Grafik</a></p>
+
+<p>Bu noktaların dışbükey zarfını (convex hull) bulmak için pek çok algoritma
+var. Mesela Quickhull [1], ya da Graham Scan adlı algoritmalar. Altta
+\verb!scipy!'in çağrısını kullanıyoruz, bu çağrı içinde [2] koduna çağrı
+yapıyor, QHull Quickhull kullanıyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">ConvexHull</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">points</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;quadri.csv&#39;</span><span class="p">))</span>
+<span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">points</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[:,</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">simplex</span> <span class="ow">in</span> <span class="n">hull</span><span class="o">.</span><span class="n">simplices</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">simplex</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="n">simplex</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;k-&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">12</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;enc_01.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="enc_01.png">Grafik</a></p>
+
+<p>3 boyutlu bir veri için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">ConvexHull</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span> <span class="nn">scipy.spatial</span> <span class="kn">import</span> <span class="n">ConvexHull</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">points3</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">hull</span> <span class="o">=</span> <span class="n">ConvexHull</span><span class="p">(</span><span class="n">points3</span><span class="p">)</span>
+<span class="n">edges</span><span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">points3</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">hull</span><span class="o">.</span><span class="n">simplices</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">points3</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span> <span class="n">points3</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">points3</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s1">&#39;r-&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">edges</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;bo&#39;</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;enc_08.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="enc_08.png">Grafik</a></p>
+
+<p>Sonuçlar üstte. Piyasadaki en iyi dışbükey zarf algoritmalarının algoritmik
+karmaşıklığı $O(n \log n)$ olarak biliniyor. Bu bazı uygulamalar için yavaş
+gelebilir, ayrıca çoğu uygulamanın kesin bir dış çeper bilgisine
+ihtiyacı yoktur, yaklaşık bir çeper, kabaca şeklin ne olduğunu bildiren bir
+algoritma da kabul edilir olabilir.</p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

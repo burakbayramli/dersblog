@@ -193,6 +193,29 @@ plt.savefig('algs_075_enc_16.png')
 
 Bu güzel bir şekil oldu.
 
+Alfa Sekilleri (Alpha Shapes)
+
+Bu yaklasim ustteki tarif edilen yontemin literaturdeki yaygin
+kullanilan bir versiyonu, bu yaklasimi kodlayan bir paket `alphashapes`,
+
+```python
+import pandas as pd
+import alphashape
+
+pts=np.array(pd.read_csv("cres.csv"))
+
+plt.plot(pts[:,0],pts[:,1],'r.')
+
+poly = alphashape.alphashape(pts, 0.3)
+    
+c = np.array(poly.exterior.coords)
+plt.plot(c[:,0].T,c[:,1].T)
+
+plt.savefig('nokta4.jpg')
+```
+
+[Grafik](nokta4.jpg)
+
 Dışbükey Zarf (Convex Hull)
 
 Verili herhangi bir boyuttaki bir nokta bulutunu düşünelim. Bu noktalar

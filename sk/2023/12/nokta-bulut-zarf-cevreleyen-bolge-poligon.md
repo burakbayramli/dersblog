@@ -193,10 +193,10 @@ plt.savefig('algs_075_enc_16.png')
 
 Bu güzel bir şekil oldu.
 
-Alfa Sekilleri (Alpha Shapes)
+Alfa Şekilleri (Alpha Shapes)
 
-Bu yaklasim ustteki tarif edilen yontemin literaturdeki yaygin
-kullanilan bir versiyonu, bu yaklasimi kodlayan bir paket `alphashapes`,
+Bu yaklaşım üstteki tarif edilen yöntemin literatürdeki yaygın
+kullanılan bir versiyonu, yaklaşımı kodlayan bir paket `alphashapes`,
 
 ```python
 import pandas as pd
@@ -215,6 +215,9 @@ plt.savefig('nokta4.jpg')
 ```
 
 [Grafik](nokta4.jpg)
+
+Parametre `alpha`, üstte 0.3 verildi, çevreleyen çizginin ne kadar
+detaylı olacağını tanımlıyor.
 
 Dışbükey Zarf (Convex Hull)
 

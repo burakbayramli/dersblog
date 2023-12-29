@@ -5,7 +5,7 @@ Poligon Birleşimi
 Bir harita uygulaması için bir poligon grubunun dış çeperini bulmak
 gerekti. Poligonların kestiği bölgeler var, bu bölgeleri dikkate almadan
 tüm poligonların birleşiminin dış sınırını nasıl buluruz? Yardımcı olacak
-kütüphaneler `shapely` ve `geopandaş`.
+kütüphaneler `shapely` ve `geopandas`.
 
 ```python
 from matplotlib import pyplot as plt
@@ -302,4 +302,6 @@ algoritma da kabul edilir olabilir.
 Kaynaklar
 
 [1] https://www.matecdev.com/posts/shapely-merge-polygons.html
+
+
 

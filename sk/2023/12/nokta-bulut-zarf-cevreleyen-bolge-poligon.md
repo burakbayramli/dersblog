@@ -1,6 +1,11 @@
-# Poligon Birlesimi, Çevreleyen Bölge
+# Poligon Birleşimi, Çevreleyen Bölge
 
 Poligon Birleşimi
+
+Bir harita uygulaması için bir poligon grubunun dış çeperini bulmak
+gerekti. Poligonların kestiği bölgeler var, bu bölgeleri dikkate almadan
+tüm poligonların birleşiminin dış sınırını nasıl buluruz? Yardımcı olacak
+kütüphaneler `shapely` ve `geopandaş`.
 
 ```python
 from matplotlib import pyplot as plt
@@ -13,8 +18,17 @@ poly1 = Polygon([(0,0), (2,0), (2,2), (0,2)])
 poly2 = Polygon([(2,2), (4,2), (4,4), (2,4)])
 poly3 = Polygon([(1,1), (3,1), (3,3), (1,3)])
 poly4 = Polygon([(3,3), (5,3), (5,5), (3,5)])
-polys = [poly1, poly2, poly3, poly4]     
+polys = [poly1, poly2, poly3, poly4]
 
+gpd.GeoSeries(polys).boundary.plot()
+plt.savefig('nokta3.jpg')
+```
+
+![](nokta3.jpg)
+
+Birleştirmek için `unary_union` çağrısı yapılır,
+
+```python
 from shapely.ops import unary_union
 
 mergedPolys = unary_union(polys)
@@ -28,6 +42,10 @@ plt.savefig('nokta2.jpg')
 ```
 
 ![](nokta2.jpg)
+
+Not: Çağrıdan geriye tek bir birleşmiş Polygon geliyor. Fakat eğer
+çağrıdan geriye bir liste gelirse her liste içindeki Polygon
+objelerine ayrı ayrı bakılabilir, uygun olanı seçilir.
 
 Üçgenleme, Delanuay (Triangulation)
 
@@ -258,4 +276,7 @@ gelebilir, ayrıca çoğu uygulamanın kesin bir dış çeper bilgisine
 ihtiyacı yoktur, yaklaşık bir çeper, kabaca şeklin ne olduğunu bildiren bir
 algoritma da kabul edilir olabilir.
 
+Kaynaklar
+
+[1] https://www.matecdev.com/posts/shapely-merge-polygons.html
 

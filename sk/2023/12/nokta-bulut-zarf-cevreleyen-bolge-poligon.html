@@ -36,9 +36,14 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Poligon Birlesimi, Çevreleyen Bölge</h1>
+<h1>Poligon Birleşimi, Çevreleyen Bölge</h1>
 
 <p>Poligon Birleşimi</p>
+
+<p>Bir harita uygulaması için bir poligon grubunun dış çeperini bulmak
+gerekti. Poligonların kestiği bölgeler var, bu bölgeleri dikkate almadan
+tüm poligonların birleşiminin dış sınırını nasıl buluruz? Yardımcı olacak
+kütüphaneler <code>shapely</code> ve <code>geopandaş</code>.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
@@ -51,9 +56,19 @@
 <span class="n">poly2</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)])</span>
 <span class="n">poly3</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">)])</span>
 <span class="n">poly4</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">([(</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">)])</span>
-<span class="n">polys</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly1</span><span class="p">,</span> <span class="n">poly2</span><span class="p">,</span> <span class="n">poly3</span><span class="p">,</span> <span class="n">poly4</span><span class="p">]</span>     
+<span class="n">polys</span> <span class="o">=</span> <span class="p">[</span><span class="n">poly1</span><span class="p">,</span> <span class="n">poly2</span><span class="p">,</span> <span class="n">poly3</span><span class="p">,</span> <span class="n">poly4</span><span class="p">]</span>
 
-<span class="kn">from</span> <span class="nn">shapely.ops</span> <span class="kn">import</span> <span class="n">unary_union</span>
+<span class="n">gpd</span><span class="o">.</span><span class="n">GeoSeries</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span><span class="o">.</span><span class="n">boundary</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;nokta3.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="nokta3.jpg" alt="" /></p>
+
+<p>Birleştirmek için <code>unary_union</code> çağrısı yapılır,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">shapely.ops</span> <span class="kn">import</span> <span class="n">unary_union</span>
 
 <span class="n">mergedPolys</span> <span class="o">=</span> <span class="n">unary_union</span><span class="p">(</span><span class="n">polys</span><span class="p">)</span>
 
@@ -67,6 +82,10 @@
 </div>
 
 <p><img src="nokta2.jpg" alt="" /></p>
+
+<p>Not: Çağrıdan geriye tek bir birleşmiş Polygon geliyor. Fakat eğer
+çağrıdan geriye bir liste gelirse her liste içindeki Polygon
+objelerine ayrı ayrı bakılabilir, uygun olanı seçilir.</p>
 
 <p>Üçgenleme, Delanuay (Triangulation)</p>
 
@@ -306,6 +325,10 @@ karmaşıklığı $O(n \log n)$ olarak biliniyor. Bu bazı uygulamalar için yav
 gelebilir, ayrıca çoğu uygulamanın kesin bir dış çeper bilgisine
 ihtiyacı yoktur, yaklaşık bir çeper, kabaca şeklin ne olduğunu bildiren bir
 algoritma da kabul edilir olabilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://www.matecdev.com/posts/shapely-merge-polygons.html</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

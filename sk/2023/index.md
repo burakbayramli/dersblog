@@ -136,5 +136,5 @@
 
 [Leaflet ile Sınır Çizimi, Ukrayna](11/ukrayna-sinirlar-leaflet.html)
 
-[Poligon Birlesimi, Çevreleyen Bölge](12/nokta-bulut-zarf-cevreleyen-bolge-poligon.html)
+[Poligon Birleşimi, Çevreleyen Bölge](12/nokta-bulut-zarf-cevreleyen-bolge-poligon.html)
 

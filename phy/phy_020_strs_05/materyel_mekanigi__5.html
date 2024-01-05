@@ -373,8 +373,110 @@ v_1 \\ \phi_1 \\ v_2 \\ \phi_2
 $$</p>
 <p>Direngenlik matrisi denen büyüklük $EI / L^3$ çarpı üstteki formülde görülen
 4 x 4 matrisidir, yani eşitliğin sağında orta kısımda olan değerler.</p>
+<p>Ornek</p>
+<p>Daha önce makaskirişlerde gördüğümüz gibi üstdüşüm tekniğini normal kirişler
+için de kullanmak mümkündür. Alttaki gibi bir yapı düşünelim [7, sf. 181],</p>
 <p><img alt="" src="phy_020_strs_06_01.jpg" /></p>
-<p>[devam edecek]</p>
+<p>$EI$ büyüklüğünün tüm kiriş boyunca sabit olduğunu kabul edelim. Kirişin orta
+noktasına 5000 N kuvveti ve 2500 Nm momenti uygulanıyor. Kiriş en solda bir
+duvara sabitlenmiş, sağ noktasında ise bir pimle destekleniyor (pimler
+dönüşe izin verir ama yer değişime izin vermez). </p>
+<p>Bu yapıyı üç tane düğüm (node) üzerinden ayrıksal hale getirebiliriz,
+düğümler 1,2, ve 3, ve elde iki tane kiriş var, grafikte görülüyor.</p>
+<p>Bu iki kiriş parçası için direngenlik matrisleri,</p>
+<p>$$
+k^{(1)} = \frac{EI}{L^3}
+\begin{array}{cc} &amp; \begin{array}{rrrr} v_1 &amp; \phi_1 &amp; v_2 &amp; \phi_2 \end{array} \\ &amp;
+\left[
+\begin{array}{cccc}
+  12 &amp; 6L &amp; -12 &amp; 6L \\
+  6L &amp; 4L^2 &amp; -6L &amp; 2L^2 \\
+  -12 &amp; -6L &amp; 12 &amp; -6L \\
+  6L &amp; 2L^2 &amp; -6L &amp; 4L^2
+\end{array}
+\right]
+\end{array} 
+$$</p>
+<p>$$
+k^{(2)} = \frac{EI}{L^3}
+\begin{array}{cc} &amp; \begin{array}{rrrr} v_2 &amp; \phi_2 &amp; v_3 &amp; \phi_3 \end{array} \\ &amp;
+\left[
+\begin{array}{cccc}
+  12 &amp; 6L &amp; -12 &amp; 6L \\
+  6L &amp; 4L^2 &amp; -6L &amp; 2L^2 \\
+  -12 &amp; -6L &amp; 12 &amp; -6L \\
+  6L &amp; 2L^2 &amp; -6L &amp; 4L^2
+\end{array}
+\right]
+\end{array} 
+$$</p>
+<p>Tüm direngenlik matrisini oluşturmak için yine direk direngenlik metotunu
+kullanırız, üstdüşüm uygulayınca her iki matris genişletilir, ve üst üste konur,
+nihai sonuç,</p>
+<p>$$
+\left[\begin{array}{c}
+F_{1y} \\ M_1 \\ F_{2y} \\ M_2 \\ F_{3y} \\ M_3
+\end{array}\right] =
+\frac{EI}{L^3}
+\left[\begin{array}{cccccc}
+12 &amp; 6L &amp; -12 &amp; 6L &amp; 0 &amp; 0 \\
+6L &amp; 4L^2 &amp; -6L &amp; 2L^2 &amp; 0 &amp; 0 \\
+-12L &amp; -6L &amp; 12+12 &amp; -6L+6L &amp; -12 &amp; 6L \\
+6L &amp; 2L^2 &amp; -6L+6L &amp; 4L^2+4L^2 &amp; -6L &amp; 2L^2 \\
+0 &amp; 0 &amp; -12 &amp; -6L &amp; 12 &amp; -6L \\
+0 &amp; 0 &amp; 6L &amp; 2L^2 &amp; -6L &amp; 4L^2
+\end{array}\right]
+\left[\begin{array}{c}
+v_1 \\ \phi_1 \\ v_2 \\ \phi_2 \\ v_3 \\ \phi_3
+\end{array}\right]
+$$</p>
+<p>Bu noktada sınır şartlarını, ya da kısıtlamaları sisteme dahil edebiliriz.
+Düğüm 1'de bir sabit destek var, düğüm 3'te bir menteşe (hinge) desteği var,
+bu demektir ki</p>
+<p>$$
+\phi_1 = 0, \qquad
+v_1 = 0, \qquad
+v_3 = 0
+$$</p>
+<p>En sağ uçta $v_3 = 0$ oldu çünkü menteşe dönüşe izin verir, yer değişime
+izin vermez, $\phi_3$ değeri sıfırdan büyük olabilir, ama $v_3$ sıfır olur.</p>
+<p>Kısıtlamaları dahil edince birinci, ikinci ve beşinci satır ve kolonları
+dışarıda bırakarak bir sistem elde edebiliriz,</p>
+<p>$$
+\left[\begin{array}{c}
+-5000 \\ 5000 \\ 0
+\end{array}\right] =
+\frac{EI}{L^3}
+\left[\begin{array}{ccc}
+24 &amp; 0 &amp; 6L \\
+0 &amp; 8L^2 &amp; 2L^2 \\
+6L &amp; 2L^2 &amp; 4L^2
+\end{array}\right]
+\left[\begin{array}{c}
+v_2 \\ \phi_2 \\ \phi_3
+\end{array}\right]
+$$</p>
+<pre><code class="python">from sympy import symbols, simplify, latex
+from sympy.matrices import Matrix
+L,E,I = symbols(&quot;L, E, I&quot;)
+A = Matrix([[24,0,6*L], [0,8*L**2,2*L**2],[6*L,2*L**2,4*L**2]])
+b = Matrix([[-5000],[5000],[0]])
+sol = A.solve(b)
+</code></pre>
+
+<p>Elde edilen <code>sol</code> sonucuna baktığımızda, biraz basitleştirme sonrası</p>
+<p>$$
+\left[\begin{array}{c}
+v_2 \\ \phi_2 \\ \phi_3
+\end{array}\right] =
+\frac{625}{L}
+\left[\begin{array}{c}
+(3-7L)/12 \\
+(5-L)/4L \\
+(L-1)/L
+\end{array}\right]
+$$</p>
+<p>sonucu çıkıyor.</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Fizik, Materyel Mekaniği - Hazırlık</em></p>
 <p>[2] Craig, <em>Mechanics of Materials, Third Edition</em></p>

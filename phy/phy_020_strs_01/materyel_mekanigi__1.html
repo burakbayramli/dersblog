@@ -38,6 +38,197 @@
         <h1>Materyel Mekaniği - 1
 </h1>
 
+<p>Direk Direngenlik Metotu (Direct Stiffness Method)</p>
+<p>Direngenlik metotunu anlamak için direngenlik matrisi kavramını işlemek
+gerekir. Bu konuya biraz [5]'de değindik. Bir öğe grubunun, sistemin direngenlik
+matrisi düğümsel yer değişimler $d$ ile düğümsel kuvvetler $F$'yi ilintilendiren
+bir $K$ matrisidir, öyle ki [4, sf. 34]</p>
+<p>$$
+F = K d
+$$</p>
+<p>eşitliği geçerlidir. Alttaki gibi bir sistem olsun,</p>
+<p><img alt="" src="phy_020_strs_06_03.jpg" /></p>
+<p>Sistemde bir yay görülüyor, bu yay üzerinde iki tane düğüm noktası seçtik,
+onları takip edeceğiz, düğüm 1 ve 2. Düğümlerdeki yer değişimler $u_1,u_2$
+olsun, yaydaki toplam değişimo $\delta = u_1 - u_2$. Uygulanan kuvvet $T$
+ise bir sabit $k$ üzerinden $T = k \delta$ eşitliği ortaya atılabilir.</p>
+<p>Direngenlik matrisine gelirsek, sistemdeki tüm yer değişimleri şöyle gösterebiliriz,</p>
+<p><img alt="" src="phy_020_strs_06_04.jpg" /></p>
+<p>Sağ uçta yay $T$ kuvveti ile çekiliyorsa, bu durum sol uçta $-T$ tepkisel
+kuvvete sebep olur. Ayrıca $u_1$'in sol yönü işaret ettiğine dikkat, çünkü yer
+değişimin yönü pozitif yönün tersinde, yaydaki takip edilen nokta başlangıç
+anının sol tarafında kalıyor, bu sebeple yön eksi.</p>
+<p>$$
+f_{1x} = -T, \quad f_{2x} = T
+$$</p>
+<p>Hepsini bir araya koyarsak</p>
+<p>$$
+T = -f_{1x} = k (u_2 - u_1)
+$$</p>
+<p>$$
+T = f_{2x} = k (u_2 - u_1)
+$$</p>
+<p>Yani</p>
+<p>$$
+f_{1x} = k(u_1 - u_2)
+$$</p>
+<p>$$
+f_{2x} = k(u_2 - u_1)
+$$</p>
+<p>Matris formunu kullanarak,</p>
+<p>$$
+\left[\begin{array}{ccc}
+f_{1x} \\ f_{2x}
+\end{array}\right] = 
+\left[\begin{array}{ccc}
+k &amp; -k \\ -k &amp; k
+\end{array}\right]
+\left[\begin{array}{ccc}
+u_1 \\ u_2
+\end{array}\right]
+$$</p>
+<p>İfadenin ortasındaki 2 x 2 matrisi direngenlik matrisidir.</p>
+<p>Üstdüşüm (Superposition)</p>
+<p>Eğer iki tane yay sistemini birbiriyle bağlı olarak işlemek istersek [4, sf. 38],
+üstdüşüm tekniği kullanılabilir. Üstdüşüm basit bir matris toplamı ile
+yapılabiliyor. Alttaki örneğe bakalım,</p>
+<p><img alt="" src="phy_020_strs_06_02.jpg" /></p>
+<p>İki yay var, birbirlerine bağlılar, iki yayın sabitleri $k_1$, $k_2$
+olsun. Her iki yayın direngenlik matrisi ayrı ayrı (tekabül eden yer değişim
+değişkenleri matris kolon etiketi olarak gösteriliyor),</p>
+<p>$$
+k^{(1)} =
+\begin{array}{cc} &amp; \begin{array}{cc} u_1 &amp; u_3 \end{array} \\ &amp;
+\left[
+\begin{array}{cc}
+k_1 &amp; -k_1 \\ -k_1 &amp; k_1
+\end{array}
+\right]
+\end{array} 
+\qquad
+k^{(2)} =
+\begin{array}{cc} &amp; \begin{array}{cc} u_3 &amp; u_2 \end{array} \\ &amp;
+\left[
+\begin{array}{cc}
+k_2 &amp; -k_2 \\ -k_2 &amp; k_2
+\end{array}
+\right]
+\end{array}
+$$</p>
+<p>İki yay sistemini tek sistem haline getirmek aslında basit bir matris
+toplamından ibaret fakat bu matrisin kolonları aynı değişkenlere tekabül ediyor
+olmalı. O zaman her iki 2 x 2 matrisi genişletip 3 x 3 matrisi haline
+getirirsek, değişken etiketlerini eşitlersek bu yeni iki matrisi
+toplayabiliriz.</p>
+<p>$$
+k^{(1)} =
+\begin{array}{cc} &amp; \begin{array}{ccc} u_1 &amp; u_2 &amp; u_3 \end{array} \\ &amp;
+\left[
+\begin{array}{ccc}
+k_1 &amp; 0 &amp; -k_1 \\
+0 &amp; 0 &amp; 0 \\
+-k_1 &amp; 0 &amp; k_1
+\end{array}
+\right]
+\end{array} \qquad
+k^{(2)} =
+\begin{array}{cc} &amp; \begin{array}{ccc} u_1 &amp; u_2 &amp; u_3 \end{array} \\ &amp;
+\left[
+\begin{array}{ccc}
+0 &amp; 0 &amp; 0 \\
+0 &amp; k_2 &amp; -k_2 \\
+0 &amp; -k_2 &amp; k_2
+\end{array}
+\right]
+\end{array} \qquad
+$$</p>
+<p>Dikkat edilirse mesela ilk matrisin $u_2$ kolonu tamamen sıfır çünkü 2 x 2
+halindeki $k^{(1)}$ matrisinde bu değişken yoktu. Yeni genişletilmiş matrise
+geçerken olmayan değişkenin kolonunu sıfırlarsak aslında aynı matrisi elde etmiş
+oluruz.</p>
+<p>Artık iki matrisi toplayabiliriz,</p>
+<p>$$
+\left[\begin{array}{ccc}
+k_1 &amp; 0 &amp; -k_1 \\
+0 &amp; k_2 &amp; -k_2 \\
+-k_1 &amp; -k_2 &amp; k_1+k_2
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ u_2 \\ u_3
+\end{array}\right] =
+\left[\begin{array}{c}
+F_{1x} \\ F_{2x} \\ F_{3x}
+\end{array}\right]
+$$</p>
+<p>Sınır Şartları (Boundary Conditions)</p>
+<p>Resimde gösterilen örnekte sol tarafın duvara sabitlendiğini görüyoruz.
+Sabitlenme demek notasyonumuz itibariyle $u_1 = 0$ demektir. Bu bir
+sınır şartıdır, onu bir şekilde sistemimize dahil etmemiz gerekir.
+Değeri üstteki sistemde yerine koyarsak,</p>
+<p>$$
+\left[\begin{array}{ccc}
+k_1 &amp; 0 &amp; -k_1 \\
+0 &amp; k_2 &amp; -k_2 \\
+-k_1 &amp; -k_2 &amp; k_1+k_2
+\end{array}\right]
+\left[\begin{array}{c}
+0 \\ u_2 \\ u_3
+\end{array}\right] =
+\left[\begin{array}{c}
+F_{1x} \\ F_{2x} \\ F_{3x}
+\end{array}\right]
+$$</p>
+<p>Matris sistemini cebirsel olarak tekrar açarsak,</p>
+<p>$$
+k_1(0) + (0) u_2 - k_1 u_3 = F_{1x}
+$$</p>
+<p>$$
+0(0) + k_2 u_2 - k_2 u_3 = F_{2x}
+$$</p>
+<p>$$
+-k_1 (0) - k_2 u_2 + (k_1+k_2) u_3 = F_{3x}
+$$</p>
+<p>elde edilir. Bu sistemde sadece ikinci ve üçüncü denklemi matris olarak
+yazabiliriz,</p>
+<p>$$
+\left[\begin{array}{cc}
+k_2 &amp; -k_2 \\ -k_2 &amp; k_1 + k_2 
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ u_2
+\end{array}\right] =
+\left[\begin{array}{c}
+F_{2x} \\ F_{3x}
+\end{array}\right]
+$$</p>
+<p>Bu son matrisi elde etmek için bir anlamda önceki matrisin birinci satırı ve
+kolonunu dışarı attık, kenara ayırdık, ve kalanlarla yeni bir sistem yarattık.
+Fakat dikkat bu $F_{1x}$ sıfır demek değildir, onun hala bir ifadesi var,
+$F_{1x} = -k_1 u_3$, ve bu eşitliği bir kez sistemin geri kalanının çözdükten
+sonra dönüp ayrıca bulmamız gerekiyor.</p>
+<p>Devam edelim, yeni sistemi çözersek,</p>
+<p>$$
+\left[\begin{array}{ccc}
+u_2 \\ u_3
+\end{array}\right] =
+\left[\begin{array}{cc}
+k_2 &amp; -k_2 \\ -k_2 &amp; k_1 + k_2 
+\end{array}\right]^{-1}
+\left[\begin{array}{c}
+F_{2x} \\ F_{3x}
+\end{array}\right]
+$$</p>
+<p>$$
+= \left[\begin{array}{cc}
+\dfrac{1}{k_2} + \dfrac{1}{k_1} &amp; \dfrac{1}{k_1} \\
+\dfrac{1}{k_1} &amp; \dfrac{1}{k_1} 
+\end{array}\right]
+\left[\begin{array}{c}
+F_{2x} \\ F_{3x}
+\end{array}\right]
+$$</p>
+<p>$u_2,u_3$ bir kez elde edildikten sonra $F_{1x} = -k_1 u_3$ formulu
+ile $F_{1x}$ elde edilebilir.</p>
 <p>Gerinim Tensörü (Strain Tensor) </p>
 <p>Önce nesneleri nasıl temsil ettiğimizden bahsedelim [2]. Diyelim ki elimizde bir
 patates var. Fakat bu patatesin matematiksel olarak bir anlamı yok. Eğer bu
@@ -415,6 +606,8 @@ yaşıyorsa önümüzde daha büyük bir problem var demektir.</p>
     <a href="https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi">https://www.youtube.com/watch?v=2iUnfPRk6Ro&amp;list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi</a></p>
 <p>[3] Adeeb, <em>Introduction to Solid Mechanics, Online Book</em>,
     <a href="https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/">https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/</a></p>
+<p>[4] Logan, <em>A First Course in the Finite Element Method</em></p>
+<p>[5] Bayramlı, <em>Hesapsal Bilim, Ders 1-8</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

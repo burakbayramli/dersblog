@@ -108,6 +108,47 @@ f'<em>{1x} \\ f'</em>{1y} \\ f'<em>{2x} \\ f'</em>{2y}
 u_1 \\ v_1 \\ u_2 \\ v_2
 \end{array}\right]
 $$</p>
+<p>İlerlemeden önce iki üstteki dönüş matrisi, $T$ diyelim, hakkında ilginç bir
+ispatı verelim, ileride lazım olacak. Acaba $T^T = T^{-1}$ ifadesi doğru mudur?
+Bu aynı zamanda [1] kitabındaki 3.28 probleminin de cevabı. İspat için $T T^T$
+çarpımını yapabiliriz, eğer birim (identity) matrisi elde edersek ispat tamam
+demektir.</p>
+<p>$$
+T = 
+\left[\begin{array}{cccc}
+C &amp; S &amp; 0 &amp; 0 \\
+-S &amp; C &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; C &amp; S \\
+0 &amp; 0 &amp; -S &amp; C 
+\end{array}\right], \quad
+T^T = 
+\left[\begin{array}{cccc}
+C &amp; -S &amp; 0 &amp; 0 \\
+S &amp; C &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; C &amp; -S \\
+0 &amp; 0 &amp; S &amp; C 
+\end{array}\right]
+$$</p>
+<p>Çarpımı <code>sympy</code> ile yapalım,</p>
+<pre><code class="python">from sympy import symbols, pprint, latex
+from sympy.matrices import Matrix
+C,S = symbols(&quot;C,S&quot;)
+T = Matrix([[C,S,0,0],[-S,C,0,0],[0,0,C,S],[0,0,-S,C]])
+Tprime = Matrix([[C,-S,0,0],[S,C,0,0],[0,0,C,-S],[0,0,S,C]])
+print (latex(T * Tprime))
+</code></pre>
+
+<pre><code>\left[\begin{matrix}C^{2} + S^{2} &amp; 0 &amp; 0 &amp; 0\\\\0 &amp; C^{2} + S^{2} &amp; 0 &amp; 0\\\\0 &amp; 0 &amp; C^{2} + S^{2} &amp; 0\\\\0 &amp; 0 &amp; 0 &amp; C^{2} + S^{2}\end{matrix}\right]
+</code></pre>
+
+<p>\LaTeX\quad ile</p>
+<p>$$
+\left[\begin{matrix}C^{2} + S^{2} &amp; 0 &amp; 0 &amp; 0\\0 &amp; C^{2} + S^{2} &amp; 0 &amp; 0\\0 &amp; 0 &amp; C^{2} + S^{2} &amp; 0\\0 &amp; 0 &amp; 0 &amp; C^{2} + S^{2}\end{matrix}\right]
+$$</p>
+<p>Hatırlarsak $C = \cos\theta, S = \sin\theta$, bunları yerine koyunca tüm köşegen
+boyunca 1 değeri elde edilir, diğer hücrelerde sıfır var, demek ki bir birim
+matrisi elde ettik. Bu demektir ki $T T^T = I$, ve bu ifadenin doğru olmasının
+tek yolu $T^T = T^{-1}$ olmasıdır.</p>
 <p>Dönüş mekaniğini gördük, şimdi önceki derste işlenen kiriş parçasına hem
 eksenel dinamiği hem de biraz önce gördüğümüz dönüş mantığını ekleyelim.
 Altta görülen kiriş parçasının hareketlerini hesaplayabilmek istiyoruz yani,</p>

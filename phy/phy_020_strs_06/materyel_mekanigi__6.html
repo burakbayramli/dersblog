@@ -91,23 +91,6 @@ C &amp; S &amp; 0 &amp; 0 \\
 u_1 \\ v_1 \\ u_2 \\ v_2
 \end{array}\right]
 $$</p>
-<p>Üstteki hesabı (1) formülü ile birleştirirsek, genişletilmiş (1) formu şu hale
-gelir,</p>
-<p>$$
-\left[\begin{array}{c}
-f'<em>{1x} \\ f'</em>{1y} \\ f'<em>{2x} \\ f'</em>{2y} 
-\end{array}\right] =
-\frac{AE}{L}
-\left[\begin{array}{cccc}
-1 &amp; 0 &amp; -1 &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; 0 \\
--1 &amp; 0 &amp; 1 &amp; 0 \\
-0 &amp; 0 &amp; 0 &amp; 0
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ v_1 \\ u_2 \\ v_2
-\end{array}\right]
-$$</p>
 <p>İlerlemeden önce iki üstteki dönüş matrisi, $T$ diyelim, hakkında ilginç bir
 ispatı verelim, ileride lazım olacak. Acaba $T^T = T^{-1}$ ifadesi doğru mudur?
 Bu aynı zamanda [1] kitabındaki 3.28 probleminin de cevabı. İspat için $T T^T$
@@ -135,13 +118,13 @@ from sympy.matrices import Matrix
 C,S = symbols(&quot;C,S&quot;)
 T = Matrix([[C,S,0,0],[-S,C,0,0],[0,0,C,S],[0,0,-S,C]])
 Tprime = Matrix([[C,-S,0,0],[S,C,0,0],[0,0,C,-S],[0,0,S,C]])
-print (latex(T * Tprime))
+print (latex(T * Tprime)[:60],'...')
 </code></pre>
 
-<pre><code>\left[\begin{matrix}C^{2} + S^{2} &amp; 0 &amp; 0 &amp; 0\\\\0 &amp; C^{2} + S^{2} &amp; 0 &amp; 0\\\\0 &amp; 0 &amp; C^{2} + S^{2} &amp; 0\\\\0 &amp; 0 &amp; 0 &amp; C^{2} + S^{2}\end{matrix}\right]
+<pre><code>\left[\begin{matrix}C^{2} + S^{2} &amp; 0 &amp; 0 &amp; 0\\\\0 &amp; C^{2} + S ...
 </code></pre>
 
-<p>\LaTeX\quad ile</p>
+<p>\LaTeX\ ile</p>
 <p>$$
 \left[\begin{matrix}C^{2} + S^{2} &amp; 0 &amp; 0 &amp; 0\\0 &amp; C^{2} + S^{2} &amp; 0 &amp; 0\\0 &amp; 0 &amp; C^{2} + S^{2} &amp; 0\\0 &amp; 0 &amp; 0 &amp; C^{2} + S^{2}\end{matrix}\right]
 $$</p>
@@ -149,8 +132,8 @@ $$</p>
 boyunca 1 değeri elde edilir, diğer hücrelerde sıfır var, demek ki bir birim
 matrisi elde ettik. Bu demektir ki $T T^T = I$, ve bu ifadenin doğru olmasının
 tek yolu $T^T = T^{-1}$ olmasıdır.</p>
-<p>Bir önemli eşitlik daha. Yer değişimleri, kuvvetler döndürme matematiğini
-kullanabilirler. Mesela dönüş matrisi $T$ için</p>
+<p>Bir önemli eşitlik daha, hem yer değişimleri, hem kuvvetler döndürme
+matematiğini kullanabilirler. Mesela dönüş matrisi $T$ için</p>
 <p>$$
 d' = T d
 $$</p>
@@ -221,7 +204,62 @@ u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2
 \end{array}\right]
 $$</p>
 <p>elde edilir, ki $C_1 = \dfrac{AE}{L}$ ve $C_2 = \dfrac{EI}{L^3}$
-olmak üzere. </p>
+olmak üzere. Üstte ortada duran matris $k'$ matrisidir.</p>
+<p>Şimdi dönüş mekanığini ekleyelim.</p>
+<p>$$
+\left[\begin{array}{ccc}
+u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2 
+\end{array}\right] =
+\left[\begin{array}{cccccc}
+C &amp; S &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+-S &amp; C &amp; 0 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; C &amp; S &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; -S &amp; C &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1
+\end{array}\right]
+\left[\begin{array}{ccc}
+u_1 \\ v_1 \\ \phi_1 \\ u_2 \\ v_2 \\ \phi_2 
+\end{array}\right]
+$$</p>
+<p>Dikkat edersek dönüşümü sağlayan 2 x 2 boyutundaki altmatris, üstteki matristeki
+o iki bölge, daha büyük matriste öyle yerleştirildi ki sadece $u_1,v_1$ ve
+$u_2,v_2$ değişkenlerini etkiliyor, onlara tekabül eden bölgelerde duruyor.</p>
+<p>Boylece $T$ matrisini bulmus olduk. Simdi $k$ matrisini bulmak icin
+$k = T^T k' T$ islemini yapabiliriz [1, sf. 243].</p>
+<pre><code class="python">from sympy import symbols, latex, simplify
+from sympy.matrices import Matrix
+
+C,S,C1,C2,L,A,E,I = symbols(&quot;C,S,C1,C2,L,A,E,I&quot;)
+kprime = Matrix([ [C1, 0, 0, -C1, 0, 0],
+                  [0, 12*C2, 6*C2*L, 0, -12*C2, 6*C2*L],
+                  [0, 6*C2*L, 4*C2*L**2, 0, -6*C2*L, 2*C2*L**2],
+                  [-C1, 0, 0, C1, 0, 0],
+                  [0, -12*C2, -6*C2*L, 0, 12*C2, -6*C2*L],
+                  [0, 6*C2*L, 2*C2*L**2, 0, -6*C2*L, 4*C2*L**2]])
+
+T = Matrix([[C,S,0,0,0,0],[-S,C,0,0,0,0],[0,0,1,0,0,0],
+            [0,0,0,C,S,0],[0,0,0,-S,C,0],[0,0,0,0,0,1]])
+
+res = T.transpose()*kprime*T
+res = res.subs(C1,A*E/L) 
+res = res.subs(C2,E*I/L**3)
+res = res / (E/L) # E/L ile onceden bol cunku basitlestirme yapamadi
+print (latex(simplify(res))[:70],'...')
+</code></pre>
+
+<pre><code>\left[\begin{matrix}A C^{2} + \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \le ...
+</code></pre>
+
+<p>$$
+k = 
+\frac{E}{L} \times % sonradan biz ekledik cunku bolum yapmistik
+\left[\begin{matrix}A C^{2} + \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; - \frac{6 I S}{L} &amp; - A C^{2} - \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; - \frac{6 I S}{L}\\\frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; A S^{2} + \frac{12 C^{2} I}{L^{2}} &amp; \frac{6 C I}{L} &amp; \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; - A S^{2} - \frac{12 C^{2} I}{L^{2}} &amp; \frac{6 C I}{L}\\- \frac{6 I S}{L} &amp; \frac{6 C I}{L} &amp; 4 I &amp; \frac{6 I S}{L} &amp; - \frac{6 C I}{L} &amp; 2 I\\- A C^{2} - \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; \frac{6 I S}{L} &amp; A C^{2} + \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; \frac{6 I S}{L}\\\frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; - A S^{2} - \frac{12 C^{2} I}{L^{2}} &amp; - \frac{6 C I}{L} &amp; \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; A S^{2} + \frac{12 C^{2} I}{L^{2}} &amp; - \frac{6 C I}{L}\\- \frac{6 I S}{L} &amp; \frac{6 C I}{L} &amp; 2 I &amp; \frac{6 I S}{L} &amp; - \frac{6 C I}{L} &amp; 4 I\end{matrix}\right]
+$$</p>
+<p>Bu sonuç [1]'deki sonuca benziyor, cebirsel olarak eşit. Kod yorumlarında
+vurgulandı tekrar bahsedelim, $E/L$ bölümünü <code>sympy</code> basitleştirmesi öncesi
+sistemde biz uyguladık çünkü cebirsel düzenlemede sisteme yardım etmek istedik,
+bu sayede sonuç kitaptaki çıktıya benzemiş oldu.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>

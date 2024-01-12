@@ -229,6 +229,7 @@ $u_2,v_2$ değişkenlerini etkiliyor, onlara tekabül eden bölgelerde duruyor.<
 $k = T^T k' T$ işlemini yapabiliriz [1, sf. 243].</p>
 <pre><code class="python">from sympy import symbols, latex, simplify
 from sympy.matrices import Matrix
+import pickle
 
 C,S,C1,C2,L,A,E,I = symbols(&quot;C,S,C1,C2,L,A,E,I&quot;)
 kprime = Matrix([ [C1, 0, 0, -C1, 0, 0],
@@ -244,6 +245,7 @@ T = Matrix([[C,S,0,0,0,0],[-S,C,0,0,0,0],[0,0,1,0,0,0],
 res = T.transpose()*kprime*T
 res = res.subs(C1,A*E/L) 
 res = res.subs(C2,E*I/L**3)
+pickle.dump(res,open(&quot;frame.pkl&quot;,&quot;wb&quot;))
 res = res / (E/L) # E/L ile onceden bol cunku basitlestirme yapamadi
 print (latex(simplify(res))[:70],'...')
 </code></pre>
@@ -274,6 +276,23 @@ olabilir, yani katı bağlantı noktaları üzerinden bir moment sürekliliği v
 <p>Sistem düğüm 1 ve 4 üzerinden sabitlenmiş, düğüm 2 üzerinde ve yatay 40 kN
 kuvvet uygulanıyor, ayrıca düğüm 3'te pozitif moment 500 N-m var. Üstteki
 resimde global kordinat sisteminin yeri gösteriliyor.</p>
+<pre><code class="python">from sympy import symbols, latex, simplify
+from sympy.matrices import Matrix
+import pickle
+
+C,S,L,A,E,I = symbols(&quot;C,S,L,A,E,I&quot;)
+frame = pickle.load(open('frame.pkl','rb'))
+d = {L:3000.0, C:0.0, S:1.0, E:200.0*1e3, A:6500.0, I:80.0*1e6}
+res = frame.subs(d) / (1e3*d[E]/d[L])
+print ('66.67 x 1000', latex(res))
+</code></pre>
+
+<pre><code>66.67 x 1000 \left[\begin{matrix}0.106666666666667 &amp; 0 &amp; -160.0 &amp; -0.106666666666667 &amp; 0 &amp; -160.0\\\\0 &amp; 6.5 &amp; 0 &amp; 0 &amp; -6.5 &amp; 0\\\\-160.0 &amp; 0 &amp; 320000.0 &amp; 160.0 &amp; 0 &amp; 160000.0\\\\-0.106666666666667 &amp; 0 &amp; 160.0 &amp; 0.106666666666667 &amp; 0 &amp; 160.0\\\\0 &amp; -6.5 &amp; 0 &amp; 0 &amp; 6.5 &amp; 0\\\\-160.0 &amp; 0 &amp; 160000.0 &amp; 160.0 &amp; 0 &amp; 320000.0\end{matrix}\right]
+</code></pre>
+
+<p>$$
+66.67 x 1000 \left[\begin{matrix}0.106666666666667 &amp; 0 &amp; -160.0 &amp; -0.106666666666667 &amp; 0 &amp; -160.0\\0 &amp; 6.5 &amp; 0 &amp; 0 &amp; -6.5 &amp; 0\\-160.0 &amp; 0 &amp; 320000.0 &amp; 160.0 &amp; 0 &amp; 160000.0\\-0.106666666666667 &amp; 0 &amp; 160.0 &amp; 0.106666666666667 &amp; 0 &amp; 160.0\\0 &amp; -6.5 &amp; 0 &amp; 0 &amp; 6.5 &amp; 0\\-160.0 &amp; 0 &amp; 160000.0 &amp; 160.0 &amp; 0 &amp; 320000.0\end{matrix}\right]
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>

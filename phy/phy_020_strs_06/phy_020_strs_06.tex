@@ -272,20 +272,21 @@ $$
 
 Bu sonuç [1]'deki sonuca benziyor, cebirsel olarak eşit.
 
-Not: $E/L$ bölümünü \verb!sympy! basitleştirmesi öncesi sistemde dışarıdan
-uyguladık çünkü cebirsel düzenlemede sisteme yardım etmek istedik, bu sayede
-sonuç kitaptaki çıktıya benzemiş oldu.
+$E/L$ bölümünü \verb!sympy! basitleştirmesi öncesi sistemde dışarıdan uyguladık
+çünkü cebirsel düzenlemede sisteme yardım etmek istedik, bu sayede sonuç
+kitaptaki çıktıya benzemiş oldu. Koda bakarsak cebirsel işlem sonucunu diske
+kaydettik (3) çıktısı alttaki problemde lazım olacak.
 
-Cebirsel işlem sonucunu diske kaydettik (3) çıktısı alttaki problemde
-lazım olacak. 
-
-Üstteki formül / matris düz katı şasi / düz oynamaz çerçeve (rigid plane frame)
-formülü olarak bilinir, bu sistem ``katı bir şekilde birbirine bağlanmış bir
-grup kiriş parçalarının toplamı'' olarak ta tarif edilebilir, yani kiriş
-parçalarının birbirine olan açıları, yük uygulandıktan sonra bağlandıklarında ne
-ise o halde kalırlar, deformasyon sonrası değişime uğramazlar. Ayrıca bu tür bir
-sistemde moment bir parçadan diğerine, bağlantı noktaları üzerinden transfer
-olabilir, yani katı bağlantı noktaları üzerinden bir moment sürekliliği vardır.
+Birden fazla kiriş formülü de üstdüşüm ile birleştirilerek daha büyük bir
+yapının formülü haline getirilebilir, alttaki soruda bunun nasıl yapılacağını
+göreceğiz. Elde edilecek sistem / matris düz katı şasi / düz oynamaz çerçeve
+(rigid plane frame) formülasyonu için kullanılacak, bu sistem ``katı bir şekilde
+birbirine bağlanmış bir grup kırış parçalarının toplamı'' olarak ta tarif
+edilebilir, yani kiriş parçalarının birbirine olan açıları, yük uygulandıktan
+sonra bağlandıklarında ne ise o halde kalırlar, deformasyon sonrası değişime
+uğramazlar. Ayrıca bu tür bir sistemde moment bir parçadan diğerine, bağlantı
+noktaları üzerinden transfer olabilir, yani katı bağlantı noktaları üzerinden
+bir moment sürekliliği vardır.
 
 Soru
 
@@ -500,7 +501,7 @@ f_{2x} \\ f_{2y} \\ m_{2} \\ f_{3x} \\ f_{3y} \\ m_{3}
 \end{array}\right]
 $$
 
-Cozecegimiz sistem
+Çözeceğimiz sistem
 
 $$
 \left[\begin{array}{c}
@@ -520,7 +521,6 @@ $$
 u_2 \\ v_2 \\ \phi_2 \\ u_3 \\ v_3 \\ \phi_3
 \end{array}\right]
 $$
-
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import numpy.linalg as lin
@@ -543,6 +543,8 @@ v3   -0.0333
 phi3 -0.0014
 \end{verbatim}
 
+Sonuçlara göre düğüm 2 ve 3 noktalarında şasi bir miktar sağa doğru gidiyor,
+ve dikey yer değişim ve dönüş yok denecek kadar az.
 
 
 

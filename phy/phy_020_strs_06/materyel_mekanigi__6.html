@@ -245,8 +245,8 @@ T = Matrix([[C,S,0,0,0,0],[-S,C,0,0,0,0],[0,0,1,0,0,0],
 res = T.transpose()*kprime*T
 res = res.subs(C1,A*E/L) 
 res = res.subs(C2,E*I/L**3)
-pickle.dump(res,open(&quot;frame.pkl&quot;,&quot;wb&quot;))
-res = res / (E/L) # E/L ile onceden bol cunku basitlestirme yapamadi
+pickle.dump(res,open(&quot;frame.pkl&quot;,&quot;wb&quot;)) # sonra lazim olacak diske kaydet
+res = res / (E/L) 
 print (latex(simplify(res))[:70],'...')
 </code></pre>
 
@@ -255,13 +255,16 @@ print (latex(simplify(res))[:70],'...')
 
 <p>$$
 k = 
-\frac{E}{L} \times % sonradan biz ekledik cunku bolum yapmistik
+\frac{E}{L} \times 
 \left[\begin{matrix}A C^{2} + \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; - \frac{6 I S}{L} &amp; - A C^{2} - \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; - \frac{6 I S}{L}\\\frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; A S^{2} + \frac{12 C^{2} I}{L^{2}} &amp; \frac{6 C I}{L} &amp; \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; - A S^{2} - \frac{12 C^{2} I}{L^{2}} &amp; \frac{6 C I}{L}\\- \frac{6 I S}{L} &amp; \frac{6 C I}{L} &amp; 4 I &amp; \frac{6 I S}{L} &amp; - \frac{6 C I}{L} &amp; 2 I\\- A C^{2} - \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; \frac{6 I S}{L} &amp; A C^{2} + \frac{12 I S^{2}}{L^{2}} &amp; \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; \frac{6 I S}{L}\\\frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} &amp; - A S^{2} - \frac{12 C^{2} I}{L^{2}} &amp; - \frac{6 C I}{L} &amp; \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} &amp; A S^{2} + \frac{12 C^{2} I}{L^{2}} &amp; - \frac{6 C I}{L}\\- \frac{6 I S}{L} &amp; \frac{6 C I}{L} &amp; 2 I &amp; \frac{6 I S}{L} &amp; - \frac{6 C I}{L} &amp; 4 I\end{matrix}\right]
+\qquad (3)
 $$</p>
-<p>Bu sonuç [1]'deki sonuca benziyor, cebirsel olarak eşit. Kod yorumlarında
-vurgulandı tekrar bahsedelim, $E/L$ bölümünü <code>sympy</code> basitleştirmesi öncesi
-sistemde biz uyguladık çünkü cebirsel düzenlemede sisteme yardım etmek istedik,
-bu sayede sonuç kitaptaki çıktıya benzemiş oldu.</p>
+<p>Bu sonuç [1]'deki sonuca benziyor, cebirsel olarak eşit.</p>
+<p>Not: $E/L$ bölümünü <code>sympy</code> basitleştirmesi öncesi sistemde dışarıdan
+uyguladık çünkü cebirsel düzenlemede sisteme yardım etmek istedik, bu sayede
+sonuç kitaptaki çıktıya benzemiş oldu.</p>
+<p>Cebirsel işlem sonucunu diske kaydettik (3) çıktısı alttaki problemde
+lazım olacak. </p>
 <p>Üstteki formül / matris düz katı şasi / düz oynamaz çerçeve (rigid plane frame)
 formülü olarak bilinir, bu sistem "katı bir şekilde birbirine bağlanmış bir
 grup kiriş parçalarının toplamı" olarak ta tarif edilebilir, yani kiriş
@@ -275,8 +278,12 @@ olabilir, yani katı bağlantı noktaları üzerinden bir moment sürekliliği v
 <p>Cevap</p>
 <p>Sistem düğüm 1 ve 4 üzerinden sabitlenmiş, düğüm 2 üzerinde ve yatay 40 kN
 kuvvet uygulanıyor, ayrıca düğüm 3'te pozitif moment 500 N-m var. Üstteki
-resimde global kordinat sisteminin yeri gösteriliyor.</p>
-<p>Parca 1</p>
+resimde global kordinat sisteminin yeri gösteriliyor [1, sf. 244].</p>
+<p>Çözüm için her parçayı kiriş matematiği (3) ile formülize edeceğiz, ve bu
+parçaları üstdüşüm ile biraraya koyacağız, nihai matrisi çözerek yükleri ve yer
+değişimleri bulacağız.</p>
+<p>Parça 1</p>
+<p>Bu parçanın duruş açısı 90 derece, o zaman $C = \cos 90 = 0$, $S = \sin 90 = 1$.</p>
 <pre><code class="python">from sympy import symbols, latex, simplify
 from sympy.matrices import Matrix
 import pickle, pandas as pd
@@ -304,7 +311,9 @@ print ('66.67*1000 * \n', df1)
 5 -160.00  0.0  160000.0  160.00  0.0  320000.0
 </code></pre>
 
-<p>Parca 2</p>
+<p>Üstteki matrisin birimi N/mm. </p>
+<p>Parça 2</p>
+<p>Bu parçanın duruşu sebebiyle açı sıfır, yani $C=1,S=0$.</p>
 <pre><code class="python">d = {L:3000.0, C:1.0, S:0.0, E:200.0*1e3, A:6500.0, I:40.0*1e6}
 res = frame.subs(d) / (1e3*d[E]/d[L])
 df2 = pd.DataFrame(np.array(res).astype(np.float64))
@@ -322,7 +331,8 @@ print ('66.67*1000 * \n', df2)
 5  0.0  80.0000  80000.0   0.0 -80.0000  160000.0
 </code></pre>
 
-<p>Parca 3</p>
+<p>Parça 3</p>
+<p>Açı 270 derece, demek ki $C=0,S=-1$.</p>
 <pre><code class="python">d = {L:3000.0, C:0.0, S:-1, E:200.0*1e3, A:6500.0, I:80.0*1e6}
 res = frame.subs(d) / (1e3*d[E]/d[L])
 df3 = pd.DataFrame(np.array(res).astype(np.float64))
@@ -340,6 +350,45 @@ print ('66.67*1000 * \n', df3)
 5  160.0000  0.0  160000.0 -160.0000  0.0  320000.0
 </code></pre>
 
+<p>Üstteki üç matris birleştirilip, üstdüşüm üzerinden daha büyük bir matris haline
+getirilecek. Üstdüşüm yapılabilmesi için her matrisin aynı boyutta, aynı
+kolonlara sahip olması gerekir. Bize şimdi gereken bir matrisi (ya da Dataframe)
+alıp yeni değişkenlere "büyüten" bir kod parçası.</p>
+<pre><code class="python">import pandas as pd
+pd.set_option('display.max_columns', None)
+
+def expand_dataframe(df, new_cols):
+
+    res = df.copy()
+    old_cols = list(df.columns)
+    addn_vars = [x for x in new_cols if x not in old_cols]
+    res.index = df.columns
+    for x in addn_vars:
+        res[x] = np.nan
+        res.loc[x] = pd.Series(res.columns)
+    res = res[new_cols]
+    res = res.reindex(new_cols).fillna(0)
+    return res
+
+df = pd.DataFrame([['a','c'],['b','d']],columns = ['u1','u3'])
+print (df)
+res = expand_dataframe(df,['u1','u2','u3','u4'])
+print (res)
+</code></pre>
+
+<pre><code>  u1 u3
+0  a  c
+1  b  d
+   u1   u2 u3   u4
+u1  a  0.0  c  0.0
+u2  0  0.0  0  0.0
+u3  b  0.0  d  0.0
+u4  0  0.0  0  0.0
+</code></pre>
+
+<p>Üstteki kod parçası bunu yapabiliyor, ilk u1, u3 kolon listesini ü1,u2,u3,u4
+listesine büyüttük, ve kod gerekli yerlere gerekli sıfır değerlerini yazdı
+ve eski matrisin değerlerini büyütülmüş yeni matriste gereken yerlere yazdı.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>

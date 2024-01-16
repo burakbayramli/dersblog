@@ -25,9 +25,9 @@ u'_1 \\ u'_2
 \mlabel{1}
 $$
 
-olarak göstermiştik. Üstte yazılan kirişin yerel, kendisine has kordinat
+olarak göstermiştik. Üstteki formül kirişin yerel, kendisine has kordinat
 sistemini baz alıyor. Eğer üstteki değişkenleri global kordinat sistemine
-eşlemek, yansıtmak istiyorsak o zaman sistemi görülen $\theta$ kadar döndürmemiz
+eşlemek, yansıtmak istiyorsak o zaman sistemi resimdeki $\theta$ kadar döndürmemiz
 gerekiyor. Döndürme işlemi genel olarak iki boyuttaki bir $[u, v]$ vektörü için
 [1, sf. 85]
 
@@ -112,10 +112,10 @@ $$
 Hatırlarsak $C = \cos\theta, S = \sin\theta$, bunları yerine koyunca tüm köşegen
 boyunca 1 değeri elde edilir, diğer hücrelerde sıfır var, demek ki bir birim
 matrisi elde ettik. Bu demektir ki $T T^T = I$, ve bu ifadenin doğru olmasının
-tek yolu $T^T = T^{-1}$ olmasıdır.
+tek yolu $T^T = T^{-1}$ olmasıdır. İspat tamamlandı.
 
-Bir önemli eşitlik daha, hem yer değişimleri, hem kuvvetler döndürme
-matematiğini kullanabilirler. Mesela dönüş matrisi $T$ için
+Bir önemli eşitlik daha, yer değişimlerde olduğu gibi, kuvvetler de döndürme
+matematiğine tabi olabilirler. Mesela dönüş matrisi $T$ için
 
 $$
 d' = T d
@@ -140,7 +140,7 @@ $$
 f' = k' d' 
 $$
 
-sistem şöyle de gösterilebilir,
+Bu sistem şöyle de gösterilebilir,
 
 $$
 T f = k' T d
@@ -228,9 +228,9 @@ u_1 \\ v_1 \\ \phi_1 \\ u_2 \\ v_2 \\ \phi_2
 \end{array}\right]
 $$
 
-Dikkat edersek dönüşümü sağlayan 2 x 2 boyutundaki altmatris, üstteki matristeki
-o iki bölge, daha büyük matriste öyle yerleştirildi ki sadece $u_1,v_1$ ve
-$u_2,v_2$ değişkenlerini etkiliyor, onlara tekabül eden bölgelerde duruyor.
+Dikkat edersek dönüş sağlayan 2 x 2 boyutundaki altmatristir, üstteki matriste
+görülen o iki bölge, daha büyük matriste öyle yerleştirildi ki sadece $u_1,v_1$
+ve $u_2,v_2$ değişkenlerini etkiliyor, onlara tekabül eden bölgelerde duruyor.
 
 Böylece $T$ matrisini bulmuş olduk. Şimdi $k$ matrisini hesaplamak için
 $k = T^T k' T$ işlemini yapabiliriz [1, sf. 243].
@@ -274,14 +274,14 @@ Bu sonuç [1]'deki sonuca benziyor, cebirsel olarak eşit.
 
 $E/L$ bölümünü \verb!sympy! basitleştirmesi öncesi sistemde dışarıdan uyguladık
 çünkü cebirsel düzenlemede sisteme yardım etmek istedik, bu sayede sonuç
-kitaptaki çıktıya benzemiş oldu. Koda bakarsak cebirsel işlem sonucunu diske
-kaydettik (3) çıktısı alttaki problemde lazım olacak.
+kitaptaki çıktıya benzemiş oldu. Ayrıca cebirsel işlem sonucunu diske kaydettik
+(3) çıktısı alttaki problemde lazım olacak.
 
 Birden fazla kiriş formülü de üstdüşüm ile birleştirilerek daha büyük bir
 yapının formülü haline getirilebilir, alttaki soruda bunun nasıl yapılacağını
 göreceğiz. Elde edilecek sistem / matris düz katı şasi / düz oynamaz çerçeve
 (rigid plane frame) formülasyonu için kullanılacak, bu sistem ``katı bir şekilde
-birbirine bağlanmış bir grup kırış parçalarının toplamı'' olarak ta tarif
+birbirine bağlanmış bir grup kiriş parçalarının toplamı'' olarak ta tarif
 edilebilir, yani kiriş parçalarının birbirine olan açıları, yük uygulandıktan
 sonra bağlandıklarında ne ise o halde kalırlar, deformasyon sonrası değişime
 uğramazlar. Ayrıca bu tür bir sistemde moment bir parçadan diğerine, bağlantı
@@ -319,9 +319,9 @@ C,S,L,A,E,I = symbols("C,S,L,A,E,I")
 frame = pickle.load(open('frame.pkl','rb'))
 \end{minted}
 
-Birinci parçanın duruş açısı 90 derece, o zaman $C = \cos 90 = 0$, $S = \sin 90 = 1$.
-Bu değerleri sembolik matrisi sayısal halee çevirmek için kullanacağız,
-\verb!subs! çağrısı ile,
+Birinci parçanın duruş açısı 90 derece, o zaman $C = \cos 90 = 0$, $S = \sin 90
+= 1$.  Bu değerleri sembolik matrisi sayısal hale çevirmek için kullanacağız,
+``yoğun (dense) matris'' elde edeceğiz, \verb!subs! çağrısı ile,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 d = {L:3000.0, C:0.0, S:1.0, E:200.0*1e3, A:6500.0, I:80.0*1e6}

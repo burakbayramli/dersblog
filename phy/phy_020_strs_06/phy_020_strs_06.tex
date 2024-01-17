@@ -143,6 +143,12 @@ $$
 Bu sistem şöyle de gösterilebilir,
 
 $$
+f' = k' T d
+$$
+
+ve
+
+$$
 T f = k' T d
 $$
 
@@ -204,6 +210,7 @@ C_1 & 0 & 0 & -C_1 & 0 & 0 \\
 \left[\begin{array}{c}
 u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2
 \end{array}\right]
+\mlabel{4}
 $$
 
 elde edilir, ki $C_1 = \dfrac{AE}{L}$ ve $C_2 = \dfrac{EI}{L^3}$
@@ -255,6 +262,7 @@ res = T.transpose()*kprime*T
 res = res.subs(C1,A*E/L) 
 res = res.subs(C2,E*I/L**3)
 pickle.dump(res,open("frame.pkl","wb")) # sonra lazim olacak diske kaydet
+pickle.dump(kprime,open("kprime.pkl","wb"))
 res = res / (E/L) 
 print (latex(simplify(res))[:70],'...')
 \end{minted}
@@ -546,6 +554,43 @@ phi3 -0.0014
 Birimler yer değişimleri için mm, açılar için radyan. Sonuçlara göre düğüm 2 ve
 3 noktalarında şaşı bir miktar sağa doğru gidiyor, ve dikey yer değişim ve dönüş
 yok denecek kadar az.
+
+Her Parçaya Etki Eden Yerel Kuvvetler
+
+Bir kez tüm sistem bazında yer değişimlerini hesapladıktan sonra bunları
+kullanarak her ögeye etki eden kuvvetleri bulabiliriz, $f' = k' T d$
+gerekli. Daha önce (4)'te gösterilen $k'$ matrisini sembolik olarak
+kaydetmiştik, onu geri okuyup birinci öğe için değerleri geçelim,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pickle, pandas as pd
+from sympy import symbols
+pd.set_option("display.precision", 4)
+pd.set_option('display.max_columns', None)
+
+kprime = pickle.load(open('kprime.pkl','rb'))
+C,S,C1,C2,L,A,E,I = symbols("C,S,C1,C2,L,A,E,I")
+d = {L:3000.0, C:0.0, S:1.0, E:200.0*1e3, A:6500.0, I:80.0*1e6}
+kprime = kprime.subs(C1,A*E/L) 
+kprime = kprime.subs(C2,E*I/L**3)
+kprime = kprime.subs(d) 
+df = pd.DataFrame(np.array(kprime),dtype=np.float64)
+print (df / (66.67*1e3))
+\end{minted}
+
+\begin{verbatim}
+      0      1         2     3       4         5
+0  6.50   0.00      0.00 -6.50    0.00      0.00
+1  0.00   0.11    159.99  0.00   -0.11    159.99
+2  0.00 159.99 319984.00  0.00 -159.99 159992.00
+3 -6.50   0.00      0.00  6.50    0.00      0.00
+4  0.00  -0.11   -159.99  0.00    0.11   -159.99
+5  0.00 159.99 159992.00  0.00 -159.99 319984.00
+\end{verbatim}
+
+
+
+
 
 
 

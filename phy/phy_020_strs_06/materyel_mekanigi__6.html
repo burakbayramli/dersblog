@@ -152,6 +152,10 @@ f' = k' d'
 $$</p>
 <p>Bu sistem şöyle de gösterilebilir,</p>
 <p>$$
+f' = k' T d
+$$</p>
+<p>ve</p>
+<p>$$
 T f = k' T d
 $$</p>
 <p>Eğer üstteki ifadeyi soldan $T^{-1}$ ile çarparsak,</p>
@@ -202,6 +206,7 @@ C_1 &amp; 0 &amp; 0 &amp; -C_1 &amp; 0 &amp; 0 \\
 \left[\begin{array}{c}
 u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2
 \end{array}\right]
+\qquad (4)
 $$</p>
 <p>elde edilir, ki $C_1 = \dfrac{AE}{L}$ ve $C_2 = \dfrac{EI}{L^3}$
 olmak üzere. Üstte ortada duran matris $k'$ matrisidir.</p>
@@ -246,6 +251,7 @@ res = T.transpose()*kprime*T
 res = res.subs(C1,A*E/L) 
 res = res.subs(C2,E*I/L**3)
 pickle.dump(res,open(&quot;frame.pkl&quot;,&quot;wb&quot;)) # sonra lazim olacak diske kaydet
+pickle.dump(kprime,open(&quot;kprime.pkl&quot;,&quot;wb&quot;))
 res = res / (E/L) 
 print (latex(simplify(res))[:70],'...')
 </code></pre>
@@ -493,6 +499,35 @@ phi3 -0.0014
 <p>Birimler yer değişimleri için mm, açılar için radyan. Sonuçlara göre düğüm 2 ve
 3 noktalarında şaşı bir miktar sağa doğru gidiyor, ve dikey yer değişim ve dönüş
 yok denecek kadar az.</p>
+<p>Her Parçaya Etki Eden Yerel Kuvvetler</p>
+<p>Bir kez tüm sistem bazında yer değişimlerini hesapladıktan sonra bunları
+kullanarak her ögeye etki eden kuvvetleri bulabiliriz, $f' = k' T d$
+gerekli. Daha önce (4)'te gösterilen $k'$ matrisini sembolik olarak
+kaydetmiştik, onu geri okuyup birinci öğe için değerleri geçelim,</p>
+<pre><code class="python">import pickle, pandas as pd
+from sympy import symbols
+pd.set_option(&quot;display.precision&quot;, 4)
+pd.set_option('display.max_columns', None)
+
+kprime = pickle.load(open('kprime.pkl','rb'))
+C,S,C1,C2,L,A,E,I = symbols(&quot;C,S,C1,C2,L,A,E,I&quot;)
+d = {L:3000.0, C:0.0, S:1.0, E:200.0*1e3, A:6500.0, I:80.0*1e6}
+kprime = kprime.subs(C1,A*E/L) 
+kprime = kprime.subs(C2,E*I/L**3)
+kprime = kprime.subs(d) 
+df = pd.DataFrame(np.array(kprime),dtype=np.float64)
+print (df / (66.67*1e3))
+</code></pre>
+
+<pre><code>      0      1         2     3       4         5
+0  6.50   0.00      0.00 -6.50    0.00      0.00
+1  0.00   0.11    159.99  0.00   -0.11    159.99
+2  0.00 159.99 319984.00  0.00 -159.99 159992.00
+3 -6.50   0.00      0.00  6.50    0.00      0.00
+4  0.00  -0.11   -159.99  0.00    0.11   -159.99
+5  0.00 159.99 159992.00  0.00 -159.99 319984.00
+</code></pre>
+
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>

@@ -38,576 +38,244 @@
         <h1>Materyel Mekaniği - 1
 </h1>
 
-<p>Direk Direngenlik Metotu (Direct Stiffness Method)</p>
-<p>Direngenlik metotunu anlamak için direngenlik matrisi kavramını işlemek
-gerekir. Bu konuya biraz [5]'de değindik. Bir öğe grubunun, sistemin direngenlik
-matrisi düğümsel yer değişimler $d$ ile düğümsel kuvvetler $F$'yi ilintilendiren
-bir $K$ matrisidir, öyle ki [4, sf. 34]</p>
+<p>Alan Atalet Momenti (Area Moment of Inertia)</p>
+<p>Herhangi bir şekil için, o şekilde olan bir eksene olan uzaklık karesinin alan
+üzerinden entegre edilmesiyle "alan atalet momenti" sonucu elde ediliyor
+[3, sf. 362]. </p>
+<p><img alt="" src="phy_020_strs_00_04.jpg" /></p>
+<p>Formül, $z$ eksen bazlı olarak</p>
 <p>$$
-F = K d
+I_z = \int_A y^2 \mathrm{d} A
 $$</p>
-<p>eşitliği geçerlidir. Alttaki gibi bir sistem olsun,</p>
-<p><img alt="" src="phy_020_strs_06_03.jpg" /></p>
-<p>Sistemde bir yay görülüyor, bu yay üzerinde iki tane düğüm noktası seçtik,
-onları takip edeceğiz, düğüm 1 ve 2. Düğümlerdeki yer değişimler $u_1,u_2$
-olsun, yaydaki toplam değişim $\delta = u_1 - u_2$. Uygulanan kuvvet $T$
-ise bir sabit $k$ üzerinden $T = k \delta$ eşitliği ortaya atılabilir.</p>
-<p>Direngenlik matrisine gelirsek, sistemdeki tüm yer değişimleri şöyle gösterebiliriz,</p>
-<p><img alt="" src="phy_020_strs_06_04.jpg" /></p>
-<p>Sağ uçta yay $T$ kuvveti ile çekiliyorsa, bu durum sol uçta $-T$ tepkisel
-kuvvete sebep olur. Ayrıca $u_1$'in sol yönü işaret ettiğine dikkat, çünkü yer
-değişimin yönü pozitif yönün tersinde, yaydaki takip edilen nokta başlangıç
-anının sol tarafında kalıyor, bu sebeple yön eksi.</p>
+<p>Bu entegral belli şekiller / alanlar için muhakkak hep aynı olur. Üstteki kalıp
+bazı alanlarda, mesela inşaat mühendisliğinde, çok ortaya çıktığı için
+bilinir, ve belli şekiller için $I$ formülü önceden hesaplanmıştır.</p>
+<p>Üstteki basit bir şekil tabii ki, ama onun da bir formülü var, eğer türetmek
+istersek,</p>
 <p>$$
-f_{1x} = -T, \quad f_{2x} = T
+I_z = \int_{-h/2}^{h/2} y^2 (b \mathrm{d} y) = b \frac{y^3}{3} \bigg\vert_{-h/2}^{h/2} =
+\frac{b h^3}{12}
 $$</p>
-<p>Hepsini bir araya koyarsak</p>
+<p>Yani dikdörtgensel şekiller için $I_z$ gerektiğinde hemen üstteki formül
+kullanılabilir. Dairesel, üçgensel, vb. pek çok şekil için bu hesap mevcut.</p>
+<p>Eksenel Yükleme (Uniaxial Loading)</p>
+<p>Pek çok problemde kullanılan en temel deformasyon (yamulma, şekil değiştirme)
+türü altta görülen tür yüklemedir. Bir demir, ya da plastik çubuk iki kuvvetle
+boyu yönünde (tek bir eksende yani) iki tarafa doğru çekilir, bizim
+ilgilendiğimiz çubukta seçilen herhangi bir noktanın nereye gittiği, yani o tek
+eksendeki deformasyonun ne olduğu.</p>
+<p><img alt="" src="phy_020_strs_00_01.jpg" /></p>
+<p>Diyelim ki üstteki her üç çubuk aynı maddeden yapılmış, farklı uzunlukları ve
+kalınlıkları var, her çubuğa sıfırdan başlayarak belli seviyelerde $P$ kuvveti
+ile yük uyguluyoruz, ve çubuğun uzunluk değişimi (elongation) $\delta$
+değerinin, ki tek boyuttaki deformasyon budur, ne olduğuna bakıyoruz. Her 1,2,3
+çubuğu için $P/A$ ve $\delta/L$ değerlerini grafiklersek çoğunlukla sonuç ya alt
+soldaki gibi ya da sağdaki gibi çıkacaktır [1, sf. 76].</p>
+<p><img alt="" src="phy_020_strs_00_02.jpg" /></p>
+<p>Eğer materyelin eksenel yük ve uzama ilişkisi lineer ise o zaman sonuç soldaki
+resim gibi çıkar. Grafiğin eğimine elastiklik genliği (modulus of elasticity)
+adı verilir ve çoğunlukla ona $E$ sembolü verilir. Formülsel olarak belirtirsek,</p>
 <p>$$
-T = -f_{1x} = k (u_2 - u_1)
-$$</p>
-<p>$$
-T = f_{2x} = k (u_2 - u_1)
-$$</p>
-<p>Yani</p>
-<p>$$
-f_{1x} = k(u_1 - u_2)
-$$</p>
-<p>$$
-f_{2x} = k(u_2 - u_1)
-$$</p>
-<p>Matris formunu kullanarak,</p>
-<p>$$
-\left[\begin{array}{ccc}
-f_{1x} \\ f_{2x}
-\end{array}\right] = 
-\left[\begin{array}{ccc}
-k &amp; -k \\ -k &amp; k
-\end{array}\right]
-\left[\begin{array}{ccc}
-u_1 \\ u_2
-\end{array}\right]
-$$</p>
-<p>İfadenin ortasındaki 2 x 2 matrisi direngenlik matrisidir.</p>
-<p>Üstdüşüm (Superposition)</p>
-<p>Eğer iki tane yay sistemini birbiriyle bağlı olarak işlemek istersek [4, sf. 38],
-üstdüşüm tekniği kullanılabilir. Üstdüşüm basit bir matris toplamı ile
-yapılabiliyor. Alttaki örneğe bakalım,</p>
-<p><img alt="" src="phy_020_strs_06_02.jpg" /></p>
-<p>İki yay var, birbirlerine bağlılar, iki yayın sabitleri $k_1$, $k_2$
-olsun. Her iki yayın direngenlik matrisi ayrı ayrı (tekabül eden yer değişim
-değişkenleri matris kolon etiketi olarak gösteriliyor),</p>
-<p>$$
-k^{(1)} =
-\begin{array}{cc} &amp; \begin{array}{cc} u_1 &amp; u_3 \end{array} \\ &amp;
-\left[
-\begin{array}{cc}
-k_1 &amp; -k_1 \\ -k_1 &amp; k_1
-\end{array}
-\right]
-\end{array} 
-\qquad
-k^{(2)} =
-\begin{array}{cc} &amp; \begin{array}{cc} u_3 &amp; u_2 \end{array} \\ &amp;
-\left[
-\begin{array}{cc}
-k_2 &amp; -k_2 \\ -k_2 &amp; k_2
-\end{array}
-\right]
-\end{array}
-$$</p>
-<p>İki yay sistemini tek sistem haline getirmek aslında basit bir matris
-toplamından ibaret fakat bu matrisin kolonları aynı değişkenlere tekabül ediyor
-olmalı. O zaman her iki 2 x 2 matrisi genişletip 3 x 3 matrisi haline
-getirirsek, değişken etiketlerini eşitlersek bu yeni iki matrisi
-toplayabiliriz.</p>
-<p>$$
-k^{(1)} =
-\begin{array}{cc} &amp; \begin{array}{ccc} u_1 &amp; u_2 &amp; u_3 \end{array} \\ &amp;
-\left[
-\begin{array}{ccc}
-k_1 &amp; 0 &amp; -k_1 \\
-0 &amp; 0 &amp; 0 \\
--k_1 &amp; 0 &amp; k_1
-\end{array}
-\right]
-\end{array} \qquad
-k^{(2)} =
-\begin{array}{cc} &amp; \begin{array}{ccc} u_1 &amp; u_2 &amp; u_3 \end{array} \\ &amp;
-\left[
-\begin{array}{ccc}
-0 &amp; 0 &amp; 0 \\
-0 &amp; k_2 &amp; -k_2 \\
-0 &amp; -k_2 &amp; k_2
-\end{array}
-\right]
-\end{array} \qquad
-$$</p>
-<p>Dikkat edilirse mesela ilk matrisin $u_2$ kolonu tamamen sıfır çünkü 2 x 2
-halindeki $k^{(1)}$ matrisinde bu değişken yoktu. Yeni genişletilmiş matrise
-geçerken olmayan değişkenin kolonunu sıfırlarsak aslında aynı matrisi elde etmiş
-oluruz.</p>
-<p>Artık iki matrisi toplayabiliriz,</p>
-<p>$$
-\left[\begin{array}{ccc}
-k_1 &amp; 0 &amp; -k_1 \\
-0 &amp; k_2 &amp; -k_2 \\
--k_1 &amp; -k_2 &amp; k_1+k_2
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2 \\ u_3
-\end{array}\right] =
-\left[\begin{array}{c}
-F_{1x} \\ F_{2x} \\ F_{3x}
-\end{array}\right]
-$$</p>
-<p>Sınır Şartları (Boundary Conditions)</p>
-<p>Resimde gösterilen örnekte sol tarafın duvara sabitlendiğini görüyoruz.
-Sabitlenme demek notasyonumuz itibariyle $u_1 = 0$ demektir. Bu bir
-sınır şartıdır, onu bir şekilde sistemimize dahil etmemiz gerekir.
-Değeri üstteki sistemde yerine koyarsak,</p>
-<p>$$
-\left[\begin{array}{ccc}
-k_1 &amp; 0 &amp; -k_1 \\
-0 &amp; k_2 &amp; -k_2 \\
--k_1 &amp; -k_2 &amp; k_1+k_2
-\end{array}\right]
-\left[\begin{array}{c}
-0 \\ u_2 \\ u_3
-\end{array}\right] =
-\left[\begin{array}{c}
-F_{1x} \\ F_{2x} \\ F_{3x}
-\end{array}\right]
-$$</p>
-<p>Matris sistemini cebirsel olarak tekrar açarsak,</p>
-<p>$$
-k_1(0) + (0) u_2 - k_1 u_3 = F_{1x}
-$$</p>
-<p>$$
-0(0) + k_2 u_2 - k_2 u_3 = F_{2x}
-$$</p>
-<p>$$
--k_1 (0) - k_2 u_2 + (k_1+k_2) u_3 = F_{3x}
-$$</p>
-<p>elde edilir. Bu sistemde sadece ikinci ve üçüncü denklemi matris olarak
-yazabiliriz,</p>
-<p>$$
-\left[\begin{array}{cc}
-k_2 &amp; -k_2 \\ -k_2 &amp; k_1 + k_2 
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2
-\end{array}\right] =
-\left[\begin{array}{c}
-F_{2x} \\ F_{3x}
-\end{array}\right]
-$$</p>
-<p>Bu son matrisi elde etmek için bir anlamda önceki matrisin birinci satırı ve
-kolonunu dışarı attık, kenara ayırdık, ve kalanlarla yeni bir sistem yarattık.
-Fakat dikkat bu $F_{1x}$ sıfır demek değildir, onun hala bir ifadesi var,
-$F_{1x} = -k_1 u_3$, ve bu eşitliği bir kez sistemin geri kalanının çözdükten
-sonra dönüp ayrıca bulmamız gerekiyor.</p>
-<p>Devam edelim, yeni sistemi çözersek,</p>
-<p>$$
-\left[\begin{array}{ccc}
-u_2 \\ u_3
-\end{array}\right] =
-\left[\begin{array}{cc}
-k_2 &amp; -k_2 \\ -k_2 &amp; k_1 + k_2 
-\end{array}\right]^{-1}
-\left[\begin{array}{c}
-F_{2x} \\ F_{3x}
-\end{array}\right]
-$$</p>
-<p>$$
-= \left[\begin{array}{cc}
-\dfrac{1}{k_2} + \dfrac{1}{k_1} &amp; \dfrac{1}{k_1} \\
-\dfrac{1}{k_1} &amp; \dfrac{1}{k_1} 
-\end{array}\right]
-\left[\begin{array}{c}
-F_{2x} \\ F_{3x}
-\end{array}\right]
-$$</p>
-<p>$u_2,u_3$ bir kez elde edildikten sonra $F_{1x} = -k_1 u_3$ formülü
-ile $F_{1x}$ elde edilebilir.</p>
-<p>Gerinim Tensörü (Strain Tensor) </p>
-<p>Önce nesneleri nasıl temsil ettiğimizden bahsedelim [2]. Diyelim ki elimizde bir
-patates var. Fakat bu patatesin matematiksel olarak bir anlamı yok. Eğer bu
-nesneyi $R^3$ uzayında temsil etmek istiyorsak, onun üzerindeki belli seçilmiş
-noktalar sayesinde bunu yapabiliriz.</p>
-<p><img alt="" src="phy_020_strs_01_01.jpg" /></p>
-<p>Nesne üzerindeki mavi noktalar bu seçilmiş noktaları gösteriyor.</p>
-<p>Seçilmiş noktaların kordinatı bir referansa göre alınmalı, $e_1,e_2,e_3$
-şeklinde bir baz bu işi yapabilir. Artık bu baza, kordinat sistemine izafi
-olarak patates üzerindeki her noktayı bir vektör olarak temsil edebiliyoruz.
-Altta örnek olarak üç tane seçilmiş noktayı gösterdik,</p>
-<p><img alt="" src="phy_020_strs_01_02.jpg" /></p>
-<p>Daha fazla nokta da seçebilirdik, tüm seçilmiş noktalardan gelen vektörlerin
-kümesi cisim hakkında bize bir konum, durum bilgisi verecektir, bu konuma biçim
-değiştirme öncesi noktaların konumu $\Omega_0$ diyelim, ya da referans konumu.
-Nesne üzerindeki değişimler, özellikle bu ders sonlu öğeler (finite elements
-method, FEM) dersi olduğu için deformasyon değişimleri referans vektörlerinin
-nasıl değiştiği üzerinden incelenebilir. İlk konumdaki bir vektörü, $X$ diyelim,
-değişimi $f$ fonksiyonu yapıyor olsun, sonuç vektörü $x$ olacak, yani $x =
-f(X)$.</p>
-<p><img alt="" src="phy_020_strs_01_03.jpg" /></p>
-<p>Üstteki resimde örnek bir değişim görüyoruz; yana kayma, dönme, uzama
-var. Değişimi gerçekleştiren $f$ fonksiyonu. Bu ders için farz edilen $f$'nin
-birebir ve örten (bijective) olduğu, liner cebirden hatırlarsak bu $f$'nin tersi
-alınabilir olduğu anlamına geliyor, yani elimde deforme edilmiş konum var ise,
-$f$'nin tersi ile başlangıç konumuna dönebilirim. Diğer bir faraziye fonksiyonun
-sürekli (continuous), ve pürüzsüz (smooth), yani türevi alınabilir olduğu. Katı
-cisim mekaniğinde türevi alınabilirlik önemli bir faraziyedir, gerçek hayatta
-böyle mi, her zaman değil muhakkak, hatta bir bakıma bu sebepten dolayı FEM'e
-ihtiyacımız var.</p>
-<p>Ayrıca bize ileride lazım olabilecek bir üçüncü vektör $u$ da tanımlayabiliriz,
-bu vektör varılan konumu referans konumuna direk ilintilendiriyor. Vektör $u$'ya
-yer değişim fonksiyonu denir. Pozisyon fonksiyonu ile karıştırmayalım, o küçük
-$x$, bu yer değişim fonksiyonu $u$.</p>
-<p><img alt="" src="phy_020_strs_01_05.jpg" /></p>
-<p>Fakat bu tüm grafiğe baktığımızda $u$'nun aslında vektör çıkartma operasyonunu
-gösterdiğini fark edebiliriz, yani $u = x - X$.</p>
-<p>Üç tür katı gövde değişimine bakalım şimdi, not katı demek gövde esneyip,
-uzamıyor demek.</p>
-<p>Katı Gövde Yer Değişimi: $x = X + c$, ki $c$ sabit bir vektör. Pür yer değişimi
-olduğu için basit bir toplanma işlemi sadece. Şimdi bildiğimiz sonuç konumu
-formülünü yazarsak, $u = x - X$ bu formülde önceki $x$'i geçirelim, $u = X + c -
-X$ yani $u = c$.</p>
-<p>Katı Gövde Dönüşü: $x = Q X$, formüldeki $Q$ bir dönüş matrisidir. Tekrar yer
-değişim formülünü yazalım, $u = x - X$ ve önceki $x$'i yerine koyalım, $u = QX -
-X$, tekrar düzenlersek, $u = (Q-I)X$.</p>
-<p>Katı Gövde Hareketi: $x = QX + c$, bu kalem aslında önceki iki kalemin
-birleşimi, hem dönüş hem de yer değişimi var. Çoğunlukla fizik problemlerinde bu
-kavramdan bahsedilir. Yine $u$'yu düşünürsek $u = (Q-I)X + c$ elde ederiz.</p>
-<p><img alt="" src="phy_020_strs_01_04.jpg" /></p>
-<p>Bahsedilen değişim türleri üstte resmedildi, yanlız hala gerinim, esneme,
-küçülme türü şekil değişimlerini görmedik. Diğerleri şunlar,</p>
-<p>Her Yönde Uzama ve Küçülme (Uniform Extension and Contraction)</p>
-<p>Her kordinat ekseninde uzama var ise, mesela $x_1 = k_1 X_1$, $x_2 = k_2 X_2$,
-$x_3 = k_3 X_3$, ki $k_i &gt; 0$ reel sayı olmak üzere. Bu değişimleri matris
-ile şöyle gösterebiliriz,</p>
-<p>$$
-x = \left[\begin{array}{c}
-x_1 \\ x_2 \\ x_3
-\end{array}\right] =
-\left[\begin{array}{ccc}
-k_1 &amp; 0   &amp;   0 \\
-0   &amp; k_2 &amp; 0 \\
-0   &amp; 0   &amp; k_3
-\end{array}\right]
-\left[\begin{array}{c}
-X_1 \\ X_2 \\ X_3 
-\end{array}\right] =
-\left[\begin{array}{c}
-k_1 X_1 \\ k_2 X_2 \\ k_3 X_3 
-\end{array}\right]
-$$</p>
-<p>Üstteki ifadeden pozisyon fonksiyonunu şöyle belirtebiliriz,</p>
-<p>$$
-u = x - X = \left[\begin{array}{ccc}
-(k_1 - 1) X_1 \\ 
-(k_2 - 1) X_2 \\ 
-(k_3 - 1) X_3 
-\end{array}\right]
-$$</p>
-<p>İki boyutta eğer hem $k_1$ hem $k_2$ 1'den büyükse her iki eksende esneme
-görülürdü,</p>
-<p><img alt="" src="phy_020_strs_01_06.jpg" /></p>
-<p>Eğer sadece $k_1 &gt; 1$ ise o yönde büyüme olurdu, diğerinde değil. Eğer
-$0 &lt; k &lt; 1$ ise küçülme, $k &gt; 1$ ise büyüme, $k = 1$ değişim yok.</p>
-<p>$k=0$ ya da $k&lt;0$ fiziki dünyada mümkün değil, mesela $k&lt;0$ durumunda nesnenin
-tamamen kendi tersine dönmüş olması gerekiyor, bu da fiziksel olarak olamaz.</p>
-<p>Basit Kaykılma (Simple Shear)</p>
-<p>Üç boyutta $e_2$ etrafında bir kaykılma düşünüyor olsaydık, bunu</p>
-<p>$$
-x_1 = X_1 + k X_2, \qquad x_2 = X_2, \qquad x_3 = X_3
-$$</p>
-<p>ile temsil edebilirdik, $\theta$ açısında bir kaykılma için matris formunda</p>
-<p>$$
-x = \left[\begin{array}{ccc}
-1 &amp; \tan(\theta) &amp; 0 \\
-0 &amp; 1 &amp; 0 \\
-0 &amp; 0 &amp; 1 
-\end{array}\right]
-\left[\begin{array}{c}
-X_1 \\ X_2 \\ X_3
-\end{array}\right] =
-\left[\begin{array}{c}
-X_1 + \tan(\theta) X_2 \\
-X_2 \\
-X_3
-\end{array}\right] 
-$$</p>
-<p>$$
-\implies u = x - X =
-\left[\begin{array}{ccc}
-\tan(\theta) X_2 \\
-0 \\
-0
-\end{array}\right]
-$$</p>
-<p><img alt="" src="phy_020_strs_01_07.jpg" /></p>
-<p>Pür Kaykılma (Pure Shear)</p>
-<p>Bu tür şekil değiştirme birden fazla eksen bazında olabilir,</p>
-<p>$$
-x = \left[\begin{array}{ccc}
-1               &amp; \tan(\theta/2) &amp; 0 \\
-\tan(\theta/2) &amp; 1              &amp; 0 \\
-0               &amp; 0              &amp; 1 
-\end{array}\right]
-\left[\begin{array}{c}
-X_1 \\ X_2 \\ X_3
-\end{array}\right] =
-\left[\begin{array}{c}
-X_1 + \tan(\theta/2) X_2 \\
-\tan(\theta/2) X_1 + X_2  \\
-X_3
-\end{array}\right] 
-$$</p>
-<p>$$
-\implies u = x - X =
-\left[\begin{array}{ccc}
-\tan(\theta / 2) X_2 \\
-\tan(\theta / 2) X_1 \\
-0
-\end{array}\right]
-$$</p>
-<p><img alt="" src="phy_020_strs_01_08.jpg" /></p>
-<p>Nihayet gerinim konusunda geldik. Bu dersin en önemli konusu bu. Başta
-gösterdiğimiz patatese dönelim, referans konumundaki bir mavi noktaya $X$'e
-bakıyorduk, patatesi yamulttuğumuz zaman sonuç konumdaki $x$ elde ediliyordu,
-her iki noktayı birbiriyle ilintilendiren aralarındaki $u$ vektörü idi.</p>
-<p>Şimdi gerinim tensörünü türetmek için patateslere ikinci bir nokta
-ekleyeceğiz. Referans konumda $X$ noktası ile bu ikinci nokta arasındaki vektör
-$\mathrm{d} X$ olacak, sonuç patatesindeki ikinci noktaya olan vektör $\mathrm{d} x$.  Tabii
-bu noktaları rasgele eklemedik, yamultan fonksiyon $\mathrm{d} X$'i yamultunca $\mathrm{d} x$
-elde ettik, sonuç patatesteki ikinci noktaya böyle eriştik.</p>
-<p><img alt="" src="phy_020_strs_01_09.jpg" /></p>
-<p>Şimdi diyelim ki orijinden ikinci patatesteki $P$ noktasına gitmek
-istiyoruz. Bir yol $X$, $\mathrm{d} X$, $u(X+\mathrm{d} X)$ olabilirdi, bu vektörlerin toplamı
-bizi $P$'ye götürür. Fakat daha kısa bir yol daha var, $x$, $\mathrm{d} x$. Aynı
-noktaya eriştiğimize göre bu iki yolun vektör toplamları birbirine eşit olmalı.
-O zaman şu ifade doğrudur,</p>
-<p>$$
-x + \mathrm{d} x = X + \mathrm{d} X + u(X+\mathrm{d} X)
-$$</p>
-<p>Eğer $x$'i sol taraftan sağa geçirirsem, ve biraz düzenleme sonrası,</p>
-<p>$$
-\mathrm{d} x = \mathrm{d} X + u(X+\mathrm{d} X) - (x - X)
-$$</p>
-<p>Tabii daha önceden hatırlıyoruz ki $u(X) = (x - X)$ o zaman </p>
-<p>$$
-\mathrm{d} x = \mathrm{d} X + u(X+\mathrm{d} X) - u(X)
+E = \frac{P/A}{\delta / L}
 \qquad (1)
 $$</p>
-<p>Üstteki ifade tanıdık bir kavrama dönüşmeye başladı, eşitliğin sağ tarafı kısmen
-bir türeve, gradyana benzemiyor mu? Gradyan tanımı,</p>
+<p>$E$ formülüne Young'in Genliği (Young's Modulus) ismi de verilir. </p>
+<p>$\delta/L$ büyüklüğü mevcut büyüklüğe nazaran ne kadar uzama olduğunu gösteren
+bir oran, mesela 200 cm için 2 cm büyüme var ise 2/200, bu bir tür yüzde hesabı
+olarak görülebilir (ek olarak yüz ile de çarpmak gerekir ama aşağı yukarı öyle).</p>
+<p>Not: $P$ çoğunlukla basınç (pressure) için kullanılır ama burada kuvvet.</p>
+<p>$P/A$'nin birimi kuvvet bölü birim alan olduğu ve $\delta / L$ birimsiz olduğu
+için $E$'nin birimi de kuvvet bölü birim alan olacaktır. Daha ileride göreceğiz
+ki $P/A$ bir alan $A$ üzerindeki ortalama <em>stres</em> değeridir, $\delta / L$
+ise $L$ boyunca hissedilen <em>gerinim</em> değeridir (strain).</p>
+<p>Yani $E$ birimi Newton bölü metrekare olacaktır, $N/m^2$ ya da Pascal, Pa terimi
+kullanılabilir. Bazı tipik değerler demir ve çelik için $200\cdot 10^6$ kilo
+Newton / $m^2$, aliminyum için $69 \cdot 10^6$ $kN / m^2$.</p>
+<p>(1) formülünü düzenleyip tekrar yazarsak, </p>
 <p>$$
-\nabla u = \frac{u(X+\mathrm{d} X) - u(X)}{\mathrm{d} X}
+\delta = \frac{PL}{AE}
 $$</p>
-<p>$\nabla u$'ya yer değişim gradyanı deniyor.  Bunu (1) ifadesine uydurmak için </p>
+<p>Üstteki formül Hooke Kanunu'nun basit bir formudur aslında; bu isim Robert Hooke
+bilimcisine atfendir, ki pek çok materyelin yük-deformasyon eğrisinin lineer
+olduğunu keşfeden Hooke'tur. Bu arada materyelin eğrisi lineer ise bu durum
+sarma yaylar (coiled springs) için de aynıdır. Kavramsal ve formülsel olarak
+bir demir çubuğu yay olarak görsek mesela $10^3 mm^2$ genişliğinde ve
+1 metre uzunluğunda, Hooke Kanunu</p>
 <p>$$
-\nabla u \mathrm{d} X = u(X+\mathrm{d} X) - u(X)
+F = k x
 $$</p>
-<p>Şimdi (1)'de yerine geçirelim,</p>
+<p>ki $F$ kuvvet, $k$ yay sabiti ve $x$ uzama, mevcut semboller ile,</p>
 <p>$$
-\mathrm{d} x = \mathrm{d} X + \nabla u \mathrm{d} X
+P = k \delta
 $$</p>
-<p>Bir basitleştirme daha,</p>
 <p>$$
-\mathrm{d} x = (I + \nabla u) \mathrm{d} X
+k = \frac{P}{\delta}
+$$</p>
+<p>$$
+= \frac{P}{PL / AE} = \frac{1}{L / AE} = \frac{AE}{L} =
+\frac{10^3 10^{-3} 205}{1} =
+205 GN/m
+$$</p>
+<p>Çubuk Bükülme Gerinimi (Beam Bending Strain)</p>
+<p>Daha önce gördüğümüz üzere bir normal gerinim $\epsilon$'nin baz tanımı</p>
+<p>$$
+\epsilon = \Delta L / L
 \qquad (2)
 $$</p>
-<p>$I + \nabla u$ ifadesine şu şekilde erişmek mümkün, hatırlarsak
-$x = X + u(X)$ idi. Eğer değişim gradyanı $F$ olarak $F = \partial x / \partial X$,
-ya da $F_{ij} = \frac{\partial x_i}{\partial X_j}$ tanımlarsak [1, sf. 144], </p>
+<p>ki $L$ mevcut uzunluk, $\Delta L$ uygulanan kuvvet sonucu elde edilen uzama [2].
+Bu formülü ufak bir demir çubuk parçasının bükülmesine uygulayabilir miyiz
+acaba? </p>
+<p><img alt="" src="phy_020_strs_00_03.jpg" /></p>
+<p>Üstteki resme göre formülleri yazabiliriz. Gösterilen çubuk herhangi bir
+çubuk, tipi ve onun üzerindeki yükün dağılımı farketmiyor.</p>
+<p>Resimde alt solda bükülme öncesi, sağda sonrası görülüyor, bükülme nötr eksenden
+$\rho$ uzaklığındaki bir nokta etrafında ve $\mathrm{d}\theta$ kadar. $\rho$'ya bükülme
+çemberinin / eğiminin yarıçapı (radius of curvature) ismi de verilir. Bükülme
+öncesi $AB$ uzunluğu mesela görülen mavi çizgi için $A'B'$ haline gelecek. Ama
+dikkat edersek nötr eksene yakın noktalar daha az uzayacak, uzaklar daha
+fazla.. bu uzaklığı bir $y$ üzerinden temsil edebiliriz. O uzaklığı hesaba katan
+bir gerinim formülü nasıl elde ederiz?</p>
+<p>Nötr eksene $y$ uzaklığındaki $AB$ bükülme sonrası $A'B'$ oldu ise, bu durumu
+(2) bazında belirtelim,</p>
 <p>$$
-\frac{\partial (X + u(X))}{\partial X} = 1  + \frac{\partial u}{\partial X} = F
+\epsilon = \frac{A'B' - AB}{AB}
+$$</p>
+<p>Şimdi $A'B'$ hesabına gelelim. Dikkat edersek $A'B'$ ufak bir çember çevresi,
+verili yarıçapı ve açı üzerinden bu çember çevresi hesaplanabilir, tüm daire
+çevresi muhakkak $2 \pi r$, açısı bilinen ufak parçalar için $\pi \theta$,
+burada açı $\theta$ tüm $2 \pi$'ye oranlı, radyan olarak. O zaman</p>
+<p>$$
+AB = \rho \mathrm{d} \theta
+$$</p>
+<p>$A'B'$ için ufak dairenin yarıçapı değişir, nötr eksene $y$ kadar uzak isek,
+$A'B'$ yarıçapı $\rho - y$, demek ki </p>
+<p>$$
+A'B' = (\rho - y) \mathrm{d} \theta
+$$</p>
+<p>Bunları (2)'ye koyarsak,</p>
+<p>$$
+\epsilon = \frac{(\rho - y) \mathrm{d} \theta - \rho \mathrm{d} \theta}{\rho \mathrm{d}\theta} =
+\frac{\rho \mathrm{d}\theta - y \mathrm{d}\theta - \rho \mathrm{d}\theta}{\rho \mathrm{d}\theta} =
+- \frac{y \mathrm{d}\theta}{\rho \mathrm{d}\theta}
 $$</p>
 <p>$$
-F = I + \nabla u
+\epsilon = - \frac{y}{\rho}
 $$</p>
-<p>Üsttekini (2)'ye sokarsak,</p>
+<p>Üstteki gerinim formülünü stres formülüne dönüştürebiliriz, Hooke'un Kanunu
+$\sigma = E \epsilon$ üzerinden,</p>
 <p>$$
-\mathrm{d} x = F \mathrm{d} X
-$$</p>
-<p>elde ederiz.</p>
-<p>$F$'ye bakmanın bir diğer yolu $x = \Phi(X,t)$ tanımından hareketle doğal olarak
-elde edilen</p>
-<p>$$
-\mathrm{d} x = \frac{\partial x}{\partial X} \mathrm{d} X
-$$</p>
-<p>formülü. Burada $F$ dediğimiz $\mathrm{d} X$ sonsuz ufak büyüklüğü $\mathrm{d} x$'e ceviren
-şey, açılımı tabii ki $F = \partial x / \partial X$, ya da $F_{ij} = \frac{\partial x_i}{\partial X_j}$.
-$x$ için farklı bir formül kullanınca mesela $x = X + u(x)$ bu durumda $F$
-hesabı bizi $I + \nabla u$'ya götürecektir.</p>
-<p>Devam edelim, dersin geri kalanında gerinim konusunu işlerken hep $\mathrm{d} x = F \mathrm{d}
-X$ formülünü baz alacağız. Niye?  Çünkü gerinim bir uzunluk değişimidir ve
-üstteki formül bana baştaki ufak fark vektörlerinin nasıl uzunluksal olarak
-değişime uğradığını gösteriyor. Orijinal pozisyondaki değişim $\mathrm{d} X$ biliniyor,
-buradan değişim sonrasındaki $\mathrm{d} x$'e geçerek o mesafeyi hesaplayabilirim.</p>
-<p>Gradyanlar</p>
-<p>Deformasyon ve yer değişim gradyanından bahsettik. Yer değişim gradyanı $\nabla
-u$ bir tensör alan (field) sonucunu verir, çünkü $u$ bir vektör değerli
-fonksiyondur. Yer değişim (displacement) gradyanı $\nabla u$'nun tam tanımı,</p>
-<p>$$
-\nabla u = \frac{\partial u_i}{\partial X_j} =
-\left[\begin{array}{ccc}
-\dfrac{\partial u_1}{\partial X_1} &amp; \dfrac{\partial u_1}{\partial X_2} &amp; \dfrac{\partial u_1}{\partial X_3} \\
-\dfrac{\partial u_2}{\partial X_1} &amp; \dfrac{\partial u_2}{\partial X_2} &amp; \dfrac{\partial u_2}{\partial X_3} \\
-\dfrac{\partial u_3}{\partial X_1} &amp; \dfrac{\partial u_3}{\partial X_2} &amp; \dfrac{\partial u_3}{\partial X_3} 
-\end{array}\right]
-$$</p>
-<p>Yamulma / Deformasyon Gradyanı $F$</p>
-<p>$F$'nin formülü $F = I + \nabla u$ ise üstteki matristen hareketle bu basit
-bir hesap,</p>
-<p>$$
-F = I + \nabla u = 
-\left[\begin{array}{ccc}
-1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 1
-\end{array}\right] + 
-\left[\begin{array}{ccc}
-\dfrac{\partial u_1}{\partial X_1} &amp; \dfrac{\partial u_1}{\partial X_2} &amp; \dfrac{\partial u_1}{\partial X_3} \\
-\dfrac{\partial u_2}{\partial X_1} &amp; \dfrac{\partial u_2}{\partial X_2} &amp; \dfrac{\partial u_2}{\partial X_3} \\
-\dfrac{\partial u_3}{\partial X_1} &amp; \dfrac{\partial u_3}{\partial X_2} &amp; \dfrac{\partial u_3}{\partial X_3} 
-\end{array}\right]
-$$</p>
-<p>Üstteki toplam aslında alttaki kısmi türev matrisine eşittir,</p>
-<p>$$
-F = \left[\begin{array}{ccc}
-\dfrac{\partial x_1}{\partial X_1} &amp; \dfrac{\partial x_1}{\partial X_2} &amp; \dfrac{\partial x_1}{\partial X_3} \\
-\dfrac{\partial x_2}{\partial X_1} &amp; \dfrac{\partial x_2}{\partial X_2} &amp; \dfrac{\partial x_2}{\partial X_3} \\
-\dfrac{\partial x_3}{\partial X_1} &amp; \dfrac{\partial x_3}{\partial X_2} &amp; \dfrac{\partial x_3}{\partial X_3} 
-\end{array}\right] =
-\frac{\partial x_i}{\partial X_j}
-$$</p>
-<p>Yani elde ettiğimiz pozisyon fonksiyonunun gradyanıdır. Nihai olarak eşitliği
-$\nabla u = F - I$ olarak ta gösterebilirdik, yani,</p>
-<p>$$
-\nabla u =
-\left[\begin{array}{ccc}
-\dfrac{\partial u_1}{\partial X_1} &amp; \dfrac{\partial u_1}{\partial X_2} &amp; \dfrac{\partial u_1}{\partial X_3} \\
-\dfrac{\partial u_2}{\partial X_1} &amp; \dfrac{\partial u_2}{\partial X_2} &amp; \dfrac{\partial u_2}{\partial X_3} \\
-\dfrac{\partial u_3}{\partial X_1} &amp; \dfrac{\partial u_3}{\partial X_2} &amp; \dfrac{\partial u_3}{\partial X_3} 
-\end{array}\right] = 
-\left[\begin{array}{ccc}
-\dfrac{\partial x_1}{\partial X_1} &amp; \dfrac{\partial x_1}{\partial X_2} &amp; \dfrac{\partial x_1}{\partial X_3} \\
-\dfrac{\partial x_2}{\partial X_1} &amp; \dfrac{\partial x_2}{\partial X_2} &amp; \dfrac{\partial x_2}{\partial X_3} \\
-\dfrac{\partial x_3}{\partial X_1} &amp; \dfrac{\partial x_3}{\partial X_2} &amp; \dfrac{\partial x_3}{\partial X_3} 
-\end{array}\right] -
-\left[\begin{array}{ccc}
-1 &amp; 0 &amp; 0 \\ 0 &amp; 1 &amp; 0 \\ 0 &amp; 0 &amp; 1
-\end{array}\right]
-$$</p>
-<p>Şimdi Lagrange (Green) tensörüne gelelim.</p>
-<p>Gerinim, yamulma sonucu uzunluk değişimidir. $\mathrm{d} x = F \mathrm{d} X$ formülü vektörler
-arası değişimi gösteriyor, formülü vektör uzunluğu (norm) kullanacak şekilde
-değişterebiliriz. Eşitliğin iki tarafını kendisi ile noktasal çarpıma tabi
-tutarım, böylece her iki tarafta norm elde ederim,</p>
-<p>$$
-\mathrm{d} x \cdot \mathrm{d} x  = (F \mathrm{d} X) \cdot (F \mathrm{d} X)
-$$</p>
-<p>$$
-||\mathrm{d} x||^2  = \mathrm{d} X \cdot (F^T F) \mathrm{d} X
-$$</p>
-<p>Son eşitlik ortaya çıktı çünkü bir $Ax$ örneği üzerinden bakarsak,</p>
-<p>$$
-Ax \cdot Ax = (Ax)^T Ax = x^T A^T (Ax) = x^T (A^T A) x  = x \cdot (A^T A) x
-$$</p>
-<p>Ana konumuza dönersek, iki üstteki $F^T F$ grubuna $C$ diyelim, bu büyüklük
-Sağ Cauchy-Green Yamulma Tensörü (Right Cauchy-Green Deformation Tensor)
-olarak biliniyor.</p>
-<p>Bir zihin egzersizi yapalım, eğer $C = F^T F = I$ yani $C$ birim matristir
-dersem ne olur? O zaman</p>
-<p>$$
-||\mathrm{d} x||^2  = \mathrm{d} X \cdot I \mathrm{d} X = \mathrm{d} X \cdot \mathrm{d} X
-$$</p>
-<p>$$
-||\mathrm{d} x||^2 = ||\mathrm{d} X||^2
-$$</p>
-<p>Bu bize uzunlukları değişmediği bir ortamı gösteriyor, demek ki elimizde bir
-katı-gövde hareketi (rigid-body motion) bulunuyor. Gövdede hiç esneme, gerinim,
-uzama yok, obje şeklen olduğu gibi kalıyor.</p>
-<p>Normal şartlarda $F = (I+\nabla u)$ ve $F^T F$ birim matris değil, bu durumda
-tüm $C$'yi açarsak,</p>
-<p>$$
-C = F^T F = (I+\nabla u)^T (I+\nabla u) =
-I + \nabla u + \nabla u^T + \nabla u^T \nabla u
-$$</p>
-<p>Katı-gövde için $C = I$ demiştik, üstteki son ifadede $C = I + ...$  gibi
-bir açılım var, nokta nokta olan yerler tabii ki diğer semboller. Ama
-tekrar katı-gövde durumunu düşünürsek, o durumda $C = I$ olacağı için
-üstteki formülde $I$ sonrası gelen,</p>
-<p>$$
-.. + \nabla u + \nabla u^T + \nabla u^T \nabla u
-$$</p>
-<p>terimleri tamamen sıfır demektir.</p>
-<p>Şimdi Cauchy-Green tensörünü tekrar tanımlayalım,</p>
-<p>$$
-C = I + 2 \epsilon_{Green} 
-$$</p>
-<p>öyle ki </p>
-<p>$$
-\epsilon_{Green} = \frac{1}{2} (\nabla u + \nabla u^T + \nabla u^T \nabla u )
+\sigma = -E y / \rho
 \qquad (3)
 $$</p>
-<p>Not: $C$ içinde 2 ile çarpım var $\epsilon_{Green}$ içinde 1/2 bunlar birbirini
-iptal eder ama 1/2 kullanımı karesel formlarda yaygın şekilde kullanılır,
-basitleştirici bir amacı var muhakkak. </p>
-<p>Böylece Green Gerinim Tensörünü tanımlamış olduk.</p>
-<p>Tensörün bizim için faydalı bazı özellikleri var.</p>
-<p>1) Simetrik: Bu özellik hesapları rahatlaştırır, özellikle yaklaşık
-hesaplara gelince simetrinin faydalarını göreceğiz. </p>
-<p>2) Sonlu (finite) yamulmalar için geçerli: Tensör hesabı için $\nabla u$
-kullanılır, onun için de yer değişim fonksiyonu yeterlidir. Bunlar varsa geçerli
-bir formül eldedir.</p>
-<p>Sonsuz Küçük Gerinim Tensörü (Infinitesimal Strain Tensor)</p>
-<p>Green gerinim tensörünü gördük, kuvvetli bir yaklaşım ama bizim daha çok
-kullanacağımız şimdi anlatacağımız. Niye? Çünkü Green tensörü sonlu
-deformasyonlar / yamulmalar için geçerli ama çoğu uygulamada bize lazım olan çok
-ufak yamulmalar. Ufak derken, önceki dersteki (3) formülünden hareketle, oradaki
-en son terimi hatırlarsak, çok ufak yamulmalar için $\nabla u^T \nabla u &lt;&lt; \nabla u$ 
-olur, yani ufak değişimlerde o karesel işlem $\nabla u$'dan daha ufak sonuç
-verir. O zaman belli durumlarda son terim yaklaşık sıfır kabul edilebilir,
-$\nabla u^T \nabla u \approx 0$. Green tensörü bu durumlarda yaklaşık
-olarak alttaki gibi olur,</p>
+<p>Fakat bu formülün bazı dezavantajları var, mesela bükülme eğimin yarıçapı
+$\rho$'yu bulmak zor. Acaba bükülme momenti (bending moment) ile bir ilişki
+kurarak eğim yarıçapından kurtulabilir miyiz?</p>
+<p><img alt="" src="phy_020_strs_00_05.jpg" /></p>
+<p>Nötr eksen etrafındaki bükülme momenti</p>
 <p>$$
-\epsilon_{Green} \approx \frac{1}{2} (\nabla u + \nabla u^T )
+M = \int y (-\mathrm{d} F)
 $$</p>
-<p>Tüm öğeleri gözükecek şekilde [3, 4.3.2.2], </p>
+<p>$\mathrm{d} F$ bükülme sebebiyle sonsuz küçük alan $\mathrm{d} A$ üzerinde etkili olan
+kuvvettir. Tabii stres kuvvet bölü alandır o zaman ters yönde de gidebiliriz,
+stres çarpı alan kuvvettir, yerine koyalım,</p>
 <p>$$
-\left[\begin{array}{ccc}
-  \frac{\partial u_1}{\partial X_1} &amp;
-  \frac{1}{2}(\frac{\partial u_1}{\partial X_2} + \frac{\partial u_2}{\partial X_1} ) &amp; 
-  \frac{1}{2}(\frac{\partial u_1}{\partial X_3} + \frac{\partial u_3}{\partial  X_1} )
-\\
-  \frac{1}{2}(\frac{\partial u_1}{\partial X_2} + \frac{\partial u_2}{\partial X_1} ) &amp;
-  \frac{\partial u_2}{\partial X_2} &amp;
-  \frac{1}{2}(\frac{\partial u_2}{\partial X_3} + \frac{\partial u_3}{\partial X_2} )
-\\
-  \frac{1}{2}(\frac{\partial u_1}{\partial X_3} + \frac{\partial u_3}{\partial X_1} ) &amp;
-  \frac{1}{2}(\frac{\partial u_2}{\partial X_3} + \frac{\partial u_3}{\partial X_2} ) &amp;
-  \frac{\partial u_3}{\partial X_3} 
-\end{array}\right]
+M = -\int y \sigma \mathrm{d} A
 $$</p>
-<p>Bileşen formunda</p>
+<p>$\sigma$ için (3) formülünü koyalım,</p>
 <p>$$
-\epsilon_{ij} = \frac{1}{2}\left(
-\frac{\partial u_i}{\partial X_j} + \frac{\partial u_j}{\partial X_i}
-\right)
+\frac{E}{\rho} \int y^2 \mathrm{d} A = M
 $$</p>
-<p>Bu tensör de simetrik, fakat sadece ufak şekil değişimleri, yamulmalar için
-geçerli. Fakat zaten, mesela inşaat mühendisliği durumunda, binalar, demir
-kirişler (beam) ile iş yaptığımız zaman, bu tür şekil değişimi faraziyesi
-yeterli. Çünkü eh, biraz düşünürsek eğer binamız büyük şekil değişimleri
-yaşıyorsa önümüzde daha büyük bir problem var demektir.</p>
+<p>Formülde bir alan atalet moment kalıbı gözüküyor, ona $I$ diyelim,</p>
+<p>$$
+M = E I / \rho
+$$</p>
+<p>Üstteki formül [3, sf. 464] kaynağında moment-eğri (moment-curvature) denklemi
+olarak tarif ediliyor.</p>
+<p>Ama $\rho$'dan hala kurtulamadık, (3)'u $\rho$ için düzenleyip üstteki formüle
+sokarsak,</p>
+<p>$$
+EI / (-Ey / \sigma )  = M
+$$</p>
+<p>Basitleştirince</p>
+<p>$$
+\sigma = - \frac{M y}{I}
+$$</p>
+<p>Bu formül bükülme normal stres formülüdür.</p>
+<p>Gerinim Enerji Yoğunluğu (Strain Energy Density)</p>
+<p>Yapılan iş ve enerji arasındaki bağlantıyı [5] yazısında işledik. Şimdi bir
+maddeye uygulanan stres ve onun sebep olduğu gerinimin yol açtığı esnemeden
+bahsedelim, bir kuvvet uygulanıyor ve bir esneme oluyor, bu hesap kuvvet çarpı
+mesafe ile yapılan iş olarak hesaplanabilir. Diyelim ki bir çubuk (bar) üzerinde
+tek eksenel $P$ kuvveti uygulanıyor, sonucunda $\mathrm{d} \Delta$ kadar uzama var
+[4, sf. 243],</p>
+<p><img alt="" src="phy_020_strs_00_07.jpg" /></p>
+<p>Yapılan iş</p>
+<p>$$
+\mathrm{d} W = P \mathrm{d} \Delta
+$$</p>
+<p>Eğer $P$ sürekli uygulansa ve uzama devam etse tüm ufak uzamalar üzerinden
+yapılan iş $\mathrm{d} \Delta$ üzerinden bir entegral gerektirir, fakat alttaki
+gibi basit durumda sadece üçgen alan hesabı yeterli,</p>
+<p><img alt="" src="phy_020_strs_00_08.jpg" /></p>
+<p>Şu formülü kullanabiliriz,</p>
+<p>$$
+U = \frac{1}{2} P \Delta
+$$</p>
+<p>Önceden hatırlarsak $\Delta = PL / EA$ idi, o zaman üstteki </p>
+<p>$$
+U = \frac{P^2 L}{2 E A}
+\qquad (4)
+$$</p>
+<p>olur.</p>
+<p>Yoğunluğa gelirsek; gerinim enerjisi madde içinde farklı seviyelerde olabilir,
+onu sonsuz ufak bir hacim için hesaplarız ve gerektiğinde sonrada tüm enerji
+için tüm hacim üzerinden entegre ederiz.</p>
+<p>Alttaki çubuktaki ufak bir hacim birimine bakalım, birimin kenarları $\mathrm{d} x$,
+$\mathrm{d} y$, $\mathrm{d} z$ büyüklüğünde, birimin hacmi tabii ki $\mathrm{d} V = \mathrm{d} x \mathrm{d} y \mathrm{d}
+z$.</p>
+<p><img alt="" src="phy_020_strs_00_06.jpg" /></p>
+<p>Formül (4) kullanalım, stres için $\sigma$ sembolü kullanacağız, stres kuvvet
+bölü alan demektir, ufak birimdeki alan $A = \mathrm{d} y \mathrm{d} z$, o zaman
+$P = \sigma_{xx} \mathrm{d} y \mathrm{d} z$, üstteki ufak birimdeki gerinim enerjisi</p>
+<p>$$
+U = \frac{(\sigma_{xx} \mathrm{d} y \mathrm{d} z)^2 \mathrm{d} x}{2 E \mathrm{d} y \mathrm{d} z} =
+\frac{\sigma_{xx}^2 \mathrm{d} y^2 \mathrm{d} z^2 \mathrm{d} x}{2 E \mathrm{d} y \mathrm{d} z} =
+\frac{\sigma_{xx}^2 \mathrm{d} y \mathrm{d} z \mathrm{d} x}{2 E} 
+$$</p>
+<p>$$
+= \frac{\sigma_{xx}^2 \mathrm{d} V}{2 E} 
+$$</p>
+<p>Yoğunlukla ilgileniyoruz demiştik, bize birim hacimdeki $U$ lazım, o zaman
+yoğunluk $u$</p>
+<p>$$
+u = \frac{\sigma_{xx}^2}{2 E}
+$$</p>
+<p>Hooke Kanunu $\sigma_{xx} = E \epsilon_{xx}$ üzerinden üstteki son formül,
+gerinim enerji yoğunluğu</p>
+<p>$$
+u = \frac{1}{2} \sigma_{xx} \epsilon_{xx}
+$$</p>
+<p>olarak ta gösterilebilir. Alttaki resimde görülebileceği gibi bu tek eksenel
+stres-gerinim eğrisinin altında kalan alandır,</p>
+<p><img alt="" src="phy_020_strs_00_09.jpg" /></p>
+<p>Daha çetrefil $\sigma-\epsilon$ ilişkileri (ve eğrileri) için $u$ hesabı
+bir entegral olacaktır,</p>
+<p>$$
+u = \int_{0}^{\epsilon_{T}} \sigma_{xx} \mathrm{d} \epsilon_{xx} 
+$$</p>
+<p>Gerinim, esneme, enerji alakası şöyle de görülebilir, uygulanan stresin
+oluşturduğu esneme bir iş yapıyor, bu iş ile enerjiyi esnemeye transfer
+ediyoruz, bir lastiği uzattığımızda enerji o lastiğin "elastisitesine"
+aktarılıyor sanki, bu işin / enerjinin birim hacimdeki ölçüsü gerilim
+enerji yoğunluğunu veriyor bize.</p>
 <p>Kaynaklar</p>
-<p>[1] Kim, <em>Introduction to Non-linear Finite Element Analysis</em></p>
-<p>[2] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,
-    <a href="https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi">https://www.youtube.com/watch?v=2iUnfPRk6Ro&amp;list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi</a></p>
-<p>[3] Adeeb, <em>Introduction to Solid Mechanics, Online Book</em>,
-    <a href="https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/">https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/</a></p>
-<p>[4] Logan, <em>A First Course in the Finite Element Method</em></p>
-<p>[5] Bayramlı, <em>Hesapsal Bilim, Ders 1-8</em></p>
+<p>[1] Crandall, <em>An Introduction to the Mechanics of Solids</em></p>
+<p>[2] Gramoll, <em>Mechanics</em>,
+    <a href="http://www.ecourses.ou.edu/cgi-bin/ebook.cgi?topic=me">http://www.ecourses.ou.edu/cgi-bin/ebook.cgi?topic=me</a></p>
+<p>[3] Craig, <em>Mechanics of Materials, Third Edition</em></p>
+<p>[4] Kelly, <em>University of Auckland, Solid Mechanics, Part I</em></p>
+<p>[5] Bayramlı, <em>Fizik, Temel Fizik 1</em></p>
+<p>[7] Khennane, <em>Introduction to Finite Element Analysis using Matlab and Abaqus</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

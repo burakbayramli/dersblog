@@ -193,18 +193,5 @@ Kaynaklar
 
 [1] <a href="../../../phy/phy_020_strs_06/materyel_mekanigi__6.html">Materyel Mekaniği - 6</a>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+[2] https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html
 

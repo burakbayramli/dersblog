@@ -1,316 +1,186 @@
 \documentclass[12pt,fleqn]{article}\usepackage{../../common}
 \begin{document}
-Materyel Mekaniği - 5
+Materyel Mekaniği - 6
 
-Bükülen bir çubuğun formüllerine bir giriş [1] kaynağında yapıldı. Orada
-moment-eğri (moment-curvature) formülü gösterilmişti.
+Bu derste kirişler ve makaskirişleri üstdüşüm ile birleştirip hem eksenel hem
+eksene dik kuvvetler ile nasıl hesap yapabileceğimizi göreceğiz. Daha sonra bu
+yeni parça türü bir şasi içinde biraraya koyulup daha çetrefil yapılar analiz
+edilecek. Ama önce döndürme kavramını görelim.
 
-$$
-M(x) = \frac{E(x)I(x)}{\rho(x)}
-\mlabel{1}
-$$
+Dönüş (Rotation)
 
-Şimdi bu formülü genişletelim, ve bir ikinci derece türeve eşitleyelim.
+Alttaki gibi bir kiriş düşünelim,
 
-\includegraphics[width=15em]{phy_020_strs_05_01.jpg}
+\includegraphics[width=20em]{phy_020_strs_06_01.jpg}
 
-Resimde gösterilen semboller $M$ bükme momenti, $\rho$ çubuğun $+y$ tarafındaki
-bükülme çemberinin, eğiminin yarıçapı (radius of curvature).  $v$ ise yine $+y$
-kısmındaki yer değişimidir. Çubuğa uygulanan kuvvet dağılımının ne olduğu
-önemli değil, sonuçta odaklandığımız çubuğun ufak bir kısmı.
-
-[3] kaynağında bir çemberi (yarıçapını) onun bir eğriye dokunduğu noktadaki
-türevler üzerinden temsil etme tekniğini paylaştık. Bu formülü mevcut probleme
-uygulayabiliriz.
-
-\includegraphics[width=20em]{phy_020_strs_05_02.jpg}
-
-Üstteki örnekte çemberin yarıçapı $\rho$, türevler ise $\ud v / \ud x$.
-Formül [2, sf. 466],
-
-$$
-\frac{1}{\rho} =
-\frac
-{\dfrac{\ud^2 v}{\ud x^2}}
-{ \left[ 1 + \left( \dfrac{\ud v}{\ud x}  \right)^2 \right]^{3/2} }
-$$
-
-Üstteki problemde eğim çok ufaktır o zaman $\ud v / \ud x$ ufak kabul edilir
-(resimdeki eğim eğitim amaçlı abartılmış), demek ki bölendeki kare hesabı
-daha da ufalır, geriye sadece 1 kalır, 1 ile bölümü yok sayarız, geriye kalanlar
-
-$$
-\frac{1}{\rho} \approx \frac{\ud^2 v}{\ud x^2}
-\mlabel{2}
-$$
-
-Şimdi (1) formülünü tekrar düzenlersek,
-
-$$
-\frac{1}{\rho(x)} = \frac{M(x)}{E(x) I(x)}
-$$
-
-diyebilirdik. Bu formülün sol tarafının (2) sol tarafı ile aynı olduğunu
-görüyoruz. Demek ki onları eşitleyebiliriz, moment-eğri formülü şu hale gelir,
-
-$$
-\frac{\ud^2 v}{\ud x^2} = \frac{M(x)}{E(x) I(x)}
-$$
-
-Formüller daha kısa olsun diye bazı notasyonel ekler yapalım,
-
-$$
-v' = \frac{\ud v}{\ud x} \quad 
-v'' = \frac{\ud^2 v}{\ud x^2} \quad 
-M' = \frac{\ud M}{\ud x} \quad 
-$$
-
-İki üstteki formül kısa notasyonla söyle olur,
-
-$$
-EI v'' = M
-\mlabel{3}
-$$
-
-Bir formül daha, sonra faydalı olacak, hatırlarsak,
-
-$$
-v = \frac{\ud M}{\ud x}
-$$
-
-idi, o zaman (3)'teki formülün iki tarafının $x$'e göre türevini alırsak,
-
-$$
-EI v''' = \frac{\ud M}{\ud x} = V
-$$
-
-Yani [6, sf. 683]
-
-$$
-v = EI v''' = EI \frac{\ud^3 v}{\ud x^3}
-\mlabel{6}
-$$
-
-Ayrıca [8]'de gösterilmişti, $\ud v / \ud x = -q$ olduğu için
-
-$$
-EI v'''' = \frac{\ud v}{\ud x} = -q
-$$
-
-ifadesi de doğrudur.
-
-Tek Öğe Direngenlik (Stiffness) Matrisi
-
-Tek bir bağlantı parçasının direngenliğini hesaplamak istiyoruz, bunu hem
-eksenel yöndeki yer değişmeleri, hem de bükülme, eğilme gibi eksene dik
-uygulanan yönlerden de hesaplamak istiyoruz.
-
-Makaskiriş
-
-Önce makaskiriş (truss) mekaniği ile başlayalım. Makaskiriş konusuna [5]'te
-değinilmişti. Daha önce [1]'de gördüğümüz formülü hatırlarsak,
-
-$$
-E = \frac{P/A}{\delta / L}
-$$
-
-Biraz farklı notasyon [4, sf. 344] ile buna
-
-$$
-\Delta = \frac{NL}{AE}
-$$
-
-diyebiliriz, ki $E$ yine Young'in Genliği, $N$ uygulanan kuvvet, $A$ çubuk
-alanı, $L$ uzunluğu.
-
-\includegraphics[width=15em]{phy_020_strs_05_06.jpg}
-
-Makaşkiriş öğelerinin sadece eksenel yüklenebildiklerini biliyoruz, eğer üstteki
-figür gibi bir senaryo olsaydı, alt uçtan $q'_N$ kuvveti uygulanmış, diğer nokta
-bir pime bağlı, bu durumda önceki formülü değiştirip [4, sf. 542]
-
-$$
-\Delta = \frac{NL}{AE} \to \frac{\Delta AE}{L} = N
-$$
-
-ve $\Delta$ yerine yer değişim $d_N$, kuvvet $N$ için $q'_N$ kullanırız,
-
-$$
-q'_N = \frac{AE}{L} d_N
-$$
-
-Pimli noktada denge durumunda üstteki kuvvete tepki olarak ona eşdeğerde ama
-eksi yönde bir kuvvet oluşmalıdır, ona $q'_F$ diyelim, o zaman diğer uçta
-
-$$
-q'_F = -\frac{AE}{L} d_N
-$$
-
-olur.
-
-\includegraphics[width=15em]{phy_020_strs_05_07.jpg}
-
-Eğer pimli noktayı değiştirsek, üstteki duruma baksak, o zaman yer değişim
-$d_F$ içeren iki formül şöyle olur,
-
-$$
-q''_N = - \frac{AE}{L} d_F \quad
-q''_F = - \frac{AE}{L} d_F 
-$$
-
-\includegraphics[width=15em]{phy_020_strs_05_08.jpg}
-
-Gördüğümüz iki senaryo, yani bir uçta pim var diğerinde yok, sonra tam tersi,
-bize dört formül verdi. Eğer her uçta pim olduğu durumu elde etmek istersek, ki
-bu durum daha büyük bir makaskiriş sisteminde olurdu, o zaman bu dört formülü
-üst üste koymak (superposition) gerekli,
-
-$$
-q_N = q'_N + q''_N 
-$$
-
-$$
-q_F = q'_F + q''_F
-$$
-
-Yani
-
-$$
-q_N = \frac{AE}{L} d_N - \frac{AE}{L} d_F
-$$
-
-$$
-q_F = -\frac{AE}{L} d_N + \frac{AE}{L} d_F
-$$
-
-Üstteki iki formülü matris formunda yazmak istersek,
+Daha önce bu tür bir kiriş üzerinde eksenel yöndeki kuvvetler ve yer
+değişimlerinin ilişkisini
 
 $$
 \left[\begin{array}{c}
-q_N \\ q_F
+f'_{1x} \\ f'_{2x}
 \end{array}\right] =
+\frac{AE}{L}
 \left[\begin{array}{cc}
 1 & -1 \\ -1 & 1
 \end{array}\right]
 \left[\begin{array}{c}
-d_N \\ d_F
-\end{array}\right] 
+u'_1 \\ u'_2
+\end{array}\right]
+\mlabel{1}
 $$
 
-Daha kısa olarak
+olarak göstermiştik. Üstteki formül kirişin yerel, kendisine has kordinat
+sistemini baz alıyor. Eğer üstteki değişkenleri global kordinat sistemine
+eşlemek, yansıtmak istiyorsak o zaman sistemi resimdeki $\theta$ kadar döndürmemiz
+gerekiyor. Döndürme işlemi genel olarak iki boyuttaki bir $[u, v]$ vektörü için
+[1, sf. 85]
 
 $$
-q = k' d
+\left[\begin{array}{c}
+u' \\ v'
+\end{array}\right] =
+\left[\begin{array}{cc}
+C & S \\ -S & C
+\end{array}\right]
+\left[\begin{array}{c}
+u \\ v
+\end{array}\right]
+\mlabel{2}
 $$
 
-ki $q,k',d$ vektör, matris formundadır ve
+ile yapılır, ki $C = \cos\theta$, $S = \sin\theta$.
+
+Fakat unutmayalım tek eksenlikten çıktığımız zaman kirişin her ucunda iki
+serbestlik derecesi vardır, her uç $u,v$ yönünde yer değişim yaşayabilir,
+bunları $u_1,v_1$ ve $u_2,v_2$ diye gösterebiliriz. O zaman dönüş hesabı
 
 $$
-k' = \left[\begin{array}{cc}
-1 & -1 \\ -1 & 1
+\left[\begin{array}{c}
+u'_1 \\ v'_1 \\ u'_2 \\ v'_2
+\end{array}\right] =
+\left[\begin{array}{cccc}
+C & S & 0 & 0 \\
+-S & C & 0 & 0 \\
+0 & 0 & C & S \\
+0 & 0 & -S & C 
+\end{array}\right]
+\left[\begin{array}{c}
+u_1 \\ v_1 \\ u_2 \\ v_2
 \end{array}\right]
 $$
 
-$k'$ matrisine öğe direngenlik matrisi (member stiffness matrix) olarak bilinir.
-
-Kirişler (Beams)
-
-Eksene dik (transverse) yüklerin dinamiğini hesaplamak için kiriş formülasyonu
-gerekli. Bu kiriş parçasının iki ucuna bakacağız, bu uçlar yer değişimine ve
-ufak bir dönüş açısına sahip olabilecekler. Yani her uçta iki olmak üzere
-bu sistemde toplam dört derece serbestlik var. Fonksiyon $v(x)$,
-
-\includegraphics[width=20em]{phy_020_strs_05_09.jpg}
-
-Bu fonksiyonu
+İlerlemeden önce iki üstteki dönüş matrisi, $T$ diyelim, hakkında ilginç bir
+ispatı verelim, ileride lazım olacak. Acaba $T^T = T^{-1}$ ifadesi doğru mudur?
+Bu aynı zamanda [1] kitabındaki 3.28 probleminin de cevabı. İspat için $T T^T$
+çarpımını yapabiliriz, eğer birim (identity) matrisi elde edersek ispat tamam
+demektir.
 
 $$
-v(x) = a_1 x^3 + a_2 x^2 + a_3 x + a_4
-\mlabel{7}
+T = 
+\left[\begin{array}{cccc}
+C & S & 0 & 0 \\
+-S & C & 0 & 0 \\
+0 & 0 & C & S \\
+0 & 0 & -S & C 
+\end{array}\right], \quad
+T^T = 
+\left[\begin{array}{cccc}
+C & -S & 0 & 0 \\
+S & C & 0 & 0 \\
+0 & 0 & C & -S \\
+0 & 0 & S & C 
+\end{array}\right]
 $$
 
-küpsel polinom ile temsil edebiliriz, bu uygun çünkü 4 derece serbestlik var
-demiştik, üstteki formülde de böyle. Ayrıca küpsel fonksiyonlar iki parça
-yanyana geldiğinde eğimsel ve yer değişim sürekliliğini de sağlayabilirler.
+Çarpımı \verb!sympy! ile yapalım,
 
-$x=0$ ve $x=L$ noktalarında elde edilebilecek formüllere bakalım [7, sf. 173],
+\begin{minted}[fontsize=\footnotesize]{python}
+from sympy import symbols, pprint, latex
+from sympy.matrices import Matrix
+C,S = symbols("C,S")
+T = Matrix([[C,S,0,0],[-S,C,0,0],[0,0,C,S],[0,0,-S,C]])
+Tprime = Matrix([[C,-S,0,0],[S,C,0,0],[0,0,C,-S],[0,0,S,C]])
+print (latex(T * Tprime)[:60],'...')
+\end{minted}
 
-$$
-v(0) = v_1 = a_4
-$$
+\begin{verbatim}
+\left[\begin{matrix}C^{2} + S^{2} & 0 & 0 & 0\\0 & C^{2} + S ...
+\end{verbatim}
 
+Yani,
+  
 $$
-\frac{\ud v(0)}{\ud x} = \phi_1 = a_3
-$$
-
-$$
-v(L) = v_2 = a_1 L^3 + a_2 L^2 + a_3 L + a_4 
-$$
-
-$$
-\frac{\ud v}{\ud x}(L) = \phi_2 = 3 a_1 L^2 + 2 a_2 L + a_3
-$$
-
-ki $\phi = \ud v / \ud x$, üstteki resimde ima edildiği gibi, ve $\phi$'nin
-ufak dönüşlere tekabül ettiği durumlar için.
-
-Üstteki dört formülü kullanarak (7) içindeki katsayılar yerine serbestlik
-derecesi değişkenleri $v_1,v_2,\phi_1,\phi_2$ kullanabiliriz, biraz cebirsel
-takla atmak lazım. $a_3,a_4$ için ne koyulacağı bariz, bunlar sırasıyla
-$\phi_1,v_1$ olacak. Geriye $a_1,a_2$ kalıyor, bunun için $v_2,\phi_2$
-formüllerini $a_1$ için düzenleyip birbirine eşitlersek, iptaller sonrası
-geriye $a_2$ eşitliği ortaya çıkacaktır, benzer şekilde $a_1$ elde edilebilir,
-nihai sonuç,
-
-$$
-v =
-\left[
-  \frac{2}{L^3} (v_1 - v_2) + \frac{1}{L^2} (\phi_1 - \phi_2) 
-\right] x^3 +
-\left[
-  -\frac{3}{L^2} (v_1 - v_2) - \frac{1}{L} (2\phi_1 + \phi_2)
-\right] x^2 +
-\phi_1 x + v_1
-\mlabel{8}
+\left[\begin{matrix}C^{2} + S^{2} & 0 & 0 & 0\\0 & C^{2} + S^{2} & 0 & 0\\0 & 0 & C^{2} + S^{2} & 0\\0 & 0 & 0 & C^{2} + S^{2}\end{matrix}\right]
 $$
 
-Bu nihai formül kullanılarak kiriş öğe direngenlik matrisi elde
-edilebilir. Bu matris için iki uçtaki kaykılma kuvvetleri ve
-bükülme momentleri gerekiyor, onlara $f_{1y}$, $m_1$, $f_{2y}$,
-$m_2$ diyelim,
+Hatırlarsak $C = \cos\theta, S = \sin\theta$, bunları yerine koyunca tüm köşegen
+boyunca 1 değeri elde edilir, diğer hücrelerde sıfır var, demek ki bir birim
+matrisi elde ettik. Bu demektir ki $T T^T = I$, ve bu ifadenin doğru olmasının
+tek yolu $T^T = T^{-1}$ olmasıdır. İspat tamamlandı.
 
-\includegraphics[width=20em]{phy_020_strs_05_10.jpg}
-
-Moment $m(x)$, kaykılma $V$ formüllerini bir kez daha hatırlarsak
-
-$$
-m(x) = EI \frac{\ud^2 v}{\ud x^2}, \quad
-V = EI \frac{\ud^3 v}{\ud x^3}
-$$
-
-Türevi alınan $v$ formülü (8)'de gösterilen olacak, o zaman
+Bir önemli eşitlik daha, yer değişimlerde olduğu gibi, kuvvetler de döndürme
+matematiğine tabi olabilirler. Mesela dönüş matrisi $T$ için
 
 $$
-f_{1y} = V = EI \frac{\ud^3 v(0)}{\ud x^3} =
-\frac{EI}{L^3} (12 v_1 + 6L \phi_1 - 12 v_2 + 6L \phi_2 )
+d' = T d
 $$
 
-$$
-m_1 = -m = -EI \frac{\ud^2 v(0)}{\ud x^2} =
-\frac{EI}{L^3} ( 6L v_1 + 4L^2 \phi_1 - 6L v_2 + 2 L^2 \phi_2 )
-$$
+diyebilirdim, ya da kuvvetler için
 
 $$
-f_{2y} = -V = -EI \frac{\ud^3 v(L)}{\ud x^3} =
-\frac{EI}{L^3} (-12 v_1 - 6L \phi_1 + 12 v_2 - 6L \phi_2 )
+f' = T f
 $$
 
+Bunun bir yan etkisi şudur, yer değişimlerini kuvvetlerle ilintilendiren
+sistem
+
 $$
-m_2 = m = EI \frac{\ud^2 v(L)}{\ud x^2} =
-\frac{EI}{L^3} ( 6L v_1 + 2L^2 \phi_1 - 6L v_2 + 4 L^2 \phi_2)
+f = k d
 $$
 
-Matris formunda üstteki dört formülü şu şekilde gösterebiliriz,
+ise,
+
+$$
+f' = k' d' 
+$$
+
+Bu sistem şöyle de gösterilebilir,
+
+$$
+f' = k' T d
+$$
+
+ve
+
+$$
+T f = k' T d
+$$
+
+Eğer üstteki ifadeyi soldan $T^{-1}$ ile çarparsak,
+
+$$
+T^{-1} T f = T^{-1} k' T d
+$$
+
+$T^{-1} T = I$ olduğu için yokolur, ayrıca biraz önceki ispattan $T^{-1} = T^T$
+olduğunu biliyoruz,
+
+$$
+f = T^T k' T d
+$$
+
+Global direngenlik matrisi $k$ ortadaki $T^T k' T$ büyüklüğüdür.
+
+Devam edelim. Dönüş mekaniğini gördük, şimdi önceki derste işlenen kiriş
+parçasına hem eksenel dinamiği hem de biraz önce gördüğümüz dönüş mantığını
+ekleyelim.  Altta görülen kiriş parçasının hareketlerini hesaplayabilmek
+istiyoruz yani,
+
+\includegraphics[width=15em]{phy_020_strs_06_02.jpg}
+
+Önceki dersten hatırlarsak eksene dik yük alan parçaların mekaniği alttaki
+formülle gösterilmişti,
 
 $$
 \left[\begin{array}{c}
@@ -328,283 +198,466 @@ v_1 \\ \phi_1 \\ v_2 \\ \phi_2
 \end{array}\right]
 $$
 
-Direngenlik matrisi denen büyüklük $EI / L^3$ çarpı üstteki formülde görülen
-4 x 4 matrisidir, yani eşitliğin sağında orta kısımda olan değerler.
-
-Örnek
-
-Daha önce makaskirişlerde gördüğümüz gibi üstdüşüm tekniğini normal kirişler
-için de kullanmak mümkündür. Alttaki gibi bir yapı düşünelim [7, sf. 181],
-
-\includegraphics[width=20em]{phy_020_strs_06_01.jpg}
-
-$EI$ büyüklüğünün tüm kiriş boyunca sabit olduğunu kabul edelim. Kirişin orta
-noktasına 5000 N kuvveti ve 2500 Nm momenti uygulanıyor. Kiriş en solda bir
-duvara sabitlenmiş, sağ noktasında ise bir pimle destekleniyor (pimler
-dönüşe izin verir ama yer değişime izin vermez). 
-
-Bu yapıyı üç tane düğüm (node) üzerinden ayrıksal hale getirebiliriz,
-düğümler 1,2, ve 3, ve elde iki tane kiriş var, grafikte görülüyor.
-
-Bu iki kiriş parçası için direngenlik matrisleri,
-
-$$
-k^{(1)} = \frac{EI}{L^3}
-\begin{array}{cc} & \begin{array}{rrrr} v_1 & \phi_1 & v_2 & \phi_2 \end{array} \\ &
-\left[
-\begin{array}{cccc}
-  12 & 6L & -12 & 6L \\
-  6L & 4L^2 & -6L & 2L^2 \\
-  -12 & -6L & 12 & -6L \\
-  6L & 2L^2 & -6L & 4L^2
-\end{array}
-\right]
-\end{array} 
-$$
-
-$$
-k^{(2)} = \frac{EI}{L^3}
-\begin{array}{cc} & \begin{array}{rrrr} v_2 & \phi_2 & v_3 & \phi_3 \end{array} \\ &
-\left[
-\begin{array}{cccc}
-  12 & 6L & -12 & 6L \\
-  6L & 4L^2 & -6L & 2L^2 \\
-  -12 & -6L & 12 & -6L \\
-  6L & 2L^2 & -6L & 4L^2
-\end{array}
-\right]
-\end{array} 
-$$
-
-Tüm direngenlik matrisini oluşturmak için yine direk direngenlik metotunu
-kullanırız, üstdüşüm uygulayınca her iki matris genişletilir, ve üst üste konur,
-nihai sonuç,
+Bu formüle (1)'deki eksenel mantığı eklersek, yerel kordinatlarda
 
 $$
 \left[\begin{array}{c}
-F_{1y} \\ M_1 \\ F_{2y} \\ M_2 \\ F_{3y} \\ M_3
+f'_{1x} \\ f'_{1y} \\ m'_1 \\ f'_{2x} \\ f'_{2y} \\ m'_2
 \end{array}\right] =
-\frac{EI}{L^3}
 \left[\begin{array}{cccccc}
-12 & 6L & -12 & 6L & 0 & 0 \\
-6L & 4L^2 & -6L & 2L^2 & 0 & 0 \\
--12L & -6L & 12+12 & -6L+6L & -12 & 6L \\
-6L & 2L^2 & -6L+6L & 4L^2+4L^2 & -6L & 2L^2 \\
-0 & 0 & -12 & -6L & 12 & -6L \\
-0 & 0 & 6L & 2L^2 & -6L & 4L^2
+C_1 & 0 & 0 & -C_1 & 0 & 0 \\
+0 & 12C_2 & 6 C_2 L & 0 & -12 C_2 & 6 C_2 L \\
+0 & 6C_2 L & 4 C_2 L^2 & 0 & -6 C_2 L & 2 C_2 L^2 \\
+-C_1 & 0 & 0 & C_1 & 0 & 0 \\
+0 & -12C_2 & -6 C_2 L & 0 & 12 C_2 & -6 C_2 L \\
+0 & 6 C_2 L & 2 C_2 L^2 & 0 & -6C_2 L & 4C_2 L^2
 \end{array}\right]
 \left[\begin{array}{c}
-v_1 \\ \phi_1 \\ v_2 \\ \phi_2 \\ v_3 \\ \phi_3
+u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2
 \end{array}\right]
+\mlabel{4}
 $$
 
-Bu noktada sınır şartlarını, ya da kısıtlamaları sisteme dahil edebiliriz.
-Düğüm 1'de bir sabit destek var, düğüm 3'te bir menteşe (hinge) desteği var,
-bu demektir ki
+elde edilir, ki $C_1 = \dfrac{AE}{L}$ ve $C_2 = \dfrac{EI}{L^3}$
+olmak üzere. Üstte ortada duran matris $k'$ matrisidir.
+
+Şimdi dönüş mekaniğini ekleyelim.
 
 $$
-\phi_1 = 0, \qquad
-v_1 = 0, \qquad
-v_3 = 0
-$$
-
-En sağ uçta $v_3 = 0$ oldu çünkü menteşe dönüşe izin verir, yer değişime
-izin vermez, $\phi_3$ değeri sıfırdan büyük olabilir, ama $v_3$ sıfır olur.
-
-Kısıtlamaları dahil edince birinci, ikinci ve beşinci satır ve kolonları
-dışarıda bırakarak bir sistem elde edebiliriz,
-
-$$
-\left[\begin{array}{c}
--5000 \\ 5000 \\ 0
-\end{array}\right] =
-\frac{EI}{L^3}
 \left[\begin{array}{ccc}
-24 & 0 & 6L \\
-0 & 8L^2 & 2L^2 \\
-6L & 2L^2 & 4L^2
+u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2 
+\end{array}\right] =
+\left[\begin{array}{cccccc}
+C & S & 0 & 0 & 0 & 0 \\
+-S & C & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0 \\
+0 & 0 & 0 & C & S & 0 \\
+0 & 0 & 0 & -S & C & 0 \\
+0 & 0 & 0 & 0 & 0 & 1
+\end{array}\right]
+\left[\begin{array}{ccc}
+u_1 \\ v_1 \\ \phi_1 \\ u_2 \\ v_2 \\ \phi_2 
+\end{array}\right]
+\mlabel{5}
+$$
+
+Ortadaki matris yerel öğeler için etkili $T$ matrisi. Dikkat edersek dönüş
+sağlayan 2 x 2 boyutundaki iki altmatrisler, $T$'de görülen o iki bölge, daha
+büyük matriste öyle yerleştirildi ki sadece $u_1,v_1$ ve $u_2,v_2$
+değişkenlerini etkiliyor, onlara tekabül eden bölgelerde duruyor.
+
+Böylece $T$ matrisini bulmuş olduk. Şimdi $k$ matrisini hesaplamak için
+$k = T^T k' T$ işlemini yapabiliriz [1, sf. 243].
+
+\begin{minted}[fontsize=\footnotesize]{python}
+from sympy import symbols, latex, simplify
+from sympy.matrices import Matrix
+import pickle
+
+C,S,C1,C2,L,A,E,I = symbols("C,S,C1,C2,L,A,E,I")
+kprime = Matrix([ [C1, 0, 0, -C1, 0, 0],
+                  [0, 12*C2, 6*C2*L, 0, -12*C2, 6*C2*L],
+                  [0, 6*C2*L, 4*C2*L**2, 0, -6*C2*L, 2*C2*L**2],
+                  [-C1, 0, 0, C1, 0, 0],
+                  [0, -12*C2, -6*C2*L, 0, 12*C2, -6*C2*L],
+                  [0, 6*C2*L, 2*C2*L**2, 0, -6*C2*L, 4*C2*L**2]])
+
+T = Matrix([[C,S,0,0,0,0],[-S,C,0,0,0,0],[0,0,1,0,0,0],
+            [0,0,0,C,S,0],[0,0,0,-S,C,0],[0,0,0,0,0,1]])
+
+res = T.transpose()*kprime*T
+res = res.subs(C1,A*E/L) 
+res = res.subs(C2,E*I/L**3)
+pickle.dump(res,open("frame.pkl","wb")) # sonra lazim olacak diske kaydet
+pickle.dump(kprime,open("kprime.pkl","wb"))
+pickle.dump(T,open("T.pkl","wb"))
+res = res / (E/L) 
+print (latex(simplify(res))[:70],'...')
+\end{minted}
+
+\begin{verbatim}
+\left[\begin{matrix}A C^{2} + \frac{12 I S^{2}}{L^{2}} & \frac{C S \le ...
+\end{verbatim}
+
+$$
+k = 
+\frac{E}{L} \times 
+\left[\begin{matrix}A C^{2} + \frac{12 I S^{2}}{L^{2}} & \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} & - \frac{6 I S}{L} & - A C^{2} - \frac{12 I S^{2}}{L^{2}} & \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} & - \frac{6 I S}{L}\\\frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} & A S^{2} + \frac{12 C^{2} I}{L^{2}} & \frac{6 C I}{L} & \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} & - A S^{2} - \frac{12 C^{2} I}{L^{2}} & \frac{6 C I}{L}\\- \frac{6 I S}{L} & \frac{6 C I}{L} & 4 I & \frac{6 I S}{L} & - \frac{6 C I}{L} & 2 I\\- A C^{2} - \frac{12 I S^{2}}{L^{2}} & \frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} & \frac{6 I S}{L} & A C^{2} + \frac{12 I S^{2}}{L^{2}} & \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} & \frac{6 I S}{L}\\\frac{C S \left(- A L^{2} + 12 I\right)}{L^{2}} & - A S^{2} - \frac{12 C^{2} I}{L^{2}} & - \frac{6 C I}{L} & \frac{C S \left(A L^{2} - 12 I\right)}{L^{2}} & A S^{2} + \frac{12 C^{2} I}{L^{2}} & - \frac{6 C I}{L}\\- \frac{6 I S}{L} & \frac{6 C I}{L} & 2 I & \frac{6 I S}{L} & - \frac{6 C I}{L} & 4 I\end{matrix}\right]
+\mlabel{3}
+$$
+
+Bu sonuç [1]'deki sonuca benziyor, cebirsel olarak eşit.
+
+$E/L$ bölümünü \verb!sympy! basitleştirmesi öncesi sistemde dışarıdan uyguladık
+çünkü cebirsel düzenlemede sisteme yardım etmek istedik, bu sayede sonuç
+kitaptaki çıktıya benzemiş oldu. Ayrıca cebirsel işlem sonucunu diske kaydettik
+(3) çıktısı alttaki problemde lazım olacak.
+
+Birden fazla kiriş formülü de üstdüşüm ile birleştirilerek daha büyük bir
+yapının formülü haline getirilebilir, alttaki soruda bunun nasıl yapılacağını
+göreceğiz. Elde edilecek sistem / matris düz katı şasi / düz oynamaz çerçeve
+(rigid plane frame) formülasyonu için kullanılacak, bu sistem ``katı bir şekilde
+birbirine bağlanmış bir grup kiriş parçalarının toplamı'' olarak ta tarif
+edilebilir, yani kiriş parçalarının birbirine olan açıları, yük uygulandıktan
+sonra bağlandıklarında ne ise o halde kalırlar, deformasyon sonrası değişime
+uğramazlar. Ayrıca bu tür bir sistemde moment bir parçadan diğerine, bağlantı
+noktaları üzerinden transfer olabilir, yani katı bağlantı noktaları üzerinden
+bir moment sürekliliği vardır.
+
+Soru
+
+İlk katı düzlem çerçeve analizi olarak alttaki basit sistemi çözün.
+
+\includegraphics[width=15em]{phy_020_strs_06_03.jpg}
+
+Cevap
+
+Sistem düğüm 1 ve 4 üzerinden sabitlenmiş, düğüm 2 üzerinde ve yatay 40 kN
+kuvvet uygulanıyor, ayrıca düğüm 3'te pozitif moment 500 N-m var. Üstteki
+resimde global kordinat sisteminin yeri gösteriliyor [1, sf. 244].
+
+Çözüm için her parçayı kiriş matematiği (3) ile formülize edeceğiz, ve bu
+parçaları üstdüşüm ile biraraya koyacağız, nihai matrisi çözerek yükleri ve yer
+değişimleri bulacağız.
+
+Parça 1
+
+Hesap yapabilmek için (3)'teki matrise ihtiyaç var, bu matrisin sembolik
+halini diskten okuyalım, oraya kaydetmiştik, 
+
+\begin{minted}[fontsize=\footnotesize]{python}
+from sympy import symbols, latex, simplify
+from sympy.matrices import Matrix
+import pickle, pandas as pd
+pd.set_option('display.max_columns', None)
+pd.set_option("display.precision", 4)
+C,S,L,A,E,I = symbols("C,S,L,A,E,I")
+frame = pickle.load(open('frame.pkl','rb'))
+\end{minted}
+
+Birinci parçanın duruş açısı 90 derece, o zaman $C = \cos 90 = 0$, $S = \sin 90
+= 1$.  Bu değerleri sembolik matrisi sayısal hale çevirmek için kullanacağız,
+``yoğun (dense) matris'' elde edeceğiz, \verb!subs! çağrısı ile,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+d = {L:3000.0, C:0.0, S:1.0, E:200.0*1e3, A:6500.0, I:80.0*1e6}
+res = frame.subs(d) / (1e3*d[E]/d[L])
+df1 = pd.DataFrame(np.array(res).astype(np.float64))
+df1.columns = ['u1','v1','phi1','u2','v2','phi2']
+df1 = df1.round(2)
+print ('66.67*1000 * \n', df1)
+\end{minted}
+
+\begin{verbatim}
+66.67*1000 * 
+        u1   v1      phi1      u2   v2      phi2
+0    0.11  0.0    -160.0   -0.11  0.0    -160.0
+1    0.00  6.5       0.0    0.00 -6.5       0.0
+2 -160.00  0.0  320000.0  160.00  0.0  160000.0
+3   -0.11  0.0     160.0    0.11  0.0     160.0
+4    0.00 -6.5       0.0    0.00  6.5       0.0
+5 -160.00  0.0  160000.0  160.00  0.0  320000.0
+\end{verbatim}
+
+Matrisin birimi N/mm. 
+
+Parça 2
+
+Bu parçanın duruşu sebebiyle açı sıfır, yani $C=1,S=0$.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+d = {L:3000.0, C:1.0, S:0.0, E:200.0*1e3, A:6500.0, I:40.0*1e6}
+res = frame.subs(d) / (1e3*d[E]/d[L])
+df2 = pd.DataFrame(np.array(res).astype(np.float64))
+df2.columns = ['u2','v2','phi2','u3','v3','phi3']
+print ('66.67*1000 * \n', df2)
+\end{minted}
+
+\begin{verbatim}
+66.67*1000 * 
+     u2       v2      phi2   u3       v3      phi3
+0  6.5   0.0000       0.0 -6.5   0.0000       0.0
+1  0.0   0.0533      80.0  0.0  -0.0533      80.0
+2  0.0  80.0000  160000.0  0.0 -80.0000   80000.0
+3 -6.5   0.0000       0.0  6.5   0.0000       0.0
+4  0.0  -0.0533     -80.0  0.0   0.0533     -80.0
+5  0.0  80.0000   80000.0  0.0 -80.0000  160000.0
+\end{verbatim}
+
+Parça 3
+
+Açı 270 derece, demek ki $C=0,S=-1$.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+d = {L:3000.0, C:0.0, S:-1, E:200.0*1e3, A:6500.0, I:80.0*1e6}
+res = frame.subs(d) / (1e3*d[E]/d[L])
+df3 = pd.DataFrame(np.array(res).astype(np.float64))
+df3.columns = ['u3','v3','phi3','u4','v4','phi4']
+print ('66.67*1000 * \n', df3)
+\end{minted}
+
+\begin{verbatim}
+66.67*1000 * 
+          u3   v3      phi3        u4   v4      phi4
+0    0.1067  0.0     160.0   -0.1067  0.0     160.0
+1    0.0000  6.5       0.0    0.0000 -6.5       0.0
+2  160.0000  0.0  320000.0 -160.0000  0.0  160000.0
+3   -0.1067  0.0    -160.0    0.1067  0.0    -160.0
+4    0.0000 -6.5       0.0    0.0000  6.5       0.0
+5  160.0000  0.0  160000.0 -160.0000  0.0  320000.0
+\end{verbatim}
+
+Üstteki üç matris birleştirilip, üstdüşüm üzerinden daha büyük bir matris haline
+getirilecek. Üstdüşüm yapılabilmesi için her matrisin aynı boyutta, aynı
+kolonlara sahip olması gerekir. Bir matrisi (ya da Dataframe) alıp yeni
+değişkenlere ``büyüten'' bir kod parçası lazım.
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pandas as pd
+pd.set_option('display.max_columns', None)
+
+def expand_dataframe(df, new_cols):
+
+    res = df.copy()
+    old_cols = list(df.columns)
+    addn_vars = [x for x in new_cols if x not in old_cols]
+    res.index = df.columns
+    for x in addn_vars:
+        res[x] = np.nan
+        res.loc[x] = pd.Series(res.columns)
+    res = res[new_cols]
+    res = res.reindex(new_cols).fillna(0)
+    return res
+
+df = pd.DataFrame([['a','c'],['b','d']],columns = ['u1','u3'])
+print (df)
+res = expand_dataframe(df,['u1','u2','u3','u4'])
+print (res)
+\end{minted}
+
+\begin{verbatim}
+  u1 u3
+0  a  c
+1  b  d
+   u1   u2 u3   u4
+u1  a  0.0  c  0.0
+u2  0  0.0  0  0.0
+u3  b  0.0  d  0.0
+u4  0  0.0  0  0.0
+\end{verbatim}
+
+Üstteki kod parçası bunu yapabiliyor, örnek verideki ilk \verb!u1!, \verb!u3!
+kolon listesini \verb!u1!, \verb!u2!, \verb!u3!, \verb!u4! listesine büyüttük,
+ve kod gerekli yerlere gerekli sıfır değerlerini yazdı ve eski matrisin
+değerlerini büyütülmüş yeni matriste uygun yerlere taşıdı.
+
+Nihai matristen değişken çıkartmak ta lazım olabiliyor, sınır şartları bunu
+gerektiriyor olabilir. mesela \verb!u1=0! için bu değişkene tekabül eden hem
+kolon hem satır çıkartılmalı,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+res2 = res.copy()
+res2 = res2.drop('u1',axis=1)
+res2 = res2.drop('u1',axis=0)
+print (res2)
+\end{minted}
+
+\begin{verbatim}
+     u2 u3   u4
+u2  0.0  0  0.0
+u3  0.0  d  0.0
+u4  0.0  0  0.0
+\end{verbatim}
+
+Verilen bir kolon ve satırların listesini çıkartmak için de bir fonksiyon yazalım,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+def drop_col_row(df, var_list):
+    res = df.copy()
+    for x in var_list:
+        res = res.drop(x,axis=1)
+        res = res.drop(x,axis=0)
+    return res
+\end{minted}
+
+Son hesap aşamasına geldik. Üstdüşüm yapalım, ve $u_1 = v_1 = \phi_1 = 0$,
+$u_4 = v_4 = \phi_4 = 0$ şartlarını uygulayalım,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+all_vars = ['u1','v1','phi1','u2','v2','phi2','u3','v3','phi3','u4','v4','phi4']
+df1f = expand_dataframe(df1,all_vars)
+df2f = expand_dataframe(df2,all_vars)
+df3f = expand_dataframe(df3,all_vars)
+df_super = df1f + df2f + df3f
+
+df_super = drop_col_row(df_super, ['u1','v1','phi1','u4','v4','phi4'])
+print (df_super)
+\end{minted}
+
+\begin{verbatim}
+          u2       v2      phi2        u3       v3      phi3
+u2      6.61   0.0000     160.0   -6.5000   0.0000       0.0
+v2      0.00   6.5533      80.0    0.0000  -0.0533      80.0
+phi2  160.00  80.0000  480000.0    0.0000 -80.0000   80000.0
+u3     -6.50   0.0000       0.0    6.6067   0.0000     160.0
+v3      0.00  -0.0533     -80.0    0.0000   6.5533     -80.0
+phi3    0.00  80.0000   80000.0  160.0000 -80.0000  480000.0
+\end{verbatim}
+
+Bu matrisi bir $Ax = b$ lineer sistemini çözmek için kullanacağız. Üstteki
+matris $A$ olacak, $b$ ise kuvvet ve momentleri taşıyan bir vektör,
+sınır şartlarının çıkarttığı değerler sonrası kalan değişkenler,
+
+$$
+\left[\begin{array}{c}
+f_{2x} \\ f_{2y} \\ m_{2} \\ f_{3x} \\ f_{3y} \\ m_{3} 
+\end{array}\right] =
+\left[\begin{array}{c}
+4 \times 10^4 \\ 0 \\ 0 \\ 0 \\ 0 \\ 5 \times 10^5
+\end{array}\right]
+$$
+
+Çözeceğimiz sistem
+
+$$
+\left[\begin{array}{c}
+4 \times 10^4 \\ 0 \\ 0 \\ 0 \\ 0 \\ 5 \times 10^5
+\end{array}\right]
+=
+66.67 \times 10^3
+\left[\begin{array}{cccccc}
+  6.61 &  0 &     160 &   -6.5 &   0   &    0 \\
+  0    & 6.5533 &  80.0 &    0 &  -0.0533 &   80.0 \\
+160 &  80 &  480000 &    0 & -80 &   80000 \\
+ -6.50 &   0 &       0 &    6.6067 &   0 &     160.0 \\
+  0 &  -0.0533 &     -80.0 &    0 &   6.5533 &     -80.0 \\
+  0 &  80 &.   80000 &  160 & -80 &  480000 
 \end{array}\right]
 \left[\begin{array}{c}
-v_2 \\ \phi_2 \\ \phi_3
+u_2 \\ v_2 \\ \phi_2 \\ u_3 \\ v_3 \\ \phi_3
 \end{array}\right]
 $$
 
 \begin{minted}[fontsize=\footnotesize]{python}
-from sympy import symbols, simplify, latex
-from sympy.matrices import Matrix
-L,E,I = symbols("L, E, I")
-A = Matrix([[24,0,6*L], [0,8*L**2,2*L**2],[6*L,2*L**2,4*L**2]])
-b = Matrix([[-5000],[5000],[0]])
-sol = A.solve(b)
+import numpy.linalg as lin
+
+b = np.array([4*1e4,0,0,0,0,5*1e5])
+
+x = lin.solve(66.67*1e3*df_super, b)
+
+pd.DataFrame(x,index=df_super.columns)
 \end{minted}
 
-Elde edilen \verb!sol! sonucuna baktığımızda, biraz basitleştirme sonrası
+\begin{verbatim}
+Out[1]: 
+           0
+u2    4.8197
+v2    0.0333
+phi2 -0.0014
+u3    4.7747
+v3   -0.0333
+phi3 -0.0014
+\end{verbatim}
+
+Birimler yer değişimleri için mm, açılar için radyan. Sonuçlara göre düğüm 2 ve
+3 noktalarında şasi bir miktar sağa doğru gidiyor, ve dikey yer değişim ve dönüş
+yok denecek kadar az.
+
+Her Parçaya Etki Eden Yerel Kuvvetler
+
+Bir kez tüm sistem bazında yer değişimlerini hesapladıktan sonra bunları
+kullanarak her ögeye etki eden kuvvetleri bulabiliriz, $f' = k' T d$
+gerekli. Daha önce (4)'te gösterilen $k'$ ve (5)'te gösterilen $T$ matrislerini
+sembolik olarak kaydetmiştik, onları geri okuyup birinci öğe için değerleri
+geçelim [1, sf. 247],
+
+\begin{minted}[fontsize=\footnotesize]{python}
+import pickle, pandas as pd
+from sympy import symbols
+pd.set_option("display.precision", 4)
+pd.set_option('display.max_columns', None)
+
+kprime = pickle.load(open('kprime.pkl','rb'))
+T = pickle.load(open('T.pkl','rb'))
+C,S,C1,C2,L,A,E,I = symbols("C,S,C1,C2,L,A,E,I")
+d = {L:3000.0, C:0.0, S:1.0, E:200.0*1e3, A:6500.0, I:80.0*1e6}
+kprime = kprime.subs(C1,A*E/L) 
+kprime = kprime.subs(C2,E*I/L**3)
+kprime = kprime.subs(d) 
+kprime = pd.DataFrame(np.array(kprime),dtype=np.float64)  / (66.67*1e3)
+print (kprime)
+
+T = T.subs(C,0)
+T = T.subs(S,1)
+T = pd.DataFrame(np.array(T),dtype=np.float64)
+print (T)
+\end{minted}
+
+\begin{verbatim}
+      0      1         2     3       4         5
+0  6.50   0.00      0.00 -6.50    0.00      0.00
+1  0.00   0.11    159.99  0.00   -0.11    159.99
+2  0.00 159.99 319984.00  0.00 -159.99 159992.00
+3 -6.50   0.00      0.00  6.50    0.00      0.00
+4  0.00  -0.11   -159.99  0.00    0.11   -159.99
+5  0.00 159.99 159992.00  0.00 -159.99 319984.00
+      0    1    2     3    4    5
+0  0.00 1.00 0.00  0.00 0.00 0.00
+1 -1.00 0.00 0.00  0.00 0.00 0.00
+2  0.00 0.00 1.00  0.00 0.00 0.00
+3  0.00 0.00 0.00  0.00 1.00 0.00
+4  0.00 0.00 0.00 -1.00 0.00 0.00
+5  0.00 0.00 0.00  0.00 0.00 1.00
+\end{verbatim}
+
+Birinci öğe için geçerli olan yer değişimler
 
 $$
-\left[\begin{array}{c}
-v_2 \\ \phi_2 \\ \phi_3
-\end{array}\right] =
-\frac{625}{L}
-\left[\begin{array}{c}
-(3-7L)/12 \\
-(5-L)/4L \\
-(L-1)/L
+d = \left[\begin{array}{c}
+u_1 = 0 \\ v_1 = 0 \\ \phi_1 = 0 \\ u_2 = 5.007 \\ v_2 = 0.0345 \\ \phi_2 = -0.00144
 \end{array}\right]
 $$
 
-sonucu çıkıyor.
+Artık $f' = k' T d$ hesaplanabilir,
 
-Cebirsel Form
+\begin{minted}[fontsize=\footnotesize]{python}
+d = np.array([[0,0,0,5.007,0.0345,-0.00144]]).T
+fprime = 66.67*1e3 * np.dot(kprime,T).dot(d)
+fprime = pd.DataFrame(fprime)
+fprime.index = ['fprime1x','fprime1y','mprime1','fprime2x','fprime2y','mprime2']
+print (fprime)
+\end{minted}
 
-Bazi tür problemleri çözmek için alttaki form kullanılabilir, (3)'teki iki
-dereceli diferansiyel denklemi kullanırız. Mesela alttaki gibi bir problem
-olsun,
+\begin{verbatim}
+                   0
+fprime1x   -14950.00
+fprime1y    20245.33
+mprime1  38048000.00
+fprime2x    14950.00
+fprime2y   -20245.33
+mprime2  22688000.00
+\end{verbatim}
 
-\includegraphics[width=15em]{phy_020_strs_05_03.jpg}
+Birimler kuvvetler için Newton, momentler için Newton-mm.
 
-Sol ucu sabit bir dirsekli kiriş (cantilevel beam) var. Bu kirişe dikey yönde en
-sağ ucunde $P_B$ yükü ve $M_B$ momenti uygulanıyor. Bu sistemde eğim $v'(x)$ ve
-sapma $v(x)$ için gereken ifadeyi bulalım.
+Diğer ögeler için benzer hesap yapılabilir.
 
-Uygulanan iki kuvvet kirişi yukarı doğru eğer, o zaman eğim alttakine benzer,
+Seyrek Matris Kodlamasi
 
-\includegraphics[width=15em]{phy_020_strs_05_04.jpg}
-
-$M(x)$ bulmak için herhangi bir noktadaki hissedilen momentlerin toplamının
-sıfır olduğunu hatırlayalım,
-
-$$
-M(x) - P_B(L-x) - M_B = 0
-$$
-
-Moment-eğri denklemini (3) kullanalım, ve üsttekileri o denkleme koyalım,
-
-$$
-EIv'' = M(x) = P_B(L-x) - M_B
-$$
-
-Aradığımız sonuç $v$ ve $v'$. O zaman üstteki denklemi iki kere entegre etmemiz
-gerekli.
-
-$$
-EI v' = M_B x + P_B Lx - P_B \left( \frac{x}{2} \right)^2 + C_1
-\mlabel{4}
-$$
-
-$$
-EIv = M_B \left( \frac{x^2}{2} \right) +
-P_B L  \left( \frac{x^2}{2} \right) -
-P_B \left( \frac{x^3}{6} \right) +
-C_1 x + C_2
-\mlabel{5}
-$$
-
-\includegraphics[width=15em]{phy_020_strs_05_05.jpg}
-
-Şimdi sınır şartlarını probleme uygulayalım, bu değerler bilinenler
-olarak bilinmeyen değerlerin bulunmasına yardımcı olacak. Sınır şartları
-problem tanımında tarif edildi, kirişin bir ucu sabitlenmiş o zaman
-$x=0$ noktasında hem eğim hem de sapma sıfır olmalı. Yani
-
-$$
-v'(0) = 0,\quad v(0) = 0
-$$
-
-Şartlardan ilkini $v'(0)=0$ ve $x=0$ kullanırsak (4) şu hale gelir,
-
-$$
-EI v' = C_1 = 0
-$$
-
-$v(0)=0$ ve $x=0$ kullanırsak (5) şöyle olur,
-
-$$
-EIv = C_2 = 0
-$$
-
-Demek ki (4) ve (5) şöyle yazılabilir,
-
-$$
-v'(x) = \frac{1}{EI} \left[
-  M_B x + P_B Lx - P_B \left( \frac{x}{2} \right)^2
-\right]
-$$
-
-$$
-v(x) = \frac{1}{EI} \left[
-  M_B \left( \frac{x^2}{2} \right) + 
-  P_B L  \left( \frac{x^2}{2} \right) -
-  P_B \left( \frac{x^3}{6} \right)
-\right]
-$$
-
-Artık üstteki formülleri kullanarak kirişin en son noktasında, yani $x=L$'de, ya
-da $B$ yerinde, sapmanın ne olacağını hesaplayabiliriz. Yerine koyarsak, sapma
-$\delta_B$ diyelim,
-
-$$
-\delta_B = v(L) =
-\frac{1}{EI} \left[
-M_B \left( \frac{L^2}{2}  \right) +
-P_B \left( \frac{L^3}{3}  \right)
-\right]
-$$
-
-Aynı noktadaki sapma açısı $\theta_B$
-
-$$
-\theta_B = v'(L) =
-\frac{1}{EI} \left[
-M_B L + P_B \left( \frac{L^2}{2} \right) 
-\right]
-$$
-
-Bir diğer formda denklemler şöyle gösterilebilir,
-
-$$
-\delta = \left( \frac{L^3}{3EI} \right) P +
-\left( \frac{L^2}{2EI} \right) M
-$$
-
-$$
-\theta = \left( \frac{L^2}{2EI} \right) P +
-\left( \frac{L}{EI} \right) M
-$$
-
-Üstteki formülleri $P,M$ eşitlikleri olarak tekrar düzenleyebiliriz.
-Birinci formülü $\frac{3EI}{L^3}$ ikincisini $\frac{2EI}{L^2}$ ile
-çarparsak mesela her iki formülde $P$ tek başına kalır, ikinci formülden
-birinciyi çıkartıp $P$'ler iptal edilir, basitleştirme sonrası $M$ elde
-edilir, benzer şekilde $P$ bulunur, sonuç
-
-$$
-P = \left( \frac{12EI}{L^3}  \right) \delta -
-\left(  \frac{6EI}{L^2} \right) \theta
-$$
-
-$$
-M = - \left( \frac{6 EI}{L^2}  \right) \delta +
-\left( \frac{4 EI}{L}  \right) \theta
-$$
+Bir kodlama detayından bahsedelim, gerçek dünya uygulamalarında performans için
+seyrek matris teknikleri kullanmak daha iyidir, bu yazı demo amaçlı bir yöntem
+seçti, fakat seyrek seçenek ile mesela matrisler sözlük ile temsil edilebilir,
+olan değerlerin anahtarı vardır, diğerleri dolaylı olarak yok sayılır. Üstdüşüm
+yaparken birbirine uyan anahtarların değerleri toplanır, diğerleri yine boş
+kalır, bu değerler sıfırdır. $Ax=b$ çözerken her satırda mevcut anahtarların
+değerleri JSON olarak ayrı sözlükler olarak alınabilir ve bu satırlar artımsal
+(incremental) çözüm yapabilen bir eşlenik gradyan [2] koduna satır satır
+geçilebilir.
 
 Kaynaklar
 
-[1] Bayramlı, {\em Fizik, Materyel Mekaniği - Hazırlık}
+[1] Logan, {\em A First Course in the Finite Element Method, 6th Ed}
 
-[2] Craig, {\em Mechanics of Materials, Third Edition}
-
-[3] Bayramlı, {\em Çok Değişkenli Calculus, Eğrilik (Curvature)}
-
-[4] Hibbeler, {\em Structural Analysis, 8th Edition}
-
-[5] Bayramlı, {\em Hesapsal Bilim, Ders 1-15}
-
-[6] Gere, {\em Mechanics of Materials}
-
-[7] Logan, {\em A First Course in the Finite Element Method}
-
-[1] Bayramlı, {\em Fizik, Materyel Mekaniği - 2}
+[2] Bayramlı, {\em Hesapsal Bilim, Ders 2-19}
 
 \end{document}
-
-

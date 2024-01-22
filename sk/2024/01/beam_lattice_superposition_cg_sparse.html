@@ -1,0 +1,237 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
+          crossorigin="anonymous"></script>  
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Üstdüşümlü Matris Sistemini Çözmek</h1>
+
+<p>[1] yazisinda anlatilan sistemi seyrek matrisler ve eslenik gradyan
+tekniklerini kullanarak cozmenin iki yolu alttadir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">simplify</span>
+<span class="kn">from</span> <span class="nn">sympy.matrices</span> <span class="kn">import</span> <span class="n">Matrix</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">csr_matrix</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">json</span>
+
+<span class="n">C</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">C1</span><span class="p">,</span><span class="n">C2</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">E</span><span class="p">,</span><span class="n">I</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;C,S,C1,C2,L,A,E,I&quot;</span><span class="p">)</span>
+<span class="n">kprime</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([</span> <span class="p">[</span><span class="n">C1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="n">C1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="o">*</span><span class="n">C2</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span><span class="o">*</span><span class="n">C2</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">2</span><span class="p">],</span>
+                  <span class="p">[</span><span class="o">-</span><span class="n">C1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">C1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">12</span><span class="o">*</span><span class="n">C2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="o">*</span><span class="n">C2</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">],</span>
+                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="mi">4</span><span class="o">*</span><span class="n">C2</span><span class="o">*</span><span class="n">L</span><span class="o">**</span><span class="mi">2</span><span class="p">]])</span>
+
+<span class="n">T</span> <span class="o">=</span> <span class="n">Matrix</span><span class="p">([[</span><span class="n">C</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="n">S</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
+            <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">S</span><span class="p">,</span><span class="n">C</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]])</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span><span class="o">*</span><span class="n">kprime</span><span class="o">*</span><span class="n">T</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">C1</span><span class="p">,</span><span class="n">A</span><span class="o">*</span><span class="n">E</span><span class="o">/</span><span class="n">L</span><span class="p">)</span> 
+<span class="n">frame</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">C2</span><span class="p">,</span><span class="n">E</span><span class="o">*</span><span class="n">I</span><span class="o">/</span><span class="n">L</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">res</span> <span class="o">/</span> <span class="p">(</span><span class="n">E</span><span class="o">/</span><span class="n">L</span><span class="p">)</span> 
+
+<span class="kn">from</span> <span class="nn">sympy</span> <span class="kn">import</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">latex</span><span class="p">,</span> <span class="n">simplify</span>
+<span class="kn">from</span> <span class="nn">sympy.matrices</span> <span class="kn">import</span> <span class="n">Matrix</span>
+<span class="kn">import</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.precision&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">C</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">E</span><span class="p">,</span><span class="n">I</span> <span class="o">=</span> <span class="n">symbols</span><span class="p">(</span><span class="s2">&quot;C,S,L,A,E,I&quot;</span><span class="p">)</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">L</span><span class="p">:</span><span class="mf">3000.0</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">E</span><span class="p">:</span><span class="mf">200.0</span><span class="o">*</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span><span class="mf">6500.0</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span><span class="mf">80.0</span><span class="o">*</span><span class="mf">1e6</span><span class="p">}</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1e3</span><span class="o">*</span><span class="n">d</span><span class="p">[</span><span class="n">E</span><span class="p">]</span><span class="o">/</span><span class="n">d</span><span class="p">[</span><span class="n">L</span><span class="p">])</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="n">vars1</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;v1&#39;</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span><span class="s1">&#39;u2&#39;</span><span class="p">,</span><span class="s1">&#39;v2&#39;</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">]</span>
+<span class="n">df1</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">vars1</span><span class="p">;</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">vars1</span> 
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">L</span><span class="p">:</span><span class="mf">3000.0</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">E</span><span class="p">:</span><span class="mf">200.0</span><span class="o">*</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span><span class="mf">6500.0</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span><span class="mf">40.0</span><span class="o">*</span><span class="mf">1e6</span><span class="p">}</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1e3</span><span class="o">*</span><span class="n">d</span><span class="p">[</span><span class="n">E</span><span class="p">]</span><span class="o">/</span><span class="n">d</span><span class="p">[</span><span class="n">L</span><span class="p">])</span>
+<span class="n">vars2</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u2&#39;</span><span class="p">,</span><span class="s1">&#39;v2&#39;</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">,</span><span class="s1">&#39;u3&#39;</span><span class="p">,</span><span class="s1">&#39;v3&#39;</span><span class="p">,</span><span class="s1">&#39;phi3&#39;</span><span class="p">]</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="n">df2</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">vars2</span><span class="p">;</span> <span class="n">df2</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">vars2</span>
+
+<span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">L</span><span class="p">:</span><span class="mf">3000.0</span><span class="p">,</span> <span class="n">C</span><span class="p">:</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">S</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">E</span><span class="p">:</span><span class="mf">200.0</span><span class="o">*</span><span class="mf">1e3</span><span class="p">,</span> <span class="n">A</span><span class="p">:</span><span class="mf">6500.0</span><span class="p">,</span> <span class="n">I</span><span class="p">:</span><span class="mf">80.0</span><span class="o">*</span><span class="mf">1e6</span><span class="p">}</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">subs</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1e3</span><span class="o">*</span><span class="n">d</span><span class="p">[</span><span class="n">E</span><span class="p">]</span><span class="o">/</span><span class="n">d</span><span class="p">[</span><span class="n">L</span><span class="p">])</span>
+<span class="n">vars3</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u3&#39;</span><span class="p">,</span><span class="s1">&#39;v3&#39;</span><span class="p">,</span><span class="s1">&#39;phi3&#39;</span><span class="p">,</span><span class="s1">&#39;u4&#39;</span><span class="p">,</span><span class="s1">&#39;v4&#39;</span><span class="p">,</span><span class="s1">&#39;phi4&#39;</span><span class="p">]</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="n">df3</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">vars2</span><span class="p">;</span> <span class="n">df3</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">vars2</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">pickle</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.precision&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">mult_A_b</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">*</span><span class="n">row</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">b</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">A</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>  <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">dot</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">vec_sum</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">)}</span>
+
+<span class="k">def</span> <span class="nf">vec_subt</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">a</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">b</span><span class="p">)}</span>
+
+<span class="k">def</span> <span class="nf">vec_scalar_times</span> <span class="p">(</span><span class="n">vec</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">*</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">vec</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">vec_scalar_sum</span> <span class="p">(</span><span class="n">vec</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">+</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">vec</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+<span class="k">def</span> <span class="nf">vec_scalar_subt</span> <span class="p">(</span><span class="n">vec</span><span class="p">,</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">((</span><span class="n">k</span><span class="p">,</span><span class="n">v</span><span class="o">-</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">vec</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+
+<span class="n">df_super</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="n">df_super</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df2</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="n">df_super</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df3</span><span class="o">.</span><span class="n">index</span><span class="p">:</span> <span class="n">df_super</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">drop_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;v1&#39;</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span><span class="s1">&#39;u4&#39;</span><span class="p">,</span><span class="s1">&#39;v4&#39;</span><span class="p">,</span><span class="s1">&#39;phi4&#39;</span><span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">add_to_super</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+    <span class="k">for</span> <span class="n">rowid</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">rowid</span> <span class="ow">in</span> <span class="n">drop_vars</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">v</span> <span class="o">!=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">drop_vars</span><span class="p">:</span>
+                <span class="c1">#print (rowid,k)</span>
+                <span class="n">df_super</span><span class="p">[</span><span class="n">rowid</span><span class="p">][</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_super</span><span class="p">[</span><span class="n">rowid</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="n">v</span>
+
+<span class="n">add_to_super</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="n">add_to_super</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">add_to_super</span><span class="p">(</span><span class="n">df3</span><span class="p">)</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">df_super</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="nb">id</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">A</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">66.67</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">)</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;u2&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="o">*</span><span class="mf">1e4</span><span class="p">,</span> <span class="s1">&#39;phi3&#39;</span><span class="p">:</span> <span class="mi">5</span><span class="o">*</span><span class="mf">1e5</span><span class="p">}</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span> <span class="n">r</span> <span class="o">=</span> <span class="n">b</span><span class="p">;</span> <span class="n">x</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">r2</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+
+    <span class="n">Ap</span> <span class="o">=</span> <span class="n">mult_A_b</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">p</span><span class="p">)</span>
+
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">/</span> <span class="n">dot</span><span class="p">(</span><span class="n">Ap</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">vec_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">vec_scalar_times</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">alpha</span><span class="p">))</span>
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">vec_subt</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">vec_scalar_times</span><span class="p">(</span><span class="n">Ap</span><span class="p">,</span><span class="n">alpha</span><span class="p">))</span>
+
+    <span class="n">r2old</span> <span class="o">=</span> <span class="n">r2</span>
+
+    <span class="n">r2</span> <span class="o">=</span> <span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">r2</span> <span class="o">/</span> <span class="n">r2old</span>
+
+    <span class="n">p</span> <span class="o">=</span> <span class="n">vec_sum</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">vec_scalar_times</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">beta</span><span class="p">))</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&#39;v1&#39;: 0.0, &#39;u1&#39;: 0.0, &#39;u3&#39;: 8.689191625966664, &#39;phi2&#39;:
+-0.0020595226448240213, &#39;v2&#39;: -3.3229233662294724e-17, &#39;v3&#39;:
+-0.01250651341977623, &#39;phi3&#39;: 0.001035030753854022, &#39;u2&#39;:
+8.714002731297926, &#39;phi1&#39;: 0.0}
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.sparse.linalg</span> <span class="kn">import</span> <span class="n">cg</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">scipy.sparse</span> <span class="k">as</span> <span class="nn">sps</span><span class="o">,</span> <span class="nn">pickle</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.precision&quot;</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+
+<span class="n">all_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;v1&#39;</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span><span class="s1">&#39;u2&#39;</span><span class="p">,</span><span class="s1">&#39;v2&#39;</span><span class="p">,</span><span class="s1">&#39;phi2&#39;</span><span class="p">,</span><span class="s1">&#39;u3&#39;</span><span class="p">,</span><span class="s1">&#39;v3&#39;</span><span class="p">,</span><span class="s1">&#39;phi3&#39;</span><span class="p">,</span><span class="s1">&#39;u4&#39;</span><span class="p">,</span><span class="s1">&#39;v4&#39;</span><span class="p">,</span><span class="s1">&#39;phi4&#39;</span><span class="p">]</span>
+
+<span class="n">drop_vars</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;u1&#39;</span><span class="p">,</span><span class="s1">&#39;v1&#39;</span><span class="p">,</span><span class="s1">&#39;phi1&#39;</span><span class="p">,</span><span class="s1">&#39;u4&#39;</span><span class="p">,</span><span class="s1">&#39;v4&#39;</span><span class="p">,</span><span class="s1">&#39;phi4&#39;</span><span class="p">]</span>
+
+<span class="n">A</span> <span class="o">=</span> <span class="n">sps</span><span class="o">.</span><span class="n">lil_matrix</span><span class="p">((</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">add_to_super2</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+
+    <span class="k">for</span> <span class="nb">id</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+            <span class="n">A</span><span class="p">[</span><span class="n">all_vars</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="nb">id</span><span class="p">),</span><span class="n">all_vars</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">c</span><span class="p">)]</span> <span class="o">+=</span> <span class="n">row</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+
+<span class="n">add_to_super2</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
+<span class="n">add_to_super2</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
+<span class="n">add_to_super2</span><span class="p">(</span><span class="n">df3</span><span class="p">)</span>
+
+<span class="n">index_to_drop</span> <span class="o">=</span> <span class="p">[</span><span class="n">all_vars</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">drop_vars</span><span class="p">]</span>
+
+<span class="n">to_keep</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">index_to_drop</span><span class="p">))</span>    
+<span class="n">A2</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span><span class="n">to_keep</span><span class="p">]</span>
+<span class="n">to_keep</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span><span class="o">-</span><span class="nb">set</span><span class="p">(</span><span class="n">index_to_drop</span><span class="p">))</span>    
+<span class="n">A3</span> <span class="o">=</span> <span class="n">A2</span><span class="p">[</span><span class="n">to_keep</span><span class="p">,:]</span>
+
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="o">*</span><span class="mf">1e4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="o">*</span><span class="mf">1e5</span><span class="p">])</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">exit_code</span> <span class="o">=</span> <span class="n">cg</span><span class="p">(</span><span class="mf">66.67</span><span class="o">*</span><span class="mf">1e3</span><span class="o">*</span><span class="n">A3</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[ 8.71400273e+00  2.09901541e-16 -2.05952264e-03  8.68919163e+00
+ -1.25065134e-02  1.03503075e-03]
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="../../../phy/phy_020_strs_06/materyel_mekanigi__6.html">Materyel Mekaniği - 6</a></p>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

@@ -107,7 +107,13 @@ sonucu icin de gecerli.</p>
 
 <p>Alttaki ilk yontem matrisleri Python sozlugu olarak muhafaza ediyor.
 Her alt matrisi sozluk olarak gezilir, ve nihai matris bir sozluk
-olarak olusturulur.</p>
+olarak olusturulur. Matrisler bir sozluk icinde sozluk olarak temsil
+edilir, her satir ayri bir sozluktur, ilk anahtar u1, ikinci v1, boyle
+gidiyor. Ilk satirin anahtari <code>u1</code>, ilk kolonun anahtari ayni sekilde.</p>
+
+<p>Sozluk yapisini kullanmanin bir faydasi bildik bir yapi olmasi ve
+aynen diger seyrek depolama yaklasimlarinda oldugu gibi kodun geri
+kalani olmayan degerin sifir kabul edebilir.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">pickle</span>
@@ -156,8 +162,15 @@ olarak olusturulur.</p>
 <span class="n">add_to_super</span><span class="p">(</span><span class="n">df1</span><span class="p">)</span>
 <span class="n">add_to_super</span><span class="p">(</span><span class="n">df2</span><span class="p">)</span>
 <span class="n">add_to_super</span><span class="p">(</span><span class="n">df3</span><span class="p">)</span>
+</code></pre>
+</div>
 
-<span class="n">A</span> <span class="o">=</span> <span class="n">df_super</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<p>Cozmek icin [3]'te anlatilan eslenik gradyan (conjugate gradient)
+yontemik kodlandi. CG kodu altta A matrisini sozluk icinde sozluk
+olarak aliyor. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="n">df_super</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="nb">id</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">A</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="n">row</span><span class="o">.</span><span class="n">update</span><span class="p">(</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="o">*</span> <span class="mf">66.67</span><span class="o">*</span><span class="mf">1e3</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">row</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="p">)</span>

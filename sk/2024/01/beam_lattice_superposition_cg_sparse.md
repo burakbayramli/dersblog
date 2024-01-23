@@ -55,7 +55,7 @@ df3 = pd.DataFrame(np.array(res).astype(np.float64))
 df3.columns = vars2; df3.index = vars2
 ```
 
-Bu matrisleri üstdutum ile birleştirmek istiyoruz, her matriste diğer
+Bu matrisleri üstdüşüm ile birleştirmek istiyoruz, her matriste diğer
 matristekilere uyan değişkenleri toplamak gerekiyor. [1] yazısında
 gösterim amaçlı her matrisi nihai boyutlara büyütmüştük, ve aynı
 boyutta olan üç matrisi üstdüşüm için toplamıştık.
@@ -65,7 +65,7 @@ olmayabilir.  Bir yoğun matrisi büyütünce sıfır olan değerlerin bile
 bellekte depolanması gerekiyor. Bu durum aynı şekilde üstdüşüm matrisi
 sonucu için de geçerli.
 
-Alttaki yöntemler alternatif yaklaşılar, ilki matrisleri Python
+Alttaki yöntemler alternatif yaklaşımlar, ilki matrisleri Python
 sözlüğü olarak muhafaza eder. Her alt matris gezilir, ve nihai matris
 bir sözlük olarak oluşturulur. Matrisler bir sözlük içinde sözlük
 olarak temsil edilir, her satır ayrı bir anahtardır, ilk satır
@@ -231,4 +231,3 @@ Kaynaklar
 [2] <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html">scipy.sparse.linalg.cg</a>
 
 [3] <a href="../../..//compscieng/compscieng_2_19/ders_2.19.html">Ders 2.19</a>
-

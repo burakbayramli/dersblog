@@ -3,7 +3,7 @@
 
 ## En Son
 
-27/1 - [Euler-Bernoulli Kirişleri, MM - 3 - Ekler](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_05/materyel_mekanigi__3.html)
+27/1 - [Euler-Bernoulli Kirişleri, MM - 3 - Ekler](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_03/materyel_mekanigi__3.html)
 
 23/1 - [Eğrilik (Curvature)](https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_60/egrilik__curvature_.html)
 
@@ -48,4 +48,7 @@
 [Sene](year.html)
 
 [Ara](ara.html)
+
+
+
 

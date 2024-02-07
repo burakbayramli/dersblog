@@ -1,9 +1,9 @@
 # Üstdüşümlü Matris Sistemini Çözmek
 
-[1] yazısında anlatılan sistemı seyrek matrisler ve eşlenik gradyan
+[1] yazısında anlatılan sistemi seyrek matrisler ve eşlenik gradyan
 tekniklerini kullanarak çözmenin iki yolu alttadır.
 
-Önce [1]'deki üç matrisi tekrar oluşturualım,
+Önce [1]'deki üç matrisi tekrar oluşturalım,
 
 ```python
 from sympy import symbols, latex, simplify
@@ -231,3 +231,6 @@ Kaynaklar
 [2] <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.sparse.linalg.cg.html">scipy.sparse.linalg.cg</a>
 
 [3] <a href="../../..//compscieng/compscieng_2_19/ders_2.19.html">Ders 2.19</a>
+
+
+

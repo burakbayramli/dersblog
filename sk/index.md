@@ -3,7 +3,7 @@
 
 ## En Son
 
-12/2 - [Materyel Mekaniği - 5](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_06/materyel_mekanigi__5.html)
+12/2 - [Materyel Mekaniği - 5](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_05/materyel_mekanigi__5.html)
 
 5/2 - [Materyel Mekaniği - 4](https://burakbayramli.github.io/dersblog/phy/phy_020_strs_04/materyel_mekanigi__4.html)
 
@@ -48,4 +48,7 @@
 [Sene](year.html)
 
 [Ara](ara.html)
+
+
+
 

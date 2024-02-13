@@ -25,8 +25,6 @@ html_head = '''
    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
    </script>
    <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1548953794786292"
-          crossorigin="anonymous"></script>  
   </head>
     <body>
       <div id="header_wrap" class="outer">

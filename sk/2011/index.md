@@ -14,13 +14,9 @@
 
 [Liste Gezerken Eleman Silmek](03/liste-gezerken-eleman-silmek.html)
 
-[String Birlestirmek](03/string-birlestirmek.html)
-
 [USGS Deprem Verileri](03/usgs-deprem-verileri.html)
 
 [$.getJSON Hata Durumlari](04/getjson-hata-durumlari.html)
-
-[jQuery ve Radyo Dugme Gruplari](04/jquery-ve-radyo-dugme-gruplari.html)
 
 [Sosyal Kodlama = Github](04/sosyal-kodlama-github.html)
 

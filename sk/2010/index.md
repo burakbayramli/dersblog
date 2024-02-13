@@ -40,8 +40,6 @@
 
 [izip](06/izip.html)
 
-[jQuery ile Girdi Tamamlamak (Auto Complete)](06/jquery-girdi-tamamlamak-auto-complete.html)
-
 [jQuery](06/jquery.html)
 
 [kdtree](06/kdtree.html)
@@ -63,8 +61,6 @@
 [Stackoverflow Turu Yardimci Siteler](08/stackoverflow-turu-yardimci-siteler.html)
 
 [Kitap Scan Dosyalari ve DJVU](09/kitap-scan-dosyalari-ve-djvu.html)
-
-[Numpy Loadtxt ve Converter](09/numpy-loadtxt-ve-converter.html)
 
 [Python ve Alternatif Path](09/python-ve-alternatif-path.html)
 

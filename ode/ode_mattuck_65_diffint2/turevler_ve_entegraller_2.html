@@ -256,69 +256,6 @@ türev $2x$'e yaklaşır demektir.</p>
 gibi, aynen limitlerin çalıştığı uzayda olduğu gibi sonsuz küçük
 aralıklarla çalışabilecek bir tanım olduğu için, bu türetilmiş yeni
 fonksiyonu da normal bir fonksiyon olarak kabul etmemiz mümkün olmaktadır.</p>
-<p>Türev: $\sin(x)$</p>
-<p>[3, sf. 66]. Sinüs fonksiyonunun türevi derken aslında kastedilen şudur,</p>
-<p>$$ \lim_{h \to 0} \frac{sin(x+h) - sin(x)}{h} $$</p>
-<p>Trigonometrik eşitliklerden bildiğimize göre, </p>
-<p>$$ sin(a+b) = \sin a \cos b + \cos a \sin b $$</p>
-<p>Bu eşitliği iki üstteki fonksiyonu açmak için kullanalım,</p>
-<p>$$ \lim_{h \to 0} \frac{\sin x \cos h + \cos x \sin h - \sin x }{h} $$</p>
-<p>$$ = \lim_{h \to 0} \sin x \bigg( \frac{\cos h - 1}{h} \bigg) + \cos x \bigg( \frac{\sin h}{h} \bigg) $$</p>
-<p>Pür trigonometri ve cebir bizi buraya getirdi; bundan sonrası limitler ve
-Calculus. Şu soruyu soralım, $h \to 0$ iken üstteki formüllere ne olur? </p>
-<p>Limit: $\sin h / h$</p>
-<p>Önce $\sin h / h$'e bakalım. Ufak $h$ değerleri için </p>
-<p>$$ \sin h &lt; h, \qquad \tan h &gt; h $$</p>
-<p>eşitsizliklerinin doğru olduğunu biliyoruz. Ya da</p>
-<p>$$ \frac{\sin h}{h} &lt; 1, \qquad  \frac{\sin h}{\cos h} &gt; h $$</p>
-<p>İkinci eşitsizliği biraz değiştirelim,</p>
-<p>$$ \frac{\sin h}{h} &lt; 1, \qquad  \frac{\sin h}{h} &gt; \cos h $$</p>
-<p>Şimdi bu eşitsizlikleri ispatlayalım. 1. eşitsizliğin ispatı için alttaki
-figür yeterli,</p>
-<p><img alt="" src="ode_mattuck_93_diff_01.png" /></p>
-<p>İki nokta arasındaki en kısa mesafe düz çizgi olduğuna göre $2h &lt; 2\sin h$
-olmalı, yani $\sin h &lt; h$, ya da $\sin h / h &lt; 1$.</p>
-<ol>
-<li>eşitsizliğin ispatı için alan hesabını kullanacağız. </li>
-</ol>
-<p><img alt="" src="ode_mattuck_93_diff_02.png" /></p>
-<p>Üstteki figürdeki üçgenin alanı $\tan h \cdot 1 / 2$'dir, değil mi, çünkü
-üçgen alanı iki kenarın çarpımının iki ile bölümüne eşittir, kenarın
-büyüklüğü $\tan h$, bunu temel trigonometriden biliyoruz, diğer kenar ise
-1. Gri alan ise dairenin bir parçası, onun $h/2\pi$'lik oranında bir
-parçası daha doğrusu, ve o parçanın alanı alanı $h/2\pi \cdot \pi r^2$,
-$\pi r^2$ tüm alanı temsil eder, $r=1$ olduğuna göre sonuç $1/2 h$. Eh,
-dairenin parçası olan alan onu kapsayan üçgenden daha küçük olduğuna göre
-$1/2 h &lt; 1/2 \tan h$, yani $h &lt; \tan h$. İspat tamam.</p>
-<p>Şimdi $h \to 0$ iken ne olur? Formüllere tekrar bakalım,</p>
-<p>$$ \frac{\sin h}{h} &lt; 1, \qquad  \frac{\sin h}{h} &gt; \cos h $$</p>
-<p>Bu durumda $\cos h$ zaten 1'e yaklaşıyordu (çünkü $\cos 0 = 1$), yani $\sin h
-/ h$ hem 1'den küçük olmak hem de 1' yaklaşmak arasında "sıkışacak
-(squeezed)". O zaman limite giderken bu değer 1'e yaklaşmalıdır.</p>
-<p>Limit: $(\cos h -1) / h$ Sıfıra Gider</p>
-<p>Bu ispat için $(\sin h)^2 + (\cos h)^2 = 1$'den faydalanacağız. </p>
-<p>$\sin h &lt; h$ olduğunu artık biliyoruz, onu üstteki formüle koyalım,</p>
-<p>$$ (\sin h)^2 = 1 -  (\cos h)^2$$</p>
-<p>$$ h^2 &gt; 1 -  (\cos h)^2$$</p>
-<p>Üstteki ifadelerin hepsinin pozitif olduğuna dikkat, çünkü $h^2$ bir kare
-işlemi, ayrıca $\cos h$ $h$ sıfıra "yaklaşırken" 1'e yaklaşır, o zaman
-$1-\cos h$ her zaman sıfırdan büyük olur. Bunu ekleyelim, bir de ufak
-açılım yapalım,</p>
-<p>$$ 0 &gt; h^2 &gt; (1 + \cos h)(1 - \cos h)$$</p>
-<p>Şimdi tüm terimleri önce $h$ sonra $1+\cos h$ ile bölersek, </p>
-<p>$$ 0 &lt; \frac{1 + \cos h}{h} &lt;  \frac{h}{1+\cos h} $$</p>
-<p>Yine arada sıkışmışlık argümanını kullanacağız, $h \to 0$ iken en sağdaki
-formül sıfıra gider, ve ortadaki formül 0 ile 0'a gitmek arasında
-sıkışır. Demek ki ortadaki ifade de sıfıra gider.</p>
-<p>Şimdi ana ifadeye dönelim. $h$ sıfıra giderken $\sin h/h$ 1'e gidiyor,
-$(\cos h-1)/h$ ise sıfıra gidiyor, o zaman üstteki formülde geriye tek
-kalan $\cos x$ ifadesidir. </p>
-<p>$$ \lim_{h \to 0}<br />
-\sin x \bigg( \cancelto{0}{\frac{\cos h - 1}{h}} \bigg) + 
-\cos x \bigg( \cancelto{1}{\frac{\sin h}{h}} \bigg)
-$$</p>
-<p>$$ = cos(x) $$</p>
-<p>Böylece $\sin x$'in türevinin $\cos x$ olduğunu ispatlamış olduk.</p>
 <p>Dolaylı Türev Almak (Implicit Differentiation)</p>
 <p>Türev alırken başlangıçta $y = x^2$ turu $y$'yi direk $x$ ile ilintilendiren
 açık, belirtilmiş, belli (explicit) fonksiyon varlığı farz edilir. Fakat bazen

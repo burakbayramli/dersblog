@@ -236,9 +236,9 @@ farklı şekillerde ağırlıklanması sonucu elde edilen denklemlerdir.</p>
 <p>Bu metot FEM'in temelini oluşturur [2], 1915, 1913'te Galerkin, Bubnov
 tarafından ayrı ayrı keşfedilmiştir. Galerkin metotunun özü şu basit önermeden
 ibaret, daha önce gördüğümüz ağırlıklı artıklar metotunda Galerkin metotu der ki
-$w_j = T_j$, yani ağırlık fonksiyonu test fonksiyonu ile aynı olsun. Ayrica
-hatirlarsak $T_j$'lerin bir tam kume olusturmasi gerekiyor, o zaman $w_j$'lerin
-de tam kume olusturmasi gerekiyor. Bu durumda agirlikli artiklar metotu bizi su
+$w_j = T_j$, yani ağırlık fonksiyonu test fonksiyonu ile aynı olsun. Ayrıca
+hatırlarsak $T_j$'lerin bir tam küme oluşturması gerekiyor, o zaman $w_j$'lerin
+de tam küme oluşturması gerekiyor. Bu durumda ağırlıklı artıklar metotu bizi şu
 noktaya getirir,</p>
 <p>$$
 (w_j,R) = 0
@@ -256,40 +256,14 @@ kullanabiliriz.</p>
 metottur, bunu tüm yaklaşık fonksiyonun tanım kümesi üzerinden ağırlıklı hata
 artıklarını sıfıra eşitleyerek yapar. Bununla ne demek istediğimizi birazdan
 yakından göreceğiz [4, Ders 3].</p>
-<p>Örnek olarak [5]'de öğrendiğimiz Euler-Bernoulli kirişlerini tanımlayan denklemi
-hatırlarsak,</p>
+<p>Euler-Bernoulli kirişlerini tanımlayan denklemi hatırlayalım,</p>
 <p>$$
 E I \frac{\mathrm{d}^4 y}{\mathrm{d} X_1^4} = q
 \qquad (1)
 $$</p>
-<p>Biraz düzenleme sonrası</p>
-<p>$$
-E I \frac{\mathrm{d}^4 y}{\mathrm{d} X_1^4} - q = 0
-$$</p>
-<p>elde ederim. Amacım öyle bir yaklaşık $y$, ya da $y_{approx}$ diyelim, bulmak ki
-üstteki denklemi çözebileyim. Bunu $y$ yerine onu yaklaşık temsil edebilen bir
-diğer fonksiyonu geçirerek yapabilirim. Bir polinom bu işi görebilir; Pek çok
-diğer yöntemin kullandığı tipik bir polinom vardır,</p>
-<p>$$
-y_{approx} = a_0 + a_1 X_1 + a_2 X_1^2 
-$$</p>
-<p>diye gider, aslında daha genel olarak olan her terimde "bir katsayı çarpı
-$X_1$'in bir tür fonksiyonu" gibi bir toplam kullanmak daha iyi olabilir,
-bu formda,</p>
-<p>$$
-y_{approx} = a_0 \phi_0(X_1) + a_1 \phi_1(X_1) + a_2 \phi_2(X_1) 
-$$</p>
-<p>Daha kısa olarak</p>
-<p>$$
-y_{approx} = \sum_{i=0}^{n} a_i \phi_i(X) 
-$$</p>
-<p>Dikkat $\phi_i(X)$ içinde $X$ var bu $X = X_1,X_2,..,X_n$ anlamında, cebirsel
-olarak her $\phi$ fonksiyonuna $X$ geçildiğini düşünebiliriz ama her $\phi_i$
-tüm $X$ öğelerini kullanmayabilir; üstteki polinom örneğinde mesela $\phi_1$
-fonksiyonu sadece $X_1$'i kullanarak bir hesap yapar, diğerleri diğer şekillerde.</p>
-<p>Not, $y_{approx}$ gerekli (essential) sınır şartlarını yerine getirmelidir.</p>
-<p>Metotun dayandığı ana prensip şudur; eğer çözmeye uğraştığım (1)'deki gibi bir
-problemde eğer $y$ yerine $y_{approx}$ kullanırsam</p>
+<p>Galerkin ve şekil fonksiyonlarını gördük. Metotun dayandığı ana prensip şudur;
+eğer çözmeye uğraştığım (1)'deki gibi bir problemde eğer $y$ yerine $y_{approx}$
+kullanırsam</p>
 <p>$$
 \frac{\mathrm{d}^4 y}{\mathrm{d} X_1^4} - q = 0 \qquad
 \frac{\mathrm{d}^4 y_{approx}}{\mathrm{d} X_1^4} - q \ne 0
@@ -604,96 +578,8 @@ kalanlar</p>
 \left( \frac{\mathrm{d} N_i}{\mathrm{d} X_1} \right) \mathrm{d} X_1
 = \int_{0}^{L} p N_i \mathrm{d} X_1 
 $$</p>
-<p>Şimdi $N_i$ fonksiyonlarına gelelim, onlara şekil fonksiyonları demiştik.
-Bu şekiller neye benziyor, ne için kullanılıyorlar?</p>
-<p>Diyelim ki bir çubuğa bakıyorum ve onun üzerinde iki tane düğüm tanımladım,
-düğümlerden biri $X_1 = x_1$ noktasında diğeri $X_2 = x_2$ noktasında.</p>
-<p><img alt="" src="compscieng_bpp45fem2_05.jpg" /></p>
-<p>Ve yine diyelim ki bu iki düğümdeki yer değişimi $u_i$ değerlerini biliyorum,
-eldeki örnek için $u_1$ ve $u_2$, kabaca alttaki gibi olsun,</p>
-<p><img alt="" src="compscieng_bpp45fem2_06.jpg" /></p>
-<p>Şekle gelelim; eğer bu iki düğüm üzerinden bir lineer bağlantı kullanmak
-istiyorsam yani iki düğüm arasında aradeğerleme yapacak fonksiyon lineer olsun
-diyorsam, yapılacak olan bariz aslında,</p>
-<p><img alt="" src="compscieng_bpp45fem2_07.jpg" /></p>
-<p>Aradeğerleme $u_e$ bu şekilde. Peki o fonksiyonda bilinmeyen $a_0,a_1$ nasıl
-bulunacak? Biz nihai sonuç olarak bu katsayılarla ilgilenmiyoruz, bizi tek
-ilgilendiren yer değişim fonksiyonu, bunu belirtmiştik. O zaman üstteki
-fonksiyonu $u_1,u_2$ temelli olarak tekrar yazabilir miyiz acaba? Eğer $x_1$
-noktasında fonksiyon değeri $u_1$, $x_2$ noktasında $u_2$ ise,</p>
-<p>$$
-u(x_1) = a_0 + a_1 x_1 = u_1
-$$</p>
-<p>$$
-u(x_2) = a_0 + a_1 x_2 = u_2
-$$</p>
-<p>İki bilinmeyen var, iki denklem var, çözüm [11, Ders 2]</p>
-<p>$$
-a_0 = \frac{u_2 x_1 - u_1 x_2}{L}, \qquad a_1 = \frac{u_2 - u_1}{L}
-$$</p>
-<p>$L$ kırmızı ile gösterilen parçanın uzunluğu sadece, yani $x_2 - x_1$.</p>
-<p>Üstteki $a_0,a_1$ değerlerini nasıl bulduğumuzu merak edenler için</p>
-<p>$$
-u(x_1) = a_0 + a_1 x_1 = u_1, \quad
-u(x_2) = a_0 + a_1 x_2 = u_2
-$$</p>
-<p>ile başlarız, ikinci formülden birinciyi çıkartırsak,</p>
-<p>$$
-(x_2 - x_1) a_1 = u_2 - u_1 \to a_1 = \frac{u_2 - u_1}{L}
-$$</p>
-<p>ki $L = x_2 - x_1$</p>
-<p>$a_0$'i bulmak için birinci formüldeki $a_1$'i alıp, yani
-$a_1 = \frac{u_1 - a_0}{x_1}$, ikinciye sokuyoruz,</p>
-<p>$$
-a_0 + \frac{\frac{u_1 - a_0}{x_1}}{x_1} x_2 = u_2
-$$</p>
-<p>$$
-x_1 a_0 + u_1 x_2 - a_0 x_2 = u_2 x_2
-$$</p>
-<p>$$
-u_1 x_2 - u_2x_1 = -a_0 x_1 + a_0 x_2
-$$</p>
-<p>$$
-= a_0 (x_2 - x_1) = a_0 L
-$$</p>
-<p>$$
-a_0 = \frac{u_1 x_2 - u_1 x_2}{L}
-$$</p>
-<p>Devam edelim.</p>
-<p>$a_0,a_1$ degerlerini $u_e$ icine koyunca,</p>
-<p>$$
-u = \frac{u_2 x_1 - u_1 x_2}{L} - \frac{u_2 - u_1}{L} X_1
-$$</p>
-<p>Biraz daha cebirsel değiştirme sonrası</p>
-<p>$$
-u = \frac{(x_2 - X_1)}{L} u_1 + \frac{(X_1 - x_1)}{L} u_2
-$$</p>
-<p>Bu son değişimi yaptık çünkü bu formda dikkat edersek denklem daha önce
-gördüğümüz Galerkin deneme fonksiyonlarına benziyor,</p>
-<p>$$
-u = u_1 \phi_1(X_1) + u_2 \phi_2 (X_1)
-$$</p>
-<p>kalıbında görüldüğü gibi. Deneme fonksiyonlarında $u_1,u_2$ sabit değerlerdi, bu
-bölümde gördüğümüz $u_i$ değerleri de öyle aslında. Bilinen $u_i$ değerlerini
-yaklaşık temsile uğraşıyoruz, gerçi çözüm mekaniği içinde o $u$ değerleri de
-hesaplanıyor fakat bu belli formülasyonlar için onların bilindiği
-farzedilebilir.</p>
-<p>Şimdi $\phi_1,\phi_2$ fonksiyonları bizim önceden seçtiğimiz fonksiyonlardı,
-polinom seçtiğimizde $X_1,X_1^2$ gibi hesaplar kullandık. Üstteki türetim
-sonrası $N_1,N_2$ var, ve ulaştığımız fonksiyonlar</p>
-<p>$$
-N_1 = \frac{(x_2 - X_1)}{L}, \quad N_2 = \frac{(X_1 - x_1)}{L} 
-$$</p>
-<p>Bu şekil fonksiyonları neye benziyor acaba? Alttaki gibi,</p>
-<p><img alt="" src="compscieng_bpp45fem2_08.jpg" /></p>
-<p>Bu iki fonksiyonu üst üste koyduğumuzda (superimpose) yani topladığımızda,
-sonucun mavi çizgiyi aynen vereceğini görebilirdik.</p>
-<p>İlginç bir diğer özellik, eğer mesela $N_2$'ye tek başına bakarsam, onun ilk
-düğümde 0 değerinde, ikinci düğümde 1 değerinde olduğunu görebiliriz.  Eğer
-$N_3$ olsa bu şekil de birinci ve ikinci düğümde sıfır olurdu. Diğer yandan her
-şekil fonksiyonu ait olduğu düğümde 1 değerindedir. $N_1$ birinci düğümde 1
-değerinde, $N_2$ ikinci düğümde 1 değerinde, vs. Bu şekil fonksiyonları öyle
-tasarlanmıştır.</p>
+<p>Şimdi $N_i$ fonksiyonlarına gelelim, onlara şekil fonksiyonları demiştik.  Bu
+şekilleri daha önce anlattık.</p>
 <p>Şapka fonksiyonlarını ifade etmenin daha genel bir yöntemi [8, sf. 9], ki $h =
 x_{j+1}-x_j$, ya da 1 uzunluğundaki bir yatay eksen için $h = 1/N$ ve $j =
 1,2,...,N$ olmak üzere,</p>
@@ -1125,8 +1011,6 @@ $$</p>
 <p>[9] Adeeb, <em>Introduction to Solid Mechanics, Online Book</em>,
     <a href="https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/">https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/</a></p>
 <p>[10] Petitt, <em>Intro to the Finite Element Method</em>, University of Alberta,
-    <a href="https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi">https://www.youtube.com/watch?v=2iUnfPRk6Ro&amp;list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi</a></p>
-<p>[11] Petitt, <em>Finite Element Method Theory</em>, University of Alberta,
     <a href="https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi">https://www.youtube.com/watch?v=2iUnfPRk6Ro&amp;list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi</a></p>
 <p>[12] Bayramlı, <em>Fizik, Materyel Mekaniği 2</em></p>
 <p>[13] Bayramlı, <em>Fizik, Materyel Mekaniği 1</em></p>

@@ -38,11 +38,11 @@
         <section id="main_content" class="inner">
         <h1>Izgara Denklemleri
 </h1></p>
-<p>Yapısal mekanikte ızgara yüklerin dik uygulandığı bir sistemdir. İzgaranın
+<p>Yapısal mekanikte ızgara yüklerin dik uygulandığı bir sistemdir. Izgaranın
 öğelerinin katı (rigid) şekilde bağlandığı farz edilir, yani ögelerin birbirine
 bağlandığındaki açılar aynı kalır. Düğüm noktalarında bürümsal ve bükülme
-momentleri süreklilik gösterir. İzgara örnekleri bir evin tabanı (floor)
-ya da bir köprünün alt yüzeyi olabilir.</p>
+momentleri süreklilik gösterir. İzgara örnekleri bir evin tabanı (floor) ya da
+bir köprünün alt yüzeyi olabilir [3, sf. 262].</p>
 <p><img alt="" src="compscieng_bpp43fem_01.jpg" /></p>
 <p>Ama izgara denklemlerine detaylı giriş yapmadan önce Galerkin, ve şekil
 fonksiyonları (shape function) konusuna bakalım.</p>
@@ -166,10 +166,31 @@ $N_3$ olsa bu şekil de birinci ve ikinci düğümde sıfır olurdu. Diğer yand
 şekil fonksiyonu ait olduğu düğümde 1 değerindedir. $N_1$ birinci düğümde 1
 değerinde, $N_2$ ikinci düğümde 1 değerinde, vs. Bu şekil fonksiyonları öyle
 tasarlanmıştır.</p>
-<p>Fakat ustteki turetimden daha basit olani iki noktadaki farki uzunluga bolmek,
-ve $x$ ile carpip baslangic degerine eklemektir. Mesela alttaki cubugu
-dusunelim,</p>
+<p>Fakat üstteki türetimden daha basit olanı iki noktadaki farkı uzunluğa bölmek,
+ve $x$ ile çarpıp başlangıç değerine eklemek. Mesela alttaki çubuğu
+düşünelim [3, sf. 264],</p>
 <p><img alt="" src="compscieng_bpp43fem_02.jpg" /></p>
+<p>Eger bir $\phi'$ acisi 1 noktasinda $\phi'_{1x}$ 2 noktasinda $\phi'_{2x}$
+olsun istiyorsak ve aradaki degisim lineer ise,</p>
+<p>$$
+\phi' = \left( \frac{\phi'_{2x} - \phi'_{1x}}{L}  \right) x' + \phi'_{1x}
+$$</p>
+<p>Eğer şekil fonksiyonu $N_1,N_2$ kullanmak istersek ki her iki fonksiyon
+sırasıyla $x'$'in birer fonksiyonu, yani</p>
+<p>$$
+\phi' = N_1 \phi'_{1x} + N_2 \phi'_{2x}
+$$</p>
+<p>olacak şekilde, o zaman</p>
+<p>$$
+N_1 = 1 - \frac{x'}{L}, \quad N_2 = \frac{x'}{L}
+$$</p>
+<p>ile bunu yapabilirdik. Matris formunda</p>
+<p>$$
+\phi' = [\begin{array}{cc} N_1 &amp; N_2 \end{array}]
+\left[\begin{array}{c}
+\phi'_{1x} \\ \phi'_{2x}
+\end{array}\right]
+$$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Finite Element Method Theory</em>, University of Alberta,

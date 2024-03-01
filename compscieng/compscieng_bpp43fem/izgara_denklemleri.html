@@ -40,11 +40,11 @@
 </h1></p>
 <p>Yapısal mekanikte ızgara yüklerin dik uygulandığı bir sistemdir. Izgaranın
 öğelerinin katı (rigid) şekilde bağlandığı farz edilir, yani ögelerin birbirine
-bağlandığındaki açılar aynı kalır. Düğüm noktalarında bürümsal ve bükülme
-momentleri süreklilik gösterir. İzgara örnekleri bir evin tabanı (floor) ya da
+bağlandığındaki açılar aynı kalır. Düğüm noktalarında burumsal ve bükülme
+momentleri süreklilik gösterir. Izgara örnekleri bir evin tabanı (floor) ya da
 bir köprünün alt yüzeyi olabilir [3, sf. 262].</p>
 <p><img alt="" src="compscieng_bpp43fem_01.jpg" /></p>
-<p>Ama izgara denklemlerine detaylı giriş yapmadan önce Galerkin, ve şekil
+<p>Ama ızgara denklemlerine detaylı giriş yapmadan önce Galerkin, ve şekil
 fonksiyonları (shape function) konusuna bakalım.</p>
 <p>Alttaki gibi bir denklem düşünelim,</p>
 <p>$$
@@ -167,11 +167,23 @@ $N_3$ olsa bu şekil de birinci ve ikinci düğümde sıfır olurdu. Diğer yand
 değerinde, $N_2$ ikinci düğümde 1 değerinde, vs. Bu şekil fonksiyonları öyle
 tasarlanmıştır.</p>
 <p>Fakat üstteki türetimden daha basit olanı iki noktadaki farkı uzunluğa bölmek,
-ve $x$ ile çarpıp başlangıç değerine eklemek. Mesela alttaki çubuğu
-düşünelim [3, sf. 264],</p>
+ve $x$ ile çarpıp başlangıç değerine eklemek. Altta bu teknik kullanılacak.</p>
+<p>Şimdi ızgara formüllerine dönelim. Bu sistemin öğelerinin katı (rigid) şekilde
+bağlandığını söylemiştik, yani öğelerin birbirine bağlandığındaki açılar aynı
+kalır, düğüm noktalarında burumsal ve bükülme momentleri süreklilik gösterir. O
+zaman bu tür bir ızgaranın her ögesinin her ucunda 3 olmak üzere 6 derece
+serbestliği olacaktır.</p>
+<p><img alt="" src="compscieng_bpp43fem_04.jpg" /></p>
+<p>Değişkenlere bakarsak, sol uçta mesela $v'_1$ var, bu yer değişimi.  Bir diğer
+değişken $\phi'_{1z}$ bükülme açısı, notasyonel olarak hangi eksen etrafında
+dönüldüğünü değişkene yazıyoruz. Sol kısım için üçüncü değişken yine dönüş
+açısı, ama bu seferki burulma sebebiyle ortaya çıkıyor, $x$ ekseni etrafında bu
+sebeple ona $\phi'_{1x}$ diyoruz. Aynı notasyonu sağ kısma uyguluyoruz, $v'_2$,
+$\phi'_{2z}$ ve $\phi'_{2x}$ elde ediyoruz.</p>
+<p>Burulma icin alttaki çubuğu düşünelim [3, sf. 264],</p>
 <p><img alt="" src="compscieng_bpp43fem_02.jpg" /></p>
-<p>Eger bir $\phi'$ acisi 1 noktasinda $\phi'_{1x}$ 2 noktasinda $\phi'_{2x}$
-olsun istiyorsak ve aradaki degisim lineer ise,</p>
+<p>Eğer bir $\phi'$ açısı 1 noktasında $\phi'_{1x}$ 2 noktasında $\phi'_{2x}$
+olsun istiyorsak ve aradaki değişim lineer ise,</p>
 <p>$$
 \phi' = \left( \frac{\phi'_{2x} - \phi'_{1x}}{L}  \right) x' + \phi'_{1x}
 \qquad (2)
@@ -193,11 +205,11 @@ $$</p>
 \end{array}\right]
 $$</p>
 <p><img alt="" src="compscieng_bpp43fem_03.jpg" /></p>
-<p>Maksimum kaykilma gerginligini bulmak icin daha onceki formulu hatirlayalim,</p>
+<p>Maksimum kaykılma gerginliğini bulmak için daha önceki formülü hatırlayalım,</p>
 <p>$$
 \gamma_{max} = \frac{R \mathrm{d} \phi'}{\mathrm{d} x'}
 $$</p>
-<p>Herhangi bir $r$ yaricapi icin</p>
+<p>Herhangi bir $r$ yarıçapı için</p>
 <p>$$
 \gamma = \frac{r \mathrm{d} \phi'}{\mathrm{d} x'}
 $$</p>
@@ -220,7 +232,7 @@ $$</p>
 <p>$$
 m'_x = \frac{\tau J}{R}
 $$</p>
-<p>Lineer elastik esyonlu (isotropic) materyeller için kaykılma stresi $\tau$
+<p>Lineer elastik eşyönlü (isotropic) materyeller için kaykılma stresi $\tau$
 ve kaykılma gerginliği $\gamma$ arasındaki ilişkiyi</p>
 <p>$$
 \tau = G \gamma
@@ -234,14 +246,60 @@ $$</p>
 m'_x = \frac{G J}{R} \frac{R}{L} ( \phi'_{2x} - \phi'_{1x}  )
 $$</p>
 <p>$$
-= \frac{G J}{L} ( \phi'_{2x} - \phi'_{1x}  )
+m'_x = \frac{G J}{L} ( \phi'_{2x} - \phi'_{1x}  )
 $$</p>
+<p>Son bulduğumuz formül $1x,2x$ ifadeleri içeriyor fakat aslında genel bir
+$x$ için bu hesap yapıldı. Eğer gerçekten 1 noktasındaki torku hesaplamak
+istiyorsak (resmi tekrar paylaşalım),</p>
+<p><img alt="" src="compscieng_bpp43fem_02.jpg" /></p>
+<p>Formül,</p>
+<p>$$
+m'_{1x} = \frac{G J}{L} ( \phi'_{1x} - \phi'_{2x}  )
+$$</p>
+<p>Dikkat edersek 1 eksi 2 yazdık, burulma açısı 2'ye giderken büyüyecek, 1'de
+sabit. 2 noktası için [4],</p>
+<p>$$
+m'_{2x} = \frac{G J}{L} ( \phi'_{2x} - \phi'_{1x}  )
+$$</p>
+<p>Son iki formülü matris formunda yazabiliriz,</p>
+<p>$$
+\left[\begin{array}{c}
+m'_{1x} \\ m'_{2x} 
+\end{array}\right] =
+\frac{GJ}{L}
+\left[\begin{array}{rr}
+1 &amp; -1 \\ -1 &amp; 1
+\end{array}\right]
+\left[\begin{array}{c}
+\phi'_{1x} \\ \phi'_{2x} 
+\end{array}\right]
+$$</p>
+<p>Demek ki direngenlik matrisi eşitliğin sağındaki ortada kalan bölümdür. Bu
+matris burulma (torsion) etkilerini gösteriyor, etkiler tek bir kiriş öğesi
+temel alınarak hesaplandı.</p>
+<p>Eğer burulma etkilerini bükülme (bending) ve kaykılma etkileriyle birleştirmek
+istiyorsak [5]'teki formülü kullanabiliriz, hatırlarsak bu formüldeki
+direngenlik matrisi, yine tek bir kiriş öğesi için, şöyleydi,</p>
+<p>$$
+\frac{EI}{L^3}
+\left[\begin{array}{cccc}
+12 &amp; 6L &amp; -12 &amp; 6L \\
+6L &amp; 4L^2 &amp; -6L &amp; 2L^2 \\
+-12 &amp; -6L &amp; 12 &amp; -6L \\
+6L &amp; 2L^2 &amp; -6L &amp; 4L^2
+\end{array}\right]
+$$</p>
+<p>Matris bir değişken listesini referans alıyor muhakkak, bu liste eşitliğin
+solunda her üç için kuvvet, moment, ve sağında yer değişim, açı değişimidir. </p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Finite Element Method Theory</em>, University of Alberta,
     <a href="https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi">https://www.youtube.com/watch?v=2iUnfPRk6Ro&amp;list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi</a></p>
-<p>[2] Bayramli, <em>Fizik, Materyel Mekanigi 7</em></p>
+<p>[2] Bayramlı, <em>Fizik, Materyel Mekanigi 7</em></p>
 <p>[3] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>
+<p>[4] Barsoum, <em>5 4 Grid Element Equations and Stiffness Matrix</em>,
+    <a href="https://youtu.be/Jejd1UGqq1s">https://youtu.be/Jejd1UGqq1s</a></p>
+<p>[5] Bayramlı, <em>Fizik, Materyel Mekanigi 4</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

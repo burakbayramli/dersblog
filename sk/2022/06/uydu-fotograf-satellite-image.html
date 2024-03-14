@@ -148,7 +148,39 @@ Attributes:
 
 <p><img src="uydu_01.png" alt="" /></p>
 
-<p>Detaylar net gözüküyor.. </p>
+<p>Detaylar net gözüküyor..</p>
+
+<p>Mapbox</p>
+
+<p>Sık güncellenmese de dünyanin her noktası için hızlı görüntü almanın bir
+diğer yolu Mapbox. Sitesinden anahtar alınır, bizdeki bir json <code>.conf</code>
+dosyası içinde. Eyfel kulesi fotoğrafı için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">sat_img</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">longitude</span><span class="p">,</span> <span class="n">zoom</span><span class="p">,</span> <span class="n">outfile</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/.nomterr.conf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+    <span class="n">accessToken</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;mapbox&#39;</span><span class="p">]</span>
+    <span class="k">def</span> <span class="nf">latToTile</span><span class="p">(</span><span class="n">latDeg</span><span class="p">,</span> <span class="n">zoom</span><span class="p">):</span>
+        <span class="n">latRadians</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">latDeg</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="n">zoom</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">asinh</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">latRadians</span><span class="p">))</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">lonToTile</span><span class="p">(</span><span class="n">lonDeg</span><span class="p">,</span> <span class="n">zoom</span><span class="p">):</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">**</span> <span class="n">zoom</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="n">lonDeg</span> <span class="o">+</span> <span class="mf">180.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">360.0</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="n">url</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;https://api.mapbox.com/v4/&quot;</span> <span class="o">+</span> <span class="s2">&quot;mapbox.satellite/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">zoom</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">lonToTile</span><span class="p">(</span><span class="n">longitude</span><span class="p">,</span> <span class="n">zoom</span><span class="p">))</span> <span class="o">+</span>
+           <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">latToTile</span><span class="p">(</span><span class="n">latitude</span><span class="p">,</span> <span class="n">zoom</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;@2x.png?access_token=&quot;</span> <span class="o">+</span> <span class="n">accessToken</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">stream</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">image</span><span class="p">:</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfileobj</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">raw</span><span class="p">,</span> <span class="n">image</span><span class="p">)</span>
+
+<span class="n">sat_img</span><span class="p">(</span><span class="mf">48.85859253797154</span><span class="p">,</span> <span class="mf">2.2945835762002353</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="s2">&quot;uydu_02.jpg&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="uydu_02.jpg" alt="" /></p>
 
 <p>Kaynaklar</p>
 

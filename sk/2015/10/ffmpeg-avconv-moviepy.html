@@ -37,7 +37,7 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>ffmpeg, moviepy</h1>
+<h1>ffmpeg, moviepy, melt</h1>
 
 <h3>Bazı ffmpeg, komutları</h3>
 
@@ -153,6 +153,25 @@ clip1 = VideoFileClip("v1.mp4").resize(0.50)
 clip2 = VideoFileClip("v2.mp4").resize(0.50)
 final_clip = concatenate_videoclips([clip1,clip2])
 final_clip.write_videofile("out.mp4")
+</code></pre>
+
+<p>Bir diğer iki parçaya bölme, birleştirme araçları <code>melt</code> ve
+<code>mkvmerge</code>.  Birincisini kurmak için <code>melt</code> paketi <code>apt ınstall</code>
+edilir, ikincisi için <code>mkvtoolnix</code>. Parçaya bölme işlemi bazen
+<code>ffmpeg</code> ile olmuyor çünkü bu program birbirini takip eden karelerin
+(frames) sıkıştırma sebebiyle az veri taşıyabileceğini anlamıyor, çok
+kare atlama yapabiliyor. Program <code>melt</code> tam istenen kareyi görüntüde
+olduğu gibi çıkartıyor. Bir kullanım</p>
+
+<pre><code>melt video.mp4 in=100 out=200 -consumer avformat:out.mp4 acodec=aac vcodec=libx264
+</code></pre>
+
+<p>Bu çağrı 100'uncu ile 200'uncu kare arasındaki tüm görüntüleri çıkartıp <code>out.mp4</code>
+içine yazar.</p>
+
+<p>Birleştirme için,</p>
+
+<pre><code>mkvmerge -o out.mp4 in1.mp4 + in2.mp4 + in3.mp4
 </code></pre>
 
 <h3>mencoder</h3>

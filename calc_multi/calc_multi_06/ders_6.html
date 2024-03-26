@@ -291,6 +291,114 @@ ki üstteki ifadenin sıfır olduğu da doğrudur.</p>
 <p>Not: Bu arada parallellik hem çekim, hem itme için geçerli olur (her iki durumda
 da yön paraleldir). Hakikaten de elektriksel alanda parçacıkların çekilmesi ve
 itilmesi bağlamında da Kepler'in Kanunu aynen işlemektedir.</p>
+<p>Ekler</p>
+<p>Yol Entegrali (Path Integral)</p>
+<p>Eğri uzunluğu hesabını formülize etmenin bir diğer yolu daha var, bu da yol
+entegral kavramı ile (dikkat bu kavram çizgi entegrali -line integral-
+kavramından farklı). Diyelim ki [6, sf. 352] bir skalar fonksiyon $f$ verildi
+öyle ki $f: \mathbb{R}^3 \to \mathbb{R}$ ve biz bu fonksiyonun $c$ eğrisi, ki
+$c(t) = (x(t),y(t),z(t))$ olacak şekilde, üzerinden alınan entegrali merak
+ediyoruz. Belki $f(x,y,z)$ bir sıcaklığı temsil ediyor ve bir $c$ kablosu
+üzerindeki ortalama sıcaklığı merak ediyoruz (yani $c$ üzerinden bir $f$ toplamı
+yapmak gerekiyor) gibi.</p>
+<p>Yol entegrali şöyle hesaplanır,</p>
+<p>$$
+\int _{a}^{b} f(x(t),y(t),z(t)) || c'(t) || \mathrm{d} t
+$$</p>
+<p>Şöyle de temsil edilebilir,</p>
+<p>$$
+\int_{a}^{b} f(c(t)) || c'(t) || \mathrm{d} t
+$$</p>
+<p>ki $\vec{c}(t) = c(t)$, yani $c(t)$ vektör fonksiyonu.</p>
+<p>Eğer $f = 1$ ise üstteki hesap eğri uzunluğunu verecektir. </p>
+<p>Eğer $c$ eğrisi bir kordinat düzlemi üzerindeyse mesela alttaki resimde olduğu
+gibi $x-y$ düzleminde, o zaman yol entegrali görülen o sanki çit gibi duran
+bölgenin alanını hesaplar</p>
+<p><img alt="" src="calc_multi_06_04.jpg" /></p>
+<p>Hesap</p>
+<p>$$
+\int_{a}^{b} f(x(t),y(t)) \sqrt {x'(t)^2 + y'(t)^2} \mathrm{d} t
+$$</p>
+<p>Eğri Uzunluğu (Arc Length, Alternatif Anlatım)</p>
+<p>Bir anlatım daha.. Elde $C$ eğrisi var, ve parametrik olarak tanımlı [1, sf. 417],</p>
+<p>$$
+x = f(t), \quad y = g(t), \quad a \le t \le b
+$$</p>
+<p>Fonksiyonun sürekli türevi alınabilir olduğunu farz edelim, bu durumda $C$ bir
+pürüzsüz eğri olacaktır.  Eğriyi $P_0,P_1,...,P_n$ noktalarında $n$ tane parçaya
+bölelim, öyle ki $P_k = (f(t_k),g(t_k))$. Bu parçaları düz çizgi ile
+birleştirirsek,</p>
+<p><img alt="" src="calc_multi_06_01.png" /></p>
+<p>Her çizgi parçasının uzunluğu </p>
+<p>$$
+L_k = \sqrt{(\Delta x)^2 + (\Delta y)^2}
+$$</p>
+<p>$$
+= \sqrt{[f(t_k) - f(t_{k-1})]^2 + [g(t_k) - g(t_{k-1})]^2 }
+$$</p>
+<p><img alt="" src="calc_multi_06_03.png" /></p>
+<p>Eğer $\delta t_k$ yeterince ufaksa $L_k$ yaklaşık olarak $P_{k-1}$ ve $P_k$
+arasındaki eğrinin uzunluğudur. Ve Ortalama Değer Teorisine göre
+$[t_{k-1},t_k]$ arasında $t_k^\ast$ ve $t_k^{**}$ mevcuttur öyle ki </p>
+<p>$$
+\Delta x_k = f(t_k) - f(t_{k-1}) = f'(t_k^\ast) \Delta t_k
+$$</p>
+<p>$$
+\Delta y_k = g(t_k) - g(t_{k-1}) = g'(t_k^\ast) \Delta t_k
+$$</p>
+<p>O zaman eğrinin uzunluğu tüm bu uzunluklar $L_k$'lerin toplamı </p>
+<p>$$
+\sum_{k=1}^{n} L_k = \sum_{k=1}^{n} \sqrt{(\Delta x_k)^2 + (\Delta y_k)^2} 
+$$</p>
+<p>$$
+= \sum_{k=1}^{n} \sqrt{[f'(t_k^\ast)]^2 + [g'(t_k^{\ast\ast})]^2} \Delta t_k
+$$</p>
+<p>Üstteki toplam her ne kadar bir Riemann toplamı olmasa da (çünkü $f'$ ve $g'$
+değişik noktalarda hesaplanıyorlar) ileri Calculus'taki bir teori onun limitini
+garantiler, yani üstteki formülden alttaki entegrale geçiş yapılabilir,</p>
+<p>$$
+\int_{a}^{b} \sqrt{[f'(t)^2 + g'(t)^2} \mathrm{d} t
+$$</p>
+<p>Üç boyutlu eğri için tabii ki üstteki kalıp genişletilir.</p>
+<p>Bazen tek boyutlu, klasik, parametrik olmayan durumda, mesela $y = f(x)$ için</p>
+<p>$$
+L = \int_{a}^{b} \sqrt{1 + \left( \frac{\mathrm{d} y}{\mathrm{d} x} \right)^2} \mathrm{d} x 
+$$</p>
+<p>formülünü görebilirsiniz, bu da parametrik formülasyona bağlanabilir, $y(x(t))
+= f(x(t))$ ve $x(t) = t$ dersek $\frac{\mathrm{d} x}{\mathrm{d} t} = 1$ olacaktır,
+formüldeki 1 terimi buradan geliyor.</p>
+<p>Örnek</p>
+<p>$y = \frac{2 x ^{3/2}}{3}$ fonksiyonunun $(1,2/3)$ ile $(2,\frac{4\sqrt{2}}{3})$ 
+arasındaki uzunluğu nedir [4]? </p>
+<pre><code class="python">x = np.linspace(0,3,100)
+y = 2*x**(3/2) / 3.0
+plt.plot(x,y)
+plt.savefig('calc_multi_06_02.png')
+</code></pre>
+
+<p><img alt="" src="calc_multi_06_02.png" /></p>
+<p>$$
+ \frac{2 x ^{3/2}}{3}, \quad f'(x) = \frac{3}{2} \frac{2}{3} x^{1/2} =
+ \sqrt{x} = [f'(x)]^2 = x
+$$</p>
+<p>$a=1,b=2$</p>
+<p>$$
+L = \int_{a}^{b} \sqrt{ 1+ [f'(x)]^2} \mathrm{d} x = 
+\int_{1}^{2} \sqrt{1 + x} \mathrm{d} x
+$$</p>
+<p>$u = 1 + x$, $u(1) = 1$, $u(2) = 3$ ile</p>
+<p>$$
+= \int_{2}^{3} \sqrt{u} \mathrm{d} u = \frac{u^{3/2}}{3/2} \bigg\vert_{2}^{3} = 
+\frac{2}{3} [3 \sqrt{3} - 2\sqrt{2} ]
+$$</p>
+<pre><code class="python">print (3*np.sqrt(3) - 2*np.sqrt(2))
+</code></pre>
+
+<pre><code>2.3677252979604417
+</code></pre>
+
+<hr>
+
 <p>Soru</p>
 <p>Diyelim ki $P$ noktası bir küre (sphere) üzerinde hareket ediyor ve </p>
 <p>$$ OP = \vec{r}(t) = x(t)\hat{i} + y(t)\hat{j} + z(t)\hat{k}  $$</p>
@@ -499,91 +607,16 @@ aralığı için bul. </p>
 5t 
 $$</p>
 <p>$$ s(\pi / 2) = 5(\pi/2) $$</p>
-<p>Eğri Uzunluğu (Arc Length, Alternatif Anlatım)</p>
-<p>Bir $C$ eğrisi var, ve parametrik olarak tanımlı [1, sf. 417],</p>
-<p>$$
-x = f(t), \quad y = g(t), \quad a \le t \le b
-$$</p>
-<p>Fonksiyonun sürekli türevi alınabilir olduğunu farz edelim, bu durumda $C$ bir
-pürüzsüz eğri olacaktır.  Eğriyi $P_0,P_1,...,P_n$ noktalarında $n$ tane parçaya
-bölelim, öyle ki $P_k = (f(t_k),g(t_k))$. Bu parçaları düz çizgi ile
-birleştirirsek,</p>
-<p><img alt="" src="calc_multi_06_01.png" /></p>
-<p>her cizginin uzunlugu </p>
-<p>$$
-L_k = \sqrt{(\Delta x)^2 + (\Delta y)^2}
-$$</p>
-<p>$$
-= \sqrt{[f(t_k) - f(t_{k-1})]^2 + [g(t_k) - g(t_{k-1})]^2 }
-$$</p>
-<p><img alt="" src="calc_multi_06_03.png" /></p>
-<p>Eğer $\delta t_k$ yeterince ufaksa $L_k$ yaklaşık olarak $P_{k-1}$ ve $P_k$
-arasındaki eğrinin uzunluğudur. Ve Ortalam Değer Teorisine göre
-$[t_{k-1},t_k$ arasında $t_k^\ast$ ve $t_k^{**}$ mevcuttur öyle ki </p>
-<p>$$
-\Delta x_k = f(t_k) - f(t_{k-1}) = f'(t_k^\ast) \Delta t_k
-$$</p>
-<p>$$
-\Delta y_k = g(t_k) - g(t_{k-1}) = g'(t_k^\ast) \Delta t_k
-$$</p>
-<p>O zaman eğrinin uzunluğu tüm bu uzunluklar $L_k$'lerin toplamı </p>
-<p>$$
-\sum_{k=1}^{n} L_k = \sum_{k=1}^{n} \sqrt{(\Delta x)^2 + (\Delta y)^2} 
-$$</p>
-<p>$$
-= \sum_{k=1}^{n} \sqrt{[f'(t_k^\ast)]^2 + [g(t_k^{**})]^2} \Delta t_k
-$$</p>
-<p>Üstteki toplam her ne kadar bir Riemann toplamı olmasa da (çünkü $f'$ ve $g'$
-değişik noktalarda hesaplanıyorlar) ileri Calculus'taki bir teori onun limitini
-garantiler, yani üstteki formülden alttaki entegrale geçiş yapılabilir,</p>
-<p>$$
-\int_{a}^{b} \sqrt{[f'(t)^2 + g'(t)^2} \mathrm{d} t
-$$</p>
-<p>Üç boyutlu eğri için tabii ki üstteki kalıp genişletilir.</p>
-<p>Bazen tek boyutlu, klasik, parametrik olmayan durumda, mesela $y = f(x)$ için</p>
-<p>$$
-L = \int_{a}^{b} \sqrt{1 + \left( \frac{\mathrm{d} y}{\mathrm{d} x} \right)^2} \mathrm{d} x 
-$$</p>
-<p>formülünü görebilirsiniz, bu da parametrik formülasyona bağlanabilir, $y(x(t))
-= f(x(t))$ ve $x(t) = t$ dersek $\frac{\mathrm{d} x}{\mathrm{d} t} = 1$ olacaktır,
-formüldeki 1 terimi buradan geliyor.</p>
-<p>Örnek</p>
-<p>$y = \frac{2 x ^{3/2}}{3}$ fonksiyonunun $(1,2/3)$ ile $(2,\frac{4\sqrt{2}}{3})$ 
-arasındaki uzunluğu nedir [4]? </p>
-<pre><code class="python">x = np.linspace(0,3,100)
-y = 2*x**(3/2) / 3.0
-plt.plot(x,y)
-plt.savefig('calc_multi_06_02.png')
-</code></pre>
-
-<p><img alt="" src="calc_multi_06_02.png" /></p>
-<p>$$
- \frac{2 x ^{3/2}}{3}, \quad f'(x) = \frac{3}{2} \frac{2}{3} x^{1/2} =
- \sqrt{x} = [f'(x)]^2 = x
-$$</p>
-<p>$a=1,b=2$</p>
-<p>$$
-L = \int_{a}^{b} \sqrt{ 1+ [f'(x)]^2} \mathrm{d} x = 
-\int_{1}^{2} \sqrt{1 + x} \mathrm{d} x
-$$</p>
-<p>$u = 1 + x$, $u(1) = 1$, $u(2) = 3$ ile</p>
-<p>$$
-= \int_{2}^{3} \sqrt{u} \mathrm{d} u = \frac{u^{3/2}}{3/2} \bigg\vert_{2}^{3} = 
-\frac{2}{3} [3 \sqrt{3} - 2\sqrt{2} ]
-$$</p>
-<pre><code class="python">print (3*np.sqrt(3) - 2*np.sqrt(2))
-</code></pre>
-
-<pre><code>2.3677252979604417
-</code></pre>
-
 <p>Kaynaklar</p>
 <p>[1] Thomas, <em>Thomas' Calculus, 11. Baski</em></p>
-<p>[2] <a href="http://tutorial.math.lamar.edu/Classes/CalcII/ArcLength.aspx">http://tutorial.math.lamar.edu/Classes/CalcII/ArcLength.aspx</a></p>
-<p>[3] 
-<a href="http://www.phengkimving.com/calc_of_one_real_var/12_app_of_the_intgrl/12_06_arc_len.htm">http://www.phengkimving.com/calc_of_one_real_var/12_app_of_the_intgrl/12_06_arc_len.htm</a></p>
+<p>[2] <em>Paul's Online Notes</em>,
+    <a href="http://tutorial.math.lamar.edu/Classes/CalcII/ArcLength.aspx">http://tutorial.math.lamar.edu/Classes/CalcII/ArcLength.aspx</a></p>
+<p>[3] <em>Pheng Kim Ving</em>,
+    <a href="http://www.phengkimving.com/calc_of_one_real_var/12_app_of_the_intgrl/12_06_arc_len.htm">http://www.phengkimving.com/calc_of_one_real_var/12_app_of_the_intgrl/12_06_arc_len.htm</a></p>
 <p>[4] <em>Math 10560, Calculus II, Resources</em>, </p>
-<p><a href="https://www3.nd.edu/~apilking/Calculus2Resources/Lecture%2016/SlidesL16.pdf">https://www3.nd.edu/~apilking/Calculus2Resources/Lecture%2016/SlidesL16.pdf</a></p>
+<p>[5] <em>University of Notre Dame, Math 10560, Calculus II</em>,
+    <a href="https://www3.nd.edu/~apilking/Calculus2Resources/Lecture%2016/SlidesL16.pdf">https://www3.nd.edu/~apilking/Calculus2Resources/Lecture%2016/SlidesL16.pdf</a></p>
+<p>[6] Marsden, <em>Vector Calculus</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

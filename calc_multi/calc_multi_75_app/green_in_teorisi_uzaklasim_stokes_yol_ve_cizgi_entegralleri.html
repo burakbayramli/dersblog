@@ -38,6 +38,73 @@
         <section id="main_content" class="inner">
         <h1>Green'in Teorisi, Uzaklaşım, Stokes, Yol ve Çizgi Entegralleri
 </h1></p>
+<p>Yüzeyler (Surfaces)</p>
+<p>Üç boyut içindeki iki boyut yüzeyler parametrize edilerek gösterilir,
+tek boyutlu eğri bir parametre $t$ ile parametrize ediliyordu, alan için
+iki değişken $u,v$ gerekir. Notasyonel olarak $r$'nin taradığı bir yüzey</p>
+<p>$$
+r(u,v) = &lt; x(u,v), y(u,v), z(u,v) &gt;
+$$</p>
+<p>Mesela $r(u,v) = &lt; u, u^2, v &gt;$ bir yüzey olabilir.</p>
+<p>Yüzey alan hesabı için tüm yüzeyi kenarları $\Delta u$, $\Delta v$ olan hücreler
+yaratabiliriz. Her noktada iki tane teğet vektör bulunabilir, bunlar $t_u$ ve
+$t_v$ olsun,</p>
+<p>$$
+t_u = &lt; \frac{\partial x}{\partial u},
+        \frac{\partial y}{\partial u},
+        \frac{\partial z}{\partial u} &gt;, \quad
+t_v = &lt; \frac{\partial x}{\partial v},
+        \frac{\partial y}{\partial v},
+        \frac{\partial z}{\partial v} &gt;      <br />
+$$</p>
+<p>Yaklaşık olarak her hücrenin alanı $\Delta S_{ij}$ her hücredeki $t_u$ ve $t_v$
+(ya da yeni notasyonla onlara $t_u^{ij}$ ve $t_v^{ij}$ diyelim) yönündeki
+$\Delta u$ ve $\Delta v$'nin oluşturduğu paralelogram alanıdır, bu paralelogram
+bildiğimiz gibi iki vektörün çapraz çarpımından gelen üçüncü vektörün
+büyüklüğüdür, o zaman </p>
+<p>$$
+\Delta S_{ij} \approx || \Delta u t_u^{ij} \times \Delta v t_v^{ij} ||
+$$</p>
+<p>$$
+= ||  t_u^{ij} \times t_v^{ij} || \Delta u \Delta v
+$$</p>
+<p><img alt="" src="calc_multi_75_app_01.jpg" /></p>
+<p><img alt="" src="calc_multi_75_app_02.jpg" /></p>
+<p>Tüm ufak hücre alanlarını toplarız, ve hücre sayısı sonsuza yaklaşırken toplam
+alan limitine bakabiliriz,</p>
+<p>$$
+\lim_{m,n \to \infty} \sum_{i=1}^{m} \sum_{j=1}^{n} ||  t_u^{ij} \times t_v^{ij} || \Delta u \Delta v
+$$</p>
+<p>Bu limit yüzey alan çift entegral hesabına yaklaşır / onu tanımlar,</p>
+<p>$$
+= \iint_D || t_u \times t_v || \mathrm{d} A
+$$</p>
+<pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+import numpy as np
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+u = np.linspace(0, 3, 100)
+v = np.linspace(0, 4, 100)
+u,v = np.meshgrid(u,v)
+x = u
+y = v**2 - u
+z = u + v
+ax.plot_surface(x, y, z, rstride=4, cstride=4, cmap = cm.copper)
+x = np.linspace(0, 3, 5)
+y = np.linspace(0, 10, 5)
+z = np.linspace(0, 6, 5)
+fu = -y
+fv = x
+fw = z*0
+xx,yy,zz = np.meshgrid(x,y,z)
+ax.quiver(xx, yy, zz, fu, fv, fw, length=0.2, color = 'red')
+ax.view_init(elev=18, azim=-46)
+plt.savefig('calc_multi_75_app_03.jpg',quality=30)
+</code></pre>
+
+<p><img alt="" src="calc_multi_75_app_03.jpg" /></p>
+<p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Marsden, <em>Vector Calculus</em></p>
           <br/><a href="../index.html">Yukarı</a>

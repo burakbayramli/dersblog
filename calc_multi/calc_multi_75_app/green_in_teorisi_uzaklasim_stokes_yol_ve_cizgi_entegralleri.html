@@ -93,7 +93,7 @@ $$</p>
 <p>$$
 = \lim_{m,n \to \infty} \sum_{i=1}^{m} \sum_{j=1}^{n} f(P_{ij}) \Delta S_{ij} 
 $$</p>
-<p>O zaman yuzey entegralleri alttaki sekilde hesaplanabilir,</p>
+<p>O zaman yüzey entegralleri alttaki şekilde hesaplanabilir,</p>
 <p>$$
 \iint_S f(x,y,z) \mathrm{d} S =
 \iint_D f(r(u,v)) || t_u \times t_v || \mathrm{d} A
@@ -102,7 +102,7 @@ $$</p>
 <p>Vektör Alanları Üzerinden Yüzey Entegrali</p>
 <p>Skalar fonksiyona benzer şekilde bir vektör alanı $F$ ve yüzey $S$ üzerinden de
 entegral hesaplanabilir. Yine bir ufak çarpımlar toplamından bahsediyoruz, bu
-tür bir hesap pek çok uygulama için faydalı olabiir. Mesela bir su akışı
+tür bir hesap pek çok uygulama için faydalı olabilir. Mesela bir su akışı
 içindeki geçirgen bir yüzeyi düşünürsek, kütle akışını (mass flux) nasıl
 hesaplarız? </p>
 <p><img alt="" src="calc_multi_75_app_04.jpg" /></p>
@@ -123,7 +123,85 @@ gerçek kütle akışına yaklaşır, yani</p>
 \iint_S \rho v \cdot N \mathrm{d} S = \lim_{m,n \to \infty}
 \sum_{i=1}^{m} \sum_{j=1}^{n} (\rho v \cdot N) \Delta S_{ij}
 $$</p>
+<p>Devam edelim $\rho v$ yerine herhangi bir vektör alanı $F$ kullanalım, o zaman
+şu genel tanımı artık yapabiliriz, $F$'nin $S$ yüzeyi üzerinden entegrali</p>
+<p>$$
+\iint_S \vec{F} \cdot \mathrm{d} \vec{S} = \iint_S \vec{F} \cdot \vec{N} \mathrm{d} S
+$$</p>
+<p>olarak gösterilir.</p>
 <p><img alt="" src="calc_multi_75_app_05.jpg" /></p>
+<p>Dikkat her yerde vektör notasyonu kullanmıyoruz, olmadığı yerde formül
+çerçevesine göre anlaşılabilir.</p>
+<p>$N$ yüzey normalı, öne dik olan birim vektör, hesabı için önceden gördüğümüz
+$t_u,t_v$ vektörlerini kullanabiliriz,</p>
+<p>$$
+N = \frac{t_u \times t_v}{ || t_u \times t_v || }
+$$</p>
+<p>Üstteki ifadeyi yüzey entegralinde kullanırsak [2, sf. 778],</p>
+<p>$$
+\iint_S \vec{F} \cdot \vec{N} \mathrm{d} S =
+\iint_S \vec{F} \cdot \frac{t_u \times t_v}{ || t_u \times t_v || } \mathrm{d} S
+$$</p>
+<p>Daha önce gördük</p>
+<p>$$
+\mathrm{d} S = || t_u \times t_v || \mathrm{d} u \mathrm{d} v = || t_u \times t_v || \mathrm{d} A
+$$</p>
+<p>İki üste geçirince</p>
+<p>$$
+= \iint_D \vec{F}(r(u,v)) \cdot \frac{t_u \times t_v}{ || t_u \times t_v || }
+|| t_u \times t_v || \mathrm{d} A
+$$</p>
+<p>Basitleştirme sonrası,</p>
+<p>$$
+= \iint_D \vec{F}(r(u,v)) \cdot (t_u \times t_v) || t_u \times t_v || \mathrm{d} A
+$$</p>
+<p>Soru</p>
+<p>$F = &lt; -y, x, 0 &gt;$ olarak veriliyor, $S$ yüzeyi $r(u,v) = &lt; u, v^2 - u, u+v &gt;$.</p>
+<p>$\iint_S F \cdot N \mathrm{d} S$ yüzey entegralini hesaplayın.</p>
+<p>Cevap</p>
+<p>Teğet vektörler $t_u = &lt; 1, -1, 1 &gt;$, ve $t_v = &lt; 0, 2v, 1 &gt;$.</p>
+<p>$t_u \times t_v$ çapraz çarpımı</p>
+<pre><code class="python">import sympy
+
+u,v = sympy.symbols('u v')
+t_u = sympy.Matrix([[1,-1,1]])
+t_v = sympy.Matrix([[0,2*v,1]])
+print (t_u.cross(t_v))
+</code></pre>
+
+<pre><code>Matrix([[-2*v - 1, -1, 2*v]])
+</code></pre>
+
+<p>Yüzey entegral hesabı şöyle hesaplanabilir,</p>
+<p>$$
+\int _{0}^{4} \int _{0}^{3} F(r(u,v)) \cdot (t_u \times t_v) \mathrm{d} u \mathrm{d} v
+$$</p>
+<p>Verili $F = &lt; -y, x, 0 &gt;$, ve yüzey $r(u,v) = &lt; u, v^2 - u, u+v &gt;$ demiştik,
+o zaman </p>
+<p>$$
+F(r(u,v)) = &lt; u-v^2, u, 0 &gt; 
+$$</p>
+<p>olur. Tüm entegral</p>
+<p>$$
+= \int _{0}^{4} \int _{0}^{3} &lt; u-v^2, u, 0 &gt;  \cdot &lt; -1-2v, -1, 2v &gt;
+\mathrm{d} u \mathrm{d} v
+$$</p>
+<p>$$
+= \int_{0}^{4} \int_{0}^{3} (2v^3 + v^2 -2uv -2u )
+\mathrm{d} u \mathrm{d} v
+$$</p>
+<p>$$
+= \int_{0}^{4} [ 2v^3u + v^2u - vu^2 - u^2 ]_{0}^{3} \mathrm{d} v
+$$</p>
+<p>$$
+= \int_{0}^{4} (6v^3 + 3v^2 - 9v -9 ) \mathrm{d} v
+$$</p>
+<p>$$
+= \left[ \frac{3v^4}{2} + v^3 - \frac{9v^2}{2} - 9v \right]_{0}^{4}
+$$</p>
+<p>$$
+= 340
+$$</p>
 <pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import cm
 import numpy as np

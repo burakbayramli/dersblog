@@ -315,111 +315,8 @@ plt.savefig('calc_multi_70_div_curl_lap_02.png')
 <p><img alt="" src="calc_multi_70_div_curl_lap_02.png" /></p>
 <p>Evet, üstteki resim $4 x^2 + 4 y^2$ gibi duruyor [5].</p>
 <p>Dolam (Curl)</p>
-<p>Uzaklaşımdan biraz daha farklı bir hesap bir vektör alanının dolamı yani
-curl'ü. Bir vektör alanı $F = [F_1,F_2,F_3]$ için hesabı şu şekilde,</p>
-<p>$$
-\mathrm{curl} F = \left[\begin{array}{ccc} 
-\dfrac{\partial F_3}{\partial y} - \dfrac{\partial F_2}{\partial z} &amp; 
-\dfrac{\partial F_1}{\partial z} - \dfrac{\partial F_3}{\partial x} &amp; 
-\dfrac{\partial F_2}{\partial x} - \dfrac{\partial F_1}{\partial y} 
-\end{array}\right]
-\qquad (2)
-$$</p>
-<p>Bu hesap, isminin çağrıştırabileceği üzere bir vektör alanının döndürme etkisini
-özetler. Mesela içinde dalgalar, akımlar olan bir sıvıya ufak bir küre attık. Bu
-küre o sıvının hareketlerine, yani $F$'sine göre, belli bir şekilde dönmeye
-başlayabilir, bu dönüşü özetlemenin iyi bir yolu curl hesabıdır.</p>
-<p><img alt="" src="calc_multi_70_div_curl_lap_06.png" /></p>
-<p>Çizgi entegrali yardıma yetişiyor. Üç tane eksen üzerinden, o eksenler etrafında
-ufak bir dönme yolunun yaptığı işi ayrı ayrı hesaplayabiliriz, ve sonucu aynı
-boyutta bir vektörün boyutları olarak kabul edebiliriz, ve vektörün gösterdiği
-yön etrafında sağ el kuralı dönüşün nasıl olduğunu tarif eder, vektörün
-büyüklüğü ise dönüşün hızını. </p>
-<p>Hatırlarsak yapılan iş $W = \int_{t=a}^{t=b} F \cdot T \mathrm{d} s$ ile hesaplanır,
-$T$ ile $F$'nin üzerinde gidilen eğrinin yansımasına bakıyoruz, $\mathrm{d} s$ bu
-eğrinin ufak bir parçası [9, sf. 1153]. Ayni islem $F \mathrm{d} \vec{r}$ ile de
-gosterilebilir.</p>
-<p>Devam edersek, şimdi diyelim ki $F$'nin ufak bir dikdörtgen etrafında yaptığı
-dönüşsel işi, dolaşımını (circulation) hesaplayacağız. Sonra dikdörtgeni limite
-götürüp sonsuz küçültünce bir analitik sonuca erişmiş olacağız.</p>
-<p>Bu hesabı her eksen için yapmak istiyoruz, önce $z$'den başlayalım, dolaşım $xy$
-düzleminde olacak [8, sf. 77].</p>
-<p><img alt="" src="calc_multi_70_div_curl_lap_07.png" />
-<img alt="" src="calc_multi_70_div_curl_lap_08.png" /></p>
-<p>Önce $C_B$ parçasını hesaplayalım. Üst sağdaki resimde görülüyor, ortaki
-noktanın kordinat değeri $x,y,z$, $C_B$ üzerinde $F$'nin bileşeni $F_x$, oradaki
-$F_x$ değeri $F_x(x,y-\frac{\Delta y}{2}, z)$. Bu kuvveti $C_B$ boyunca
-katedilen yol $\Delta x$ ile çarpıyoruz,</p>
-<p>$$
-\int_{C_B} F \cdot T \mathrm{d} s =
-\int_{C_B} F_x \mathrm{d} x \approx
-F_x \left( x,y-\frac{\Delta y}{2}, z \right) \Delta x
-$$</p>
-<p>$C_T$ icin</p>
-<p>$$
-\int_{C_T} F_x \mathrm{d} x \approx -F_x \left(x,y+\frac{\Delta y}{2}, z \right) \Delta x
-$$</p>
-<p>Yukarı ve aşağı gidişi hesaplamadık çünkü o yollar $F_x$'e dik, yapılan iş
-sıfır. Üstteki sonuçları toplarsak,</p>
-<p>$$
-\int_{C_T+C_B} F \cdot T \mathrm{d} s  = - \left[
-F_x \left( x,y+\frac{\Delta y}{2},z \right) -
-F_x \left( x,y-\frac{\Delta y}{2},z \right)
-\right] \Delta x
-$$</p>
-<p>$$
-= - \dfrac{
-\left[
-  F_x \left( x,y+\dfrac{\Delta y}{2},z \right) -
-  F_x \left( x,y-\dfrac{\Delta y}{2},z \right)
-\right]<br />
-}{\Delta y}
-\Delta x \Delta y
-$$</p>
-<p>$\Delta x \Delta y$ carpani tabii ki dikdortgenin alani. Onu sol tarafa alirsak,</p>
-<p>$$
-\frac{1}{\Delta S}\int_{C_T+C_B} F \cdot T \mathrm{d} s \approx
-- \dfrac{
-\left[
-  F_x \left( x,y+\dfrac{\Delta y}{2},z \right) -
-  F_x \left( x,y-\dfrac{\Delta y}{2},z \right)
-\right]<br />
-}{\Delta y}
-$$</p>
-<p>Benzer analizi dikdörtgenin sağ ve sol tarafına, $C_L$ ve $C_R$ için uygularsak,</p>
-<p>$$
-\frac{1}{\Delta S}\int_{C_L+C_R} F \cdot T \mathrm{d} s \approx
-- \dfrac{
-\left[
-  F_y \left( x+\dfrac{\Delta x}{2},y,z \right) -
-  F_y \left( x-\dfrac{\Delta x}{2},y,z \right)
-\right]<br />
-}{\Delta x}
-$$</p>
-<p>Son iki sonucu toplarız, $\Delta S$'nin limitini alırız, böylece dikdörtgen
-$x,y,z$ noktasına sonsuz küçültülmüş olur, ki bu durumda $\Delta x \to 9$ ve
-$\Delta y \to 0$, böylece nihai eriştiğimiz sonuç,</p>
-<p>$$
-\lim_{\Delta \to 0} \frac{1}{\Delta S} \oint F \cdot T \mathrm{d} s =
-\frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y}
-$$</p>
-<p>Entegralde $\int$ yerine $\oint$ kullandık ki dolaşım hesabı olduğu daha iyi
-belli olsun.</p>
-<p>Tabii bu tek eksen, $z$ ekseni etrafındaki dolaşım. Aynı işlemi diğer eksenlere
-de uygularsak,</p>
-<p><img alt="" src="calc_multi_70_div_curl_lap_09.png" />
-<img alt="" src="calc_multi_70_div_curl_lap_10.png" /></p>
-<p>Tüm bu bileşenleri bir araya koyunca (2)'de gösterilen curl vektörüne ulaşmış
-oluyoruz, $z$ ekseni etrafındaki 3. öğe, üstteki soldaki 2. sağdaki 1. öğe,</p>
-<p>$$
-\mathrm{curl} F = \left[\begin{array}{ccc} 
-\dfrac{\partial F_z}{\partial y} - \dfrac{\partial F_y}{\partial z} &amp; 
-\dfrac{\partial F_x}{\partial z} - \dfrac{\partial F_z}{\partial x} &amp; 
-\dfrac{\partial F_y}{\partial x} - \dfrac{\partial F_x}{\partial y} 
-\end{array}\right]
-$$</p>
-<p>$F_1,F_2,F_3$ yerine $F_x,F_y,F_z$ kullanmış olduk.</p>
-<p>Bir üç boyutlu vektör alanı, ve onun analitik olarak curl hesabını verelim,</p>
+<p>Bu kavram [12]'de anlatildi.  Bir üç boyutlu vektör alanı, ve onun analitik
+olarak curl hesabını verelim,</p>
 <pre><code class="python">import sympy
 x, y, z = sympy.symbols('x y z', real=True)
 pi = sympy.symbols('pi', constant=True)
@@ -551,6 +448,7 @@ plt.savefig('calc_multi_70_div_curl_lap_12.png')
 <p>[10] Bayramlı, <em>Octave ile Ruzgar Verisi, wind.dat, Curl Ornekleri</em>,
      <a href="https://burakbayramli.github.io/dersblog/sk/2020/09/octave-3d-wind.html">https://burakbayramli.github.io/dersblog/sk/2020/09/octave-3d-wind.html</a></p>
 <p>[11] Bayramlı, <em>Cok Boyutlu Calculus, Ders 19</em></p>
+<p>[12] Bayramlı, <em>Cok Boyutlu Calculus, Ders 22</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

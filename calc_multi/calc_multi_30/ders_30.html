@@ -118,7 +118,144 @@ miyiz? Evet çünkü bu alana gradyan alarak erişebileceğimizi biliyoruz, bir
 tahmin yaparsak mesela $\vec{F} = \nabla (xyz)$ ile. O zaman örneğimize dönersek
 çizgi entegralini sadece bitiş ve başlangıç noktalarını kullanarak
 hesaplayabiliriz, $f(1,1,1) - f(0,0,0)$, $1 - 0 = 1$.</p>
+<p>Gradyan alan testi şöyle yapılabilir, mesela $\vec{F} = &lt; P,Q,R &gt; $ verilmiş, bu
+bir $ <f_x, f_y, f_z > $ sonucu mu elde edilmiştir? Eğer öyleyse ikinci kısmı
+türeve bakarız, $f_{xy} = f_{yx}$ olmalı, $f_{xz} = f_{zx}$ olmalı,
+$f_{yz} = f_{zy}$ olmalı. Bu kısmi türev eşit olma durumu <em>aynı fonksiyonun</em>
+farklı şekillerde ikinci türevinin alınıyor olmasının doğal sonucu tabii ki. Biz
+bir probleme bakarken muhakkak aynı fonksiyonun birinci türevinden olup olmadığını
+bilmiyoruz, ama ikinci türevleri farklı kombinasyonlarda alıp birbirlerine eşit
+olup olmadığına baktığımızda durumu anlıyoruz. Eğer $&lt; yz, xz, xy &gt;$ verilmiş
+ise bu ilk öğe $f_x$ sonucu mu? Ekstra ikinci türevi $f_{xy}$ alıp, $f_{yx}$ ile
+karşılaştırıyoruz, bunu tüm diğerleri için yapınca kontrol tamamlanıyor.</p>
+<p>[atlandi]</p>
+<p>Dolam (Curl)</p>
+<p>Uc boyutta is hesabi icin Green'in Teorisi'nin yerine gecen teori Stokes'un
+Teorisi (Stokes' Theorem). Ama once dolam konusu ile baslayalim.</p>
+<p>Aslinda dolamin hesapladigi vektor alaninizin muhafazakar olmakta ne kadar
+basarisiz oldugu. Eger fiziksel hareketlilik baglaminda bakmak istiyorsak
+dolam alanimizin donmeye olan meyilini olcer. Formulsel olarak dolam,</p>
+<p>$$
+\mathrm{curl} \vec{F} = (R_y - Q_z) i + (P_z - R_x) j + (Q_x - P_y) k
+$$</p>
+<p>olarak gosterilir. Tabii gorur gormez ogrencinin unuttugu bir formul..
+oldukca karisik cunku.</p>
+<p>Formulun yapisi, basladigi kavram nedir? Sudur, bir alaninin muhafazakar olmasi
+icin ustte gordugumuz $i,j,k$ solundaki bolumlerin her birinin sifir olmasi
+gerekiyor, yani $\mathrm{curl} \vec{F} = 0$ olmasi gerekiyor.</p>
+<p>Uc boyuttaki dolamin iki boyuttakinden farki iki boyutta elimizde bir skalar,
+tek sayi vardi, burada bir alan var. Yani bir alanin dolami yeni bir alan verir,
+her noktada yeni bir vektor elde ederiz (sag el kurali baglaminda bu vektor
+donusten -oona oranli- yukari cikan bir yonu gosterir). </p>
+<p>Ekler</p>
+<p>Dolam formülünü nasıl türetiriz? Bir vektör alanı $F = [F_1,F_2,F_3]$ için
+hesabı şu şekilde,</p>
+<p>$$
+\mathrm{curl} F = \left[\begin{array}{ccc} 
+\dfrac{\partial F_3}{\partial y} - \dfrac{\partial F_2}{\partial z} &amp; 
+\dfrac{\partial F_1}{\partial z} - \dfrac{\partial F_3}{\partial x} &amp; 
+\dfrac{\partial F_2}{\partial x} - \dfrac{\partial F_1}{\partial y} 
+\end{array}\right]
+\qquad (2)
+$$</p>
+<p>Bu hesap, isminin çağrıştırabileceği üzere bir vektör alanının döndürme etkisini
+özetler. Mesela içinde dalgalar, akımlar olan bir sıvıya ufak bir küre attık. Bu
+küre o sıvının hareketlerine, yani $F$'sine göre, belli bir şekilde dönmeye
+başlayabilir, bu dönüşü özetlemenin iyi bir yolu curl hesabıdır.</p>
+<p><img alt="" src="calc_multi_70_div_curl_lap_06.png" /></p>
+<p>Çizgi entegrali yardıma yetişiyor. Üç tane eksen üzerinden, o eksenler etrafında
+ufak bir dönme yolunun yaptığı işi ayrı ayrı hesaplayabiliriz, ve sonucu aynı
+boyutta bir vektörün boyutları olarak kabul edebiliriz, ve vektörün gösterdiği
+yön etrafında sağ el kuralı dönüşün nasıl olduğunu tarif eder, vektörün
+büyüklüğü ise dönüşün hızını. </p>
+<p>Hatırlarsak yapılan iş $W = \int_{t=a}^{t=b} F \cdot T \mathrm{d} s$ ile hesaplanır,
+$T$ ile $F$'nin üzerinde gidilen eğrinin yansımasına bakıyoruz, $\mathrm{d} s$ bu
+eğrinin ufak bir parçası [2, sf. 1153]. Aynı işlem $F \mathrm{d} \vec{r}$ ile de
+gösterilebilir.</p>
+<p>Devam edersek, şimdi diyelim ki $F$'nin ufak bir dikdörtgen etrafında yaptığı
+dönüşsel işi, dolaşımını (circulation) hesaplayacağız. Sonra dikdörtgeni limite
+götürüp sonsuz küçültünce bir analitik sonuca erişmiş olacağız.</p>
+<p>Bu hesabı her eksen için yapmak istiyoruz, önce $z$'den başlayalım, dolaşım $xy$
+düzleminde olacak [1, sf. 77].</p>
+<p><img alt="" src="calc_multi_70_div_curl_lap_07.png" />
+<img alt="" src="calc_multi_70_div_curl_lap_08.png" /></p>
+<p>Önce $C_B$ parçasını hesaplayalım. Üst sağdaki resimde görülüyor, ortaki
+noktanın kordinat değeri $x,y,z$, $C_B$ üzerinde $F$'nin bileşeni $F_x$, oradaki
+$F_x$ değeri $F_x(x,y-\frac{\Delta y}{2}, z)$. Bu kuvveti $C_B$ boyunca
+katedilen yol $\Delta x$ ile çarpıyoruz,</p>
+<p>$$
+\int_{C_B} F \cdot T \mathrm{d} s =
+\int_{C_B} F_x \mathrm{d} x \approx
+F_x \left( x,y-\frac{\Delta y}{2}, z \right) \Delta x
+$$</p>
+<p>$C_T$ icin</p>
+<p>$$
+\int_{C_T} F_x \mathrm{d} x \approx -F_x \left(x,y+\frac{\Delta y}{2}, z \right) \Delta x
+$$</p>
+<p>Yukarı ve aşağı gidişi hesaplamadık çünkü o yollar $F_x$'e dik, yapılan iş
+sıfır. Üstteki sonuçları toplarsak,</p>
+<p>$$
+\int_{C_T+C_B} F \cdot T \mathrm{d} s  = - \left[
+F_x \left( x,y+\frac{\Delta y}{2},z \right) -
+F_x \left( x,y-\frac{\Delta y}{2},z \right)
+\right] \Delta x
+$$</p>
+<p>$$
+= - \dfrac{
+\left[
+  F_x \left( x,y+\dfrac{\Delta y}{2},z \right) -
+  F_x \left( x,y-\dfrac{\Delta y}{2},z \right)
+\right]<br />
+}{\Delta y}
+\Delta x \Delta y
+$$</p>
+<p>$\Delta x \Delta y$ carpani tabii ki dikdortgenin alani. Onu sol tarafa alirsak,</p>
+<p>$$
+\frac{1}{\Delta S}\int_{C_T+C_B} F \cdot T \mathrm{d} s \approx
+- \dfrac{
+\left[
+  F_x \left( x,y+\dfrac{\Delta y}{2},z \right) -
+  F_x \left( x,y-\dfrac{\Delta y}{2},z \right)
+\right]<br />
+}{\Delta y}
+$$</p>
+<p>Benzer analizi dikdörtgenin sağ ve sol tarafına, $C_L$ ve $C_R$ için uygularsak,</p>
+<p>$$
+\frac{1}{\Delta S}\int_{C_L+C_R} F \cdot T \mathrm{d} s \approx
+- \dfrac{
+\left[
+  F_y \left( x+\dfrac{\Delta x}{2},y,z \right) -
+  F_y \left( x-\dfrac{\Delta x}{2},y,z \right)
+\right]<br />
+}{\Delta x}
+$$</p>
+<p>Son iki sonucu toplarız, $\Delta S$'nin limitini alırız, böylece dikdörtgen
+$x,y,z$ noktasına sonsuz küçültülmüş olur, ki bu durumda $\Delta x \to 9$ ve
+$\Delta y \to 0$, böylece nihai eriştiğimiz sonuç,</p>
+<p>$$
+\lim_{\Delta \to 0} \frac{1}{\Delta S} \oint F \cdot T \mathrm{d} s =
+\frac{\partial F_y}{\partial x} - \frac{\partial F_x}{\partial y}
+$$</p>
+<p>Entegralde $\int$ yerine $\oint$ kullandık ki dolaşım hesabı olduğu daha iyi
+belli olsun.</p>
+<p>Tabii bu tek eksen, $z$ ekseni etrafındaki dolaşım. Aynı işlemi diğer eksenlere
+de uygularsak,</p>
+<p><img alt="" src="calc_multi_70_div_curl_lap_09.png" />
+<img alt="" src="calc_multi_70_div_curl_lap_10.png" /></p>
+<p>Tüm bu bileşenleri bir araya koyunca (2)'de gösterilen curl vektörüne ulaşmış
+oluyoruz, $z$ ekseni etrafındaki 3. öğe, üstteki soldaki 2. sağdaki 1. öğe,</p>
+<p>$$
+\mathrm{curl} F = \left[\begin{array}{ccc} 
+\dfrac{\partial F_z}{\partial y} - \dfrac{\partial F_y}{\partial z} &amp; 
+\dfrac{\partial F_x}{\partial z} - \dfrac{\partial F_z}{\partial x} &amp; 
+\dfrac{\partial F_y}{\partial x} - \dfrac{\partial F_x}{\partial y} 
+\end{array}\right]
+$$</p>
+<p>$F_1,F_2,F_3$ yerine $F_x,F_y,F_z$ kullanmış olduk.</p>
 <p>[devam edecek]</p>
+<p>Kaynaklar</p>
+<p>[8] Schey, <em>Div, Grad, Curl, All That, 4th Ed</em></p>
+<p>[9] Thomas, <em>Thomas Calculus, 11th Ed</em></p>
           <br/><a href="../index.html">Yukarı</a>
         </section>          
       </div>

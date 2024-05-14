@@ -49,8 +49,8 @@ Bu HTML'e baktığımızda ufaltılmış resmi göreceğiz.
 ### Resim Üzeri Tıklama Kordinatı
 
 Resim bölgesi üzerindeki tıklama verisini Javascript üzerinden
-`önclıck` olayını bağlayarak bir fonksiyon ile alabiliriz. Altta bir örneği
-görülüyor,
+`onclick` olayına (event) bağlanan bir fonksiyon ile alabiliriz. Altta
+bir örneği görülüyor,
 
 ```
 <html> 
@@ -67,6 +67,8 @@ görülüyor,
   </body>
 </html>
 ```
+
+[Örnek](test2.html)
 
 
 

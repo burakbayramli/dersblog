@@ -509,6 +509,23 @@ almak için <code>get_prefs</code> geri yazmak için <code>save_cookie</code>.</
 </code></pre>
 </div>
 
+<p>Fakat dikkat, eğer üstteki kod <code>filanca.com</code> sitesi dışındaki başka
+bir siteden geliyorsa, mesela HTML/JS kodu <code>falanca.com</code>'da
+eriştiğimiz json <code>filanca.com</code>'da olabilir, o zaman çoğunlukla bu
+erişim CORS denilen bir hata verir, her site dışarıdan gelen kodlara
+programsal erişim sağlamak istemiyor. En garanti olan sitenin kendi
+servis ettiği json dosyalarına erişmektir, bu da izafi dizin erişimi
+ile yapılabilir, mesela <code>filanca.com/dir/ındex.html</code> içindeki Javascript
+aynı dizindeki json dosyasına <code>/dır/file1.json</code> ile erişir.</p>
+
+<p>Önbellekleme</p>
+
+<p>JSON dosyalarına bir kez erişildiğinde bu dosyalara ikinci erişim
+onbellekten veriyi alır, bir daha Internet'e gidiş olmaz. Bu hem
+programlama hem performans açısından yardımcı olur, farklı sayfalar
+aynı json dosyasına erişiyorsa ikinci ve sonraki erişimler hızla
+işleyecektir, çetrefil onbellekleme kodlarına gerek kalmaz.</p>
+
 <p>Ajax</p>
 
 <p>XMLHttpRequest ile Ajax çağrısı yapmak ta mümkündür. İlk kez bu
@@ -596,6 +613,38 @@ tabana yazılacak.  Servis tarafını Flask ile yazalım,</p>
 <span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
 </code></pre>
 </div>
+
+<h3>URL Parametresi Okumak</h3>
+
+<p>Servis tarafı kodlarında olduğu gibi pür istemci tarafında işleyen
+Javascript kodlarında da ÜRL sonuna eklenen parametreler
+okunabilir. Mesela bir ürün programı yazmışsak, ürün listesinden bir
+ürüne tıklayınca onun detaylarını ayrı bir <code>detay.html</code> sayfasında
+görmek isteyebilirim. Hangi ürüne baktığımı bu sayfaya bir parametre
+ile geçmek isterim, mesela <code>id=...</code> gibi. Tüm URL
+<code>/detay.html?id=12231</code> gibi bir çağrı olabilir.</p>
+
+<p>Parametreyi ÜRL'den almak için <code>location.search</code> çağrısından tüm URL'i
+alırım, ve parametre kısmını ayırırım, bunlar o sayfa yüklenir
+yüklenmez işleyen bir Javascript fonksiyonu içinde yapılabilir,</p>
+
+<pre><code>&lt;html&gt;
+  &lt;script&gt;
+    function detail() {
+      var id = location.search.split('id=')[1];
+      var s = `Gonderilen urun id ${id}`;
+      document.getElementById('output').innerHTML = s; 
+    }
+  &lt;/script&gt;    
+  &lt;body onload='detail()'&gt;
+    &lt;div id="output"&gt;
+    &lt;/div&gt;
+  &lt;/body&gt;
+
+&lt;/html&gt;
+</code></pre>
+
+<p><a href="detay.html?id=4444">Örnek</a></p>
 
 <h3>Tarih Objeleri</h3>
 

@@ -69,6 +69,3 @@ bir örneği görülüyor,
 ```
 
 [Örnek](test2.html)
-
-
-

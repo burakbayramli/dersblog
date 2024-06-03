@@ -32,8 +32,8 @@ function read_zip() {
 Üstteki kod CSV dosyasının her kaydının ayrı bir satırda ve
 kolonlarının virgül ile ayrılmış olduğunu farz ediyor, bu sebeple önce
 ters zip yapar, sonra yeni satır `\n` karakteri üzerinden ayırma
-(split) yapar, ve en son her elde edilen her satırda virgül üzerinden
-bir ayrım daha yapar. Bu işlem sonunda her satır işlenirken `tokens`
+(split) yapar, ve en son elde edilen her satırda virgül üzerinden bir
+ayrım daha yapar. Bu işlem sonunda her satır işlenirken `tokens`
 dizini icinde gerekli kolon bilgileri alinabilecektir.
 
 ### Girdi Tamamlamak (Autocomplete)

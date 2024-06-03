@@ -4,3 +4,5 @@
 
 [Web, HTML, Görüntü Dosyaları, Tıklama Kordinatları, Görsel Veri Gömmek](05/web_images.html)
 
+[Javascript - 2](06/javascript-2.html)
+

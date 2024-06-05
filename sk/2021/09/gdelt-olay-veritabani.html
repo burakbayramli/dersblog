@@ -158,6 +158,46 @@ https://twitchy.com/brettt-3136/2022/09/10/reporter-nevada-gubernatorial-candida
 fakat bu askeri değil, politika bağlamında sözel bir çekişme var. Demek
 ki GDELT her zaman işlemiyor, ek filtreleme yapmak gerekebilir.</p>
 
+<p>Ekler</p>
+
+<p>En son versiyon üzerinde işleyen kod alttadır, 20240602 tarihi için bir zıp
+dosyasının indirilmiş olduğunu kabul edelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">zipfile</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="s1">&#39;20240602.export.CSV.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;20240602.export.CSV&#39;</span><span class="p">),</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="n">cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;GLOBALEVENTID&quot;</span><span class="p">,</span> <span class="s2">&quot;SQLDATE&quot;</span><span class="p">,</span> <span class="s2">&quot;MonthYear&quot;</span><span class="p">,</span> <span class="s2">&quot;Year&quot;</span><span class="p">,</span>
+<span class="s2">&quot;FractionDate&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1CountryCode&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor1KnownGroupCode&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1EthnicCode&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Religion1Code&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor1Religion2Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Type1Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Type2Code&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor1Type3Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2CountryCode&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor2KnownGroupCode&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2EthnicCode&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Religion1Code&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor2Religion2Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Type1Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Type2Code&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor2Type3Code&quot;</span><span class="p">,</span> <span class="s2">&quot;IsRootEvent&quot;</span><span class="p">,</span> <span class="s2">&quot;EventCode&quot;</span><span class="p">,</span> <span class="s2">&quot;EventBaseCode&quot;</span><span class="p">,</span>
+<span class="s2">&quot;EventRootCode&quot;</span><span class="p">,</span> <span class="s2">&quot;QuadClass&quot;</span><span class="p">,</span> <span class="s2">&quot;GoldsteinScale&quot;</span><span class="p">,</span> <span class="s2">&quot;NumMentions&quot;</span><span class="p">,</span>
+<span class="s2">&quot;NumSources&quot;</span><span class="p">,</span> <span class="s2">&quot;NumArticles&quot;</span><span class="p">,</span> <span class="s2">&quot;AvgTone&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Geo_Type&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor1Geo_FullName&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Geo_CountryCode&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Geo_ADM1Code&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor1Geo_Lat&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Geo_Long&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor1Geo_FeatureID&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor2Geo_Type&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Geo_FullName&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Geo_CountryCode&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor2Geo_ADM1Code&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Geo_Lat&quot;</span><span class="p">,</span> <span class="s2">&quot;Actor2Geo_Long&quot;</span><span class="p">,</span>
+<span class="s2">&quot;Actor2Geo_FeatureID&quot;</span><span class="p">,</span> <span class="s2">&quot;ActionGeo_Type&quot;</span><span class="p">,</span> <span class="s2">&quot;ActionGeo_FullName&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ActionGeo_CountryCode&quot;</span><span class="p">,</span> <span class="s2">&quot;ActionGeo_ADM1Code&quot;</span><span class="p">,</span> <span class="s2">&quot;ActionGeo_Lat&quot;</span><span class="p">,</span>
+<span class="s2">&quot;ActionGeo_Long&quot;</span><span class="p">,</span> <span class="s2">&quot;ActionGeo_FeatureID&quot;</span><span class="p">,</span> <span class="s2">&quot;DATEADDED&quot;</span><span class="p">,</span><span class="s2">&quot;SOURCEURL&quot;</span><span class="p">];</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">cols</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Actor1Type1Code&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;MIL&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">EventCode</span><span class="o">==</span><span class="mi">154</span><span class="p">)]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;Actor1Geo_Lat&#39;</span><span class="p">,</span><span class="s1">&#39;Actor1Geo_Long&#39;</span><span class="p">,</span><span class="s1">&#39;SOURCEURL&#39;</span><span class="p">]]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;SOURCEURL&#39;</span><span class="p">],</span><span class="n">keep</span><span class="o">=</span><span class="s1">&#39;last&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">isnull</span><span class="p">(</span><span class="n">df2</span><span class="o">.</span><span class="n">Actor1Geo_Lat</span><span class="p">)</span><span class="o">==</span><span class="kc">False</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>Artık <code>df</code> içinde filtrelenmiş ve enlem, boylam ve haber kaynağının
+URL bağlantısını içeren bir veri sonucu vardır.</p>
+
 <p>Kaynaklar</p>
 
 <p>[1] [GDELT](http://data.gdeltproject.org/events/index.html)</p>

@@ -493,6 +493,28 @@ fonksiyonlar alttaki gibidir,</p>
 her sayfa kendine ait bilgiye bir sözlük üzerinden erişir. Çerezleri
 almak için <code>get_prefs</code> geri yazmak için <code>save_cookie</code>.</p>
 
+<h3>Alternatif Depolama Yöntemleri</h3>
+
+<p>Eğer çerez kullanmak istemiyorsak ya da kullanmak mümkün değil ise
+(bir keresinde siteme eklediğim reklam servisinin Javascript kodu site
+seviyesinde ne çerez bulursa onları siliyordu, uygulamamızın çerezi
+yok oluyordu), alternatif depolama yöntemleri vardır. Bunlardan kalıcı
+olanı <code>localStorage</code>, oturum bazında olanı <code>sessionStorage</code>.</p>
+
+<p>Her iki değişken her zaman kullanıma hazır durumdadır, ve anahtar /
+değer bazında çalışırlar. <code>setItem('anahtar','değer')</code> ile depolama
+yapılır, <code>.getİtem('anahtar')</code> ile depolanan değer geri alınır. Eğer
+<code>localStorage</code> kullanılmışsa tarayıcı kapatıldıktan sonra bile
+değerler sonraki ziyarette hatırlanır, <code>sessionStorage</code> ile oturum
+bitince değerler silinir.</p>
+
+<p>Önemli nokta, her iki depolama sisteminin de metin (string) bazlı
+depolama yapması, yani çetrefil obje mesela dizin, sözlük gibi
+depolayınca onu olduğu gibi geri alabilmeyi bekleyemeyiz, o yüzden her
+iki durumda da depolamadan önce <code>JSON.stringify</code> ile metne çevirip,
+geri okurken de <code>JSON.parse</code> ile gerekli objelere çevirim yapmamız
+gerekir.</p>
+
 <h3>XMLHttpRequest</h3>
 
 <p>Statik Dosya</p>

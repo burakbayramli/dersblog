@@ -7,14 +7,13 @@ etmek için komut satırı ortamında
 var math = require('./math.js');
 ```
 
-ve artık mesela `cos` çağırmak için `math.cos()` çağrısı yapılır, ve
-`node` ile script çağrılır. HTML sayfa bağlamında standard `src include`
-komutu gerekir. Yazının geri kalanı komut satırı farz edecek.
-
-Bir matris işlemi,
+ve artık mesela `cos` hesabı için `math.cos()` çağrısı yapılır, ve
+`node` ile script işletilir. HTML sayfa bağlamında standard `src
+include` komutu gerekir. Yazının geri kalanı komut satırı farz
+edecek. Bir matris işlemi,
 
 ```javascript
-let N = 20;
+N = 20;
 A = math.round(math.random([N,N]),5);
 B = math.round(math.random([N,N]),5);
 

@@ -6,3 +6,5 @@
 
 [Javascript - 2](06/javascript-2.html)
 
+[Math.js](06/mathjs.html)
+

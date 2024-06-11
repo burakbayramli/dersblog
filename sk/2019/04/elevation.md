@@ -232,11 +232,11 @@ plt.savefig('gltiles1.png')
 
 ![](gltiles1.png)
 
-Eger belli bir bolgeyi cekip cikartmak istiyorsak biraz daha ek islem
-gerekli. Mesela sol alt kose 35,25 sag ust kose 42,46 olacak sekilde
-(TR bolgesi) bir dikdortgenin icine dusen yukseklikleri istiyoruz. Bu
-durumda `lat`, `lon` vektorleri icindeki o alana dusen kordinat
-indislerini bulup, onlara gore `zm` matrisi icindeki o veriyi almak
+Eğer belli bir bölgeyi çekip çıkartmak istiyorsak biraz daha ek işlem
+gerekli. Mesela sol alt köşe 35,25 sağ üst köşe 42,46 olacak şekilde
+(TR bölgesi) bir dikdörtgenin içine düşen yükseklikleri istiyoruz. Bu
+durumda `lat`, `lon` vektörleri içindeki o alana düşen kordinat
+indislerini bulup, onlara göre `zm` matrisi içindeki o veriyi almak
 gerekir.
 
 Burada bize yardımcı olabilecek bir kod türü aslında görüntü işlem
@@ -359,3 +359,4 @@ Kaynaklar
 [7] [İmaj / Görüntü İşleme Teknikleri](https://burakbayramli.github.io/dersblog/sk/2023/06/imaj-isleme-teknikleri.html)
 
 [8] git@github.com:rl3/nodejs-globe-elevation.git
+

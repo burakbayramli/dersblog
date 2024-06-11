@@ -390,6 +390,36 @@ gibi görürsek görüntü işlem kütüphanelerinin küçültme, büyültme, b�
 </code></pre>
 </div>
 
+<p>Eğer Javascript ortamında GLOBE veri dosyalarını okuyup işlemek istiyorsak,</p>
+
+<pre><code>var url = "/vs/vs/all10/g10g";    
+fetch(url).then(res =&gt; res.arrayBuffer())
+    .then(arrayBuffer =&gt; {
+        byteArray = new Uint8Array(arrayBuffer);
+    })
+    .then(function(done) {
+        console.log('done');
+    // Alttaki bayt indix degeri fileIndex cagrisindan alinabilir
+        console.log(byteArray[33681360]);
+        console.log(byteArray[33681361]);
+        var buffer = new ArrayBuffer(2);
+        var Uint8View = new Uint8Array(buffer);
+        Uint8View[0] = byteArray[33681360];
+        Uint8View[1] = byteArray[33681361]
+        var Uint16View = new Uint16Array(buffer);
+        console.log(Uint16View[0]);     
+    })
+    .catch(error =&gt; {
+        console.log('error');           
+    });
+</code></pre>
+
+<p>gibi bir kalıp takip edebiliriz. Muhakkak her dosya parçası, <code>a10g</code>,
+<code>b10g</code> 100 MB civarı, bunları Internet'ten indirmek zaman alır. Fakat
+belki yerel bir uygulama var, ya da bahsedilen dosyalar parçalara
+bölündu, zaten ilk erişim sonrası ikinci, üçüncü erişimler onbellekten
+gelir diyorsak, bu durumda üstteki kod faydalı olabilir.</p>
+
 <p>Kaynaklar</p>
 
 <p>[1] [RBF](https://burakbayramli.github.io/dersblog/stat/stat<em>175</em>rbf/dairesel<em>baz</em>fonksiyonlari<strong>radial<em>basis</em>functions<em>rbf</strong>yukseklik</em>verisi_daglar.html)</p>

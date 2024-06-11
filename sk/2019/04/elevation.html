@@ -76,7 +76,8 @@ getirmek lazım, bundan sonra proje API kodunu kullanıp ES çağrılabilir.</p>
 veriyor; onun sayfalarından "kazıyarak" istenen veriyi alabiliriz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">re</span>
+<pre><span></span><code><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">re</span>
 
 <span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://veloroutes.org/elevation/?&quot;</span> <span class="o">+</span> \
       <span class="s2">&quot;location=41.40000%2C28.15000&amp;units=m&quot;</span>
@@ -93,66 +94,12 @@ veriyor; onun sayfalarından "kazıyarak" istenen veriyi alabiliriz,</p>
 </code></pre>
 </div>
 
-<p>Bir diğeri elevation.racemap.com adresinden; bu arkadaşlar da bedava
-servis veriyorlar, Curl kullanıp</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="err">!</span> <span class="n">curl</span> <span class="o">-</span><span class="n">d</span> <span class="s1">&#39;[[51.3, 13.4], [51.4, 13.3]]&#39;</span> <span class="o">-</span><span class="n">XPOST</span> \
-  <span class="o">-</span><span class="n">H</span> <span class="s1">&#39;Content-Type: application/json&#39;</span> \
-  <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">elevation</span><span class="o">.</span><span class="n">racemap</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">api</span>
-</code></pre>
-</div>
-
-<div class="codehilite">
-<pre><span></span><code>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100    37  100     9  100    28      8     27  0:00:01  0:00:01 --:--:--    27100    37  100     9  100    28      8     27  0:00:01  0:00:01 --:--:--    27
-[101,100]
-</code></pre>
-</div>
-
-<p>Bu komutu tabii ki sarmalayıp sonucu bir yere yazdırıp Python ile
-güzel liste döndürmesi için ayarlayabiliriz. Ya da <code>requests</code>
-kullanarak aynı çağrıyı yapabiliriz,</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
-
-<span class="n">headers</span> <span class="o">=</span> <span class="p">{</span>  <span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,</span> <span class="p">}</span>
-<span class="n">data</span> <span class="o">=</span> <span class="s1">&#39;[[51.3, 13.4], [51.4, 13.3]]&#39;</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://elevation.racemap.com/api&#39;</span><span class="p">,</span>
-                         <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-</code></pre>
-</div>
-
 <p>Daha Çetrefil Kullanım</p>
 
 <p>Alttaki örnekte bir kordinat alanıda 7 x 7 büyüklüğünde bir ızgara yaratıyoruz,
 o ızgara öğe kordinatları için yükseklik verisini alıyoruz, ve RBF tekniği [1]
 ile aradeğerleme (interpolation) yaparak yüksekliği yaklaşık şekilde temsil
 ediyoruz. </p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span>
-
-<span class="k">def</span> <span class="nf">get_elev_data</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
-    <span class="n">chunk</span> <span class="o">=</span> <span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">coords</span><span class="p">]</span>
-    <span class="n">data</span> <span class="o">=</span> <span class="s2">&quot;[&quot;</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">x</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">chunk</span><span class="p">):</span>
-        <span class="n">data</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">chunk</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span>
-    <span class="n">data</span> <span class="o">+=</span> <span class="s2">&quot;]&quot;</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="s1">&#39;https://elevation.racemap.com/api&#39;</span><span class="p">,</span>
-                             <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;Content-Type&#39;</span><span class="p">:</span> <span class="s1">&#39;application/json&#39;</span><span class="p">,},</span>
-                             <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-    <span class="n">res</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">res</span>
-</code></pre>
-</div>
 
 <p>Veri alındı, şimdi RBF,</p>
 
@@ -161,6 +108,10 @@ ediyoruz. </p>
 
 <span class="n">latlow</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span> <span class="n">lathigh</span> <span class="o">=</span> <span class="mi">37</span>
 <span class="n">lonlow</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span> <span class="n">lonhigh</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="k">def</span> <span class="nf">get_elev_data</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+    <span class="o">...</span>
+
 
 <span class="n">D</span> <span class="o">=</span> <span class="mi">7</span>
 <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lonlow</span><span class="p">,</span><span class="n">lonhigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
@@ -274,6 +225,8 @@ civarı, A,B,C,D bölge dosyaları bu zip içinde, "All Tiles in One .zip
 file" seçeneği. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
 olacaktır, bazıları daha az, altta her bölgenin boyutları var.</p>
 
+<p>Python</p>
+
 <p>Zip dosyasını açalım, alttaki kod <code>g10g</code> bölgesini okuyup haritalıyor,
 [5] kodu örnek alındı. </p>
 
@@ -369,6 +322,74 @@ gibi görürsek görüntü işlem kütüphanelerinin küçültme, büyültme, b�
 
 <p><img src="gltiles2.jpg" alt="" /></p>
 
+<p>Javascript</p>
+
+<p>Alttaki kod [8] kod deposunu baz almıştır, komut satırında <code>node</code> ile işletilebilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">path</span><span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">fs</span><span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">resolution</span><span class="o">=</span> <span class="mf">120</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">dataFiles</span><span class="o">=</span> <span class="p">[</span>
+    <span class="c1">// ...</span>
+    <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;g10g&#39;</span><span class="p">,</span> <span class="nx">latMin</span><span class="o">:</span>     <span class="mf">0</span><span class="p">,</span> <span class="nx">latMax</span><span class="o">:</span>     <span class="mf">50</span><span class="p">,</span> <span class="nx">lngMin</span><span class="o">:</span>      <span class="mf">0</span><span class="p">,</span> <span class="nx">lngMax</span><span class="o">:</span>     <span class="mf">90</span><span class="p">,</span> <span class="nx">elMin</span><span class="o">:</span>   <span class="o">-</span><span class="mf">407</span><span class="p">,</span> <span class="nx">elMax</span><span class="o">:</span>    <span class="mf">8752</span><span class="p">,</span> <span class="nx">columns</span><span class="o">:</span>    <span class="mf">10800</span><span class="p">,</span> <span class="nx">rows</span><span class="o">:</span>   <span class="mf">6000</span> <span class="p">}</span>
+    <span class="c1">// ...</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">baseDir</span> <span class="o">=</span> <span class="s1">&#39;./all10&#39;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">findFile</span><span class="p">(</span> <span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">dataFiles</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">df</span><span class="o">=</span> <span class="nx">dataFiles</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">latMin</span> <span class="o">&lt;=</span> <span class="nx">lat</span> <span class="o">&amp;&amp;</span> <span class="nx">df</span><span class="p">.</span><span class="nx">latMax</span> <span class="o">&gt;</span> <span class="nx">lat</span> <span class="o">&amp;&amp;</span> <span class="nx">df</span><span class="p">.</span><span class="nx">lngMin</span> <span class="o">&lt;=</span> <span class="nx">lng</span> <span class="o">&amp;&amp;</span> <span class="nx">df</span><span class="p">.</span><span class="nx">lngMax</span> <span class="o">&gt;</span> <span class="nx">lng</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">df</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">fileIndex</span><span class="p">(</span> <span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">fileEntry</span><span class="p">,</span> <span class="nx">resolution</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">column</span><span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">lng</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">row</span><span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">lat</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">rowIndex</span><span class="o">=</span> <span class="nx">row</span> <span class="o">-</span> <span class="nx">fileEntry</span><span class="p">.</span><span class="nx">latMin</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">columnIndex</span><span class="o">=</span> <span class="nx">column</span> <span class="o">-</span> <span class="nx">fileEntry</span><span class="p">.</span><span class="nx">lngMin</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">index</span><span class="o">=</span> <span class="p">((</span><span class="nx">fileEntry</span><span class="p">.</span><span class="nx">rows</span> <span class="o">-</span> <span class="nx">rowIndex</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)</span> <span class="o">*</span> <span class="nx">fileEntry</span><span class="p">.</span><span class="nx">columns</span> <span class="o">+</span> <span class="nx">columnIndex</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">index</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">openFile</span><span class="p">(</span> <span class="nx">name</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">openSync</span><span class="p">(</span><span class="nx">baseDir</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">readNumberFromFile</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">buffer</span><span class="o">=</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">fd</span> <span class="o">=</span> <span class="nx">openFile</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readSync</span><span class="p">(</span><span class="nx">fd</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="nx">position</span><span class="p">)</span> <span class="o">!==</span> <span class="mf">2</span> <span class="p">)</span> <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Could not fetch value from file&#39;</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">int16</span><span class="o">=</span> <span class="nx">buffer</span><span class="p">.</span><span class="nx">readInt16LE</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+
+    <span class="c1">// return 0 for oceans</span>
+    <span class="k">return</span> <span class="nx">int16</span> <span class="o">===</span> <span class="o">-</span><span class="mf">500</span> <span class="o">?</span> <span class="mf">0</span> <span class="o">:</span> <span class="nx">int16</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getElevation</span><span class="p">(</span> <span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">onError</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">fileEntry</span><span class="o">=</span> <span class="nx">findFile</span><span class="p">(</span><span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">result</span><span class="o">=</span> <span class="nx">readNumberFromFile</span><span class="p">(</span><span class="nx">fileEntry</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">fileIndex</span><span class="p">(</span><span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">fileEntry</span><span class="p">,</span> <span class="nx">resolution</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">getElevation</span><span class="p">(</span><span class="mf">29</span><span class="p">,</span><span class="mf">37</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
+</code></pre>
+</div>
+
 <p>Kaynaklar</p>
 
 <p>[1] [RBF](https://burakbayramli.github.io/dersblog/stat/stat<em>175</em>rbf/dairesel<em>baz</em>fonksiyonlari<strong>radial<em>basis</em>functions<em>rbf</strong>yukseklik</em>verisi_daglar.html)</p>
@@ -384,6 +405,8 @@ gibi görürsek görüntü işlem kütüphanelerinin küçültme, büyültme, b�
 <p>[6] [Yükseklik Verisini Kontur olarak Folium Haritasında Göstermek](../../2021/11/yukseklik-kontur-folium-harita.html)</p>
 
 <p>[7] [İmaj / Görüntü İşleme Teknikleri](https://burakbayramli.github.io/dersblog/sk/2023/06/imaj-isleme-teknikleri.html)</p>
+
+<p>[8] git@github.com:rl3/nodejs-globe-elevation.git</p>
 
           <br/><a href="../index.html">Yukarı</a>
         </section>          

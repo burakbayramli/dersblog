@@ -344,7 +344,7 @@ console.log(res);
 
 Eğer Javascript ortamında GLOBE veri dosyalarını okuyup işlemek istiyorsak,
 
-```
+```javascript
 var url = "/vs/vs/all10/g10g";    
 fetch(url).then(res => res.arrayBuffer())
     .then(arrayBuffer => {
@@ -353,7 +353,7 @@ fetch(url).then(res => res.arrayBuffer())
     .then(function(done) {
         console.log('done');
         // Alttaki indis degeri enlem,boylam icin fileIndex
-	// cagrisindan alinabilir, ornek 37,29 icin olan degerler bunlar
+        // cagrisindan alinabilir, ornek 37,29 icin olan degerler bunlar
         console.log(byteArray[33681360]);
         console.log(byteArray[33681361]);
         var buffer = new ArrayBuffer(2);
@@ -395,4 +395,8 @@ Kaynaklar
 [8] <a href="https://github.com/rl3/nodejs-globe-elevation">nodejs-globe-elevation</a>
 
 [9] <a href="https://github.com/burakbayramli/nomadicterrain/blob/main/static/elev/elev.js">Github</a>
+
+
+
+
 

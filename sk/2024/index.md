@@ -4,6 +4,8 @@
 
 [Web, HTML, Görüntü Dosyaları, Tıklama Kordinatları, Görsel Veri Gömmek](05/web_images.html)
 
+[Javascript Fetch, Paralellik, Kapsam İsteği (Range Request)](06/fetch-range-request.html)
+
 [Javascript - 2](06/javascript-2.html)
 
 [Math.js](06/mathjs.html)

@@ -422,8 +422,51 @@ gibi görürsek görüntü işlem kütüphanelerinin küçültme, büyültme, b�
 <p>Muhakkak her dosya parçası, <code>a10g</code>, <code>b10g</code> 100 MB civarı, bunları
 Internet'ten indirmek zaman alır. Fakat belki yerel web uygulaması
 yazdık, ya da bahsedilen dosyalar parçalara bölündü ve parça parça
-alınıp önbelleğe alıyoruz, üstteki koda bu tür uzatmalar yapılabilir,
-[9] kodunda parçalı okuma yaklaşımını görüyoruz.</p>
+alınıp önbelleğe alıyoruz, üstteki koda bu tür uzatmalar yapılabilir.</p>
+
+<p>Bir diğer seçenek (belki bu en iyisi) kapsam isteği (range request)
+kavramını kullanmak. Kİ ile çoğu statik web servisinin ne kadar büyük
+olursa olsun servis ettiği dosyalara noktasal erişim elde edebiliyoruz.
+Kİ web standartının bir parçası, yani çoğu web servisi (Apaçhe gibi)
+bu tür erişimi sağlayacaktır, böylece dosya <code>data.bin</code> diyelim, 1 GB olsa
+bile kapsam isteği ile 1000'inci ve 1010'uncu baytları arasındaki ufak
+bölgeyi çekip çıkartabiliyoruz.</p>
+
+<p>GLOBE verisine erişim için bu çok faydalı çünkü zaten üstte görüldüğü
+gibi o veriye de baytsal indis vererek erişim yapıyoruz. O zaman o
+erişimi kapsam isteği haline çevirirsek bellege büyük dosyalar almadan
+direk erişim yapabiliriz. Alttaki kod bunu gösteriyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/static/elev/data/g10g2&quot;</span><span class="p">;</span>
+    <span class="c1">// g10g dosyalari dort parcaya bolundu, bu durumda 33681360-33681361</span>
+    <span class="c1">// erisimi ikinci ufak parcada 1281360-1281361 erisimine tekabul eder</span>
+    <span class="c1">// aslinda dort parcaya bolmeye gerek yoktu direk g10g uzerinde de</span>
+    <span class="c1">// erisim yapabilirdik fakat Github dosya limiti icin boyle yapmak gerekti</span>
+    <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s1">&#39;content-type&#39;</span><span class="o">:</span> <span class="s1">&#39;multipart/byteranges&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;range&#39;</span><span class="o">:</span> <span class="s1">&#39;bytes=1281360-1281361&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="mf">1</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint16Array</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+    <span class="p">});</span>
+
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Bu kod çıktı olarak 756 (metre) değerini basacaktır.</p>
 
 <p>Kaynaklar</p>
 

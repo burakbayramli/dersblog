@@ -308,45 +308,45 @@ dosyaları içinde. Kod kabaca soyle,</p>
     <span class="kd">var</span> <span class="nx">stok_hits</span> <span class="o">=</span> <span class="p">{}</span>
 
     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mf">0</span><span class="p">;</span> <span class="nx">i</span><span class="o">&lt;</span><span class="nx">stoks</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="kd">var</span> <span class="nx">tok</span> <span class="o">=</span> <span class="nx">stoks</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
-    <span class="kd">var</span> <span class="nx">letter_dict</span><span class="p">;</span>
-    <span class="kd">var</span> <span class="nx">firstLetter</span> <span class="o">=</span> <span class="nx">tok</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="sb">`/static/skidx/invidx-</span><span class="si">${</span><span class="nx">firstLetter</span><span class="si">}</span><span class="sb">.json`</span><span class="p">;</span>
-    <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
-        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
-        <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="p">=&gt;</span> <span class="nx">letter_dict</span> <span class="o">=</span> <span class="nx">data</span> <span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">tok</span> <span class="o">=</span> <span class="nx">stoks</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="kd">var</span> <span class="nx">letter_dict</span><span class="p">;</span>
+        <span class="kd">var</span> <span class="nx">firstLetter</span> <span class="o">=</span> <span class="nx">tok</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="mf">1</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="sb">`/static/skidx/invidx-</span><span class="si">${</span><span class="nx">firstLetter</span><span class="si">}</span><span class="sb">.json`</span><span class="p">;</span>
+        <span class="nx">await</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">)</span>
+            <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">json</span><span class="p">())</span>
+            <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">data</span> <span class="p">=&gt;</span> <span class="nx">letter_dict</span> <span class="o">=</span> <span class="nx">data</span> <span class="p">);</span>
 
-    <span class="k">if</span> <span class="p">(</span><span class="nx">letter_dict</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">tok</span><span class="p">))</span> <span class="p">{</span>
-        <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">letter_dict</span><span class="p">[</span><span class="nx">tok</span><span class="p">]).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">article</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="p">(</span><span class="nx">stok_hits</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">article</span><span class="p">))</span> <span class="p">{</span>
-            <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">article</span><span class="p">]</span> <span class="o">=</span> <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">article</span><span class="p">]</span> <span class="o">+</span> <span class="nx">letter_dict</span><span class="p">[</span><span class="nx">tok</span><span class="p">][</span><span class="nx">article</span><span class="p">];</span>
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">article</span><span class="p">]</span> <span class="o">=</span> <span class="nx">letter_dict</span><span class="p">[</span><span class="nx">tok</span><span class="p">][</span><span class="nx">article</span><span class="p">];</span>
-        <span class="p">}</span>
-        <span class="p">});</span>     
-    <span class="p">}</span>   
+        <span class="k">if</span> <span class="p">(</span><span class="nx">letter_dict</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">tok</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nb">Object</span><span class="p">.</span><span class="nx">keys</span><span class="p">(</span><span class="nx">letter_dict</span><span class="p">[</span><span class="nx">tok</span><span class="p">]).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">article</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nx">stok_hits</span><span class="p">.</span><span class="nx">hasOwnProperty</span><span class="p">(</span><span class="nx">article</span><span class="p">))</span> <span class="p">{</span>
+                    <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">article</span><span class="p">]</span> <span class="o">=</span> <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">article</span><span class="p">]</span> <span class="o">+</span> <span class="nx">letter_dict</span><span class="p">[</span><span class="nx">tok</span><span class="p">][</span><span class="nx">article</span><span class="p">];</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">article</span><span class="p">]</span> <span class="o">=</span> <span class="nx">letter_dict</span><span class="p">[</span><span class="nx">tok</span><span class="p">][</span><span class="nx">article</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">});</span>     
+        <span class="p">}</span>       
     <span class="p">}</span>
 
     <span class="kd">var</span> <span class="nx">keyValues</span> <span class="o">=</span> <span class="p">[]</span>
 
     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">key</span> <span class="k">in</span> <span class="nx">stok_hits</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">keyValues</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">])</span>
+        <span class="nx">keyValues</span><span class="p">.</span><span class="nx">push</span><span class="p">([</span> <span class="nx">key</span><span class="p">,</span> <span class="nx">stok_hits</span><span class="p">[</span><span class="nx">key</span><span class="p">]</span> <span class="p">])</span>
     <span class="p">}</span>
 
     <span class="nx">keyValues</span><span class="p">.</span><span class="nx">sort</span><span class="p">(</span><span class="kd">function</span> <span class="nx">compare</span><span class="p">(</span><span class="nx">kv1</span><span class="p">,</span> <span class="nx">kv2</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="nx">kv2</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">kv1</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> 
+        <span class="k">return</span> <span class="nx">kv2</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">-</span> <span class="nx">kv1</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> 
     <span class="p">})</span>
 
     <span class="nx">N</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">min</span><span class="p">(</span><span class="mf">20</span><span class="p">,</span><span class="nx">keyValues</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
     <span class="kd">var</span> <span class="nx">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
     <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span><span class="o">=</span><span class="mf">0</span><span class="p">;</span><span class="nx">i</span><span class="o">&lt;</span><span class="nx">N</span><span class="p">;</span><span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nx">out</span> <span class="o">+=</span>
-        <span class="s1">&#39;&lt;p&gt;&lt;a target=&quot;_blank&quot; href=&quot;&#39;</span> <span class="o">+</span>
-        <span class="s1">&#39;https://burakbayramli.github.io&#39;</span> <span class="o">+</span> <span class="nx">keyValues</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="o">+</span>
-        <span class="nx">keyValues</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">+</span>
-        <span class="s1">&#39;&lt;/a&gt;&lt;/p&gt;&#39;</span><span class="p">;</span>
+        <span class="nx">out</span> <span class="o">+=</span>
+            <span class="s1">&#39;&lt;p&gt;&lt;a target=&quot;_blank&quot; href=&quot;&#39;</span> <span class="o">+</span>
+            <span class="s1">&#39;https://burakbayramli.github.io&#39;</span> <span class="o">+</span> <span class="nx">keyValues</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&#39;</span> <span class="o">+</span>
+            <span class="nx">keyValues</span><span class="p">[</span><span class="nx">i</span><span class="p">][</span><span class="mf">0</span><span class="p">]</span> <span class="o">+</span>
+            <span class="s1">&#39;&lt;/a&gt;&lt;/p&gt;&#39;</span><span class="p">;</span>
 
-    <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">out</span><span class="p">;</span>
+        <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">).</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="nx">out</span><span class="p">;</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>

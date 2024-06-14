@@ -246,7 +246,7 @@ def write_to_page():
 
 ### Web Kodlaması, Javascript
 
-Ustteki kodun benzeri Javascript ile soyle kodlanabilir,
+Üstteki kodun benzeri Javascript ile şöyle kodlanabilir,
 
 ```javascript
 async function searchText() {
@@ -311,4 +311,7 @@ Kaynaklar
 [3] <a href="https://github.com/burakbayramli/classnotes">Github</a>
 
 [4] <a href="https://towardsdatascience.com/benchmarking-python-nlp-tokenizers-3ac4735100c5">Benchmarking Python NLP Tokenizers</a>
+
+
+
 

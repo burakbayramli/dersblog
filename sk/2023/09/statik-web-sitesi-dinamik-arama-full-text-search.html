@@ -221,7 +221,7 @@ liste üzerinde bu ağırlık bazlı sıralama yaparız.</p>
 </code></pre>
 </div>
 
-<h3>Web Kodlaması</h3>
+<h3>Web Kodlaması, Pyscript</h3>
 
 <p>Eğer üstteki arama metotunu uygulama servisi (app server) olmadan
 kodlamak istiyorsak, yani sadece PyScript (ya da Javascript) ve servis
@@ -240,16 +240,62 @@ tersyüz edilmiş indis dosyası <code>invidx-a.json</code>, 'b' için
 kelime aranıyorsa bu ortalama 1 MB JSON dosya indirilmesi demektir,
 hızlı bir şekilde yapılabilir.</p>
 
-<p>Bahsedilen yaklaşımı bu site için kodladık, sonuçları [2]'de görebiliriz.</p>
+<p>Bahsedilen yaklaşımı bu site için kodladık, sonuçları [2]'de
+görebiliriz. Kodlar Github deposunda [3] <code>invidx.py</code> ve <code>sk/ara.html</code>
+dosyaları içinde. Kod kabaca soyle,</p>
 
-<p>Kodlar Github deposunda [3] <code>invidx.py</code> ve <code>sk/ara.html</code> dosyaları
-içinde.</p>
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">pyodide.http</span> <span class="kn">import</span> <span class="n">open_url</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">def</span> <span class="nf">write_to_page</span><span class="p">():</span>
+   <span class="n">manual_div</span> <span class="o">=</span> <span class="n">Element</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">)</span>
+   <span class="n">search</span> <span class="o">=</span> <span class="n">Element</span><span class="p">(</span><span class="s2">&quot;search&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">value</span>
+   <span class="n">search</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ç&quot;</span><span class="p">,</span><span class="s2">&quot;c&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ö&quot;</span><span class="p">,</span><span class="s2">&quot;o&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ğ&quot;</span><span class="p">,</span><span class="s2">&quot;g&quot;</span><span class="p">)</span>
+   <span class="n">search</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ı&quot;</span><span class="p">,</span><span class="s2">&quot;i&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ü&quot;</span><span class="p">,</span><span class="s2">&quot;u&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ş&quot;</span><span class="p">,</span><span class="s2">&quot;s&quot;</span><span class="p">)</span>
+   <span class="n">stok</span> <span class="o">=</span> <span class="n">search</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+   <span class="n">stok_hits</span> <span class="o">=</span> <span class="p">{}</span>
+
+   <span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+
+   <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://burakbayramli.github.io&quot;</span>
+
+   <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">stok</span><span class="p">:</span>
+      <span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s1">&#39;/idx/invidx-</span><span class="si">%s</span><span class="s1">.json&#39;</span> <span class="o">%</span> <span class="n">tok</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+      <span class="n">df</span> <span class="o">=</span> <span class="n">open_url</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+      <span class="n">letter_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">getvalue</span><span class="p">())</span>
+      <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">letter_dict</span><span class="p">:</span>
+         <span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">=</span> <span class="n">letter_dict</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span>
+         <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">letter_dict</span><span class="p">[</span><span class="n">tok</span><span class="p">]))</span>
+
+   <span class="n">u</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([])</span>
+   <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span> <span class="n">u</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="o">*</span><span class="n">results</span><span class="p">)</span>
+   <span class="n">hits</span> <span class="o">=</span> <span class="p">[]</span>        
+   <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">u</span><span class="p">:</span>
+      <span class="n">hits</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">f</span><span class="p">,</span><span class="nb">sum</span><span class="p">([</span><span class="n">stok_hits</span><span class="p">[</span><span class="n">tok</span><span class="p">][</span><span class="n">f</span><span class="p">]</span> <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">stok</span><span class="p">])])</span>
+
+   <span class="n">sorted_hits</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">)),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">hits</span><span class="p">[</span><span class="n">x</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+   <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>         
+   <span class="n">s1</span> <span class="o">=</span> <span class="s1">&#39;&lt;p&gt;&lt;a target=&#39;</span><span class="n">_blank</span><span class="s1">&#39; href=&quot;&#39;</span> 
+   <span class="n">s2</span> <span class="o">=</span> <span class="s1">&#39;&quot;&gt;</span><span class="si">%s</span><span class="s1">&lt;/a&gt;&lt;/p&gt;&#39;</span>
+   <span class="n">N</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">hits</span><span class="p">))</span>
+   <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+      <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">+</span> <span class="n">s1</span> <span class="o">+</span> <span class="n">base_url</span> <span class="o">+</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="n">hits</span><span class="p">[</span><span class="n">sorted_hits</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.md&quot;</span><span class="p">,</span><span class="s2">&quot;.html&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="n">s2</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">hits</span><span class="p">[</span><span class="n">sorted_hits</span><span class="p">[</span><span class="n">i</span><span class="p">]][</span><span class="mi">0</span><span class="p">])</span>
+
+   <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;No Results&quot;</span>
+   <span class="n">manual_div</span><span class="o">.</span><span class="n">element</span><span class="o">.</span><span class="n">innerHTML</span> <span class="o">=</span> <span class="n">out</span>
+</code></pre>
+</div>
+
+<h3>Web Kodlaması, Javascript</h3>
 
 <p>Kaynaklar</p>
 
 <p>[1] <a href="pyscript.html">PyScript</a></p>
-
-<p>[2] <a href="../../ara.html">Blog Arama Sayfasi</a></p>
 
 <p>[3] <a href="https://github.com/burakbayramli/classnotes">Github</a></p>
 

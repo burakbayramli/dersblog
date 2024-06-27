@@ -15,7 +15,7 @@ görüntüsünü taşıyan programlara girmeden Web üzerinden
 `webfilebrowser` ile bunları yapabiliyoruz.
 
 İlk hali ile kod yerel kullanım için hazır. Ağdaki diğer makinaların
-erişimini sağlamak için `app.py` daki kod, mesela 192.168.1.1 için
+erişimini sağlamak için `app.py` daki kod, mesela 192.168.1.2 için
 
 ```
 app.run(host="192.168.1.2",port=8080)
@@ -51,4 +51,6 @@ ile alınabilir.
 `192.168.` adresleri dışarından görülmezler, bu sebeple yerel
 kullanımları güvenlidir.  Hatta dış Internet bağlantımızı kessek bile
 yerel bağlantılar, DHCP hala yerel ortamda işlemeye devam edecektir.
+
+
 

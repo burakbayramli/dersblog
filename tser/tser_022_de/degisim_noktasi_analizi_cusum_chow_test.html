@@ -198,6 +198,29 @@ p degeri = 9.40286063455531e-07
 
 <p>Hesaplanan p değeri çok küçük, ve 0.05'ten daha az, demek ki hipotez
 reddedildi. Demek ki hakikaten 1973'te bir değişim olmuş!</p>
+<p>Paket</p>
+<p><code>pip install chow_test</code> ile kurulabilecek bir paket var [10], bu paketin
+kullanımı,</p>
+<pre><code class="python">import chow_test, pandas as pd
+
+df = pd.DataFrame({'x': [1, 1, 2, 3, 4, 4, 5, 5, 6, 7, 7, 8, 8, 9, 10, 10,
+                         11, 12, 12, 13, 14, 15, 15, 16, 17, 18, 18, 19, 20, 20],
+                   'y': [3, 5, 6, 10, 13, 15, 17, 14, 20, 23, 25, 27, 30, 30, 31,
+                         33, 32, 32, 30, 32, 34, 34, 37, 35, 34, 36, 34, 37, 38, 36]})
+print (df)
+res = chow_test.chow_test(df['y'], df['x'],15,16,.05)
+print (df.iloc[15])
+print (res)
+</code></pre>
+
+<pre><code>Reject the null hypothesis of equality of regression coefficients in the two periods.
+Chow Statistic: 37.96716203561837, P_value: 2.6531641550420204e-08
+x    10
+y    33
+Name: 15, dtype: int64
+(37.96716203561837, 2.6531641550420204e-08)
+</code></pre>
+
 <p>Değişim Noktasını Bulmak</p>
 <p>Eğer değişim anı 1973'ü bilmeseydik onu nasıl ortaya çıkartırdık? Bir
 yaklaşıma göre [5] tüm seneleri teker teker deneyerek Chow testini ardı
@@ -376,6 +399,10 @@ gözüküyor herhalde. Kırmızı noktalar ise alarm anları olarak tanımlanmı
 <p>[6] Bayramlı, <em>Zaman Serileri, Sinüssel Regresyon (Sinusoidal Regression)</em></p>
 <p>[7] Bayramlı, <em>Istatistik, Testlere devam</em></p>
 <p>[8] Bayramlı, <em>Istatistik, Değişim Noktası Analizi</em></p>
+<p>[9] Woroniuk, <em>Chow test</em>,
+    <a href="https://github.com/David-Woroniuk/chowtest">https://github.com/David-Woroniuk/chowtest</a></p>
+<p>[10] Bobbitt, <em>How to Perform a Chow Test in Python</em>,
+    <a href="https://www.statology.org/chow-test-in-python/">https://www.statology.org/chow-test-in-python/</a></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

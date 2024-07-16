@@ -82,6 +82,51 @@ yazma izni yoktur, fakat eğer zip çok büyük değilse tarayıcı üstteki
 kodla zip indirip, içindeki dosyayı açıp onu rahat bir şekilde
 tarayıp, işlemini yapabilir.</p>
 
+<h3>Düzenli İfadeler (Regex)</h3>
+
+<p>Regex desteği dil seviyesinde dahil edilmiş, ek paket dahil etmeye
+gerek yok. İki yana yatik çubuk arasında bilinen regex ifadeleri
+kullanılabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kr">const</span> <span class="nx">re</span> <span class="o">=</span> <span class="sr">/d(b+)d/g</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="s2">&quot;cdbbdbsbza&quot;</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">re</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">s</span><span class="p">));</span>
+</code></pre>
+</div>
+
+<pre><code>[ 'dbbd', 'bb', index: 1, input: 'cdbbdbsbza' ]
+</code></pre>
+
+<p>Sonuç bir liste olarak geldi, ilk öğe uyan tüm ifade için, ikinci öğe
+ifadenin uyan parantez içindeki kısmı, <code>g</code> ile global bir uydurma
+istediğimizi belirtiyoruz.</p>
+
+<p>Üstteki örnek tek bir uyumu gösterdi, eğer aynı ifade metin içinde
+birden çok yere uysaydı? Bu durumda sonuçları gezmek gerekiyor,
+<code>re.exeç</code> global bir yerde / değişkende o uyum listesinde nerede
+olduğunu hatırlıyor, aynı çağrıyı birkaç kez yapınca farklı sonuçlar
+gelecek, sonuçlar bitince <code>nüll</code> döndürülüyor, <code>while</code> ile bunu test
+ederen döngüden çıkıyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kr">const</span> <span class="nx">re</span> <span class="o">=</span> <span class="sr">/d(b+)d/g</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="s2">&quot;cdbbdbsbzaaaadbbbbbbd&quot;</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">result</span><span class="p">;</span>
+<span class="k">while</span><span class="p">(</span><span class="nx">result</span> <span class="o">=</span> <span class="nx">re</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span> 
+</code></pre>
+</div>
+
+<pre><code>[ 'dbbd', 'bb', index: 1, input: 'cdbbdbsbzaaaadbbbbbbd' ]
+[ 'dbbbbbbd',
+  'bbbbbb',
+  index: 13,
+  input: 'cdbbdbsbzaaaadbbbbbbd' ]
+</code></pre>
+
 <h3>Girdi Tamamlamak (Autocomplete)</h3>
 
 <p>HTML sayfasındaki bir giriş kutusuna girilen birkaç kelime sonrası

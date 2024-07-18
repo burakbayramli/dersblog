@@ -127,6 +127,15 @@ cikartmak, mesela 100. saniyeden baslayarak 20 saniyelik kisim,</p>
 
 <p>Genisligi 640 yap, geri kalan her seyi ona gore ayarla dedik.</p>
 
+<p>Aydinlik (brightness), renkleri canlandirmak (gamma, contrast) ayarlari icin
+<code>-vf eq=eq=brightness=1.5:gamma=1.5:saturation=1.5</code> komutu kullanilabilir.
+Fakat sunu belirtmek gerekir ki cogunlukla gereken karanlik bir resimde
+renk canlandirmasi yapmak, o yuzden <code>gamma</code> ve <code>saturation</code> ayarlari yeterli
+olacaktir, yani</p>
+
+<pre><code>ffmpeg -i in.mp4 -y -vf eq=gamma=1.5:saturation=1.5 -c:a copy out.mp4
+</code></pre>
+
 <p>Video birlestirmek icin bir ara formattan gecmek lazim.</p>
 
 <pre><code>ffmpeg -i dosya1.mp4 -q:v 1 -filter:v scale=500:-1 -f mpegts dosya1.ts
@@ -145,7 +154,7 @@ ffmpeg -i dosya2.mp4 -q:v 1 -filter:v scale=500:-1 -f mpegts dosya2.ts
   -global_quality:v 0 -codec:a libmp3lame dosya.avi 
 </code></pre>
 
-<p>Ya da en rahat arac Python <code>moviepy</code> paketi ile,</p>
+<p>Python <code>moviepy</code> paketi ile,</p>
 
 <pre><code>from moviepy.editor import VideoFileClip, concatenate_videoclips
 clip1 = VideoFileClip("v1.mp4").resize(0.50)

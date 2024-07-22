@@ -14,5 +14,5 @@
 
 [Flask ile Web Üzerinden Dizin Gezebilmek - webfilebrowser](06/webfilebrowser.html)
 
-[Ticaret Veri Tabanını İşlemek, BACI](07/ticaret-veri-tabani-baci.html)
+[Ticaret Veri Tabanı, Önişlemler, Raporlar](07/ticaret-veri-tabani-baci.html)
 

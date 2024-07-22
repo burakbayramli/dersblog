@@ -69,7 +69,10 @@ yüksek değer bulunursa sözlük güncelleniyor. Diğer bir sözlükte bu
 ikili için o değerin tekabul ettiği ürünün anahtarı kayıt ediliyor.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">baci_dir</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/baci&quot;</span>
+<pre><span></span><code><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+<span class="kn">import</span> <span class="nn">util</span><span class="o">,</span> <span class="nn">json</span>
+
+<span class="n">baci_dir</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/baci&quot;</span>
 
 <span class="k">class</span> <span class="nc">BaciJob</span><span class="p">:</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -99,21 +102,16 @@ ikili için o değerin tekabul ettiği ürünün anahtarı kayıt ediliyor.</p>
         <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/out-v.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">))</span>
         <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</code></pre>
-</div>
 
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">process_baci_top_products</span><span class="p">():</span>
+<span class="k">def</span> <span class="nf">process_baci_top_products</span><span class="p">():</span>
     <span class="n">file_name</span> <span class="o">=</span> <span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/BACI_HS22_Y2022_V202401b.csv&quot;</span>
     <span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
     <span class="n">N</span> <span class="o">=</span> <span class="mi">1</span> 
-    <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">lineproc</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">TJob</span><span class="p">(),</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">util</span><span class="o">.</span><span class="n">lineproc</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">BaciJob</span><span class="p">(),</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
     <span class="n">end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;elapsed time&#39;</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
-
-<span class="n">process_baci_top_products</span><span class="p">()</span>
 </code></pre>
 </div>
 

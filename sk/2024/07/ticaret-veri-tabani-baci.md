@@ -33,6 +33,9 @@ ikili için o değerin tekabul ettiği ürünün anahtarı kayıt ediliyor.
 
 
 ```python
+from multiprocessing import Process
+import util, json
+
 baci_dir = "/opt/Downloads/baci"
 
 class BaciJob:
@@ -63,20 +66,16 @@ class BaciJob:
         fout = open(baci_dir + "/out-v.json","w")
         fout.write(json.dumps(self.V))
         fout.close()
-```
 
-```python
 def process_baci_top_products():
     file_name = baci_dir + "/BACI_HS22_Y2022_V202401b.csv"
     start = timer()
     N = 1 
-    ps = [Process(target=lineproc,args=(file_name, i, N, TJob(),1)) for i in range(N)]
+    ps = [Process(target=util.lineproc,args=(file_name, i, N, BaciJob(),1)) for i in range(N)]
     for p in ps: p.start()
     for p in ps: p.join()
     end = timer()
     print('elapsed time', timedelta(seconds=end-start))
-
-process_baci_top_products()
 ```
 
 ```python

@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ticaret Veri Tabanını İşlemek, BACI</h1>
+
+<p>200 ülke için ikili ticaret ilişkilerinin verisi BACI tabanında
+paylaşılıyor [1].  Bu yazıda tabanın 2022 yılı için olan verisini
+işleyeceğiz, veri 5000 ürün kategorisini içermeke, kategori sistemi
+"harmonize edilmiş sistem" adı verilen 6 sayılık bir kod
+kullanıyor. BACI kayıtları alan / satan bilgini içerir, yani her ülke
+ikilisi için ihraç edici / ithal edici kayıtlanmıştır, ve bu ilişkide
+her ürünün ihraç/ithal miktarı ve değeri de tabanda vardır. Taban tek
+bir csv dosyası, kolonlar,</p>
+
+<pre><code>t: yıl
+i: ihraççı
+j: ithalcı
+k: ürün
+v: değer
+q: miktar
+</code></pre>
+
+<p>Para deger birimi 1000 Amerikan doları, miktar ise metrik ton.</p>
+
+<p>Kayıtları işlemek için [2]'deki paralel, satırsal işleyici altyapısını
+kullanacağız.  CSV dosyasında her satırda ihraç eden ülke / ithal eden
+ülke / ürün üçlüsü var. Alttaki kod her satırı okurken iki ülke
+arasındaki değeri en yüksek ürünü takip ediyor. Bu takip basit bir
+Python sözlüğü ile yapılıyor, sözlükteki anahtar iki kimliğin
+birleşimi, ihraççı - ithalci ile bir özgün, birleşik kimlik
+yaratılıyor, bu kimliğin değeri o iki ülke arasındaki o ana kadar
+kayıtlarda görülen en yüksek değeri taşıyor, eğer yeni satırda daha
+yüksek değer bulunursa sözlük güncelleniyor. Diğer bir sözlükte bu
+ikili için o değerin tekabul ettiği ürünün anahtarı kayıt ediliyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">baci_dir</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/baci&quot;</span>
+
+<span class="k">class</span> <span class="nc">BaciJob</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">infile</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">chunk</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">header</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;t&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;i&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s1">&#39;j&#39;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s1">&#39;k&#39;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s1">&#39;v&#39;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="s1">&#39;q&#39;</span><span class="p">:</span><span class="mi">5</span><span class="p">}</span>
+    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>        
+        <span class="n">tok</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="o">=</span> <span class="n">tok</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;i&#39;</span><span class="p">]],</span> <span class="n">tok</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;j&#39;</span><span class="p">]]</span>
+        <span class="n">i</span><span class="p">,</span><span class="n">j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tok</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;v&#39;</span><span class="p">]])</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">tok</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]]</span>
+        <span class="n">prod</span> <span class="o">=</span> <span class="n">tok</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">header</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]]</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span> <span class="ow">or</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">prod</span>
+
+    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">infile</span><span class="p">)</span>
+        <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/out-p.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">P</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+        <span class="n">fout</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/out-v.json&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">V</span><span class="p">))</span>
+        <span class="n">fout</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">process_baci_top_products</span><span class="p">():</span>
+    <span class="n">file_name</span> <span class="o">=</span> <span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/BACI_HS22_Y2022_V202401b.csv&quot;</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="mi">1</span> 
+    <span class="n">ps</span> <span class="o">=</span> <span class="p">[</span><span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">lineproc</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">TJob</span><span class="p">(),</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;elapsed time&#39;</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
+
+<span class="n">process_baci_top_products</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">baci_top_products</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>elapsed time 0:01:60.95
+</code></pre>
+</div>
+
+<p>İşlem bitince sonuçlar BACI dizini altında yazılmış olmalı.</p>
+
+<p>Çıktıları raporlamak için yeni iki fonksiyon yazalım, bu
+fonksiyonlardan <code>baci_top_product()</code> verili iki ülke için, ihraccı /
+ithalci olarak, en değerli ürün kategorisini ve o kategorinin tanmını
+geri getirsin. Bu bilgilerin raporlanabilmesi için bazı referans csv
+dosyaları okunmalı, ama o dosyalar ardı ardı yapılacak fonksiyon
+çağrılarında sürekli okunmasın diye onları otomatik olarak önbellege
+gönderiyoruz, <code>@lru_cache</code> kullanımına dikkat, <code>init()</code> ilk
+çağrıldığında dört tane DataFrame diskten okuyup geri döndürür,
+sonraki çağrılarda önbellekteki objeler diske gitmeden geri verilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">textwrap</span>
+
+<span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># returned types are cached</span>
+<span class="k">def</span> <span class="nf">init</span><span class="p">():</span>
+   <span class="n">baci_cc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s1">&#39;/country_codes_V202401b.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;country_name&#39;</span><span class="p">)</span>
+   <span class="n">baci_pc</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s1">&#39;/product_codes_HS22_V202401b.csv&#39;</span><span class="p">,</span><span class="n">index_col</span><span class="o">=</span><span class="s1">&#39;code&#39;</span><span class="p">)</span>
+   <span class="n">baci_p</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/out-p.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+   <span class="n">baci_v</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">baci_dir</span> <span class="o">+</span> <span class="s2">&quot;/out-v.json&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+   <span class="k">return</span> <span class="n">baci_cc</span><span class="p">,</span> <span class="n">baci_pc</span><span class="p">,</span> <span class="n">baci_p</span><span class="p">,</span> <span class="n">baci_v</span>
+
+<span class="k">def</span> <span class="nf">baci_top_product</span><span class="p">(</span><span class="n">frc</span><span class="p">,</span> <span class="n">toc</span><span class="p">):</span>
+    <span class="n">baci_cc</span><span class="p">,</span> <span class="n">baci_pc</span><span class="p">,</span> <span class="n">baci_p</span><span class="p">,</span> <span class="n">baci_v</span> <span class="o">=</span> <span class="n">init</span><span class="p">()</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">baci_cc</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">frc</span><span class="p">]</span><span class="o">.</span><span class="n">country_code</span><span class="p">,</span> <span class="n">baci_cc</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">toc</span><span class="p">]</span><span class="o">.</span><span class="n">country_code</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;$&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">baci_v</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">*</span><span class="mi">1000</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">baci_pc</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">baci_p</span><span class="p">[</span><span class="n">key</span><span class="p">])]</span><span class="o">.</span><span class="n">description</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">wrap</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">70</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Çin'in Fransa'ya ihraç ettiği en çok para getiren ürünü nedir?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">baci_top_product</span><span class="p">(</span><span class="s2">&quot;China&quot;</span><span class="p">,</span><span class="s2">&quot;France&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>$ 979,185,844.0
+Communication apparatus (excluding telephone sets or base stations):
+machines for the reception, conversion and transmission or
+regeneration of voice, images or other data, including switching and
+routing apparatus
+</code></pre>
+</div>
+
+<p>Rusya ve Hindistan,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">baci_top_product</span><span class="p">(</span><span class="s2">&quot;Russian Federation&quot;</span><span class="p">,</span><span class="s2">&quot;India&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>$ 25,534,776,517.0
+Oils: petroleum oils and oils obtained from bituminous minerals, crude
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] http://www.cepii.fr/cepii/en/bdd<em>modele/bdd</em>modele_item.asp?id=37</p>
+
+<p>[2] Bayramlı, <a href="../../2016/02/toptan-islemler-paralelizasyon.html">Paralel, Satır Bazlı Dosya İşlemek</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

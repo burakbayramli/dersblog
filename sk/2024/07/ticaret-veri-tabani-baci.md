@@ -2,7 +2,7 @@
 
 200 ülke için ikili ticaret ilişkilerinin verisi B.A.C.I. tabanında
 paylaşılıyor [1].  Bu yazıda tabanın 2022 yılı için olan verisini
-işleyeceğiz, veri 5000 ürün kategorisini içermeke, kategori sistemi
+işleyeceğiz, veri 5000 ürün kategorisini içermekte, kategori sistemi
 "harmonize edilmiş sistem" adı verilen 6 sayılık bir kod
 kullanıyor. BACI kayıtları alan / satan bilgini içerir, yani her ülke
 ikilisi için ihraç edici / ithal edici kayıtlanmıştır, ve bu ilişkide

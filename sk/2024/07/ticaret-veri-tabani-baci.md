@@ -117,7 +117,7 @@ geri getirsin. Bu bilgilerin raporlanabilmesi için bazı referans csv
 dosyaları okunmalı, ardı ardı yapılacak fonksiyon çağrılarında sürekli
 okunmasın diye onları otomatik olarak önbellege gönderiyoruz,
 `@lru_cache` kullanımına dikkat, `init()` ilk çağrıldığında dört tane
-DataFrame'i diskten okuyup geri döndürür, sonraki çağrılarda
+veri objesini diskten okuyup geri döndürür, sonraki çağrılarda
 önbellekteki objeler diske gitmeden geri verilir.
 
 ```python

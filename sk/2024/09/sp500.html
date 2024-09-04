@@ -99,7 +99,7 @@ tarihleri 20240101 şeklinde yazarsak büyüktür, küçüktür filtreleme
 operasyonu hala düzgün çalışacaktır, çünkü mesela 20240201 sayısı
 20240101 sayısından büyüktür, 20250101 onlardan da büyüktür, vs.</p>
 
-<p>Ilk verileri yukleyelim,</p>
+<p>İlk verileri yükleyelim,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">db_load_2010</span><span class="p">():</span>
@@ -119,9 +119,9 @@ operasyonu hala düzgün çalışacaktır, çünkü mesela 20240201 sayısı
 </code></pre>
 </div>
 
-<p>Şimdi artıksal, güncelleme dosyalarına gelelim. Bu dosyalar farklı bir dizinde olur,
-her gün için ayrı bir CSV, bu dosya içinde sembol, kapanış fiyatı verisi bulunur.
-Mesela Eylül 3 için,</p>
+<p>Şimdi artıksal, güncelleme dosyalarına gelelim. Bu dosyalar farklı bir
+dizinde olur, her gün için ayrı bir CSV, dosya içinde sembol, kapanış
+fiyatı verisi bulunur.  Mesela Eylül 3 için,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -141,7 +141,7 @@ Mesela Eylül 3 için,</p>
 </code></pre>
 </div>
 
-<p>Bu dosyalari yuklemek icin</p>
+<p>Artıksal dosyaları yüklemek için</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">db_load_inc</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
@@ -162,6 +162,19 @@ Mesela Eylül 3 için,</p>
 </code></pre>
 </div>
 
+<p>Parametre olarak dizin veriliyor, fonksiyon o dizin altında özyineli olarak hangi CSV
+dosyasını bulursa okuyup yüklüyor, üstteki veri için</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">db_load_inc</span><span class="p">(</span><span class="n">DIR</span> <span class="o">+</span> <span class="s2">&quot;/2024/09&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>diyebilirdik.</p>
+
+<p>Artık veriyi okuyabiliriz. Bir sembol listesi ve başlangıç yılı kullanarak
+istediğimiz SP 500 verisini bir zaman serisi olarak alabiliyoruz,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="k">def</span> <span class="nf">get_db_tickers</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">tickers</span><span class="p">):</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -177,6 +190,14 @@ Mesela Eylül 3 için,</p>
     <span class="k">return</span> <span class="n">df</span>
 </code></pre>
 </div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">get_db_ticker</span><span class="p">(</span><span class="mi">2010</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;AAPL&quot;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p><img src="aapl.jpg" alt="" /></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

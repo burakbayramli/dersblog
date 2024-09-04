@@ -37,16 +37,107 @@
         <section id="main_content" class="inner">
         <h1>Sinyaller, Geriye Dönük Analiz, Performans
 </h1></p>
+<p>Elimizde bir zaman serisi var, bu seri bir finansal varlığın fiyat seviyesi
+olabilir, belki Apple senedidir, ilk gün 100 ikinci gün 102 olmuş, böyle
+gidiyor.</p>
 <pre><code class="python">import pandas as pd
-d = np.array([100,102,104.04,106.12,108.24,110.41,105,100])
-s = pd.Series(d)
-print (list(s))
-print (list(np.round(s.pct_change(),2)))
+d = np.array([100,102,104.04,106.12,108.24,110.41])
 </code></pre>
 
-<pre><code>[100.0, 102.0, 104.04, 106.12, 108.24, 110.41, 105.0, 100.0]
-[nan, 0.02, 0.02, 0.02, 0.02, 0.02, -0.05, -0.05]
+<p>Peki bu fiyat seviyeleri günlük hangi yüzde değişimlerine tekabül ediyor?
+Bunun hesabın bir yolu var, </p>
+<pre><code class="python">p = pd.Series(d)
+print (list(p))
+print (list(np.round(p.pct_change(),2)))
 </code></pre>
+
+<pre><code>[100.0, 102.0, 104.04, 106.12, 108.24, 110.41]
+[nan, 0.02, 0.02, 0.02, 0.02, 0.02]
+</code></pre>
+
+<p>Her gün yüzde 2'lik bir değişim varmış (öyle çıktı çünkü bu yazı için veri
+uydururken sayıları ona göre ayarladık).</p>
+<p>Şimdi sadece yüzde değişimleri ve başlangıç fiyat seviyesini kullanarak seriyi
+tekrar üretebilir miydik? Yüzde değişimle sonraki sayıyı nasıl elde ederiz?
+Mesela 100'den yüzde 2 değişimle sonraki değere geçmek için ne gerekir?  Kolay,
+1 artı 0.02 yani 1.02 değerini 100 ile çarparız, sonraki sayı çıkar, 102.</p>
+<p>O zaman tüm fiyat seviyeleri için eldeki yüzde değişim listesine 1 sayısını
+eklersek, 1.02, 1.02, .. elde edilir, ve bu rakamları başta 100 ile, sonra
+birbirleri ile çarparsak tüm fiyat listesini tekrar elde ederiz. Bir dizinin tüm
+öğelerinin birer birer çarpılıp bunun kümülatif olarak gösterilmesini
+<code>cumprod</code>  halleder,</p>
+<pre><code class="python">ret = p.pct_change()
+100*np.cumprod(1+ret)
+</code></pre>
+
+<pre><code>Out[1]: 
+0       NaN
+1    102.00
+2    104.04
+3    106.12
+4    108.24
+5    110.41
+dtype: float64
+</code></pre>
+
+<p>Üstteki hesabı bir al-tut stratejisinin performansı olarak ta görebiliriz. İlla
+baştaki 100 değerini kullanmaya gerek yok, 100 yerine 1 dersek o zaman bu
+stratejiye koyulmuş 1 liranın, 1 doların ne kadar büyüyeceğini görmüş oluruz.  1
+lira 2 lira olduysa bu ikiye katlama demektir, performans iyi sonucuna
+varabiliriz.</p>
+<pre><code class="python">1*np.cumprod(1+ret)
+</code></pre>
+
+<pre><code>Out[1]: 
+0       NaN
+1    1.0200
+2    1.0404
+3    1.0612
+4    1.0824
+5    1.1041
+dtype: float64
+</code></pre>
+
+<p>Yüzde değişimler, kümülatif çarpımlar ile uğraşmamızın bir sebebi var, işin
+içine alım / satım "sinyallerini" kolayca dahil edebiliyoruz, ve her
+stratejide bir zaman serisi elde edebiliyoruz. Bu serinin istatistiki,
+matematiksel özellikleri vardır, ve bu özellikleri özet hesapları için çok
+faydalı olur, mesela Sharpe oranı gibi.</p>
+<pre><code class="python">signal = pd.Series(np.array([1,1,1,1,0,1]))
+ret*signal
+</code></pre>
+
+<pre><code>Out[1]: 
+0         NaN
+1    0.020000
+2    0.020000
+3    0.019992
+4    0.000000
+5    0.020048
+dtype: float64
+</code></pre>
+
+<pre><code class="python">signal = pd.Series(np.array([1,1,1,1,0,1]))
+1*np.cumprod(1+(ret*signal))
+</code></pre>
+
+<pre><code>Out[1]: 
+0         NaN
+1    1.020000
+2    1.040400
+3    1.061200
+4    1.061200
+5    1.082475
+dtype: float64
+</code></pre>
+
+<pre><code class="python">import pandas as pd
+df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
+df.plot()
+plt.savefig('tser_011_sign_01.jpg')
+</code></pre>
+
+<p>[devam edecek]</p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

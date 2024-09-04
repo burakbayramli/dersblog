@@ -86,7 +86,9 @@ yaratalım, SQlite tabanı olacak, başlangıç verilerinin olduğu dizindeki t�
 CSV dosyaları okunup tabana yüklenecek,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">db_conn</span><span class="p">():</span>
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">os</span>
+
+<span class="k">def</span> <span class="nf">db_conn</span><span class="p">():</span>
     <span class="n">db_file</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/sp500.db&quot;</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_file</span><span class="p">)</span>    
     <span class="k">return</span> <span class="n">conn</span>
@@ -128,8 +130,7 @@ dizinde olur, her gün için ayrı bir CSV, dosya içinde sembol, kapanış
 fiyatı verisi bulunur.  Mesela Eylül 3 için,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/2024/09/2024-09-03.csv&quot;</span><span class="p">)</span>
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/2024/09/2024-09-03.csv&quot;</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </code></pre>
 </div>

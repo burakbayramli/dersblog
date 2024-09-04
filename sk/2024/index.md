@@ -16,3 +16,5 @@
 
 [Ticaret Veri Tabanı, Önişlemler, Raporlar](07/ticaret-veri-tabani-baci.html)
 
+[S&P 500 Verisi](09/sp500.html)
+

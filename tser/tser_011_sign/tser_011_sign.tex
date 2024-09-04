@@ -76,11 +76,12 @@ Out[1]:
 dtype: float64
 \end{verbatim}
 
-Yüzde değişimler, kumulatif çarpımlar ile uğraşmamızın bir sebebi var, işin
-içine alım / satım ``sinyallerini'' kolayca dahil edebiliyoruz, ve stratejiyi
-tartarken bir zaman serisi üzerinden bunu yapabiliyoruz. Elde edilecek serinin
-istatistiki, matematiksel özellikleri vardır, ve bu özellikleri diğer özet
-irdelemeler için çok faydalı olacaktır, mesela Sharpe oranı gibi.
+Yüzde değişimler, kumulatif çarpımlar ile uğraşmamızın bir sebebi var, portföy
+perfomansına bakarken herhangi bir strateji için gereken alım / satım
+``sinyallerini'' kolayca dahil edebiliyoruz, ve stratejiyi tartarken bir zaman
+serisi üzerinden bunu yapabiliyoruz. Elde edilecek serinin istatistiki,
+matematiksel özellikleri vardır, ve bu özellikleri ek özet irdelemeler
+faydalı olur, mesela Sharpe oranı gibi.
 
 Sinyalleri şöyle kullanabiliriz, bir varlığı belli bir zaman noktasında almış
 olmak 1 sinyali ile temsil edilir, varlığın elde olmaması ise 0 ile temsil
@@ -123,21 +124,9 @@ Out[1]:
 dtype: float64
 \end{verbatim}
 
+Senet Ornegi
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Apple senedine bakalim,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 import pandas as pd
@@ -145,6 +134,75 @@ df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
 df.plot()
 plt.savefig('tser_011_sign_01.jpg')
 \end{minted}
+
+\includegraphics[width=20em]{tser_011_sign_01.jpg}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+df['signal'] = 0
+filt1 = (df.index > '2005-06-01') & (df.index < '2006-02-01')
+df.loc[filt1,'signal'] = 1
+filt2 = (df.index > '2006-09-01') & (df.index < '2007-01-01')
+df.loc[filt2,'signal'] = 1
+df['ret'] = df.AAPL.pct_change()
+
+cumret = np.cumprod(1+(df.ret*df.signal))
+print (cumret.tail(4))
+\end{minted}
+
+\begin{verbatim}
+Date
+2006-12-26    2.233475
+2006-12-27    2.233750
+2006-12-28    2.215938
+2006-12-29    2.324721
+dtype: float64
+\end{verbatim}
+
+
+\begin{minted}[fontsize=\footnotesize]{python}
+np.prod(1+(df.ret*df.signal))
+\end{minted}
+
+\begin{verbatim}
+Out[1]: 2.3247214450625857
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+print ('APR', ((np.prod(1.+df.ret*df.signal))**(252./len(df.ret)))-1)
+\end{minted}
+
+\begin{verbatim}
+APR 0.32471861974412564
+\end{verbatim}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
+df['signal'] = 0
+filt1 = (df.index > '2005-06-01')
+df.loc[filt1,'signal'] = 1
+df['ret'] = df.AAPL.pct_change()
+print (np.prod(1+(df.ret*df.signal)))
+print ('APR', ((np.prod(1.+df.ret*df.signal))**(252./len(df.ret)))-1)
+\end{minted}
+
+\begin{verbatim}
+2.105210500206348
+APR 0.2816374105511763
+\end{verbatim}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

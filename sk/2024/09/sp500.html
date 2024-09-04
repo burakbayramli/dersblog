@@ -86,7 +86,12 @@ yaratalım, SQlite tabanı olacak, başlangıç verilerinin olduğu dizindeki t�
 CSV dosyaları okunup tabana yüklenecek,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">db_create</span><span class="p">():</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">db_conn</span><span class="p">():</span>
+    <span class="n">db_file</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/sp500.db&quot;</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_file</span><span class="p">)</span>    
+    <span class="k">return</span> <span class="n">conn</span>
+
+<span class="k">def</span> <span class="nf">db_create</span><span class="p">():</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;DROP TABLE IF EXISTS TICKER; &#39;&#39;&#39;</span><span class="p">)</span>

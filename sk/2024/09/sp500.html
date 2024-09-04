@@ -113,7 +113,6 @@ operasyonu hala düzgün çalışacaktır, çünkü mesela 20240201 sayısı
         <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
             <span class="n">dt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
             <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">])</span>
-            <span class="c1">#print (sym, dt, c)</span>
             <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;INSERT INTO TICKER (dt,sym,c) VALUES (?,?,?)&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span><span class="n">sym</span><span class="p">,</span><span class="n">c</span><span class="p">))</span>
         <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>        
 </code></pre>
@@ -199,15 +198,17 @@ istediğimiz SP 500 verisini bir zaman serisi olarak alabiliyoruz,</p>
 </code></pre>
 </div>
 
-<p><img src="aapl.jpg" alt="" /></p>
+<p><img width='340' src='aapl.jpg'/></p>
 
 <p>Üstteki kodun kullandığı veriler hazırlanmış olarak</p>
 
-<p>https://github.com/burakbayramli/alldata</p>
+<p><a href="https://github.com/burakbayramli/alldata">https://github.com/burakbayramli/alldata</a></p>
 
-<p>adresinden, sp500 alt dizini altında bulunabilir. Bu Github deposunu
-indirmek ve üstteki kodları gerekli dizine yönlendirmek yeterli, veri
-yüklemesi yapılacaktır.</p>
+<p>adresinde, <code>sp500</code> alt dizini altında bulunabilir. Bu Github deposunu
+<code>git clone</code> indirmek ve üstteki kodları gerekli dizine yönlendirmek
+yeterli, veri yüklemesi yapılacaktır. Biz bu veriyi güncel tutuyoruz,
+artıksal dosyalar yine üstteki depoya konuyor, ek dosyalar gerektikçe
+<code>git pull</code> ile aynı depo altından alınabilir.</p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

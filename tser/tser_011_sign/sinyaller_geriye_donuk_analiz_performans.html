@@ -45,7 +45,7 @@ d = np.array([100,102,104.04,106.12,108.24,110.41])
 </code></pre>
 
 <p>Peki bu fiyat seviyeleri günlük hangi yüzde değişimlerine tekabül ediyor?
-Bunun hesabın bir yolu var, </p>
+Bu hesabın bir yolu var, <code>pct_change</code> kullanabiliriz,</p>
 <pre><code class="python">p = pd.Series(d)
 print (list(p))
 print (list(np.round(p.pct_change(),2)))
@@ -55,17 +55,18 @@ print (list(np.round(p.pct_change(),2)))
 [nan, 0.02, 0.02, 0.02, 0.02, 0.02]
 </code></pre>
 
-<p>Her gün yüzde 2'lik bir değişim varmış (öyle çıktı çünkü bu yazı için veri
-uydururken sayıları ona göre ayarladık).</p>
+<p>Her gün yüzde 2'lik bir değişim varmış (bu yazı için veri uydururken sayıları
+ona göre ayarladık).</p>
 <p>Şimdi sadece yüzde değişimleri ve başlangıç fiyat seviyesini kullanarak seriyi
-tekrar üretebilir miydik? Yüzde değişimle sonraki sayıyı nasıl elde ederiz?
-Mesela 100'den yüzde 2 değişimle sonraki değere geçmek için ne gerekir?  Kolay,
-1 artı 0.02 yani 1.02 değerini 100 ile çarparız, sonraki sayı çıkar, 102.</p>
-<p>O zaman tüm fiyat seviyeleri için eldeki yüzde değişim listesine 1 sayısını
-eklersek, 1.02, 1.02, .. elde edilir, ve bu rakamları başta 100 ile, sonra
-birbirleri ile çarparsak tüm fiyat listesini tekrar elde ederiz. Bir dizinin tüm
-öğelerinin birer birer çarpılıp bunun kümülatif olarak gösterilmesini
-<code>cumprod</code>  halleder,</p>
+tekrar üretebilir miydik? Tek yüzde değişimle bir sonraki sayıyı nasıl elde
+ederiz?  Mesela 100'den yüzde 2 değişimle sonraki değere geçeceğiz, kolay, 1
+artı 0.02 yani 1.02 değerini 100 ile çarparız, sonraki sayı çıkar, 102. Bu
+metotu diğer yüzde değişimler için kullanabiliriz. O zaman tüm fiyat
+seviyelerini hesap için eldeki yüzde değişim listesine 1 sayısını eklersek,
+1.02, 1.02, .. elde edilir, ve bu rakamları başta 100 ile, sonra birbirleri ile
+çarparsak tüm fiyat listesini tekrar elde ederiz. Bir dizinin tüm öğelerinin
+birer birer çarpılıp bunun kümülatif olarak gösterilmesini <code>cumprod</code>
+halleder,</p>
 <pre><code class="python">ret = p.pct_change()
 100*np.cumprod(1+ret)
 </code></pre>
@@ -80,11 +81,11 @@ birbirleri ile çarparsak tüm fiyat listesini tekrar elde ederiz. Bir dizinin t
 dtype: float64
 </code></pre>
 
-<p>Üstteki hesabı bir al-tut stratejisinin performansı olarak ta görebiliriz. İlla
-baştaki 100 değerini kullanmaya gerek yok, 100 yerine 1 dersek o zaman bu
-stratejiye koyulmuş 1 liranın, 1 doların ne kadar büyüyeceğini görmüş oluruz.  1
-lira 2 lira olduysa bu ikiye katlama demektir, performans iyi sonucuna
-varabiliriz.</p>
+<p>Üstteki hesabı bir al-tut stratejisinin performansı olarak ta görebiliriz bu
+durumda illa baştaki 100 değerini kullanmaya gerek yok, 100 yerine 1 dersek o
+zaman bu stratejiye koyulmuş 1 liranın, 1 doların ne kadar büyüyeceğini görmüş
+oluruz.  1 lira 2 lira olduysa mesela bu ikiye katlama demektir, performansın
+iyi olduğu sonucuna varabiliriz.</p>
 <pre><code class="python">1*np.cumprod(1+ret)
 </code></pre>
 
@@ -98,11 +99,19 @@ varabiliriz.</p>
 dtype: float64
 </code></pre>
 
-<p>Yüzde değişimler, kümülatif çarpımlar ile uğraşmamızın bir sebebi var, işin
-içine alım / satım "sinyallerini" kolayca dahil edebiliyoruz, ve her
-stratejide bir zaman serisi elde edebiliyoruz. Bu serinin istatistiki,
-matematiksel özellikleri vardır, ve bu özellikleri özet hesapları için çok
-faydalı olur, mesela Sharpe oranı gibi.</p>
+<p>Yüzde değişimler, kumulatif çarpımlar ile uğraşmamızın bir sebebi var, işin
+içine alım / satım "sinyallerini" kolayca dahil edebiliyoruz, ve stratejiyi
+tartarken bir zaman serisi üzerinden bunu yapabiliyoruz. Elde edilecek serinin
+istatistiki, matematiksel özellikleri vardır, ve bu özellikleri diğer özet
+irdelemeler için çok faydalı olacaktır, mesela Sharpe oranı gibi.</p>
+<p>Sinyalleri şöyle kullanabiliriz, bir varlığı belli bir zaman noktasında almış
+olmak 1 sinyali ile temsil edilir, varlığın elde olmaması ise 0 ile temsil
+edilir.  O zaman kumulatif hesaptan önce tüm yüzde değişimleri sinyal vektörü
+ile çarparız, ondan sonra kumulatif hesap devreye girer. Eğer sinyal 1 ise o
+noktada yüzde değişim sıfıra iner, o getiri elde edilmemiş olur, kumulatif
+hesapta 1+0 = 1, yani hiç bir değişim yaratmaz. Eğer sinyal 1 ise 1 çarpı mesela
+yüzde 2 getiri yüzde 2 getirinin aktif olmuş olması demektir, o getiri kumulatif
+çarpıma etki eder.</p>
 <pre><code class="python">signal = pd.Series(np.array([1,1,1,1,0,1]))
 ret*signal
 </code></pre>

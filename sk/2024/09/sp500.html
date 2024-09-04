@@ -38,15 +38,15 @@
         <h1></h1>
 <h1>S&amp;P 500 Verisi</h1>
 
-<p>Surekli Internet'ten senet verisi almak istenmezse bu veri onceden
-indirilip yerel veri tabaninda saklanabilir.. Her gunun kapanis
-fiyatlari bir sekilde veriyi her gun eklenirse elimizde canli, guncel
-bir veri tabani olacaktir. Veriyi arka arka okumasi gereken al/sat
-stratejileri Internet verisi yerine yerel veriyi kullanir.</p>
+<p>Sürekli İnternet'ten senet verisi almak istenmezse bu veri önceden
+indirilip yerel veri tabanında saklanabilir.. Her günün kapanış
+fiyatları bir şekilde veriyi her gün eklenirse elimizde canlı, güncel
+bir veri tabanı olacaktır. Veriyi arka arka okuması gereken al/sat
+stratejileri İnternet verisi yerine yerel veriyi kullanır.</p>
 
-<p>ABD The Standard and Poor's 500, ya da S&amp;P 500 bir indistir, ABD
-piyasalarindaki 500 tane en buyuk sirketin senet fiyatlarini yansitir.
-Bu indisin hangi sembolleri kapsadigini almak icin</p>
+<p>ABD The Standard and Poor's 500, ya da S&amp;P 500 bir indistır, ABD
+piyasalarındaki 500 tane en büyük şirketin senet fiyatlarını yansıtır.
+Bu indisin hangi sembolleri kapsadığını almak için</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">DATA</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/alldata/sp500&quot;</span>
@@ -56,12 +56,12 @@ Bu indisin hangi sembolleri kapsadigini almak icin</p>
 </code></pre>
 </div>
 
-<p>Bir csv dosyasina bu sembolleri yazmis olduk. Ustteki <code>read_html</code> cagrisini dikkat,
-Pandas bir HTML sayfasini bile okuyup <code>DataFrame</code> haline cevirebiliyor.</p>
+<p>Bir csv dosyasına bu sembolleri yazmış olduk. Üstteki <code>read_html</code> çağrısını dikkat,
+Pandas bir HTML sayfasını bile okuyup <code>DataFrame</code> haline çevirebiliyor.</p>
 
-<p>Tarihi veriyi bu semboller icin biz daha once Yahoo Finance sitesinden
-indirdik, mesela Apple seneti icin, 2010 ve 2024 Eylul arasindaki
-tarihler icin,</p>
+<p>Tarihi veriyi bu semboller için biz daha önce Yahoo Finance sitesinden
+indirdik, mesela Apple seneti için, 2010 ve 2024 Eylül arasındaki
+tarihler için,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -81,7 +81,102 @@ tarihler icin,</p>
 </code></pre>
 </div>
 
-<p>Bu veriler ilk indirim, yerel tabani bu verilerle once dolduracagiz. </p>
+<p>Bu veriler ilk indirim, yerel tabanı bu verilerle önce dolduracağız. Veri tabanını
+yaratalım, SQlite tabanı olacak, başlangıç verilerinin olduğu dizindeki tüm
+CSV dosyaları okunup tabana yüklenecek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">db_create</span><span class="p">():</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;DROP TABLE IF EXISTS TICKER; &#39;&#39;&#39;</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;CREATE TABLE TICKER (dt INTEGER, sym TEXT, c NUMERIC, PRIMARY KEY (dt, sym)); &#39;&#39;&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Veri tabanı tasarımında tarih <code>dt</code> bir tam sayı olarak yazıldı, eğer
+tarihleri 20240101 şeklinde yazarsak büyüktür, küçüktür filtreleme
+operasyonu hala düzgün çalışacaktır, çünkü mesela 20240201 sayısı
+20240101 sayısından büyüktür, 20250101 onlardan da büyüktür, vs.</p>
+
+<p>Ilk verileri yukleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">db_load_2010</span><span class="p">():</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>    
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;2010-2024&quot;</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/*&quot;</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+        <span class="n">sym</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">dt</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Adj Close&#39;</span><span class="p">])</span>
+            <span class="c1">#print (sym, dt, c)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;INSERT INTO TICKER (dt,sym,c) VALUES (?,?,?)&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span><span class="n">sym</span><span class="p">,</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>        
+</code></pre>
+</div>
+
+<p>Şimdi artıksal, güncelleme dosyalarına gelelim. Bu dosyalar farklı bir dizinde olur,
+her gün için ayrı bir CSV, bu dosya içinde sembol, kapanış fiyatı verisi bulunur.
+Mesela Eylül 3 için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/2024/09/2024-09-03.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+      AJG   294.49
+497   ABT   114.66
+498   CNC    80.23
+499   XYL   130.71
+500  FICO  1688.41
+501   NVR  9053.67
+</code></pre>
+</div>
+
+<p>Bu dosyalari yuklemek icin</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">db_load_inc</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>    
+    <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">gdir</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/**/*.csv&quot;</span>
+    <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">gdir</span><span class="p">,</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>        
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">basename</span><span class="p">(</span><span class="n">file</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;DELETE FROM TICKER where dt = ?&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="p">,))</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>        
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+            <span class="n">sym</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span><span class="n">sym</span><span class="p">,</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">cursor</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;INSERT INTO TICKER (dt,sym,c) VALUES (?,?,?)&#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">dt</span><span class="p">,</span><span class="n">sym</span><span class="p">,</span><span class="n">c</span><span class="p">))</span>
+        <span class="n">conn</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>        
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">get_db_tickers</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">tickers</span><span class="p">):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
+    <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;0101&quot;</span><span class="p">)</span>
+    <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ticker</span> <span class="ow">in</span> <span class="n">tickers</span><span class="p">:</span>
+        <span class="n">rows</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT dt,c from TICKER where sym = ? and dt &gt;= ?&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">ticker</span><span class="p">,</span><span class="n">year</span><span class="p">))</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="o">.</span><span class="n">fetchall</span><span class="p">(),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">,</span><span class="n">ticker</span><span class="p">])</span>
+        <span class="n">df</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;dt&#39;</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;dt&#39;</span><span class="p">)</span>
+        <span class="n">dfs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">dfs</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+</code></pre>
+</div>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

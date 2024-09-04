@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>S&amp;P 500 Verisi</h1>
+
+<p>Surekli Internet'ten senet verisi almak istenmezse bu veri onceden
+indirilip yerel veri tabaninda saklanabilir.. Her gunun kapanis
+fiyatlari bir sekilde veriyi her gun eklenirse elimizde canli, guncel
+bir veri tabani olacaktir. Veriyi arka arka okumasi gereken al/sat
+stratejileri Internet verisi yerine yerel veriyi kullanir.</p>
+
+<p>ABD The Standard and Poor's 500, ya da S&amp;P 500 bir indistir, ABD
+piyasalarindaki 500 tane en buyuk sirketin senet fiyatlarini yansitir.
+Bu indisin hangi sembolleri kapsadigini almak icin</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">DATA</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/alldata/sp500&quot;</span>
+<span class="n">link</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;https://en.wikipedia.org/wiki/List_of_S%26P_500_companies#S&amp;P_500_component_stocks&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_html</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/spy-tickers.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Bir csv dosyasina bu sembolleri yazmis olduk. Ustteki <code>read_html</code> cagrisini dikkat,
+Pandas bir HTML sayfasini bile okuyup <code>DataFrame</code> haline cevirebiliyor.</p>
+
+<p>Tarihi veriyi bu semboller icin biz daha once Yahoo Finance sitesinden
+indirdik, mesela Apple seneti icin, 2010 ve 2024 Eylul arasindaki
+tarihler icin,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/2010-2024/AAPL.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+            Date   Adj Close
+3685  2024-08-23  226.839996
+3686  2024-08-26  227.179993
+3687  2024-08-27  228.029999
+3688  2024-08-28  226.490005
+3689  2024-08-29  229.789993
+</code></pre>
+</div>
+
+<p>Bu veriler ilk indirim, yerel tabani bu verilerle once dolduracagiz. </p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

@@ -141,8 +141,8 @@ dtype: float64
 dtype: float64
 </code></pre>
 
-<p>Senet Ornegi</p>
-<p>Apple senedine bakalim,</p>
+<p>Örnek</p>
+<p>Apple senedine bakalım,</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
 df.plot()
@@ -150,13 +150,19 @@ plt.savefig('tser_011_sign_01.jpg')
 </code></pre>
 
 <p><img alt="" src="tser_011_sign_01.jpg" /></p>
+<p>Diyelim ki müneccim bir yatırımcı bu senede ne zaman alıp, satacağını bir
+şekilde biliyor. O 2005-06 civarındaki çıkış öncesi alıyor, o çıkışın tepesinde
+satıyor, sonra 2006-09'da tekrar geliyor, ve son düşüş öncesi yine çıkıyor.  Bu
+arkadaşın alım / satım stratejisini 1 ve 0 sinyalleri ile temsil edebiliriz.</p>
 <pre><code class="python">df['signal'] = 0
 filt1 = (df.index &gt; '2005-06-01') &amp; (df.index &lt; '2006-02-01')
 df.loc[filt1,'signal'] = 1
 filt2 = (df.index &gt; '2006-09-01') &amp; (df.index &lt; '2007-01-01')
 df.loc[filt2,'signal'] = 1
-df['ret'] = df.AAPL.pct_change()
+</code></pre>
 
+<p>Stratejinin başarısı ne olur acaba?</p>
+<pre><code class="python">df['ret'] = df.AAPL.pct_change()
 cumret = np.cumprod(1+(df.ret*df.signal))
 print (cumret.tail(4))
 </code></pre>
@@ -169,18 +175,32 @@ print (cumret.tail(4))
 dtype: float64
 </code></pre>
 
+<p>Tüm kumulatif seriye aslında ihtiyaç yok, son gelinen getiri noktası için,</p>
 <pre><code class="python">np.prod(1+(df.ret*df.signal))
 </code></pre>
 
 <pre><code>Out[1]: 2.3247214450625857
 </code></pre>
 
+<p>Yüzde 232 gibi bir artış var! Bu stratejiyi yıllık kazanca nasıl çeviririz?
+Eldeki getirinin hangi zaman dilimine tekabül ettiğine bakarız, ve bu getiriyi
+bir sene, yani 252 zaman dilimi (yıl içindeki iş günü miktarı), için
+ölçekleriz. Mesela eğer 50 gün için bir getiri $g$ hesaplamışsak, bu getiriyi
+yukarı ölçekleyip kabaca $g^5$ hesaplayabiliriz ve getiriyi tüm sene bazına
+yukarı ölçekleyebiliriz (çünkü $252/5 \approx 5$), sonra tüm sonuçtan bir
+çıkartırız daha önce eklenen 1 etkisini iptal etmek için. Eğer eldeki zaman
+serisi miktarı 252'den fazla ise alta ölçekleme de yapılabilirdi, $g^{1/2}$,
+$g^{1/5}$ gibi, ama bu hesaplar da yine matematiksel olarak doğrudur. Elde
+edilecek olan yıllık yüzde oranı (annual percentage rate), APR,</p>
 <pre><code class="python">print ('APR', ((np.prod(1.+df.ret*df.signal))**(252./len(df.ret)))-1)
 </code></pre>
 
 <pre><code>APR 0.32471861974412564
 </code></pre>
 
+<p>Getiri yıllık yüzde 32.47.</p>
+<p>Eğer strateji üstteki kadar iyi olmasaydı, mesela yatırımcı 2005-06'da
+alım yapmış ama senette kalmış, sona kadar satmamış, bu durumda,</p>
 <pre><code class="python">df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
 df['signal'] = 0
 filt1 = (df.index &gt; '2005-06-01')
@@ -194,6 +214,7 @@ print ('APR', ((np.prod(1.+df.ret*df.signal))**(252./len(df.ret)))-1)
 APR 0.2816374105511763
 </code></pre>
 
+<p>Daha düşük bir getiri elde etmiş olacaktı.</p>
 <p>[devam edecek]</p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

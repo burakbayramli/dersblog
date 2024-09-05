@@ -150,8 +150,8 @@ plt.savefig('tser_011_sign_01.jpg')
 </code></pre>
 
 <p><img alt="" src="tser_011_sign_01.jpg" /></p>
-<p>Diyelim ki müneccim bir yatırımcı bu senede ne zaman alıp, satacağını bir
-şekilde biliyor. O 2005-06 civarındaki çıkış öncesi alıyor, o çıkışın tepesinde
+<p>Diyelim ki müneccim bir yatırımcı bu senedi ne zaman alıp, satacağını bir
+şekilde biliyor. 2005-06 civarındaki çıkış öncesi alıyor, o çıkışın tepesinde
 satıyor, sonra 2006-09'da tekrar geliyor, ve son düşüş öncesi yine çıkıyor.  Bu
 arkadaşın alım / satım stratejisini 1 ve 0 sinyalleri ile temsil edebiliriz.</p>
 <pre><code class="python">df['signal'] = 0
@@ -161,7 +161,7 @@ filt2 = (df.index &gt; '2006-09-01') &amp; (df.index &lt; '2007-01-01')
 df.loc[filt2,'signal'] = 1
 </code></pre>
 
-<p>Stratejinin başarısı ne olur acaba?</p>
+<p>Stratejinin başarısı ne olur acaba? Üstte gördüğümüz yöntemler ile hesaplayalım,</p>
 <pre><code class="python">df['ret'] = df.AAPL.pct_change()
 cumret = np.cumprod(1+(df.ret*df.signal))
 print (cumret.tail(4))
@@ -183,15 +183,15 @@ dtype: float64
 </code></pre>
 
 <p>Yüzde 232 gibi bir artış var! Bu stratejiyi yıllık kazanca nasıl çeviririz?
-Eldeki getirinin hangi zaman dilimine tekabül ettiğine bakarız, ve bu getiriyi
-bir sene, yani 252 zaman dilimi (yıl içindeki iş günü miktarı), için
-ölçekleriz. Mesela eğer 50 gün için bir getiri $g$ hesaplamışsak, bu getiriyi
-yukarı ölçekleyip kabaca $g^5$ hesaplayabiliriz ve getiriyi tüm sene bazına
-yukarı ölçekleyebiliriz (çünkü $252/5 \approx 5$), sonra tüm sonuçtan bir
-çıkartırız daha önce eklenen 1 etkisini iptal etmek için. Eğer eldeki zaman
-serisi miktarı 252'den fazla ise alta ölçekleme de yapılabilirdi, $g^{1/2}$,
-$g^{1/5}$ gibi, ama bu hesaplar da yine matematiksel olarak doğrudur. Elde
-edilecek olan yıllık yüzde oranı (annual percentage rate), APR,</p>
+Stratejinin uygulandığı tüm zaman dilimlerini alırız, ve getiriyi bir sene, yani
+252 zaman dilimi (yıl içindeki iş günü miktarı), için ölçekleriz. Mesela eğer 50
+gün için bir getiri $g$ hesaplamışsak, bu getiriyi yukarı ölçekleyip kabaca
+$g^5$ ile yıllık getiriyi hesaplayabiliriz / tüm sene bazına yukarı
+ölçekleyebiliriz (çünkü $252/5 \approx 5$), sonra tüm sonuçtan bir çıkartırız
+daha önce eklenen 1 etkisini iptal etmek için. Eğer eldeki zaman serisi miktarı
+252'den fazla ise alta ölçekleme de yapılabilirdi, $g^{1/2}$, $g^{1/5}$ gibi,
+ama bu hesaplar da yine matematiksel olarak doğrudur ve aynı yöntemle
+hesaplanır. Elde edilecek olan yıllık yüzde oranı (annual percentage rate), APR,</p>
 <pre><code class="python">print ('APR', ((np.prod(1.+df.ret*df.signal))**(252./len(df.ret)))-1)
 </code></pre>
 
@@ -200,7 +200,7 @@ edilecek olan yıllık yüzde oranı (annual percentage rate), APR,</p>
 
 <p>Getiri yıllık yüzde 32.47.</p>
 <p>Eğer strateji üstteki kadar iyi olmasaydı, mesela yatırımcı 2005-06'da
-alım yapmış ama senette kalmış, sona kadar satmamış, bu durumda,</p>
+alım yapmış ama senette kalmış, sona kadar satmamış olsaydı, bu durumda,</p>
 <pre><code class="python">df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
 df['signal'] = 0
 filt1 = (df.index &gt; '2005-06-01')
@@ -218,7 +218,7 @@ APR 0.2816374105511763
 <p>Not: Getiriyi ölçeklerken <code>len(df.ret)</code> ile yukarıdaki grafiğin tümünü
 kullandık fakat düşünürsek aslında bu strateji 2004-01 noktasında değil 2005-06
 noktasında başlıyor. Bu sebeple tüm seri aslında daha kısa ve APR bu sebeple
-daha yüksek olur. Neyse örneği basit tutma amacıyla bu değişikliği yapmıyoruz.</p>
+daha yüksek olurdu. Neyse örneği basit tutma amacıyla bu değişikliği yapmıyoruz.</p>
 <p>Sinyaller</p>
 <p>Almış olmanın 1, elde olmama için 0 sinyalinden bahsettik. Aslında sinyal bazlı
 strateji hesabı sadece bu iki rakamla sınırlı değildir, mesela eksi değer
@@ -227,7 +227,7 @@ düşüşten kazanıldığı için zaman serisinin getiri yüzdesi eksi 1 ile
 çarpılacaktır, yüzde artışta düşüş var ise o değer eksi değerdir ve eksi yüzde
 çarpı eksi 1 artı değer olacağı için, o değişim kazanç olarak portföye yansımış
 olacaktır. Değişim -0.01 olabilir, fakat o noktada strateji açığa sat, -1 diyor
-ise, -1 * -0.01 = 0.01, bu kazanç olarak yazılacaktır.</p>
+ise, -1 * -0.01 = 0.01, bu sayı kazanç olarak haneye yazılır.</p>
 <p>[devam edecek]</p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

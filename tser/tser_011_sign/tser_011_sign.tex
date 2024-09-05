@@ -76,7 +76,7 @@ Out[1]:
 dtype: float64
 \end{verbatim}
 
-Yüzde değişimler, kumulatif çarpımlar ile uğraşmamızın bir sebebi var, portföy
+Yüzde değişimler, kümülatif çarpımlar ile uğraşmamızın bir sebebi var, portföy
 perfomansına bakarken herhangi bir strateji için gereken alım / satım
 ``sinyallerini'' kolayca dahil edebiliyoruz, ve stratejiyi tartarken bir zaman
 serisi üzerinden bunu yapabiliyoruz. Elde edilecek serinin istatistiki,
@@ -85,11 +85,11 @@ faydalı olur, mesela Sharpe oranı gibi.
 
 Sinyalleri şöyle kullanabiliriz, bir varlığı belli bir zaman noktasında almış
 olmak 1 sinyali ile temsil edilir, varlığın elde olmaması ise 0 ile temsil
-edilir.  O zaman kumulatif hesaptan önce tüm yüzde değişimleri sinyal vektörü
-ile çarparız, ondan sonra kumulatif hesap devreye girer. Eğer sinyal 1 ise o
-noktada yüzde değişim sıfıra iner, o getiri elde edilmemiş olur, kumulatif
+edilir.  O zaman kümülatif hesaptan önce tüm yüzde değişimleri sinyal vektörü
+ile çarparız, ondan sonra kümülatif hesap devreye girer. Eğer sinyal 1 ise o
+noktada yüzde değişim sıfıra iner, o getiri elde edilmemiş olur, kümülatif
 hesapta 1+0 = 1, yani hiç bir değişim yaratmaz. Eğer sinyal 1 ise 1 çarpı mesela
-yüzde 2 getiri yüzde 2 getirinin aktif olmuş olması demektir, o getiri kumulatif
+yüzde 2 getiri yüzde 2 getirinin aktif olmuş olması demektir, o getiri kümülatif
 çarpıma etki eder.
 
 \begin{minted}[fontsize=\footnotesize]{python}
@@ -167,7 +167,7 @@ Date
 dtype: float64
 \end{verbatim}
 
-Tüm kumulatif seriye aslında ihtiyaç yok, son gelinen getiri noktası için,
+Tüm kümülatif seriye aslında ihtiyaç yok, son gelinen getiri noktası için,
 
 \begin{minted}[fontsize=\footnotesize]{python}
 np.prod(1+(df.ret*df.signal))
@@ -218,6 +218,21 @@ APR 0.2816374105511763
 
 Daha düşük bir getiri elde etmiş olacaktı.
 
+Not: Getiriyi ölçeklerken \verb!len(df.ret)! ile yukarıdaki grafiğin tümünü
+kullandık fakat düşünürsek aslında bu strateji 2004-01 noktasında değil 2005-06
+noktasında başlıyor. Bu sebeple tüm seri aslında daha kısa ve APR bu sebeple
+daha yüksek olur. Neyse örneği basit tutma amacıyla bu değişikliği yapmıyoruz.
+
+Sinyaller
+
+Almış olmanın 1, elde olmama için 0 sinyalinden bahsettik. Aslında sinyal bazlı
+strateji hesabı sadece bu iki rakamla sınırlı değildir, mesela eksi değer
+kullanırsak, -1 gibi, bu açığa satış stratejisini kodlayabilirdi. Açığa satışta
+düşüşten kazanıldığı için zaman serisinin getiri yüzdesi eksi 1 ile
+çarpılacaktır, yüzde artışta düşüş var ise o değer eksi değerdir ve eksi yüzde
+çarpı eksi 1 artı değer olacağı için, o değişim kazanç olarak portföye yansımış
+olacaktır. Değişim -0.01 olabilir, fakat o noktada strateji açığa sat, -1 diyor
+ise, -1 * -0.01 = 0.01, bu kazanç olarak yazılacaktır.
 
 
 

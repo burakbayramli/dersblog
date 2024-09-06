@@ -335,36 +335,44 @@ garantisi değildir. Ayrıca veri uyduruk, gerçek dünya şartlarında iki seri
 birbirini dengeleyici bazı özellikleri olabilir, mesela genellikle ortalama
 performanslı fakat iki seriden birinin sert düşüşünü diğerinin dengeleyici
 özelliği varsa, birleşik portföyün getirisi uzun vadede daha sağlam olacaktır.</p>
+<p>Birlesik portfoy avantajini iyi gosteren bir ornek 60/40 kurali, yatirimcilikta
+bilinen unlu bir dagilim yatirimin yuzde 60'inin senet yuzde 40'inin tahvil
+olmasi tavsiyesidir. Acaba bu dagilim hakikaten isliyor mu? Geri donuk testlerle
+kontrol edebiliriz. </p>
+<p>Veri SP 500 indisini baz alan <code>SPY</code> ve tahvilleri baz alan <code>AGG</code> fon
+fiyatları olacak [2,3]. Bu iki zaman serisini genel bir borsa, ve tahvil fiyatı
+yerine kullanacağız. Farklı karışım oranları deneyeceğiz, ve her dağılım için
+getiri performansını hesaplayacağız.</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('eqbnd.csv',index_col='Date',parse_dates=True)
-</code></pre>
-
-<pre><code class="python">ge_df = df.copy()
-ge_df = ge_df[(ge_df.index &gt; '2003-01-01') &amp; (ge_df.index &lt; '2010-01-01')]
-positions = np.zeros(ge_df.shape)
+df = df[(df.index &gt; '2003-01-01') &amp; (df.index &lt; '2010-01-01')]
+positions = np.zeros(df.shape)
 print ('Senet  Tahvil')
 for x in np.linspace(0,1,11):
-   x = np.round(x,3)
+   x = np.round(x,4)
    positions[:,0] = x
    positions[:,1] = 1.0-x
-   ret = (ge_df.pct_change() * positions).sum(axis=1)
-   print ('%0.2f   %0.2f   %0.2f' % (x, np.round(1-x,2), np.round(np.prod(1.0+ret),3)))
+   ret = (df.pct_change() * positions).sum(axis=1)
+   print ('%0.3f   %0.3f   %0.3f' % (x, np.round(1-x,2), np.round(np.prod(1.0+ret),3)))
 </code></pre>
 
 <pre><code>Senet  Tahvil
-0.00   1.00   1.32
-0.10   0.90   1.35
-0.20   0.80   1.37
-0.30   0.70   1.39
-0.40   0.60   1.41
-0.50   0.50   1.42
-0.60   0.40   1.43
-0.70   0.30   1.43
-0.80   0.20   1.43
-0.90   0.10   1.42
-1.00   0.00   1.40
+0.000   1.000   1.318
+0.100   0.900   1.347
+0.200   0.800   1.373
+0.300   0.700   1.394
+0.400   0.600   1.410
+0.500   0.500   1.421
+0.600   0.400   1.427
+0.700   0.300   1.429
+0.800   0.200   1.425
+0.900   0.100   1.416
+1.000   0.000   1.402
 </code></pre>
 
+<p>Sonuca göre 60/40 iyi gözüküyor, gerçi 70/30 en iyisi. Demek ki bahsedilen
+dağılımın iyi performans verdiği doğruymuş. Dikkat edersek bahsedilen oran
+her iki varlığın tek başına olan performansından daha iyi. </p>
 <pre><code class="python">ret = ge_df.SPY.pct_change()
 print ('Senet',np.round(np.prod(1.0+ret),2))
 ret = ge_df.AGG.pct_change()
@@ -375,9 +383,11 @@ print ('Tahvil',np.round(np.prod(1.0+ret),2))
 Tahvil 1.32
 </code></pre>
 
-<p>[devam edecek]</p>
+<p>Karışımlar işte bu şekilde daha iyi performans gösterebilirler.</p>
 <p>Kaynaklar</p>
 <p>[1] <a href="https://www.quantstart.com/qstrader/tutorial-60-40-portfolio/">https://www.quantstart.com/qstrader/tutorial-60-40-portfolio/</a></p>
+<p>[2] <a href="https://finance.yahoo.com/quote/SPY/">https://finance.yahoo.com/quote/SPY/</a></p>
+<p>[3] <a href="https://finance.yahoo.com/quote/AGG/">https://finance.yahoo.com/quote/AGG/</a></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

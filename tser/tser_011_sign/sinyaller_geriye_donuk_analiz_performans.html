@@ -40,13 +40,14 @@
 <p>Elimizde bir zaman serisi var, bu seri bir finansal varlığın fiyat seviyesi
 olabilir, belki Apple senedidir, ilk gün 100 ikinci gün 102 olmuş, böyle
 gidiyor.</p>
-<pre><code class="python">import pandas as pd
-d = np.array([100,102,104.04,106.12,108.24,110.41])
+<pre><code class="python">d = np.array([100,102,104.04,106.12,108.24,110.41])
 </code></pre>
 
 <p>Peki bu fiyat seviyeleri günlük hangi yüzde değişimlerine tekabül ediyor?
 Bu hesabın bir yolu var, <code>pct_change</code> kullanabiliriz,</p>
-<pre><code class="python">p = pd.Series(d)
+<pre><code class="python">import pandas as pd
+
+p = pd.Series(d)
 print (list(p))
 print (list(np.round(p.pct_change(),2)))
 </code></pre>
@@ -220,14 +221,23 @@ kullandık fakat düşünürsek aslında bu strateji 2004-01 noktasında değil 
 noktasında başlıyor. Bu sebeple tüm seri aslında daha kısa ve APR bu sebeple
 daha yüksek olurdu. Neyse örneği basit tutma amacıyla bu değişikliği yapmıyoruz.</p>
 <p>Sinyaller</p>
-<p>Almış olmanın 1, elde olmama için 0 sinyalinden bahsettik. Aslında sinyal bazlı
-strateji hesabı sadece bu iki rakamla sınırlı değildir, mesela eksi değer
-kullanırsak, -1 gibi, bu açığa satış stratejisini kodlayabilirdi. Açığa satışta
-düşüşten kazanıldığı için zaman serisinin getiri yüzdesi eksi 1 ile
-çarpılacaktır, yüzde artışta düşüş var ise o değer eksi değerdir ve eksi yüzde
-çarpı eksi 1 artı değer olacağı için, o değişim kazanç olarak portföye yansımış
-olacaktır. Değişim -0.01 olabilir, fakat o noktada strateji açığa sat, -1 diyor
-ise, -1 * -0.01 = 0.01, bu sayı kazanç olarak haneye yazılır.</p>
+<p>Varlığı almış olmanın 1, olmamanın 0 sinyali ile belirtildiğinden
+bahsettik. Aslında sinyal bazlı strateji hesabı sadece bu iki rakamla sınırlı
+değildir, mesela eksi değer kullanırsak, -1 gibi, bu açığa satış stratejisini
+kodlayabilirdi. Açığa satışta düşüşten kazanıldığı için zaman serisinin getiri
+yüzdesi eksi 1 ile çarpılacaktır. Düşüş var ise o değer eksi değerdir ve eksi
+yüzde çarpı eksi 1 artı değer olacağı için, o değişim kazanç olarak portföye
+yansımış olacaktır. Değişim -0.01 olabilir, fakat o noktada strateji açığa sat,
+-1 diyor ise, -1 * -0.01 = 0.01, bu sayı kazanç sayılır.</p>
+<p>Sinyaller birden fazla varlığı da kapsayabilir, 0 ile 1 arası birkaç değer
+kullanırsak (ki bu değerlerin toplamı 1 olmalıdır) o zaman sinyaller portföydeki
+"dağılımı" temsil edebilir. Sinyal 1 sonuçta bir zaman aralığındaki tüm
+değişimden istifade etmek demektir, eğer mesela 0.5 ile çarparsam değişimin
+sadece yarısından istifade ediyorum, paranın yarısının o varlığa koymuşum, diğer
+yarısı 0.5 ile başka bir değişimi çarpabilir, onun kazancı (ya da kaybı)
+kümülatife yansıtıyor.</p>
+<p>Alttaki örnekle devam edelim, iki tane zaman serisi görüyoruz, önce onların
+yüzde değişimlerini hesaplıyoruz,</p>
 <pre><code class="python">import pandas as pd
 
 a = np.array([2.0, 2.03, 2.07, 2.11, 2.13, 2.17, 2.25, 2.29, 2.33, 2.4])
@@ -242,9 +252,13 @@ print (list(np.round(b.pct_change(),2)))
 [nan, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01]
 </code></pre>
 
+<p>Bariz şekilde birinci seri ikinciye göre daha çok yükseliyor. Bu seriler
+üzerinde yarı yarıya dağılım yaparsak elde edilecek kazancı hesaplayalım
+şimdi. <code>DataFrame</code> yaratılır,</p>
 <pre><code class="python">df = pd.concat([a,b],axis=1)
 df.columns = ['a','b']
 print (df)
+print (df.shape)
 </code></pre>
 
 <pre><code>      a     b
@@ -258,15 +272,23 @@ print (df)
 7  2.29  4.39
 8  2.33  4.44
 9  2.40  4.50
+(10, 2)
 </code></pre>
 
+<p>Veri <code>(10,2)</code> boyutlarında, iki varlığın fiyat seviyelerini gösteren 10
+zaman dilimi var. Şimdi sinyali ikiye bölüyoruz, biri varlık a diğeri b için,
+dağılım 0.5, 0.5 olacak, bu dağılımı 10 kere tekrarlayacağız, getirilerin
+matrisini bu dağılım matrisi ile çarpacağız, sonucu toplayacağız.  Sonuçta
+elimize aynen tek varlık durumunda olduğu gibi tek boyutlu bir getiri zaman
+serisi geçecek.</p>
+<p>Not: Dağılım her zaman diliminde aynı, o zaman niye (10,2) boyutlu bir matris
+kullandık? Burada göstermiyoruz ama dağılımlar da zamana göre değişebilir,
+dinamik karakterde olabilir. Bu tür stratejileri ilerideki derslerde göreceğiz.</p>
 <pre><code class="python">positions = np.zeros(df.shape)
 positions[:,0] = 0.5
 positions[:,1] = 0.5
 ret = (df.pct_change() * positions).sum(axis=1)
 print (ret)
-print (np.prod(1+ret))
-print ('APR', ((np.prod(1+ret))**(252./len(ret)))-1)
 </code></pre>
 
 <pre><code>0    0.000000
@@ -280,10 +302,18 @@ print ('APR', ((np.prod(1+ret))**(252./len(ret)))-1)
 8    0.014428
 9    0.021778
 dtype: float64
-1.1620428461381263
+</code></pre>
+
+<p>Bu serinin başarısını hesaplayalım,</p>
+<pre><code class="python">print (np.prod(1+ret))
+print ('APR', ((np.prod(1+ret))**(252./len(ret)))-1)
+</code></pre>
+
+<pre><code>1.1620428461381263
 APR 43.01472199080321
 </code></pre>
 
+<p>Eğer dağılım farklı olsaydı, </p>
 <pre><code class="python">positions = np.zeros(df.shape)
 positions[:,0] = 0.8
 positions[:,1] = 0.2
@@ -296,6 +326,15 @@ print ('APR', ((np.prod(1+ret))**(252./len(ret)))-1)
 APR 70.61274939993416
 </code></pre>
 
+<p>Bu sonuç mantıklı çünkü varlık a daha hızlı artıyordu, ağırlığı oraya daha fazla
+veren strateji tabii ki daha iyi kazandırır.</p>
+<p>Akla gelebilecek sorular, eğer bir seri diğerinden daha iyi getiri veriyorsa
+niye hep ona, hatta sadece ona ağırlık verilmez? Cevabın ilk kısmı üstteki
+yapılan test geriye dönük bir test olduğu, geriye dönük test ileri fiyatların
+garantisi değildir. Ayrıca veri uyduruk, gerçek dünya şartlarında iki serinin
+birbirini dengeleyici bazı özellikleri olabilir, mesela genellikle ortalama
+performanslı fakat iki seriden birinin sert düşüşünü diğerinin dengeleyici
+özelliği varsa, birleşik portföyün getirisi uzun vadede daha sağlam olacaktır.</p>
 <pre><code class="python">import pandas as pd
 df = pd.read_csv('eqbnd.csv',index_col='Date',parse_dates=True)
 </code></pre>

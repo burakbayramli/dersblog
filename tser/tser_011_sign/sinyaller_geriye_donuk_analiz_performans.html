@@ -235,7 +235,7 @@ kullanırsak (ki bu değerlerin toplamı 1 olmalıdır) o zaman sinyaller portf�
 değişimden istifade etmek demektir, eğer mesela 0.5 ile çarparsam değişimin
 sadece yarısından istifade ediyorum, paranın yarısının o varlığa koymuşum, diğer
 yarısı 0.5 ile başka bir değişimi çarpabilir, onun kazancı (ya da kaybı)
-kümülatife yansıtıyor.</p>
+kümülatife yansır.</p>
 <p>Alttaki örnekle devam edelim, iki tane zaman serisi görüyoruz, önce onların
 yüzde değişimlerini hesaplıyoruz,</p>
 <pre><code class="python">import pandas as pd
@@ -331,13 +331,14 @@ veren strateji tabii ki daha iyi kazandırır.</p>
 <p>Akla gelebilecek sorular, eğer bir seri diğerinden daha iyi getiri veriyorsa
 niye hep ona, hatta sadece ona ağırlık verilmez? Cevabın ilk kısmı üstteki
 yapılan test geriye dönük bir test olduğu, geriye dönük test ileri fiyatların
-garantisi değildir. Ayrıca veri uyduruk, gerçek dünya şartlarında iki serinin
-birbirini dengeleyici bazı özellikleri olabilir, mesela genellikle ortalama
-performanslı fakat iki seriden birinin sert düşüşünü diğerinin dengeleyici
-özelliği varsa, birleşik portföyün getirisi uzun vadede daha sağlam olacaktır.</p>
-<p>Birlesik portfoy avantajini iyi gosteren bir ornek 60/40 kurali, yatirimcilikta
-bilinen unlu bir dagilim yatirimin yuzde 60'inin senet yuzde 40'inin tahvil
-olmasi tavsiyesidir. Acaba bu dagilim hakikaten isliyor mu? Geri donuk testlerle
+garantisi olmaması. Ayrıca veri uyduruk, gerçek dünya şartlarında iki serinin
+birbirini dengeleyici bazı özellikleri olabilir, mesela genellikle birleşik
+performansı ortalama olsa da iki seriden birinin sert düşüşünü diğerinin
+dengeleyici özelliği varsa, portföyün getirisi uzun vadede daha sağlam
+olabilir.</p>
+<p>Birleşik portföy avantajını iyi gösteren bir örnek 60/40 kuralı, yatırımcılıkta
+bilinen ünlü bir dağılım yatırımın yüzde 60'inin senet yüzde 40'inin tahvil
+olması tavsiyesidir. Acaba bu dağılım hakikaten işliyor mu? Geri dönük testlerle
 kontrol edebiliriz. </p>
 <p>Veri SP 500 indisini baz alan <code>SPY</code> ve tahvilleri baz alan <code>AGG</code> fon
 fiyatları olacak [2,3]. Bu iki zaman serisini genel bir borsa, ve tahvil fiyatı
@@ -371,8 +372,8 @@ for x in np.linspace(0,1,11):
 </code></pre>
 
 <p>Sonuca göre 60/40 iyi gözüküyor, gerçi 70/30 en iyisi. Demek ki bahsedilen
-dağılımın iyi performans verdiği doğruymuş. Dikkat edersek bahsedilen oran
-her iki varlığın tek başına olan performansından daha iyi. </p>
+dağılımın iyi performans verdiği doğruymuş. Ayrıca dikkat edersek bahsedilen
+oran her iki varlığın tek başına olan performansından daha iyi.</p>
 <pre><code class="python">ret = ge_df.SPY.pct_change()
 print ('Senet',np.round(np.prod(1.0+ret),2))
 ret = ge_df.AGG.pct_change()
@@ -383,7 +384,6 @@ print ('Tahvil',np.round(np.prod(1.0+ret),2))
 Tahvil 1.32
 </code></pre>
 
-<p>Karışımlar işte bu şekilde daha iyi performans gösterebilirler.</p>
 <p>Kaynaklar</p>
 <p>[1] <a href="https://www.quantstart.com/qstrader/tutorial-60-40-portfolio/">https://www.quantstart.com/qstrader/tutorial-60-40-portfolio/</a></p>
 <p>[2] <a href="https://finance.yahoo.com/quote/SPY/">https://finance.yahoo.com/quote/SPY/</a></p>

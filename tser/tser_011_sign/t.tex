@@ -2,51 +2,6 @@
 \begin{document}
 
 
-\begin{minted}[fontsize=\footnotesize]{python}
-import pandas as pd
-df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
-\end{minted}
-
-
-\begin{minted}[fontsize=\footnotesize]{python}
-df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
-df['signal'] = 0
-filt1 = (df.index > '2005-06-01') & (df.index < '2006-02-01')
-df.loc[filt1,'signal'] = 1
-filt2 = (df.index > '2006-09-01') & (df.index < '2007-01-01')
-df.loc[filt2,'signal'] = 1
-df['ret'] = df.AAPL.pct_change()
-print (np.prod(1+(df.ret*df.signal)))
-\end{minted}
-
-\begin{verbatim}
-2.3247214450625857
-\end{verbatim}
-
-
-\begin{minted}[fontsize=\footnotesize]{python}
-df = pd.read_csv('../tser_008_data/AAPL.csv',index_col='Date',parse_dates=True)
-df['signal'] = 0
-filt1 = (df.index > '2005-06-01')
-df.loc[filt1,'signal'] = 1
-df['ret'] = df.AAPL.pct_change()
-print (np.prod(1+(df.ret*df.signal)))
-\end{minted}
-
-\begin{verbatim}
-2.105210500206348
-\end{verbatim}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

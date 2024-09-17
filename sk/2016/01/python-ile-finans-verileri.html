@@ -124,6 +124,32 @@ milisaniye üzerinden verilir, ve sonuç JSON içinden alınır.</p>
 </code></pre>
 </div>
 
+<h3>Polygon.io</h3>
+
+<p>Ticare bir servis olsa da bedava olan seviyesi hala ise yariyor, fakat
+bedava serviste bazi kisitlamalar var, mesela tarihi verilerde iki
+sene oncesinde daha fazlasi verilmiyor. Gene de faydali olabilir, servise
+uye olduktan sonra API anahtar kelimesi / sifresi alinir, biz alttaki
+gibi bir kod kullaniyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">KEY</span> <span class="o">=</span> <span class="s2">&quot;[anahtar buraya]&quot;</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="s2">&quot;2018-01-01&quot;</span>
+<span class="n">ticker</span> <span class="o">=</span> <span class="s2">&quot;AAPL&quot;</span>
+
+<span class="n">conf</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">poly_url</span> <span class="o">%</span> <span class="p">(</span><span class="n">ticker</span><span class="p">,</span> <span class="n">d1</span><span class="p">,</span> <span class="n">today</span><span class="p">,</span> <span class="n">KEY</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;results&#39;</span><span class="p">]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="p">[[</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;t&#39;</span><span class="p">])</span> <span class="o">/</span> <span class="mf">1000.</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">),</span> <span class="n">x</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">res</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Date&#39;</span><span class="p">,</span><span class="n">ticker</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;Date&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <h3>FRED</h3>
 
 <p>'FRED' ABD merkez bankası tabanından veri indirilebiliyor.  ABD gayrı

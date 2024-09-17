@@ -38,17 +38,13 @@
         <h1></h1>
 <h1>Python ile Finans Verileri</h1>
 
-<p>Finans verilerini indirmek, işlemek Python üzerinde iyice
-basitleşti. Veri işleme amaçlı başlatılan Pandas'ın yazarı zaten
-projesini ilk başta zaman serileri / finans verisi işlemek için
-başlattığını söylemişti. Bu yakınlık devam etmiş anlaşılan, şu anda
-Yahoo Finance, Google Finance, hatta makroekonomik veriler için FRED
-bağlantısı var. Hatta birisi opsiyon (option) verisi indirecek kodları
-bile eklemiş - açık yazılımın faydaları.</p>
-
 <h3>Yahoo Finance</h3>
 
-<p>İndeks verisi, mesela Nasdaq için <code>^IXIC</code>,</p>
+<p>Alttaki yöntemle YF arayüze özel ÜRL oluşturarak bağlanıyoruz. Bu
+bağlantı yöntemi arka planda <code>finance.yahoo.com</code> sitesinin girdi
+mantığını takip ediyor, senetler için direk onların kodu girilebilir,
+AAPL, MSFT gibi, indisler ve özel göstergeler başında <code>^</code> vardır,
+indis verisi, mesela Nasdaq için <code>^IXIC</code>,</p>
 
 <pre><code>import pandas as pd, datetime, time
 import urllib.request as urllib2
@@ -67,8 +63,7 @@ df = pd.read_csv(file,index_col='Date')
 
 <p>Not: Yahoo Finans'ın üstteki bağlantı yöntemi 2024 Eylül'de aksaklığa
 uğradı, tamamen kapatıldı mı bilinmiyor, bir alternatif yöntem
-altadır. Bu yontemle başlangıç ve bitiş tarihleri Ünix epoch
-milisaniye üzerinden verilir, ve sonuç JSON içinden alınır.</p>
+altadır. Bu yöntem biraz farklı, sonuç JSON olarak geliyor,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">requests</span>
@@ -126,11 +121,11 @@ milisaniye üzerinden verilir, ve sonuç JSON içinden alınır.</p>
 
 <h3>Polygon.io</h3>
 
-<p>Ticare bir servis olsa da bedava olan seviyesi hala ise yariyor, fakat
-bedava serviste bazi kisitlamalar var, mesela tarihi verilerde iki
-sene oncesinde daha fazlasi verilmiyor. Gene de faydali olabilir, servise
-uye olduktan sonra API anahtar kelimesi / sifresi alinir, biz alttaki
-gibi bir kod kullaniyoruz,</p>
+<p>Ticari bir servis olsa da bedava olan seviyesi hala ise yarıyor, fakat
+bedava serviste bazı kısıtlamalar var, mesela tarihi verilerde iki
+sene öncesinde daha fazlası verilmiyor. Gene de faydalı olabilir, servise
+üye olduktan sonra APİ anahtar kelimesi / şifresi alınır, biz alttaki
+gibi bir kod kullanıyoruz,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">KEY</span> <span class="o">=</span> <span class="s2">&quot;[anahtar buraya]&quot;</span>
@@ -183,7 +178,7 @@ DATE
 
 <p>Alttaki url kazınabilir</p>
 
-<p>https://www.nasdaq.com/symbol/aapl/option-chain</p>
+<p><a href="https://www.nasdaq.com/symbol/aapl/option-chain">https://www.nasdaq.com/symbol/aapl/option-chain</a></p>
 
 <p>Makroekonomik Veriler ve Digerleri</p>
 
@@ -202,7 +197,7 @@ df1 = quandl.get("CURRFX/GBPUSD",
                  authtoken=auth)
 </code></pre>
 
-<p>Bilanco, kar, zarar gibi şirket temel verileri için <code>yahoo_fin</code> paketi
+<p>Bilanço, kâr, zarar gibi şirket temel verileri için <code>yahoo_fin</code> paketi
 faydalıdır, mesela Amazon şirketinin brüt karı (gross profit) ve
 toplam hasılat (total revenue) verisi için,</p>
 

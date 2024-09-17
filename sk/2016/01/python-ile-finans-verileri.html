@@ -44,10 +44,11 @@ projesini ilk başta zaman serileri / finans verisi işlemek için
 başlattığını söylemişti. Bu yakınlık devam etmiş anlaşılan, şu anda
 Yahoo Finance, Google Finance, hatta makroekonomik veriler için FRED
 bağlantısı var. Hatta birisi opsiyon (option) verisi indirecek kodları
-bile eklemiş - açık yazılımın faydaları. Bazı örnekler altta.</p>
+bile eklemiş - açık yazılımın faydaları.</p>
 
-<p>İndeks verisi, mesela Nasdaq için <code>^IXIC</code>, ama paketsiz, kendi işimizi
-kendimiz yapmamız gerekiyor,</p>
+<h3>Yahoo Finance</h3>
+
+<p>İndeks verisi, mesela Nasdaq için <code>^IXIC</code>,</p>
 
 <pre><code>import pandas as pd, datetime, time
 import urllib.request as urllib2
@@ -64,8 +65,69 @@ file = BytesIO(r)
 df = pd.read_csv(file,index_col='Date')
 </code></pre>
 
-<p>Aynı şekilde 'FRED' ABD merkez bankası tabanından veri indirilebiliyor. 
-ABD gayrı safi milli hasıla verisi için mesela,</p>
+<p>Not: Yahoo Finans'ın üstteki bağlantı yöntemi 2024 Eylül'de aksaklığa
+uğradı, tamamen kapatıldı mı bilinmiyor, bir alternatif yöntem
+altadır. Bu yontemle başlangıç ve bitiş tarihleri Ünix epoch
+milisaniye üzerinden verilir, ve sonuç JSON içinden alınır.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">datetime</span><span class="o">,</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">urllib.request</span> <span class="k">as</span> <span class="nn">urllib2</span>
+
+<span class="n">d1</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2015-09-01&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="s2">&quot;2024-09-17&quot;</span><span class="p">,</span> <span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">timestamp</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d1</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">d2</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>1441054800
+1726520400
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">ticker</span> <span class="o">=</span> <span class="s2">&quot;AAPL&quot;</span>
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;https://query2.finance.yahoo.com/v8/finance/chart/</span><span class="si">%s</span><span class="s2">?period1=</span><span class="si">%d</span><span class="s2">&amp;period2=</span><span class="si">%d</span><span class="s2">&amp;interval=1d&amp;events=history&amp;includeAdjustedClose=true&quot;</span> 
+<span class="n">url</span> <span class="o">=</span> <span class="n">url</span> <span class="o">%</span> <span class="p">(</span><span class="n">ticker</span><span class="p">,</span><span class="nb">int</span><span class="p">(</span><span class="n">d1</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">d2</span><span class="p">))</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">urllib2</span><span class="o">.</span><span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">json</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;chart&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;timestamp&#39;</span><span class="p">]</span>
+<span class="n">adjclose</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="s1">&#39;chart&#39;</span><span class="p">][</span><span class="s1">&#39;result&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;indicators&#39;</span><span class="p">][</span><span class="s1">&#39;adjclose&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;adjclose&#39;</span><span class="p">]</span>
+<span class="n">ts</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y-%m-</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">]</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">adjclose</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">ts</span><span class="p">),</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">ticker</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>                  AAPL
+2015-08-31   25.457985
+2015-09-01   24.320099
+2015-09-02   25.363161
+2015-09-03   24.918392
+2015-09-04   24.670042
+...                ...
+2024-09-10  220.110001
+2024-09-11  222.660004
+2024-09-12  222.770004
+2024-09-13  222.500000
+2024-09-16  216.320007
+
+[2276 rows x 1 columns]
+</code></pre>
+</div>
+
+<h3>FRED</h3>
+
+<p>'FRED' ABD merkez bankası tabanından veri indirilebiliyor.  ABD gayrı
+safi milli hasıla verisi için mesela,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">datetime</span>

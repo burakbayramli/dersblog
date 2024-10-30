@@ -18,3 +18,5 @@
 
 [S&P 500 Verisi](09/sp500.html)
 
+[Görüntü Dosyaları, PDF, Birleştirme, Kitap](10/foto_kitap.html)
+

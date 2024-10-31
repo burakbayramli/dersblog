@@ -50,10 +50,11 @@ for x in files_orig:
 ```
 
 Görüntü işlemek için ImageMagick kullandık, her sayfayı 90 derece sağa
-döndürüyoruz, gerekirse ek işlemler bu noktada kodlanabilir. Mesela
-sayfanın sağında solunda fazla boş bölgeler varsa `-shave 50x0` gibi
-bir seçenek o işlemi yapar, resim üzerinde keskinlik (sharpening)
-yapılabilir, pek çok diğer kabiliyet mevcut [3].
+döndürüyoruz (foto programından öyle geldi), gerekirse ek işlemler bu
+noktada kodlanabilir. Mesela sayfanın sağında solunda fazla boş
+bölgeler varsa `-shave 50x0` gibi bir seçenek o işlemi yapar, resim
+üzerinde keskinlik (sharpening) yapılabilir, pek çok diğer kabiliyet
+mevcut [3].
 
 Üstteki kodda zip dosyasının içeriğinin gezilmesine dikkat, işlemden
 önce tüm zip dosyasını açıp içindeki dosyaları diske yazmıyoruz,
@@ -72,7 +73,7 @@ indeksleyici program tarafından indekslenebilir hale gelir.
 
 Kaynaklar
 
-[1] <a href="2024/06/webfilebrowser.html">Flask ile Web Üzerinden Dizin Gezebilmek - webfilebrowser</a>
+[1] <a href="../../2024/06/webfilebrowser.html">Flask ile Web Üzerinden Dizin Gezebilmek - webfilebrowser</a>
 
 [2] <a href="../../2011/12/pdftk.html">PDFTK</a>
 

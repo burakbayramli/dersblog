@@ -1,507 +1,409 @@
 \documentclass[12pt,fleqn]{article}\usepackage{../../common}
 \begin{document}
-Materyel Mekaniği - 6
+Materyel Mekaniği - 5
 
-Tek Öğe Direngenlik (Stiffness) Matrisi
-
-Tek bir bağlantı parçasının direngenliğini hesaplamak istiyoruz, bunu hem
-eksenel yöndeki yer değişmeleri, hem de bükülme, eğilme gibi eksene dik
-uygulanan yönlerden de hesaplamak istiyoruz.
-
-Makaskiriş
-
-Önce makaskiriş (truss) mekaniği ile başlayalım. Makaskiriş konusuna [4]'te
-değinilmişti. Daha önce [1]'de gördüğümüz formülü hatırlarsak,
+Bükülen bir çubuğun formüllerine bir giriş [1] kaynağında yapıldı. Orada
+moment-eğri (moment-curvature) formülü gösterilmişti.
 
 $$
-E = \frac{P/A}{\delta / L}
+M(x) = \frac{E(x)I(x)}{\rho(x)} = \frac{EI}{\rho}
+\mlabel{1}
 $$
 
-Biraz farklı notasyon [3, sf. 344] ile buna
+Şimdi bu formülü genişletelim, ve bir ikinci derece türeve eşitleyelim.
+
+\includegraphics[width=15em]{phy_020_strs_05_01.jpg}
+
+Resimde gösterilen semboller $M$ bükme momenti, $\rho$ çubuğun $+y$ tarafındaki
+bükülme çemberinin, eğiminin yarıçapı (radius of curvature).  $v$ ise yine $+y$
+kısmındaki yer değişimidir. Çubuğa uygulanan kuvvet dağılımının ne olduğu
+önemli değil, sonuçta odaklandığımız çubuğun ufak bir kısmı.
+
+[7] kaynağında bir çemberi (yarıçapını) onun bir eğriye dokunduğu noktadaki
+türevler üzerinden temsil etme tekniğini paylaştık. Bu formülü mevcut probleme
+uygulayabiliriz.
+
+\includegraphics[width=20em]{phy_020_strs_05_02.jpg}
+
+Üstteki örnekte çemberin yarıçapı $\rho$, türevler ise $\ud v / \ud x$.
+Formül [6, sf. 466],
 
 $$
-\Delta = \frac{NL}{AE}
+\frac{1}{\rho} =
+\frac
+{\dfrac{\ud^2 v}{\ud x^2}}
+{ \left[ 1 + \left( \dfrac{\ud v}{\ud x}  \right)^2 \right]^{3/2} }
 $$
 
-diyebiliriz, ki $E$ yine Young'in Genliği, $N$ uygulanan kuvvet, $A$ çubuk
-alanı, $L$ uzunluğu.
-
-\includegraphics[width=15em]{phy_020_strs_05_06.jpg}
-
-Makaşkiriş öğelerinin sadece eksenel yüklenebildiklerini biliyoruz, eğer üstteki
-figür gibi bir senaryo olsaydı, alt uçtan $q'_N$ kuvveti uygulanmış, diğer nokta
-bir pime bağlı, bu durumda önceki formülü değiştirip [4, sf. 542]
+Üstteki problemde eğim çok ufaktır o zaman $\ud v / \ud x$ ufak kabul edilir
+(resimdeki eğim eğitim amaçlı abartılmış), demek ki bölendeki kare hesabı
+daha da ufalır, geriye sadece 1 kalır, 1 ile bölümü yok sayarız, geriye kalanlar
 
 $$
-\Delta = \frac{NL}{AE} \to \frac{\Delta AE}{L} = N
+\frac{1}{\rho} \approx \frac{\ud^2 v}{\ud x^2}
+\mlabel{2}
 $$
 
-ve $\Delta$ yerine yer değişim $d_N$, kuvvet $N$ için $q'_N$ kullanırız,
+Şimdi (1) formülünü tekrar düzenlersek,
 
 $$
-q'_N = \frac{AE}{L} d_N
+\frac{1}{\rho} = \frac{M}{EI }
 $$
 
-Pimli noktada denge durumunda üstteki kuvvete tepki olarak ona eşdeğerde ama
-eksi yönde bir kuvvet oluşmalıdır, ona $q'_F$ diyelim, o zaman diğer uçta
+diyebilirdik. Bu formülün sol tarafının (2) sol tarafı ile aynı olduğunu
+görüyoruz. Demek ki onları eşitleyebiliriz, moment-eğri formülü şu hale gelir,
 
 $$
-q'_F = -\frac{AE}{L} d_N
+\frac{\ud^2 v}{\ud x^2} = \frac{M}{E I}
 $$
 
-olur.
-
-\includegraphics[width=15em]{phy_020_strs_05_07.jpg}
-
-Eğer pimli noktayı değiştirsek, üstteki duruma baksak, o zaman yer değişim
-$d_F$ içeren iki formül şöyle olur,
+Formüller daha kısa olsun diye bazı notasyonel ekler yapalım,
 
 $$
-q''_N = - \frac{AE}{L} d_F \quad
-q''_F = - \frac{AE}{L} d_F 
+v' = \frac{\ud v}{\ud x} \quad 
+v'' = \frac{\ud^2 v}{\ud x^2} \quad 
+M' = \frac{\ud M}{\ud x} \quad 
 $$
 
-\includegraphics[width=15em]{phy_020_strs_05_08.jpg}
-
-Gördüğümüz iki senaryo, yani bir uçta pim var diğerinde yok, sonra tam tersi,
-bize dört formül verdi. Eğer her uçta pim olduğu durumu elde etmek istersek, ki
-bu durum daha büyük bir makaskiriş sisteminde olurdu, o zaman bu dört formülü
-üst üste koymak (superposition) gerekli,
+İki üstteki formül kısa notasyonla söyle olur,
 
 $$
-q_N = q'_N + q''_N 
+EI v'' = M
+\mlabel{3}
 $$
 
-$$
-q_F = q'_F + q''_F
-$$
-
-Yani
+Bir formül daha, sonra faydalı olacak, hatırlarsak,
 
 $$
-q_N = \frac{AE}{L} d_N - \frac{AE}{L} d_F
+v = \frac{\ud M}{\ud x}
 $$
 
-$$
-q_F = -\frac{AE}{L} d_N + \frac{AE}{L} d_F
-$$
-
-Üstteki iki formülü matris formunda yazmak istersek,
+idi, o zaman (3)'teki formülün iki tarafının $x$'e göre türevini alırsak,
 
 $$
-\left[\begin{array}{c}
-q_N \\ q_F
-\end{array}\right] =
-\left[\begin{array}{cc}
-1 & -1 \\ -1 & 1
-\end{array}\right]
-\left[\begin{array}{c}
-d_N \\ d_F
-\end{array}\right] 
+EI v''' = \frac{\ud M}{\ud x} = V
 $$
 
-Daha kısa olarak
+Yani [5, sf. 683]
 
 $$
-q = k' d
+v = EI v''' = EI \frac{\ud^3 v}{\ud x^3}
+\mlabel{6}
 $$
 
-ki $q,k',d$ vektör, matris formundadır ve
+Ayrıca [4]'de gösterilmişti, $\ud v / \ud x = -q$ olduğu için
 
 $$
-k' = \left[\begin{array}{cc}
-1 & -1 \\ -1 & 1
-\end{array}\right]
+EI v'''' = \frac{\ud v}{\ud x} = -q
 $$
 
-$k'$ matrisine öğe direngenlik matrisi (member stiffness matrix) olarak bilinir.
+ifadesi de doğrudur.
 
-Kirişler (Beams)
+Farklı bir açıdan / anlatımla şimdiye kadar görülenleri tekrarlamak iyi
+olabilir, ve önceki derste gösterilenlerle beraber aynı formüllere erişmeye 
+çalışalım [8, sf. 172]. Alttaki ufak parçaya bakalım,
 
-Eksene dik (transverse) yüklerin dinamiğini hesaplamak için kiriş formülasyonu
-gerekli. Bu kiriş parçasının iki ucuna bakacağız, bu uçlar yer değişimine ve
-ufak bir dönüş açısına sahip olabilecekler. Yani her uçta iki olmak üzere
-bu sistemde toplam dört derece serbestlik var. Fonksiyon $v(x)$,
+\includegraphics[width=10em]{phy_020_strs_03_07.jpg}
 
-\includegraphics[width=20em]{phy_020_strs_05_09.jpg}
-
-Bu fonksiyonu
+Dikey kuvvetleri toplarsak,
 
 $$
-v(x) = a_1 x^3 + a_2 x^2 + a_3 x + a_4
-\mlabel{7}
-$$
-
-küpsel polinom ile temsil edebiliriz, bu uygun çünkü 4 derece serbestlik var
-demiştik, üstteki formülde de böyle. Ayrıca küpsel fonksiyonlar iki parça
-yanyana geldiğinde eğimsel ve yer değişim sürekliliğini de sağlayabilirler.
-
-$x=0$ ve $x=L$ noktalarında elde edilebilecek formüllere bakalım [2, sf. 173],
-
-$$
-v(0) = v_1 = a_4
+-w \ud x - \ud V = 0 
 $$
 
 $$
-\frac{\ud v(0)}{\ud x} = \phi_1 = a_3
+w = -\frac{\ud V}{\ud x}
+$$
+
+Momentleri toplarsak ve sıfıra eşitlersek,
+
+$$
+-V \ud x + \ud M + w(x) \ud x \left( \frac{\ud x}{2}  \right) = 0
 $$
 
 $$
-v(L) = v_2 = a_1 L^3 + a_2 L^2 + a_3 L + a_4 
+V = \frac{\ud M}{\ud x}
 $$
 
-$$
-\frac{\ud v}{\ud x}(L) = \phi_2 = 3 a_1 L^2 + 2 a_2 L + a_3
-$$
+Bükülme momenti ile kesme kuvveti arasındaki eşitlik elde edilebildi çünkü
+eşitliğin sol tarafını $\ud x$ ile böldük, ve sonucun limitini aldık, $\ud x$
+sıfıra yaklaşırken $w(x)$ terimi yokoldu.
 
-ki $\phi = \ud v / \ud x$, üstteki resimde ima edildiği gibi, ve $\phi$'nin
-ufak dönüşlere tekabül ettiği durumlar için.
-
-Üstteki dört formülü kullanarak (7) içindeki katsayılar yerine serbestlik
-derecesi değişkenleri $v_1,v_2,\phi_1,\phi_2$ kullanabiliriz, biraz cebirsel
-takla atmak lazım. $a_3,a_4$ için ne koyulacağı bariz, bunlar sırasıyla
-$\phi_1,v_1$ olacak. Geriye $a_1,a_2$ kalıyor, bunun için $v_2,\phi_2$
-formüllerini $a_1$ için düzenleyip birbirine eşitlersek, iptaller sonrası
-geriye $a_2$ eşitliği ortaya çıkacaktır, benzer şekilde $a_1$ elde edilebilir,
-nihai sonuç,
+Ayrıca daha önceden biliyoruz ki eğrilik $\kappa$ ile moment arasında
+bir ilişki var,
 
 $$
-v =
-\left[
-  \frac{2}{L^3} (v_1 - v_2) + \frac{1}{L^2} (\phi_1 - \phi_2) 
-\right] x^3 +
-\left[
-  -\frac{3}{L^2} (v_1 - v_2) - \frac{1}{L} (2\phi_1 + \phi_2)
-\right] x^2 +
-\phi_1 x + v_1
-\mlabel{8}
+\kappa = \frac{1}{\rho} = \frac{M}{EI}
 $$
 
-Bu nihai formül kullanılarak kiriş öğe direngenlik matrisi elde
-edilebilir. Bu matris için iki uçtaki kesme kuvvetleri ve
-bükülme momentleri gerekiyor, onlara $f_{1y}$, $m_1$, $f_{2y}$,
-$m_2$ diyelim,
-
-\includegraphics[width=20em]{phy_020_strs_05_10.jpg}
-
-Moment $m(x)$, kesme / teğetsel $V$ formüllerini bir kez daha hatırlarsak
+Ufak açılar için eğrilik
 
 $$
-m(x) = EI \frac{\ud^2 v}{\ud x^2}, \quad
-V = EI \frac{\ud^3 v}{\ud x^3}
+\kappa = \frac{\ud^2 v}{\ud x^2}
 $$
 
-Türevi alınan $v$ formülü (8)'de gösterilen olacak, o zaman
+Eğriliğin diğer formülünü üstteki eşitliğin sağ kısmına eşitleyelim,
 
 $$
-f_{1y} = V = EI \frac{\ud^3 v(0)}{\ud x^3} =
-\frac{EI}{L^3} (12 v_1 + 6L \phi_1 - 12 v_2 + 6L \phi_2 )
+\frac{\ud^2 v}{\ud x^2} = \frac{M}{EI}
 $$
 
-$$
-m_1 = -m = -EI \frac{\ud^2 v(0)}{\ud x^2} =
-\frac{EI}{L^3} ( 6L v_1 + 4L^2 \phi_1 - 6L v_2 + 2 L^2 \phi_2 )
-$$
+$M$ için çözersek,
 
 $$
-f_{2y} = -V = -EI \frac{\ud^3 v(L)}{\ud x^3} =
-\frac{EI}{L^3} (-12 v_1 - 6L \phi_1 + 12 v_2 - 6L \phi_2 )
+EI \frac{\ud^2 v}{\ud x^2} = M
 $$
 
-$$
-m_2 = m = EI \frac{\ud^2 v(L)}{\ud x^2} =
-\frac{EI}{L^3} ( 6L v_1 + 2L^2 \phi_1 - 6L v_2 + 4 L^2 \phi_2)
-$$
-
-Matris formunda üstteki dört formülü şu şekilde gösterebiliriz,
+Bir türev alalım,
 
 $$
-\left[\begin{array}{c}
-f_{1y} \\ m_1 \\ f_{2y} \\ m_2
-\end{array}\right] =
-\frac{EI}{L^3}
-\left[\begin{array}{cccc}
-12 & 6L & -12 & 6L \\
-6L & 4L^2 & -6L & 2L^2 \\
--12 & -6L & 12 & -6L \\
-6L & 2L^2 & -6L & 4L^2
-\end{array}\right]
-\left[\begin{array}{ccc}
-v_1 \\ \phi_1 \\ v_2 \\ \phi_2
-\end{array}\right]
+\frac{\ud }{\ud x} EI \frac{\ud^2 v}{\ud x^2} = \frac{\ud M}{\ud x}
 $$
 
-Direngenlik matrisi denen büyüklük $EI / L^3$ çarpı üstteki formülde görülen
-4 x 4 matrisidir, yani eşitliğin sağında orta kısımda olan değerler.
-
-Örnek
-
-Daha önce makaskirişlerde gördüğümüz gibi üstdüşüm tekniğini normal kirişler
-için de kullanmak mümkündür. Alttaki gibi bir yapı düşünelim [7, sf. 181],
-
-\includegraphics[width=20em]{phy_020_strs_06_01.jpg}
-
-$EI$ büyüklüğünün tüm kiriş boyunca sabit olduğunu kabul edelim. Kirişin orta
-noktasına 5000 N kuvveti ve 2500 Nm momenti uygulanıyor. Kiriş en solda bir
-duvara sabitlenmiş, sağ noktasında ise bir pimle destekleniyor (pimler
-dönüşe izin verir ama yer değişime izin vermez). 
-
-Bu yapıyı üç tane düğüm (node) üzerinden ayrıksal hale getirebiliriz,
-düğümler 1,2, ve 3, ve elde iki tane kiriş var, grafikte görülüyor.
-
-Bu iki kiriş parçası için direngenlik matrisleri,
+Sağ tarafın $V$ olduğunu biliyoruz,
 
 $$
-k^{(1)} = \frac{EI}{L^3}
-\begin{array}{cc} & \begin{array}{rrrr} v_1 & \phi_1 & v_2 & \phi_2 \end{array} \\ &
-\left[
-\begin{array}{cccc}
-  12 & 6L & -12 & 6L \\
-  6L & 4L^2 & -6L & 2L^2 \\
-  -12 & -6L & 12 & -6L \\
-  6L & 2L^2 & -6L & 4L^2
-\end{array}
-\right]
-\end{array} 
+\frac{\ud }{\ud x} EI \frac{\ud^2 v}{\ud x^2} = V
 $$
 
-$$
-k^{(2)} = \frac{EI}{L^3}
-\begin{array}{cc} & \begin{array}{rrrr} v_2 & \phi_2 & v_3 & \phi_3 \end{array} \\ &
-\left[
-\begin{array}{cccc}
-  12 & 6L & -12 & 6L \\
-  6L & 4L^2 & -6L & 2L^2 \\
-  -12 & -6L & 12 & -6L \\
-  6L & 2L^2 & -6L & 4L^2
-\end{array}
-\right]
-\end{array} 
-$$
-
-Tüm direngenlik matrisini oluşturmak için yine direk direngenlik metotunu
-kullanırız, üstdüşüm uygulayınca her iki matris genişletilir, ve üst üste konur,
-nihai sonuç,
+Bir türev daha alırsak,
 
 $$
-\left[\begin{array}{c}
-F_{1y} \\ M_1 \\ F_{2y} \\ M_2 \\ F_{3y} \\ M_3
-\end{array}\right] =
-\frac{EI}{L^3}
-\left[\begin{array}{cccccc}
-12 & 6L & -12 & 6L & 0 & 0 \\
-6L & 4L^2 & -6L & 2L^2 & 0 & 0 \\
--12L & -6L & 12+12 & -6L+6L & -12 & 6L \\
-6L & 2L^2 & -6L+6L & 4L^2+4L^2 & -6L & 2L^2 \\
-0 & 0 & -12 & -6L & 12 & -6L \\
-0 & 0 & 6L & 2L^2 & -6L & 4L^2
-\end{array}\right]
-\left[\begin{array}{c}
-v_1 \\ \phi_1 \\ v_2 \\ \phi_2 \\ v_3 \\ \phi_3
-\end{array}\right]
+\frac{\ud^2 }{\ud x^2} EI \frac{\ud^2 v}{\ud x^2} = \frac{\ud V}{\ud x}
 $$
 
-Bu noktada sınır şartlarını, ya da kısıtlamaları sisteme dahil edebiliriz.
-Düğüm 1'de bir sabit destek var, düğüm 3'te bir menteşe (hinge) desteği var,
-bu demektir ki
+Bu sağ tarafın da $-w$ olduğunu biliyoruz,
 
 $$
-\phi_1 = 0, \qquad
-v_1 = 0, \qquad
-v_3 = 0
+\frac{\ud^2 }{\ud x^2} EI \frac{\ud^2 v}{\ud x^2} = -w
 $$
 
-En sağ uçta $v_3 = 0$ oldu çünkü menteşe dönüşe izin verir, yer değişime
-izin vermez, $\phi_3$ değeri sıfırdan büyük olabilir, ama $v_3$ sıfır olur.
+Eğer $EI$ sabit ise üstteki formül şöyle yazılabilir,
+        
+$$
+EI \frac{\ud^4 v}{\ud x^4} = -w
+$$
 
-Kısıtlamaları dahil edince birinci, ikinci ve beşinci satır ve kolonları
-dışarıda bırakarak bir sistem elde edebiliriz,
+Problem Çözmek
+
+Euler-Bernoulli kirişlerini temel alan analizleri üç adıma bölmek mümkündür.
+
+1) Uygulanan yük $q$'yu kullanarak saptırma (deflection) fonksiyonu $y$'yi hesapla,
 
 $$
-\left[\begin{array}{c}
--5000 \\ 5000 \\ 0
-\end{array}\right] =
-\frac{EI}{L^3}
-\left[\begin{array}{ccc}
-24 & 0 & 6L \\
-0 & 8L^2 & 2L^2 \\
-6L & 2L^2 & 4L^2
-\end{array}\right]
-\left[\begin{array}{c}
-v_2 \\ \phi_2 \\ \phi_3
-\end{array}\right]
+q = E I \frac{\ud^4 y}{\ud X_1^4}
 $$
+
+Formülde görüyoruz eğer $q$ biliniyorsa ve elde yeterli sınır şartları var ise
+(dört tane) diferansiyel denklemi kullanarak $y$'yi bulabiliriz
+[1, Lecture 2, 2:02:00]. 
+
+2) Saptırma $y$ bulunduktan sonra onu kullanarak kesme (shear) ve bükülme
+momentini hesapla,
+
+$$
+M = E I \frac{\ud^2 y}{\ud X_1^2}, \quad
+V = E I \frac{\ud^3 y}{\ud X_1^3} 
+$$
+
+çünkü sonuçta $M,V$ hesapları $y$'nin birer fonksiyonu, elde edilen $M,V$
+sonuçları $X_1$'in fonksiyonları olacak tabii ki.
+
+3) Oradan hareketle moment ve kesme $M,V$ bulunanca stres bileşenlerini
+bulabilirim,
+
+$$
+\sigma_{11} = -\frac{M X_2}{I}, \quad
+\sigma_{12} = -\frac{VQ}{I b}
+\mlabel{2}
+$$
+
+Soru
+
+Alttaki 6 metreli Euler-Bernoulli kirişinin uygulanan $q$ yükü sebebiyle sahip
+olacağı yer değişim fonksiyonunu bulun. Kirişin Young genliği 20,000 MPa, ve ona
+eşit şekilde dağılmış bir 45 kN / m $q$ yükü uygulanıyor, kalınlığı 600 mm,
+yüksekliği 800 mm.
+
+\includegraphics[width=20em]{phy_020_strs_03_02.jpg}
+
+Çözüm
+
+Bir dikdörtgenin atalet momenti $b h^3 / 12$. EI tabii ki Young'in genliği çarpı
+bu sayı olur. Aradığımız $y$ denklemi, dördüncü dereceden bir diferansiyel
+denklem çözeceğiz. Dördüncü derece demek nihai çözüm için dört tane sınır
+şartı gerekli demek. Bu şartları vermeden çözersek,
 
 \begin{minted}[fontsize=\footnotesize]{python}
-from sympy import symbols, simplify, latex
-from sympy.matrices import Matrix
-L,E,I = symbols("L, E, I")
-A = Matrix([[24,0,6*L], [0,8*L**2,2*L**2],[6*L,2*L**2,4*L**2]])
-b = Matrix([[-5000],[5000],[0]])
-sol = A.solve(b)
+import sympy as sym
+L = 6000 # mm bazinda
+Em = 20000
+b = 500
+h = 800
+Ig = (b * h**3)/12
+EI = Em * Ig
+q = -25 # Newton icin 1000 carpip mm icin 1000 ile bolduk ayni kaldi
+X1, X2 = sym.symbols('X1, X2')
+y = sym.Function('y')
+sol = sym.dsolve(EI*y(X1).diff(X1,4)-q, y(X1))
+print (sym.latex(sol))
 \end{minted}
 
-Elde edilen \verb!sol! sonucuna baktığımızda, biraz basitleştirme sonrası
+\begin{verbatim}
+y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + C_{3} X_{1}^{2} + C_{4} X_{1}^{3} - \frac{25 X_{1}^{4}}{10240000000000008}
+\end{verbatim}
+
+Çağrı \verb!dsolve! sıfıra eşitlik faraziyesi ile hareket ediyor, bu sebeple
+üstteki çağrıda diferansiyel denklemin neye eşit olduğunu berlirtmedik, sıfıra
+eşitlik farz edildi.
 
 $$
-\left[\begin{array}{c}
-v_2 \\ \phi_2 \\ \phi_3
-\end{array}\right] =
-\frac{625}{L}
-\left[\begin{array}{c}
-(3-7L)/12 \\
-(5-L)/4L \\
-(L-1)/L
-\end{array}\right]
+y{\left(X_{1} \right)} = C_{1} + C_{2} X_{1} + C_{3} X_{1}^{2} + C_{4} X_{1}^{3} - \frac{25 X_{1}^{4}}{10240000000000008}
 $$
 
-sonucu çıkıyor.
+$X_1^4$ katsayısı [1, Lecture 2]'de 1 bölü büyük bir sayı olarak gösterilmiş,
+acaba aynı sonuca vardık mı? Kontrol edelim,
 
-Cebirsel Form
+\begin{minted}[fontsize=\footnotesize]{python}
+print (1/(25./10240000000000008.))
+\end{minted}
 
-Bazi tür problemleri çözmek için alttaki form kullanılabilir, (3)'teki iki
-dereceli diferansiyel denklemi kullanırız. Mesela alttaki gibi bir problem
-olsun,
+\begin{verbatim}
+409600000000000.3
+\end{verbatim}
 
-\includegraphics[width=15em]{phy_020_strs_05_03.jpg}
+Katsayı aynı. Gördüldüğü gibi çözümde 4 tane sabit var, bu sabitler orada çünkü
+sınır şartlarını tanımlamadık. Onlar tanımlanınca sabitler yokolacak,
 
-Sol ucu sabit bir dirsekli kiriş (cantilevel beam) var. Bu kirişe dikey yönde en
-sağ ucunde $P_B$ yükü ve $M_B$ momenti uygulanıyor. Bu sistemde eğim $v'(x)$ ve
-sapma $v(x)$ için gereken ifadeyi bulalım.
+\begin{minted}[fontsize=\footnotesize]{python}
+y1 = y(X1).subs(X1,0)
+y2 = y(X1).subs(X1,L)
+th = y(X1).diff(X1)
+th1 = th.subs(X1,0)
+th2 = th.subs(X1,L)
+sol = sym.dsolve(EI*y(X1).diff(X1,4)-q, y(X1),ics={y1:0,y2:0,th1:0,th2:0})
+print (sym.latex(sol))
+\end{minted}
 
-Uygulanan iki kuvvet kirişi yukarı doğru eğer, o zaman eğim alttakine benzer,
-
-\includegraphics[width=15em]{phy_020_strs_05_04.jpg}
-
-$M(x)$ bulmak için herhangi bir noktadaki hissedilen momentlerin toplamının
-sıfır olduğunu hatırlayalım,
-
-$$
-M(x) - P_B(L-x) - M_B = 0
-$$
-
-Moment-eğri denklemini (3) kullanalım, ve üsttekileri o denkleme koyalım,
-
-$$
-EIv'' = M(x) = P_B(L-x) - M_B
-$$
-
-Aradığımız sonuç $v$ ve $v'$. O zaman üstteki denklemi iki kere entegre etmemiz
-gerekli.
+\begin{verbatim}
+y{\left(X_{1} \right)} = - \frac{25 X_{1}^{4}}{10240000000000008} + \frac{12500 X_{1}^{3}}{426666666666667} - \frac{37500000 X_{1}^{2}}{426666666666667}
+\end{verbatim}
 
 $$
-EI v' = M_B x + P_B Lx - P_B \left( \frac{x}{2} \right)^2 + C_1
-\mlabel{4}
+y{\left(X_{1} \right)} = - \frac{25 X_{1}^{4}}{10240000000000008} + \frac{12500 X_{1}^{3}}{426666666666667} - \frac{37500000 X_{1}^{2}}{426666666666667}
 $$
 
-$$
-EIv = M_B \left( \frac{x^2}{2} \right) +
-P_B L  \left( \frac{x^2}{2} \right) -
-P_B \left( \frac{x^3}{6} \right) +
-C_1 x + C_2
-\mlabel{5}
-$$
+Şimdi kesme $V$ ve moment $M$ hesaplanabilir, bu fonksiyonlar $y$'nin farklı
+derecedeki türevlerini içeriyor, 
 
-\includegraphics[width=15em]{phy_020_strs_05_05.jpg}
+\begin{minted}[fontsize=\footnotesize]{python}
+y = sol.rhs
+V = EI * y.diff(X1,3)
+M = EI * y.diff(X1,2)
+print (V)
+print (M)
+\end{minted}
 
-Şimdi sınır şartlarını probleme uygulayalım, bu değerler bilinenler
-olarak bilinmeyen değerlerin bulunmasına yardımcı olacak. Sınır şartları
-problem tanımında tarif edildi, kirişin bir ucu sabitlenmiş o zaman
-$x=0$ noktasında hem eğim hem de sapma sıfır olmalı. Yani
+\begin{verbatim}
+74999.9999999999 - 25.0*X1
+-12.5*X1**2 + 74999.9999999999*X1 - 74999999.9999999
+\end{verbatim}
 
-$$
-v'(0) = 0,\quad v(0) = 0
-$$
+Stres öğesini hesaplayabilirim şimdi, formülleri (2)'de,
 
-Şartlardan ilkini $v'(0)=0$ ve $x=0$ kullanırsak (4) şu hale gelir,
+\begin{minted}[fontsize=\footnotesize]{python}
+S11 = -M * X2 / Ig
+print (sym.simplify(S11))
+\end{minted}
 
-$$
-EI v' = C_1 = 0
-$$
+\begin{verbatim}
+X2*(5.85937499999999e-10*X1**2 - 3.515625e-6*X1 + 0.003515625)
+\end{verbatim}
 
-$v(0)=0$ ve $x=0$ kullanırsak (5) şöyle olur,
+\begin{minted}[fontsize=\footnotesize]{python}
+Q = b*((h/2) - X2) * ((h/2)+(X2/2))
+S12 = (-V * Q) / (Ig*b)
+print (S12)
+\end{minted}
 
-$$
-EIv = C_2 = 0
-$$
+\begin{verbatim}
+9.375e-14*(200000.0 - 500*X2)*(25.0*X1 - 74999.9999999999)*(X2/2 + 400.0)
+\end{verbatim}
 
-Demek ki (4) ve (5) şöyle yazılabilir,
+Yer değişim sonucunu grafikleyelim,
 
-$$
-v'(x) = \frac{1}{EI} \left[
-  M_B x + P_B Lx - P_B \left( \frac{x}{2} \right)^2
-\right]
-$$
+\begin{minted}[fontsize=\footnotesize]{python}
+u = sym.lambdify(X1, y,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,u(x))
+plt.title(u'Yer Değişim y')
+plt.savefig('phy_020_strs_03_03.jpg',quality=30)
+\end{minted}
 
-$$
-v(x) = \frac{1}{EI} \left[
-  M_B \left( \frac{x^2}{2} \right) + 
-  P_B L  \left( \frac{x^2}{2} \right) -
-  P_B \left( \frac{x^3}{6} \right)
-\right]
-$$
+\includegraphics[width=20em]{phy_020_strs_03_03.jpg}
 
-Artık üstteki formülleri kullanarak kirişin en son noktasında, yani $x=L$'de, ya
-da $B$ yerinde, sapmanın ne olacağını hesaplayabiliriz. Yerine koyarsak, sapma
-$\delta_B$ diyelim,
+Akla yatkın, ortalara doğru kirişin bükülmesi daha fazla her iki yana doğru daha
+az.
 
-$$
-\delta_B = v(L) =
-\frac{1}{EI} \left[
-M_B \left( \frac{L^2}{2}  \right) +
-P_B \left( \frac{L^3}{3}  \right)
-\right]
-$$
+Kesme ve momenti de grafikleyelim,
 
-Aynı noktadaki sapma açısı $\theta_B$
+\begin{minted}[fontsize=\footnotesize]{python}
+v = sym.lambdify(X1, V,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,v(x))
+plt.title(u'Kesme, V')
+plt.savefig('phy_020_strs_03_04.jpg',quality=30)
+\end{minted}
 
-$$
-\theta_B = v'(L) =
-\frac{1}{EI} \left[
-M_B L + P_B \left( \frac{L^2}{2} \right) 
-\right]
-$$
+\includegraphics[width=20em]{phy_020_strs_03_04.jpg}
 
-Bir diğer formda denklemler şöyle gösterilebilir,
+\begin{minted}[fontsize=\footnotesize]{python}
+m = sym.lambdify(X1, M,'numpy')
+x = np.linspace(0,L,20)
+plt.plot(x,m(x))
+plt.title('Moment, M')
+plt.savefig('phy_020_strs_03_05.jpg',quality=30)
+\end{minted}
 
-$$
-\delta = \left( \frac{L^3}{3EI} \right) P +
-\left( \frac{L^2}{2EI} \right) M
-$$
+\includegraphics[width=20em]{phy_020_strs_03_05.jpg}
 
-$$
-\theta = \left( \frac{L^2}{2EI} \right) P +
-\left( \frac{L}{EI} \right) M
-$$
+\begin{minted}[fontsize=\footnotesize]{python}
+s11f = sym.lambdify([X1,X2], S11,'numpy')
+x = np.linspace(0,L,20)
+y = np.linspace(-h/2,h/2,20)
+xg,yg = np.meshgrid(x,y)
+zg = s11f(xg,yg)
+plt.contourf(xg,yg,zg,cmap='gnuplot2')
+plt.savefig('phy_020_strs_03_06.jpg',quality=30)
+\end{minted}
 
-Üstteki formülleri $P,M$ eşitlikleri olarak tekrar düzenleyebiliriz.
-Birinci formülü $\frac{3EI}{L^3}$ ikincisini $\frac{2EI}{L^2}$ ile
-çarparsak mesela her iki formülde $P$ tek başına kalır, ikinci formülden
-birinciyi çıkartıp $P$'ler iptal edilir, basitleştirme sonrası $M$ elde
-edilir, benzer şekilde $P$ bulunur, sonuç
+\includegraphics[width=20em]{phy_020_strs_03_06.jpg}
 
-$$
-P = \left( \frac{12EI}{L^3}  \right) \delta -
-\left(  \frac{6EI}{L^2} \right) \theta
-$$
-
-$$
-M = - \left( \frac{6 EI}{L^2}  \right) \delta +
-\left( \frac{4 EI}{L}  \right) \theta
-$$
+Yine akla yatkın; grafiğin üst kısımda koyu maviye yakın yerde sıkışma
+(compression) var orada materyel daralma, içe doğru baskı yaşıyor. Alt kısımda
+ise gerginlik var, burada materyel yanlara doğru çekiliyor. Desteklere yakın
+noktalarda alt sol ve sağda sıkışma görüyoruz, onun üstünde gerginlik.
+Bunlar da mantıklı.
 
 Kaynaklar
 
-[1] Bayramlı, {\em Fizik, Materyel Mekaniği - 1}
+[1] Petitt, {\em Intro to the Finite Element Method}, University of Alberta,
+    \url{https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi}
 
-[2] Logan, {\em A First Course in the Finite Element Method}
+[2] Gramoll, {\em Mechanics},
+    \url{http://www.ecourses.ou.edu/cgi-bin/ebook.cgi?topic=me}
 
-[3] Hibbeler, {\em Structural Analysis, 8th Edition}
+[3] Bayramlı, {\em Fizik, Materyel Mekaniği - 1}
+    
+[4] Bayramlı, {\em Fizik, Materyel Mekaniği - 2}
 
-[4] Bayramlı, {\em Hesapsal Bilim, Ders 1-15}
+[5] Gere, {\em Mechanics of Materials}
 
+[6] Craig, {\em Mechanics of Materials, Third Edition}
+
+[7] Bayramlı, {\em Çok Değişkenli Calculus, Eğrilik (Curvature)}
+
+[8] Logan, {\em A First Course in the Finite Element Method}
+  
 \end{document}
-
-
-
 

@@ -1,297 +1,245 @@
 \documentclass[12pt,fleqn]{article}\usepackage{../../common}
 \begin{document}
-Materyel Mekaniği - 4
+Materyel Mekaniği - 3
 
-Direk Direngenlik Metotu (Direct Stiffness Method)
+Kesme Genliği, $E,G$ İlişkisi
 
-Direngenlik metotunu anlamak için direngenlik matrisi kavramını işlemek
-gerekir. Bu konuya biraz [5]'de değindik. Bir öğe grubunun, sistemin direngenlik
-matrisi düğümsel yer değişimler $u$ ile düğümsel kuvvetler $F$'yi ilintilendiren
-bir $K$ matrisidir, öyle ki
+İki yanindan $P$ ile çekilen bir inşaat parçası düşünelim, bu parça içinde
+kenarları birim uzunluğundaki hayali bir küp olsun. Çekme sonucu bir uzama
+oluşacaktır bu uzama gerginlik eksenel yönde $\epsilon_x$ olsun, $P$'ye
+$E$ üzerinden bağlıdır. Çekim kuvvetinin eksene dik yönde etkileri de vardır,
+bu etki bir Poisson oranı $\nu$ üzerinden olur, yani
+$\epsilon_y = \epsilon_z = -\nu \epsilon_x$.
 
-$$
-F = K u
-$$
+\includegraphics[width=15em]{phy_020_strs_06_07.jpg}
 
-eşitliği geçerlidir. Alttaki gibi bir sistem olsun [7, sf. 21],
+Şimdi aynı küpü köşegen şekilde hayali bir düzlemle 45 derecede keselim, ve aynı
+kuvvet uygulaması ardından alttaki resimde koyu renkle görülen parçaya
+ne olacağını düşünelim.
 
-\includegraphics[width=20em]{phy_020_strs_02_01.jpg}
+\includegraphics[width=20em]{phy_020_strs_06_08.jpg}
 
-Üstteki sistem kısım kısım incelenen daha büyük bir yay sisteminin parçası
-olabilir, birazdan göreceğimiz en basit örnekte sol taraf hareket etmiyor, bu
-sebeple $u_1$ yer değişimini düşünmek anlamsız, fakat 1 noktasının tam yayın
-esneyen kısmını işaret ettiği durumda ve daha büyük bir sistem var ise bu nokta
-da hareket edecektir.
+Bu küp yarısı parçanın kenarları dikey $1-\nu \epsilon_x$, yatay $1 + \epsilon_x$
+noktasına gelecektir. Peki yeni $\beta$ acısı ne olur? Bunun için iki
+üstteki küpün 45 derece çevrilmiş halini düşünelim,
 
-Herneyse $u_1$ şimdilik hareket edemez olsa da formülasyonu yapalım. Yayın
-toplam esnemesi
+\includegraphics[width=15em]{phy_020_strs_06_09.jpg}
 
-$$
-\delta = u_2 - u_1
-$$
-
-Eğer yay sabiti $k$ ise yaydaki etki eden kuvvet
-
-$$
-f = k \delta = k (u_2 - u_1)
-$$
-
-Kuvvet denge koşulu için $f_1 + f_2  = 0$, yani $f_1 = -f_2$ olur, o zaman
-her düğümdeki kuvvetleri genel formül üzerinden şöyle açabiliriz,
+Burada görülen açı değişimi sağ ve sol kenarlarda $\frac{\pi}{2} - \gamma'$.
+Daha önce gördük ki 45 derecede konumlanmış bir düzleme etki eden kesme
+kuvveti maksimum büyüklüktedir, yani $\gamma_m = \gamma'$. Şimdi bir düşünsel
+takla daha atalım, iki üstteki $\beta$ açısına nasıl eriştik? Bu açı bir küpün
+45 derecede kesilmiş halinden gelmedi mi? Evet. O zaman bu $\beta$ açısının
+geldiği nokta üstteki resimde sağ ve solda görülen açı değişiminin yarısıdır
+[2, sf. 102], yani
 
 $$
-f_1 = -k (u_2 - u_1)
+\beta = \frac{\pi}{4} - \frac{\gamma_m}{2}
 $$
 
-$$
-f_2 = k(u_2 - u_1)
-$$
-
-Matris formunda üstteki iki formül
+Bu formüle iki açı farkının tanjantı eşitliğini [5] uygularsak,
 
 $$
-\left[\begin{array}{cc}
-k & -k \\ -k & k
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2 
-\end{array}\right] =
-\left[\begin{array}{c}
-f_1 \\ f_2 
-\end{array}\right]  \Rightarrow
-Ku = f
-$$
-
-Eger ornek bazi sayilari kullanip yer degisim hesabini yaparsak,
-
-\begin{minted}[fontsize=\footnotesize]{python}
-import numpy.linalg as lin
-k = 2
-K = np.array([[k+0.00001, -k],[-k, k]])
-f = np.array([[-10],[10]])
-print (np.dot (lin.inv(K), f) )
-\end{minted}
-
-\begin{verbatim}
-[[0.]
- [5.]]
-\end{verbatim}
-
-$u_2 = 5$, ve $u_1 = 0$ çıktı.
-
-Üstdüşüm (Superposition)
-
-Eğer iki tane yay sistemini birbiriyle bağlı olarak işlemek istersek [4, sf. 40],
-üstdüşüm tekniği kullanılabilir. Üstdüşüm basit bir matris toplamı ile
-yapılabiliyor. Alttaki örneğe bakalım,
-
-\includegraphics[width=20em]{phy_020_strs_02_02.jpg}
-
-İki yay var, birbirlerine bağlılar, iki yayın sabitleri $k_1$, $k_2$
-olsun. Her iki yayın direngenlik matrisi ayrı ayrı (tekabül eden yer değişim
-değişkenleri matris kolon etiketi olarak gösteriliyor),
-
-$$
-k^{(1)} =
-\begin{array}{cc} & \begin{array}{cc} u_1 & u_3 \end{array} \\ &
-\left[
-\begin{array}{cc}
-k_1 & -k_1 \\ -k_1 & k_1
-\end{array}
-\right]
-\end{array} 
-\qquad
-k^{(2)} =
-\begin{array}{cc} & \begin{array}{cc} u_3 & u_2 \end{array} \\ &
-\left[
-\begin{array}{cc}
-k_2 & -k_2 \\ -k_2 & k_2
-\end{array}
-\right]
-\end{array}
-$$
-
-İki yay sistemini tek sistem haline getirmek aslında basit bir matris
-toplamından ibaret fakat bu matrisin kolonları aynı değişkenlere tekabül ediyor
-olmalı. O zaman her iki 2 x 2 matrisi genişletip 3 x 3 matrisi haline
-getirirsek, değişken etiketlerini eşitlersek bu yeni iki matrisi
-toplayabiliriz.
-
-$$
-k^{(1)} =
-\begin{array}{cc} & \begin{array}{ccc} u_1 & u_2 & u_3 \end{array} \\ &
-\left[
-\begin{array}{ccc}
-k_1 & 0 & -k_1 \\
-0 & 0 & 0 \\
--k_1 & 0 & k_1
-\end{array}
-\right]
-\end{array} \qquad
-k^{(2)} =
-\begin{array}{cc} & \begin{array}{ccc} u_1 & u_2 & u_3 \end{array} \\ &
-\left[
-\begin{array}{ccc}
-0 & 0 & 0 \\
-0 & k_2 & -k_2 \\
-0 & -k_2 & k_2
-\end{array}
-\right]
-\end{array} \qquad
-$$
-
-Dikkat edilirse mesela ilk matrisin $u_2$ kolonu tamamen sıfır çünkü 2 x 2
-halindeki $k^{(1)}$ matrisinde bu değişken yoktu. Yeni genişletilmiş matrise
-geçerken olmayan değişkenin kolonunu sıfırlarsak aslında aynı matrisi elde etmiş
-oluruz.
-
-Artık iki matrisi toplayabiliriz,
-
-$$
-\left[\begin{array}{ccc}
-k_1 & 0 & -k_1 \\
-0 & k_2 & -k_2 \\
--k_1 & -k_2 & k_1+k_2
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2 \\ u_3
-\end{array}\right] =
-\left[\begin{array}{c}
-F_{1x} \\ F_{2x} \\ F_{3x}
-\end{array}\right]
-$$
-
-Sınır Şartları (Boundary Conditions)
-
-Resimde gösterilen örnekte sol tarafın duvara sabitlendiğini görüyoruz.
-Sabitlenme demek notasyonumuz itibariyle $u_1 = 0$ demektir. Bu bir
-sınır şartıdır, onu bir şekilde sistemimize dahil etmemiz gerekir.
-Değeri üstteki sistemde yerine koyarsak,
-
-$$
-\left[\begin{array}{ccc}
-k_1 & 0 & -k_1 \\
-0 & k_2 & -k_2 \\
--k_1 & -k_2 & k_1+k_2
-\end{array}\right]
-\left[\begin{array}{c}
-0 \\ u_2 \\ u_3
-\end{array}\right] =
-\left[\begin{array}{c}
-F_{1x} \\ F_{2x} \\ F_{3x}
-\end{array}\right]
-$$
-
-Matris sistemini cebirsel olarak tekrar açarsak,
-
-$$
-k_1(0) + (0) u_2 - k_1 u_3 = F_{1x}
+\tan \beta =
+\dfrac{\tan \dfrac{\pi}{4} - \tan \dfrac{\gamma_m}{2}}
+      {1 + \tan \dfrac{\pi}{4} \tan \dfrac{\gamma_m}{2}}
 $$
 
 $$
-0(0) + k_2 u_2 - k_2 u_3 = F_{2x}
+= \frac{1 - \tan \frac{\gamma_m}{2}}{1 + \tan \frac{\gamma_m}{2} }
+$$
+
+$\gamma_m / 2$ çok ufak bir açı olduğu için $\tan \gamma_m / 2 = \gamma_m / 2$
+kabul edilebilir,
+
+$$
+\tan \beta = \dfrac{1 - \dfrac{\gamma_m}{2}}{1 + \dfrac{\gamma_m}{2}}
+$$
+
+Diğer yandan iki üstteki resimde üçüncü kısımda bir eşitlik ima ediliyor,
+$\beta$ acısının karşı kenarı $1 - \nu \epsilon_x$ komşu kenarı $1 +
+\epsilon_x$ olduğuna göre, o zaman $\tan\beta$ şu şekilde de gösterilebilir,
+
+$$
+\tan\beta = \frac{1 - \nu \epsilon_x}{1 + \epsilon_x}
+$$
+
+Üstteki formülü iki üstteki ile eşitlersek ve $\gamma_m$ için çözersek,
+
+$$
+\gamma_m = \dfrac{(1+\mu)\epsilon_x}{ 1 + \dfrac{1-\mu}{2} \epsilon_x}
+$$
+
+$\epsilon_x << 1$ olduğu için yani 1'den çok daha küçük bir değer olduğu için
+bölende $\frac{1-\mu}{2} \epsilon_x$ değerinin yok olduğunu ve geriye
+sadece 1 kaldığını farz edebiliriz, o zaman üstteki,
+
+$$
+\gamma_m = (1+\mu) \epsilon_x
+$$
+
+kabul edilebilir. Bu bize maksimum kesme gerinmesi $\gamma_m$ ve eksenel gerinme
+$\epsilon_x$ arasında aradığımız ilişkiyi verecektir. Şimdi $E,\mu,G$ sabitleri
+arasındaki ilişkiyi bulmak için sunları hatırlayalım, Hooke Kanunu sebebiyle
+$\gamma_m = \tau_m / G$, ve bir eksenel yük için $\epsilon_x = \sigma_x /
+E$. Demek ki üstteki formül,
+
+$$
+\frac{\tau_m}{G} = (1+\nu) \frac{\sigma_x}{E}
+$$
+
+ya da
+
+$$
+\frac{E}{G} = (1+\nu) \frac{\sigma_x}{\tau_m}
+$$
+
+olarak yazılabilir. Tekrar hatırlarsak tarif ettiğimiz şekiller için
+$\sigma_x = P / A$ ve $\tau_m = P / 2A$, o zaman $\sigma_x / \tau_m = 2$.
+Yani üstteki formül
+
+$$
+\frac{E}{G} = (1+\nu) 2
+$$
+
+olur, $G$ için tekrar düzenlersek,
+
+$$
+G = \frac{E}{2(1+\nu)}
+$$
+
+Gerinim Enerji Yoğunluğu (Strain Energy Density)
+
+Yapılan iş ve enerji arasındaki bağlantıyı işledik. Şimdi bir maddeye uygulanan
+stres ve onun sebep olduğu gerinimin yol açtığı esnemeden bahsedelim, bir kuvvet
+uygulanıyor ve bir esneme oluyor, bu hesap kuvvet çarpı mesafe ile yapılan iş
+olarak hesaplanabilir. Diyelim ki bir çubuk (bar) üzerinde tek eksenel $P$
+kuvveti uygulanıyor, sonucunda $\ud \Delta$ kadar uzama var [4, sf. 243],
+
+\includegraphics[width=20em]{phy_020_strs_00_07.jpg}
+
+Yapılan iş
+
+$$
+\ud W = P \ud \Delta
+$$
+
+Eğer $P$ sürekli uygulansa ve uzama devam etse tüm ufak uzamalar üzerinden
+yapılan iş $\ud \Delta$ üzerinden bir entegral gerektirir, fakat alttaki
+gibi basit durumda sadece üçgen alan hesabı yeterli,
+
+\includegraphics[width=20em]{phy_020_strs_00_08.jpg}
+
+Şu formülü kullanabiliriz,
+
+$$
+U = \frac{1}{2} P \Delta
+$$
+
+Önceden hatırlarsak $\Delta = PL / EA$ idi, o zaman üstteki 
+
+$$
+U = \frac{P^2 L}{2 E A}
+\mlabel{4}
+$$
+
+olur.
+
+Yoğunluğa gelirsek; gerinim enerjisi madde içinde farklı seviyelerde olabilir,
+onu sonsuz ufak bir hacim için hesaplarız ve gerektiğinde sonrada tüm enerji
+için tüm hacim üzerinden entegre ederiz.
+
+Alttaki çubuktaki ufak bir hacim birimine bakalım, birimin kenarları $\ud x$,
+$\ud y$, $\ud z$ büyüklüğünde, birimin hacmi tabii ki $\ud V = \ud x \ud y \ud
+z$.
+
+\includegraphics[width=25em]{phy_020_strs_00_06.jpg}
+
+Formül (4) kullanalım, stres için $\sigma$ sembolü kullanacağız, stres kuvvet
+bölü alan demektir, ufak birimdeki alan $A = \ud y \ud z$, o zaman
+$P = \sigma_{xx} \ud y \ud z$, üstteki ufak birimdeki gerinim enerjisi
+
+$$
+U = \frac{(\sigma_{xx} \ud y \ud z)^2 \ud x}{2 E \ud y \ud z} =
+\frac{\sigma_{xx}^2 \ud y^2 \ud z^2 \ud x}{2 E \ud y \ud z} =
+\frac{\sigma_{xx}^2 \ud y \ud z \ud x}{2 E} 
 $$
 
 $$
--k_1 (0) - k_2 u_2 + (k_1+k_2) u_3 = F_{3x}
+= \frac{\sigma_{xx}^2 \ud V}{2 E} 
 $$
 
-elde edilir. Bu sistemde sadece ikinci ve üçüncü denklemi matris olarak
-yazabiliriz,
+Yoğunlukla ilgileniyoruz demiştik, bize birim hacimdeki $U$ lazım, o zaman
+yoğunluk $u$
 
 $$
-\left[\begin{array}{cc}
-k_2 & -k_2 \\ -k_2 & k_1 + k_2 
-\end{array}\right]
-\left[\begin{array}{c}
-u_1 \\ u_2
-\end{array}\right] =
-\left[\begin{array}{c}
-F_{2x} \\ F_{3x}
-\end{array}\right]
+u = \frac{\sigma_{xx}^2}{2 E}
 $$
 
-Bu son matrisi elde etmek için bir anlamda önceki matrisin birinci satırı ve
-kolonunu dışarı attık, kenara ayırdık, ve kalanlarla yeni bir sistem yarattık.
-Fakat dikkat bu $F_{1x}$ sıfır demek değildir, onun hala bir ifadesi var,
-$F_{1x} = -k_1 u_3$, ve bu eşitliği bir kez sistemin geri kalanının çözdükten
-sonra dönüp ayrıca bulmamız gerekiyor.
-
-Devam edelim, yeni sistemi çözersek,
+Hooke Kanunu $\sigma_{xx} = E \epsilon_{xx}$ üzerinden üstteki son formül,
+gerinim enerji yoğunluğu
 
 $$
-\left[\begin{array}{ccc}
-u_2 \\ u_3
-\end{array}\right] =
-\left[\begin{array}{cc}
-k_2 & -k_2 \\ -k_2 & k_1 + k_2 
-\end{array}\right]^{-1}
-\left[\begin{array}{c}
-F_{2x} \\ F_{3x}
-\end{array}\right]
+u = \frac{1}{2} \sigma_{xx} \epsilon_{xx}
 $$
 
+olarak ta gösterilebilir. Alttaki resimde görülebileceği gibi bu tek eksenel
+stres-gerinim eğrisinin altında kalan alandır,
+
+\includegraphics[width=15em]{phy_020_strs_00_09.jpg}
+
+Daha çetrefil $\sigma-\epsilon$ ilişkileri (ve eğrileri) için $u$ hesabı
+bir entegral olacaktır,
+
 $$
-= \left[\begin{array}{cc}
-\dfrac{1}{k_2} + \dfrac{1}{k_1} & \dfrac{1}{k_1} \\
-\dfrac{1}{k_1} & \dfrac{1}{k_1} 
-\end{array}\right]
-\left[\begin{array}{c}
-F_{2x} \\ F_{3x}
-\end{array}\right]
+u = \int_{0}^{\epsilon_{T}} \sigma_{xx} \ud \epsilon_{xx} 
 $$
 
-$u_2,u_3$ bir kez elde edildikten sonra $F_{1x} = -k_1 u_3$ formülü
-ile $F_{1x}$ elde edilebilir.
+Gerinim, esneme, enerji alakası şöyle de görülebilir, uygulanan stresin
+oluşturduğu esneme bir iş yapıyor, bu iş ile enerjiyi esnemeye transfer
+ediyoruz, bir lastiği uzattığımızda enerji o lastiğin ``elastisitesine''
+aktarılıyor sanki, bu işin / enerjinin birim hacimdeki ölçüsü gerilim
+enerji yoğunluğunu veriyor bize.
 
-Euler-Bernoulli Kirişleri (Beams)
+İlerlemeden önce birazdan lazım olacak iki formülü bulalım. Daha önce gördük ki
 
-\includegraphics[width=20em]{phy_020_strs_02_09.jpg}
+$$
+I = \int \int X_2^2 \ud X_2 \ud X_3
+$$
 
-Mühendislikte, özellikle inşaat mühendisliğinde kirişler yaygın bilinen
-bir konudur. Bir kiriş bağlamında
+ve
 
-\begin{itemize}
-   \item Kesme (Shear) Kuvvet Fonksiyonu $V(X_1)$
-   \item Bükülme Moment Fonksiyonu $M(X_1)$
-   \item Saptırma (Deflection) Fonksiyonu $y(X_1)$
-\end{itemize}
+$$
+M = \int \int -X_2 \sigma_{11} \ud X_2 \ud X_3
+$$
 
-gibi kalemlerle ilgileniyor olabilirim. Bu kalemlerden ilk ikisi çok basittir.
-Üçüncü hesap kirişin ``servis edebilir'' olup olmadığını söyleyebilir mesela, ki
-insanlar bu kirişin üstünde yürüdüğünde oraya buraya savrulmasınlar (saptırma bu
-hesabı bize verebilir). İşte üstteki türden hesapları yapabilmek için
-Euler-Bernoulli kiriş faraziyesinden yola çıkmak yaygın bir yaklaşımdır.  Bu
-önkabuller nelerdir?
+Üstteki iki formülü birleştirelim, $M$ içinde $I$ oluşturalım, ve yerine koyalım,
 
-\begin{itemize}
-   \item Deformasyonlar ufak: Bu doğal bir varsayım, inşaat mühendisliğinde
-     mesela eğer ortada bir deprem yok ise çok büyük şekil değişiklikleri
-     beklemeye gerek yok. 
-   \item Kiriş lineer elastik eşyönlü (isotropic) maddeden yapılmış: inşaat
-     mühendisliğindeki çelik kirişlerin zaten böyle olduğu farz edilir.
-   \item Poisson oranı etkileri yoksayılır.
-   \item Düzlem bölümler düzlem kalır (plane sections remain plain). Boyu
-     eninden çok daha fazla olan nesnelerde bu doğrudur, fakat daha ufak
-     parçalarda varsayım tutmayabilir.
-\end{itemize}
+$$
+M = \int \int -\frac{X_2}{X_2^2} X_2^2 \sigma_{11} \ud X_2 \ud X_3 =
+-\frac{1}{X_2} \sigma_{11} I 
+$$
+
+Buradan $\sigma_{11}$ eşitliğine geçilir,
+
+$$
+\implies \sigma_{11} = -\frac{M X_2}{I}
+$$
 
 Kaynaklar
 
-[1] Kim, {\em Introduction to Non-linear Finite Element Analysis}
+[1] Crandall, {\em An Introduction to the Mechanics of Solids}
 
-[2] Petitt, {\em Intro to the Finite Element Method}, University of Alberta,
-    \url{https://www.youtube.com/watch?v=2iUnfPRk6Ro&list=PLLSzlda_AXa3yQEJAb5JcmsVDy9i9K_fi}
-    
-[3] Adeeb, {\em Introduction to Solid Mechanics, Online Book},
-    \url{https://engcourses-uofa.ca/books/introduction-to-solid-mechanics/}
+[2] Mazurek, {\em Mechanics of Materials, 6th Edition}
 
-[4] Logan, {\em A First Course in the Finite Element Method}
+[3] Craig, {\em Mechanics of Materials, Third Edition}
 
-[5] Bayramlı, {\em Hesapsal Bilim, Ders 1-8}
+[4] Kelly, {\em University of Auckland, Solid Mechanics, Part I}
 
-[7] Hutton, {\em Fundamentals of Finite Element Analysis}
+[5] Bayramlı, {\em Normal Diferansiyel Denklemler, Trigonometri}
+
+[6] Gere, {\em Mechanics of Materials}
+
+[7] Khennane, {\em Introduction to Finite Element Analysis using Matlab and Abaqus}
 
 \end{document}
-
-

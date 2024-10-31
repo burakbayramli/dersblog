@@ -55,19 +55,20 @@ sayfanın sağında solunda fazla boş bölgeler varsa `-shave 50x0` gibi
 bir seçenek o işlemi yapar, resim üzerinde keskinlik (sharpening)
 yapılabilir, pek çok diğer kabiliyet mevcut [3].
 
-Üstteki kodda zip dosyasının gezilmesine dikkat, işlemden önce tüm zip
-dosyasını açıp içindeki dosyaları diske yazmıyoruz, gerekli bilgiyi
-zip içinde gezerken Python `zipfile` ile alabiliyoruz. İşlem öncesi
-ham görüntü dosyası sadece `/tmp/out.jpg` içinde, yeni görüntü sadece
-gerekli işlemler sonrası yazılıyor. Böylece yerden muhafaza ediyoruz.
+Üstteki kodda zip dosyasının içeriğinin gezilmesine dikkat, işlemden
+önce tüm zip dosyasını açıp içindeki dosyaları diske yazmıyoruz,
+gerekli bilgiyi zip içinde gezerken Python `zipfile` ile
+alabiliyoruz. Imagemagick işlemi öncesi ham görüntü dosyası sadece
+`/tmp/out.jpg` içinde, yeni görüntü dosyası, ayrı bir dosya olarak
+gerekli işlemler bittikten sonra yazılıyor. Böylece yerden muhafaza
+ediyoruz.
 
-Yeni goruntuler olusunca `pdftk` ile birlesimi yapiyoruz [2]. 
+Yeni görüntüler oluşunca `pdftk` ile birleştirmeyi yapıyoruz [2]. 
 
-Eğer artık kitaplaşmış PDF dosyası içinde CTRL-F ile arama yapabilmek
-istiyorsak, `ocrmypdf` ile bunu yapabiliriz, gerekli metin bilgisi PDF
-içine bu program tarafından eklenecektir. Hatta bu sayede doküman
-herhangi bir indeksleyici program tarafından indekslenebilir hale
-gelir.
+Kitaplaşmış PDF dosyası içinde CTRL-F ile arama yapabilmek istiyorsak,
+`ocrmypdf` ile bunu da yapabiliriz, gerekli metin bilgisi PDF içine bu
+program tarafından eklenecektir. Hatta bu sayede doküman herhangi bir
+indeksleyici program tarafından indekslenebilir hale gelir.
 
 Kaynaklar
 

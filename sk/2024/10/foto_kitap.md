@@ -13,10 +13,9 @@ son foto dosyası hep en sondadır.
 Çekilmiş tüm fotoları dizüstü bilgisayara aktarmak için önce zip
 sıkıştırması yapmak lazım, `ZArchiver` kullanalım.
 
-Dizüstü bilgisayara dosyalar bizim kodlayacağımız yükleme (upload)
-özelliği ile yapılabilir, ikinci bilgisayarda bir web uygulaması
-işletiriz, Flask üzerinden, oradaki özellik dosya gönderimi sağlar
-[1],
+Dizüstü bilgisayara dosyalar kodlayacağımız yükleme (upload) özelliği
+ile yapılabilir, ikinci bilgisayarda bir web uygulaması işletiriz,
+Flask üzerinden, oradaki özellik dosya gönderimi sağlar [1],
 
 ```python
 @app.route('/upload', methods = ['GET', 'POST'])
@@ -30,14 +29,12 @@ def upload_file():
    return "OK"
 ```
 
-Foto çekimi bitince ZIP dosyasını bu şekilde göndermiş oluruz.
-
-Son işlem kısmına geldik, dizüstü ortamında bir Python script zip
-içindeki tüm dosyaları alıp, küçültüp, PDF haline getirebilir, yeni
-bir dizine yazabilir. Ardından `pdftk` ile birleştirimi yapılır.
+Foto çekimi bitince ZIP dosyası ustteki kodla gönderilir. Son işlem
+dizüstü ortamında olur, bir Python script zip içindeki tüm dosyaları
+alıp, küçültüp, PDF haline getirir, yeni bir dizine yazar. Ardından
+`pdftk` ile birleştirim yapılır.
 
 ```python
-DIR = 
 z    = zipfile.ZipFile('dosya.zip')
 files_orig = list(z.namelist())
 for x in files_orig:

@@ -20,3 +20,5 @@
 
 [Görüntü Dosyaları, PDF, Birleştirme, Kitap](10/foto_kitap.html)
 
+[Ses Tanıma, İşleme](11/ses-tanima-isleme.html)
+

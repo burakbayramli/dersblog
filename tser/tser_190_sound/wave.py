@@ -1,22 +1,22 @@
 import sys
 from math  import *
-
+# http://openbookproject.net/py4fun/wave/wave.html
 class wave :
     def __init__ (self, data):
         self.data = data
     def __init__ (self, points=2387, formula=None) :
-	self.data = [0.0]*points
-	self.points= points
-	if formula :
-	    for p in range(points) :
-		x = p*pi*2/points
-		self.data[p] = eval(formula)
+        self.data = [0.0]*points
+        self.points= points
+        if formula :
+            for p in range(points) :
+                x = p*pi*2/points
+                self.data[p] = eval(formula)
                 
     def __add__ (self, other) :
-	target = wave(points=self.points)
-	for i in range(self.points) :
-	    target.data[i] = self.data[i] + other.data[i]
-	return target
+        target = wave(points=self.points)
+        for i in range(self.points) :
+            target.data[i] = self.data[i] + other.data[i]
+        return target
 
     def __mul__ (self, other) :
         target = wave(points=self.points)
@@ -47,7 +47,7 @@ class wave :
             area = (wave(formula=formula)*work).integral()
             amplitude = area/-pi
             if amplitude > .000001 :
-                print "Harmonic=",harm, " Amplitude=%.04f" % amplitude
+                print ("Harmonic=",harm, " Amplitude=%.04f" % amplitude)
             takeAway = wave(formula="sin(%d*x) * %f" % (harm,amplitude))
             work = work-takeAway
 
@@ -57,6 +57,6 @@ if __name__ == "__main__":
     p3 = wave(formula="sin(3*x)/3")
     p5 = wave(formula="sin(5*x)/5")
     mys = p1+p3+p5
-    print mys.fft()
-    print mys.points
-    print len(mys.data)
+    print (mys.fft())
+    print (mys.points)
+    print (len(mys.data))

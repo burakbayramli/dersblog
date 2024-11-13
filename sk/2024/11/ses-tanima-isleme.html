@@ -154,7 +154,7 @@ zaman noktası diğer şerideki birkaç farklı noktaya bile eşlenebiliyor!</p>
 <p>Bahsedilen eşlemenin bulunması bir arama gerektirir, pek çok seçenek
 arasından arama yapılmalıdır, ve bu arama, $M$ ve $N$ büyüklüğüneki
 iki zaman serisi için başlangıç DTW algoritmasıyla $O(M N)$
-karmaşıklığına sahiptir.</p>
+karmaşıklığına [1] sahiptir.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">simpledtw</span>
@@ -175,14 +175,18 @@ karmaşıklığına sahiptir.</p>
 </code></pre>
 </div>
 
-<p>Ses verileri icin ayni islemi uygulayabiliriz,</p>
+<p>Ses verileri için aynı işlemi uygulayabiliriz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">tmp</span><span class="p">,</span> <span class="n">wav1</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/b.wav&#39;</span><span class="p">)</span>
+<pre><span></span><code><span class="kn">import</span> <span class="nn">scipy.io.wavfile</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">wav1</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/b.wav&#39;</span><span class="p">)</span>
 <span class="n">tmp</span><span class="p">,</span> <span class="n">wav2</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/d.wav&#39;</span><span class="p">)</span>
 <span class="n">tmp</span><span class="p">,</span> <span class="n">wav3</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/ay.wav&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
 
-<span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav2</span><span class="p">)</span>
+<div class="codehilite">
+<pre><span></span><code><span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav2</span><span class="p">)</span>
 <span class="nb">print</span> <span class="p">(</span><span class="n">cost</span><span class="p">)</span>
 <span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav3</span><span class="p">)</span>
 <span class="nb">print</span> <span class="p">(</span><span class="n">cost</span><span class="p">)</span>
@@ -192,6 +196,59 @@ karmaşıklığına sahiptir.</p>
 <pre><code>856568.0
 3479812.0
 </code></pre>
+
+<p>Üstteki işlemin biraz yavaş işlediği farkedilebilir, bunun sebebi
+$O(MN)$ ya da aşağı yukarı benzer uzunluktaki seriler için $O(M^2)$.
+Karesel karmaşıklık hep kaçınmaya uğraştığımız bir durum, mümkün
+olduğu kadar $O(M)$'e yakın olmak isteriz.</p>
+
+<p>Hızlandırma amaçlı bir algoritma FastDTW [2,3] yaklaşımı, $O(M)$
+karmaşıklığına sahiptir. Aynı veriler üzerinde kullanalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span>
+<span class="kn">import</span> <span class="nn">fastdtw</span>
+
+<span class="n">distance</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">fastdtw</span><span class="o">.</span><span class="n">fastdtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav2</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">euclidean</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+<span class="n">distance</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">fastdtw</span><span class="o">.</span><span class="n">fastdtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav3</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">euclidean</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>865169.0
+3619304.0
+</code></pre>
+</div>
+
+<p>Bu çağrının çok daha hızlı işlediğini göreceğiz.</p>
+
+<p>Ses komut örnekleri üzerinde aynı programı işletelim (diğer komut ses
+dosyaları [7] bağlantısında). Bu komutlardan ilk ikisi farklı
+konuşmacıların söylediği "bed" kelimesi, üçüncüsü "down" kelimesi.
+Acaba birinci ses komut dosyası 2'inci ve 3'üncü arasından hangi ses
+zaman serisine daha yakın çıkacak?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">tmp</span><span class="p">,</span> <span class="n">wav1</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;vcommand/fb24c826_nohash_0.wav&#39;</span><span class="p">)</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">wav2</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;vcommand/fb7c9b3b_nohash_2.wav&#39;</span><span class="p">)</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">wav3</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;vcommand/fda46b78_nohash_1.wav&#39;</span><span class="p">)</span>
+
+<span class="n">distance</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">fastdtw</span><span class="o">.</span><span class="n">fastdtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav2</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">euclidean</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+<span class="n">distance</span><span class="p">,</span> <span class="n">path</span> <span class="o">=</span> <span class="n">fastdtw</span><span class="o">.</span><span class="n">fastdtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav3</span><span class="p">,</span> <span class="n">dist</span><span class="o">=</span><span class="n">euclidean</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">distance</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>10319233.0
+19032652.0
+</code></pre>
+</div>
+
+<p>İkinciye daha yakın çıktı, bu iyi bir sonuç.</p>
 
 <p>Fourier Analizi ile Sesi Sinüs Eğrilerine Ayırmak</p>
 

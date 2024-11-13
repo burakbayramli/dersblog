@@ -86,23 +86,67 @@ araçlarla karşılaştıramaz mıyız? Mesela basit korelasyon, ya da basit
 Öklitsel uzaklık ölçütleri ile bir mesafe irdelemesi kullansak olmaz
 mi acaba?
 
-Eğer amac ses tanıma ise, basit karşılaştırma yöntemleri problem
-çıkartabilir. Gürültü konusunu bir kenara bıraksak, boyutsal, genlik
-(amplitude) uyuşmazlık problemleri olabilir. Yani aynı ses bazen daha
-yüksek genli, bazen faz olarak sağa, sola kaymış olabilir, ya da ses
-verisi daha çok zamana yayılmış olabilir.
+Eğer amaç ses tanıma ise, basit karşılaştırma yöntemleri problem
+çıkartabilir. Standart karşılaştırma metotları aynı boyutlarda ve
+zaman dilimleri birbirine uyan veriyi bekler. Fakat gürültü konusunu
+bir kenara bıraksak, boyutsal, genlik (amplitude) uyuşmazlık
+problemleri olabilir. Yani aynı ses bazen daha yüksek genli, bazen faz
+olarak sağa, sola kaymış olabilir, ya da ses verisi daha çok zamana
+yayılmış olabilir. Bu tür veri durumlarında, özellikle ses
+karşılaştırmasında Dinamik Zaman Eğriltmesi (Dynamic Time Warping
+-DTW-) metotu var.
 
+Dinamik Zaman Eğriltmesi
 
+![](ses_05.jpg)
 
+DTW ile iki zaman serisi arasında bir eşleme aranır, öyle ki optimal
+eşleme üzerinden iki zaman serisi arasındaki toplam mesafe en minimal
+olsun. Eğriltme metaforu niye kullanılmış resme bakınca anlıyoruz, bir
+şerideki her zaman dilimi birebir diğer şerideki aynı seriye
+eşlenmiyor, serilerin arasında kayma, büyüme, küçülme olabileceği
+beklentisi ile eşleme farklı şekillerde olabiliyor. Hatta bazen aynı
+zaman noktası diğer şerideki birkaç farklı noktaya bile eşlenebiliyor!
 
+Bahsedilen eşlemenin bulunması bir arama gerektirir, pek çok seçenek
+arasından arama yapılmalıdır, ve bu arama, $M$ ve $N$ büyüklüğüneki
+iki zaman serisi için başlangıç DTW algoritmasıyla $O(M N)$
+karmaşıklığına sahiptir.
 
+```python
+import simpledtw
 
+series_1 = [1, 2, 3, 2, 2.13, 1]
+series_2 = [1, 1, 2, 2, 2.42, 3, 2, 1]
+series_3 = [4, 3, 1, 9, 9.2, 1, 1, 1]
+matches, cost, mapping_1, mapping_2, matrix = simpledtw.dtw(series_1, series_2)
+print (cost)
+matches, cost, mapping_1, mapping_2, matrix = simpledtw.dtw(series_1, series_3)
+print (cost)
+```
 
+```text
+0.5499999999999998
+18.94
+```
 
+Ses verileri icin ayni islemi uygulayabiliriz,
 
+```python
+tmp, wav1 = scipy.io.wavfile.read('phonemes/b.wav')
+tmp, wav2 = scipy.io.wavfile.read('phonemes/d.wav')
+tmp, wav3 = scipy.io.wavfile.read('phonemes/ay.wav')
 
+matches, cost, mapping_1, mapping_2, matrix = simpledtw.dtw(wav1, wav2)
+print (cost)
+matches, cost, mapping_1, mapping_2, matrix = simpledtw.dtw(wav1, wav3)
+print (cost)
+```
 
-
+```
+856568.0
+3479812.0
+```
 
 
 
@@ -211,7 +255,7 @@ Kaynaklar
 
 [1] <a href="https://github.com/talcs/simpledtw">SimpleDTW</a>
 
-[2] <a href="https://github.com/slaypni/fastdtw">FastDTW</a>
+[2] <a href="https://github.com/slaypni/fastdtw">FastDTW Kod</a>
 
 [3] <a href="https://cs.fit.edu/~pkc/papers/tdm04.pdf">FastDTW Makale</a>
 

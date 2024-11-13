@@ -129,11 +129,69 @@ araçlarla karşılaştıramaz mıyız? Mesela basit korelasyon, ya da basit
 Öklitsel uzaklık ölçütleri ile bir mesafe irdelemesi kullansak olmaz
 mi acaba?</p>
 
-<p>Eğer amac ses tanıma ise, basit karşılaştırma yöntemleri problem
-çıkartabilir. Gürültü konusunu bir kenara bıraksak, boyutsal, genlik
-(amplitude) uyuşmazlık problemleri olabilir. Yani aynı ses bazen daha
-yüksek genli, bazen faz olarak sağa, sola kaymış olabilir, ya da ses
-verisi daha çok zamana yayılmış olabilir.</p>
+<p>Eğer amaç ses tanıma ise, basit karşılaştırma yöntemleri problem
+çıkartabilir. Standart karşılaştırma metotları aynı boyutlarda ve
+zaman dilimleri birbirine uyan veriyi bekler. Fakat gürültü konusunu
+bir kenara bıraksak, boyutsal, genlik (amplitude) uyuşmazlık
+problemleri olabilir. Yani aynı ses bazen daha yüksek genli, bazen faz
+olarak sağa, sola kaymış olabilir, ya da ses verisi daha çok zamana
+yayılmış olabilir. Bu tür veri durumlarında, özellikle ses
+karşılaştırmasında Dinamik Zaman Eğriltmesi (Dynamic Time Warping
+-DTW-) metotu var.</p>
+
+<p>Dinamik Zaman Eğriltmesi</p>
+
+<p><img src="ses_05.jpg" alt="" /></p>
+
+<p>DTW ile iki zaman serisi arasında bir eşleme aranır, öyle ki optimal
+eşleme üzerinden iki zaman serisi arasındaki toplam mesafe en minimal
+olsun. Eğriltme metaforu niye kullanılmış resme bakınca anlıyoruz, bir
+şerideki her zaman dilimi birebir diğer şerideki aynı seriye
+eşlenmiyor, serilerin arasında kayma, büyüme, küçülme olabileceği
+beklentisi ile eşleme farklı şekillerde olabiliyor. Hatta bazen aynı
+zaman noktası diğer şerideki birkaç farklı noktaya bile eşlenebiliyor!</p>
+
+<p>Bahsedilen eşlemenin bulunması bir arama gerektirir, pek çok seçenek
+arasından arama yapılmalıdır, ve bu arama, $M$ ve $N$ büyüklüğüneki
+iki zaman serisi için başlangıç DTW algoritmasıyla $O(M N)$
+karmaşıklığına sahiptir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">simpledtw</span>
+
+<span class="n">series_1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">2.13</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">series_2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">2.42</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">series_3</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mf">9.2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">series_1</span><span class="p">,</span> <span class="n">series_2</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+<span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">series_1</span><span class="p">,</span> <span class="n">series_3</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>0.5499999999999998
+18.94
+</code></pre>
+</div>
+
+<p>Ses verileri icin ayni islemi uygulayabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">tmp</span><span class="p">,</span> <span class="n">wav1</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/b.wav&#39;</span><span class="p">)</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">wav2</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/d.wav&#39;</span><span class="p">)</span>
+<span class="n">tmp</span><span class="p">,</span> <span class="n">wav3</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">wavfile</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;phonemes/ay.wav&#39;</span><span class="p">)</span>
+
+<span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav2</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+<span class="n">matches</span><span class="p">,</span> <span class="n">cost</span><span class="p">,</span> <span class="n">mapping_1</span><span class="p">,</span> <span class="n">mapping_2</span><span class="p">,</span> <span class="n">matrix</span> <span class="o">=</span> <span class="n">simpledtw</span><span class="o">.</span><span class="n">dtw</span><span class="p">(</span><span class="n">wav1</span><span class="p">,</span> <span class="n">wav3</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>856568.0
+3479812.0
+</code></pre>
 
 <p>Fourier Analizi ile Sesi Sinüs Eğrilerine Ayırmak</p>
 
@@ -224,7 +282,7 @@ R^2 0.5121417785266622
 
 <p>[1] <a href="https://github.com/talcs/simpledtw">SimpleDTW</a></p>
 
-<p>[2] <a href="https://github.com/slaypni/fastdtw">FastDTW</a></p>
+<p>[2] <a href="https://github.com/slaypni/fastdtw">FastDTW Kod</a></p>
 
 <p>[3] <a href="https://cs.fit.edu/~pkc/papers/tdm04.pdf">FastDTW Makale</a></p>
 

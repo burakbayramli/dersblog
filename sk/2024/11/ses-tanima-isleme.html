@@ -59,10 +59,11 @@ elde edilecektir. Bir örnek görelim,</p>
 <p>Ses verisi sonuçta bir zaman serisidir. Şekil olarak iki sesin (fonem)
 birbirinden farkı görülebiliyor.</p>
 
-<p>Bu ses dosyalarını komut satirinda calmak icin <code>aplay</code> ya da <code>ffmpeg</code>
-kullanilabilir.</p>
+<p>Bu ses dosyalarını komut satırında çalmak için <code>aplay</code> ya da <code>ffmpeg</code>
+kullanılabilir.</p>
 
-<p>Eger elde tek boyutlu bir ses verisi varsa diske yazmak icin <code>scipy.io.wavfile.write</code>,</p>
+<p>Eğer elde tek boyutlu bir ses verisi varsa diske yazmak için
+<code>scipy.iö.wavfile.write</code>,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">wav1tmp</span> <span class="o">=</span> <span class="n">wav1</span> <span class="o">+</span> <span class="mi">1000</span>
@@ -72,15 +73,15 @@ kullanilabilir.</p>
 </code></pre>
 </div>
 
-<p>Ilginc bir durum ses dosyasini yukari kaydirdik fakat ses calininca
-hala ayni ses duyuluyor.</p>
+<p>İlginç bir durum ses dosyasını yukarı kaydırdık fakat ses çalınınca
+hala aynı ses duyuluyor.</p>
 
 <p>Fakat tüm ses verisini 100 ile bölersem, bu ``ses kısması'' demek, ses
-azalir.</p>
+azalır.</p>
 
 <p>Ses Olusturma</p>
 
-<p>Kendimiz sinus bazli sesler yaratabilirdik,</p>
+<p>Kendimiz sinüs bazlı sesler yaratabilirdik,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">scipy.io.wavfile</span>
@@ -148,13 +149,18 @@ eşleme üzerinden iki zaman serisi arasındaki toplam mesafe en minimal
 olsun. Eğriltme metaforu niye kullanılmış resme bakınca anlıyoruz, bir
 şerideki her zaman dilimi birebir diğer şerideki aynı seriye
 eşlenmiyor, serilerin arasında kayma, büyüme, küçülme olabileceği
-beklentisi ile eşleme farklı şekillerde olabiliyor. Hatta bazen aynı
-zaman noktası diğer şerideki birkaç farklı noktaya bile eşlenebiliyor!</p>
+beklentisi ile eşleme farklı şekillerde olabiliyor, eşlemede "eğrilme"
+görülebiliyor. Hatta bazen aynı zaman noktası diğer serideki birkaç
+farklı noktaya bile eşlenebiliyor!</p>
 
 <p>Bahsedilen eşlemenin bulunması bir arama gerektirir, pek çok seçenek
-arasından arama yapılmalıdır, ve bu arama, $M$ ve $N$ büyüklüğüneki
-iki zaman serisi için başlangıç DTW algoritmasıyla $O(M N)$
-karmaşıklığına [1] sahiptir.</p>
+arasından arama yapılmalıdır, ve bu arama, $M$ ve $N$ büyüklüğündeki
+iki zaman serisi için başlangıç DTW algoritmasının $O(M N)$
+karmaşıklığı [1] vardır. Bu arama çok daha fazla karmaşıklığa sahip
+olabilirdi, fakat dinamik programlama ile bu süre biraz daha
+kısaltılabiliyor. Detaylar için [1,4,5].</p>
+
+<p>Standart DTW algoritmasi <code>simpledtw.py</code> içinde bulunabilir. Kullanım örneği,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">simpledtw</span>
@@ -198,12 +204,13 @@ karmaşıklığına [1] sahiptir.</p>
 </code></pre>
 
 <p>Üstteki işlemin biraz yavaş işlediği farkedilebilir, bunun sebebi
-$O(MN)$ ya da aşağı yukarı benzer uzunluktaki seriler için $O(M^2)$.
-Karesel karmaşıklık hep kaçınmaya uğraştığımız bir durum, mümkün
-olduğu kadar $O(M)$'e yakın olmak isteriz.</p>
+karmaşıklığın $O(MN)$ ya da aşağı yukarı benzer uzunluktaki seriler
+için $O(M^2)$ olması. Karesel karmaşıklık hep kaçınmaya uğraştığımız
+bir durum, mümkün olduğu kadar $O(M)$'e yakın olmak isteriz.</p>
 
 <p>Hızlandırma amaçlı bir algoritma FastDTW [2,3] yaklaşımı, $O(M)$
-karmaşıklığına sahiptir. Aynı veriler üzerinde kullanalım,</p>
+karmaşıklığına sahiptir. Kodlaması <code>fastdtw.py</code> içinde. Aynı veriler
+üzerinde kullanalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">euclidean</span>
@@ -225,7 +232,7 @@ karmaşıklığına sahiptir. Aynı veriler üzerinde kullanalım,</p>
 <p>Bu çağrının çok daha hızlı işlediğini göreceğiz.</p>
 
 <p>Ses komut örnekleri üzerinde aynı programı işletelim (diğer komut ses
-dosyaları [7] bağlantısında). Bu komutlardan ilk ikisi farklı
+dosyaları [7] zip dosyasında var). Bu komutlardan ilk ikisi farklı
 konuşmacıların söylediği "bed" kelimesi, üçüncüsü "down" kelimesi.
 Acaba birinci ses komut dosyası 2'inci ve 3'üncü arasından hangi ses
 zaman serisine daha yakın çıkacak?</p>

@@ -24,12 +24,11 @@ Bu ses dosyalarını komut satırında çalmak için `aplay` ya da `ffmpeg`
 kullanılabilir.
 
 Eğer elde tek boyutlu bir ses verisi varsa diske yazmak için
-`scipy.iö.wavfile.write`,
+`scipy.io.wavfile.write`,
 
 ```python
-wav1tmp = wav1 + 1000
-plt.plot(wav1tmp)
 fs = 16000 
+wav1tmp = wav1 + 1000
 scipy.io.wavfile.write('/tmp/out1.wav', fs, np.array(wav1tmp))
 ```
 
@@ -39,7 +38,7 @@ hala aynı ses duyuluyor.
 Fakat tüm ses verisini 100 ile bölersem, bu ``ses kısması'' demek, ses
 azalır.
 
-Ses Olusturma
+Ses Oluşturma
 
 Kendimiz sinüs bazlı sesler yaratabilirdik,
 
@@ -112,12 +111,12 @@ farklı noktaya bile eşlenebiliyor!
 
 Bahsedilen eşlemenin bulunması bir arama gerektirir, pek çok seçenek
 arasından arama yapılmalıdır, ve bu arama, $M$ ve $N$ büyüklüğündeki
-iki zaman serisi için başlangıç DTW algoritmasının $O(M N)$
-karmaşıklığı [1] vardır. Bu arama çok daha fazla karmaşıklığa sahip
-olabilirdi, fakat dinamik programlama ile bu süre biraz daha
+iki zaman serisi için başlangıç DTW algoritmasında $O(M N)$
+karmaşıklığına [1] sebep olur. Bu arama çok daha fazla karmaşıklığa
+sahip olabilirdi, fakat dinamik programlama ile bu süre biraz daha
 kısaltılabiliyor. Detaylar için [1,4,5].
 
-Standart DTW algoritmasi `simpledtw.py` içinde bulunabilir. Kullanım örneği,
+Standart DTW algoritması `simpledtw.py` içinde bulunabilir. Kullanım örneği,
 
 ```python
 import simpledtw

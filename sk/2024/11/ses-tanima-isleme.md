@@ -103,7 +103,7 @@ Dinamik Zaman Eğriltmesi
 DTW ile iki zaman serisi arasında bir eşleme aranır, öyle ki optimal
 eşleme üzerinden iki zaman serisi arasındaki toplam mesafe en minimal
 olsun. Eğriltme metaforu niye kullanılmış resme bakınca anlıyoruz, bir
-şerideki her zaman dilimi birebir diğer şerideki aynı seriye
+serideki her zaman dilimi birebir diğer serideki aynı seriye
 eşlenmiyor, serilerin arasında kayma, büyüme, küçülme olabileceği
 beklentisi ile eşleme farklı şekillerde olabiliyor, eşlemede "eğrilme"
 görülebiliyor. Hatta bazen aynı zaman noktası diğer serideki birkaç
@@ -303,6 +303,3 @@ Kaynaklar
 [6] Bayramlı, Finans ve Zaman Serileri - Sezonsallık, Periyotlar
 
 [7] <a href="https://www.dropbox.com/scl/fi/7bjyicydyyurizi314qp8/google_voice_small.zip?rlkey=l5ibbx480jld79exvkwih3szr&st=ni9ibhbs&dl=1">Ufak Ses Komut Verisi</a>
-    
-
-

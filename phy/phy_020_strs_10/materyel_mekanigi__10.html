@@ -335,9 +335,15 @@ T_G = \left[\begin{array}{cccccc}
 0 &amp; 0 &amp; 0 &amp; 0 &amp; -S &amp; C 
 \end{array}\right]
 $$</p>
-<p>ki buradaki $\theta$ $x$ ve $x'$ arasındaki açıdır, $i$,$j$ düğümlerini baz
+<p>ki buradaki $\theta$ $x$ ve $x'$ arasındaki acıdır, $i$,$j$ düğümlerini baz
 alacak şekilde figür altta gösteriliyor,</p>
 <p><img alt="" src="compscieng_bpp43fem_05.jpg" /></p>
+<p>$C$ ve $S$ her öge için hesaplanır, $j$ öğenin üç noktası $i$ başlangıç
+noktası ise,</p>
+<p>$$
+C = \cos\theta = \frac{x_j - x_i}{L}, \quad
+S = \sin\theta = \frac{z_j - z_i}{L},
+$$</p>
 <p>O zaman global direngenlik matrisi $k$ şu formül olacaktır [3, sf. 269],</p>
 <p>$$
 k = T_G^T k' T_G
@@ -350,8 +356,22 @@ merkezlidir (o nokta orijin, [0,0,0] kabul edilebilir).  Tüm öğeler için $E 
 \times 10^3$ ksi, $G = 12 \times 10^3$ ksi, $I = 400$ inch, $J = 110$ inch
 olsun.</p>
 <p><img alt="" src="compscieng_bpp43fem_06.jpg" /></p>
-<pre><code class="python">from sympy import symbols, latex, simplify
+<p>Çözüm</p>
+<p>Bu probleme yaklaşım [6]'dakine benziyor, şekle bakarak öğe öğe $k$ matrislerini
+oluşturuyoruz (üç tane), ve her ögenin değişkenlerini bu öğelerin üç noktalarına
+bakarak isimlendiriyoruz. Sonra her $k$ matrisini tüm değişken listesine
+genişleterek bu genişletilmiş matrisleri birbiri ile topluyoruz (üstdüşümleme),
+çünkü bu noktada matrisler aynı değişken listesine tekabül ediyorlar. Bu şekilde
+bir lineer cebir $Ax = b$ sistemi yaratmış oluyoruz ve bu sistemi lineer cebirle
+çözüyoruz. Eğer varsa çözümden önce sıfır olan değişkenleri (sınır şartları) ana
+matristen atıyoruz, böylece boyutu daha küçük bir sistem elde ediliyor
+(neredeyse tüm problemlerde böyle şartlar vardır), ve çözüm daha basitleşiyor.</p>
+<p>Önce k matrisini sembolik, cebirsel olarak yaratalım,</p>
+<pre><code class="python">import pandas as pd
+from sympy import symbols, latex, simplify
 from sympy.matrices import Matrix
+pd.set_option('display.max_columns', None)
+
 G,J,C,S,L,E,I = symbols(&quot;G,J,C,S,L,E,I&quot;)
 kprime = Matrix([[12*E*I/L**3, 0, 6*E*I/L**2, -12*E*I/L**3, 0, 6*E*I/L**2],
                 [0, G*J/L, 0, 0, -G*J/L, 0],
@@ -368,46 +388,37 @@ T_G = Matrix([[1,0,0,0,0,0],
               [0,0,0,0,C,S],
               [0,0,0,0,-S,C]])
 k_G = T_G.transpose()*kprime*T_G
-print (k_G.shape)
 </code></pre>
 
-<pre><code>(6, 6)
-</code></pre>
-
-<pre><code class="python">import pandas as pd
-pd.set_option('display.max_columns', None)
-
-d = {E:30000.0, G: 12000, I: 400, J: 110}
+<p>Öğe 1</p>
+<pre><code class="python">d = {E:30000.0, G: 12000, I: 400, J: 110}
 d1 = d.copy(); d1.update({L:22.36*12, C:-0.894, S: 0.447})
 df1 = k_G.subs(d1)
 df1 = pd.DataFrame(np.array(df1).astype(np.float64))
 df1.columns = ['v1','phi1x','phi1z','v2','phi2x','phi2z']
 </code></pre>
 
-<pre><code class="python">import pandas as pd
-pd.set_option('display.max_columns', None)
-
-d = {E:30000.0, G: 12000, I: 400, J: 110}
+<p>Öğe 2</p>
+<pre><code class="python">d = {E:30000.0, G: 12000, I: 400, J: 110}
 d2 = d.copy(); d2.update({L:22.36*12, C:-0.894, S: -0.447})
 df2 = k_G.subs(d2)
 df2 = pd.DataFrame(np.array(df2).astype(np.float64))
 df2.columns = ['v1','phi1x','phi1z','v3','phi3x','phi3z']
 </code></pre>
 
-<pre><code class="python">import pandas as pd
-pd.set_option('display.max_columns', None)
-
-d = {E:30000.0, G: 12000, I: 400, J: 110}
+<p>Öğe 3</p>
+<pre><code class="python">d = {E:30000.0, G: 12000, I: 400, J: 110}
 d3 = d.copy(); d3.update({L:10*12, C:0, S: -1})
 df3 = k_G.subs(d3)
 df3 = pd.DataFrame(np.array(df3).astype(np.float64))
 df3.columns = ['v1','phi1x','phi1z','v4','phi4x','phi4z']
 </code></pre>
 
-<pre><code class="python">import pandas as pd
-pd.set_option('display.max_columns', None)
-
-def expand_dataframe(dfarg, new_cols):
+<p>$L$ için 10x12 değeri var, çünkü ft ile inch arasında bir geçiş gerekti,
+1 ft = 12 inch.</p>
+<p>[6]'daki kod fonksiyonlarını tekrar verelim, bu fonksiyonlar değişken
+genişletme, ve değişken atma işlemlerini gerçekleştiriyor,</p>
+<pre><code class="python">def expand_dataframe(dfarg, new_cols):
 
     res = dfarg.copy()
     old_cols = list(dfarg.columns)
@@ -427,13 +438,16 @@ def drop_col_row(df, var_list):
         res = res.drop(x,axis=0)
     return res    
 
-all_vars = ['v1','phi1x','phi1z','v2','phi2x','phi2z','v3','phi3x','phi3z','v4','phi4x','phi4z']
+</code></pre>
+
+<p>Altta her üç $k$ matrisini bu problemin ana değişken listesini tanımlayarak
+genişletiyoruz, ve toplamayı yapıyoruz.</p>
+<pre><code class="python">all_vars = ['v1','phi1x','phi1z','v2','phi2x','phi2z','v3','phi3x','phi3z','v4','phi4x','phi4z']
 df1f = expand_dataframe(df1,all_vars)
 df2f = expand_dataframe(df2,all_vars)
 df3f = expand_dataframe(df3,all_vars)
-</code></pre>
 
-<pre><code class="python">dfall = df1f + df2f + df3f
+dfall = df1f + df2f + df3f
 dfall = drop_col_row(dfall, ['v2','phi2x','phi2z','v3','phi3x','phi3z','v4','phi4x','phi4z'])
 print (dfall)
 </code></pre>
@@ -444,6 +458,20 @@ phi1x  5000.000000  479351.695886       0.000000
 phi1z -1788.108717       0.000000  298917.977639
 </code></pre>
 
+<p>Simdi</p>
+<p>$$
+\left[\begin{array}{c}
+F_{1y} = -100 \\ M_{1x} = 0 \\ M_{1z} = 0
+\end{array}\right]
+\left[\begin{array}{ccc}
+   98.241813 &amp;   5000.000000 &amp;   -1788.108717 \\
+ 5000.000000 &amp;  479351.695886 &amp;       0.000000 \\
+-1788.108717  &amp;      0 &amp;  298917.977639
+\end{array}\right]
+\left[\begin{array}{c}
+v_1 \\ \phi_{1x} \\ \phi_{1z}
+\end{array}\right]
+$$</p>
 <pre><code class="python">import numpy.linalg as lin
 
 b = np.array([-100.0,0,0])
@@ -456,6 +484,8 @@ print (x)
 <pre><code>[-2.82552252  0.02947233 -0.0169021 ]
 </code></pre>
 
+<p>Sonuç bulundu, $v_1 = -2.8255$ in, $\phi_{1x} = 0.02947$ rad, $\phi_{1z} =
+-0.01690$ rad.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Petitt, <em>Finite Element Method Theory</em>, University of Alberta,
@@ -465,6 +495,7 @@ print (x)
 <p>[4] Barsoum, <em>5 4 Grid Element Equations and Stiffness Matrix</em>,
     <a href="https://youtu.be/Jejd1UGqq1s">https://youtu.be/Jejd1UGqq1s</a></p>
 <p>[5] Bayramlı, <em>Fizik, Materyel Mekanigi 7</em></p>
+<p>[6] Bayramlı, <em>Fizik, Materyel Mekanigi 8</em></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

@@ -372,7 +372,7 @@ print ('66.67*1000 * \n', df3)
 getirilecek. Üstdüşüm yapılabilmesi için her matrisin aynı boyutta, aynı
 kolonlara sahip olması gerekir. Bir matrisi (ya da Dataframe) alıp yeni
 değişkenlere "büyüten" bir kod parçası lazım.</p>
-<pre><code class="python">import pandas as pd
+<pre><code class="python">import pandas as pd, inspect
 pd.set_option('display.max_columns', None)
 
 def expand_dataframe(df, new_cols):
@@ -583,6 +583,17 @@ kalır, bu değerler sıfırdır. $Ax=b$ çözerken her satırda mevcut anahtarl
 değerleri JSON olarak ayrı sözlükler olarak alınabilir ve bu satırlar artımsal
 (incremental) çözüm yapabilen bir eşlenik gradyan [2,3] koduna satır satır
 geçilebilir.</p>
+<p>Not: Alttakiler biraz önce yazdığımız fonksiyonları diğer kodların
+kullanabilmesi için onları dinamik olarak hafızadan alıp diske yazıyor.</p>
+<pre><code class="python">fout = open('dfutil.py','w')
+fout.write('import pandas as pd, numpy as np\n')
+code = inspect.getsourcelines(expand_dataframe)
+for line in code[0]: fout.write(line)
+code = inspect.getsourcelines(drop_col_row)
+for line in code[0]: fout.write(line)
+fout.close()
+</code></pre>
+
 <p>Kaynaklar</p>
 <p>[1] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>
 <p>[2] Bayramlı, <em>Hesapsal Bilim, Ders 2-19</em></p>

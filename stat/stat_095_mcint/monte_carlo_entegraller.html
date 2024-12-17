@@ -49,16 +49,16 @@ basit olarak $a$ ile $b$ arasında.</p>
 <p>Biraz cebirsel numara yaparsak, mesela üstteki formülü $p(x)$ ile çarpalım
 bölelim (hiçbir değişiklik yaratmamış oluyoruz aslında)</p>
 <p>$$
-I = \int_{x \in D} \frac{f(x)}{p(x)} p(x) \mathrm{d} x
+I = \int_{a}^{b} \frac{f(x)}{p(x)} p(x) \mathrm{d} x
 $$</p>
 <p>$f(x)/p(x)$ bölümüne bir isim verelim, mesela $g(x)$,</p>
 <p>$$
-I = \int_{x \in D} g(x) p(x) \mathrm{d} x
+I = \int_{a}^{b} g(x) p(x) \mathrm{d} x
 $$</p>
 <p>Üstteki formül bir beklenti (expectation) hesabına benzemiyor mu? Evet,
 $g(x)$'in $p(x)$ yoğunluğu üzerinden beklentisi bu formüldür, </p>
 <p>$$
-E[g(x)] = I = \int_{x \in D} g(x) p(x) \mathrm{d} x
+E[g(x)] = I = \int_{a}^{b} g(x) p(x) \mathrm{d} x
 $$</p>
 <p>Beklenti hesabını örneklem ortalaması ile yaklaşık hesaplayabileceğimizi
 biliyoruz, etki alanından $N$ tane $x_i$ örneklemi alalım mesela, o zaman</p>
@@ -67,7 +67,7 @@ E[g(x)] \approx
 \frac{1}{N} \sum_{i=1}^{N} g(x_i) =
 \frac{1}{N} \sum_{i=1}^{N} \frac{f(x_i)}{g(x_i)}
 $$</p>
-<p>Diyelim ki $a,b$ arasında örneklem aldığımız sayılar birörnek (üniform)
+<p>Diyelim ki $a,b$ arasında örneklem aldığımız sayılar birörnek (uniform)
 dağılımdan geliyor, yani $p(x)$ birörnek dağılımın yoğunluğu, $p(x) = 1/(b-a)$,
 bunu üstteki son formüle sokarsak,</p>
 <p>$$
@@ -77,32 +77,26 @@ $$</p>
 uzunluğu ile çarpıyor, bir anlamda bir dikdörtgen alanını hesaplıyoruz,
 ki bu dikdörtgenin eni $a,b$ aralığının uzunluğu, yüksekliği ise $f(x)$'in
 beklenti değeri.</p>
-<p>Mesela $f(x) = x^2$'nin entegralini bulalim, aralik $-2,+2$ arasi,</p>
+<p>Mesela $f(x) = x^2$'nin entegralini bulalım, aralık $-2,+2$ arası,</p>
 <pre><code class="python">def func1(x):
-    # function f(x)=x^2
     return x**2
 
 def func1_int(a, b):
-    # analytical solution to integral of f(x)
     return (1/3)*(b**3-a**3)
 
 def mc_integrate(func, a, b, n = 1000):
-    # Monte Carlo integration between x1 and x2 of given function from a to b
-
     vals = np.random.uniform(a, b, n)
-    y = [func(val) for val in vals]
-
+    y = [func(val) for val in vals]    
     y_mean = np.sum(y)/n
-    integ = (b-a) * y_mean
-
+    integ = (b-a) * y_mean    
     return integ
 
 print(f&quot;Monte Carlo çözümü: {mc_integrate(func1, -2, 2, 500000): .4f}&quot;)
-print(f&quot;Analitik cozum: {func1_int(-2, 2): .4f}&quot;)
+print(f&quot;Analitik çözüm: {func1_int(-2, 2): .4f}&quot;)
 </code></pre>
 
-<pre><code>Monte Carlo çözümü:  5.3317
-Analitik cozum:  5.3333
+<pre><code>Monte Carlo çözümü:  5.3254
+Analitik çözüm:  5.3333
 </code></pre>
 
 <p>Kaynaklar</p>

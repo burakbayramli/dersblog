@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Monte Carlo, Entegraller
+</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+<p><link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>        <br />
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">      <br />
+        <section id="main_content" class="inner">
+        <h1>Monte Carlo, Entegraller
+</h1></p>
+<p>Monte Carlo entegrasyonu bir entegral mesela $f(x)$'i sayısal olarak kestirmek
+(estimation), ona yakın bir sonuca sayısal olarak erişmenin
+yöntemidir. Arkasında yatan teori oldukca basit, diyelim ki $f(x)$'i bir $D$
+tanım bölgesi (domain) üzerinden entegre etmek istiyoruz [1].</p>
+<p>$$
+I = \int_{x \in D} f(x) \mathrm{d} x
+$$</p>
+<p>Tek değişkenli fonksiyonlar için etki tek boyutlu ve entegrasyon sınırları
+basit olarak $a$ ile $b$ arasında.</p>
+<p>Biraz cebirsel numara yaparsak, mesela üstteki formülü $p(x)$ ile çarpalım
+bölelim (hiçbir değişiklik yaratmamış oluyoruz aslında)</p>
+<p>$$
+I = \int_{x \in D} \frac{f(x)}{p(x)} p(x) \mathrm{d} x
+$$</p>
+<p>$f(x)/p(x)$ bölümüne bir isim verelim, mesela $g(x)$,</p>
+<p>$$
+I = \int_{x \in D} g(x) p(x) \mathrm{d} x
+$$</p>
+<p>Üstteki formül bir beklenti (expectation) hesabına benzemiyor mu? Evet,
+$g(x)$'in $p(x)$ yoğunluğu üzerinden beklentisi bu formüldür, </p>
+<p>$$
+E[g(x)] = I = \int_{x \in D} g(x) p(x) \mathrm{d} x
+$$</p>
+<p>Beklenti hesabını örneklem ortalaması ile yaklaşık hesaplayabileceğimizi
+biliyoruz, etki alanından $N$ tane $x_i$ örneklemi alalım mesela, o zaman</p>
+<p>$$
+E[g(x)] \approx
+\frac{1}{N} \sum_{i=1}^{N} g(x_i) =
+\frac{1}{N} \sum_{i=1}^{N} \frac{f(x_i)}{g(x_i)}
+$$</p>
+<p>Diyelim ki $a,b$ arasında örneklem aldığımız sayılar birörnek (üniform)
+dağılımdan geliyor, yani $p(x)$ birörnek dağılımın yoğunluğu, $p(x) = 1/(b-a)$,
+bunu üstteki son formüle sokarsak,</p>
+<p>$$
+= (b-a) \frac{1}{N} \sum_{i=1}^{N} f(x_i) 
+$$</p>
+<p>Bu son formül $f(x)$'in $a,b$ arasındaki ortalamasını hesaplıyor ve onu aralığın
+uzunluğu ile çarpıyor, bir anlamda bir dikdörtgen alanını hesaplıyoruz,
+ki bu dikdörtgenin eni $a,b$ aralığının uzunluğu, yüksekliği ise $f(x)$'in
+beklenti değeri.</p>
+<p>Mesela $f(x) = x^2$'nin entegralini bulalim, aralik $-2,+2$ arasi,</p>
+<pre><code class="python">def func1(x):
+    # function f(x)=x^2
+    return x**2
+
+def func1_int(a, b):
+    # analytical solution to integral of f(x)
+    return (1/3)*(b**3-a**3)
+
+def mc_integrate(func, a, b, n = 1000):
+    # Monte Carlo integration between x1 and x2 of given function from a to b
+
+    vals = np.random.uniform(a, b, n)
+    y = [func(val) for val in vals]
+
+    y_mean = np.sum(y)/n
+    integ = (b-a) * y_mean
+
+    return integ
+
+print(f&quot;Monte Carlo çözümü: {mc_integrate(func1, -2, 2, 500000): .4f}&quot;)
+print(f&quot;Analitik cozum: {func1_int(-2, 2): .4f}&quot;)
+</code></pre>
+
+<pre><code>Monte Carlo çözümü:  5.3317
+Analitik cozum:  5.3333
+</code></pre>
+
+<p>Kaynaklar</p>
+<p>[1] Zhao, <em>Monte Carlo integration in Python over univariate and multivariate functions</em>,
+    <a href="https://boyangzhao.github.io/posts/monte-carlo-integration">https://boyangzhao.github.io/posts/monte-carlo-integration</a></p>
+<p>[2] Pharr, <em>Physically Based Rendering 3rd Ed</em></p>
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

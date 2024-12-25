@@ -22,3 +22,8 @@ basit kodlar çalıştı fakat çetrefil jar dosyalarında problem çıktı.
 Yine de paylaşalım, belki başkaları için yeterli olur.
 
 [Dosyalar](cheerpj-listing.html)
+
+Not: Üstteki HTML Unix `tree -af -H . ` komutu ile üretilmiştir, dizin
+yapısını göstermek istedik, aynı zamanda dosyalar tıklanıp
+görülebilir, indirilebilir.
+

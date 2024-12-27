@@ -242,6 +242,35 @@ fonksiyonlar var,</p>
 
 <p>İlk iki sayı enlem ve boylamdır.</p>
 
+<h3>Bir Kordinatın Evrensel Zaman Farkını Bulmak</h3>
+
+<p>Greenwich'i sıfır kabul ederek herhangi bir noktanın zaman farkını nasıl buluruz?
+Mesela New York -5 İstanbul +3 olmalı..</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">timezonefinder</span> <span class="kn">import</span> <span class="n">TimezoneFinder</span>
+<span class="kn">from</span> <span class="nn">pytz</span> <span class="kn">import</span> <span class="n">timezone</span><span class="p">,</span> <span class="n">utc</span>
+
+<span class="k">def</span> <span class="nf">time_zone</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">):</span>
+    <span class="n">tf</span> <span class="o">=</span> <span class="n">TimezoneFinder</span><span class="p">()</span> 
+    <span class="n">today</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
+    <span class="n">tz_target</span> <span class="o">=</span> <span class="n">timezone</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">certain_timezone_at</span><span class="p">(</span><span class="n">lng</span><span class="o">=</span><span class="n">lon</span><span class="p">,</span> <span class="n">lat</span><span class="o">=</span><span class="n">lat</span><span class="p">))</span>
+    <span class="n">today_target</span> <span class="o">=</span> <span class="n">tz_target</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
+    <span class="n">today_utc</span> <span class="o">=</span> <span class="n">utc</span><span class="o">.</span><span class="n">localize</span><span class="p">(</span><span class="n">today</span><span class="p">)</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">today_utc</span> <span class="o">-</span> <span class="n">today_target</span><span class="p">)</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3600</span>
+    <span class="k">return</span> <span class="n">offset</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">time_zone</span><span class="p">(</span><span class="mf">40.70</span><span class="p">,</span><span class="o">-</span><span class="mf">73.79</span><span class="p">))</span> <span class="c1"># New York</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">time_zone</span><span class="p">(</span><span class="mf">41.0</span><span class="p">,</span><span class="mf">29.0</span><span class="p">))</span> <span class="c1"># Istanbul</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>-5.0
+3.0
+</code></pre>
+</div>
+
 <h3>HTML5 ve Javascript ile Yer Bulmak</h3>
 
 <p>Javascript icinden yer bulmak mumkun, bu cep telefonunda da isliyor,

@@ -43,10 +43,10 @@ en "rahat" gidiş yolunu nasıl buluruz? </p>
 <p>Yükseklikler bir $E(x,y)$ fonksiyonunda olsun. Yolları nasıl temsil ederiz?
 Bir parametrik eğri kullanabiliriz, mesela </p>
 <p>$$
-x(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3
+x(t) = a_0 + a_1 t + a_2 t^2 + a_3 t^3 + a_4 t^4
 $$</p>
 <p>$$
-y(t) = b_0 + b_1 t + b_2 t^2 + b_3 t^3
+y(t) = b_0 + b_1 t + b_2 t^2 + b_3 t^3 + b_4 t^4
 $$</p>
 <p>İstediğimiz derecede polinom parametrize eğrileri nasıl yaratacağımızı
 biliyoruz [3]. Böylece doğru, optimal bir yolu bulmak demek
@@ -113,6 +113,19 @@ plt.savefig('calc_multi_40_elev_01.png')
 </code></pre>
 
 <p><img alt="" src="calc_multi_40_elev_01.png" /></p>
+<p>Başlangıç ve bitiş noktalarını nasıl formüle dahil ettiğimize dikkat, $t=0$
+olduğu anda $x(t),y(t)$ değerleri sırasıyla $a_0$ ve $b_0$'dir bunlar başlangıç
+değerleridir. Bitiş noktası ise $t=1$ anında sahip olunması gereken değerdir,
+bu noktada</p>
+<p>$$
+x(1) = a_0 + a_1 + a_2 + a_3 + a_4 ,\quad
+y(1) = b_0 + b_1 + b_2 + b_3 + b_4 
+$$</p>
+<p>olacağı için bitiş noktalarına $e_x,e_y$ diyelim, $x(t)$ için $a_1,a_2,a_3$
+katsayılarının değişmesine izin veririz, fakat sonuncu katsayı $a_4$'un ne
+olacağını formülde $e_x$ üzerinden zorlarız, yani $a_4 = e_x - (a_0 + a_1 + a_2
++ a_3)$ hesabını yaparız. Böylece $a_0 + a_1 + a_2 + a_3 + a_4$ toplamı
+$e_x$ sonucunu vermelidir. $y(t)$ ve $e_y$ için benzer mantığı kullanırız.</p>
 <p>Eğer üstteki gidiş yoluna kuşbakışı, iki boyutlu ortamda bakmak istersek,</p>
 <pre><code class="python">t = np.linspace(0,1.0,100)
 x = a0 + a1*t + a2*t**2 + a3*t**3 + a4*t**4 
@@ -153,12 +166,12 @@ I_h = \int_{t=0}^{t=1} \sqrt{
 } 
 \mathrm{d} t
 $$</p>
-<p>Formülde görülen $\mathrm{d} z/\mathrm{d} t$, $\mathrm{d} x/\mathrm{d} t$ ve $\mathrm{d} y/\mathrm{d} t$, parametrik
-eğri üzerinden alınacak tabii ki. Problem çözümü açısından $\mathrm{d} z/\mathrm{d} t$
-hesabı külfetli olabilir, çünkü $z = f(x,y)$ yükşelik
-fonksiyonundur. Üstteki örnekteki yükseklik fonksiyonu basit, ama daha
-çetrefil durumlarda da kullanabileceğimiz bir yaklaşım daha iyi olur. Bu
-sebeple $\mathrm{d} z/\mathrm{d} t$ türevini hesapsal yapacağız.</p>
+<p>Formülde görülen $\mathrm{d} z/\mathrm{d} t$, $\mathrm{d} x/\mathrm{d} t$ ve $\mathrm{d} y/\mathrm{d} t$, parametrik eğri
+üzerinden alınacak tabii ki. Problem çözümü açısından $\mathrm{d} z/\mathrm{d} t$ hesabı
+külfetli olabilir, çünkü $z = f(x,y)$ yükseklik fonksiyonundur. Üstteki
+örnekteki yükseklik fonksiyonu basit, ama daha çetrefil durumlarda da
+kullanabileceğimiz bir yaklaşım daha iyi olur. Bu sebeple $\mathrm{d} z/\mathrm{d} t$ türevini
+hesapsal yapacağız.</p>
 <p>Ama yatay türevler $\mathrm{d} x/\mathrm{d} t$ ve $\mathrm{d} y/\mathrm{d} t$ için, türevi almak, kare,
 toplam, karekök hesaplarını sembolik olarak yapabiliriz, çünkü bu formül
 polinom, formu şimdiden belli.</p>
@@ -334,14 +347,14 @@ değiştirilmiş sigmoid $\sigma$ ifadesi</p>
 <p>$$
 \sigma (x,k) = (x-k) \frac{1}{1 + exp(-\alpha (x-k))}
 $$</p>
-<p>Bilindidigi gibi normal sigmoid ifadesi</p>
+<p>Bilindiği gibi normal sigmoid ifadesi</p>
 <p>$$
 \sigma (x) = \frac{1}{1 + exp(-\alpha x)}
 $$</p>
 <p>ve $\alpha$ büyüdükçe 0'dan 1'e geçiş sertleşir. </p>
 <p>Bu şekilde parametrize edilmiş eğri ile pek çok farklı şekil ortaya
-çıkartılabilir. Bitis noktasini da farkli bir sekilde optimizasyon
-kisitlamasi uzerinden zorluyoruz [3]. </p>
+çıkartılabilir. Bitiş noktasını da farklı bir şekilde optimizasyon kısıtlaması
+üzerinden zorluyoruz [3].</p>
 <pre><code class="python">from scipy.optimize import minimize, Bounds, SR1, BFGS
 import numpy as np
 import matplotlib.pyplot as plt

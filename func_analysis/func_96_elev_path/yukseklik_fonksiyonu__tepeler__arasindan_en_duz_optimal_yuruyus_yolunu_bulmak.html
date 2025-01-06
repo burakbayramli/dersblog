@@ -188,7 +188,8 @@ entegral olacak, $t=0,t=1$ arasında hesaplanacak tabii ki (çünkü başlangı�
 bitiş değerlerini de bu kavrama ilintilendirdik), ve fonksiyon değişken olarak
 şu anda bilinmeyen katsayıları alacak, optimizasyon rutini ise en optimal
 katsayı değerlerini bu bedel üzerinden bulacak.</p>
-<pre><code class="python">pa0,pb0=(1.0,1.0)
+<pre><code class="python">LARGE_FLOAT = 1e6
+pa0,pb0=(1.0,1.0)
 pex,pey=(0.3,4.0)
 ts = np.linspace(0,1,20)
 def calcint_g1(pars):
@@ -200,32 +201,32 @@ def calcint_g1(pars):
     ys = []
     for tcurr in ts:
        sqrval = sqrdef.subs(argsubs).subs({t:tcurr})
-       if sqrval &lt; 0: sqrval = 0    
        xval = xdef.subs(argsubs).subs({a0: pa0}).subs({t:tcurr})
        yval = ydef.subs(argsubs).subs({b0: pb0}).subs({t:tcurr})
        prod1 = gfunc1(float(xval),float(yval))*sqrval
        ys.append(prod1)
     W = np.trapz(ys,x=ts)
+    if W &lt; 0: return LARGE_FLOAT
     return W
 </code></pre>
 
-<pre><code class="python">from scipy.optimize import minimize, Bounds, SR1, BFGS
+<pre><code class="python">from scipy.optimize import minimize, Bounds
 
 LIM = 5.0
 pa1,pa2,pa3 = 0,0,0
 pb1,pb2,pb3 = 0,0,0
 x0 = pa1,pa2,pa3,pb1,pb2,pb3
-opts = {'maxiter': 20, 'verbose': 0}
+opts = {'maxiter': 40, 'verbose': 3}
+
 res = minimize (fun=calcint_g1,x0=x0,
-                method='trust-constr',
-                hess = BFGS (),
+                method='Nelder-Mead',
                 bounds=Bounds([-LIM, -LIM, -LIM, -LIM, -LIM, -LIM],
                               [LIM, LIM, LIM, LIM, LIM, LIM]),
                 options=opts)
 print (res['x'])
 </code></pre>
 
-<pre><code>[-0.35628684 -2.58099677 -3.26315201 -3.87505375  1.12278098  1.70215256]
+<pre><code>[-1.92645176  0.87238797  1.45300069  1.5909808   2.46135117  0.73187586]
 </code></pre>
 
 <pre><code class="python">a1,a2,a3,b1,b2,b3 = list(res['x'])
@@ -239,6 +240,12 @@ plt.savefig('calc_multi_40_elev_07.jpg')
 <p><img alt="" src="calc_multi_40_elev_07.jpg" /></p>
 <p>Fena değil, optimal bir yola benziyor, tepelerden kaçınıldı mümkün olduğu kadar
 düşük yükseklikli ve kısa yoldan gidildi.</p>
+<p>Üstteki optimizasyon kodunda dikkat edilirse bazı püf noktalar var, mesela eğer
+<code>W</code> değeri sıfırdan küçük ise çok büyük bir değer donduruyoruz böylece o
+tür parametrelerden kaçınmiş oluyoruz, optimizasyonu diğer yönlere kanalize
+ediyoruz. Bu basit bir sağlama işlemi, tarif edilen türden entegral hesabı
+sıfırdan küçük olamaz, eğer öyle ise o tür sonucu veren parametrelerle
+ilgilenmiyoruz.</p>
 <p>Başka bir yükseklik fonksiyonunu kullanalım, iki tepe var şimdi, ve
 bitiş noktası farklı,</p>
 <pre><code class="python">def gfunc2(x, y):
@@ -249,7 +256,7 @@ bitiş noktası farklı,</p>
     return g1*10.0 + g2*10.0
 </code></pre>
 
-<pre><code class="python">from scipy.optimize import minimize, Bounds, SR1, BFGS
+<pre><code class="python">from scipy.optimize import minimize, Bounds
 
 pa0,pb0=(1.0,1.0)
 pex,pey=(4.0,2.0)

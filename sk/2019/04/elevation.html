@@ -277,6 +277,43 @@ olacaktır, bazıları daha az, altta her bölgenin boyutları var.</p>
 
 <p><img src="gltiles1.png" alt="" /></p>
 
+<p>Alternatif bir Python kodu (alttaki Javascript kodunu baz alıyor),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+
+<span class="n">RESOLUTION</span> <span class="o">=</span> <span class="mi">120</span>
+
+<span class="n">dataFiles</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;g10g&quot;</span><span class="p">,</span> <span class="s2">&quot;latMin&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;latMax&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;lngMin&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;lngMax&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;elMin&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">407</span><span class="p">,</span> <span class="s2">&quot;elMax&quot;</span><span class="p">:</span><span class="mi">8752</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span><span class="mi">10800</span><span class="p">,</span> <span class="s2">&quot;rows&quot;</span><span class="p">:</span><span class="mi">6000</span> <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">readNumberFromFile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">position</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+<span class="k">def</span> <span class="nf">fileIndex</span><span class="p">(</span><span class="n">lng</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">fileEntry</span><span class="p">):</span>
+    <span class="n">column</span><span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">lng</span><span class="o">*</span><span class="n">RESOLUTION</span><span class="p">);</span>
+    <span class="n">row</span><span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">lat</span><span class="o">*</span><span class="n">RESOLUTION</span><span class="p">);</span>
+    <span class="n">rowIndex</span><span class="o">=</span> <span class="n">row</span> <span class="o">-</span> <span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;latMin&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">RESOLUTION</span><span class="p">;</span>
+    <span class="n">columnIndex</span><span class="o">=</span> <span class="n">column</span> <span class="o">-</span> <span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;lngMin&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">RESOLUTION</span><span class="p">;</span>
+    <span class="n">index</span><span class="o">=</span> <span class="p">((</span><span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rowIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">columnIndex</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">index</span>
+
+<span class="k">def</span> <span class="nf">getElevation</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">findex</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">fileIndex</span><span class="p">(</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">dataFiles</span><span class="p">[</span><span class="n">findex</span><span class="p">]);</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">readNumberFromFile</span><span class="p">(</span><span class="n">dataFiles</span><span class="p">[</span><span class="n">findex</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="n">idx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span>
+</code></pre>
+</div>
+
 <p>Eğer belli bir bölgeyi çekip çıkartmak istiyorsak biraz daha ek işlem
 gerekli. Mesela sol alt köşe 35,25 sağ üst köşe 42,46 olacak şekilde
 (TR bölgesi) bir dikdörtgenin içine düşen yükseklikleri istiyoruz. Bu

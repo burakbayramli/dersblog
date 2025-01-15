@@ -61,8 +61,8 @@ diğer fonksiyonu geçirerek yapabilirim. Bir polinom bu işi görebilir; Pek ç
 diğer yöntemin kullandığı tipik bir polinom vardır,</p>
 <p>$$
 y_{approx} = a_0 + a_1 X_1 + a_2 X_1^2 
-$$</p>
-<p>diye gider, aslında daha genel olarak olan her terimde "bir katsayı çarpı
+$$
+diye gider, aslında daha genel olarak olan her terimde "bir katsayı çarpı
 $X_1$'in bir tür fonksiyonu" gibi bir toplam kullanmak daha iyi olabilir,
 bu formda,</p>
 <p>$$
@@ -233,6 +233,63 @@ $$</p>
 <p>Üstteki matris simetriktir, bu sebeple sol alt kısmı boş bıraktık, üst sağ kısım
 ile simetriktir. Direngenlik matrisi $k'$ ortadaki 6x6 matrisi olarak kabul
 edilebilir.</p>
+<p>Yine <code>sympy</code> ile sağlama yapalım,</p>
+<pre><code class="python">from sympy import symbols, pprint, latex
+from sympy.matrices import Matrix
+import pandas as pd
+pd.set_option('display.max_columns', None)
+
+G,J,E,L,I = symbols(&quot;G,J,E,L,I&quot;)
+</code></pre>
+
+<pre><code class="python">vars1 = ['phi1x','phi2x']
+M1 = pd.DataFrame([[1,-1],[-1,1]],index=vars1)
+M1 = (G*J/L)*M1
+M1.columns = vars1
+print (M1)
+</code></pre>
+
+<pre><code>        phi1x   phi2x
+phi1x   G*J/L  -G*J/L
+phi2x  -G*J/L   G*J/L
+</code></pre>
+
+<pre><code class="python">vars2 = ['v1','phi1z','v2','phi2z']
+M2 = pd.DataFrame([[12, 6*L,-12,6*L],
+                  [6*L,4*L**2,-6*L,2*L**2],
+                  [-12,-6*L,12,-6*L],
+                  [6*L,2*L**2,-6*L,4*L**2]],index=vars2)
+M2 = (E*I/L**3)*M2
+M2.columns = vars2
+print (M2)
+</code></pre>
+
+<pre><code>                 v1        phi1z            v2        phi2z
+v1      12*E*I/L**3   6*E*I/L**2  -12*E*I/L**3   6*E*I/L**2
+phi1z    6*E*I/L**2      4*E*I/L   -6*E*I/L**2      2*E*I/L
+v2     -12*E*I/L**3  -6*E*I/L**2   12*E*I/L**3  -6*E*I/L**2
+phi2z    6*E*I/L**2      2*E*I/L   -6*E*I/L**2      4*E*I/L
+</code></pre>
+
+<pre><code class="python">import sys; sys.path.append('../phy_020_strs_08')
+import dfutil
+
+all_vars = ['v1','phi1x','phi1z','v2','phi2x','phi2z']
+M1f = dfutil.expand_dataframe(M1,all_vars)
+M2f = dfutil.expand_dataframe(M2,all_vars)
+Mall = M1f + M2f
+print (Mall)
+</code></pre>
+
+<pre><code>                 v1   phi1x        phi1z            v2   phi2x        phi2z
+v1      12*E*I/L**3       0   6*E*I/L**2  -12*E*I/L**3       0   6*E*I/L**2
+phi1x             0   G*J/L            0             0  -G*J/L            0
+phi1z    6*E*I/L**2       0      4*E*I/L   -6*E*I/L**2       0      2*E*I/L
+v2     -12*E*I/L**3       0  -6*E*I/L**2   12*E*I/L**3       0  -6*E*I/L**2
+phi2x             0  -G*J/L            0             0   G*J/L            0
+phi2z    6*E*I/L**2       0      2*E*I/L   -6*E*I/L**2       0      4*E*I/L
+</code></pre>
+
 <p>Izgarayı yerel kordinat sisteminden globala çeviren transform matrisi ise
 alttadır,</p>
 <p>$$

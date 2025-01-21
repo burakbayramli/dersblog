@@ -161,20 +161,21 @@ Sonuç matrisini bir dosyaya yazalım,
 \begin{minted}[fontsize=\footnotesize]{python}
 Mall = Mall.apply(np.vectorize(lambda x: latex(x)))
 fout = open('matrix1.tex','w')
-fout.write ('$$\\left[\\begin{array}{cccccccccccc}')
+fout.write ('$$\n\\left[\\begin{array}{cccccccccccc}')
 fout.write('\n')
 for x,y in Mall.iterrows():
    row = ' & '.join(list(y)) + '\\\\'
    row = row.replace('0.0','0')
    fout.write(row)
    fout.write('\n')
-fout.write ('\\end{array}\\right]$$')
+fout.write ('\\end{array}\\right]\n$$')
 fout.close()
 \end{minted}
 
 Ve kodu belgeye dahil edelim, matris alttaki gibi olacak,
 
-$$\left[\begin{array}{cccccccccccc}
+$$
+\left[\begin{array}{cccccccccccc}
 \frac{A E}{L} & 0 & 0 & 0 & 0 & 0 & - \frac{A E}{L} & 0 & 0 & 0 & 0 & 0\\
 0 & \frac{12 E Iz}{L^{3}} & 0 & 0 & 0 & \frac{6 E Iz}{L^{2}} & 0 & - \frac{12 E Iz}{L^{3}} & 0 & 0 & 0 & \frac{6 E Iz}{L^{2}}\\
 0 & 0 & \frac{12 E Iy}{L^{3}} & 0 & - \frac{6 E Iy}{L^{2}} & 0 & 0 & 0 & - \frac{12 E Iy}{L^{3}} & 0 & - \frac{6 E Iy}{L^{2}} & 0\\
@@ -187,7 +188,8 @@ $$\left[\begin{array}{cccccccccccc}
 0 & 0 & 0 & - \frac{G J}{L} & 0 & 0 & 0 & 0 & 0 & \frac{G J}{L} & 0 & 0\\
 0 & 0 & - \frac{6 E Iy}{L^{2}} & 0 & \frac{2 E Iy}{L} & 0 & 0 & 0 & \frac{6 E Iy}{L^{2}} & 0 & \frac{4 E Iy}{L} & 0\\
 0 & \frac{6 E Iz}{L^{2}} & 0 & 0 & 0 & \frac{2 E Iz}{L} & 0 & - \frac{6 E Iz}{L^{2}} & 0 & 0 & 0 & \frac{4 E Iz}{L}\\
-\end{array}\right]$$
+\end{array}\right]
+$$
 
 Bu matrisin [2, sf. 282]'deki matris ile aynı olduğunu göreceğiz.
 

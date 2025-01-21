@@ -37,17 +37,74 @@
         <section id="main_content" class="inner">
         <h1>Materyel Mekaniği - 11
 </h1></p>
+<p>Üç boyutta herhangi bir yönde olabilecek bir kiriş öğesinin direngenlik
+matrisini bu bölümde geliştirelim [2, sf. 281]. Bunu yapabilmek için daha önce
+gördüğümüz eksenel, iki boyutlu kiriş, burulma direngenlik matrislerini
+birleştireceğiz.</p>
+<p>İki boyuttaki kirişin mekanığı bükülme alttaki gibiydi [1],</p>
+<p><img alt="" src="phy_020_strs_11_02.jpg" /></p>
+<p><img alt="" src="phy_020_strs_11_03.jpg" /></p>
+<p>Şimdi işaretler alttaki gibi olacak,</p>
 <p><img alt="" src="phy_020_strs_11_01.jpg" /></p>
-<p>$x-z$ Duzlemi</p>
+<p>İki boyutlu kiriş matrisini [1] iki kez kullanacagiz, ilki $x-z$ düzlemi icin,
+ikincisi $x-y$ düzlemi için,</p>
+<p>$x-z$ düzlemi</p>
 <p>$$
 \frac{EI_y}{L^4}
 \left[\begin{array}{cccc}
 12L &amp; -6L  &amp; -12L &amp; -6L^2 \\
     &amp; 4L^3 &amp; 6L^2 &amp; 2L^3  \\
     &amp;      &amp; 12L  &amp; 6L^2  \\
-                  &amp; 4L^3
+    &amp;      &amp;      &amp; 4L^3
 \end{array}\right]
+\qquad (1)
 $$</p>
+<p>$x-y$ düzlemi</p>
+<p>$$
+\frac{EI_y}{L^4}
+\left[\begin{array}{cccc}
+12L &amp; 6L  &amp; -12L &amp; 6L^2 \\
+    &amp; 4L^3 &amp; -6L^2 &amp; 2L^3  \\
+    &amp;      &amp; 12L  &amp; -6L^2  \\
+    &amp;      &amp;      &amp; 4L^3
+\end{array}\right]
+\qquad (2)
+$$</p>
+<p>Dikkat edersek $x-y$ düzleminin matrisi [1] matrisi ile aynı. $x-z$ düzlemi
+matrisinin bazı işaretleri farklı, bunun sebebi düzlemdeki bükülmenin sağ el
+kuralına göre farklı yönleri gösterebilmesi. Mesela [1]'deki </p>
+<p>$$
+m_1 = -m = -EI \frac{\mathrm{d}^2 v(0)}{\mathrm{d} x^2} =
+\frac{EI}{L^3} ( 6L v_1 + 4L^2 \phi_1 - 6L v_2 + 2 L^2 \phi_2 )
+$$</p>
+<p>formülünü hatırlarsak, o formülde bir uçta $m$ diğer üçta $-m$ vardı, fakat
+üstteki figürde $x-z$ düzlemindeki iki uçtaki $m$ değerleri aynı işarettedir,
+sağ el kuralını düşünürsek $x-z$'deki bükülme 1 noktasında kağıttan bize doğru
+gösteriyor, 2 noktasında aynı şekilde. O zaman üstteki formüldeki işaretler
+değişir,</p>
+<p>$$
+\Rightarrow \frac{EI}{L^3} ( -6L v_1 - 4L^2 \phi_1 + 6L v_2 - 2 L^2 \phi_2 )
+$$</p>
+<p>Bir değişim daha açılarda, üstteki formülde $\phi_1,\phi_2$ olan acılar,
+üç boyuttaki üstteki şekilde bunlar $\phi_{1y}$ ve $\phi_{2y}$. Bu açılar
+iki boyutlu durumun aksine artı yönde tam ters işaretli, tersi yönde bir
+yer değişim $v_1,v_2$'ye sebep oluyorlarlar, bu yüzden o işaretler de
+tersine dönüyor, notasyonu da düzeltince,</p>
+<p>$$
+\Rightarrow \frac{EI}{L^3} ( -6L v_1 + 4L^2 \phi_{1y} + 6L v_2 + 2 L^2 \phi_{2y} )
+$$</p>
+<p>Böylece matrisin ikinci satırında $-6,+4,+6,+2$ katsayılarını elde ediyoruz.
+Bu işaretlerin (1) matrisinin ikinci satırıyla aynı olduğunu görebiliriz,
+diğer satırlar benzer şekilde değiştiriliyorlar.</p>
+<p>Üstdüşüm (Süperposition)</p>
+<p>Artık bahsedilen matrisleri birleştirebiliriz. Bu üstdüşümü <code>sympy</code>  ile
+otomatik olarak yapacağız, daha önce sayısal değerler için kullandığımız
+<code>expand_dataframe</code> kodu yine kullanılabilecek, çünkü kod bir <code>pandas</code>
+Dataframe'i baz alıyor, bu Dataframe içinde herhangi bir obje depolamak mümkün,
+oraya sayılar yerine <code>sympy</code> sembolik matematik objeleri koyabiliriz. Bir
+bonus ta elde ediyoruz, toplama işlemi <code>sympy</code> tipleri için önceden
+tanımlıdır, yani eğer üstdüşüm sırasında çakışma olursa, sembolik objeler
+birbiriyle toplanacaktır!</p>
 <pre><code class="python">from sympy import symbols, pprint, latex
 from sympy.matrices import Matrix
 import pandas as pd
@@ -58,6 +115,7 @@ all_vars = ['u1','v1','w1','phi1x','phi1y','phi1z',\
 A,G,J,E,L,Iy,Iz = symbols(&quot;A,G,J,E,L,Iy,Iz&quot;)
 </code></pre>
 
+<p>Önce üstte bahsedilen iki düzlemi alalım,</p>
 <pre><code class="python"># x-z
 vars1 = ['w1','phi1y','w2','phi2y']
 M1 = pd.DataFrame([[12*L, -6*L**2,-12*L,-6*L**2],
@@ -74,18 +132,26 @@ M2 = pd.DataFrame([[12*L, 6*L**2,-12*L,6*L**2],
                   [6*L**2,2*L**3,-6*L**2,4*L**3]],index=vars2)
 M2.columns = vars2
 M2 = M2 * (E*Iz/L**4 )
+</code></pre>
 
+<p>Şimdi [1]'deki eksenel yükleri tanımlayan makaskiriş direngenlik matrisini
+alalım,</p>
+<pre><code class="python"># Eksenel Yuk
 vars3 = ['u1','u2']
 M3 = pd.DataFrame([[1,-1],[-1,1]],index=vars3)
 M3.columns = vars3
 M3 = M3 * (A*E/L)
+</code></pre>
 
+<p>[4]'te tanımladığımız burulma mekanığının matrisini belirtelim,</p>
+<pre><code class="python"># Burulma (Torsion)
 vars4 = ['phi1x','phi2x']
 M4 = pd.DataFrame([[1,-1],[-1,1]],index=vars3)
 M4.columns = vars4
 M4 = M4 * (G*J/L)
 </code></pre>
 
+<p>Hepsini üstdüşüm ile birleştirelim,</p>
 <pre><code class="python">import sys; sys.path.append('../phy_020_strs_08')
 import dfutil
 
@@ -110,7 +176,7 @@ fout.write ('\\\\end{array}\\\\right]$$')
 fout.close()
 </code></pre>
 
-<p>Ve altta belgeye dahil edelim,</p>
+<p>Ve kodu belgeye dahil edelim, matris alttaki gibi olacak,</p>
 <p>$$\left[\begin{array}{cccccccccccc}
 \frac{A E}{L} &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; - \frac{A E}{L} &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\
 0 &amp; \frac{12 E Iz}{L^{3}} &amp; 0 &amp; 0 &amp; 0 &amp; \frac{6 E Iz}{L^{2}} &amp; 0 &amp; - \frac{12 E Iz}{L^{3}} &amp; 0 &amp; 0 &amp; 0 &amp; \frac{6 E Iz}{L^{2}}\
@@ -125,8 +191,12 @@ fout.close()
 0 &amp; 0 &amp; - \frac{6 E Iy}{L^{2}} &amp; 0 &amp; \frac{2 E Iy}{L} &amp; 0 &amp; 0 &amp; 0 &amp; \frac{6 E Iy}{L^{2}} &amp; 0 &amp; \frac{4 E Iy}{L} &amp; 0\
 0 &amp; \frac{6 E Iz}{L^{2}} &amp; 0 &amp; 0 &amp; 0 &amp; \frac{2 E Iz}{L} &amp; 0 &amp; - \frac{6 E Iz}{L^{2}} &amp; 0 &amp; 0 &amp; 0 &amp; \frac{4 E Iz}{L}\
 \end{array}\right]$$
-Kaynaklar</p>
+Bu matrisin [2, sf. 282]'deki matris ile aynı olduğunu göreceğiz.</p>
+<p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Fizik, Materyel Mekanigi 7</em></p>
+<p>[2] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>
+<p>[3] Witt <em>Concepts and Apps of FEM</em></p>
+<p>[4] Bayramlı, <em>Fizik, Materyel Mekanigi 9</em></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

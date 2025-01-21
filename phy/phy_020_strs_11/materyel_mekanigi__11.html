@@ -107,7 +107,7 @@ tanımlıdır, yani eğer üstdüşüm sırasında çakışma olursa, sembolik o
 birbiriyle toplanacaktır!</p>
 <pre><code class="python">from sympy import symbols, pprint, latex
 from sympy.matrices import Matrix
-import pandas as pd
+import pandas as pd, pickle
 pd.set_option('display.max_columns', None)
 
 all_vars = ['u1','v1','w1','phi1x','phi1y','phi1z',\
@@ -160,6 +160,7 @@ M2f = dfutil.expand_dataframe(M2,all_vars)
 M3f = dfutil.expand_dataframe(M3,all_vars)
 M4f = dfutil.expand_dataframe(M4,all_vars)
 Mall = M1f + M2f + M3f + M4f
+pickle.dump(Matrix(Mall),open(&quot;Mall.pkl&quot;,&quot;wb&quot;))
 </code></pre>
 
 <p>Sonuç matrisini bir dosyaya yazalım, </p>
@@ -194,6 +195,27 @@ fout.close()
 \end{array}\right]
 $$</p>
 <p>Bu matrisin [2, sf. 282]'deki matris ile aynı olduğunu göreceğiz.</p>
+<p>Problem 5.8</p>
+<pre><code class="python">from sympy.matrices import Matrix
+from sympy import symbols
+import pickle
+
+A,G,J,E,L,Iy,Iz = symbols(&quot;A,G,J,E,L,Iy,Iz&quot;)
+Mall = pickle.load(open('Mall.pkl','rb'))
+
+D = {E: 30000, G: 10000, J:50, Iy:100, Iz:100, A:10, L:100}
+M = Mall.subs(D)
+print (latex(M)[:100], '..')
+</code></pre>
+
+<pre><code>\left[\begin{array}{cccccccccccc}3000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; -3000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0  ..
+</code></pre>
+
+<p>$$
+{\scriptsize
+\left[\begin{array}{cccccccccccc}3000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; -3000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0\\0.0 &amp; 36 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 1800 &amp; 0.0 &amp; -36 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 1800\\0.0 &amp; 0.0 &amp; 36 &amp; 0.0 &amp; -1800 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; -36 &amp; 0.0 &amp; -1800 &amp; 0.0\\0.0 &amp; 0.0 &amp; 0.0 &amp; 5000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; -5000 &amp; 0.0 &amp; 0.0\\0.0 &amp; 0.0 &amp; -1800 &amp; 0.0 &amp; 120000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 1800 &amp; 0.0 &amp; 60000 &amp; 0.0\\0.0 &amp; 1800 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 120000 &amp; 0.0 &amp; -1800 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 60000\\-3000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 3000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0\\0.0 &amp; -36 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; -1800 &amp; 0.0 &amp; 36 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; -1800\\0.0 &amp; 0.0 &amp; -36 &amp; 0.0 &amp; 1800 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 36 &amp; 0.0 &amp; 1800 &amp; 0.0\\0.0 &amp; 0.0 &amp; 0.0 &amp; -5000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 5000 &amp; 0.0 &amp; 0.0\\0.0 &amp; 0.0 &amp; -1800 &amp; 0.0 &amp; 60000 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 1800 &amp; 0.0 &amp; 120000 &amp; 0.0\\0.0 &amp; 1800 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 60000 &amp; 0.0 &amp; -1800 &amp; 0.0 &amp; 0.0 &amp; 0.0 &amp; 120000\end{array}\right]
+}
+$$</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Fizik, Materyel Mekaniği 7</em></p>
 <p>[2] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>

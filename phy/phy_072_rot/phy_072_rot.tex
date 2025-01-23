@@ -201,7 +201,7 @@ gösterilebilir,
 \includegraphics[height=6cm]{rotation.png}
 
 Ya da rotasyon eksenini $\hat{n}$ olarak gösterelim, ve dönüşün o eksene
-dikgen olan bir düzlem üzerinde olduğunu düşünelim [3, sf. 37],
+dikgen olan bir düzlem üzerinde olduğunu düşünelim [4, sf. 37],
 
 \includegraphics[height=6cm]{rotation2.png}
 
@@ -210,7 +210,7 @@ ve dikgen olduğu düzlemi tanımlamak için kullanılıyor.
 
 $v$'nin dönüşten etkilenmeyen bileşeni $v_\parallel$'yi hesaplamak için
 $v$'nin $\hat{n}$ üzerine olan yansımasını (projection) hesaplayabiliriz. 
-Yansıtma formülü, bkz [2],
+Yansıtma formülü, bkz [5],
 
 $$ v_\parallel =  \frac{\hat{n}\hat{n}^T}{\hat{n}^T\hat{n}} v 
 = (\hat{n}\hat{n}^T) v
@@ -335,13 +335,13 @@ Altta $(-1/3,2/3,2/3)$ ekseni etrafında 70 derece dönüş birkaç farklı
 açıdan gösteriliyor. 
 
 \begin{minted}[fontsize=\footnotesize]{python}
+def skew(a):
+   return np.array([[0,-a[2],a[1]],[a[2],0,-a[0]],[-a[1],a[0],0]])
+
 o = np.array([5,5,5])
 v = np.array([3,3,3])
 n = [-1/3.,2/3.,2/3.]
-\end{minted}
-
-\begin{minted}[fontsize=\footnotesize]{python}
-import skew
+   
 theta = np.deg2rad(70)
 N = skew.skew(n)
 R = np.eye(3) + np.sin(theta) * N - (1-np.cos(theta))*N**2
@@ -356,8 +356,6 @@ print vr
  [-0.91889724 -0.38633975  1.        ]]
 [ 1.24538705  4.72244477 -0.91571096]
 \end{verbatim}
-
-\inputminted[fontsize=\footnotesize]{python}{plot3d.py}
 
 \begin{minted}[fontsize=\footnotesize]{python}
 from mpl_toolkits.mplot3d import Axes3D
@@ -395,6 +393,10 @@ Kaynaklar
 [2] Bayramlı, {\em Lineer Cebir, Giris}
 
 [3] Widnall, {\em 16.07 Dynamics}
+
+[4] Sastry, {\em An Invitation to 3-D Vision}
+
+[5] Bayramlı, Lineer Cebir, {\em Ders 15}
 
 \end{document}
 

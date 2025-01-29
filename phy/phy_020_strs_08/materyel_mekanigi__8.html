@@ -211,65 +211,9 @@ u'_1 \\ v'_1 \\ \phi'_1 \\ u'_2 \\ v'_2 \\ \phi'_2
 \end{array}\right]
 \qquad (4)
 $$</p>
-<p>elde edilir, ki $C_1 = \dfrac{AE}{L}$ ve $C_2 = \dfrac{EI}{L^3}$
-olmak üzere. Üstte ortada duran matris $k'$ matrisidir.</p>
-<p>Hemen <code>sympy</code> ile doğrulamasını yapalım,</p>
-<pre><code class="python">from sympy import symbols, pprint, latex
-from sympy.matrices import Matrix
-import pandas as pd
-pd.set_option('display.max_columns', None)
-
-A,E,L,I,u1,u2,v1,v2,phi1,phi2 = symbols(&quot;A,E,L,I,u1,u2,v1,v2,phi1,phi2&quot;)
-</code></pre>
-
-<pre><code class="python">vars1 = ['u1','u2']
-M1 = pd.DataFrame([[1,-1],[-1,1]],index=vars1)
-M1 = (A*E/L)*M1
-M1.columns = vars1
-print (M1)
-</code></pre>
-
-<pre><code>        u1      u2
-u1   A*E/L  -A*E/L
-u2  -A*E/L   A*E/L
-</code></pre>
-
-<pre><code class="python">vars2 = ['v1','phi1','v2','phi2']
-M2 = pd.DataFrame([[12, 6*L,-12,6*L],
-                  [6*L,4*L**2,-6*L,2*L**2],
-                  [-12,-6*L,12,-6*L],
-                  [6*L,2*L**2,-6*L,4*L**2]],index=vars2)
-M2 = (E*I/L**3)*M2
-M2.columns = vars2
-print (M2)
-</code></pre>
-
-<pre><code>                v1         phi1            v2         phi2
-v1     12*E*I/L**3   6*E*I/L**2  -12*E*I/L**3   6*E*I/L**2
-phi1    6*E*I/L**2      4*E*I/L   -6*E*I/L**2      2*E*I/L
-v2    -12*E*I/L**3  -6*E*I/L**2   12*E*I/L**3  -6*E*I/L**2
-phi2    6*E*I/L**2      2*E*I/L   -6*E*I/L**2      4*E*I/L
-</code></pre>
-
-<pre><code class="python">import dfutil
-
-all_vars = ['u1','v1','phi1','u2','v2','phi2']
-M1f = dfutil.expand_dataframe(M1,all_vars)
-M2f = dfutil.expand_dataframe(M2,all_vars)
-Mall = M1f + M2f
-print (Mall)
-</code></pre>
-
-<pre><code>          u1            v1         phi1      u2            v2         phi2
-u1     A*E/L             0            0  -A*E/L             0            0
-v1         0   12*E*I/L**3   6*E*I/L**2       0  -12*E*I/L**3   6*E*I/L**2
-phi1       0    6*E*I/L**2      4*E*I/L       0   -6*E*I/L**2      2*E*I/L
-u2    -A*E/L             0            0   A*E/L             0            0
-v2         0  -12*E*I/L**3  -6*E*I/L**2       0   12*E*I/L**3  -6*E*I/L**2
-phi2       0    6*E*I/L**2      2*E*I/L       0   -6*E*I/L**2      4*E*I/L
-</code></pre>
-
-<p>Aynı sonuca eriştik.</p>
+<p>elde edilir, ki $C_1 = \dfrac{AE}{L}$ ve $C_2 = \dfrac{EI}{L^3}$ olmak
+üzere. Üstte ortada duran matris $k'$ matrisidir. İfadenin <code>sympy</code> ile
+doğrulaması için yazının sonuna gidebiliriz.</p>
 <p>Şimdi dönüş mekaniğini ekleyelim.</p>
 <p>$$
 \left[\begin{array}{ccc}
@@ -640,8 +584,9 @@ kalır, bu değerler sıfırdır. $Ax=b$ çözerken her satırda mevcut anahtarl
 değerleri JSON olarak ayrı sözlükler olarak alınabilir ve bu satırlar artımsal
 (incremental) çözüm yapabilen bir eşlenik gradyan [2,3] koduna satır satır
 geçilebilir.</p>
-<p>Not: Alttakiler biraz önce yazdığımız fonksiyonları diğer kodların
-kullanabilmesi için onları dinamik olarak hafızadan alıp diske yazıyor.</p>
+<p>Diske Kayıt</p>
+<p>Alttakiler biraz önce yazdığımız fonksiyonları diğer kodların kullanabilmesi
+için onları dinamik olarak hafızadan alıp diske yazıyor.</p>
 <pre><code class="python">fout = open('dfutil.py','w')
 fout.write('import pandas as pd, numpy as np\n')
 code = inspect.getsourcelines(expand_dataframe)
@@ -651,6 +596,64 @@ for line in code[0]: fout.write(line)
 fout.close()
 </code></pre>
 
+<p>Doğrulama</p>
+<p>(4)'ün <code>sympy</code> ile doğrulaması</p>
+<pre><code class="python">from sympy import symbols, pprint, latex
+from sympy.matrices import Matrix
+import pandas as pd
+pd.set_option('display.max_columns', None)
+
+A,E,L,I,u1,u2,v1,v2,phi1,phi2 = symbols(&quot;A,E,L,I,u1,u2,v1,v2,phi1,phi2&quot;)
+</code></pre>
+
+<pre><code class="python">vars1 = ['u1','u2']
+M1 = pd.DataFrame([[1,-1],[-1,1]],index=vars1)
+M1 = (A*E/L)*M1
+M1.columns = vars1
+print (M1)
+</code></pre>
+
+<pre><code>        u1      u2
+u1   A*E/L  -A*E/L
+u2  -A*E/L   A*E/L
+</code></pre>
+
+<pre><code class="python">vars2 = ['v1','phi1','v2','phi2']
+M2 = pd.DataFrame([[12, 6*L,-12,6*L],
+                  [6*L,4*L**2,-6*L,2*L**2],
+                  [-12,-6*L,12,-6*L],
+                  [6*L,2*L**2,-6*L,4*L**2]],index=vars2)
+M2 = (E*I/L**3)*M2
+M2.columns = vars2
+print (M2)
+</code></pre>
+
+<pre><code>                v1         phi1            v2         phi2
+v1     12*E*I/L**3   6*E*I/L**2  -12*E*I/L**3   6*E*I/L**2
+phi1    6*E*I/L**2      4*E*I/L   -6*E*I/L**2      2*E*I/L
+v2    -12*E*I/L**3  -6*E*I/L**2   12*E*I/L**3  -6*E*I/L**2
+phi2    6*E*I/L**2      2*E*I/L   -6*E*I/L**2      4*E*I/L
+</code></pre>
+
+<pre><code class="python">import dfutil
+
+all_vars = ['u1','v1','phi1','u2','v2','phi2']
+M1f = dfutil.expand_dataframe(M1,all_vars)
+M2f = dfutil.expand_dataframe(M2,all_vars)
+Mall = M1f + M2f
+print (Mall)
+</code></pre>
+
+<pre><code>          u1            v1         phi1      u2            v2         phi2
+u1     A*E/L             0            0  -A*E/L             0            0
+v1         0   12*E*I/L**3   6*E*I/L**2       0  -12*E*I/L**3   6*E*I/L**2
+phi1       0    6*E*I/L**2      4*E*I/L       0   -6*E*I/L**2      2*E*I/L
+u2    -A*E/L             0            0   A*E/L             0            0
+v2         0  -12*E*I/L**3  -6*E*I/L**2       0   12*E*I/L**3  -6*E*I/L**2
+phi2       0    6*E*I/L**2      2*E*I/L       0   -6*E*I/L**2      4*E*I/L
+</code></pre>
+
+<p>Aynı sonuca eriştik.</p>
 <p>Kaynaklar</p>
 <p>[1] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>
 <p>[2] Bayramlı, <em>Hesapsal Bilim, Ders 2-19</em></p>

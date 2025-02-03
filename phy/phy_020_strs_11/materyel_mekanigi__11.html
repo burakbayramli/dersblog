@@ -46,7 +46,7 @@ birleştireceğiz.</p>
 <p><img alt="" src="phy_020_strs_11_03.jpg" /></p>
 <p>Şimdi işaretler alttaki gibi olacak,</p>
 <p><img alt="" src="phy_020_strs_11_01.jpg" /></p>
-<p>İki boyutlu kiriş matrisini [1] iki kez kullanacagiz, ilki $x-z$ düzlemi icin,
+<p>İki boyutlu kiriş matrisini [1] iki kez kullanacağız, ilki $x-z$ düzlemi icin,
 ikincisi $x-y$ düzlemi için,</p>
 <p>$x-z$ düzlemi</p>
 <p>$$
@@ -205,10 +205,9 @@ C_{xz'} &amp; C_{yz'} &amp; C_{zz'}
 \end{array}\right]
 $$</p>
 <p>Sonlu Öğeler (Finite Element) bu hesap şu şekilde uygulanır, FEM problemlerinde
-genellikle yapılan bir kiriş parçasını transform edilmiş $x'$ ekseni kabul
-edilir, ve geri kalan $\lambda$ değerleri buna göre doldurulur. Bu durumda
-kirişin uç ve baş noktasını kullanarak $x'$ ile oluşan açıları şöyle
-bulabiliriz,</p>
+genellikle yapılan bir kiriş parçası transform edilmiş $x'$ ekseni kabul edilir,
+ve geri kalan $\lambda$ değerleri buna göre doldurulur. Bu durumda kirişin uç ve
+baş noktasını kullanarak $x'$ ile oluşan açıları şöyle bulabiliriz,</p>
 <p>$$
 \cos_{xx'} = \frac{x_2 - x_1}{L} = l
 $$</p>
@@ -221,13 +220,15 @@ $$</p>
 <p>ki kirişin son noktası $x_2,y_2,z_2$, baş noktası $x_1,y_1,z_1$, uzunluk $L$.</p>
 <p>Kiriş bazlı yeni eksen oluştururken bir kez $x'$ elde ettikten sonra diğer
 eksenleri ona göre bulabiliriz, diğer herhangi bir vektörle oluşturulan düzleme
-dik olan yeni bir vektörü $y'$ için kullanabilirdik mesela, genellikle burada
-yapılan $x'$ ile $z$ ekseninin çapraz çarpımını almaktır, ki bilindiği gibi iki
-vektöre dikgen üçüncü bir vektör çapraz çarpım ile hesaplanır, böylece bir $y'$
-elde edilir, sonra $x'$ ile $y'$ ekseninin bir çapraz çarpımı daha alınarak $z'$
-bulunabilir.  Bu hesapla elde edilen $x',y',z'$ bir kordinat ekseninin sahip
-olması gerekli tüm koşulları yerine getiriyor, eksenler birbiriyle dikgen.</p>
-<p>Biraz önceki semboller üzerinde görelim,</p>
+dik olan yeni bir vektörü $y'$ için kullanabilirdik mesela, [2]'de yapılan $x'$
+ile $z$ ekseninin çapraz çarpımını almaktır. Bilindiği gibi iki vektöre dikgen
+üçüncü bir vektör çapraz çarpım ile hesaplanır, böylece $x'$ eksenine dikgen bir
+$y'$ elde etmiş oluruz, sonra $x'$ ile $y'$ ekseninin bir çapraz çarpımı daha
+alınarak her iki eksene dikgen üçüncü eksen $z'$ bulunabilir.  Bu hesapla elde
+edilen $x',y',z'$ bir kordinat ekseninin sahip olması gerekli tüm koşulları
+yerine getiriyor.</p>
+<p>Biraz önceki semboller üzerinde görelim, $i,j,k$ birim vektörler, notasyonda
+genellikle $\mathbf{i},\mathbf{j},\mathbf{k}$ olarak gösterilirler.</p>
 <p>$$
 z \times x' = y' = \frac{1}{D}
 \left[\begin{array}{ccc}
@@ -240,6 +241,51 @@ $$</p>
 <p>$$
 D = (l^2 + m^2)^{1/2}
 $$</p>
+<p>Simdi $z'$ ekseni,</p>
+<p>$$
+z' = x' \times y' = \frac{1}{D}
+\left[\begin{array}{ccc}
+i &amp; j &amp; k \\ l &amp; m &amp; n \\ -m &amp; l &amp; 0
+\end{array}\right]
+$$</p>
+<p>$$
+z' = -\frac{ln}{D} i - \frac{mn}{D} j + D k 
+$$</p>
+<p>Sonuçları bir araya koyarsak,</p>
+<p>$$
+\lambda = \left[\begin{array}{ccc}
+l &amp; m &amp; n \\
+-\dfrac{m}{D} &amp; \dfrac{l}{D} &amp; 0 \\
+-\dfrac{ln}{D} &amp; -\dfrac{mn}{D} &amp; D
+\end{array}\right]
+$$</p>
+<p>Üstteki matris bir vektörü yerel kordinat sisteminden global kordinat sistemine
+çevirebilir. $T$ içinde üstteki matrisleri kullanırız, ve $T^T k' T$ hesabını
+yaparız.</p>
+<p>Problem 5.7</p>
+<p><img alt="" src="phy_020_strs_11_05.jpg" /></p>
+<p>Üstteki şekil için gereken $\lambda$ matrisini bulun.</p>
+<p>Çözüm</p>
+<p>Önce kiriş uzunluğunu bulalım.</p>
+<pre><code class="python">np.sqrt(3**2 + 4**2 + 12**2)
+</code></pre>
+
+<pre><code>Out[1]: 13.0
+</code></pre>
+
+<p>Şimdi uzunluğu kullanarak $x'$ eksenini bulalım, daha önce bahsedildiği gibi bu
+eksenin çubuğun bir ucundan başlayıp onunla aynı yönü gösterdiği kabul edilir.
+Bu değerlere $l_x,l_y,l_z$ diyelim, $\lambda$ matrisinin ilk satırı bu değerler,</p>
+<p>$$
+l_x = \frac{x_2 - x_1}{L} = \frac{3 = 0}{13} = \frac{3}{13}
+$$</p>
+<p>$$
+m_x = \frac{y_2 - y_1}{L} = \frac{4-0}{13} = \frac{4}{13}
+$$</p>
+<p>$$
+n_x = \frac{z_2 - z_1}{L} = \frac{12 = 0}{13} = \frac{12}{13}
+$$</p>
+<p>[devam edecek]</p>
 <p>Problem 5.8</p>
 <pre><code class="python">from sympy.matrices import Matrix
 from sympy import symbols
@@ -261,6 +307,7 @@ print (latex(M)[:100], '..')
 \left[\begin{array}{cccccccccccc}3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 36 &amp; 0 &amp; 0 &amp; 0 &amp; 1800 &amp; 0 &amp; -36 &amp; 0 &amp; 0 &amp; 0 &amp; 1800\\0 &amp; 0 &amp; 36 &amp; 0 &amp; -1800 &amp; 0 &amp; 0 &amp; 0 &amp; -36 &amp; 0 &amp; -1800 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 5000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -5000 &amp; 0 &amp; 0\\0 &amp; 0 &amp; -1800 &amp; 0 &amp; 120000 &amp; 0 &amp; 0 &amp; 0 &amp; 1800 &amp; 0 &amp; 60000 &amp; 0\\0 &amp; 1800 &amp; 0 &amp; 0 &amp; 0 &amp; 120000 &amp; 0 &amp; -1800 &amp; 0 &amp; 0 &amp; 0 &amp; 60000\\-3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; -36 &amp; 0 &amp; 0 &amp; 0 &amp; -1800 &amp; 0 &amp; 36 &amp; 0 &amp; 0 &amp; 0 &amp; -1800\\0 &amp; 0 &amp; -36 &amp; 0 &amp; 1800 &amp; 0 &amp; 0 &amp; 0 &amp; 36 &amp; 0 &amp; 1800 &amp; 0\\0 &amp; 0 &amp; 0 &amp; -5000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 5000 &amp; 0 &amp; 0\\0 &amp; 0 &amp; -1800 &amp; 0 &amp; 60000 &amp; 0 &amp; 0 &amp; 0 &amp; 1800 &amp; 0 &amp; 120000 &amp; 0\\0 &amp; 1800 &amp; 0 &amp; 0 &amp; 0 &amp; 60000 &amp; 0 &amp; -1800 &amp; 0 &amp; 0 &amp; 0 &amp; 120000\end{array}\right]
 }
 $$</p>
+<p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, <em>Fizik, Materyel Mekaniği 7</em></p>
 <p>[2] Logan, <em>A First Course in the Finite Element Method, 6th Ed</em></p>

@@ -3,9 +3,9 @@
 Materyel Mekaniği - 11
 
 Üç boyutta herhangi bir yönde olabilecek bir kiriş öğesinin direngenlik
-matrisini bu bölümde geliştirelim [2, sf. 281]. Bunu yapabilmek için daha önce
-gördüğümüz eksenel, iki boyutlu kiriş, burulma direngenlik matrislerini
-birleştireceğiz.
+matrisini bu bölümde geliştirelim [2, sf. 281]. Literatürde bu yapılara uzay
+çerçeveleri (space frame) denebiliyor. Bunu yapabilmek için daha önce gördüğümüz
+eksenel, iki boyutlu kiriş, burulma direngenlik matrislerini birleştireceğiz.
 
 İki boyuttaki kirişin mekaniği bükülme alttaki gibiydi [1],
 
@@ -374,6 +374,18 @@ $$
 
 Problem 5.8
 
+Alttaki uzay çerçevesindeki düğüm 1 noktasındaki yer değişimlerini ve dönüşleri
+hesaplayın. Her üç kiriş parçası için $E=30,000$ ksi, $G=10,000$ ksi, $J = 50$
+$in^4$, $I_y=100$ $in^4$, $I_z = 100$ $in^4$, $A=10$ $in^2$, $L = 100$ in.
+değerleri geçerlidir.
+
+\includegraphics[width=20em]{phy_020_strs_11_06.jpg}
+
+Çözüm
+
+Üç kiriş parçası uzunluk, madde, yapı açısından birbirlerine eşit olduğu için
+$k$ matrisini bir kere hesaplamak yeterli. 
+
 \begin{minted}[fontsize=\footnotesize]{python}
 from sympy.matrices import Matrix
 from sympy import symbols
@@ -383,12 +395,12 @@ A,G,J,E,L,Iy,Iz = symbols("A,G,J,E,L,Iy,Iz")
 Mall = pickle.load(open('Mall.pkl','rb'))
 
 D = {E: 30000, G: 10000, J:50, Iy:100, Iz:100, A:10, L:100}
-M = Mall.subs(D)
-print (latex(M)[:100], '..')
+kprime = Mall.subs(D)
+print (latex(kprime)[:100], '..')
 \end{minted}
 
 \begin{verbatim}
-\left[\begin{array}{cccccccccccc}3000 & 0 & 0 & 0 & 0 & 0 & -3000 & 0 & 0 & 0 & 0  ..
+\left[\begin{array}{cccccccccccc}3000 & 0.0 & 0.0 & 0.0 & 0.0 & 0.0 & -3000 & 0.0 & 0.0 & 0.0 & 0.0  ..
 \end{verbatim}
 
 $$
@@ -397,10 +409,97 @@ $$
 }
 $$
 
+Geri kalan her parça için dönüş matrislerini hesaplamak.
 
+Parça 1
 
+Önce parça 1 hesapları yapalım, bu parça düğüm 2 noktasından başlayıp
+düğüm 1 noktasına gidiyor. O zaman $x'$ ekseni için
 
+$$
+l = 1, \quad m = 0, \quad n = 0, \quad D = 1
+$$
 
+Diger hesaplar
+
+$$
+I_y = -\frac{m_x}{D}, \quad
+m_y = \frac{1}{D}, \quad
+n_y = 0
+$$
+
+$$
+i_z = -\frac{l_x n_x}{D} = 0, \quad
+m_z = -\frac{m_x n_x}{D} = 0, \quad
+n_z = D = 1
+$$
+
+Matris içinde gösterirsek,
+
+$$
+\lambda = \left[\begin{array}{ccc}
+1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1
+\end{array}\right]
+$$
+
+Sonuç şaşırtıcı olmasa gerek, çünkü yeni $x$ eski $x$ ile aynı. Bu parça için
+sanki eksen hiç değişmesin demiş olduk ve sonuç olarak çarpılınca hiçbir
+değişiklik yaratmayacak birim matrisi elde ettik. Bu matrisi büyük $T$ içinde
+köşegenlere parça parça yerleştirince yine birim matris elde edilir, yani
+$T^T k' T$ aynı $k'$ matrisini verir.
+
+Parça 2
+
+Bu parça düğüm 3 noktasıdan düğüm 1 noktasına gidiyor. O zaman $x'$ ekseni
+global $z$ ekseni ile aynı şey, o zaman ve yine önceki formüllere bakarak,
+
+$$
+\lambda = \left[\begin{array}{ccc}
+0 & 0 & 1 \\ 0 & 1 & 0 \\ -1 & 0 & 0
+\end{array}\right]
+$$
+
+elde ederiz. $T$ matrisi suna benzer,
+
+\begin{minted}[fontsize=\footnotesize]{python}
+T_P2 = np.array([
+[0, 0,1, 0,0,0, 0,0,0, 0,0,0 ],
+[0, 1,0, 0,0,0, 0,0,0, 0,0,0 ],
+[-1,0,0, 0,0,0, 0,0,0, 0,0,0],
+[0, 0,0, 0,0,1, 0,0,0, 0,0,0 ],
+[0, 0,0, 0,1,0, 0,0,0, 0,0,0],
+[0, 0,0,-1,0,0, 0,0,0, 0,0,0],
+[0, 0,0, 0,0,0, 0,0,1, 0,0,0 ],
+[0, 0,0, 0,0,0, 0,1,0, 0,0,0 ],
+[0, 0,0, 0,0,0,-1,0,0, 0,0,0],
+[0, 0,0, 0,0,0, 0,0,0, 0,0,1],
+[0, 0,0, 0,0,0, 0,0,0, 0,1,0 ],
+[0, 0,0, 0,0,0, 0,0,0,-1,0,0]])
+\end{minted}
+
+\begin{minted}[fontsize=\footnotesize]{python}
+res2 = T_P2.transpose()*kprime*T_P2
+res2 = latex(res2)
+print (res2[:100],'..')
+\end{minted}
+
+\begin{verbatim}
+\left[\begin{array}{cccccccccccc}36 & 0 & 0 & 0 & 1800 & 0 & -36 & 0 & 0 & 0 & 1800 & 0\\0 & 36 & 0  ..
+\end{verbatim}
+
+$$
+\scriptsize
+\left[\begin{array}{cccccccccccc}36 & 0 & 0 & 0 & 1800 & 0 & -36 & 0 & 0 & 0 &
+    1800 & 0\\0 & 36 & 0 & -1800 & 0 & 0 & 0 & -36 & 0 & -1800 & 0 & 0\\0 & 0 &
+    3000 & 0 & 0 & 0 & 0 & 0 & -3000 & 0 & 0 & 0\\0 & -1800 & 0 & 120000 & 0 & 0
+    & 0 & 1800 & 0 & 60000 & 0 & 0\\1800 & 0 & 0 & 0 & 120000 & 0 & -1800 & 0 &
+    0 & 0 & 60000 & 0\\0 & 0 & 0 & 0 & 0 & 5000 & 0 & 0 & 0 & 0 & 0 & -5000\\-36
+    & 0 & 0 & 0 & -1800 & 0 & 36 & 0 & 0 & 0 & -1800 & 0\\0 & -36 & 0 & 1800 & 0
+    & 0 & 0 & 36 & 0 & 1800 & 0 & 0\\0 & 0 & -3000 & 0 & 0 & 0 & 0 & 0 & 3000 &
+    0 & 0 & 0\\0 & -1800 & 0 & 60000 & 0 & 0 & 0 & 1800 & 0 & 120000 & 0 &
+    0\\1800 & 0 & 0 & 0 & 60000 & 0 & -1800 & 0 & 0 & 0 & 120000 & 0\\0 & 0 & 0
+    & 0 & 0 & -5000 & 0 & 0 & 0 & 0 & 0 & 5000\end{array}\right]
+$$
 
 
 

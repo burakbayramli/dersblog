@@ -277,19 +277,16 @@ mümkündür.
 
 Kaynaklar
 
-[1] [Tinkercad](https://www.tinkercad.com/things/h3gtFbihOx3-helice-2-pales-arrondies-propeller-2-rounded-blades)
+[1] <a href="https://www.tinkercad.com/things/h3gtFbihOx3-helice-2-pales-arrondies-propeller-2-rounded-blades">Tinkercad</a>
 
-[2] [Numpy STL](https://pythonhosted.org/numpy-stl/)
+[2] <a href="https://pythonhosted.org/numpy-stl/">Numpy STL</a>
 
-[3] [C++ ile STL Dosyasi Okumak](http://www.sgh1.net/posts/read-stl-file.html)
+[3] <a href="http://www.sgh1.net/posts/read-stl-file.html">C++ ile STL Dosyasi Okumak</a>
 
-[4] [Cornell, Triangle meshes I, PDF](http://www.cs.cornell.edu/courses/cs4620/2014fa/lectures/02trimesh1.pdf)
+[4] <a href="http://www.cs.cornell.edu/courses/cs4620/2014fa/lectures/02trimesh1.pdf">Cornell, Triangle meshes I, PDF</a>
 
-[5] [STL File Format, Simply Explained](https://all3dp.com/what-is-stl-file-format-extension-3d-printing/#pointone)
+[5] <a href="https://all3dp.com/what-is-stl-file-format-extension-3d-printing/#pointone">STL File Format, Simply Explained</a>
 
-[6] [Döndürme (Rotation)](https://burakbayramli.github.io/dersblog/phy/phy_072_rot/dondurme__rotation_.html)
+[6] <a href="https://burakbayramli.github.io/dersblog/phy/phy_072_rot/dondurme__rotation_.html">Döndürme (Rotation)</a>
 
-[7] [STL Viewer](https://www.viewstl.com/plugin/)
-
-
-
+[7] <a href="https://www.viewstl.com/plugin/">STL Viewer</a>

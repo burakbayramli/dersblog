@@ -46,6 +46,8 @@
 
 [Pürüzleştirilmiş Parcaçık Hidrodinamiği (Smoothed Particle Hydrodynamics -SPH-)](08/sph.html)
 
+[3D Baskıya Hazır CAD Tasarım Formatı, STL](08/stl-3d-cad.html)
+
 [Octave ile Ruzgar Verisi, wind.dat, Curl Ornekleri](09/octave-3d-wind.html)
 
 [Dosya Kodlamasi (File Encoding)](10/dosya-kodlamasi-encoding.html)

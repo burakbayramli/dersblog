@@ -270,7 +270,7 @@ Aynı `static` dizini altına bir `index.html` yazarız,
 </html>
 ```
 
-Tarayıcıda `http://localhost:5000/static/ındex.html` ziyaret edilince STL objesi
+Tarayıcıda `http://localhost:5000/static/index.html` ziyaret edilince STL objesi
 gösterilecektir. Objeye klasik fare hareketleri ile yakından bakmak, çevirmek, vs
 mümkündür.
 
@@ -290,4 +290,6 @@ Kaynaklar
 [6] [Döndürme (Rotation)](https://burakbayramli.github.io/dersblog/phy/phy_072_rot/dondurme__rotation_.html)
 
 [7] [STL Viewer](https://www.viewstl.com/plugin/)
+
+
 

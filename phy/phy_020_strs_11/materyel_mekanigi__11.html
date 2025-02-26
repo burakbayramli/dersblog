@@ -264,7 +264,7 @@ $$</p>
 yaparız.</p>
 <p>Problem 5.7</p>
 <p><img alt="" src="phy_020_strs_11_05.jpg" /></p>
-<p>Üstteki şekil için gereken $\lambda$ matrisini bulun.</p>
+<p>Üstteki şekil için gereken $\lambda$ matrisini bulun [2, sf. 285].</p>
 <p>Çözüm</p>
 <p>Önce kiriş uzunluğunu bulalım.</p>
 <pre><code class="python">np.sqrt(3**2 + 4**2 + 12**2)
@@ -330,13 +330,13 @@ $$</p>
 <p>Alttaki uzay çerçevesindeki düğüm 1 noktasındaki yer değişimlerini ve dönüşleri
 hesaplayın. Her üç kiriş parçası için $E=30,000$ ksi, $G=10,000$ ksi, $J = 50$
 $in^4$, $I_y=100$ $in^4$, $I_z = 100$ $in^4$, $A=10$ $in^2$, $L = 100$ in.
-değerleri geçerlidir.</p>
+değerleri geçerlidir [2, sf. 287].</p>
 <p><img alt="" src="phy_020_strs_11_06.jpg" /></p>
 <p>Çözüm</p>
 <p>Üç kiriş parçası uzunluk, madde, yapı açısından birbirlerine eşit olduğu için
 $k$ matrisini bir kere hesaplamak yeterli. </p>
 <pre><code class="python">from sympy.matrices import Matrix
-from sympy import symbols
+from sympy import symbols, latex
 import pickle
 
 A,G,J,E,L,Iy,Iz = symbols(&quot;A,G,J,E,L,Iy,Iz&quot;)
@@ -428,6 +428,67 @@ print (res2[:100],'..')
     0 &amp; 0 &amp; 0\\0 &amp; -1800 &amp; 0 &amp; 60000 &amp; 0 &amp; 0 &amp; 0 &amp; 1800 &amp; 0 &amp; 120000 &amp; 0 &amp;
     0\\1800 &amp; 0 &amp; 0 &amp; 0 &amp; 60000 &amp; 0 &amp; -1800 &amp; 0 &amp; 0 &amp; 0 &amp; 120000 &amp; 0\\0 &amp; 0 &amp; 0
     &amp; 0 &amp; 0 &amp; -5000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 5000\end{array}\right]
+$$</p>
+<p>Parça 3</p>
+<p>Bu parça için $x'$ eksenini düğüm 4'ten düğüm 1'e gidiyor şekilde ayarlıyoruz,</p>
+<p>$$
+l = \frac{0 - 0}{100} = 0, \quad
+m = \frac{0 - (-100)}{100} = 1, \quad
+n = \frac{0 - 0}{100} = 0
+$$</p>
+<p>Ayrica $D = 1$.</p>
+<p>Simdi $l,m,n$ hesaplanabilir,</p>
+<p>$$
+l_y = - \frac{m}{D} = -1, \quad
+m_y = \frac{L}{D} = 0, \quad
+n_y = 0
+$$</p>
+<p>$$
+l_z = - \frac{ln}{D} = 0, \quad
+m_z = - \frac{mn}{D} = 0, \quad
+n_z = D = 1
+$$</p>
+<p>O zaman</p>
+<p>$$
+[ \lambda ] = \left[\begin{array}{rrr}
+0 &amp; 1 &amp; 1 \\ -1 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 1
+\end{array}\right]
+$$</p>
+<pre><code class="python">T_P3 = np.array([
+[0, 1,0, 0,0,0, 0,0,0, 0, 0,0 ],
+[-1,0,0, 0,0,0, 0,0,0, 0, 0,0 ],
+[0, 0,1, 0,0,0, 0,0,0, 0, 0,0],
+[0, 0,0, 0,1,0, 0,0,0, 0, 0,0 ],
+[0, 0,0,-1,0,0, 0,0,0, 0, 0,0],
+[0, 0,0, 0,0,1, 0,0,0, 0, 0,0],
+[0, 0,0, 0,0,0, 0,1,0, 0, 0,0 ],
+[0, 0,0, 0,0,0,-1,0,0, 0, 0,0 ],
+[0, 0,0, 0,0,0, 0,0,1, 0, 0,0],
+[0, 0,0, 0,0,0, 0,0,0, 0, 1,0],
+[0, 0,0, 0,0,0, 0,0,0,-1, 0,0 ],
+[0, 0,0, 0,0,0, 0,0,0, 0, 0,1]])
+</code></pre>
+
+<pre><code class="python">res3 = T_P3.transpose()*kprime*T_P3
+res3 = latex(res3)
+print (res3[:100],'..')
+</code></pre>
+
+<pre><code>\left[\begin{array}{cccccccccccc}36 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1800 &amp; -36 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1800\\\\0 &amp; 3000  ..
+</code></pre>
+
+<p>$$<br />
+\scriptsize
+\left[\begin{array}{cccccccccccc}36 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1800 &amp; -36 &amp; 0 &amp; 0 &amp; 0 &amp;
+    0 &amp; -1800\\0 &amp; 3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 36
+    &amp; 1800 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -36 &amp; 1800 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 1800 &amp; 120000 &amp; 0 &amp; 0 &amp;
+    0 &amp; 0 &amp; -1800 &amp; 60000 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0 &amp; 5000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp;
+    -5000 &amp; 0\\-1800 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 120000 &amp; 1800 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp;
+    60000\\-36 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1800 &amp; 36 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 1800\\0 &amp; -3000 &amp; 0
+    &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 3000 &amp; 0 &amp; 0 &amp; 0 &amp; 0\\0 &amp; 0 &amp; -36 &amp; -1800 &amp; 0 &amp; 0 &amp; 0 &amp; 0
+    &amp; 36 &amp; -1800 &amp; 0 &amp; 0\\0 &amp; 0 &amp; 1800 &amp; 60000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; -1800 &amp; 120000
+    &amp; 0 &amp; 0\\0 &amp; 0 &amp; 0 &amp; 0 &amp; -5000 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 5000 &amp; 0\\-1800 &amp; 0 &amp; 0
+    &amp; 0 &amp; 0 &amp; 60000 &amp; 1800 &amp; 0 &amp; 0 &amp; 0 &amp; 0 &amp; 120000\end{array}\right]
 $$</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>

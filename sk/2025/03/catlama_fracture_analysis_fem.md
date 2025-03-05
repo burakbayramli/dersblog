@@ -30,7 +30,7 @@ devam edilir, ve belki de kopuş farklı öğelerde de görülecektir, amaç
 
 ![](frac2.jpg)
 
-İki boyutta kullanılan izgara (mesh) yapısı üstte. 
+İki boyutta kullanılan ızgara (mesh) yapısı üstte. 
 
 Uzay çerçevesi hesapsal amaçlı, sanal olarak yaratılıyor, bu
 çerçevenin düğüm ve bağlantı yapısı herhangi bir şekilde
@@ -64,3 +64,5 @@ Kaynaklar
 [3] Schlangen, Garboczi, <a href="https://www.sciencedirect.com/science/article/abs/pii/S0013794497000106">Fracture simulations of concrete using lattice models: Computational aspects</a>
 
 [4] <a href="../../2024/01/beam_lattice_superposition_cg_sparse.html">Üstdüşümlü Matris Sistemini Çözmek</a>
+
+

@@ -23,6 +23,13 @@ simüle eder, döngünün bir sonraki aşamasında hesaba bu eksik şekilde
 devam edilir, ve belki de kopuş farklı öğelerde de görülecektir, amaç
 çatlamanın yayılması (crack propagation) durumunu saptamaktır.
 
+Yayılma olması mümkündür çünkü tek bir kirişi çıkarttığımızda o
+noktada bir zayıflık yaratmış oluyoruz, bu belki çıkartılan parçaya
+bağlı olan diğer parçaların hissettiği yükü arttıracaktır, eğer
+kapasitelerinin ötesinde bir yüke maruz kalırlarsa onlar da kopuş
+yaşayabilirler.. Çatlak bu şekilde yayılir, hatta tüm materyelin
+paramparça olması durumu bile ortaya çıkabilir.
+
 ![](frac3.jpg)
 
 Üstteki resimlerde sanal (mavi renkli bloklar) ve gerçek çatlamalar
@@ -47,13 +54,13 @@ sisteminin materyel mekaniği literatüründe direk bir karşılığının olmas
 Hesapsal bir ek numara "kopmuş" kirişlerden sonra ortaya çıkan
 sistemde hesaplara devam etmek için kullanılır. [1] derslerinde
 gördüğümüz üzere bir kiriş sistemini çözmek için lineer cebir $Ax=b$
-çözme yaklaşımını kullanırız. Fakat eğer bir kiriş sistemden
-çıkartılırsa yeni sistemi çözmek için baştan sonra tüm $Ax=b$
-sistemini çözmeye gerek yoktur, çünkü yeni sistem eskisinden çok
-farklı olmayacaktır, bu sebeple özyineli bir şekilde eski değerleri
-baz alarak onları yeni sistem için güncelleyen bir çözüm metotu daha
-hızlı olur. [4] yazısında tarif edilen yaklaşım tam da böyle bir lineer
-cebir tekniğini gösteriyor.
+denklemini çözeriz. Fakat eğer bir kiriş sistemden çıkartılırsa yeni
+sistemi çözmek için baştan sonra tüm $Ax=b$ sistemini çözmeye gerek
+yoktur, çünkü yeni sistem eskisinden çok farklı olmayacaktır, bu
+sebeple özyineli bir şekilde eski değerleri baz alarak onları yeni
+sistem için güncelleyen bir çözüm metotu daha hızlı olur. [4]
+yazısında tarif edilen yaklaşım tam da böyle bir lineer cebir
+tekniğini gösteriyor.
 
 Kaynaklar
 

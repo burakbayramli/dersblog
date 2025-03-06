@@ -57,7 +57,7 @@ cebir tekniğini gösteriyor.
 
 Kaynaklar
 
-[1] Bayramlı, Fizik, <a href="../../../phy/index.html">Fizik</a>
+[1] Bayramlı, <a href="../../../phy/index.html">Fizik</a>
 
 [2] Qian, <a href="https://www.researchgate.net/publication/254870129_Multiscale_Modeling_of_Fracture_Processes_in_Cementitious_Materials">Multiscale Modeling of Fracture Processes in Cementitious Materials</a>
     

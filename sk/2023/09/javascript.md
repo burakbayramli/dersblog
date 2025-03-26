@@ -499,8 +499,8 @@ eriştiğimiz json `filanca.com`'da olabilir, o zaman çoğunlukla bu
 erişim CORS denilen bir hata verir, her site dışarıdan gelen kodlara
 programsal erişim sağlamak istemiyor. En garanti olan sitenin kendi
 servis ettiği json dosyalarına erişmektir, bu da izafi dizin erişimi
-ile yapılabilir, mesela `filanca.com/dir/ındex.html` içindeki Javascript
-aynı dizindeki json dosyasına `/dır/file1.json` ile erişir.
+ile yapılabilir, mesela `filanca.com/dir/index.html` içindeki
+Javascript aynı dizindeki json dosyasına `/dir/file1.json` ile erişir.
 
 Önbellekleme
 
@@ -599,14 +599,14 @@ HTML/Javascript şöyle olabilir,
 ### URL Parametresi Okumak
 
 Servis tarafı kodlarında olduğu gibi pür istemci tarafında işleyen
-Javascript kodlarında da ÜRL sonuna eklenen parametreler
+Javascript kodlarında da URL sonuna eklenen parametreler
 okunabilir. Mesela bir ürün programı yazmışsak, ürün listesinden bir
 ürüne tıklayınca onun detaylarını ayrı bir `detay.html` sayfasında
 görmek isteyebilirim. Hangi ürüne baktığımı bu sayfaya bir parametre
 ile geçmek isterim, mesela `id=...` gibi. Tüm URL
 `/detay.html?id=12231` gibi bir çağrı olabilir.
 
-Parametreyi ÜRL'den almak için `location.search` çağrısından tüm URL'i
+Parametreyi URL'den almak için `location.search` çağrısından tüm URL'i
 alırım, ve parametre kısmını ayırırım, bunlar o sayfa yüklenir
 yüklenmez işleyen bir Javascript fonksiyonu içinde yapılabilir,
 
@@ -736,4 +736,3 @@ Kaynaklar
 [2] https://mathjs.org/download.html
 
 [3] https://stackoverflow.com/questions/71943182/how-to-show-hide-animated-gif-during-the-execution-of-a-function/71944178#71944178
-

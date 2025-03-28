@@ -77,6 +77,103 @@ $$</p>
 <p>$$
 \cos^2\theta + \sin^2\theta = 1
 $$</p>
+<p>Kosinüsler Kanunu (Law of Cosines)</p>
+<p>Bir üçgenin tüm kenar uzunlukları biliniyorsa o üçgenin tüm açılarını
+hesaplamak mümkündür, Kosinüsler Kanunu altında verilen üç formül
+bunu yapabilir [4].</p>
+<p><img alt="" src="triangle-base.jpg" /></p>
+<p>Formüller</p>
+<p>$$
+A = \cos^{-1} \left( \frac{b^2 + c^2 - a^2}{2bc}  \right)
+$$</p>
+<p>$$
+B = \cos^{-1} \left( \frac{a^2 + c^2 - b^2}{2ac}  \right)
+$$</p>
+<p>$$
+C = \cos^{-1} \left( \frac{a^2 + b^2 - c^2}{2ab}  \right)
+$$</p>
+<p>Gerçi son açıyi hesaplamaya gerek yok, $A,B$ biliniyorsa üçüncü açı $C$ 180
+dereceden ilk iki açı toplamı çıkartılarak bulunabilir.</p>
+<pre><code class="python">def tri_angles(a,b,c):
+    tmp = (b**2 + c**2 - a**2) / (2*b*c)
+    tmp = np.clip(tmp, -1, 1)
+    A = np.arccos(tmp)
+    tmp = (a**2 + c**2 - b**2) / (2*a*c)
+    tmp = np.clip(tmp, -1, 1)
+    B = np.arccos(tmp)
+    C = np.pi - (A+B)
+    return A,B,C
+</code></pre>
+
+<p>Örnek olarak $b,c$ kenarları $a$'ya göre uzun olan bir üçgen kullanalım,
+bu üçgende tabii ki $A$ açısı diğerlerine göre küçük olmalıdır,</p>
+<pre><code class="python">A,B,C = tri_angles(20,80,80)
+print (A,B,C)
+</code></pre>
+
+<pre><code>0.2506556623361308 1.4454684956268313 1.445468495626831
+</code></pre>
+
+<pre><code class="python">np.rad2deg(A)
+</code></pre>
+
+<pre><code>Out[1]: 14.361511562916563
+</code></pre>
+
+<p>İspat için alttaki üçgeni referans alalım [5],</p>
+<p><img alt="" src="loc2.jpg" /></p>
+<p>Üstteki figürde bir dik üçgen $BCD$ var. Kosinüs tanımına göre</p>
+<p>$$
+\cos C = \frac{CD}{a}
+$$</p>
+<p>Ya da</p>
+<p>$$
+CD = a \cos C
+$$</p>
+<p>Bu değeri $b$ kenarından çıkartırsak, alttakini elde ederiz,</p>
+<p>$$
+DA = b - a \cos C
+$$</p>
+<p>Yine $BCD$ üçgenine bakalım, sinüs tanımına göre,</p>
+<p>$$
+\sin C = \frac{BD}{a}
+$$</p>
+<p>Ya da</p>
+<p>$$
+BD = a \sin C
+$$</p>
+<p>Şimdi $ADB$ üçgeni üzerinen Pitagor Teorisini uygularsak ve o hesap için şimdiye
+kadar bulduğumuz büyüklükleri kullanırsak,</p>
+<p>$$
+c^2 = BD^2 + DA^2
+$$</p>
+<p>Üstte $BD,DA$ için önceden bulduğumuz değerleri koyalım,</p>
+<p>$$
+c^2 = (a \sin C)^2 + (b - a \cos C)^2
+$$</p>
+<p>Kare çarpımını yaparak parantezleri açalım,</p>
+<p>$$
+c^2 = a^2 \sin^2 C + b^2 - 2ab\cos C + a^2 \cos^2 C
+$$</p>
+<p>Tekrar duzenleyelim,</p>
+<p>$$
+c^2 = a^2 \sin^2 C + a^2 \cos^2 C + b^2 - 2ab \cos C
+$$</p>
+<p>$a^2$ terimini disari cekelim,</p>
+<p>$$
+c^2 = a^2 (\sin^2 C + \cos^2 C) + b^2 - 2ab\cos C
+$$</p>
+<p>Parantez icindeki buyuklugun 1 oldugunu biliyoruz, o zaman</p>
+<p>$$
+c^2 = a^2 + b^2 - 2ab\cos C
+$$</p>
+<p>$$
+\cos C = \frac{a^2 + b^2 - c^2}{2ab}
+$$</p>
+<p>$$
+C = cos^{-1} \left( \frac{a^2 + b^2 - c^2}{2ab}  \right)
+$$</p>
+<p>Diğer iki açı formülünün ispatı benzer şekilde yapılabilir.</p>
 <p>Radyan</p>
 <p>Acıları 0 ile 360 arasında temsil edebildiğimiz gibi radyan (radian) olarak ta
 temsil edebiliriz. Zaten radyan yaklaşımı çemberle alakalı her türlü hesaba
@@ -322,6 +419,10 @@ koyalım</p>
     <a href="https://en.wikipedia.org/wiki/Small-angle_approximation">https://en.wikipedia.org/wiki/Small-angle_approximation</a></p>
 <p>[3] Math Guide,
     <a href="https://www.mathguide.com/lessons2/SDAT.html">https://www.mathguide.com/lessons2/SDAT.html</a></p>
+<p>[4] Law of Cosines Calculator,
+    <a href="https://www.calculatorsoup.com/calculators/geometry-plane/triangle-law-of-cosines.php">https://www.calculatorsoup.com/calculators/geometry-plane/triangle-law-of-cosines.php</a></p>
+<p>[5] Proof of the Law of Cosines,
+    <a href="https://www.mathopenref.com/lawofcosinesproof.html">https://www.mathopenref.com/lawofcosinesproof.html</a></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

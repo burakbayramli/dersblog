@@ -36,7 +36,7 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>MH370 Uçağı Nerede?</h1>
+<p>ffz# MH370 Uçağı Nerede?</p>
 
 <p>2014 yılında meydana gelen bu uçak kayıp hikayesini haberlerden
 çoğumuz hatırlarız, Malezya'dan kalkış yapan uçak rotasını
@@ -55,7 +55,7 @@ fikrine erişti, böylece uçağın rotasını saptamaya uğraştı (Godfrey).</
 
 <p>Biz burada örnek olarak Immersat BTO verisini kullanacağız. Veri belli
 noktalarda yeri bilinen bir uydu ve uçak arasındaki açı bilgisini
-vermektedir. [1] bağlantısından aldığımız ham veri alttadır,</p>
+vermektedir. [1,2] bağlantılarından aldığımız ham veri alttadır,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
@@ -166,10 +166,11 @@ optimizasyon görüyoruz.</p>
     <span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">)</span>
     <span class="n">curr</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">d1</span> <span class="o">*</span> <span class="n">vort</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>    
     <span class="n">deltas</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span> 
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
         <span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Lat&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Lon&#39;</span><span class="p">])</span>
         <span class="n">deltacurr</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">distanceTo</span><span class="p">(</span><span class="n">curr</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
         <span class="n">deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deltacurr</span><span class="o">-</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;BTOr&#39;</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">i</span><span class="o">==</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="k">break</span>
         <span class="n">travel</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Elapsed&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">vort</span>
         <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">travel</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="n">bearings</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
 
@@ -185,8 +186,8 @@ optimizasyon görüyoruz.</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>[198.99332757 197.77683933 192.89800635 188.6371797  188.56380639
- 191.33438559 164.3026896  164.84948342] 79.58458472231405
+<pre><span></span><code>[221.95991878 196.99509941 191.32246273 189.91456058 188.3729626
+ 193.30184947 146.31890122 182.46286984] 100.20394733332114
 </code></pre>
 </div>
 
@@ -243,7 +244,7 @@ optimizasyon görüyoruz.</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>-39.23901069072979 86.26449624208075
+<pre><span></span><code>-38.96789035839803 86.21895014132647
 </code></pre>
 </div>
 
@@ -259,7 +260,7 @@ optimizasyon görüyoruz.</p>
 
 <p>[3] <a href="https://www.independent.co.uk/travel/news-and-advice/mh370-radio-signals-theory-bbc-doc-b2508628.html">The Independent</a></p>
 
-<p>[4] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/tser/tser_085_pf/parcacik_filtreleri__particle_filters_.html">Parcacik Filtreleri</a></p>
+<p>[4] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/tser/tser_085_pf/parcacik_filtreleri__particle_filters_.html">Parçacık Filtreleri</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

@@ -145,7 +145,7 @@ olasılık ataması yaparız.</p>
 hız, gidilen mesafe, çemberlerin yerleri ve büyüklükleri, bilinmeyen
 yön verisi. O zaman optimize edilecek olan yön listesi olur, ve her
 ulaşılan noktada bir çembere ne kadar yaklaştığımız bir bedel (cost)
-fonksiyonu olarak optimizasyon rutinine verilebilir. Altta böyle bir
+fonksiyonu olarak optimizasyon rutinine veririz. Altta böyle bir
 optimizasyon görüyoruz.</p>
 
 <div class="codehilite">
@@ -166,10 +166,9 @@ optimizasyon görüyoruz.</p>
     <span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">)</span>
     <span class="n">curr</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">d1</span> <span class="o">*</span> <span class="n">vort</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="n">b1</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>    
     <span class="n">deltas</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span> <span class="c1"># skip last row</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span> 
         <span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Lat&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;Lon&#39;</span><span class="p">])</span>
         <span class="n">deltacurr</span> <span class="o">=</span> <span class="n">p1</span><span class="o">.</span><span class="n">distanceTo</span><span class="p">(</span><span class="n">curr</span><span class="p">)</span> <span class="o">/</span> <span class="mi">1000</span>
-        <span class="c1"># add diff between ring and distance to sat</span>
         <span class="n">deltas</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">deltacurr</span><span class="o">-</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;BTOr&#39;</span><span class="p">]))</span>
         <span class="n">travel</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;Elapsed&#39;</span><span class="p">]</span><span class="o">*</span><span class="n">vort</span>
         <span class="n">curr</span> <span class="o">=</span> <span class="n">curr</span><span class="o">.</span><span class="n">destination</span> <span class="p">(</span><span class="n">travel</span><span class="p">,</span> <span class="n">bearing</span><span class="o">=</span><span class="n">bearings</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">R</span><span class="p">)</span>
@@ -252,15 +251,15 @@ optimizasyon görüyoruz.</p>
 
 <p>Kaynaklar</p>
 
-<p>[1] Wragg, Github, https://github.com/joewragg/MH370</p>
+<p>[1] Wragg, <a href="https://github.com/joewragg/MH370">Github</a></p>
 
-<p>[2] Zweck, Analysis of Methods Used to Reconstruct the Flight Path of
-    Malaysia Airlines Flight 370,
-    https://personal.utdallas.edu/~zweck/Papers/Misc/MH370SIAMReviewSep15.pdf</p>
+<p>[2] <a href="https://personal.utdallas.edu/~zweck/Papers/Misc/MH370SIAMReviewSep15.pdf">
+    Zweck, Analysis of Methods Used to Reconstruct the Flight Path of
+    Malaysia Airlines Flight 370</a></p>
 
-<p>[3] The Independent, https://www.independent.co.uk/travel/news-and-advice/mh370-radio-signals-theory-bbc-doc-b2508628.html</p>
+<p>[3] <a href="https://www.independent.co.uk/travel/news-and-advice/mh370-radio-signals-theory-bbc-doc-b2508628.html">The Independent</a></p>
 
-<p>[4] Bayramli, Parcacik Filtreleri, https://burakbayramli.github.io/dersblog/tser/tser<em>085</em>pf/parcacik<em>filtreleri</em><em>particle</em>filters_.html</p>
+<p>[4] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/tser/tser_085_pf/parcacik_filtreleri__particle_filters_.html">Parcacik Filtreleri</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

@@ -102,7 +102,7 @@ below add in z following the same pattern as for x and y. Hopefully
 that is clear in the sample code but if you have any questions you can
 always reach out on Twitter.</p>
 
-<p>What are AABBs?</p>
+<h3>What are AABBs?</h3>
 
 <p>AABBs are simpler than they sound – they are essentially boxes who’s
 axes (so x,y for 2d and x,y,z for 3d) align / run in the same
@@ -148,7 +148,7 @@ encompasses the complex shape as shown in the diagram below:</p>
 
 <p>Obviously testing the AABBs for an intersection will not result in pixel perfect collision detection but remember the primary goal of using AABBs is in the broad range part of the process. Having quickly and cheaply determined that the two AABBs in the diagram above do not intersect we can save ourselves the computational expense of trying to figure out if two complex shapes intersect.</p>
 
-<p>The AABB Tree</p>
+<h3>The AABB Tree</h3>
 
 <p>Using the above approach you can see how we can quickly and easily
 test for collisions between two objects in your world space however
@@ -170,20 +170,20 @@ terminology from this Wikipedia article.</p>
 <p>In the case of the AABB tree presented here the root, branch and
 leaves have some very specific properties:</p>
 
-<p>Branch – Our branches always have exactly two children (known as left
+<ul>
+<li><p>Branch – Our branches always have exactly two children (known as left
 and right) and are assigned an AABB that is large enough to contain
-all of it’s descendants.</p>
-
-<p>Leaf – Our leaves are associated with a game world object and through
+all of it’s descendants.</p></li>
+<li><p>Leaf – Our leaves are associated with a game world object and through
 that have an AABB. A leaf’s AABB must fit entirely within it’s parents
 AABB and due to how our branches are defined that means it fits in
-every ancestors AABB.</p>
-
-<p>Root – Our root may be a branch or a leaf</p>
+every ancestors AABB.</p></li>
+<li><p>Root – Our root may be a branch or a leaf</p></li>
+</ul>
 
 <p>The best way to illustrate how this works is through a worked example.</p>
 
-<p>Constructing an AABB Tree</p>
+<h3>Constructing an AABB Tree</h3>
 
 <p>Imagine we have an empty world, and so at this point our tree is
 empty, to which we are adding our first object. As our tree is
@@ -211,7 +211,8 @@ have it intersect with an existing object:</p>
 
 <p><img src="https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/treeaabb3.png" alt="" /></p>
 
-<p>Again when we added this object some interesting things happened to our tree:</p>
+<p>Again when we added this object some interesting things happened to
+our tree:</p>
 
 <ol>
 <li>We created a new branch node (b) and assigned it an AABB that encompassed objects (1) and (3).</li>
@@ -244,7 +245,7 @@ cheaper the subsequent queries.</p>
 
 <p>A common heuristic used here is to assign a cost to the surface area of the left and right nodes having been adjusted for the addition of the new leaf’s AABB and descend in the direction of the cheapest node until you find yourself on a leaf.</p>
 
-<p>Querying the AABB Tree</p>
+<h3>Querying the AABB Tree</h3>
 
 <p>This is where all of our hard work pays off – it’s very simple and very fast. If we want to find all the possible collisions for a given AABB object all we need to do, starting at the root of the tree, is:</p>
 
@@ -274,7 +275,7 @@ cheaper the subsequent queries.</p>
 <p>Understanding how to iterate over trees none-recursively can be very
 useful.</p>
 
-<p>Updating the AABB Tree</p>
+<h3>Updating the AABB Tree</h3>
 
 <p>In most (but not all) scenarios involving collision detection at least
 some of the objects in the world are moving. As the objects move that
@@ -304,7 +305,7 @@ evenly child nodes divide the parent nodes AABB. That’s slightly
 beyond the scope of a beginners guide and I’ve not yet implemented it
 myself in the sample code – however I may return to it at some point.</p>
 
-<p>Sample Code</p>
+<h3>Sample Code</h3>
 
 <p>Finally their is sample code that goes along with this blog post and
 you can find it in my game engine. It’s pretty decoupled from the

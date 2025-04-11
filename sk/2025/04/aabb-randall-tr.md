@@ -1,6 +1,6 @@
 # AABB Ağaçları ile Çarpışma Saptamasına Giriş
 
-James Randall (içerik [Wayback Machine](https://web.archive.org/web/20170821173618/https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/) ile kurtarıldı, tercüme edildi)
+[James Randall](aabb-randall.html) 
 
 Bir [oyun] dünyasına hareket eden obbjeler veya herhangi bir şey
 eklediğiniz anda, çarpışmaları tespit etmeyi düşünmeye başlarsınız ve
@@ -282,4 +282,57 @@ kullanıyorum)
 Ağaçları özyinelemesiz olarak nasıl dolaşacağınızı anlamak çok faydalı
 olabilir.
 
+### AABB Ağacını Güncelleme
 
+Çarpışma tespiti içeren çoğu (ama hepsi değil) senaryoda, dünyadaki
+nesnelerin en azından bir kısmı hareket etmektedir. Nesneler hareket
+ettikçe, bu durum ağacın güncellenmesini gerektirir ve bu, dünya
+nesnesine karşılık gelen yaprağın kaldırılıp yeniden eklenmesiyle
+gerçekleştirilir.
+
+Bu pahalı bir işlem olabilir ve dünya nesnelerinizin hareketini bir
+hız vektörü kullanarak ifade ederseniz ve bunu ağaca eklediğiniz
+AABB'leri "genişletmek" (fatten) için kullanırsanız, bunu yapmanız
+gereken sayıyı en aza indirebilirsiniz. Örneğin, aşağıdaki
+diyagramdaki nesneyi ele alın, (1,0) (x,y) hızına sahiptir ve
+sınırlayıcı AABB'si buna göre genişletilmiştir:
+
+![](aabbr8.jpg)
+
+AABB'leri ne kadar genişleteceğiniz; güncelleme maliyeti,
+öngörülebilirlik ve geniş aralık doğruluğu arasında bir denge
+meselesidir ve en iyi performansı elde etmek için denemeler yapmanız
+gerekebilir.
+
+Son olarak, ağaçlar güncellendikçe dengesiz hale gelmeleri mümkündür;
+bazı sorgular uygunsuz bir şekilde diğerlerinden çok daha fazla
+düğümün dolaşılmasını gerektirebilir. Bunu çözmek için bir teknik, her
+düğümün yüksekliğine (alttan derinlik) dayalı rotasyonlar kullanarak
+ağacı yeniden dengelemektir. Bir diğeri ise, çocuk düğümlerin ebeveyn
+düğümlerinin AABB'sini ne kadar eşit böldüğüne göre ağacı
+dengelemektir. Bu, başlangıç seviyesi bir rehberin kapsamının biraz
+dışındadır ve henüz örnek kodda kendim uygulamadım – ancak bir noktada
+buna geri dönebilirim.
+
+Örnek Kod
+
+Son olarak, bu blog yazısıyla birlikte gelen örnek kod bulunmaktadır
+ve bunu oyun motorumda bulabilirsiniz. Motorun kendisinden oldukça
+bağımsızdır ve çok fazla sorun yaşamadan kendi kodunuzda
+kullanabilmelisiniz. Anahtar dosyalar şunlardır:
+
+- [AABB.h](randall/AABB.h)
+- [AABBTree.h](randall/AABBTree.h)
+- [AABBTree.cpp](randall/AABBTree.cpp)
+- [IAABB.h](randall/IAABB.h)
+- [AABB.py](randall/AABB.py) (biz ekledik, Python tercümesi, Google Gemini 2.5 ile yapıldı)
+
+Ağacı kullanmak için üstteki dört C++ dosyasını projenize eklemeniz ve
+AABBTree sınıfının bir örneğini oluşturmanız gerekecektir – yapıcısı
+(constructor) çok basittir ve başlangıç boyutunu (önceden ayrılacak
+ağaç düğümü sayısı) alır. Ağaca eklemek istediğiniz herhangi bir
+nesnenin, istendiğinde AABB yapısını döndürmesi gereken IAABB
+arayüzünü (interface) uygulaması gerekir. Bu nesneleri sırasıyla
+insertObject, updateObject ve removeObject yöntemleriyle ekleyebilir,
+güncelleyebilir ve kaldırabilirsiniz ve queryOverlaps yöntemiyle
+çakışmaları sorgulayabilirsiniz.

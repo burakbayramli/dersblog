@@ -120,7 +120,7 @@ olacaktır.
 testi sayısını en aza indirmek için AABB'lerimizi organize etmemizi ve
 indekslemek; AABB ağacı bunu dünyayı, tahmin edin ne kullanarak, daha
 fazla AABB kullanarak dilimleyerek yapar. Yani AABB ağacı AABB'leri
-indeksler, bunun kodlamasında yardımcı olarak iç yapısında ayni AABB
+indeksler, bunun kodlamasında yardımcı olarak iç yapısında aynı AABB
 kavramını kullanır.
 
 Daha önce karşılaşmadıysanız, ağaçlar inanılmaz derecede kullanışlı
@@ -238,10 +238,10 @@ bulana kadar en ucuz düğüm yönünde inmektir.
 
 ### AABB Ağacını Sorgulama
 
-İşte tüm ağır çalışmamızın karşılığını aldığımız yer – çok basit ve
-çok hızlı olacak. Belirli bir AABB nesnesi için tüm olası çarpışmaları
-bulmak istiyorsak, ağacın kökünden başlayarak yapmamız gereken tek şey
-şudur:
+İşte tüm ağır çalışmamızın karşılığını aldığımız yer – sorgulama artık
+çok basit ve çok hızlı olacak. Belirli bir AABB nesnesi için tüm olası
+çarpışmaları bulmak istiyorsak, ağacın kökünden başlayarak yapmamız
+gereken tek şey şudur:
 
 1. Mevcut düğümün test nesnesinin AABB'si ile kesişip kesişmediğini
 kontrol edin.
@@ -338,3 +338,5 @@ arayüzünü (interface) uygulaması gerekir. Bu nesneleri sırasıyla
 insertObject, updateObject ve removeObject yöntemleriyle ekleyebilir,
 güncelleyebilir ve kaldırabilirsiniz ve queryOverlaps yöntemiyle
 çakışmaları sorgulayabilirsiniz.
+
+

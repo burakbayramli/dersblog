@@ -2,19 +2,7 @@
 
 James Randall (salvaged from [Wayback Machine](https://web.archive.org/web/20170821173618/https://www.azurefromthetrenches.com/introductory-guide-to-aabb-tree-collision-detection/))
 
-Those of you who read my Christmas break update will know I’ve taken a
-slight detour into low level graphics and games programming, writing a
-C++ voxel engine from the ground up for fun and a challenge. I’ve
-continued to tinker with it when I can and have since added support
-for voxel based sprites. In the screenshot below the aliens, player
-and bullet are all made up of voxels and move around the world space
-in a fashion vaguely reminiscent of the classic Space Invaders game..
-
-Though I realise it just looks like a flat textured mesh, and that a
-flat textured mesh would be many times more efficient than voxels for
-this, the ground is also made up voxels.
-
-Of course as soon as you add sprites or anything that moves to a world
+A[s] soon as you add sprites or anything that moves to a [game] world
 you start to think about detecting collisions and doing this
 efficiently remains an interesting area of development with different
 approaches being more or less optimal for different conditions. It’s
@@ -26,19 +14,18 @@ algorithm, for example, is traditionally thought of as a gaming
 algorithm I’ve found myself using it in some very interesting
 none-gaming spaces.
 
-In the case of collisions between sprites in my voxel engine I need to
-consider hundreds of objects made up of, in sum, millions of voxels
+In the case of collisions between sprites in my [engine] I need to
+consider hundreds of objects made up of, in sum, millions of [parts]
 spread across an indeterminate, but essentially very large and mostly
-sparse, three dimensional space. Pixel / voxel perfect detection
-between every one of those sprites is clearly going to be horrifically
-expensive and so typically collision detection is broken down into two
-phases:
+sparse, three dimensional space.. [P]erfect detection between every
+one of those sprites is clearly going to be horrifically expensive and
+so typically collision detection is broken down into two phases:
 
 Broad range collisions – quickly draw up a shortlist of probable
 collisions.  Narrow range collisions – use additional detail to filter
 the probably collisions resulting from the broad range pass into the
-actual pixel / voxel perfect collisions.  My first attempt at solving
-the broad range problem in my voxel engine is a common one and takes
+actual pixel / [object] perfect collisions.  My first attempt at
+solving the broad range problem in my engine is a common one and takes
 advantage of an efficient means of determining if two boxes (2d or 3d)
 intersect that relies on them being axis aligned – hence the axis
 aligned bounding box, or AABB. If that sounds complicated – don’t
@@ -49,12 +36,12 @@ blog posts and tutorials but I didn’t find anything that brought it
 all together and so what follows is a step by step guide to AABBs and
 how to sort them in a tree to quickly determine intersections. There
 is sample code provided in the form of the C++ implementation in my
-voxel engine and at the bottom of this post I explain how you can use
-this (just the AABB tree implementation) in your own code. However
-this post is more about the theory and once you understand that a
-simple implementation is fairly straightforward (though there are
-numerous optimisations, some of which are in my sample code some of
-which aren’t, that can complicate things).
+engine and at the bottom of this post I explain how you can use this
+(just the AABB tree implementation) in your own code. However this
+post is more about the theory and once you understand that a simple
+implementation is fairly straightforward (though there are numerous
+optimisations, some of which are in my sample code some of which
+aren’t, that can complicate things).
 
 For the purposes of keeping this guide simple I’m going to draw
 diagrams and talk about 2 dimensional boxes (rectangles) rather than 3
@@ -100,11 +87,11 @@ An important point to note about that expression is that it is made up
 of a series of ands which means that evaluation will stop as soon as
 one of the condition fails.
 
-I’m fortunate working in a voxel engine in that objects in my game
-world are naturally axis aligned: voxels essentially being 3d pixels
-or tiny cubes. However what if your objects aren’t naturally aligned
-or are made up of shapes other than boxes? This is where the bounding
-part of the AABB comes in as you need to create a bounding box that
+I’m fortunate working in a engine in that objects in my game world are
+naturally axis aligned: [objects] essentially being 3d pixels or tiny
+cubes. However what if your objects aren’t naturally aligned or are
+made up of shapes other than boxes? This is where the bounding part of
+the AABB comes in as you need to create a bounding box that
 encompasses the complex shape as shown in the diagram below:
 
 ![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/boundingAABBs2.png)

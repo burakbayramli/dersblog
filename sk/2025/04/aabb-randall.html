@@ -115,7 +115,9 @@ AABBs intersect. Consider the two AABBs in the diagram below:</p>
 
 <p><img src="aabbr3.jpg" alt="" /></p>
 
-<p>In this diagram we have two AABBs defined by a pair of points and the result of the following expression can determine whether or not they intersect:</p>
+<p>In this diagram we have two AABBs defined by a pair of points and the
+result of the following expression can determine whether or not they
+intersect:</p>
 
 <pre><code>maxx1 &gt; minx2 &amp;&amp; minx1 &lt; maxx2 &amp;&amp; maxy1 &gt; miny1 &amp;&amp; miny1 &lt; maxy2
 </code></pre>
@@ -133,7 +135,12 @@ encompasses the complex shape as shown in the diagram below:</p>
 
 <p><img src="aabbr4.jpg" alt="" /></p>
 
-<p>Obviously testing the AABBs for an intersection will not result in pixel perfect collision detection but remember the primary goal of using AABBs is in the broad range part of the process. Having quickly and cheaply determined that the two AABBs in the diagram above do not intersect we can save ourselves the computational expense of trying to figure out if two complex shapes intersect.</p>
+<p>Obviously testing the AABBs for an intersection will not result in
+pixel perfect collision detection but remember the primary goal of
+using AABBs is in the broad range part of the process. Having quickly
+and cheaply determined that the two AABBs in the diagram above do not
+intersect we can save ourselves the computational expense of trying to
+figure out if two complex shapes intersect.</p>
 
 <h3>The AABB Tree</h3>
 
@@ -230,11 +237,16 @@ attaching to the left or right of each branch you move through. The
 better the decision you can make the more balanced the tree and the
 cheaper the subsequent queries.</p>
 
-<p>A common heuristic used here is to assign a cost to the surface area of the left and right nodes having been adjusted for the addition of the new leaf’s AABB and descend in the direction of the cheapest node until you find yourself on a leaf.</p>
+<p>A common heuristic used here is to assign a cost to the surface area
+of the left and right nodes having been adjusted for the addition of
+the new leaf’s AABB and descend in the direction of the cheapest node
+until you find yourself on a leaf.</p>
 
 <h3>Querying the AABB Tree</h3>
 
-<p>This is where all of our hard work pays off – it’s very simple and very fast. If we want to find all the possible collisions for a given AABB object all we need to do, starting at the root of the tree, is:</p>
+<p>This is where all of our hard work pays off – it’s very simple and
+very fast. If we want to find all the possible collisions for a given
+AABB object all we need to do, starting at the root of the tree, is:</p>
 
 <ol>
 <li>Check to see if the current node intersects with the test objects AABB.</li>
@@ -243,7 +255,10 @@ cheaper the subsequent queries.</p>
 <li>At the end of the above your list will contain all the possible collisions for your test object and we will have minimised the number of AABB intersection checks we had to perform as we will not have descended down any pathways (and therefore all the subsequent children) that could not intersect with the test AABB tree.</li>
 </ol>
 
-<p>In implementation it’s best not to actually use a recursive approach as this can get expensive (and could fail) on large trees. Instead just maintain a stack / list of nodes that are to be further explored  as follows:</p>
+<p>In implementation it’s best not to actually use a recursive approach
+as this can get expensive (and could fail) on large trees. Instead
+just maintain a stack / list of nodes that are to be further explored
+as follows:</p>
 
 <ol>
 <li>Push the root node onto a stack (in C++ I use std::stack)</li>

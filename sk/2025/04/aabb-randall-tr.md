@@ -53,8 +53,8 @@ takip ederek z'yi ekleyin. Umarım bu durum örnek kodda açıktır...
 
 ### AABB'ler Nedir?
 
-AABB'ler , göründüklerinden daha basittirler – esasen eksenleri (2D
-için x,y ve 3D için x,y,z) aynı yönde hızalanan ve uzanan
+AABB'ler göründüklerinden daha basittirler – esasen eksenleri (2D için
+x,y ve 3D için x,y,z) aynı yönde hızalanan ve uzanan
 kutulardır. İsimdeki "sınırlayıcı" (bounding) kısmı, çarpışma tespiti
 için veya bir ağacın parçası olarak kullanıldıklarında genellikle
 diğer kutuları içermelerinden veya sınırlamalarından
@@ -103,7 +103,7 @@ Açıkçası, AABB'leri kesişim için test etmek piksel hassasiyetinde
 çarpışma tespitiyle sonuçlanmayacaktır, ancak AABB kullanmanın
 birincil amacının sürecin geniş kapsamlı (broad phase) kısmında
 olduğunu unutmayın. Yukarıdaki diyagramdaki iki AABB'nin kesişmediğini
-hızlı ve ucuza belirledikten sonra, iki karmaşık şeklin kesişip
+hızlı ve ucuzca belirledikten sonra, iki karmaşık şeklin kesişip
 kesişmediğini anlamaya çalışmanın hesaplama maliyetinden kendimizi
 kurtarabiliriz.
 
@@ -118,14 +118,16 @@ olacaktır.
 
 İşte burada AABB ağacı devreye girer. Yapılması gereken AABB kesişim
 testi sayısını en aza indirmek için AABB'lerimizi organize etmemizi ve
-indekslememizi sağlar; bunu da dünyayı, tahmin edin ne kullanarak,
-daha fazla AABB kullanarak dilimleyerek yapar.
+indekslemek; AABB ağacı bunu dünyayı, tahmin edin ne kullanarak, daha
+fazla AABB kullanarak dilimleyerek yapar. Yani AABB ağacı AABB'leri
+indeksler, bunun kodlamasında yardımcı olarak iç yapısında ayni AABB
+kavramını kullanır.
 
 Daha önce karşılaşmadıysanız, ağaçlar inanılmaz derecede kullanışlı
 hiyerarşik veri yapılarıdır ve temel kavramın birçok çeşidi vardır
 (eğer bu tür şeyler ilginizi çekiyorsa, konuyla ilgili mükemmel, ancak
-oldukça resmi bir kitap "Introduction to Algorithms" kitabıdır) ve
-devam etmeden önce bu Wikipedia makalesinden yapı ve terminoloji
+oldukça resmi bir kitap Cormen'in Algoritmaya Giriş -Introduction to
+Algorithms- kitabıdır) ve devam etmeden önce yapı ve terminoloji
 hakkında temel bilgi edinmeye değer.
 
 Burada sunulan AABB ağacı durumunda kök, dal ve yaprakların çok özel
@@ -143,8 +145,8 @@ Burada sunulan AABB ağacı durumunda kök, dal ve yaprakların çok özel
 
 - Kök (Root) – Kökümüz bir dal veya bir yaprak olabilir.
 
-
-Bunun nasıl çalıştığını göstermenin en iyi yolu, adım adım bir örnektir.
+Bunun nasıl çalıştığını göstermenin en iyi yolu, onu adım adım
+gösteren bir örnektir.
 
 ### Bir AABB Ağacı Oluşturma
 
@@ -152,7 +154,7 @@ Boş bir dünyamız olduğunu ve dolayısıyla bu noktada ağacımızın boş
 olduğunu hayal edin. Bu dünyaya ilk nesnemizi ekliyoruz. Ağacımız şu
 anda boş olduğundan, yeni nesnemize karşılık gelen ve onun AABB'sini
 paylaşan bir yaprak düğümü oluştururuz ve bu yaprağı kök olarak
-atarız:
+atıyoruz:
 
 ![](aabbr5.jpg)
 

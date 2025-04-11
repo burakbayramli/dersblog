@@ -60,12 +60,12 @@ collision detection or as part of a tree they commonly contain, or
 bind, other boxes. The diagram below shows two simple and compatible
 AABBs:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/simpleAABBs3.png)
+![](aabbr1.jpg)
 
 In contrast the two boxes shown in the diagram below are not AABBs as
 their axes do not align:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/incompatibleAABBs3.png)
+![](aabbr2.jpg)
 
 A key characteristic of an AABB is that the space it occupies can be
 defined by 2 points irrespective of whether it is in a 2 or 3
@@ -75,7 +75,7 @@ miny) and (maxx, maxy).
 This can be used to perform a very fast check as to whether or not two
 AABBs intersect. Consider the two AABBs in the diagram below:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/intersectAABBs3.png)
+![](aabbr3.jpg)
 
 In this diagram we have two AABBs defined by a pair of points and the result of the following expression can determine whether or not they intersect:
 
@@ -94,7 +94,7 @@ made up of shapes other than boxes? This is where the bounding part of
 the AABB comes in as you need to create a bounding box that
 encompasses the complex shape as shown in the diagram below:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/boundingAABBs2.png)
+![](aabbr4.jpg)
 
 Obviously testing the AABBs for an intersection will not result in pixel perfect collision detection but remember the primary goal of using AABBs is in the broad range part of the process. Having quickly and cheaply determined that the two AABBs in the diagram above do not intersect we can save ourselves the computational expense of trying to figure out if two complex shapes intersect.
 
@@ -140,12 +140,12 @@ empty, to which we are adding our first object. As our tree is
 currently empty we create a leaf node that corresponds to our new
 object and shares its AABB and assign that leaf to be the root:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/treeaabb___1.png)
+![](aabbr5.jpg)
 
 Now we add a second object to our world, it doesn’t intersect with our
 first node, and something interesting happens to our tree:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/treeaabb2.png)
+![](aabbr6.jpg)
 
 When we added the second object to our game world a number of things occurred:
 
@@ -157,7 +157,7 @@ When we added the second object to our game world a number of things occurred:
 Ok. Let’s add another object to the game world and this time we’ll
 have it intersect with an existing object:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/treeaabb3.png)
+![](aabbr7.jpg)
 
 Again when we added this object some interesting things happened to
 our tree:
@@ -226,7 +226,7 @@ AABB trees that you insert into the tree. For example take the object
 in the diagram below, it has a (x,y) velocity of (1,0) and has had
 it’s bounding AABB fattened accordingly:
 
-![](https://web.archive.org/web/20170821173618im_/http://www.azurefromthetrenches.com/wp-content/uploads/2017/01/velocityAABBs.png)
+![](aabbr8.jpg)
 
 How much you fatten the AABB trees is a trade off between update cost,
 predictability and broad range accuracy and you may need to experiment

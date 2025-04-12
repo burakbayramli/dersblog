@@ -131,7 +131,7 @@ def title_tex(to):
 
 def title_sk(to):
     d = "sk"
-    for year in range(2000,2025):
+    for year in range(2000,2026):
         if year == 2007: continue
         out = d + "/" + str(year) + "/index.md"
         fout = codecs.open(out,mode="w",encoding="utf-8")
@@ -223,3 +223,6 @@ if __name__ == "__main__":
         
     if sys.argv[1] == 'clean': 
         clean(to)
+        
+    if sys.argv[1] == 'zip':
+        os.system("zip /opt/Downloads/dotbkps/classnotes.zip -r /home/burak/Documents/classnotes/.git/")

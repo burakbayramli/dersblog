@@ -8,5 +8,7 @@
 
 [Introductory Guide to AABB Tree Collision Detection (English)](04/aabb-randall.html)
 
+[](04/coll1.html)
+
 [Geometrik Anahtarlama (Spatial Hashing) ve Izgara (Grid) ile En Yakın Noktaları Bulmak](04/hash-grid-coll.html)
 

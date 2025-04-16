@@ -44,7 +44,7 @@ ediyor. </p>
 <p>Şu problemlere bir göz atalım. Diyelim ki </p>
 <p>1) Orijinden, yani $(0,0,0)$ noktasından geçen ve normal vektörü $\vec{N} =
 &lt; 1,5,10 &gt;$ olan bir düzlem yaratmak istiyoruz. Yani alttaki gibi bir şekil:</p>
-<p><img alt="" src="4_1.png" /></p>
+<p><img alt="" src="4_1.jpg" /></p>
 <p>Herhangi bir nokta $P = (x,y,z)$ ne zaman bu düzlem üzerindedir? Eğer orijinden
 $P$'ye giden vektör -$\vec{OP}$ vektörü-, düzlem normali ile doksan derece açı
 oluşturuyorsa. Bunun nedeni, eğer $P$ noktası düzlem üzerinde ise, orijinden $P$
@@ -246,6 +246,63 @@ $$</p>
 <p>$$
 = \frac{4}{3}
 $$</p>
+<p>Üç Nokta ile Düzlem Formülü Bulmak</p>
+<p>Üç boyutta üç nokta bir düzlem tanımlamak için yeterlidir. Bu noktaları
+kullanarak $P$, $Q$, $R$ diyelim, iki tane vektör oluştururuz. Noktalar düzlem
+üzerinde olduğu için onları kullanarak hesaplanan vektörler de aynı düzlem
+üzerinde olmalıdır. Vektörler $a = P-Q$ ve $b = P-R$ ile hesaplanır.</p>
+<p>Örnek olarak $P = (2,1,4)$, $Q = (4,-2,7)$, $R = (5,3,-2)$ kullanalım,</p>
+<p>$$
+a = PQ = (4-2, -2-1, 7-4) = (2,-3,3)
+$$</p>
+<p>$$
+b = PR = (5-2, 3-1, -2-4) = (3,2,-6)
+$$</p>
+<p>Bu vektörleri bulduktan sonra düzlemin normal vektörünü bulmak için çapraz
+çarpım yeterli,</p>
+<pre><code class="python">n = np.cross( np.array([2,-3,3]), np.array([3,2,-6])  )
+print (n)
+</code></pre>
+
+<pre><code>[12 21 13]
+</code></pre>
+
+<p><img alt="" src="4_8.jpg" /></p>
+<p>Şimdi sıra düzlem formülünü bulmaya geldi. Bu formül için düzlem üzerinde bir
+nokta ve normal vektör yeterli. Eğer düzlem noktasını $x_0,y_0,z_0$ olarak
+alırsak, bu başlangıç noktasından düzlem üzerindeki herhangi bir noktaya,
+$x,y,z$ diyelim, giden vektör normal vektöre dik olmalıdır, yani bu iki
+vektörün noktasal çarpımı sıfır olmalıdır.</p>
+<p><img alt="" src="4_7.jpg" /></p>
+<p>Üstteki resimde bu mümkün vektörler görülüyor, düzlem üzerindeki herhangi bir
+$x,y,z$ noktası görülen kırmızı vektörlerden birini ortaya çıkartabilir.</p>
+<p>Cebirsel olarak şunu söylüyoruz, $n = (n_1,n_2,n_3)$ olacak şekilde,</p>
+<p>$$
+n_1 (x - x_0) + n_2 (y-y_0) + n_3 (z-z_0) = 0
+$$</p>
+<p>Bu formülü açınca doğal olarak düzlem cebirsel formunda eşitliğin sağında olan
+bir $d$ elde edeceğiz, ve bu değeri $c_1 x + c_2 y + c_3 z = d$, ya da
+$\vec{c} \cdot [x,y,z] = d$ formundaki düzlem formülü için kullanabileceğiz.</p>
+<p>Neyse üstteki hesabı yapalım, $x_0,y_0,z_0$ için $P$ noktasını kullanabiliriz,</p>
+<p>$$
+12(x-2) + 21(y-1) + 13(z-4) = 0
+$$</p>
+<p>Burada parantez açılımını yapıp sabitleri toplarız, ve $d$ yi bulabiliriz, fakat
+aslında üstte gizli bir vektör işlemi var, $d$ değerine şu şekilde de erişilebilir,</p>
+<p>$$
+d = \vec{n} \cdot P = (12,21,13) \cdot (2,1,4)
+$$</p>
+<pre><code class="python">d = np.dot( np.array([12,21,13]), np.array([2,1,4]))
+print ('d =',d)
+</code></pre>
+
+<pre><code>d = 97
+</code></pre>
+
+<p>Geri kalan değişken katsayıları da üstteki açılımdan belli oldu, ama o formülü
+de vektörel formda zaten biliyoruz, $\vec{n} \cdot [x,y,z] = d$. Değerleri
+yerine koyarak $(12,21,13) \cdot (x,y,z) = 97 $. Açılmış formda
+$12x + 21y + 13x = 97$.</p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

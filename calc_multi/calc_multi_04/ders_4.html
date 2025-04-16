@@ -303,6 +303,67 @@ print ('d =',d)
 de vektörel formda zaten biliyoruz, $\vec{n} \cdot [x,y,z] = d$. Değerleri
 yerine koyarak $(12,21,13) \cdot (x,y,z) = 97 $. Açılmış formda
 $12x + 21y + 13x = 97$.</p>
+<p>Çizgi Parçasına Noktanın En Yakın Mesafesi</p>
+<p>Elimizde verili iki nokta arasında tanımlı çizgi parçası var. Herhangi bir
+noktanın bu parçaya en yakın mesafesi nedir? Ayrıca o noktadan parçaya bir düz
+çizgi çekilse kesişimin olduğu nokta nerededir?</p>
+<p>Şu metota bakalım [5]. Çizgiyi $\vec{z} = \vec{a} + t \vec{b}$ olarak
+tanımlayabiliriz. O zaman bu çizgi ile bir diğer nokta $\vec{x}$ arasındaki
+mesafe $\vec{x}-\vec{z}$ vektörünün uzunluğudur, yani</p>
+<p>$$
+|| \vec{x} - (\vec{a} + t' \vec{b}) ||
+$$</p>
+<p>olarak tanımlanabilir, ki burada $t'$ özel bir $t$ değeri oluyor. Bu değer öyle
+bir $t$ değeri ki o noktaya kadar gelen $\vec{z}$'nin bolumu $\vec{x}$'e dik. Bu
+noktayı ve ardından çizgiye olan (dik) mesafeyi nasıl buluruz?</p>
+<p>Şimdi üstteki çizgi formülünde kesişim anına kadar olan bölümdeki, $t'$'ye
+tekabül eden kısma $\vec{r}$ diyelim, ve onu</p>
+<p>$$
+\vec{r} = \vec{a} + t' \vec{b}
+$$</p>
+<p>olarak gösterelim. İstediğimiz $||\vec{r}-\vec{x}||$ uzunluğunu bulmak. $t'$
+değerinde aradaki vektör $\vec{b}$'ye dik olduğuna göre</p>
+<p>$$
+(\vec{x} - \vec{r}) \cdot \vec{b} = 0
+$$</p>
+<p>$\vec{r}$ formülünü açalım,</p>
+<p>$$
+= (\vec{x} - \vec{a} - t' \vec{b}) \cdot \vec{b} = 0
+$$</p>
+<p>$$
+= \vec{x}\cdot\vec{b} - \vec{a}\cdot\vec{b} - t'||b||^2 = 0
+$$</p>
+<p>$$
+t' = \frac{\vec{x}\cdot\vec{b} - \vec{a}\cdot\vec{b}}{||b||^2}
+$$</p>
+<p>Örnek</p>
+<p>$&lt; 2,2 &gt;$ ve $&lt; 5,5 &gt;$ noktaları noktalarından geçen çizgiye $&lt; 4,1 &gt;$ noktasının
+uzaklığı nedir? Kesişim nerede olur?</p>
+<pre><code class="python">def dist(x1,y1,x2,y2,px,py):
+    a = np.array([[x1,y1]]).T
+    b = np.array([[x2,y2]]).T
+    x = np.array([[px,py]]).T
+    tp = (np.dot(x.T, b) - np.dot(a.T, b)) / np.dot(b.T, b)
+    tp = tp[0][0]
+    tmp = x - (a + tp*b)
+    d = np.sqrt(np.dot(tmp.T,tmp)[0][0])
+    return d, a+tp*b
+
+x1,y1=2.,2.
+x2,y2=5.,5.
+px,py=4.,1.
+
+d, inters = dist(x1,y1, x2,y2, px,py)
+print (d)
+print (inters)
+</code></pre>
+
+<pre><code>2.1213203435596424
+[[2.5]
+ [2.5]]
+</code></pre>
+
+<p>Not: Üstteki metot 2, 3 üzeri boyutlar için de işleyecektir. </p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

@@ -244,8 +244,53 @@ vektör büyüklüğü. Devam edelim,</p>
 = \frac{2 \cdot 2 + 0 \cdot 1 + 0 \cdot (-2) }{ \sqrt{2^2 + (-1)^2 + (-2)^2} } 
 $$</p>
 <p>$$
-= \frac{4}{3}
+= \frac{4}{3} = 1.3333
 $$</p>
+<p>Fakat üstteki yaklaşımı daha da geliştirebiliriz. Aslında düzlem üzerinde bir
+nokta seçmeden de uzaklık hesabı yapabiliyoruz [1]. Formülü tekrar hatırlarsak
+$Q,P$ noktaları arasında bir vektör oluşturmuştuk, $v = (x_1-x_0, y_1-y_0, z_1-z_0)$
+ve bu vektörü düzlem normalı üzerine yansıtarak mesafeyi bulmuştuk. Normal
+vektörü $n = (A,B,C)$ olarak tanımlayalım, yani düzlem formülü $Ax+By+Cz=D$
+olsun, o zaman mesafe hesabı $d$ açılımı şöyle olurdu,</p>
+<p>$$
+d = | v \cdot n|
+$$</p>
+<p>$$
+= | (x_1-x_0, y_1-y_0, z_1-z_0) \cdot n | 
+$$</p>
+<p>$$
+\frac{ | A(x_1-x_0) + B(y_1-y_0) + C(z_1-z_0) | }{ \sqrt{ A^2 + B^2 + C^2 } }
+\qquad (1)
+$$</p>
+<p>$\sqrt{ A^2 + B^2 + C^2 }$ hesabı normal vektörü birimselleştirmek için yapıldı.
+Fakat hatırlarsak eğer bir $x,y,z$ noktası düzlem üzerinde ise o $Ax+By+Cz+D=0$
+sonucu elde edilmelidir değil mi? Bu sebeple ve $x_0,y_0,z_0$ düzlem üzerinde
+olmasını şart koştuğumuzdan, o zaman $Ax_0+By_0+Cz_0+D=0$ olmalıdır,
+ya da $D = -Ax_0-By_0-Cz_0$.</p>
+<p>Şimdi bakalım (1) formülündeki bölüneni açıp tekrar düzenlersek,</p>
+<p>$$
+= \frac{ | Ax_1 - Ax_0 + By_1 - By_0 + Cz_1 - Cz_0 | }{ \sqrt{ A^2 + B^2 + C^2 } }
+$$</p>
+<p>$$
+= \frac{ | Ax_1 + By_1 + Cz_1 + (-Ax_0 - By_0 - Cz_0) | }{ \sqrt{ A^2 + B^2 + C^2 } }
+$$</p>
+<p>Parantez içindeki kısım için $D$ kullanabiliriz,</p>
+<p>$$
+= \frac{ | Ax_1 + By_1 + Cz_1 + D | }{ \sqrt{ A^2 + B^2 + C^2 } }
+$$</p>
+<p>Nihai mesafe formülü budur. Görüldüğü gibi düzlem üzerindeki $Q=(x_0,y_0,z_0)$
+noktasına ihtiyaç yok. Biraz önceki aynı örnek üzerinde kontrol edelim,</p>
+<pre><code class="python"># Duzlem 2x + y - 2z = 4
+n = np.array([2,1,-2])
+P = np.array([0,0,0])
+d = (np.dot(n,P) + 4) / np.sqrt(2**2+1**2+(-2)**2)
+print (d)
+</code></pre>
+
+<pre><code>1.3333333333333333
+</code></pre>
+
+<p>Aynı sonuca eriştik.</p>
 <p>Üç Nokta ile Düzlem Formülü Bulmak</p>
 <p>Üç boyutta üç nokta bir düzlem tanımlamak için yeterlidir. Bu noktaları
 kullanarak $P$, $Q$, $R$ diyelim, iki tane vektör oluştururuz. Noktalar düzlem
@@ -364,6 +409,9 @@ print (inters)
 </code></pre>
 
 <p>Not: Üstteki metot 2, 3 üzeri boyutlar için de işleyecektir. </p>
+<p>Kaynaklar</p>
+<p>[1] Math Insight, <em>Distance from point to plane</em>,
+    <a href="https://mathinsight.org/distance_point_plane">https://mathinsight.org/distance_point_plane</a></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

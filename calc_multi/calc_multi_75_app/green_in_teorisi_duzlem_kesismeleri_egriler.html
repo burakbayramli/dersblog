@@ -208,9 +208,32 @@ A determinant 0.0
 </code></pre>
 
 <p><img alt="" src="calc_multi_75_app_16.jpg" /></p>
+<p>Bu hesabın farklı bazı yöntemleri için <code>raytri.c</code> koduna bakılabilir.</p>
 <p>İki 3D Üçgenin Hızlı Kesişme Kontrolü</p>
+<p>Üç boyutta iki üçgenin hızlı bir kesişme kontrolü için, ya da <em>kesişmeme</em>
+durumunda kesişme ihtimalini hızlı bir şekilde eleyebilmek için [7] bir yöntem
+nokta / düzlem [8] mesafe mantığını kullanmak. Bu yöntemde verili iki üçgen var
+diyelim, $T_1$, ki $(u_0,u_1,u_2)$ köşelerinden oluşuyor, ve $T_2$, ki
+$(v_0,v_1,v_2)$ köşelerinden oluşuyor, ikinci üçgen için önce üç noktanın ima
+ettiği düzlemi oluştururuz.</p>
+<p>$$
+n_2 = (v_1-v_0) \times (v_2 - v_1)
+$$</p>
+<p>$$
+d_2 = -n_2 \cdot v_0
+$$</p>
+<p>Sonra $T_1$'in tüm köşelerinden bu düzleme olan işaretli mesafeyi hesaplarız.</p>
+<p>$$
+m_i = n_2 \cdot u_i + d_2
+$$</p>
+<p>Eğer tüm $m_i &lt; 0$ ya da tüm $m_i &gt; 0$ ise, bu üçgen / üçgen kesişmesinin
+olmadığı sonucuna varabiliriz. Bu hızlı, kabaca yapılan bir ilk test olarak
+faydalı olabilir. Direk üçgen / üçgen bazında bir test değildir, üçgen noktaları
+ve diğe üçgenin olduğu düzlem bazında bir testtir fakat kesişme olmadığı durumda
+muhakkak kesişmeme olmadığı sonucuna hızlıca varabildiği için tercih edilen
+bir ilk yaklaşım olabilir.</p>
+<p>Örnek</p>
 <pre><code class="python">vtx1 = np.array([[0,5,0],[8,0,0 ],[0,0,0]])
-
 vtx2 = np.array([[6,8,3],[6,8,-2],[6,-4,-2]])
 
 ax = a3.Axes3D(pl.figure())
@@ -220,14 +243,6 @@ plt.savefig('calc_multi_75_app_12.jpg')
 </code></pre>
 
 <p><img alt="" src="calc_multi_75_app_12.jpg" /></p>
-<pre><code class="python">ax = a3.Axes3D(pl.figure())
-vtx3 = vtx2 + 3
-plot_tri3d(vtx1,ax)
-plot_tri3d(vtx3,ax)
-plt.savefig('calc_multi_75_app_13.jpg')
-</code></pre>
-
-<p><img alt="" src="calc_multi_75_app_13.jpg" /></p>
 <pre><code class="python"># ikinci ucgen ile duzlem yarat
 n2 = np.cross( vtx2[1,:]-vtx2[0,:], vtx2[2,:]-vtx2[0,:]  )
 d2 = -np.dot(n2,vtx2[0,:])
@@ -247,6 +262,15 @@ print (n2,d2)
 2. noktaya uzaklik = 360
 </code></pre>
 
+<p>Örnek</p>
+<pre><code class="python">ax = a3.Axes3D(pl.figure())
+vtx3 = vtx2 + 3
+plot_tri3d(vtx1,ax)
+plot_tri3d(vtx3,ax)
+plt.savefig('calc_multi_75_app_13.jpg')
+</code></pre>
+
+<p><img alt="" src="calc_multi_75_app_13.jpg" /></p>
 <pre><code class="python"># ucuncu ucgen ile duzlem yarat
 n3 = np.cross( vtx3[1,:]-vtx3[0,:], vtx3[2,:]-vtx3[0,:]  )
 d3 = -np.dot(n3,vtx3[0,:])
@@ -266,7 +290,7 @@ print (n3,d3)
 2. noktaya uzaklik = 540
 </code></pre>
 
-<p>[devam edecek]</p>
+<p>Daha detaylı kod <code>muller.c</code> ve <code>muller.py</code> dosyalarında bulunabilir.</p>
 <p>Çizgi Düzlem Kesişmesini Vektörler ile Hesaplamak</p>
 <p>Üstteki yöntem cebirsel manipülasyon gerektiriyor, fakat sayısal hesap için
 sembolik cebir işlemlerine girmeden vektör matematiği ile direk bir sonuç

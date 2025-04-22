@@ -96,21 +96,27 @@ A
 \lambda \\ \mu_1 \\ \mu_2 
 \end{array}\right] = s - p_0
 $$</p>
+<p>Sistemi çözmek için</p>
 <p>$$
 \left[\begin{array}{ccc}
 \lambda \\ \mu_1 \\ \mu_2 
 \end{array}\right] = A^{-1} (s - p_0)
 $$</p>
 <p>Yani $A$'nin tersini alıp eşitliğin sağ tarafını soldan çarpınca kesişme
-noktasındaki $\lambda,\mu_1,\mu_2$ elde ediliyor. Bu değerleri kullanarak
-kesişme noktasının kordinat yerini artık bulabiliriz, mesela çizgi parçası
-formülünden yola çıkarsak $x = s + \lambda (t-s)$ formülüne bulunan $\lambda$
-değerini sokunca, ki $t,s$ zaten biliniyor, kesişim noktası $x$ elde edilebilir.</p>
+noktasındaki $\lambda,\mu_1,\mu_2$ elde ediliyor.</p>
+<p>Bu değerleri kullanarak kesişme noktasının kordinat yerini artık bulabiliriz,
+mesela çizgi parçası formülünden yola çıkarsak $x = s + \lambda (t-s)$ formülüne
+bulunan $\lambda$ değerini sokunca, ki $t,s$ zaten biliniyor, kesişim noktası
+$x$ elde edilebilir.</p>
 <p>Önemli bir nokta eğer kesişme <em>yoksa</em> üstteki çözümün ne vereceği. Bu
-durumda $A$ matrisi özgün olur, yani tersi alınamaz. Bu durumda eğer bir lineer
-cebir paketi kullanıyorsak bir hata mesajı alırız. Tabii özgünlüğün basit bir
-kontrol yöntemi var, $A$'nin determinantini alırız, eğer sıfır ise matris
+durumda $A$ matrisi özgün (singular) olur, yani tersi alınamaz. O zaman eğer bir
+lineer cebir paketi kullanıyorsak bir hata mesajı alırız. Tabii özgünlüğün basit
+bir kontrol yöntemi var, $A$'nin determınantını alırız, eğer sıfır ise matris
 özgündür, çözüm / kesişme yoktur.</p>
+<p>Bu hesabın farklı bazı ekleri için  <code>raytri.c</code> koduna bakılabilir.</p>
+<p>Not: Üstteki kod ve [9] lineer cebir sistemını Cramer'in Kuralı ile çözüyor, o
+cebirsel açılım sırasında ortaya çıkan determinantlar kullanılıyor. Detaylar
+için koda ve kaynağa başvurulabilir.</p>
 <p>Örnek</p>
 <p>Gerekli grafik rutinleri,</p>
 <pre><code class="python">import mpl_toolkits.mplot3d as a3
@@ -208,7 +214,6 @@ A determinant 0.0
 </code></pre>
 
 <p><img alt="" src="calc_multi_75_app_16.jpg" /></p>
-<p>Bu hesabın farklı bazı yöntemleri için <code>raytri.c</code> koduna bakılabilir.</p>
 <p>İki 3D Üçgenin Hızlı Kesişme Kontrolü</p>
 <p>Üç boyutta iki üçgenin hızlı bir kesişme kontrolü için, ya da <em>kesişmeme</em>
 durumunda kesişme ihtimalini hızlı bir şekilde eleyebilmek için [7] bir yöntem
@@ -228,10 +233,16 @@ m_i = n_2 \cdot u_i + d_2
 $$</p>
 <p>Eğer tüm $m_i &lt; 0$ ya da tüm $m_i &gt; 0$ ise, bu üçgen / üçgen kesişmesinin
 olmadığı sonucuna varabiliriz. Bu hızlı, kabaca yapılan bir ilk test olarak
-faydalı olabilir. Direk üçgen / üçgen bazında bir test değildir, üçgen noktaları
-ve diğe üçgenin olduğu düzlem bazında bir testtir fakat kesişme olmadığı durumda
-muhakkak kesişmeme olmadığı sonucuna hızlıca varabildiği için tercih edilen
-bir ilk yaklaşım olabilir.</p>
+faydalı olabilir.</p>
+<p>Yöntem direk üçgen / üçgen bazında bir test değildir, üçgen noktaları ve diğer
+üçgenin olduğu <em>düzlem</em> bazında bir testtir fakat kesişme olmadığı durumda
+muhakkak kesişme olmadığı sonucuna hızlıca varabildiği için tercih edilen bir
+ilk test olabilir. Anlatımda biraz karışıklık olduysa açmaya uğraşalım, üstteki
+test kesişme olmadığı her zaman negatif sonuç verir. Fakat negatif sonuç
+alınmadıysa bu illa kesişme olduğu anlamına gelmez. Metot negatif sonuçlarda
+yüzde yüz başarılı, bu sebeple kesişme eleme fazında yardımcı olur, kesin
+kesişme sonucuna varmak için farklı yöntemler gerekir, mesela daha önce
+paylaşılan çizgi / üçgen kesişme yaklaşımı gibi.</p>
 <p>Örnek</p>
 <pre><code class="python">vtx1 = np.array([[0,5,0],[8,0,0 ],[0,0,0]])
 vtx2 = np.array([[6,8,3],[6,8,-2],[6,-4,-2]])

@@ -1,6 +1,59 @@
 # AABB, Üçgen Kesişmesi, Hızlı Çarpışma Saptaması
 
+Fiziksel dünyada hesaplanan bir simülasyon düşünelim, objeler var,
+hareket ediyorlar, bu objelerin çarpışıp çarpışmadığını her animasyon
+karesi (frame) içinde saptamamız gerekir, ki bu durumun bir sonraki
+karede fiziksel sonucunu gösterelim. Çarpışan bilardo topları çarpışma
+sonucu yer değiştirmelidir. Bir taşıt bir duvara çarpımışsa
+durmalıdır, gibi.
 
+İki obje arasında detaylı çarpışma hesabını yapabilen yaklaşımlar
+mevcut, [1]'de bunlardan birini gördük, fakat bu hesaplar her ikili
+kombinasyonuna teker teker bakmayı gerektirir, eğer irili ufaklı 1000
+obje simüle ediliyorsa bu 1000 x 1000 bir milyon işlem demektir!
+Çarpışmaları daha hızlı ve en detaylı şekilde acaba nasıl hesaplarız?
+Burada ele alacağımız çözüm birkaç aşamadan oluşuyor olacak.
+
+1. İlk aşama obje çiftlerinin birbirinden çarpışamayacak kadar uzak
+olanları saptayarak, ya da bu objelere hiç bakmayarak, bir sonraki
+fazdaki detaylı hesap yükünü azaltmak. Çarpışma saptama literatüründen
+bu aşamaya genel faz (broad phase) ismi veriliyor.
+
+1. Birbiri ile çarpışması muhtemel olan objeler bulunduktan sonra,
+çarpışması muhtemel iki objenin yüzey parçalarının da birbirine uzak
+olanlarını elemek.
+
+1. İki aday obje arasındaki aday yüzey parçalarını bulduktan sonra,
+artık detaylı kesişim testlerini yapabiliriz, bu testler / hesaplar
+nihai kesişim noktasını bulacaktır. Bu son iki kalem literatürde
+daraltılmış faz (narrow phase) olarak anılıyor.
+
+Bu kalemlerden ilki için AABB Ağaçı yaklaşımını [2] yazısında gördük.
+O yazıda verilen `AABB.py` kodunu kullanarak etrafında birer
+"eksenlere hizalı sınırlayıcı kutu (axis aligned bounding box -AABB-)"
+tanımlanan objeler arasında kabaca çakışma olup olmayacağını anlamak
+mümkündür. AABB Ağaç yapısı içindeki AABB kutularını hızlı bir şekilde
+indisleyip birbirine uzak olan objelere bakmamak için optimize
+edilmiştir.
+
+İkinci kalem için ilginç bir yaklaşım şudur, aslında AABB Ağaç
+tekniğini iki aday obje arasındaki "kesişme adayı yüzey parçaları"
+(çoğunlukla bu parçalar 3D üçgendir) için de kullanabiliriz.  Çünkü
+aynen objeler etrafında AABB kutuları tanımlanabildiği gibi üç boyutlu
+yüzey parçaları etrafında da AABB kutuları tanımlanabilir, ve mesela
+bir objenin tüm yüzey parçaları bir ağaç oluşturur, ve bu ağaca artık
+çarpışma adayı diğer objenin tüm yüzey parçalarını teker teker alıp
+"çarpışma var mı?" diye sorabiliriz. Bu işlem de, aynen objeler
+arasında olduğu gibi, birbirinden uzak olan parçalara bakmayarak
+sadece aday parçalara bakarak sonuca ulaşmayı hızlandıracaktır.
+
+Üçüncü kalemde artık uzak objeler elenmiştir, bakılan iki obje
+arasında onların uzak yüzey parçaları elenmiştir, ve bakılan iki parça
+arasında nihai hesap zamanı gelmiştir. Bu aşamada yüzey parçaları
+üçgen ise, [1]'de görülen çizgi/üçgen kesişme hesabı kullanılabilir,
+her üçgenin her kenarını bir çizgi parçası olarak alıp diğer üçgen ile
+kesişmesinin testi/hesabı yapılır, bu her seferinde 6 tane işlem
+demektir, hızlı bir şekilde yapılabilir.
 
 ```python
 from stl import mesh

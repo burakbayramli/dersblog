@@ -261,10 +261,15 @@ grafiklersek görsel olarak durum daha açık hale gelir.</p>
 <h3>Nihai Kod, Animasyon</h3>
 
 <p>Şimdi ikinci kalemdeki kodlamaya gelelim, ve tüm fikirleri bir araya
-koyarak içinde objelerin hareket ettiği bir anımasyon
+koyarak içinde objelerin hareket ettiği bir animasyon
 yaratalım. Objeleri hareket ettirmek kolay, her obje için bir yön
-vektörü tanımlarız, ve her objenin <code>offset</code> değerine bu yön çarpı bir
-sabit ekleyerek objenin o yöne gitmesini sağlarız.</p>
+vektörü tanımlarız, ve her karede objenin <code>offset</code> değerine bu yön
+çarpı bir sabit değerini ekleyerek objenin o yöne gitmesini sağlarız.
+Ayrıca alttaki kodda yüzeyler arası çarpışma adayları gerektiği için
+AABB Ağacının bu parçaları indisleyebilmesi gerekir, bunun için bir
+<code>Triangle</code> sınıfı yarattık, her prizma objesinin yüzeyini oluşturan 20
+tane üçgen objesi bu sınıftan yaratılıyor olacak. Bu sınıf aynen ana
+objelerde olduğu gibi <code>AABB.IAABB</code> arayüzünen miras alımı yapacak.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;randall&quot;</span><span class="p">)</span>
@@ -402,12 +407,15 @@ sabit ekleyerek objenin o yöne gitmesini sağlarız.</p>
 </code></pre>
 </div>
 
+<p>Animasyonun her karesi bir JPG olarak yaratıldı, bu resimleri birleştirip bir
+GİF yaratalım,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="err">!</span> <span class="n">convert</span> <span class="o">-</span><span class="n">delay</span> <span class="mi">20</span> <span class="o">-</span><span class="n">loop</span> <span class="mi">0</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">coll</span><span class="o">/*.</span><span class="n">jpg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">aabb1</span><span class="o">.</span><span class="n">gif</span>
 </code></pre>
 </div>
 
-<p>[devam edecek]</p>
+<p>Nihai animasyon [6]'da bulunabilir.</p>
 
 <p>Kaynaklar</p>
 

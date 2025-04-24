@@ -214,10 +214,15 @@ plt.savefig('coll_03.jpg')
 ### Nihai Kod, Animasyon
 
 Şimdi ikinci kalemdeki kodlamaya gelelim, ve tüm fikirleri bir araya
-koyarak içinde objelerin hareket ettiği bir anımasyon
+koyarak içinde objelerin hareket ettiği bir animasyon
 yaratalım. Objeleri hareket ettirmek kolay, her obje için bir yön
-vektörü tanımlarız, ve her objenin `offset` değerine bu yön çarpı bir
-sabit ekleyerek objenin o yöne gitmesini sağlarız.
+vektörü tanımlarız, ve her karede objenin `offset` değerine bu yön
+çarpı bir sabit değerini ekleyerek objenin o yöne gitmesini sağlarız.
+Ayrıca alttaki kodda yüzeyler arası çarpışma adayları gerektiği için
+AABB Ağacının bu parçaları indisleyebilmesi gerekir, bunun için bir
+`Triangle` sınıfı yarattık, her prizma objesinin yüzeyini oluşturan 20
+tane üçgen objesi bu sınıftan yaratılıyor olacak. Bu sınıf aynen ana
+objelerde olduğu gibi `AABB.IAABB` arayüzünen miras alımı yapacak.
 
 ```python
 import sys; sys.path.append("randall")
@@ -352,14 +357,14 @@ for i in range(15):
 Animasyon Tamamlandı
 ````
 
+Animasyonun her karesi bir JPG olarak yaratıldı, bu resimleri birleştirip bir
+GİF yaratalım,
+
 ```python
 ! convert -delay 20 -loop 0 /tmp/coll/*.jpg /tmp/aabb1.gif
 ```
 
-
-
-
-[devam edecek]
+Nihai animasyon [6]'da bulunabilir.
 
 Kaynaklar
 

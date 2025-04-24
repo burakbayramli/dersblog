@@ -348,62 +348,63 @@ objelerde olduğu gibi <code>AABB.IAABB</code> arayüzünden miras alımı yapac
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span> <span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">)</span>
+<pre><span></span><code><span class="k">def</span> <span class="nf">run_animation</span><span class="p">(</span><span class="n">offsets</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">azim</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span> <span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">)</span>
 
-<span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span> <span class="c1"># baslangıç offset değerleri</span>
-<span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># gidiş yönleri</span>
+    <span class="c1">#offsets = [[20,2,0],[-10,-10,0]]</span>
+    <span class="c1">#dirs = [[-1,-2,-1],[4,2,1]]</span>
 
-<span class="n">dirs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
-<span class="n">sobjs</span> <span class="o">=</span> <span class="p">[</span><span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">o</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">]</span>
+    <span class="n">dirs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
+    <span class="n">sobjs</span> <span class="o">=</span> <span class="p">[</span><span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">o</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">]</span>
 
-<span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>    
-<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sobjs</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sobjs</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">):</span>
-    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="n">azim</span><span class="p">)</span>
 
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">60</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
-    <span class="n">olsum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">80</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">olsum</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sobjs</span><span class="p">)):</span>
-        <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_offset</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">dirs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="n">tree</span><span class="o">.</span><span class="n">update_object</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-        <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sobjs</span><span class="p">)):</span>
+            <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_offset</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">dirs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">update_object</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+            <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
-    <span class="c1"># kesisme olan objeler icin</span>
-    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sobjs</span><span class="p">)):</span>
-        <span class="n">overlaps</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-        <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">overlaps</span><span class="p">:</span>
-            <span class="c1"># A-B kesismesi tahmin edilen her B objesinin ucgenleri icin bir</span>
-            <span class="c1"># aabb agaci yarat</span>
-            <span class="n">narrow_tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> <span class="n">narrow_tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-            <span class="c1"># A objesinin ucgenlerini alip B agacina kesisip kesismedigini sor</span>
-            <span class="k">for</span> <span class="n">a_tri</span> <span class="ow">in</span> <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> 
-                <span class="n">overlaps_narrow</span> <span class="o">=</span> <span class="n">narrow_tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">a_tri</span><span class="p">)</span> 
-                <span class="k">for</span> <span class="n">b_tri</span> <span class="ow">in</span> <span class="n">overlaps_narrow</span><span class="p">:</span>
-                    <span class="c1"># burada a_tri ile b_tri arasinda nihai</span>
-                    <span class="c1"># kesisme noktasi bulunabilir</span>
-                    <span class="n">b_tri</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+        <span class="c1"># kesisme olan objeler icin</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sobjs</span><span class="p">)):</span>
+            <span class="n">overlaps</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">overlaps</span><span class="p">:</span>
+                <span class="c1"># A-B kesismesi tahmin edilen her B objesinin ucgenleri icin bir</span>
+                <span class="c1"># aabb agaci yarat</span>
+                <span class="n">narrow_tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> <span class="n">narrow_tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="c1"># A objesinin ucgenlerini alip B agacina kesisip kesismedigini sor</span>
+                <span class="k">for</span> <span class="n">a_tri</span> <span class="ow">in</span> <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> 
+                    <span class="n">overlaps_narrow</span> <span class="o">=</span> <span class="n">narrow_tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">a_tri</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">b_tri</span> <span class="ow">in</span> <span class="n">overlaps_narrow</span><span class="p">:</span>
+                        <span class="c1"># burada a_tri ile b_tri arasinda nihai</span>
+                        <span class="c1"># kesisme noktasi bulunabilir</span>
+                        <span class="n">b_tri</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
 
 
 
-        <span class="n">olsum</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlaps</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Overlaps: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">olsum</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;/tmp/coll/coll_</span><span class="si">%02d</span><span class="s1">.jpg&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Animasyon Tamamlandı&#39;</span><span class="p">)</span>
+            <span class="n">olsum</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlaps</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Overlaps: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">olsum</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;/tmp/coll/coll_</span><span class="si">%02d</span><span class="s1">.jpg&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>Animasyon Tamamlandı
+<pre><span></span><code><span class="n">run_animation</span><span class="p">(</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -436,6 +437,36 @@ yaptığımızı düşünelim, bu 1000 x 1000, yine bir milyondan fazla hesap
 yapmak anlamına gelecektir. Ağaç araması (ve elemesi) ile bu yükten
 kurtulmuş olduk.</p>
 
+<p>Not</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">run_animation</span><span class="p">(</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">azim</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">convert</span> <span class="o">-</span><span class="n">delay</span> <span class="mi">20</span> <span class="o">-</span><span class="n">loop</span> <span class="mi">0</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">coll</span><span class="o">/*.</span><span class="n">jpg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">aabb2</span><span class="o">.</span><span class="n">gif</span>
+</code></pre>
+</div>
+
+<p>İlk animasyondaki genel çarpışma saptamasına farklı açıdan [7] bakınca detayda
+çarpışma olmadığını görüyoruz. Ödev olarak okuyucu bu çarpışmanın olmadığını
+[1]'deki determinant yöntemi ile bulabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">run_animation</span><span class="p">(</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">azim</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">convert</span> <span class="o">-</span><span class="n">delay</span> <span class="mi">20</span> <span class="o">-</span><span class="n">loop</span> <span class="mi">0</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">coll</span><span class="o">/*.</span><span class="n">jpg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">aabb3</span><span class="o">.</span><span class="n">gif</span>
+</code></pre>
+</div>
+
+<p>Üstteki parametrelerle animasyon objenin gerçekten çarpışma olduğu bir
+örnek gibi duruyor [8], yine aynı determinant testi ve nihai
+çizgi/üçgen kesişme yöntemi burada devreye girebilir.</p>
+
 <p>Kaynaklar</p>
 
 <p>[1] Bayramlı, 
@@ -451,7 +482,13 @@ kurtulmuş olduk.</p>
     <a href="../../2000/10/nesnesel-programlama.html">Nesnesel Progralama</a></p>
 
 <p>[6] Bayramli, 
-    <a href="https://www.dropbox.com/scl/fi/m0x1170yc8duo80c0592k/aabb1.gif?rlkey=08gwsgwiqnk09smpe6bbz2tpi&amp;st=2s2voz8k&amp;raw=1">Animasyon</a></p>
+    <a href="https://www.dropbox.com/scl/fi/m0x1170yc8duo80c0592k/aabb1.gif?rlkey=08gwsgwiqnk09smpe6bbz2tpi&amp;st=2s2voz8k&amp;raw=1">Animasyon 1</a></p>
+
+<p>[7] Bayramli, 
+    <a href="">Animasyon 2</a></p>
+
+<p>[8] Bayramli, 
+    <a href="">Animasyon 3</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

@@ -222,7 +222,7 @@ Ayrıca alttaki kodda yüzeyler arası çarpışma adayları gerektiği için
 AABB Ağacının bu parçaları indisleyebilmesi gerekir, bunun için bir
 `Triangle` sınıfı yarattık, her prizma objesinin yüzeyini oluşturan 20
 tane üçgen objesi bu sınıftan yaratılıyor olacak. Bu sınıf aynen ana
-objelerde olduğu gibi `AABB.IAABB` arayüzünen miras alımı yapacak.
+objelerde olduğu gibi `AABB.IAABB` arayüzünden miras alımı yapacak.
 
 ```python
 import sys; sys.path.append("randall")

@@ -74,7 +74,7 @@
 <pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;randall&quot;</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">as</span> <span class="nn">a3</span>
 <span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
-<span class="kn">import</span> <span class="nn">AABB</span><span class="o">,</span> <span class="nn">util</span>
+<span class="kn">import</span> <span class="nn">AABB</span>
 
 <span class="k">class</span> <span class="nc">STLObj</span><span class="p">(</span><span class="n">AABB</span><span class="o">.</span><span class="n">IAABB</span><span class="p">):</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">offset</span><span class="p">):</span>
@@ -99,6 +99,11 @@
             <span class="n">tri</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="s1">&#39;dotted&#39;</span><span class="p">)</span>
             <span class="n">tri</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
             <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">tri</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axx</span><span class="p">):</span>
+        <span class="n">aabb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_aabb</span><span class="p">()</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">plot_box_imp</span><span class="p">(</span><span class="n">aabb</span><span class="o">.</span><span class="n">min_x</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">min_y</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">min_z</span><span class="p">,</span>
+                          <span class="n">aabb</span><span class="o">.</span><span class="n">max_x</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">max_y</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">max_z</span><span class="p">,</span><span class="n">axx</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">get_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">)</span>
@@ -128,6 +133,20 @@
 <p><img src="coll_02.jpg" alt="" /></p>
 
 <div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">util</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>        
+<span class="n">o1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o1</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">o2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o2</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">o3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o3</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">70</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;coll_03.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
 <pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
 <span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">o2</span><span class="p">)</span>
@@ -136,17 +155,17 @@
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">o1</span><span class="p">)</span>
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;çarpışma testi&#39;</span><span class="p">)</span>
 <span class="n">overlaps</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;results&#39;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">overlaps</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Overlaps with </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Sonuçlar:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">overlaps</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Çakışma </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2"> ile&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code>Obje offset [0 0 0]
-results
-  - Overlaps with Obje offset [ 5 -7  0]
+<pre><span></span><code>Obje offset [0 0 0] çarpışma testi
+Sonuçlar:
+  - Çakışma Obje offset [ 5 -7  0] ile
 </code></pre>
 </div>
 

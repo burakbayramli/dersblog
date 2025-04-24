@@ -67,17 +67,17 @@ olan sorgular Yan etkisi olan sorgulardan kaçınılmalıdır.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Yığıt</span> <span class="p">{</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ekle</span><span class="p">(</span><span class="n">Object</span> <span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="p">..</span> <span class="p">}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ekle</span><span class="p">(</span><span class="n">Object</span> <span class="n">o</span><span class="p">)</span> <span class="p">{</span> <span class="p">..</span> <span class="p">}</span>
 
-<span class="kd">public</span> <span class="n">Object</span> <span class="nf">siradakiEleman</span><span class="p">()</span> <span class="p">{</span>
-    <span class="p">..</span> <span class="n">elemani</span> <span class="n">bul</span><span class="p">..</span> <span class="n">yigittan</span> <span class="n">cikart</span>
-    <span class="k">return</span> <span class="n">nesne</span><span class="p">;</span>
-  <span class="p">}</span>
+   <span class="kd">public</span> <span class="n">Object</span> <span class="nf">siradakiEleman</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">..</span> <span class="n">elemani</span> <span class="n">bul</span><span class="p">..</span> <span class="n">yigittan</span> <span class="n">cikart</span>
+      <span class="k">return</span> <span class="n">nesne</span><span class="p">;</span>
+    <span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
 </div>
 
-<p>Bu örnekteki siradakiEleman sorgusunun yan etkisi var, çünkü, hem
+<p>Bu örnekteki <code>siradakiEleman</code> sorgusunun yan etkisi var, çünkü, hem
 sıradaki elemanın ne olduğunu söylemekte, hem de bu elemanı yığıttan
 çıkartmaktadır. Bu sebeple aynı sorgu iki kere üst üste
 çâğırıldığında, aynı sonuç gelmeyecektir.  Bu tür bir sorgu, o sorguyu
@@ -134,13 +134,13 @@ aşağıdaki gibi bir nesne düşünelim:</p>
 <div class="codehilite">
 <pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Isleyici</span> <span class="p">{</span>
 
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">birIslem</span><span class="p">()</span> <span class="p">{}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">birIslem</span><span class="p">()</span> <span class="p">{}</span>
 
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">baskaBirIslem</span><span class="p">()</span> <span class="p">{}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">baskaBirIslem</span><span class="p">()</span> <span class="p">{}</span>
 
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">ekle</span><span class="p">(</span><span class="n">Object</span> <span class="n">bunu</span><span class="p">,</span> <span class="n">Vector</span> <span class="n">bunaEkle</span><span class="p">)</span> <span class="p">{......}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ekle</span><span class="p">(</span><span class="n">Object</span> <span class="n">bunu</span><span class="p">,</span> <span class="n">Vector</span> <span class="n">bunaEkle</span><span class="p">)</span> <span class="p">{......}</span>
 
-<span class="kd">public</span> <span class="n">Object</span> <span class="nf">cikart</span><span class="p">(</span><span class="n">Vector</span> <span class="n">bundanCikart</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
+   <span class="kd">public</span> <span class="n">Object</span> <span class="nf">cikart</span><span class="p">(</span><span class="n">Vector</span> <span class="n">bundanCikart</span><span class="p">)</span> <span class="p">{</span> <span class="p">...</span> <span class="p">}</span>
 
 <span class="p">}</span>
 </code></pre>
@@ -158,11 +158,23 @@ nesne tarafından muhafaza edilmesini sağlamalalıyız. Bu yapıldıktan
 sonra, artık sonraki bütün işlemler içerde tutulan Vector üzerinde
 yapılacaktır, yani Vector'ün bir daha geçilmesine gerek kalmaz.</p>
 
-<p>public class VectorYığıtı {protected int tepeIndisi = ...;protected
-Vector vector = null;public VectorYığıtı(Vector v) {vector = v;}public
-void ekle(Object eleman) {vector.add(eleman);}public Object cikart()
-{...return vector.get(tepeIndisi);}}public class Isleyici {public void
-birIslem() {}public void baskaBirIslem() {}}</p>
+<div class="codehilite">
+<pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">VectorYığıtı</span> <span class="p">{</span>
+   <span class="kd">protected</span> <span class="kt">int</span> <span class="n">tepeIndisi</span> <span class="o">=</span> <span class="p">...;</span>
+   <span class="kd">protected</span> <span class="n">Vector</span> <span class="n">vector</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+   <span class="kd">public</span> <span class="nf">VectorYığıtı</span><span class="p">(</span><span class="n">Vector</span> <span class="n">v</span><span class="p">)</span> <span class="p">{</span><span class="n">vector</span> <span class="o">=</span> <span class="n">v</span><span class="p">;}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ekle</span><span class="p">(</span><span class="n">Object</span> <span class="n">eleman</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">vector</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">eleman</span><span class="p">);</span>
+   <span class="p">}</span>
+   <span class="kd">public</span> <span class="n">Object</span> <span class="nf">cikart</span><span class="p">()</span> <span class="p">{</span>
+      <span class="p">...</span><span class="na">return</span> <span class="n">vector</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">tepeIndisi</span><span class="p">);}}</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Isleyici</span> <span class="p">{</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">birIslem</span><span class="p">()</span> <span class="p">{}</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">baskaBirIslem</span><span class="p">()</span> <span class="p">{}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
 
 <p>İşte bu kadar! Böylece İşleyici nesnesi daha anlaşılır hale geldi, ve
 yeni VectorYığıtı nesnesi çok daha temiz.</p>
@@ -185,14 +197,17 @@ kurtarır.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Cizer</span> <span class="p">{</span>
-<span class="kd">public</span> <span class="kt">void</span> <span class="nf">metot</span> <span class="p">(</span><span class="n">ParametreClass</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">Ucgen</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">ucgenCiz</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
-<span class="p">}</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">Dikdortgen</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">dikdortgenCiz</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span> <span class="p">}</span>
-<span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">Kare</span><span class="p">)</span> <span class="p">{</span>
-  <span class="n">kareCiz</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span> <span class="p">}}...</span>
+  <span class="kd">public</span> <span class="kt">void</span> <span class="nf">metot</span> <span class="p">(</span><span class="n">ParametreClass</span> <span class="n">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">Ucgen</span><span class="p">)</span> <span class="p">{</span>
+      <span class="n">ucgenCiz</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">Dikdortgen</span><span class="p">)</span> <span class="p">{</span>
+       <span class="n">dikdortgenCiz</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">obj</span> <span class="k">instanceof</span> <span class="n">Kare</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">kareCiz</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">...</span>
 <span class="p">}</span>
 </code></pre>
 </div>
@@ -249,30 +264,38 @@ sırasında ufak bir JVM kontrolü yaparak aktif nesnenin esas tipini
 öğrenecek, ve ciz() çağrısını doğru tipteki nesneye gönderecektir. Tüm
 bu kontroller için programcının kılını kıpırdatmasına gerek yoktur.</p>
 
-<p>public class HerhangiBirClass { public void ciz() { GrafikNesne nesne
-= new Ucgen(); // dikkat, Ucgen nesne = new Ucgen degil!!!  ..
-nesne.ciz(); }}</p>
+<div class="codehilite">
+<pre><span></span><code><span class="kd">public</span> <span class="kd">class</span> <span class="nc">HerhangiBirClass</span> <span class="p">{</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">ciz</span><span class="p">()</span> <span class="p">{</span>
+      <span class="n">GrafikNesne</span> <span class="n">nesne</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Ucgen</span><span class="p">();</span> <span class="c1">// dikkat, Ucgen nesne = new Ucgen degil!!!</span>
+      <span class="p">...</span>
+      <span class="n">nesne</span><span class="p">.</span><span class="na">ciz</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
 
 <p>Bu aynı satırda yapılan yaratma ve anında kullanma vadedilen
 avantajlar açısından sizi hayal kırıklığına uğratmasın. Onbinlerce
 satırlık bir kodun ta bir ucunda yaratılmış bir Ucgen nesnesinin,
 öteki ucunda, başkasının yazmış olduğu bir metot gönderildiğini
 düşünün. Alan metot, soyutluk seviyesi bakımından grafik nesnesinin
-ciz() metotunu "kabul ettiği haricinde" daha fazla bir bilgiyle
+<code>ciz()</code> metotunu "kabul ettiği haricinde" daha fazla bir bilgiyle
 ilgilenmeme gibi bir sânsı artık elinde vardır. Böylece elindeki
 referansı GrafikNesne seviyesinden daha aşağıda tutmasına gerek
-yoktur.  Böylece, ileriki bir günde yeni bir GrafikNesne kodlandığında
-(Beşgen diyelim), hiçbir ana listenin, hiçbir merkezi noktanın
-değişmesine gerek kalmayacaktır. Tüm ciz() metotlarıni çağıranlar aynı
-şekilde çağırmaya devam edeceklerdir, çünkü ellerindeki GrafikNesne
-class'ı halen statik olarak geçerli bir referanstır (Beşgen de
-GrafikNesne'den kalıtım yapacaktır, ve ciz() metotunu tekrar
-tanımlayacaktır).  Instanceof yöntemini kullanıyor olsaydık, "büyük"
-listemize bir de instanceof Besgen gibi bir ibare eklememiz
-gerekecekti. Nesnesel yöntemlerde buna hiçbir gerek yoktur. Tip
-kontrolleri, düzgün yapılan nesnesel model üzerinden JVM tarafınan
-otomatik olarak yapılabilen birşeydir. Makinanın yapacağını, makinaya
-bırakalım.</p>
+yoktur.</p>
+
+<p>Böylece, ileriki bir günde yeni bir GrafikNesne kodlandığında (Beşgen
+diyelim), hiçbir ana listenin, hiçbir merkezi noktanın değişmesine
+gerek kalmayacaktır. Tüm ciz() metotlarıni çağıranlar aynı şekilde
+çağırmaya devam edeceklerdir, çünkü ellerindeki GrafikNesne class'ı
+halen statik olarak geçerli bir referanstır (Beşgen de GrafikNesne'den
+kalıtım yapacaktır, ve ciz() metotunu tekrar tanımlayacaktır).
+Instanceof yöntemini kullanıyor olsaydık, "büyük" listemize bir de
+instanceof Besgen gibi bir ibare eklememiz gerekecekti. Nesnesel
+yöntemlerde buna hiçbir gerek yoktur. Tip kontrolleri, düzgün yapılan
+nesnesel model üzerinden JVM tarafınan otomatik olarak yapılabilen
+birşeydir. Makinanın yapacağını, makinaya bırakalım.</p>
 
 <p>Referans</p>
 

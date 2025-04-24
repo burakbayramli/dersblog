@@ -92,20 +92,6 @@ plt.savefig('coll_02.jpg')
 ![](coll_02.jpg)
 
 ```python
-import util
-ax = a3.Axes3D(plt.figure())        
-o1.plot(ax); o1.plot_aabb(ax)
-o2.plot(ax); o2.plot_aabb(ax)
-o3.plot(ax); o3.plot_aabb(ax)
-ax.set_xlim(30,70);ax.set_ylim(-20,20); ax.set_zlim(-20,30)
-ax.set_xlabel("x axis");ax.set_ylabel("y axis");ax.set_zlabel("z axis")
-ax.view_init(elev=21, azim=200)
-
-plt.savefig('coll_03.jpg')
-```
-
-
-```python
 tree = AABB.AABBTree(initial_size=10)
 tree.insert_object(o1)
 tree.insert_object(o2)
@@ -125,6 +111,20 @@ Sonuçlar:
   - Çakışma Obje offset [ 5 -7  0] ile
 ```
 
+```python
+import util
+ax = a3.Axes3D(plt.figure())        
+o1.plot(ax); o1.plot_aabb(ax)
+o2.plot(ax); o2.plot_aabb(ax)
+o3.plot(ax); o3.plot_aabb(ax)
+ax.set_xlim(30,70);ax.set_ylim(-20,20); ax.set_zlim(-20,30)
+ax.set_xlabel("x axis");ax.set_ylabel("y axis");ax.set_zlabel("z axis")
+ax.view_init(elev=21, azim=200)
+
+plt.savefig('coll_03.jpg')
+```
+
+![](coll_03.jpg)
 
 
 
@@ -146,3 +146,6 @@ Kaynaklar
 [2] <a href="aabb-randall-tr.html">Randall, AABB Ağaçları ile Çarpışma Saptamasına Giriş</a>
 
 [4] Bayramlı, <a href="../../2020/08/stl-3d-cad.html">3D Baskıya Hazır CAD Tasarım Formatı, STL</a>
+
+[5] Bayramli, 
+    <a href="../../2000/10/nesnesel-programlama.html">Nesnesel Progralama</a>

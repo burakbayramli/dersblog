@@ -82,6 +82,8 @@ ax.view_init(elev=21, azim=200)
 plt.savefig('coll_02.jpg')
 ```
 
+![](coll_02.jpg)
+
 ```python
 tree = AABB.AABBTree(initial_size=10)
 tree.insert_object(o1)

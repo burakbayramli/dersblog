@@ -1,100 +1,40 @@
 # AABB, Üçgen Kesişmesi, Hızlı Çarpışma Saptaması
 
 ```python
-import sys; sys.path.append("randall")
-import AABB
-
-class Tetrahedron(AABB.IAABB):
-    def __init__(self,offset):
-        self.offset = offset
-	# alttakiler tetrahedron seklini veren bilinen dort nokta
-        self.base_tri = np.array([[ 0.2309401,  1.2309401,  0.2309401],
-                                  [-0.2309401,  1.2309401, -0.2309401],
-                                  [ 0.2309401,  0.7690599, -0.2309401],
-                                  [-0.2309401,  0.7690599,  0.2309401]])
-
-    def get_triangles(self):
-        res = []
-        res.append(self.base_tri[0:3,:] + self.offset)
-        res.append(self.base_tri[1:4,:] + self.offset)
-        last = np.vstack((self.base_tri[2:4,:],self.base_tri[0,:]))
-        res.append(last + self.offset)
-        return res
-
-    def plot(self,ax):
-        tris = self.get_triangles()
-        for x in tris: 
-            tri = a3.art3d.Poly3DCollection([x])
-            tri.set_edgecolor('k')
-            tri.set_color('red')
-            tri.set_alpha(0.2)
-            ax.add_collection3d(tri)
-
-    def __repr__(self):
-        return f"Tetrahedron {self.offset}"
-
-    def get_aabb(self):
-        mins = np.min(self.offset + self.base_tri,axis=0)
-        maxs = np.max(self.offset + self.base_tri,axis=0)
-        x,y,z,w,h,d = list(mins) + list(maxs)
-        return AABB.AABB(x,y,z,w,h,d)
+from stl import mesh
+from mpl_toolkits import mplot3d
+figure = plt.figure()
+ax = mplot3d.Axes3D(figure)
+your_mesh = mesh.Mesh.from_file('../../2020/08/shapes/Prism_hexagon.stl')
+obj = mplot3d.art3d.Poly3DCollection(your_mesh.vectors)
+obj.set_edgecolor('k')
+ax.add_collection3d(obj)
+scale = your_mesh.points.flatten()
+ax.auto_scale_xyz(scale, scale, scale)
+ax.set_xlim(40,60);ax.set_ylim(-5,15); ax.set_zlim(-4,20)
+ax.view_init(elev=21, azim=40)
+plt.savefig('coll_01.jpg')
 ```
 
 ```python
-tree = AABB.AABBTree(initial_size=4)
-
-t1 = Tetrahedron(offset=np.array([0,0,0]))
-tree.insert_object(t1)
-
-t2 = Tetrahedron(offset=np.array([0.1,0,0]))
-tree.insert_object(t2)
-
-t3 = Tetrahedron(offset=np.array([1,1,1]))
-tree.insert_object(t3)
-```
-
-```python
-overlaps1 = tree.query_overlaps(t1)
-print ('results')
-for obj in overlaps1: print(f"  - Overlaps with {obj}") # Should report box2
+import pickle
+print (u'dış üçgen sayısı =',len(your_mesh.vectors))
+print (your_mesh.vectors.shape)
+pickle.dump(your_mesh.vectors, open('prismhex.pkl', 'wb'))
 ```
 
 ```text
-results
-  - Overlaps with Tetrahedron [0.1 0.  0. ]
+dış üçgen sayısı = 20
+(20, 3, 3)
 ```
 
-```python
-overlaps2 = tree.query_overlaps(t1)
-print ('results')
-for obj in overlaps1: print(f"  - Overlaps with {obj}") # Should report box2
-```
-
-```text
-results
-  - Overlaps with Tetrahedron [0.1 0.  0. ]
-```
-
-```python
-import mpl_toolkits.mplot3d as a3
-import matplotlib.colors as colors
-import pylab as pl
-
-ax = a3.Axes3D(pl.figure())        
-t1.plot(ax)
-t2.plot(ax)
-t3.plot(ax)
-
-ax.set_xlim(-1,2)
-ax.set_ylim(-1,2)
-ax.set_zlim(-1,2)
-plt.savefig('tetra_01.jpg')
-```
-
-![](tetra_01.jpg)
+![](coll_01.jpg)
 
 
-![](out.jpg)
+
+
+
+
 
 
 
@@ -103,12 +43,15 @@ plt.savefig('tetra_01.jpg')
 
 Kaynaklar
 
-[1] Bayramli, Green'in Teorisi, Düzlem Kesişmeleri, Eğriler,
-    https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_75_app/green_in_teorisi_duzlem_kesismeleri_egriler.html
+[1] Bayramlı, 
+    <a href="https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_75_app/green_in_teorisi_duzlem_kesismeleri_egriler.html">
+    Green'in Teorisi, Düzlem Kesişmeleri, Eğriler
+    </a>
 
-[2] Randall, AABB Ağaçları ile Çarpışma Saptamasına Giriş,
-    aabb-randall-tr.html
+[2] <a href="aabb-randall-tr.html">Randall, AABB Ağaçları ile Çarpışma Saptamasına Giriş</a>
 
+[3] <a href="https://www.printables.com/model/568502-basic-geometric-shapes-3d/files">
+      Basic Geometric Shapes, STL
+    </a>
 
-
-
+[4] Bayramlı, <a href="../../2020/08/stl-3d-cad.html">3D Baskıya Hazır CAD Tasarım Formatı, STL</a>

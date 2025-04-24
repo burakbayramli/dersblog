@@ -366,6 +366,21 @@ GİF yaratalım,
 
 Nihai animasyon [6]'da bulunabilir.
 
+Animasyonda muhtemel çarpışma genel fazda saptanınca görüntünün
+üstündeki çarpışma sayısı arttırılıyor. Bu genel adaylar arasında
+üçgenleri çarpışanlar var ise, bu çarpışması muhtemel üçgenler kırmızı
+ile gösteriliyor.
+
+İki obje arasında üçgenler arası çarpışmalar için de ağaç
+kullanmamızın önemini bir daha vurgulamak iyi olur, üstteki basit
+objede 20 tane yüzey üçgeni vardı. Fakat daha çetrefil objelerde,
+mesela [4] yazısında görülen pervane cisminin yüzeyinde 1000'den fazla
+üçgen mevcuttur. Böyle bir objenin benzer bir diğer obje ile
+üçgenlerini birer birer karşılaştırıp detaylı kesişme testi
+yaptığımızı düşünelim, bu 1000 x 1000, yine bir milyondan fazla hesap
+yapmak anlamına gelecektir. Ağaç araması (ve elemesi) ile bu yükten
+kurtulmuş olduk.
+
 Kaynaklar
 
 [1] Bayramlı, 

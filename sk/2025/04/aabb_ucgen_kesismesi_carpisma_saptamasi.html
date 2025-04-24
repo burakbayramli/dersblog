@@ -93,6 +93,17 @@ her üçgenin her kenarını bir çizgi parçası olarak alıp diğer üçgen il
 kesişmesinin testi/hesabı yapılır, bu her seferinde 6 tane işlem
 demektir, hızlı bir şekilde yapılabilir.</p>
 
+<h3>Objeler, AABB</h3>
+
+<p>Örnek obje olarak bir STL cismi [4] kullanacağız. STL cisimlerinin
+yüzeyleri birbiri ile bağlı üçgen parçalarıdır, en ufak parçanın üçgen
+olması çok iyi çünkü üç boyutta üçgen, çizgi kesişmeleri için elimizde
+gerekli kodlar var.</p>
+
+<p>Altta örnek seçilen ve yazının geri kalanında kullanılacak olan cisim
+prizma heksagon'dur, [4]'teki örnek cisimler arasından
+seçilmiştir. Onu grafikleyelim,</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
 <span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
@@ -102,8 +113,6 @@ demektir, hızlı bir şekilde yapılabilir.</p>
 <span class="n">obj</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
 <span class="n">obj</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
-<span class="n">scale</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">60</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;coll_01.jpg&#39;</span><span class="p">)</span>
@@ -124,6 +133,14 @@ demektir, hızlı bir şekilde yapılabilir.</p>
 </div>
 
 <p><img src="coll_01.jpg" alt="" /></p>
+
+<p>Bu objenin dış yüzeyi 20 tane üçgen ile tanımlı, yani STL dosyası 20
+tane üçgen kordinatı taşıyor. Bu temel objeyi birden fazla yerde
+kullanmak basit, STL dosyasında tanımlı olan obje belli kordinat
+sisteminde spesifik bir yerde, ama biz bir <code>offset</code> parametresi
+üzerinden bu kordinata ekleme, çıkartmalar yaparak yeni bir prizmayı
+herhangi bir yerde dünyaya yerleştirebiliriz. Şimdi objemizi temsil
+eden sınıfı yaratalım ve üç tane farklı yerlerde cisim yaratalım,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;randall&quot;</span><span class="p">)</span>
@@ -169,6 +186,15 @@ demektir, hızlı bir şekilde yapılabilir.</p>
 </code></pre>
 </div>
 
+<p>Dikkat edersek <code>STLObj</code> sınıfı <code>AABB.IAABB</code> arayüzünden kod mirası
+yapıyor, bu miras sayesinde ve onun <code>get_aabb</code> metotunu tanımladıktan
+sonra, bir <code>STLObj</code> program objesi artık AABB Ağacı ile aranabilir
+hale gelir. Burada kullanılan bir nesnesel temelli çok yüzlülük
+(polymorphism) [5] prensibidir, <code>AABB.py</code> kodu <code>AABB.IAABB</code>
+arayüzünden miras almış objelerle ilgilenir, bu objelerin bir
+<code>get_aabb</code> metotu tanımlı olduğu sürece onlar ağaç tarafından
+tanınır.</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="n">o1</span> <span class="o">=</span> <span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
 <span class="n">o2</span> <span class="o">=</span> <span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
@@ -186,6 +212,10 @@ demektir, hızlı bir şekilde yapılabilir.</p>
 </div>
 
 <p><img src="coll_02.jpg" alt="" /></p>
+
+<p>Biz kabaca bakarak iki tane obje arasında çarpışma olduğunu
+görebiliyoruz.  O zaman ağaca sorduğumuzda bize bir ve ikinci objeler
+arasında potansiyel (detaylı) çarpışma var demelidir.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -210,6 +240,9 @@ Sonuçlar:
 </code></pre>
 </div>
 
+<p>Hakikaten çarpışma bulundu. Objeler etrafındaki AABB kutularını da
+grafiklersek görsel olarak durum daha açık hale gelir.</p>
+
 <div class="codehilite">
 <pre><span></span><code><span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>        
 <span class="n">o1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o1</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
@@ -225,7 +258,13 @@ Sonuçlar:
 
 <p><img src="coll_03.jpg" alt="" /></p>
 
-<h3>Nihai Cakisma, Animasyon</h3>
+<h3>Nihai Kod, Animasyon</h3>
+
+<p>Şimdi ikinci kalemdeki kodlamaya gelelim, ve tüm fikirleri bir araya
+koyarak içinde objelerin hareket ettiği bir anımasyon
+yaratalım. Objeleri hareket ettirmek kolay, her obje için bir yön
+vektörü tanımlarız, ve her objenin <code>offset</code> değerine bu yön çarpı bir
+sabit ekleyerek objenin o yöne gitmesini sağlarız.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;randall&quot;</span><span class="p">)</span>
@@ -306,8 +345,8 @@ Sonuçlar:
 <div class="codehilite">
 <pre><span></span><code><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span> <span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">)</span>
 
-<span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
-<span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span> <span class="c1"># baslangıç offset değerleri</span>
+<span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="c1"># gidiş yönleri</span>
 
 <span class="n">dirs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
 <span class="n">sobjs</span> <span class="o">=</span> <span class="p">[</span><span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">o</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">]</span>

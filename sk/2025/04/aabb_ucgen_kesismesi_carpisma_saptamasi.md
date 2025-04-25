@@ -449,7 +449,7 @@ Kaynaklar
 [4] Bayramlı, <a href="../../2020/08/stl-3d-cad.html">3D Baskıya Hazır CAD Tasarım Formatı, STL</a>
 
 [5] Bayramli, 
-    <a href="../../2000/10/nesnesel-programlama.html">Nesnesel Progralama</a>
+    <a href="../../2000/10/nesnesel-programlama.html">Nesnesel Programlama</a>
 
 [6] Bayramli, 
     <a href="https://www.dropbox.com/scl/fi/m0x1170yc8duo80c0592k/aabb1.gif?rlkey=08gwsgwiqnk09smpe6bbz2tpi&st=2s2voz8k&raw=1">Animasyon 1</a>

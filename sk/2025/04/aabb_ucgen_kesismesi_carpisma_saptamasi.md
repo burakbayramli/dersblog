@@ -402,13 +402,13 @@ yapmak anlamına gelecektir. Ağaç araması (ve elemesi) ile bu yükten
 kurtulmuş olduk.
 
 Ayrıca objeler hareket ettikten sonra yapılan `update_object`
-çağrısına dikkat. Bu çağrı ile objenin yeri AABB Ağaçı içinde
-güncellenmiş oldu. Kullandığımızın AABB Ağaç kodunu seçmemizin bir
+çağrısına dikkat. Bu çağrı ile objenin yeri AABB Ağacı içinde
+güncellenmiş oldu. Kullandığımız AABB Ağaç kodunu seçmemizin bir
 sebebi bu tür güncellemeye izin vermesiydi, eğer güncelleme mümkün
 değilse ya da hızlı bir şekilde yapılamıyorsa obje yerlerini
 indisleyen bu yaklaşımı kullanmak anlamsız olurdu. Yüzlerce objenin
-olduğu bir anımasyon düşünsek her karede her seferinde ağaçı silbaştan
-yaratmak performanta düşüşe sebep olacaktı. 
+olduğu bir anımasyon düşünsek her karede her seferinde ağacı silbaştan
+yaratmak performanta düşüşe sebep olacaktı.
 
 Not
 
@@ -459,4 +459,7 @@ Kaynaklar
 
 [8] Bayramli, 
     <a href="https://www.dropbox.com/scl/fi/seuqx5hrgfhyhfxpzohyp/aabb3.gif?rlkey=hae5dr0ukfm7e47vcnwkprk20&st=0i47cieb&raw=1">Animasyon 3</a>
+
+
+
 

@@ -211,7 +211,7 @@ plt.savefig('coll_03.jpg')
 
 ![](coll_03.jpg)
 
-### Nihai Kod, Animasyon
+### Detaylı Saptama
 
 Şimdi ikinci kalemdeki kodlamaya gelelim, ve tüm fikirleri bir araya
 koyarak içinde objelerin hareket ettiği bir animasyon
@@ -315,7 +315,7 @@ plt.savefig('coll_04.jpg')
 
 ![](coll_04.jpg)
 
-Animasyon kodunu yazabiliriz.
+### Animasyon
 
 ```python
 def run_animation(offsets, dirs, azim):

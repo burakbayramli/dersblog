@@ -299,8 +299,25 @@ class STLObj(AABB.IAABB):
         return AABB.AABB(x,y,z,w,h,d)
 ```
 
-```python
+Üçgenlerin AABB kutusunu da çizelim, nasıl gözüktüğü belli olsun,
+altta görüldüğü gibi tek kutu yok, üçgenleri kapsayan birkaç tane kutu
+var.
 
+```python
+ax = a3.Axes3D(plt.figure())        
+o1.plot(ax)
+for tri in o1.get_aabb_triangles(): tri.plot(ax)
+ax.set_xlim(50,65);ax.set_ylim(0,20); ax.set_zlim(-20,10)
+ax.set_xlabel("x axis");ax.set_ylabel("y axis");ax.set_zlabel("z axis")
+ax.view_init(elev=21, azim=200)
+plt.savefig('coll_04.jpg')
+```
+
+![](coll_04.jpg)
+
+Animasyon kodunu yazabiliriz.
+
+```python
 def run_animation(offsets, dirs, azim):
     if not os.path.exists("/tmp/coll"): os.mkdir ("/tmp/coll")
 
@@ -383,6 +400,15 @@ mesela [4] yazısında görülen pervane cisminin yüzeyinde 1000'den fazla
 yaptığımızı düşünelim, bu 1000 x 1000, yine bir milyondan fazla hesap
 yapmak anlamına gelecektir. Ağaç araması (ve elemesi) ile bu yükten
 kurtulmuş olduk.
+
+Ayrıca objeler hareket ettikten sonra yapılan `update_object`
+çağrısına dikkat. Bu çağrı ile objenin yeri AABB Ağaçı içinde
+güncellenmiş oldu. Kullandığımızın AABB Ağaç kodunu seçmemizin bir
+sebebi bu tür güncellemeye izin vermesiydi, eğer güncelleme mümkün
+değilse ya da hızlı bir şekilde yapılamıyorsa obje yerlerini
+indisleyen bu yaklaşımı kullanmak anlamsız olurdu. Yüzlerce objenin
+olduğu bir anımasyon düşünsek her karede her seferinde ağaçı silbaştan
+yaratmak performanta düşüşe sebep olacaktı. 
 
 Not
 

@@ -43,7 +43,7 @@ teknikle göstereceğiz. Bulmak istediğimiz $\vec{n}$ etrafında $\theta$ dön�
 yaptıracak bir matris, yani öyle bir matris $R(\vec{n},\theta)$ arıyoruz ki bu
 matrisle $\vec{v}$ vektörünü sağdan çarpınca $\vec{v}'$ elde edilecek ve bu yeni
 vektör $\vec{v}$ vektörünün $\vec{n}$ etrafında $\theta$ kadar dönmüş hali
-olacak [1, sf. 142],</p>
+olacak [1, sf. 142]. Yazının geri kalanında $\vec{v} = v$, $\vec{n} = n$.. </p>
 <p>$$
 v' = v R(n,\theta)
 $$</p>
@@ -76,15 +76,84 @@ döndürerek elde edilebilir. Bu dönüşün formülünün</p>
 <p>$$
 v'_\perp = \cos \theta v</em>\perp + \sin \theta w
 $$</p>
-<p>olduğunu biliyoruz (ispatı altta),</p>
+<p>olduğunu biliyoruz (ispatı bu anlatım ardından paylaşılıyor).</p>
+<p>Şimdi eldeki formüllere bakalım:</p>
+<p>$$
+v_\parallel = (v \cdot n) n
+$$</p>
+<p>$$
+v_\perp = v - v_\parallel
+$$</p>
+<p>$$
+= v - (v \cdot n) n
+$$</p>
+<p>$$
+w = n \times v_\perp
+$$</p>
+<p>$$
+= n \times (v - v_\parallel)
+$$</p>
+<p>$$
+= n \times v - n \times v_\parallel
+$$</p>
+<p>$n$ ve $v_\parallel$ birbirine paralel olduğu için çapraz çarpımları sıfırdır,</p>
+<p>$$
+= n \times v - 0 
+$$</p>
+<p>$$
+w = n \times v
+$$</p>
+<p>$$
+v'_\perp = \cos \theta v</em>\perp + \sin \theta w
+$$</p>
+<p>$$
+= \cos \theta (v - (v \cdot n) n) + \sin \theta (n \times v)
+$$</p>
+<p>Üstteki değeri $v'$ formülü içine sokalım,</p>
+<p>$$
+v' = v'_\perp + v</em>\parallel
+$$</p>
+<p>$$
+v' = \cos \theta (v - (v \cdot n) n) + \sin \theta (n \times v) + (v \cdot n) n
+$$</p>
+<pre><code class="python">import sys; sys.path.append('../phy_072_rot')
+from mpl_toolkits.mplot3d import Axes3D
+import plot3d
+
+def rotate(v, n, theta):
+    return np.cos(theta) * ( v - np.dot(v,n) ) + \
+           np.sin(theta)* np.cross(n,v) + \
+           np.dot(v,n)*n
+
+o1 = np.array([5,5,5])
+v1 = np.array([3,3,3])
+n1 = np.array([-1/3.,2/3.,2/3.])
+
+theta = np.deg2rad(20)
+
+v1r = rotate(v1, n1, theta)
+
+fig = plt.figure()
+ax = Axes3D(fig)
+plot3d.plot_vector(fig, o1, v1)
+plot3d.plot_vector(fig, o1, v1r, 'cyan')
+plot3d.plot_vector(fig, o1, 3*np.array(n1), 'red')
+plot3d.plot_plane(ax, o1, n1, size=3)
+ax.view_init(elev=40., azim=10)
+plt.savefig('phy_073_rot_01.jpg')
+</code></pre>
+
+<p><img alt="" src="phy_073_rot_01.jpg" /></p>
 <p>Teori</p>
-<p>2D düzlemde, A vektörünün $\theta$ açısı kadar döndürülmesi $Y = \cos \theta A +
-\sin \theta B$ vektörünü verir (üstteki problemde $A = v_\perp$, $B = w$).</p>
+<p>3D A,B vektörleri birbirine dikgen ve bir 2D uzay yaratıyorlar, ki sanki A
+vektörü $x$ ekseni, B ise $y$ ekseni. A vektörünün $\theta$ açısı kadar
+döndürülmesi $Y = \cos \theta A + \sin \theta B$ vektörünü verir (üstteki
+problemde $A = v_\perp$, $B = w$).</p>
 <p>İspat</p>
-<p>A ve B'nin 3D uzayında 2D bir düzlemi kapsayan iki dikgen vektör olduğunu
-varsayalım. A ve B'yi bu 2D düzlem için baz vektörleri olarak düşünebiliriz. A
-ve B tarafından kapsanan düzlemdeki herhangi bir X vektörü, A ve B'nin bir
-doğrusal birleşimi olarak ifade edilebilir:</p>
+<p>A ve B 3D uzayında bir 2D düzlemi kapsayan iki dikgen vektör ise, A ve B'yi bu
+2D düzlem için baz vektörleri olarak düşünebiliriz. A ve B tarafından kapsanan
+düzlemdeki herhangi bir X vektörü, A ve B'nin bir doğrusal birleşimi olarak
+ifade edilebilir:</p>
 <p>$X = x_A A + x_B B$</p>
 <p>Burada, $x_A$ ve $x_B$, X'in A ve B doğrultularındaki bileşenleridir.</p>
 <p>A vektörü için, {A, B} bazındaki temsili, A doğrultusundaki bileşenin

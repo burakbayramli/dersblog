@@ -252,6 +252,29 @@ plt.savefig('phy_073_rot_03.jpg')
 </code></pre>
 
 <p><img alt="" src="phy_073_rot_03.jpg" /></p>
+<p>Farklı bir açıdan daha bakalım, bazen kamera bakış yönüne göre sonuç tam
+belli olmayabiliyor. Etrafında dönüş yapılan $n$ vektörü direk $y$ eksenine
+bakıyor olsun, kamerayı o yöne koyalım ve 90 derece dönüş yapalım,</p>
+<pre><code class="python">o1 = (5.0,5.0,5.0)
+v1 = (3.0,3.0,3.0)
+n1 = (0, 1, 0)
+
+theta = np.deg2rad(90)
+
+r1 = axisangle_to_q(n1, theta)
+v1r = rotate(r1, v1)
+
+fig = plt.figure()
+ax = Axes3D(fig)
+plot3d.plot_vector(fig, o1, v1)
+plot3d.plot_vector(fig, o1, v1r, 'cyan')
+plot3d.plot_vector(fig, o1, 3*np.array(n1), 'red')
+plot3d.plot_plane(ax, o1, n1, size=3)
+ax.view_init(elev=0., azim=90)
+plt.savefig('phy_073_rot_04.jpg')
+</code></pre>
+
+<p><img alt="" src="phy_073_rot_04.jpg" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Dunn, <em>3D Math Primer for Graphics and Game Development</em></p>

@@ -115,6 +115,23 @@ v' = v'_\perp + v</em>\parallel
 $$</p>
 <p>$$
 v' = \cos \theta (v - (v \cdot n) n) + \sin \theta (n \times v) + (v \cdot n) n
+\qquad (1)
+$$</p>
+<p>Eğer (1) formülünü matris formunda göstermek istiyorsak, baz vektörleri
+$[\begin{array}{ccc} 1 &amp; 0 &amp; 0 \end{array}]^T$,
+$[\begin{array}{ccc} 0 &amp; 1 &amp; 0 \end{array}]^T$,
+$[\begin{array}{ccc} 0 &amp; 0 &amp; 1 \end{array}]^T$ teker teker (1) ile çarpıp
+sonuçları bir diğer 3 x 3 matrisin kolonlarına yazabiliriz [1, sf. 143][1, sf. 757], 
+böylece alttaki matrisi elde ederiz,</p>
+<p>$$
+\scriptsize
+R(n,\theta) =
+\left[\begin{array}{ccc}
+n_x^2(1-\cos\theta)+\cos\theta &amp; n_x n_y (1-\cos\theta)+n_x \sin\theta &amp; n_x n_z (1-\cos\theta)-n_x\sin\theta\\
+n_x n_y (1-\cos\theta)-n_z\sin\theta &amp; n_y^2(1-\cos\theta)+\cos\theta &amp; n_y n_z (1-\cos\theta)n_x\sin\theta\\
+n_x n_z (1-\cos\theta)+n_y \sin\theta &amp; n_y n_z (1-\cos\theta)-n_x \sin\theta &amp; n_z^2 (1-\cos\theta)+\cos\theta
+\end{array}\right]
+\qquad (2)
 $$</p>
 <pre><code class="python">import sys; sys.path.append('../phy_072_rot')
 from mpl_toolkits.mplot3d import Axes3D
@@ -223,7 +240,6 @@ jk = -kj = i
 $$</p>
 <p>$$
 ki = -ik = j
-\qquad (1)
 $$</p>
 <p>Üsttekiler Hamilton'un kurallları adı veriliyor.</p>
 <p>Eşlenik (conjugate) hesabı bir $q$ için $q^{\ast}$ olarak gösterilir, hayali
@@ -282,7 +298,7 @@ $$</p>
 <p>$$
 p' = q p q^{-1}
 $$</p>
-<p>Kod üzerinde görelim,</p>
+<p>Kod üzerinde görelim [3],</p>
 <pre><code class="python">import math
 
 def q_mult(q1, q2):
@@ -366,9 +382,86 @@ plt.savefig('phy_073_rot_04.jpg')
 </code></pre>
 
 <p><img alt="" src="phy_073_rot_04.jpg" /></p>
-<p>Türetim </p>
-<p>[1, sf. 281],</p>
-<p>[devam edecek]</p>
+<p>Kuaterniyon hesabının rotasyon yaptığının belki de bir diğer ispatı $q v q^{-1}$
+hesabını (2) formundaki rotasyon matrisı formatında gösterebilmek. (2)
+matrisindeki her hücreyi teker teker alıp onu $n_x,n_y,n_z,\theta$
+değişkenlerinden $w,x,y,z$ kuaterniyon değişkenlerine tercüme edebilirek, ve bu
+matrisin döndürme yaptığını görürsek bir tür ispat elde etmiş olabiliriz,
+detaylar için [1,sf. 282].</p>
+<p>Farkli Teorik Yaklasim</p>
+<p>Buraya kadar guzel, fakat Hamilton'un sundugu sekildeki teoride bazi bosluklar
+var, mesela $ijk = -1$ onkabulu biraz zorlanmis gibi geliyor, daha dogrusu
+rasgele (arbitrary) secilmis gibi. Bir sey denenmis ve isledigi gorulunce
+kullanilmaya devam edilmis. Fakat bir onkabul olsa da bu ifadenin, ve ek hayali
+sayilar $j,k$ secimlerinin daha baz bir temelden geliyor olmalari iyi olurdu.</p>
+<p>[5] bağlantısında bu tür yaklaşımlar görüyoruz. Bunlardan der ki $i,j,k$ aslında
+$\mathbb{R}^4$ uzayında birer <em>bazdır</em>,</p>
+<p>$$
+i = \left[\begin{array}{cccc}
+0 &amp; 1 &amp; 0 &amp; 0 \\ -1 &amp; 0 &amp; 0 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1\\ 0 &amp; 0 &amp; -1 &amp; 0 
+\end{array}\right], \quad 
+j = \left[\begin{array}{cccc}
+0 &amp; 0 &amp; 0 &amp; -1 \\ 0 &amp; 0 &amp; -1 &amp; 0 \\ 0 &amp; 1 &amp; 0 &amp; 0\\ 1 &amp; 0 &amp; 0 &amp; 0 
+\end{array}\right], \quad
+k = \left[\begin{array}{cccc}
+0 &amp; 0 &amp; -1 &amp; 0 \\ 0 &amp; 0 &amp; 0 &amp; 1 \\ 1 &amp; 0 &amp; 0 &amp; 0\\ 0 &amp; -1 &amp; 0 &amp; 0 
+\end{array}\right]
+$$</p>
+<p>Ve Hamilton kuralları bu baz üzerinden hesaplanabilir,</p>
+<pre><code class="python">i = np.array([[0,1,0,0],[-1,0,0,0],[0,0,0,1],[0,0,-1,0]])
+j = np.array([[0,0,0,-1],[0,0,-1,0],[0,1,0,0],[1,0,0,0]])
+k = np.array([[0,0,-1,0],[0,0,0,1],[1,0,0,0],[0,-1,0,0]])
+</code></pre>
+
+<pre><code class="python">np.dot(i,i)
+</code></pre>
+
+<pre><code>Out[1]: 
+array([[-1,  0,  0,  0],
+       [ 0, -1,  0,  0],
+       [ 0,  0, -1,  0],
+       [ 0,  0,  0, -1]])
+</code></pre>
+
+<pre><code class="python">np.dot(j,j)
+</code></pre>
+
+<pre><code>Out[1]: 
+array([[-1,  0,  0,  0],
+       [ 0, -1,  0,  0],
+       [ 0,  0, -1,  0],
+       [ 0,  0,  0, -1]])
+</code></pre>
+
+<pre><code class="python">np.dot(k,k)
+</code></pre>
+
+<pre><code>Out[1]: 
+array([[-1,  0,  0,  0],
+       [ 0, -1,  0,  0],
+       [ 0,  0, -1,  0],
+       [ 0,  0,  0, -1]])
+</code></pre>
+
+<pre><code class="python">i.dot(j).dot(k)
+</code></pre>
+
+<pre><code>Out[1]: 
+array([[-1,  0,  0,  0],
+       [ 0, -1,  0,  0],
+       [ 0,  0, -1,  0],
+       [ 0,  0,  0, -1]])
+</code></pre>
+
+<p>Bu yaklaşım rasgele bir $ijk=-1$ seçiminden ziyade problemi bir baz seçimi
+haline dönüştürüyor, ki Lineer Cebir'de baz seçimi her zaman yapılır, bir
+transformasyon olduğunda "yeni baz nedir?" diye sorarız, bu daha anlaşılır
+bir kavramdır.</p>
+<p>[1, sf. 264]'te kuaterniyon ve matris cebiri bağlantısı daha ileri götürülüyor,
+ve niye $\theta$ yerine $\theta / 2$ kullanılmış olabileceği açıklanıyor.  Bu
+açıklamaya göre hiç kuaterniyon cebirine girmeden direk kuaterniyon sayılarına
+tekabül eden matrisler ile temel lineer cebir işlemleri yaparak aynı sonuca
+erişmek mümkündür.</p>
 <p>Kaynaklar</p>
 <p>[1] Dunn, <em>3D Math Primer for Graphics and Game Development</em></p>
 <p>[2] Bayramlı, <em>Lineer Cebir - Giriş</em></p>

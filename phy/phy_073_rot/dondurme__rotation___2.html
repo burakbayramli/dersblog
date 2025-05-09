@@ -186,8 +186,103 @@ verdiğini kanıtlar. Bu, bir 2D Kartezyen düzlemde x eksenindeki $(1,
 0)$ vektörünün $\theta$ kadar döndürüldüğünde $(\cos \theta, \sin
 \theta)$'ye dönmesiyle benzerdir. A ve B vektörleri, 3D uzayında bu 2D
 dönüşüm için eksenleri sağlar.</p>
+<p>%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</p>
 <p>Dörtlü Grup / Kuaterniyon (Quaternions)</p>
-<p>Turetim [1, sf. 281]</p>
+<p>Bir vektörü, fiziksel objeyi döndürmek için çok faydalı bir diğer kavram
+kuaterniyon kavramı.  Kuaterniyon matematiği hayali (imaginery, complex)
+sayıları baz alan bir cebir sistemidir, William Hamilton tarafından
+keşfedilmiştir. Bir kuaterniyon sayı dört reel sayı ve üç tane hayali sayı
+içerir,</p>
+<p>$$
+q = [\begin{array}{cccc} w &amp; x &amp; y &amp; z \end{array}]
+$$</p>
+<p>olarak yazılabilir, ki son üç sayı hayalidir, ya da</p>
+<p>$$
+q = w + i x + j y + k z
+$$</p>
+<p>Görüldüğü gibi bu cebirin olabilmesi için sadece $i$ değil, ek olarak $j,k$
+hayali sayıları sisteme ekleniyor, ve önkabul olarak şu ifade ileri sürülüyor
+[1, sf. 247],</p>
+<p>$$
+i^2 = j^2 = k^2 = ijk = -1
+$$</p>
+<p>Üstteki ifadelerden geri kalan eşitlikler türetilebilir [4, sf. 170], mesela</p>
+<p>$$
+ijk = -1 = k^2 \Rightarrow ij = k
+$$</p>
+<p>Ayrıca $ij = -ji$, yani sırabağımsızlık yoktur.</p>
+<p>Tüm önverili ve türetilmiş ifadeleri biraraya koyarsak,</p>
+<p>$$
+i^2 = j^2 = k^2 = ijk = -1
+$$</p>
+<p>$$
+ij = -ji = k
+$$</p>
+<p>$$
+jk = -kj = i
+$$</p>
+<p>$$
+ki = -ik = j
+\qquad (1)
+$$</p>
+<p>Üsttekiler Hamilton'un kurallları adı veriliyor.</p>
+<p>Eşlenik (conjugate) hesabı bir $q$ için $q^{\ast}$ olarak gösterilir, hayali
+olan kısmın negatiflenmesi ile elde edilir, yani</p>
+<p>$$
+q^{\ast} = [\begin{array}{cccc} w &amp; -x &amp; -y &amp; -z \end{array}]
+$$</p>
+<p>Tersi (inverse) işlemi ise eşleniğin büyüklüğe bölünmuş halidir,</p>
+<p>$$
+q^{-1} = \frac{q^{\ast}}{|| q ||}
+$$</p>
+<p>Kuaterniyon çarpımı mesela $q_1,q_2$ arasında, parantez içi dört sayının çarpım
+ve toplamsal açılımı yapılıp üstteki kurallar uygulanarak elde edilebilir
+[1, sf. 773],</p>
+<p>$$
+q_1 = w_1 + x_1 i + y_1 j + z_1 k
+$$</p>
+<p>$$
+q_2 = w_2 + x_2 i + y_2 j + z_2 k 
+$$</p>
+<p>\begin{eqnarray<em>}
+q_1 q_2 =
+w_1 w_2 + w_1 x_2 i + w_1 y_2 j + w_1 z_2 k + \\
+x_1 w_2 i + x_1 x_2 i^2 + x_1 y_2 ij x_1 z_2 ik + \\
+y_1 w_2 j + y_1 x_2 ji + y_1 y_2 j^2 + y_1 z_2 jk + \\
+z_1 w_2 k + z_1 x_2 ki + z_1 y_2 kj + z_1 z_2 k^2
+\end{eqnarray</em>}</p>
+<p>\begin{eqnarray<em>}
+= w_1 w_2 + w_1 x_2 i + w_1 y_2 j + w_1 z_2 k + \\
+x_1 w_2 i + x_1 x_2 (-1) + x_1 y_2 k + x_1 z_2 (-j) + \\
+y_1 w_2 j + y_1 x_2 (-k) y_1 y_2 (-1) + y_1 z_2 (i) + \\
+z_1 w_2 k + z_1 x_2 j + z_1 y_2 (-i) + z_1 z_2 (-1)
+\end{eqnarray</em>}</p>
+<p>Nihai çarpım denklemi</p>
+<p>\begin{eqnarray<em>}
+= w_1 w_2 - x_1 x_2 - y_1 y_2 - z_1 z_2 + \\
+(w_1 x_2 + x_1 w_2 + y_1 z_2 - z_1 y_2 + \\
+(w_1 y_2 + y_1 w_2 + z_1 x_2 - x_1 z_2) j + \\
+(w_1 z_2 + z_1 w_2 + x_1 y_2 - y_1 x_2) k
+\end{eqnarray</em>}</p>
+<p>Ve nihayet döndürme işleminin nasıl yapılacağına geliyoruz, $n$ vektörü
+etrafında bir $p$ noktasına $\theta$ dönüşü yaptırabilmek için bir su şekilde
+bir kuaterniyon yaratıyoruz,</p>
+<p>$$
+q = [\begin{array}{cccc}
+    \cos(\theta/2) &amp;
+    \sin(\theta/2) n_x &amp;
+    \sin(\theta/2) n_y &amp;
+    \sin(\theta/2) n_z \end{array}]
+$$</p>
+<p>$p$ noktasını skala değeri 0 olan bir diğer kuaterniyon olarak yazıyoruz,</p>
+<p>$$
+p = [\begin{array}{cccc} 0 &amp; p_x &amp; p_y &amp; p_z \end{array}]
+$$</p>
+<p>Ve şu şekilde bir çarpım yapıyoruz,</p>
+<p>$$
+p' = q p q^{-1}
+$$</p>
+<p>Kod üzerinde görelim,</p>
 <pre><code class="python">import math
 
 def q_mult(q1, q2):
@@ -257,7 +352,7 @@ n2 = (0, 1, 0)
 
 theta = np.deg2rad(90)
 
-r2 = axisangle_to_q(n1, theta)
+r2 = axisangle_to_q(n2, theta)
 v2r = rotate(r2, v2)
 
 fig = plt.figure()
@@ -271,12 +366,17 @@ plt.savefig('phy_073_rot_04.jpg')
 </code></pre>
 
 <p><img alt="" src="phy_073_rot_04.jpg" /></p>
+<p>Türetim </p>
+<p>[1, sf. 281],</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Dunn, <em>3D Math Primer for Graphics and Game Development</em></p>
 <p>[2] Bayramlı, <em>Lineer Cebir - Giriş</em></p>
 <p>[3] Stackoverflow,
     <a href="https://stackoverflow.com/questions/4870393/rotating-coordinate-system-via-a-quaternion/42180896#42180896">https://stackoverflow.com/questions/4870393/rotating-coordinate-system-via-a-quaternion/42180896#42180896</a></p>
+<p>[4] Millington, <em>Game Physics Engine Development</em></p>
+<p>[5] Wolfram Mathworld,
+    <a href="https://mathworld.wolfram.com/Quaternion.html">https://mathworld.wolfram.com/Quaternion.html</a></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

@@ -2,7 +2,7 @@
 
 [James Randall](aabb-randall.html) 
 
-Bir [oyun] dünyasına hareket eden obbjeler veya herhangi bir şey
+Bir [oyun] dünyasına hareket eden objeler veya herhangi bir şey
 eklediğiniz anda, çarpışmaları tespit etmeyi düşünmeye başlarsınız ve
 bunu verimli bir şekilde yapmak, farklı yaklaşımların farklı koşullar
 için az ya da çok optimal olmasıyla birlikte ilginç bir geliştirme

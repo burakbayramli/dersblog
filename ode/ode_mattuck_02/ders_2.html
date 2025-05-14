@@ -268,24 +268,24 @@ yüksek türevlerin yerine farklı $f$ hesaplarının bir şekilde ağırlıklar
 alarak aynı sonuç erişiyor [3, sf.282]. RK yönteminin hata payı Taylor yöntemine
 eşittir, daha doğrusu RK2 ikinci derece sonrası terimleri atılmış Taylor
 yaklaşıksallamasına eşittir, RK4 aynı şekilde dördücü derece için.</p>
-<p>RK yaklaşımını direk Taylor serileriden türetmek mümkün, RK4 için gereken
+<p>RK yaklaşımını direk Taylor serilerinden türetmek mümkün, RK4 için gereken
 dördüncü derece ve üstü cebirsel türetim olarak oldukca çetrefilli, fakat bir
-fikir vermesi açısından RK2 türetimi burada göstereceğiz. </p>
+fikir vermesi açısından ikinci derece için gereken türetimi burada göstereceğiz.</p>
 <p>Yine Taylor serilerinden başlayalım, eldeki bir diferansiyel denklem</p>
 <p>$$
 y' = f(x,y)
 $$</p>
 <p>için [4, sf. 713],</p>
 <p>$$
-y_{i+1} = y_i + f(x_i,y_i) h + \frac{f'(x_i,y_i)}{2!} h^2 + O(h^3)
+y_{i+1} = y_i + f(x_i,y_i) h + \frac{f'(x_i,y_i)}{2!} h^2 + ...
 \qquad (1)
 $$</p>
 <p>ya da</p>
 <p>$$
-y_{i+1} = y_i + y'_i h + \frac{y"_i}{2!} h^2 + O(h^3)
+y_{i+1} = y_i + y'_i h + \frac{y_i"}{2!} h^2 + ..
 $$</p>
-<p>İkinci derece Runge-Kutta için deriz ki üstteki formüldeki $y_i$ sonrası
-$f$ bazında bir formül olacak, türev içermeyecek [4, sf. 730],</p>
+<p>olduğunu biliyoruz. İkinci derece Runge-Kutta için deriz ki üstteki formüldeki
+$y_i$ sonrası $f$ bazında bir formül olacak, türev içermeyecek [4, sf. 730],</p>
 <p>$$
 y_{i+1} = y_i + (a_1 k_1 + a_2 k_2) h
 \qquad (2)
@@ -319,17 +319,17 @@ $$</p>
 <p>$$
 f(x_i+p_1 h, y_i + q_{11}k_1h) = f(x_i,y_i) +
 p_1 h \frac{\partial f}{\partial x} +
-q_{11} k_1 h \frac{\partial f}{\partial y} + O(h^2)
+q_{11} k_1 h \frac{\partial f}{\partial y} + ...
 $$</p>
 <p>Bu ifadeyi (2) içindeki $k_2$'ye sokalım, $k_1$ tanımını da kullanalım, ve
 (2)'yi bu şekilde tekrar yazalım,</p>
 <p>$$
 y_{i+1} = y_i + a_1 h f(x_i,y_i) + a_2 h f(x_i,y_i) +
 a_2 p_1 h^2 \frac{\partial f}{\partial x} +
-a_2 q_{11} h^2 f(x_i,y_i) \frac{\partial f}{\partial y} + O(h^3)
+a_2 q_{11} h^2 f(x_i,y_i) \frac{\partial f}{\partial y} + ..
 $$</p>
 <p>$h$ ve $h^2$ bazlı terimleri toplayıp ayrı gruplar halinde yazarsak, ve
-$O(h^3)$ atalım,</p>
+nokta noktalı bölümü atalım,</p>
 <p>$$
 y_{i+1} = y_i + [a_1 f(x_i,y_i) + a_2 f(x_i,y_i)] h +
 \left[a_2 p_1 \frac{\partial f}{\partial x} +
@@ -348,11 +348,11 @@ $$</p>
 a_2 q_{11} = \frac{1}{2}
 $$</p>
 <p>Bu denklemleri çözersek ve sabitleri bulursak bize gereken türevsiz, $f$'nin
-ağırlıklanmış halini kullanarak çözüm yapabiliriz. Fakat bir problem var,
-elde 3 denklem ama 4 bilinmeyen var, özgün bir çözüm bulmak mümkün değil.
-Fakat eğer bir sabite bir değeri kendimiz atarsak, geri kalanları ona
-göre bulabiliriz. Diyelim ki $a_2 = 1/2$ dedik, o zaman $a_1 = 1/2$ ve
-$p_1 = q_{11} = 1$. Bu bize Heun metodu denen yaklaşımı verir,</p>
+ağırlıklanmış halini kullanarak çözüm yapabiliriz. Fakat bir problem var, elde 3
+denklem ama 4 bilinmeyen var, özgün bir çözüm bulmak mümkün değil. Şöyle bir
+çözüm olabilir, eğer bir sabite bir değeri kendimiz atarsak, geri kalanları ona
+göre bulabiliriz. Diyelim ki $a_2 = 1/2$ dedik, o zaman $a_1 = 1/2$ ve $p_1 =
+q_{11} = 1$. Bu bize Heun metodu denen yaklaşımı verir,</p>
 <p>$$
 y_{i+1} = y_i + \left( \frac{1}{2} k_1 + \frac{1}{2} k_2 \right) h
 $$</p>

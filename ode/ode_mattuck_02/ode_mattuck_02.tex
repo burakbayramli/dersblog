@@ -319,9 +319,9 @@ alarak aynı sonuç erişiyor [3, sf.282]. RK yönteminin hata payı Taylor yön
 eşittir, daha doğrusu RK2 ikinci derece sonrası terimleri atılmış Taylor
 yaklaşıksallamasına eşittir, RK4 aynı şekilde dördücü derece için.
 
-RK yaklaşımını direk Taylor serileriden türetmek mümkün, RK4 için gereken
+RK yaklaşımını direk Taylor serilerinden türetmek mümkün, RK4 için gereken
 dördüncü derece ve üstü cebirsel türetim olarak oldukca çetrefilli, fakat bir
-fikir vermesi açısından RK2 türetimi burada göstereceğiz. 
+fikir vermesi açısından ikinci derece için gereken türetimi burada göstereceğiz.
 
 Yine Taylor serilerinden başlayalım, eldeki bir diferansiyel denklem
 
@@ -332,18 +332,18 @@ $$
 için [4, sf. 713],
 
 $$
-y_{i+1} = y_i + f(x_i,y_i) h + \frac{f'(x_i,y_i)}{2!} h^2 + O(h^3)
+y_{i+1} = y_i + f(x_i,y_i) h + \frac{f'(x_i,y_i)}{2!} h^2 + ...
 \mlabel{1}
 $$
 
 ya da
 
 $$
-y_{i+1} = y_i + y'_i h + \frac{y''_i}{2!} h^2 + O(h^3)
+y_{i+1} = y_i + y'_i h + \frac{y_i''}{2!} h^2 + ..
 $$
 
-İkinci derece Runge-Kutta için deriz ki üstteki formüldeki $y_i$ sonrası
-$f$ bazında bir formül olacak, türev içermeyecek [4, sf. 730],
+olduğunu biliyoruz. İkinci derece Runge-Kutta için deriz ki üstteki formüldeki
+$y_i$ sonrası $f$ bazında bir formül olacak, türev içermeyecek [4, sf. 730],
 
 $$
 y_{i+1} = y_i + (a_1 k_1 + a_2 k_2) h
@@ -389,7 +389,7 @@ Uygulanırsa,
 $$
 f(x_i+p_1 h, y_i + q_{11}k_1h) = f(x_i,y_i) +
 p_1 h \frac{\partial f}{\partial x} +
-q_{11} k_1 h \frac{\partial f}{\partial y} + O(h^2)
+q_{11} k_1 h \frac{\partial f}{\partial y} + ...
 $$
 
 Bu ifadeyi (2) içindeki $k_2$'ye sokalım, $k_1$ tanımını da kullanalım, ve
@@ -398,11 +398,11 @@ Bu ifadeyi (2) içindeki $k_2$'ye sokalım, $k_1$ tanımını da kullanalım, ve
 $$
 y_{i+1} = y_i + a_1 h f(x_i,y_i) + a_2 h f(x_i,y_i) +
 a_2 p_1 h^2 \frac{\partial f}{\partial x} +
-a_2 q_{11} h^2 f(x_i,y_i) \frac{\partial f}{\partial y} + O(h^3)
+a_2 q_{11} h^2 f(x_i,y_i) \frac{\partial f}{\partial y} + ..
 $$
 
 $h$ ve $h^2$ bazlı terimleri toplayıp ayrı gruplar halinde yazarsak, ve
-$O(h^3)$ atalım,
+nokta noktalı bölümü atalım,
 
 $$
 y_{i+1} = y_i + [a_1 f(x_i,y_i) + a_2 f(x_i,y_i)] h +
@@ -427,11 +427,11 @@ a_2 q_{11} = \frac{1}{2}
 $$
 
 Bu denklemleri çözersek ve sabitleri bulursak bize gereken türevsiz, $f$'nin
-ağırlıklanmış halini kullanarak çözüm yapabiliriz. Fakat bir problem var,
-elde 3 denklem ama 4 bilinmeyen var, özgün bir çözüm bulmak mümkün değil.
-Fakat eğer bir sabite bir değeri kendimiz atarsak, geri kalanları ona
-göre bulabiliriz. Diyelim ki $a_2 = 1/2$ dedik, o zaman $a_1 = 1/2$ ve
-$p_1 = q_{11} = 1$. Bu bize Heun metodu denen yaklaşımı verir,
+ağırlıklanmış halini kullanarak çözüm yapabiliriz. Fakat bir problem var, elde 3
+denklem ama 4 bilinmeyen var, özgün bir çözüm bulmak mümkün değil. Şöyle bir
+çözüm olabilir, eğer bir sabite bir değeri kendimiz atarsak, geri kalanları ona
+göre bulabiliriz. Diyelim ki $a_2 = 1/2$ dedik, o zaman $a_1 = 1/2$ ve $p_1 =
+q_{11} = 1$. Bu bize Heun metodu denen yaklaşımı verir,
 
 $$
 y_{i+1} = y_i + \left( \frac{1}{2} k_1 + \frac{1}{2} k_2 \right) h

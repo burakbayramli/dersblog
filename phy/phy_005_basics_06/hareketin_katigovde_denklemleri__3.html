@@ -41,7 +41,7 @@
 kodlamasını detaylı şekilde anlamak gerekiyor. RK yaklaşımını [3]'te gördük.
 Şimdi Runge-Kutta dördüncü derece çözüm yaklaşımını bir örnekte görelim.</p>
 <p>Sarkaç Problemi</p>
-<p>Bağlantı noktasında sürtünme içerebilecek basit bir şarkaçın hareket denklemleri
+<p>Bağlantı noktasında sürtünme içerebilecek basit bir şarkacın hareket denklemleri
 [1, sf. 842],</p>
 <p>$$
 \ddot{\theta} + b\dot{\theta}  c\sin(\theta) = 0, \quad
@@ -76,7 +76,26 @@ $$</p>
 derste bir paket çağrısı olan <code>odeint</code> kullanılmıştı, bu paketin
 entegrasyonu nasıl yaptığından bahsedilmemişti. Şimdi daha detaylandıralım,
 <code>odeint</code> kodu iç mantığında dördünce derece Runge-Kutta çözümü kullanır,
-yani RK4 yaklaşımını.</p>
+yani RK4 yaklaşımını. RK4 formülleri [3]'te verilmişti, [1, sf. 803] üzerinden
+bir daha paylaşalım,</p>
+<p>$$
+k_1 = h f(t_i, y_i)
+$$</p>
+<p>$$
+k_2 = h f(t_i + h/2, y_i + k_1/2)
+$$</p>
+<p>$$
+k_3 = h f(t_i + h/2, y_i + k_2/2)
+$$</p>
+<p>$$
+k_4 = h f(t_i + h, y_i + k_3)
+$$</p>
+<p>$$
+y_{i+1} = y_i + (k_1 + 2 k_2 + 2 k_3 + k_4) / 6
+$$</p>
+<p>ki başlangıç değerleri $y_0 = (\theta_0,\dot{\theta}_0)$ olmak üzere. Çözmek
+istediğimiz sistemde sürtünme yok, yani $b=0$, geri kalan değerler $c=1$,
+$\theta_0=0.1$, $\dot{\theta}_0 = 1.0$.</p>
 <pre><code class="python">n = 256; theta0 = 0.1; dtheta0 = 1.0; h = 0.1; c = 1.0
 
 theta_values = np.zeros(n)
@@ -85,7 +104,7 @@ for i in range(n):
     K1theta = h * dtheta0
     K1dtheta = -h * c * np.sin(theta0)
     theta1 = theta0 + 0.5 * K1theta
-    dtheta1 = dtheta0 + 0.5 * K1dtheta
+    dtheta1 = dtheta0 + 0.5 * K1dtheta # b=0, bir terim yokoldu burada
     K2theta = h * dtheta1
     K2dtheta = -h * c * np.sin(theta1)
 
@@ -109,6 +128,10 @@ plt.savefig('phy_005_basics_06_01.jpg')
 </code></pre>
 
 <p><img alt="" src="phy_005_basics_06_01.jpg" /></p>
+<p>Çözümün üstteki grafiği şarkaçın (dikey eksene göre olan) açılarının zamana göre
+grafiğini gösteriyor. Metot stabil gözüküyor, açıda azalma ya da patlama olmadı,
+$b=0$ şartını koştuğumuz için bunun hesaba yansıması iyi oldu, sürtünme yoksa
+sönüm (damping) görülmemeliydi. </p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Eberly, <em>Game Physics 2nd Ed</em></p>

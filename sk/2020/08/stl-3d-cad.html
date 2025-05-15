@@ -215,7 +215,8 @@ döndürelim,</p>
 <span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">axes</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-<span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;../../../compscieng/compscieng_bpp32sim_rigbod/torus.stl&#39;</span><span class="p">)</span>
+<span class="n">ftor</span> <span class="o">=</span> <span class="s1">&#39;../../../phy/phy_005_basics_05/torus.stl&#39;</span>
+<span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">ftor</span><span class="p">)</span>
 <span class="n">axes</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">))</span>
 <span class="n">scale</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
 <span class="n">axes</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
@@ -230,37 +231,10 @@ döndürelim,</p>
 </code></pre>
 </div>
 
-<div class="codehilite">
-<pre><span></span><code>exception (0, &#39;Cannot read normals (2:b\&#39;?\\xcb\\xba\\r\\xbf%n\\x8e?\\xd5=i?k\\xa8v\\xbe&quot;\\x19\\x8b?\\xf5\\xc8c?\\x18y\\x96\\xbeq\\x84\\x82?\\xe5cw?\\x18y\\x96\\xbe\&#39;)&#39;)
-
-TypeErrorTraceback (most recent call last)
-&lt;ipython-input-1-375dba368e8e&gt; in &lt;module&gt;
-      6 fig = plt.figure()
-      7 axes = mplot3d.Axes3D(fig)
-----&gt; 8 your_mesh = mesh.Mesh.from_file(&#39;../../../compscieng/compscieng_bpp32sim_rigbod/torus.stl&#39;)
-      9 axes.add_collection3d(mplot3d.art3d.Poly3DCollection(your_mesh.vectors,alpha=0.3))
-     10 scale = your_mesh.points.flatten()
-
-~/Documents/env3/lib/python3.6/site-packages/stl/stl.py in from_file(cls, filename, calculate_normals, fh, mode, speedups, **kwargs)
-    394         return cls(
-    395             data, calculate_normals, name=name,
---&gt; 396             speedups=speedups, **kwargs
-    397         )
-    398 
-
-~/Documents/env3/lib/python3.6/site-packages/python_utils/logger.py in __new__(cls, *args, **kwargs)
-    100             cls.__get_name(cls.__module__, cls.__name__)
-    101         )
---&gt; 102         return super(Logged, cls).__new__(cls)
-
-TypeError: super(type, obj): obj must be an instance or subtype of type
-</code></pre>
-</div>
-
 <p><img src="torus-begin.png" alt="" /></p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;../../../phy/phy_005_basics_04/torus.stl&#39;</span><span class="p">)</span>
+<pre><span></span><code><span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">ftor</span><span class="p">)</span>
 <span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span> <span class="c1"># 90 derece x ekseni etrafinda dondur</span>
 <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
   <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>

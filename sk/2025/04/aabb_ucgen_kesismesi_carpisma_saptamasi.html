@@ -215,7 +215,7 @@ tanınır.</p>
 
 <p>Biz kabaca bakarak iki tane obje arasında çarpışma olduğunu
 görebiliyoruz.  O zaman ağaca sorduğumuzda bize bir ve ikinci objeler
-arasında potansiyel (detaylı) çarpışma var demelidir.</p>
+arasında potansiyel çarpışma var demelidir.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
@@ -258,15 +258,19 @@ grafiklersek görsel olarak durum daha açık hale gelir.</p>
 
 <p><img src="coll_03.jpg" alt="" /></p>
 
-<h3>Detaylı Saptama</h3>
+<h3>Daha Detaylı Saptama</h3>
 
 <p>Şimdi ikinci kalemdeki kodlamaya gelelim, ve tüm fikirleri bir araya
-koyarak içinde objelerin hareket ettiği bir animasyon
-yaratalım. Objeleri hareket ettirmek kolay, her obje için bir yön
-vektörü tanımlarız, ve her karede objenin <code>offset</code> değerine bu yön
-çarpı bir sabit değerini ekleyerek objenin o yöne gitmesini sağlarız.
-Ayrıca alttaki kodda yüzeyler arası çarpışma adayları gerektiği için
-AABB Ağacının bu parçaları indisleyebilmesi gerekir, bunun için bir
+koyarak içinde objelerin hareket ettiği bir animasyon yaratalım. Dikkat
+bu faz da hala 100% detaylı saptama yapmıyor, tüm objenin etrafındaki
+AABB kutusundan sonra objenin şimdi dış cephesindeki üçgenlerin AABB
+kutularını ek bir eleme için kullanıyor.</p>
+
+<p>Objeleri hareket ettirmek kolay, her obje için bir yön vektörü
+tanımlarız, ve her karede objenin <code>offset</code> değerine bu yön çarpı bir
+sabit değerini ekleyerek objenin o yöne gitmesini sağlarız.  Ayrıca
+alttaki kodda yüzeyler arası çarpışma adayları gerektiği için AABB
+Ağacının bu parçaları indisleyebilmesi gerekir, bunun için bir
 <code>Triangle</code> sınıfı yarattık, her prizma objesinin yüzeyini oluşturan 20
 tane üçgen objesi bu sınıftan yaratılıyor olacak. Bu sınıf aynen ana
 objelerde olduğu gibi <code>AABB.IAABB</code> arayüzünden miras alımı yapacak.</p>

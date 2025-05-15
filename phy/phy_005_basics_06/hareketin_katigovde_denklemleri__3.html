@@ -37,13 +37,47 @@
         <section id="main_content" class="inner">
         <h1>Hareketin Katı-Gövde Denklemleri - 3
 </h1></p>
-<p>Sarkac Problemi</p>
-<p>[1, sf. 842]</p>
-<pre><code class="python">n = 256
-theta0 = 0.1
-dtheta0 = 1.0
-h = 0.1
-c = 1.0
+<p>Bir diferansiyel denklemi entegre edebilmek için Runge-Kutta yaklaşımının
+kodlamasını detaylı şekilde anlamak gerekiyor. RK yaklaşımını [3]'te gördük.
+Şimdi Runge-Kutta dördüncü derece çözüm yaklaşımını bir örnekte görelim.</p>
+<p>Sarkaç Problemi</p>
+<p>Bağlantı noktasında sürtünme içerebilecek basit bir şarkaçın hareket denklemleri
+[1, sf. 842],</p>
+<p>$$
+\ddot{\theta} + b\dot{\theta}  c\sin(\theta) = 0, \quad
+t \ge 0, \theta(0)=\theta_0, \quad
+\dot{\theta} = \dot{\theta}_0
+\qquad (1)
+$$</p>
+<p>olarak verilebilir. Bu denklemi ODE sistemi ölarak çözmek için yeni değişken
+tanımları üzerinden onu iki parçaya ayırıyoruz,</p>
+<p>$$
+\vec{x} = x = \left[\begin{array}{ccc}
+x_1 \\ x_2
+\end{array}\right] = 
+\left[\begin{array}{c}
+\theta \\ \dot{\theta}
+\end{array}\right], \quad
+f(t,x) = \left[\begin{array}{c}
+\dot{\theta} \\ -b \dot{\theta} - c\sin\theta
+\end{array}\right]
+$$</p>
+<p>Bu tanimlarla $\dot{x}$ ifadesi
+$
+\dot{x} = \left[\begin{array}{c} \dot{\theta} \\ \ddot{\theta} \end{array}\right]
+$
+haline gelir,  ve $\dot{x} = f(t,x)$ matris denkleminde </p>
+<p>$$
+\left[\begin{array}{c} \dot{\theta} \\ \ddot{\theta} \end{array}\right]=
+\left[\begin{array}{c} \dot{\theta} \\ -b \dot{\theta} - c\sin\theta \end{array}\right]
+$$</p>
+<p>alt satıra odaklanırsak, orada (1) denklemine geri gidebileceğimizi görebiliriz.</p>
+<p>Sayısal çözüme gelirsek, benzer bir problemin çözümünü [2]'de işlemiştik.  O
+derste bir paket çağrısı olan <code>odeint</code> kullanılmıştı, bu paketin
+entegrasyonu nasıl yaptığından bahsedilmemişti. Şimdi daha detaylandıralım,
+<code>odeint</code> kodu iç mantığında dördünce derece Runge-Kutta çözümü kullanır,
+yani RK4 yaklaşımını.</p>
+<pre><code class="python">n = 256; theta0 = 0.1; dtheta0 = 1.0; h = 0.1; c = 1.0
 
 theta_values = np.zeros(n)
 
@@ -74,9 +108,12 @@ plt.plot(range(n), theta_values)
 plt.savefig('phy_005_basics_06_01.jpg')
 </code></pre>
 
+<p><img alt="" src="phy_005_basics_06_01.jpg" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Eberly, <em>Game Physics 2nd Ed</em></p>
+<p>[2] Bayramlı, <em>Gayrı-Lineer Dinamik ve Kaos Ders 1</em></p>
+<p>[3] Bayramlı, <em>Diferansiyel Denklemler Ders 2</em></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

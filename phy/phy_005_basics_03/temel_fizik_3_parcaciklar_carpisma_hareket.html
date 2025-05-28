@@ -189,10 +189,195 @@ $$</p>
 <p>O zaman belli bir alandaki basınç için o alan üzerinden entegral almak gerekir. </p>
 <p>Basıncın birimi $N / m^2$, şaşırtıcı olmasa gerek, kuvvet birimi
 Newton, ve alan birimi $m^2$.</p>
+<p>Simulasyon</p>
+<p>Önce basit bir simülasyon kodlayalım. Bazı toplar var, onları başta bir kuvvetle
+rasgele yönlere iteceğiz ve ne yapacaklarına bakacağız. Fiziksel parametreler
+şöyle, yerçekimi sabiti $g = 0.8$ (dünyadan daha az), topların birbirine ya da
+duvara çarpması sonucu hiç enerji kaybı olmuyor.</p>
+<p>Bu tür bir sistemin konumu, o anki hali her parçacık için bazı değişkenlerin
+takip edilmesiyle olacak, bu değişkenler pozisyon, hız, kuvvet. Kütle her
+parçacık için aynı olacak.</p>
+<p>Parçacık hareketi o parçacık üzerinde uygulanan kuvvet ile belirlenir, Newton
+denklemi $m \bar{a} = \bar{f}$, ki ivme ve kuvvet çok boyutlu dikkat edelim, o
+sebeple vektör notasyonu olarak üstte çizgi kullandık. Peki ivmeden, hiza ve yer
+değişikliğine nasıl gideriz? Newton formülünü bir ODE olarak tekrar düzenlersek
+onu ileri doğru entegre edebiliriz. Yer $\bar{x}$, hız $\bar{v}$ olmak üzere
+[9,10] ve her $i$ parçacığı için,</p>
+<p>$$
+\dot{\bar{v}}_i = \bar{f}_i / m_i
+$$</p>
+<p>$$
+\dot{\bar{x}}_i = \bar{v}_i
+$$</p>
+<p>Bu tür bir sistemi entegre etmek için Euler'in metotu kullanılabilir [5, sf 5],
+her $n$ anında bir sonraki $n+1$ değeri için</p>
+<p>$$
+\bar{x}^{n+1} = \bar{x}^n + h \bar{v}^n
+$$</p>
+<p>$$
+\bar{v}^{n+1} = \bar{v}^n + h \bar{a}^n
+$$</p>
+<p>ki $h$ ufak zaman aralığı olarak alınır, bir diğer isim $\Delta t$ olabilir,
+alttaki kodda <code>dt</code> . O zaman her zaman diliminde her parçacığa etki eden
+kuvvetler toplanır, bir nihai kuvvet vektörü elde edilir. Ardından üstteki
+formüllerle sistem her parçacık için entegre edilir ve bir sonraki sistem durumu
+elde edilir.</p>
+<p>Bu ilk sistemde bazı basitleştirmeler var; kuvvet uygulanma ve onun hıza
+dönüşmesine her koşulda bakmıyoruz, duvarlar ve parçacıklar arası etkileri direk
+hız üzerinde uyguluyoruz. Topların birbirine çarpma sonucu hız vektörlerinin
+hesabı [8]'te.</p>
+<p>Kodlama notu, çarpışma hesabı için her parçacığın diğer parçacığa yakınlık
+kontrolü pahalı olursa, daha fazla parçacık için mesela, bunun için böleç
+tekniği kullanılabilir [7].</p>
+<p>Genel grafik yöntemi şurada [1] işlendi.</p>
+<pre><code class="python"># convert -scale 30% /tmp/sim/*.png /tmp/balls6.gif
+from random import random
+from collections import defaultdict 
+import numpy as np, datetime
+import sys, numpy.linalg as lin
+from mayavi import mlab
+
+G = np.array([0.0, 0.0, -0.8])
+
+m = 0.1
+B = 8 # top
+
+EPS = 0.1
+BOUND_DAMPING = -0.6
+
+class Simulation:
+    def __init__(self):
+        self.r   = 0.2
+        self.rvec   = np.ones(B) * self.r
+        self.dt  = 0.1
+        self.balls = []
+        self.cor = 0.5
+        self.mmax =  2.0-self.r
+        self.mmin = 0.0+self.r
+
+    def init(self):
+        for b in range(B):
+            v = np.array([0.0, 0.0, 0.0])
+            p = np.array([np.random.rand(), np.random.rand(), np.random.rand()])
+            f = 5*np.array([np.random.rand(), np.random.rand(), np.random.rand()])
+            self.balls.append({'x':p, 'f':f, 'v': v, 'i': b})
+
+
+    def computeForces(self, i):
+        if (i==0):
+            for j,b in enumerate(self.balls):
+                b['f'] = b['f'] + (G * m)
+        else: 
+            for b in self.balls:
+                b['f'] = G * m
+
+    def integrate(self):
+
+        for j,p in enumerate(self.balls):
+            p['v'] += self.dt*(p['f']/m)
+            p['x'] += self.dt*p['v']
+
+            if p['x'][0]-EPS &lt; 0:
+                p['v'][0] *= BOUND_DAMPING
+                p['x'][0] = 0
+            if p['x'][0]+EPS &gt; 2.0:
+                p['v'][0] *= BOUND_DAMPING
+                p['x'][0] = 2.0-EPS
+
+            if p['x'][1]-EPS &lt; 0:
+                p['v'][1] *= BOUND_DAMPING
+                p['x'][1] = 0
+            if p['x'][1]+EPS &gt; 2.0:
+                p['v'][1] *= BOUND_DAMPING
+                p['x'][1] = 2.0-EPS
+
+            if p['x'][2]-EPS &lt; 0:
+                p['v'][2] *= BOUND_DAMPING
+                p['x'][2] = 0
+            if p['x'][2]+EPS &gt; 2.0:
+                p['v'][2] *= BOUND_DAMPING
+                p['x'][2] = 2.0-EPS
+
+
+        vDone = {}
+        for j,b in enumerate(self.balls):
+            for other in self.balls:
+                if (other['i'] != b['i'] and b['i'] not in vDone and other['i'] not in vDone):
+                    dist = lin.norm(other['x']-b['x'])
+                    if (dist &lt; (2*self.r)):
+                        #print ('collision')
+                        vrel = b['v']-other['v']
+                        n = (other['x']-b['x']) / dist
+                        vnorm = np.dot(vrel,n)*n
+                        #print (vnorm)
+                        b['v'] = b['v'] - vnorm
+                        other['v'] = other['v'] + vnorm                            
+                        vDone[b['i']] = 1
+                        vDone[other['i']] = 1
+
+
+
+    def update(self,i):
+        self.computeForces(i)
+        self.integrate()
+
+    def display(self, i):
+        mlab.options.offscreen = True
+        ball_vect = [[b['x'][0],b['x'][1],b['x'][2]] for b in self.balls]
+        ball_vect = np.array(ball_vect)
+
+        fig = mlab.figure(figure=None, fgcolor=(0., 0., 0.), bgcolor=(1, 1, 1), engine=None)
+        color=(0.2, 0.4, 0.5)
+        mlab.points3d(ball_vect[:,0], ball_vect[:,1], ball_vect[:,2], self.rvec, color=color, colormap = 'gnuplot', scale_factor=1, figure=fig)
+        mlab.points3d(0, 0, 0, 0.1, color=(1,0,0), scale_factor=1.0)
+
+        BS = 2.0
+        mlab.plot3d([0.0,0.0],[0.0, 0.0],[0.0, BS], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([0.0,BS],[0.0, 0.0],[0.0, 0.0], color=(1,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([0.0,0.0],[0.0, BS],[0.0, 0.0], color=(0,1,0), tube_radius=None, figure=fig)
+        mlab.plot3d([0.0,0.0],[0.0, BS],[BS, BS], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([0.0,BS],[0.0,0.0],[BS,BS], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([BS,BS],[0.0,BS],[BS,BS], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([BS,0],[BS,BS],[BS,BS], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([0,0],[BS,BS],[BS,0], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([BS,BS],[0.0,0.0],[0.0,BS], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([BS,BS],[0.0,BS],[0.0,0.0], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([BS,0.0],[BS,BS],[0.0,0.0], color=(0,0,0), tube_radius=None, figure=fig)
+        mlab.plot3d([BS,BS],[BS,BS],[0.0,BS], color=(0,0,0), tube_radius=None, figure=fig)
+
+        mlab.view(azimuth=50, elevation=80, focalpoint=[1, 1, 1], distance=8.0, figure=fig)
+
+        mlab.savefig(filename='/tmp/sim/out-%02d.png' % i)
+        #exit()
+
+if __name__ == '__main__':
+    s = Simulation()
+    s.init()
+    for i in range(40):
+        s.update(i)
+        s.display(i)
+        #exit()
+</code></pre>
+
+<p><img alt="" src="glutout-140.png" />
+<img alt="" src="glutout-390.png" /></p>
+<p>Tüm resimleri birleştirirsek,</p>
+<pre><code class="python">! convert -scale 30% /tmp/glutout-*.png /tmp/balls1.gif
+</code></pre>
+
+<p>Sonuç [2]'de görülebilir.</p>
 <p>Kaynaklar</p>
+<p>[1] Bayramlı, <em>OpenGL, PyOpenGL</em>, <a href="https://burakbayramli.github.io/dersblog/sk/2020/08/pyopengl.html">https://burakbayramli.github.io/dersblog/sk/2020/08/pyopengl.html</a></p>
+<p>[2] Bayramlı, <em>Simulasyon 1 Animasyon</em>,
+    <a href="https://www.dropbox.com/scl/fi/0hfn6b7wltqfs9hf68uxv/balls1.gif?rlkey=m6atp3r1mx89v10u0adcum4wx&st=e4uvvrv1&raw=1">https://www.dropbox.com/scl/fi/0hfn6b7wltqfs9hf68uxv/balls1.gif?rlkey=m6atp3r1mx89v10u0adcum4wx&amp;st=e4uvvrv1&amp;raw=1</a></p>
 <p>[3] Wikipedia, <em>Elastic collision</em>, <a href="https://en.wikipedia.org/wiki/Elastic_collision">https://en.wikipedia.org/wiki/Elastic_collision</a></p>
 <p>[4] Masson, <em>Elastic Collisions in 3D</em>, <a href="https://exploratoria.github.io/exhibits/mechanics/elastic-collisions-in-3d/index.html">https://exploratoria.github.io/exhibits/mechanics/elastic-collisions-in-3d/index.html</a></p>
 <p>[6] Levi, <em>Classical Mechanics with Calculus of Variations and Optimal Control</em></p>
+<p>[7] Bayramlı, <em>Bilgisayar Bilim, Geometrik Anahtarlama (Spatial Hashing) ve Izgara (Grid) ile En Yakın Noktaları Bulmak</em></p>
+<p>[8] Bayramlı, Fizik, <em>Temel Fizik 2, Dönüşler, Basınç, Çarpışma</em></p>
+<p>[9] Müller, <em>Fluid Simulation SIGGRAPH 2007 Course Notes</em>,</p>
+<p>[10] <em>Visual Interactive Simulation (Spring 15)</em>,
+    <a href="https://www8.cs.umu.se/kurser/5DV058/VT15/">https://www8.cs.umu.se/kurser/5DV058/VT15/</a></p>
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 
           <br/><a href="../index.html">Yukarı</a>

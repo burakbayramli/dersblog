@@ -188,6 +188,38 @@ kırmızı vektörü yansıtıyoruz, bu da lineer kuvvet oluyor. Bir üstteki re
 momentumu ekileyen faktörler, sonraki adımlarda etkileri yok.</p>
 <p>Başlangıç torku ve kuvvetin nasıl başlangıç hızına çevirilecebileceğini daha
 önceki derste gördük.</p>
+<p>Uygulanan kuvveti şöyle seçelim, STL objesi üzerindeki üçgenlerden birinin
+köşesini son nokta olarak alalım, uzayda herhangi bir noktası başlangıç
+noktası olarak alalım, ve ilk kuvvet bu vektör olsun.</p>
+<pre><code class="python">import numpy.linalg as lin
+from mpl_toolkits import mplot3d
+from stl import mesh
+
+mesh1 = mesh.Mesh.from_file('../../sk/2020/08/shapes/Prism_hexagon.stl')
+
+def plot_vector(fig, torig, tend, color='blue'):
+   ax = fig.gca(projection='3d')
+   v = tend - torig
+   ax.quiver(torig[0], torig[1], torig[2], v[0], v[1], v[2],color=color)
+   ax = fig.gca(projection='3d')  
+   return fig
+
+tidx = 7
+f0 = np.array([50,20,0])
+f1 = mesh1.vectors[tidx][0]
+
+figure = plt.figure()
+ax = mplot3d.Axes3D(figure)
+obj = mplot3d.art3d.Poly3DCollection(mesh1.vectors)
+obj.set_edgecolor('k')
+ax.add_collection3d(obj)
+plot_vector(figure, f0, f1)
+ax.set_xlim(30,70);ax.set_ylim(-10,30); ax.set_zlim(-10,30)
+ax.view_init(elev=21, azim=40)
+plt.savefig('phy_005_basics_06_01.jpg')
+</code></pre>
+
+<p><img alt="" src="phy_005_basics_06_01.jpg" /></p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Eberly, <em>Game Physics 2nd Ed</em></p>

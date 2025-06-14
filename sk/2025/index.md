@@ -16,3 +16,5 @@
 
 [Javascript ile Animasyon ThreeJS](04/threejs1.html)
 
+[Ubuntu 24 Acer](06/ubuntu-24-acer.html)
+

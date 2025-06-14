@@ -56,6 +56,8 @@
 
 [Tavsiye Sistemi](09/tavsiye-sistemi-anons.html)
 
+[Kümeleme (Clustering) ile Tavsiye Sistemi](09/tavsiye-sistemi-kumeleme-kmeans-movielens.html)
+
 [Hava Kirliliği, SILAM, AQI](11/hava-kirliligi-aqi-silam.html)
 
 [Leaflet ile Sınır Çizimi, Ukrayna](11/ukrayna-sinirlar-leaflet.html)

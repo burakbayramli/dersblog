@@ -1,110 +1,102 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Cizit Analizi (Graph Analysis)
-</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {inlineMath: [["$","$"]]}
-      });
-    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
-        cancel: ["Extension","cancel"],
-        bcancel: ["Extension","cancel"],
-        xcancel: ["Extension","cancel"],
-        cancelto: ["Extension","cancel"]
-      });
-    });
-    </script>
-   <script type="text/javascript"
-       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-   </script>
-   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  
+  
+  
+  
+</head>
+<body>
+<h1 id="cizit-analizi-graph-analysis">Cizit Analizi (Graph Analysis)</h1>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> networkx <span class="im">as</span> net
+<span class="im">import</span> networkx.generators.small
+g <span class="op">=</span> networkx.generators.small.krackhardt_kite_graph()
+<span class="bu">print</span> g.number_of_edges()
+net.draw(g,with_labels<span class="op">=</span><span class="va">True</span>)
+plt.savefig(<span class="st">&#39;net1.png&#39;</span>)</code></pre></div>
+<pre><code>18</code></pre>
+<div class="figure">
+<img src="net1.png" />
 
-<p><link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
-  </head>
-    <body>
-      <div id="header_wrap" class="outer">
-        <header class="inner">
-          <h1 id="project_title">
-            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
-          </h1>
-          <h2 id="project_tagline"></h2>        <br />
-        </header>
-      </div>
-      <div id="main_content_wrap" class="outer">      <br />
-        <section id="main_content" class="inner">
-        <h1>Cizit Analizi (Graph Analysis)
-</h1></p>
-<pre><code class="python">import networkx as net
-import networkx.generators.small
-g = networkx.generators.small.krackhardt_kite_graph()
-print g.number_of_edges()
-net.draw(g,with_labels=True)
-plt.savefig('net1.png')
-</code></pre>
-
-<pre><code>18
-</code></pre>
-
-<p><img alt="" src="net1.png" /></p>
-<pre><code class="python">print net.betweenness_centrality(g)
-</code></pre>
-
+</div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span> net.betweenness_centrality(g)</code></pre></div>
 <pre><code>{0: 0.023148148148148143, 1: 0.023148148148148143, 2: 0.0, 3:
 0.10185185185185183, 4: 0.0, 5: 0.23148148148148148, 6:
-0.23148148148148148, 7: 0.38888888888888884, 8: 0.2222222222222222, 9: 0.0} 
-</code></pre>
-
-<pre><code class="python">print net.pagerank(g)
-</code></pre>
-
+0.23148148148148148, 7: 0.38888888888888884, 8: 0.2222222222222222, 9: 0.0} </code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span> net.pagerank(g)</code></pre></div>
 <pre><code>{0: 0.10191966963648949, 1: 0.10191966963648949, 2: 0.07941791239513805, 3:
 0.14714751310196444, 4: 0.07941791239513805, 5: 0.12890718095072973, 6:
 0.12890718095072973, 7: 0.09524765350111204, 8: 0.08569580310655242, 9:
-0.05141950432565652} 
-</code></pre>
-
-<pre><code class="python">cliques = list(net.find_cliques(g))
-print cliques
-</code></pre>
-
+0.05141950432565652} </code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">cliques <span class="op">=</span> <span class="bu">list</span>(net.find_cliques(g))
+<span class="bu">print</span> cliques</code></pre></div>
 <pre><code>[[8, 9], [8, 7], [3, 0, 1], [3, 0, 2, 5], [3, 4, 1, 6], [3, 6, 5], [7, 5,
-6]] 
-</code></pre>
+6]] </code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> triadic
+census, node_census <span class="op">=</span> triadic.triadic_census(g)
+<span class="bu">print</span> census</code></pre></div>
+<pre><code>{&#39;201&#39;: 24, &#39;021C&#39;: 0, &#39;021D&#39;: 0, &#39;210&#39;: 0, &#39;120U&#39;: 0, &#39;030C&#39;: 0, &#39;003&#39;:
+22, &#39;300&#39;: 11, &#39;012&#39;: 0, &#39;021U&#39;: 0, &#39;120D&#39;: 0, &#39;102&#39;: 63, &#39;111U&#39;: 0,
+&#39;030T&#39;: 0, &#39;120C&#39;: 0, &#39;111D&#39;: 0} </code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> csv <span class="co">## we&#39;ll use the built-in CSV library</span>
+<span class="im">import</span> networkx <span class="im">as</span> net
+in_file<span class="op">=</span>csv.reader(<span class="bu">open</span>(<span class="st">&#39;9_11_edgelist.txt&#39;</span>,<span class="st">&#39;rb&#39;</span>))
+g<span class="op">=</span>net.Graph()
+<span class="cf">for</span> line <span class="kw">in</span> in_file:
+    g.add_edge(line[<span class="dv">0</span>],line[<span class="dv">1</span>],weight<span class="op">=</span>line[<span class="dv">2</span>],conf<span class="op">=</span>line[<span class="dv">3</span>])
+<span class="cf">for</span> n <span class="kw">in</span> g.nodes_iter(): g.node[n][<span class="st">&#39;flight&#39;</span>]<span class="op">=</span><span class="st">&#39;None&#39;</span>
+attrb<span class="op">=</span>csv.reader(<span class="bu">open</span>(<span class="st">&#39;9_11_attrib.txt&#39;</span>,<span class="st">&#39;rb&#39;</span>))
+<span class="cf">for</span> line <span class="kw">in</span> attrb:
+    g.node[line[<span class="dv">0</span>]][<span class="st">&#39;flight&#39;</span>]<span class="op">=</span>line[<span class="dv">1</span>]
+net.draw(g,with_labels<span class="op">=</span><span class="va">True</span>,font_size<span class="op">=</span><span class="dv">5</span>,width<span class="op">=</span><span class="fl">0.5</span>,alpha<span class="op">=</span><span class="fl">0.5</span>)
+plt.savefig(<span class="st">&#39;net2.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="net2.png" />
 
-<pre><code class="python">import triadic
-census, node_census = triadic.triadic_census(g)
-print census
-</code></pre>
-
-<pre><code>{'201': 24, '021C': 0, '021D': 0, '210': 0, '120U': 0, '030C': 0, '003':
-22, '300': 11, '012': 0, '021U': 0, '120D': 0, '102': 63, '111U': 0,
-'030T': 0, '120C': 0, '111D': 0} 
-</code></pre>
-
-<pre><code class="python">import csv ## we'll use the built-in CSV library
-import networkx as net
-in_file=csv.reader(open('9_11_edgelist.txt','rb'))
-g=net.Graph()
-for line in in_file:
-    g.add_edge(line[0],line[1],weight=line[2],conf=line[3])
-for n in g.nodes_iter(): g.node[n]['flight']='None'
-attrb=csv.reader(open('9_11_attrib.txt','rb'))
-for line in attrb:
-    g.node[line[0]]['flight']=line[1]
-net.draw(g,with_labels=True,font_size=5,width=0.5,alpha=0.5)
-plt.savefig('net2.png')
-</code></pre>
-
-<p><img alt="" src="net2.png" /></p>
+</div>
 <p>Kaynaklar</p>
 <p>[1] Kouznetsov, <em>Social Network Analysis for Startups</em></p>
-          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
-
-          <br/><a href="../index.html">Yukarı</a>
-        </section>          
-      </div>
-    </body>
+</body>
 </html>

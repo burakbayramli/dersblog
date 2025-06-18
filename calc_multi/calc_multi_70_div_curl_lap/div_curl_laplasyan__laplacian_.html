@@ -1,130 +1,135 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Div, Curl, Laplasyan (Laplacian)
-</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {inlineMath: [["$","$"]]}
-      });
-    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
-        cancel: ["Extension","cancel"],
-        bcancel: ["Extension","cancel"],
-        xcancel: ["Extension","cancel"],
-        cancelto: ["Extension","cancel"]
-      });
-    });
-    </script>
-   <script type="text/javascript"
-       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-   </script>
-   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
-
-<p><link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
-  </head>
-    <body>
-      <div id="header_wrap" class="outer">
-        <header class="inner">
-          <h1 id="project_title">
-            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
-          </h1>
-          <h2 id="project_tagline"></h2>        <br />
-        </header>
-      </div>
-      <div id="main_content_wrap" class="outer">      <br />
-        <section id="main_content" class="inner">
-        <h1>Div, Curl, Laplasyan (Laplacian)
-</h1></p>
-<p>Elimizde iki türlü fonksiyon olabilir, ya skalar (tek sayı) fonksiyonu, ya da
-vektör fonksiyonu. Bu fonksiyonların skalar alan (scalar field) ve vector alanı
-(vector field) oluşturduğu söylenebilir. Alan tarifi fonksiyonların çıktısı ile
-alakalıdır, eğer fonksiyon çok boyutlu girdi alıp tek boyut (tek sayı)
-döndürüyorsa skalar alan, çok boyutlu vektör döndürüyorsa vektör alanı
-tanımlıyor demektir.</p>
-<p>Mesela bir skalar alan $f(x,y,z)$ fonksiyonu ile tanımlanıyor olabilir, ve
-$f(x,y,z) = 2y^3 + 4 xz + 3x$ olabilir.</p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  
+  
+  
+  
+</head>
+<body>
+<h1 id="div-curl-laplasyan-laplacian">Div, Curl, Laplasyan (Laplacian)</h1>
+<p>Elimizde iki türlü fonksiyon olabilir, ya skalar (tek sayı) fonksiyonu, ya da vektör fonksiyonu. Bu fonksiyonların skalar alan (scalar field) ve vector alanı (vector field) oluşturduğu söylenebilir. Alan tarifi fonksiyonların çıktısı ile alakalıdır, eğer fonksiyon çok boyutlu girdi alıp tek boyut (tek sayı) döndürüyorsa skalar alan, çok boyutlu vektör döndürüyorsa vektör alanı tanımlıyor demektir.</p>
+<p>Mesela bir skalar alan <span class="math inline">\(f(x,y,z)\)</span> fonksiyonu ile tanımlanıyor olabilir, ve <span class="math inline">\(f(x,y,z) = 2y^3 + 4 xz + 3x\)</span> olabilir.</p>
 <p>Skalar alanın gradyanı bir vektördür,</p>
-<p>$$
+<p><span class="math display">\[
 \nabla f = \left[
   \frac{\partial f}{\partial x}, 
   \frac{\partial f}{\partial y}, 
   \frac{\partial f}{\partial z}
 \right]
-$$</p>
-<p>yani bir vektör alanı oluşturmuş oluyoruz, fonksiyon çok boyutlu sonuç
-donduruyor, skalar alanın gradyanı bir vektör alanı tanımlamış oluyor. Her
-farklı $x,y,z$ değeri için bir vektör sonucu alıyoruz.</p>
+\]</span></p>
+<p>yani bir vektör alanı oluşturmuş oluyoruz, fonksiyon çok boyutlu sonuç donduruyor, skalar alanın gradyanı bir vektör alanı tanımlamış oluyor. Her farklı <span class="math inline">\(x,y,z\)</span> değeri için bir vektör sonucu alıyoruz.</p>
 <p>Fonksiyonel olarak analitik şekilde</p>
-<p>$$
+<p><span class="math display">\[
 f = \left[\begin{array}{r} f_1(x,y,z) \\ f_2(x,y,z) \\ f_3(x,y,z) \end{array}\right]
-$$</p>
+\]</span></p>
 <p>olabilir.</p>
 <p>Mesela skalar alan</p>
-<p>$$
+<p><span class="math display">\[
 U(x,y) = \frac{1}{3} (x^4 + y^4)
 \qquad (1)
-$$</p>
+\]</span></p>
 <p>olsun,</p>
-<pre><code class="python">from mpl_toolkits.mplot3d import Axes3D
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-xx = np.linspace(-5.0,5.0,20)
-yy = np.linspace(-5.0,5.0,20)
-x,y = np.meshgrid(xx,yy);
-U = 1/3*( (x**4) + (y**4))
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D
+fig <span class="op">=</span> plt.figure()
+ax <span class="op">=</span> fig.add_subplot(<span class="dv">111</span>, projection<span class="op">=</span><span class="st">&#39;3d&#39;</span>)
+xx <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">5.0</span>,<span class="fl">5.0</span>,<span class="dv">20</span>)
+yy <span class="op">=</span> np.linspace(<span class="op">-</span><span class="fl">5.0</span>,<span class="fl">5.0</span>,<span class="dv">20</span>)
+x,y <span class="op">=</span> np.meshgrid(xx,yy)<span class="op">;</span>
+U <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">3</span><span class="op">*</span>( (x<span class="op">**</span><span class="dv">4</span>) <span class="op">+</span> (y<span class="op">**</span><span class="dv">4</span>))
 ax.plot_surface(x,y,U)
-plt.savefig('calc_multi_70_div_curl_lap_01.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_01.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_01.png" />
 
-<p><img alt="" src="calc_multi_70_div_curl_lap_01.png" /></p>
+</div>
 <p>Gradyanı analitik olarak bulabiliriz,</p>
-<p>$$
+<p><span class="math display">\[
 \nabla U = \frac{4}{3} [\begin{array}{cc} x^3 &amp; y^3 \end{array}]^T
-$$</p>
+\]</span></p>
 <p>Gradyan vektör alanı [6],</p>
-<pre><code class="python">u, v = 4/3*x**3, 4/3*y**3
-fig, ax = plt.subplots()
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">u, v <span class="op">=</span> <span class="dv">4</span><span class="op">/</span><span class="dv">3</span><span class="op">*</span>x<span class="op">**</span><span class="dv">3</span>, <span class="dv">4</span><span class="op">/</span><span class="dv">3</span><span class="op">*</span>y<span class="op">**</span><span class="dv">3</span>
+fig, ax <span class="op">=</span> plt.subplots()
 ax.quiver(x,y,u,v)
 ax.xaxis.set_ticks([])
 ax.yaxis.set_ticks([])
-ax.axis([-6, 6, -6, 6])
-ax.set_aspect('equal')
-plt.savefig('calc_multi_70_div_curl_lap_03.png')
-</code></pre>
+ax.axis([<span class="op">-</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">-6</span>, <span class="dv">6</span>])
+ax.set_aspect(<span class="st">&#39;equal&#39;</span>)
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_03.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_03.png" />
 
-<p><img alt="" src="calc_multi_70_div_curl_lap_03.png" /></p>
-<p>Üstte analitik sonucu grafikledik. Gradyanı pür sayısal olarak
-hesaplayabilirdik, bu fonksiyon yaklaşık türev hesabını üç boyut için yapıyor,
-<code>gradient</code> çağrısını kullanıyoruz, </p>
-<pre><code class="python">uu,vv = np.gradient(U)
-fig, ax = plt.subplots()
+</div>
+<p>Üstte analitik sonucu grafikledik. Gradyanı pür sayısal olarak hesaplayabilirdik, bu fonksiyon yaklaşık türev hesabını üç boyut için yapıyor, <code>gradient</code> çağrısını kullanıyoruz,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">uu,vv <span class="op">=</span> np.gradient(U)
+fig, ax <span class="op">=</span> plt.subplots()
 ax.quiver(x,y,vv,uu)
 ax.xaxis.set_ticks([])
 ax.yaxis.set_ticks([])
-ax.axis([-6, 6, -6, 6])
-ax.set_aspect('equal')
-plt.savefig('calc_multi_70_div_curl_lap_04.png')
-</code></pre>
+ax.axis([<span class="op">-</span><span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">-6</span>, <span class="dv">6</span>])
+ax.set_aspect(<span class="st">&#39;equal&#39;</span>)
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_04.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_04.png" />
 
-<p><img alt="" src="calc_multi_70_div_curl_lap_04.png" /></p>
+</div>
 <p>Benzer bir sonuç elde ettik.</p>
 <p>Çizgizel Entegral (Line Integral)</p>
-<p>Bu konu [11]'de gayet güzel bir şekilde anlatılıyor. </p>
+<p>Bu konu [11]'de gayet güzel bir şekilde anlatılıyor.</p>
 <p>Uzaklaşım (Divergence)</p>
-<p>Bu hesap $\mathrm{div} f$, ya da $\nabla \cdot f$ ile gösterilir. Vektör alanı
-uzaklaşımı,</p>
-<p>$$
+<p>Bu hesap <span class="math inline">\(\mathrm{div} f\)</span>, ya da <span class="math inline">\(\nabla \cdot f\)</span> ile gösterilir. Vektör alanı uzaklaşımı,</p>
+<p><span class="math display">\[
 \mathrm{div} f = \left(
 \frac{\partial f_1}{\partial x} + 
 \frac{\partial f_2}{\partial y} + 
 \frac{\partial f_3}{\partial z} 
 \right)
-$$</p>
-<p>Gradyan $\nabla$ işareti görülüyor [4, sf. 403], fakat bu notasyonel bir
-rahatlık sadece.</p>
-<p>$$
+\]</span></p>
+<p>Gradyan <span class="math inline">\(\nabla\)</span> işareti görülüyor [4, sf. 403], fakat bu notasyonel bir rahatlık sadece.</p>
+<p><span class="math display">\[
 \nabla \cdot f = \left(
 \frac{\partial }{\partial x},
 \frac{\partial }{\partial y},
@@ -132,86 +137,66 @@ rahatlık sadece.</p>
 \right) 
 \cdot
 \left[ f_1, f_2, f_3 \right]
-$$</p>
-<p>$$
+\]</span></p>
+<p><span class="math display">\[
 = \left( \frac{\partial }{\partial x} \right)(f_1) + 
 \left( \frac{\partial }{\partial y} \right)(f_2) + 
 \left( \frac{\partial }{\partial z} \right)(f_3) 
-$$</p>
-<p>$$
+\]</span></p>
+<p><span class="math display">\[
 = \frac{\partial f_1}{\partial x} +
 \frac{\partial f_2}{\partial y} +
 \frac{\partial f_3}{\partial z}
-$$</p>
-<p>Uzaklaşımın fiziksel yorumu bir vektör alanındaki ufak bir alanda görülen akış
-(flux) olabilir. Onu bir vektör alanının genişleme ya da küçülme oranı olarak ta
-görebiliriz. Eğer yeteri kadar ufak bir alandan çıkan vektörler girenlerden
-fazla / büyük ise o nokta bir kaynaktır, uzaklaşım sıfırdan büyüktür, tersi ise
-uzaklaşım sıfırdan küçüktür.</p>
-<p>Örnek olarak elimizde iki boyutlu bir vektör alanı olduğunu farzedelim, $x,y$
-kordinatları $U(x,y) = [u_1(x,y), u_2(x,y)]$ ile bir vektör döndürülüyor, mesela</p>
-<p>$$
+\]</span></p>
+<p>Uzaklaşımın fiziksel yorumu bir vektör alanındaki ufak bir alanda görülen akış (flux) olabilir. Onu bir vektör alanının genişleme ya da küçülme oranı olarak ta görebiliriz. Eğer yeteri kadar ufak bir alandan çıkan vektörler girenlerden fazla / büyük ise o nokta bir kaynaktır, uzaklaşım sıfırdan büyüktür, tersi ise uzaklaşım sıfırdan küçüktür.</p>
+<p>Örnek olarak elimizde iki boyutlu bir vektör alanı olduğunu farzedelim, <span class="math inline">\(x,y\)</span> kordinatları <span class="math inline">\(U(x,y) = [u_1(x,y), u_2(x,y)]\)</span> ile bir vektör döndürülüyor, mesela</p>
+<p><span class="math display">\[
 U(x,y) = [\cos(x + 2y), \sin(x - 2y)]
-$$</p>
+\]</span></p>
 <p>Bu alanın uzaklaşımı analitik olarak</p>
-<p>$$
+<p><span class="math display">\[
 \mathrm{div} U = - 2\cos(x - 2y) - \sin(x + 2y)
-$$</p>
-<p>Bu bize her noktada bir tek sayı değeri veriyor, o noktada akışın çıkmakta mı
-(kaynak -source-) yoksa yokolmakta mı (alıcı -sink) olduğunu bu sayı ile
-irdeleyebiliyoruz. Biz uzaklaşımı altta sayısal olarak hesapliyoruz, ve hem
-vektör alanını hem de uzaklaşım tek sayısını bir renk kodu ile aynı grafikte
-gösterirsek,</p>
-<pre><code class="python">import numpy as np
-import matplotlib.pyplot as plt
+\]</span></p>
+<p>Bu bize her noktada bir tek sayı değeri veriyor, o noktada akışın çıkmakta mı (kaynak -source-) yoksa yokolmakta mı (alıcı -sink) olduğunu bu sayı ile irdeleyebiliyoruz. Biz uzaklaşımı altta sayısal olarak hesapliyoruz, ve hem vektör alanını hem de uzaklaşım tek sayısını bir renk kodu ile aynı grafikte gösterirsek,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> numpy <span class="im">as</span> np
+<span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt
 
-NY = 20; ymin = -2.; ymax = 2.
-dy = (ymax -ymin )/(NY-1.)
-NX = NY
-xmin = -2.; xmax = 2.
-dx = (xmax -xmin)/(NX-1.)
+NY <span class="op">=</span> <span class="dv">20</span><span class="op">;</span> ymin <span class="op">=</span> <span class="fl">-2.</span><span class="op">;</span> ymax <span class="op">=</span> <span class="fl">2.</span>
+dy <span class="op">=</span> (ymax <span class="op">-</span>ymin )<span class="op">/</span>(NY<span class="fl">-1.</span>)
+NX <span class="op">=</span> NY
+xmin <span class="op">=</span> <span class="fl">-2.</span><span class="op">;</span> xmax <span class="op">=</span> <span class="fl">2.</span>
+dx <span class="op">=</span> (xmax <span class="op">-</span>xmin)<span class="op">/</span>(NX<span class="fl">-1.</span>)
 
-def divergence(f):
-    num_dims = len(f)
-    tmp = [np.gradient(f[i], axis=i) for i in range(num_dims)]
-    return np.ufunc.reduce(np.add, tmp)
+<span class="kw">def</span> divergence(f):
+    num_dims <span class="op">=</span> <span class="bu">len</span>(f)
+    tmp <span class="op">=</span> [np.gradient(f[i], axis<span class="op">=</span>i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(num_dims)]
+    <span class="cf">return</span> np.ufunc.<span class="bu">reduce</span>(np.add, tmp)
 
-y = np.array([ ymin + float(i)*dy for i in range(NY)])
-x = np.array([ xmin + float(i)*dx for i in range(NX)])
+y <span class="op">=</span> np.array([ ymin <span class="op">+</span> <span class="bu">float</span>(i)<span class="op">*</span>dy <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(NY)])
+x <span class="op">=</span> np.array([ xmin <span class="op">+</span> <span class="bu">float</span>(i)<span class="op">*</span>dx <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(NX)])
 
-x, y = np.meshgrid( x, y, indexing = 'ij', sparse = False)
+x, y <span class="op">=</span> np.meshgrid( x, y, indexing <span class="op">=</span> <span class="st">&#39;ij&#39;</span>, sparse <span class="op">=</span> <span class="va">False</span>)
 
-Fx  = np.cos(x + 2*y)
-Fy  = np.sin(x - 2*y)
+Fx  <span class="op">=</span> np.cos(x <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>y)
+Fy  <span class="op">=</span> np.sin(x <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>y)
 
-F = [Fx, Fy]
-g = divergence(F)
+F <span class="op">=</span> [Fx, Fy]
+g <span class="op">=</span> divergence(F)
 
-plt.pcolormesh(x, y, g, shading='nearest', cmap=plt.cm.get_cmap('coolwarm'))
+plt.pcolormesh(x, y, g, shading<span class="op">=</span><span class="st">&#39;nearest&#39;</span>, cmap<span class="op">=</span>plt.cm.get_cmap(<span class="st">&#39;coolwarm&#39;</span>))
 plt.colorbar()
 plt.quiver(x,y,Fx,Fy)
-plt.savefig('calc_multi_70_div_curl_lap_05.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_05.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_05.png" />
 
-<p><img alt="" src="calc_multi_70_div_curl_lap_05.png" /></p>
-<p>Sonuç [7]'deki analitik hesaba yakın. Üstteki kodda <code>gradient</code> ile her
-boyut üzerinde sayısal gradyan hesabı yapılıyor ve sonuçlar toplanıyor. Not:
-vektör alanının kendisi de bir gradyan işleminin sonucu olabilir, o noktaya
-nasıl gelindiğinden bahsetmiyoruz, biz elde nereden gelmiş olursa olsun bir
-vektör alanı olduğunu farz ediyoruz.</p>
-<p>Oklara ve renklere bakarsak hakikkaten de mavi renkli bölgelere daha fazla giriş
-olduğundan şüphe yok, bu iyi, hesap doğru işliyor demektir. Aynı şekilde kırmızı
-bölglerde daha fazla kaçıs var.</p>
+</div>
+<p>Sonuç [7]'deki analitik hesaba yakın. Üstteki kodda <code>gradient</code> ile her boyut üzerinde sayısal gradyan hesabı yapılıyor ve sonuçlar toplanıyor. Not: vektör alanının kendisi de bir gradyan işleminin sonucu olabilir, o noktaya nasıl gelindiğinden bahsetmiyoruz, biz elde nereden gelmiş olursa olsun bir vektör alanı olduğunu farz ediyoruz.</p>
+<p>Oklara ve renklere bakarsak hakikkaten de mavi renkli bölgelere daha fazla giriş olduğundan şüphe yok, bu iyi, hesap doğru işliyor demektir. Aynı şekilde kırmızı bölglerde daha fazla kaçıs var.</p>
 <p>Laplasyan (Laplacian)</p>
-<p>Diyelim ki $f$ skalar alanı iki kez türevi alınabilir halde. O zaman $f$'nin
-gradyanı $\nabla f$ de türevi alınabilir bir vektör alanıdır, ve onun da
-uzaklaşımı hesaplanabilir, ve böylece bir tane daha skalar alan daha elde
-edilebilir [3, sf. 56]. Bu skalar alan, $\nabla \cdot \nabla f$ sonucuna $f$'nin
-Laplasyanı ismi verilir, ve kendi sembolü de vardır $\nabla^2 f$, bazen
-düz üçgen ile de gösterilebilr, $\Delta f$.</p>
-<p>Reel değerli bir fonksiyon $f(x,y,z)$ için [1, sf. 178], $f$'nin gradyani bir
-vektör alanı, ve onun uzaklaşımını alıyoruz,</p>
-<p>$$
+<p>Diyelim ki <span class="math inline">\(f\)</span> skalar alanı iki kez türevi alınabilir halde. O zaman <span class="math inline">\(f\)</span>'nin gradyanı <span class="math inline">\(\nabla f\)</span> de türevi alınabilir bir vektör alanıdır, ve onun da uzaklaşımı hesaplanabilir, ve böylece bir tane daha skalar alan daha elde edilebilir [3, sf. 56]. Bu skalar alan, <span class="math inline">\(\nabla \cdot \nabla f\)</span> sonucuna <span class="math inline">\(f\)</span>'nin Laplasyanı ismi verilir, ve kendi sembolü de vardır <span class="math inline">\(\nabla^2 f\)</span>, bazen düz üçgen ile de gösterilebilr, <span class="math inline">\(\Delta f\)</span>.</p>
+<p>Reel değerli bir fonksiyon <span class="math inline">\(f(x,y,z)\)</span> için [1, sf. 178], <span class="math inline">\(f\)</span>'nin gradyani bir vektör alanı, ve onun uzaklaşımını alıyoruz,</p>
+<p><span class="math display">\[
 \mathrm{div} \nabla f = \nabla \cdot \nabla = \nabla^2 f =
 \left(
 \frac{\partial }{\partial x},
@@ -223,235 +208,208 @@ vektör alanı, ve onun uzaklaşımını alıyoruz,</p>
 \frac{\partial f}{\partial y},
 \frac{\partial f}{\partial z} 
 \right)
-$$</p>
-<p>$$
+\]</span></p>
+<p><span class="math display">\[
 = \frac{\partial }{\partial x}\left(\frac{\partial f}{\partial x}\right)+
 \frac{\partial }{\partial y}\left(\frac{\partial f}{\partial y}\right)+
 \frac{\partial }{\partial z}\left(\frac{\partial f}{\partial z}\right)
-$$</p>
-<p>$$
+\]</span></p>
+<p><span class="math display">\[
 = \frac{\partial^2 f}{\partial x^2} +
 \frac{\partial^2 f}{\partial y^2} +
 \frac{\partial^2 f}{\partial z^2} 
-$$</p>
-<p>Kabaca bir tarif olarak gradyan vektörlerinin en yüksek değerlere sahip olduğu
-yerler değişimin en çok olduğu yönlere değil mi? Bir tepe altından tepe yönüne
-doğru, tepe noktasında çok yüksek değerler vardır, altta daha alçak değerler,
-gradyan yukarıya gösterir. Bu gradyan alanını üzerinde uzaklaşım hesaplayınca
-alanın her noktası için sayısal bir akış sayısı hesaplamış oluruz. "Gradyan
-akışının en yüksek olduğu yerler" bulunmuş oluyor. Laplasyan hesabı bu sebeple
-averajdan sapmanın en fazla olduğu noktaları mdoellemek için kullanılır.</p>
-<p>Üstte bir operatör tanımlamış olduk, bu operatör bazen $(\mathcal{L})(x,y,..)$
-ile de gösterilebilir, mesela iki boyut için</p>
-<p>$$
+\]</span></p>
+<p>Kabaca bir tarif olarak gradyan vektörlerinin en yüksek değerlere sahip olduğu yerler değişimin en çok olduğu yönlere değil mi? Bir tepe altından tepe yönüne doğru, tepe noktasında çok yüksek değerler vardır, altta daha alçak değerler, gradyan yukarıya gösterir. Bu gradyan alanını üzerinde uzaklaşım hesaplayınca alanın her noktası için sayısal bir akış sayısı hesaplamış oluruz. &quot;Gradyan akışının en yüksek olduğu yerler'' bulunmuş oluyor. Laplasyan hesabı bu sebeple averajdan sapmanın en fazla olduğu noktaları mdoellemek için kullanılır.</p>
+<p>Üstte bir operatör tanımlamış olduk, bu operatör bazen <span class="math inline">\((\mathcal{L})(x,y,..)\)</span> ile de gösterilebilir, mesela iki boyut için</p>
+<p><span class="math display">\[
 (\mathcal{L})(x,y) =
 \frac{\partial^2 }{\partial x^2} + 
 \frac{\partial^2 }{\partial y^2} 
-$$</p>
+\]</span></p>
 <p>Sayısal olarak Laplasyan hesabını görelim.</p>
 <p>Örnek</p>
 <p>Analitik olarak biliyoruz ki (1)'in Laplasyanı</p>
-<p>$$
+<p><span class="math display">\[
 \nabla^2 U(x,y) = 4 x^2 + 4 y^2
-$$</p>
-<p>foksiyonuna eşit. Bakalım sayısal olarak yaklaşık olarak aynı sonucu alabilecek
-miyiz? Burada <code>del2</code> çağrısı var (iyi isim, çünkü $\nabla$ işaretine 'del'
-denir, 'del2' ile onun karesi çağrıştırılıyor),</p>
-<pre><code class="python">import numpy as np
+\]</span></p>
+<p>foksiyonuna eşit. Bakalım sayısal olarak yaklaşık olarak aynı sonucu alabilecek miyiz? Burada <code>del2</code> çağrısı var (iyi isim, çünkü <span class="math inline">\(\nabla\)</span> işaretine 'del' denir, 'del2' ile onun karesi çağrıştırılıyor),</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> numpy <span class="im">as</span> np
 
-def del2(M):
-    dx = 1
-    dy = 1
-    rows, cols = M.shape
-    dx = dx * np.ones ((1, cols - 1))
-    dy = dy * np.ones ((rows-1, 1))
+<span class="kw">def</span> del2(M):
+    dx <span class="op">=</span> <span class="dv">1</span>
+    dy <span class="op">=</span> <span class="dv">1</span>
+    rows, cols <span class="op">=</span> M.shape
+    dx <span class="op">=</span> dx <span class="op">*</span> np.ones ((<span class="dv">1</span>, cols <span class="op">-</span> <span class="dv">1</span>))
+    dy <span class="op">=</span> dy <span class="op">*</span> np.ones ((rows<span class="dv">-1</span>, <span class="dv">1</span>))
 
-    mr, mc = M.shape
-    D = np.zeros ((mr, mc))
+    mr, mc <span class="op">=</span> M.shape
+    D <span class="op">=</span> np.zeros ((mr, mc))
 
-    if (mr &gt;= 3):
-        ## x direction
-        ## left and right boundary
-        D[:, 0] = (M[:, 0] - 2 * M[:, 1] + M[:, 2]) / (dx[:,0] * dx[:,1])
-        D[:, mc-1] = (M[:, mc - 3] - 2 * M[:, mc - 2] + M[:, mc-1]) \
-            / (dx[:,mc - 3] * dx[:,mc - 2])
+    <span class="cf">if</span> (mr <span class="op">&gt;=</span> <span class="dv">3</span>):
+        <span class="co">## x direction</span>
+        <span class="co">## left and right boundary</span>
+        D[:, <span class="dv">0</span>] <span class="op">=</span> (M[:, <span class="dv">0</span>] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> M[:, <span class="dv">1</span>] <span class="op">+</span> M[:, <span class="dv">2</span>]) <span class="op">/</span> (dx[:,<span class="dv">0</span>] <span class="op">*</span> dx[:,<span class="dv">1</span>])
+        D[:, mc<span class="dv">-1</span>] <span class="op">=</span> (M[:, mc <span class="op">-</span> <span class="dv">3</span>] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> M[:, mc <span class="op">-</span> <span class="dv">2</span>] <span class="op">+</span> M[:, mc<span class="dv">-1</span>]) <span class="op">\</span>
+            <span class="op">/</span> (dx[:,mc <span class="op">-</span> <span class="dv">3</span>] <span class="op">*</span> dx[:,mc <span class="op">-</span> <span class="dv">2</span>])
 
-        ## interior points
-        tmp1 = D[:, 1:mc - 1] 
-        tmp2 = (M[:, 2:mc] - 2 * M[:, 1:mc - 1] + M[:, 0:mc - 2])
-        tmp3 = np.kron (dx[:,0:mc -2] * dx[:,1:mc - 1], np.ones ((mr, 1)))
-        D[:, 1:mc - 1] = tmp1 + tmp2 / tmp3
+        <span class="co">## interior points</span>
+        tmp1 <span class="op">=</span> D[:, <span class="dv">1</span>:mc <span class="op">-</span> <span class="dv">1</span>] 
+        tmp2 <span class="op">=</span> (M[:, <span class="dv">2</span>:mc] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> M[:, <span class="dv">1</span>:mc <span class="op">-</span> <span class="dv">1</span>] <span class="op">+</span> M[:, <span class="dv">0</span>:mc <span class="op">-</span> <span class="dv">2</span>])
+        tmp3 <span class="op">=</span> np.kron (dx[:,<span class="dv">0</span>:mc <span class="dv">-2</span>] <span class="op">*</span> dx[:,<span class="dv">1</span>:mc <span class="op">-</span> <span class="dv">1</span>], np.ones ((mr, <span class="dv">1</span>)))
+        D[:, <span class="dv">1</span>:mc <span class="op">-</span> <span class="dv">1</span>] <span class="op">=</span> tmp1 <span class="op">+</span> tmp2 <span class="op">/</span> tmp3
 
-    if (mr &gt;= 3):
-        ## y direction
-        ## top and bottom boundary
-        D[0, :] = D[0,:]  + \
-            (M[0, :] - 2 * M[1, :] + M[2, :] ) / (dy[0,:] * dy[1,:])
+    <span class="cf">if</span> (mr <span class="op">&gt;=</span> <span class="dv">3</span>):
+        <span class="co">## y direction</span>
+        <span class="co">## top and bottom boundary</span>
+        D[<span class="dv">0</span>, :] <span class="op">=</span> D[<span class="dv">0</span>,:]  <span class="op">+</span> <span class="op">\</span>
+            (M[<span class="dv">0</span>, :] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> M[<span class="dv">1</span>, :] <span class="op">+</span> M[<span class="dv">2</span>, :] ) <span class="op">/</span> (dy[<span class="dv">0</span>,:] <span class="op">*</span> dy[<span class="dv">1</span>,:])
 
-        D[mr-1, :] = D[mr-1, :] \
-            + (M[mr-3,:] - 2 * M[mr-2, :] + M[mr-1, :]) \
-            / (dy[mr-3,:] * dx[:,mr-2])
+        D[mr<span class="dv">-1</span>, :] <span class="op">=</span> D[mr<span class="dv">-1</span>, :] <span class="op">\</span>
+            <span class="op">+</span> (M[mr<span class="dv">-3</span>,:] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> M[mr<span class="dv">-2</span>, :] <span class="op">+</span> M[mr<span class="dv">-1</span>, :]) <span class="op">\</span>
+            <span class="op">/</span> (dy[mr<span class="dv">-3</span>,:] <span class="op">*</span> dx[:,mr<span class="dv">-2</span>])
 
-        ## interior points
-        tmp1 = D[1:mr-1, :] 
-        tmp2 = (M[2:mr, :] - 2 * M[1:mr - 1, :] + M[0:mr-2, :])
-        tmp3 = np.kron (dy[0:mr-2,:] * dy[1:mr-1,:], np.ones ((1, mc)))
-        D[1:mr-1, :] = tmp1 + tmp2 / tmp3
+        <span class="co">## interior points</span>
+        tmp1 <span class="op">=</span> D[<span class="dv">1</span>:mr<span class="dv">-1</span>, :] 
+        tmp2 <span class="op">=</span> (M[<span class="dv">2</span>:mr, :] <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> M[<span class="dv">1</span>:mr <span class="op">-</span> <span class="dv">1</span>, :] <span class="op">+</span> M[<span class="dv">0</span>:mr<span class="dv">-2</span>, :])
+        tmp3 <span class="op">=</span> np.kron (dy[<span class="dv">0</span>:mr<span class="dv">-2</span>,:] <span class="op">*</span> dy[<span class="dv">1</span>:mr<span class="dv">-1</span>,:], np.ones ((<span class="dv">1</span>, mc)))
+        D[<span class="dv">1</span>:mr<span class="dv">-1</span>, :] <span class="op">=</span> tmp1 <span class="op">+</span> tmp2 <span class="op">/</span> tmp3
 
-    return D / 4
-
-</code></pre>
-
+    <span class="cf">return</span> D <span class="op">/</span> <span class="dv">4</span></code></pre></div>
 <p>Ayrıksal Laplasyanı grafiklersek,</p>
-<pre><code class="python">from del2 import del2
-L = 4*del2(U);
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> del2 <span class="im">import</span> del2
+L <span class="op">=</span> <span class="dv">4</span><span class="op">*</span>del2(U)<span class="op">;</span>
+fig <span class="op">=</span> plt.figure()
+ax <span class="op">=</span> fig.add_subplot(<span class="dv">111</span>, projection<span class="op">=</span><span class="st">&#39;3d&#39;</span>)
 ax.plot_surface(x,y,L)
-plt.savefig('calc_multi_70_div_curl_lap_02.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_02.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_02.png" />
 
-<p><img alt="" src="calc_multi_70_div_curl_lap_02.png" /></p>
-<p>Evet, üstteki resim $4 x^2 + 4 y^2$ gibi duruyor [5].</p>
+</div>
+<p>Evet, üstteki resim <span class="math inline">\(4 x^2 + 4 y^2\)</span> gibi duruyor [5].</p>
 <p>Dolam (Curl)</p>
-<p>Bu kavram [12]'de anlatildi.  Bir üç boyutlu vektör alanı, ve onun analitik
-olarak curl hesabını verelim,</p>
-<pre><code class="python">import sympy
-x, y, z = sympy.symbols('x y z', real=True)
-pi = sympy.symbols('pi', constant=True)
-Fx = sympy.sin(sympy.pi * x) * sympy.cos(sympy.pi * y) * sympy.cos(sympy.pi * z)
-Fy = -sympy.cos(sympy.pi * x) * sympy.sin(sympy.pi * y) * sympy.cos(sympy.pi * z)
-Fz = (sympy.sqrt(2.0 / 3.0) * sympy.cos(sympy.pi * x) * sympy.cos(sympy.pi * y) * sympy.sin(sympy.pi * z))
-cx = sympy.diff(Fz, y) - sympy.diff(Fy, z) 
-cy = sympy.diff(Fx, z) - sympy.diff(Fz, x)
-cz = sympy.diff(Fy, x) - sympy.diff(Fx, y)
+<p>Bu kavram [12]'de anlatildi. Bir üç boyutlu vektör alanı, ve onun analitik olarak curl hesabını verelim,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> sympy
+x, y, z <span class="op">=</span> sympy.symbols(<span class="st">&#39;x y z&#39;</span>, real<span class="op">=</span><span class="va">True</span>)
+pi <span class="op">=</span> sympy.symbols(<span class="st">&#39;pi&#39;</span>, constant<span class="op">=</span><span class="va">True</span>)
+Fx <span class="op">=</span> sympy.sin(sympy.pi <span class="op">*</span> x) <span class="op">*</span> sympy.cos(sympy.pi <span class="op">*</span> y) <span class="op">*</span> sympy.cos(sympy.pi <span class="op">*</span> z)
+Fy <span class="op">=</span> <span class="op">-</span>sympy.cos(sympy.pi <span class="op">*</span> x) <span class="op">*</span> sympy.sin(sympy.pi <span class="op">*</span> y) <span class="op">*</span> sympy.cos(sympy.pi <span class="op">*</span> z)
+Fz <span class="op">=</span> (sympy.sqrt(<span class="fl">2.0</span> <span class="op">/</span> <span class="fl">3.0</span>) <span class="op">*</span> sympy.cos(sympy.pi <span class="op">*</span> x) <span class="op">*</span> sympy.cos(sympy.pi <span class="op">*</span> y) <span class="op">*</span> sympy.sin(sympy.pi <span class="op">*</span> z))
+cx <span class="op">=</span> sympy.diff(Fz, y) <span class="op">-</span> sympy.diff(Fy, z) 
+cy <span class="op">=</span> sympy.diff(Fx, z) <span class="op">-</span> sympy.diff(Fz, x)
+cz <span class="op">=</span> sympy.diff(Fy, x) <span class="op">-</span> sympy.diff(Fx, y)
 
-i,j,k=2,2,1
-x0,y0,z0 = xx[i,j,k], yy[i,j,k], zz[i,j,k]
+i,j,k<span class="op">=</span><span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>
+x0,y0,z0 <span class="op">=</span> xx[i,j,k], yy[i,j,k], zz[i,j,k]
 
-i,j,k=1,3,1
-x0,y0,z0 = xx[i,j,k], yy[i,j,k], zz[i,j,k]
-c1,c2,c3 = cx.subs([(x, x0), (y, y0), (z, z0)]).evalf(),\
-           cy.subs([(x, x0), (y, y0), (z, z0)]).evalf(),\
+i,j,k<span class="op">=</span><span class="dv">1</span>,<span class="dv">3</span>,<span class="dv">1</span>
+x0,y0,z0 <span class="op">=</span> xx[i,j,k], yy[i,j,k], zz[i,j,k]
+c1,c2,c3 <span class="op">=</span> cx.subs([(x, x0), (y, y0), (z, z0)]).evalf(),<span class="op">\</span>
+           cy.subs([(x, x0), (y, y0), (z, z0)]).evalf(),<span class="op">\</span>
            cz.subs([(x, x0), (y, y0), (z, z0)]).evalf()
-print ( c1,c2,c3  )
+<span class="bu">print</span> ( c1,c2,c3  )</code></pre></div>
+<pre><code>0 0 3.51240736552037</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> axes3d
 
-</code></pre>
+fig <span class="op">=</span> plt.figure()
+ax <span class="op">=</span> fig.gca(projection<span class="op">=</span><span class="st">&#39;3d&#39;</span>)
+ax.view_init(elev<span class="op">=</span><span class="dv">21</span>, azim<span class="op">=-</span><span class="dv">44</span>)
+xx, yy, zz <span class="op">=</span> np.meshgrid(np.arange(<span class="op">-</span><span class="fl">0.8</span>, <span class="dv">1</span>, <span class="fl">0.2</span>),
+                         np.arange(<span class="op">-</span><span class="fl">0.8</span>, <span class="dv">1</span>, <span class="fl">0.2</span>),
+                         np.arange(<span class="op">-</span><span class="fl">0.8</span>, <span class="dv">1</span>, <span class="fl">0.8</span>))
 
-<pre><code>0 0 3.51240736552037
-</code></pre>
+u <span class="op">=</span> np.sin(np.pi <span class="op">*</span> xx) <span class="op">*</span> np.cos(np.pi <span class="op">*</span> yy) <span class="op">*</span> np.cos(np.pi <span class="op">*</span> zz)
+v <span class="op">=</span> <span class="op">-</span>np.cos(np.pi <span class="op">*</span> xx) <span class="op">*</span> np.sin(np.pi <span class="op">*</span> yy) <span class="op">*</span> np.cos(np.pi <span class="op">*</span> zz)
+w <span class="op">=</span> (np.sqrt(<span class="fl">2.0</span> <span class="op">/</span> <span class="fl">3.0</span>) <span class="op">*</span> np.cos(np.pi <span class="op">*</span> xx) <span class="op">*</span> np.cos(np.pi <span class="op">*</span> yy) <span class="op">*</span>  np.sin(np.pi <span class="op">*</span> zz))
 
-<pre><code class="python">from mpl_toolkits.mplot3d import axes3d
+ax.quiver(xx, yy, zz, u, v, w, length<span class="op">=</span><span class="fl">0.1</span>, color <span class="op">=</span> <span class="st">&#39;black&#39;</span>)
+ax.quiver(x0, y0, z0, c1, c2, c3, length<span class="op">=</span><span class="fl">0.3</span>, color <span class="op">=</span> <span class="st">&#39;blue&#39;</span>)
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_11.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_11.png" />
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.view_init(elev=21, azim=-44)
-xx, yy, zz = np.meshgrid(np.arange(-0.8, 1, 0.2),
-                         np.arange(-0.8, 1, 0.2),
-                         np.arange(-0.8, 1, 0.8))
-
-u = np.sin(np.pi * xx) * np.cos(np.pi * yy) * np.cos(np.pi * zz)
-v = -np.cos(np.pi * xx) * np.sin(np.pi * yy) * np.cos(np.pi * zz)
-w = (np.sqrt(2.0 / 3.0) * np.cos(np.pi * xx) * np.cos(np.pi * yy) *  np.sin(np.pi * zz))
-
-ax.quiver(xx, yy, zz, u, v, w, length=0.1, color = 'black')
-ax.quiver(x0, y0, z0, c1, c2, c3, length=0.3, color = 'blue')
-plt.savefig('calc_multi_70_div_curl_lap_11.png')
-</code></pre>
-
-<p><img alt="" src="calc_multi_70_div_curl_lap_11.png" /></p>
+</div>
 <p>Sağ el kuralından ve akıntıya bakarak bu sonucun doğru olduğunu görebiliriz.</p>
-<p>Şimdi sayısal olarak curl kodlamasına bakalım, bu kod da <code>gradient</code>
-çağrıları yaparak ve sonuçları işleyerek bir curl hesabı yapıyor. </p>
-<pre><code class="python">import numpy as np
-import scipy.io as sio
+<p>Şimdi sayısal olarak curl kodlamasına bakalım, bu kod da <code>gradient</code> çağrıları yaparak ve sonuçları işleyerek bir curl hesabı yapıyor.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> numpy <span class="im">as</span> np
+<span class="im">import</span> scipy.io <span class="im">as</span> sio
 
-def curl(x,y,z,u,v,w):
-    dx = x[0,:,0]
-    dy = y[:,0,0]
-    dz = z[0,0,:]
+<span class="kw">def</span> curl(x,y,z,u,v,w):
+    dx <span class="op">=</span> x[<span class="dv">0</span>,:,<span class="dv">0</span>]
+    dy <span class="op">=</span> y[:,<span class="dv">0</span>,<span class="dv">0</span>]
+    dz <span class="op">=</span> z[<span class="dv">0</span>,<span class="dv">0</span>,:]
 
-    dummy, dFx_dy, dFx_dz = np.gradient (u, dx, dy, dz, axis=[1,0,2])
-    dFy_dx, dummy, dFy_dz = np.gradient (v, dx, dy, dz, axis=[1,0,2])
-    dFz_dx, dFz_dy, dummy = np.gradient (w, dx, dy, dz, axis=[1,0,2])
+    dummy, dFx_dy, dFx_dz <span class="op">=</span> np.gradient (u, dx, dy, dz, axis<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">2</span>])
+    dFy_dx, dummy, dFy_dz <span class="op">=</span> np.gradient (v, dx, dy, dz, axis<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">2</span>])
+    dFz_dx, dFz_dy, dummy <span class="op">=</span> np.gradient (w, dx, dy, dz, axis<span class="op">=</span>[<span class="dv">1</span>,<span class="dv">0</span>,<span class="dv">2</span>])
 
-    rot_x = dFz_dy - dFy_dz
-    rot_y = dFx_dz - dFz_dx
-    rot_z = dFy_dx - dFx_dy
+    rot_x <span class="op">=</span> dFz_dy <span class="op">-</span> dFy_dz
+    rot_y <span class="op">=</span> dFx_dz <span class="op">-</span> dFz_dx
+    rot_z <span class="op">=</span> dFy_dx <span class="op">-</span> dFx_dy
 
-    l = np.sqrt(np.power(u,2.0) + np.power(v,2.0) + np.power(w,2.0));
+    l <span class="op">=</span> np.sqrt(np.power(u,<span class="fl">2.0</span>) <span class="op">+</span> np.power(v,<span class="fl">2.0</span>) <span class="op">+</span> np.power(w,<span class="fl">2.0</span>))<span class="op">;</span>
 
-    m1 = np.multiply(rot_x,u)
-    m2 = np.multiply(rot_y,v)
-    m3 = np.multiply(rot_z,w)
+    m1 <span class="op">=</span> np.multiply(rot_x,u)
+    m2 <span class="op">=</span> np.multiply(rot_y,v)
+    m3 <span class="op">=</span> np.multiply(rot_z,w)
 
-    tmp1 = (m1 + m2 + m3)
-    tmp2 = np.multiply(l,2.0)
+    tmp1 <span class="op">=</span> (m1 <span class="op">+</span> m2 <span class="op">+</span> m3)
+    tmp2 <span class="op">=</span> np.multiply(l,<span class="fl">2.0</span>)
 
-    av = np.divide(tmp1, tmp2)
+    av <span class="op">=</span> np.divide(tmp1, tmp2)
 
-    return rot_x, rot_y, rot_z, av
-</code></pre>
+    <span class="cf">return</span> rot_x, rot_y, rot_z, av</code></pre></div>
+<p>Örnek veri Matlab / Octave problemlerinden iyi bilinen rüzgar verisi [10]. Alttaki kodda ufak bir bölgedeki rüzgar hızını grafikliyoruz, ve ortasında curl hesabı yapıyoruz.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> axes3d
+<span class="im">import</span> scipy.io <span class="im">as</span> sio
 
-<p>Örnek veri Matlab / Octave problemlerinden iyi bilinen rüzgar verisi
-[10]. Alttaki kodda ufak bir bölgedeki rüzgar hızını grafikliyoruz, ve ortasında
-curl hesabı yapıyoruz.</p>
-<pre><code class="python">from mpl_toolkits.mplot3d import axes3d
-import scipy.io as sio
+mat <span class="op">=</span> sio.loadmat(<span class="st">&#39;wind.mat&#39;</span>)
+x <span class="op">=</span> mat[<span class="st">&#39;x&#39;</span>]<span class="op">;</span> y <span class="op">=</span> mat[<span class="st">&#39;y&#39;</span>]<span class="op">;</span> z <span class="op">=</span> mat[<span class="st">&#39;z&#39;</span>]
+u <span class="op">=</span> mat[<span class="st">&#39;u&#39;</span>]<span class="op">;</span> v <span class="op">=</span> mat[<span class="st">&#39;v&#39;</span>]<span class="op">;</span> w <span class="op">=</span> mat[<span class="st">&#39;w&#39;</span>]
 
-mat = sio.loadmat('wind.mat')
-x = mat['x']; y = mat['y']; z = mat['z']
-u = mat['u']; v = mat['v']; w = mat['w']
+rot_x, rot_y, rot_z, av <span class="op">=</span> curl(x,y,z,u,v,w)
 
-rot_x, rot_y, rot_z, av = curl(x,y,z,u,v,w)
+<span class="co"># i,j,k etrafinda ufak bir bolgeyi grafikle</span>
+i<span class="op">=</span><span class="dv">5</span><span class="op">;</span>j<span class="op">=</span><span class="dv">7</span><span class="op">;</span>k<span class="op">=</span><span class="dv">8</span><span class="op">;</span>S <span class="op">=</span> <span class="dv">3</span>
+x1 <span class="op">=</span> x[i<span class="op">-</span>S:i<span class="op">+</span>S, j<span class="op">-</span>S:j<span class="op">+</span>S, k<span class="op">-</span>S:k<span class="op">+</span>S]<span class="op">;</span> 
+y1 <span class="op">=</span> y[i<span class="op">-</span>S:i<span class="op">+</span>S, j<span class="op">-</span>S:j<span class="op">+</span>S, k<span class="op">-</span>S:k<span class="op">+</span>S]<span class="op">;</span> 
+z1 <span class="op">=</span> z[i<span class="op">-</span>S:i<span class="op">+</span>S, j<span class="op">-</span>S:j<span class="op">+</span>S, k<span class="op">-</span>S:k<span class="op">+</span>S]<span class="op">;</span>
+u1 <span class="op">=</span> u[i<span class="op">-</span>S:i<span class="op">+</span>S, j<span class="op">-</span>S:j<span class="op">+</span>S, k<span class="op">-</span>S:k<span class="op">+</span>S]<span class="op">;</span> 
+v1 <span class="op">=</span> v[i<span class="op">-</span>S:i<span class="op">+</span>S, j<span class="op">-</span>S:j<span class="op">+</span>S, k<span class="op">-</span>S:k<span class="op">+</span>S]<span class="op">;</span> 
+w1 <span class="op">=</span> w[i<span class="op">-</span>S:i<span class="op">+</span>S, j<span class="op">-</span>S:j<span class="op">+</span>S, k<span class="op">-</span>S:k<span class="op">+</span>S]<span class="op">;</span>
 
-# i,j,k etrafinda ufak bir bolgeyi grafikle
-i=5;j=7;k=8;S = 3
-x1 = x[i-S:i+S, j-S:j+S, k-S:k+S]; 
-y1 = y[i-S:i+S, j-S:j+S, k-S:k+S]; 
-z1 = z[i-S:i+S, j-S:j+S, k-S:k+S];
-u1 = u[i-S:i+S, j-S:j+S, k-S:k+S]; 
-v1 = v[i-S:i+S, j-S:j+S, k-S:k+S]; 
-w1 = w[i-S:i+S, j-S:j+S, k-S:k+S];
+fig <span class="op">=</span> plt.figure()
+ax <span class="op">=</span> fig.gca(projection<span class="op">=</span><span class="st">&#39;3d&#39;</span>)
+ax.view_init(elev<span class="op">=</span><span class="dv">36</span>, azim<span class="op">=</span><span class="dv">167</span>)
 
-fig = plt.figure()
-ax = fig.gca(projection='3d')
-ax.view_init(elev=36, azim=167)
+ax.quiver(x1, y1, z1, u1, v1, w1, length<span class="op">=</span><span class="fl">0.05</span>, color <span class="op">=</span> <span class="st">&#39;black&#39;</span>)
 
-ax.quiver(x1, y1, z1, u1, v1, w1, length=0.05, color = 'black')
+i<span class="op">=</span><span class="dv">5</span><span class="op">;</span>j<span class="op">=</span><span class="dv">7</span><span class="op">;</span>k<span class="op">=</span><span class="dv">8</span><span class="op">;</span>
+x0<span class="op">=</span>x[i,j,k]
+y0<span class="op">=</span>y[i,j,k]
+z0<span class="op">=</span>z[i,j,k]
+cx0<span class="op">=</span>rot_x[i,j,k]
+cy0<span class="op">=</span>rot_y[i,j,k]
+cz0<span class="op">=</span>rot_z[i,j,k]
+ax.quiver(x0, y0, z0, <span class="dv">0</span>, cy0, cz0, length<span class="op">=</span><span class="fl">1.0</span>, color <span class="op">=</span> <span class="st">&#39;blue&#39;</span>)
 
-i=5;j=7;k=8;
-x0=x[i,j,k]
-y0=y[i,j,k]
-z0=z[i,j,k]
-cx0=rot_x[i,j,k]
-cy0=rot_y[i,j,k]
-cz0=rot_z[i,j,k]
-ax.quiver(x0, y0, z0, 0, cy0, cz0, length=1.0, color = 'blue')
+plt.savefig(<span class="st">&#39;calc_multi_70_div_curl_lap_12.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="calc_multi_70_div_curl_lap_12.png" />
 
-plt.savefig('calc_multi_70_div_curl_lap_12.png')
-</code></pre>
-
-<p><img alt="" src="calc_multi_70_div_curl_lap_12.png" /></p>
-<p>Kaynaklar </p>
+</div>
+<p>Kaynaklar</p>
 <p>[1] Corral, <em>Vector Calculus</em></p>
-<p>[2] 3Blue1Brown, <em>Uzaklaşım (Divergence) ve Curl, Maxwell Denklemlerinin Dili</em>,
-    <a href="https://www.youtube.com/watch?v=8kX2f2olQao">https://www.youtube.com/watch?v=8kX2f2olQao</a></p>
+<p>[2] 3Blue1Brown, <em>Uzaklaşım (Divergence) ve Curl, Maxwell Denklemlerinin Dili</em>, <a href="https://www.youtube.com/watch?v=8kX2f2olQao" class="uri">https://www.youtube.com/watch?v=8kX2f2olQao</a></p>
 <p>[3] Matthews, <em>Vector Calculus</em></p>
 <p>[4] Kreyszig, <em>Advanced Engineering Mathematics 10th Ed</em></p>
-<p>[5] Mathworks del2, <a href="https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5">https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5</a></p>
-<p>[6] Kazarinoff, <a href="https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html">https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html</a></p>
-<p>[7] Petersdorff, <em>Example for curl and div of a 2D vector field</em>, <a href="http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4">http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4</a></p>
+<p>[5] Mathworks del2, <a href="https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5" class="uri">https://www.mathworks.com/help/matlab/ref/del2.html#bt1j8dn-5</a></p>
+<p>[6] Kazarinoff, <a href="https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html" class="uri">https://pythonforundergradengineers.com/quiver-plot-with-matplotlib-and-jupyter-notebooks.html</a></p>
+<p>[7] Petersdorff, <em>Example for curl and div of a 2D vector field</em>, <a href="http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4" class="uri">http://www2.math.umd.edu/~petersd/241/html/ex27b.html#4</a></p>
 <p>[8] Schey, <em>Div, Grad, Curl, All That, 4th Ed</em></p>
 <p>[9] Thomas, <em>Thomas Calculus, 11th Ed</em></p>
-<p>[10] Bayramlı, <em>Octave ile Ruzgar Verisi, wind.dat, Curl Ornekleri</em>,
-     <a href="https://burakbayramli.github.io/dersblog/sk/2020/09/octave-3d-wind.html">https://burakbayramli.github.io/dersblog/sk/2020/09/octave-3d-wind.html</a></p>
+<p>[10] Bayramlı, <em>Octave ile Ruzgar Verisi, wind.dat, Curl Ornekleri</em>, <a href="https://burakbayramli.github.io/dersblog/sk/2020/09/octave-3d-wind.html" class="uri">https://burakbayramli.github.io/dersblog/sk/2020/09/octave-3d-wind.html</a></p>
 <p>[11] Bayramlı, <em>Cok Boyutlu Calculus, Ders 19</em></p>
 <p>[12] Bayramlı, <em>Cok Boyutlu Calculus, Ders 22</em></p>
-          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
-
-          <br/><a href="../index.html">Yukarı</a>
-        </section>          
-      </div>
-    </body>
+</body>
 </html>

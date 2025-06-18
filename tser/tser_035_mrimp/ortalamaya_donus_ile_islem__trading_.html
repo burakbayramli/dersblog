@@ -1,444 +1,354 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Ortalamaya Dönüş ile İşlem (Trading)
-</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {inlineMath: [["$","$"]]}
-      });
-    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
-        cancel: ["Extension","cancel"],
-        bcancel: ["Extension","cancel"],
-        xcancel: ["Extension","cancel"],
-        cancelto: ["Extension","cancel"]
-      });
-    });
-    </script>
-   <script type="text/javascript"
-       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-   </script>
-   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  
+  
+  
+  
+</head>
+<body>
+<h1 id="ortalamaya-dönüş-ile-işlem-trading">Ortalamaya Dönüş ile İşlem (Trading)</h1>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf
+<span class="im">import</span> statsmodels.api <span class="im">as</span> sm
+<span class="im">import</span> pandas <span class="im">as</span> pd
+df <span class="op">=</span> pd.read_csv(<span class="st">&#39;gld_uso.csv&#39;</span>)
+cols <span class="op">=</span> [<span class="st">&#39;GLD&#39;</span>,<span class="st">&#39;USO&#39;</span>]</code></pre></div>
+<p>Borsada ortalamaya dönüş (mean-reversion) ile nasıl işlem yapılır? Daha önce örnekleri gördük, Z-skoru yarattık ve ona ters yönde işlem yaptık. Altta bazı ek noktalar gösterilecek.</p>
+<p>Lineer Regresyon ile bulunan yatırım bölüştürme oranı (hedge ratio) zaman serisinin her anı için &quot;en iyi'' olmayabilir. Bu durumda yatırımcı belli bir pencere üzerinden yakın tarihe bakıp oranı sürekli tekrar tekrar hesaplamayı seçebilir. Altta görülen kod bunu yapıyor,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> statsmodels.api <span class="im">as</span> sm
 
-<p><link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
-  </head>
-    <body>
-      <div id="header_wrap" class="outer">
-        <header class="inner">
-          <h1 id="project_title">
-            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
-          </h1>
-          <h2 id="project_tagline"></h2>        <br />
-        </header>
-      </div>
-      <div id="main_content_wrap" class="outer">      <br />
-        <section id="main_content" class="inner">
-        <h1>Ortalamaya Dönüş ile İşlem (Trading)
-</h1></p>
-<pre><code class="python">import statsmodels.formula.api as smf
-import statsmodels.api as sm
-import pandas as pd
-df = pd.read_csv('gld_uso.csv')
-cols = ['GLD','USO']
-</code></pre>
+lookback<span class="op">=</span><span class="dv">20</span><span class="op">;</span>
+df[<span class="st">&#39;hedgeRatio&#39;</span>] <span class="op">=</span> np.nan
 
-<p>Borsada ortalamaya dönüş (mean-reversion) ile nasıl işlem yapılır?  Daha
-önce örnekleri gördük, Z-skoru yarattık ve ona ters yönde işlem
-yaptık. Altta bazı ek noktalar gösterilecek.</p>
-<p>Lineer Regresyon ile bulunan yatırım bölüştürme oranı (hedge ratio) zaman
-serisinin her anı için "en iyi" olmayabilir. Bu durumda yatırımcı belli
-bir pencere üzerinden yakın tarihe bakıp oranı sürekli tekrar tekrar
-hesaplamayı seçebilir. Altta görülen kod bunu yapıyor,</p>
-<pre><code class="python">import statsmodels.api as sm
+<span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(lookback,<span class="bu">len</span>(df)):
+    x <span class="op">=</span> np.array(df[<span class="st">&#39;GLD&#39;</span>])[t<span class="op">-</span>lookback:t]
+    x <span class="op">=</span> sm.add_constant(x)
+    y <span class="op">=</span> np.array(df[<span class="st">&#39;USO&#39;</span>])[t<span class="op">-</span>lookback:t]
+    df.loc[t,<span class="st">&#39;hedgeRatio&#39;</span>] <span class="op">=</span> sm.OLS(y,x).fit().params[<span class="dv">1</span>]
 
-lookback=20;
-df['hedgeRatio'] = np.nan
-
-for t in range(lookback,len(df)):
-    x = np.array(df['GLD'])[t-lookback:t]
-    x = sm.add_constant(x)
-    y = np.array(df['USO'])[t-lookback:t]
-    df.loc[t,'hedgeRatio'] = sm.OLS(y,x).fit().params[1]
-
-yport = np.ones(df[cols].shape); yport[:,0] = -df['hedgeRatio']
-yport = np.sum(yport,axis=1)
-data_mean = pd.rolling_mean(yport, window=20)
-data_std = pd.rolling_std(yport, window=20)
-df['numUnits'] = -1*(yport-data_mean) / data_std
-tmp1 = np.ones(df[cols].shape) * np.array([df['numUnits']]).T
-tmp2 = np.ones(df[cols].shape); tmp2[:, 0] = -df['hedgeRatio']
-positions = pd.DataFrame(tmp1 * tmp2 * df[cols])
-pnl = positions.shift(1) * (df[cols] - df[cols].shift(1))  / df[cols].shift(1)
-pnl = pnl.sum(axis=1)
-ret=pnl / np.sum(np.abs(positions.shift(1)),axis=1)
-print 'APR', ((np.prod(1.+ret))**(252./len(ret)))-1
-print 'Sharpe', np.sqrt(252.)*np.mean(ret)/np.std(ret)
-</code></pre>
-
+yport <span class="op">=</span> np.ones(df[cols].shape)<span class="op">;</span> yport[:,<span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span>df[<span class="st">&#39;hedgeRatio&#39;</span>]
+yport <span class="op">=</span> np.<span class="bu">sum</span>(yport,axis<span class="op">=</span><span class="dv">1</span>)
+data_mean <span class="op">=</span> pd.rolling_mean(yport, window<span class="op">=</span><span class="dv">20</span>)
+data_std <span class="op">=</span> pd.rolling_std(yport, window<span class="op">=</span><span class="dv">20</span>)
+df[<span class="st">&#39;numUnits&#39;</span>] <span class="op">=</span> <span class="dv">-1</span><span class="op">*</span>(yport<span class="op">-</span>data_mean) <span class="op">/</span> data_std
+tmp1 <span class="op">=</span> np.ones(df[cols].shape) <span class="op">*</span> np.array([df[<span class="st">&#39;numUnits&#39;</span>]]).T
+tmp2 <span class="op">=</span> np.ones(df[cols].shape)<span class="op">;</span> tmp2[:, <span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span>df[<span class="st">&#39;hedgeRatio&#39;</span>]
+positions <span class="op">=</span> pd.DataFrame(tmp1 <span class="op">*</span> tmp2 <span class="op">*</span> df[cols])
+pnl <span class="op">=</span> positions.shift(<span class="dv">1</span>) <span class="op">*</span> (df[cols] <span class="op">-</span> df[cols].shift(<span class="dv">1</span>))  <span class="op">/</span> df[cols].shift(<span class="dv">1</span>)
+pnl <span class="op">=</span> pnl.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)
+ret<span class="op">=</span>pnl <span class="op">/</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(positions.shift(<span class="dv">1</span>)),axis<span class="op">=</span><span class="dv">1</span>)
+<span class="bu">print</span> <span class="st">&#39;APR&#39;</span>, ((np.prod(<span class="fl">1.</span><span class="op">+</span>ret))<span class="op">**</span>(<span class="fl">252.</span><span class="op">/</span><span class="bu">len</span>(ret)))<span class="op">-</span><span class="dv">1</span>
+<span class="bu">print</span> <span class="st">&#39;Sharpe&#39;</span>, np.sqrt(<span class="fl">252.</span>)<span class="op">*</span>np.mean(ret)<span class="op">/</span>np.std(ret)</code></pre></div>
 <pre><code>APR 0.233190876207
-Sharpe 1.12157265435
-</code></pre>
-
-<p>Yıllık getiri yüzde 23 Sharpe oranı 1.12. Fena değil çünkü bu seri
-koentegre bile değil,</p>
-<pre><code class="python">import sys; sys.path.append('../tser_coint')
-import pyconometrics
-print pyconometrics.cadf(np.matrix(df['GLD']).H,
-                         np.matrix(df['USO']).H,0,1)
-
-</code></pre>
-
-<pre><code>{'adf': -1.5150247935770809, 'alpha': -0.003112483397873777,
-'nlag': 1, 'crit': matrix([[-3.88031, -3.35851, -3.03798,
--1.01144, -0.65334,  0.15312]]), 'nvar': 1}
-</code></pre>
-
+Sharpe 1.12157265435</code></pre>
+<p>Yıllık getiri yüzde 23 Sharpe oranı 1.12. Fena değil çünkü bu seri koentegre bile değil,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> sys<span class="op">;</span> sys.path.append(<span class="st">&#39;../tser_coint&#39;</span>)
+<span class="im">import</span> pyconometrics
+<span class="bu">print</span> pyconometrics.cadf(np.matrix(df[<span class="st">&#39;GLD&#39;</span>]).H,
+                         np.matrix(df[<span class="st">&#39;USO&#39;</span>]).H,<span class="dv">0</span>,<span class="dv">1</span>)</code></pre></div>
+<pre><code>{&#39;adf&#39;: -1.5150247935770809, &#39;alpha&#39;: -0.003112483397873777,
+&#39;nlag&#39;: 1, &#39;crit&#39;: matrix([[-3.88031, -3.35851, -3.03798,
+-1.01144, -0.65334,  0.15312]]), &#39;nvar&#39;: 1}</code></pre>
 <p>Oran Kullanımı</p>
-<p>Eğer basit bir şekilde $y/x$ ile iki varlığını oranını "işlem sinyali"
-olarak kullansaydık ne olurdu? Ayrıca diyelim ki her iki varlığa eşit para
-yatırıyoruz,</p>
-<pre><code class="python">df['hedgeRatio'] = df['USO'] / df['GLD']
-data_mean = pd.rolling_mean(df['hedgeRatio'], window=20)
-data_std = pd.rolling_std(df['hedgeRatio'], window=20)
-df['numUnits'] = -1*(df['hedgeRatio']-data_mean) / data_std
-positions = df[['numUnits','numUnits']].copy()
-positions = positions * np.array([-1., 1.])
-pnl = positions.shift(1) * np.array((df[cols] - df[cols].shift(1))  
-      / df[cols].shift(1))
-pnl = pnl.fillna(0).sum(axis=1)
-ret=pnl / np.sum(np.abs(positions.shift(1)),axis=1)
-print 'APR', ((np.prod(1.+ret))**(252./len(ret)))-1.
-print 'Sharpe', np.sqrt(252.)*np.mean(ret)/np.std(ret)
-</code></pre>
-
+<p>Eğer basit bir şekilde <span class="math inline">\(y/x\)</span> ile iki varlığını oranını &quot;işlem sinyali'' olarak kullansaydık ne olurdu? Ayrıca diyelim ki her iki varlığa eşit para yatırıyoruz,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">df[<span class="st">&#39;hedgeRatio&#39;</span>] <span class="op">=</span> df[<span class="st">&#39;USO&#39;</span>] <span class="op">/</span> df[<span class="st">&#39;GLD&#39;</span>]
+data_mean <span class="op">=</span> pd.rolling_mean(df[<span class="st">&#39;hedgeRatio&#39;</span>], window<span class="op">=</span><span class="dv">20</span>)
+data_std <span class="op">=</span> pd.rolling_std(df[<span class="st">&#39;hedgeRatio&#39;</span>], window<span class="op">=</span><span class="dv">20</span>)
+df[<span class="st">&#39;numUnits&#39;</span>] <span class="op">=</span> <span class="dv">-1</span><span class="op">*</span>(df[<span class="st">&#39;hedgeRatio&#39;</span>]<span class="op">-</span>data_mean) <span class="op">/</span> data_std
+positions <span class="op">=</span> df[[<span class="st">&#39;numUnits&#39;</span>,<span class="st">&#39;numUnits&#39;</span>]].copy()
+positions <span class="op">=</span> positions <span class="op">*</span> np.array([<span class="op">-</span><span class="fl">1.</span>, <span class="fl">1.</span>])
+pnl <span class="op">=</span> positions.shift(<span class="dv">1</span>) <span class="op">*</span> np.array((df[cols] <span class="op">-</span> df[cols].shift(<span class="dv">1</span>))  
+      <span class="op">/</span> df[cols].shift(<span class="dv">1</span>))
+pnl <span class="op">=</span> pnl.fillna(<span class="dv">0</span>).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)
+ret<span class="op">=</span>pnl <span class="op">/</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(positions.shift(<span class="dv">1</span>)),axis<span class="op">=</span><span class="dv">1</span>)
+<span class="bu">print</span> <span class="st">&#39;APR&#39;</span>, ((np.prod(<span class="fl">1.</span><span class="op">+</span>ret))<span class="op">**</span>(<span class="fl">252.</span><span class="op">/</span><span class="bu">len</span>(ret)))<span class="op">-</span><span class="fl">1.</span>
+<span class="bu">print</span> <span class="st">&#39;Sharpe&#39;</span>, np.sqrt(<span class="fl">252.</span>)<span class="op">*</span>np.mean(ret)<span class="op">/</span>np.std(ret)</code></pre></div>
 <pre><code>APR -0.140673558863
-Sharpe -0.749582932902
-</code></pre>
+Sharpe -0.749582932902</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">plt.plot(np.cumprod(<span class="dv">1</span><span class="op">+</span>ret)<span class="op">-</span><span class="dv">1</span>)
+plt.hold(<span class="va">False</span>)
+plt.savefig(<span class="st">&#39;tser_mrimp_01.png&#39;</span>)
+plt.hold(<span class="va">False</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_01.png" />
 
-<pre><code class="python">plt.plot(np.cumprod(1+ret)-1)
-plt.hold(False)
-plt.savefig('tser_mrimp_01.png')
-plt.hold(False)
-</code></pre>
-
-<p><img alt="" src="tser_mrimp_01.png" /></p>
-<p>Sonuç iyi değil. </p>
+</div>
+<p>Sonuç iyi değil.</p>
 <p>Bollinger Bantları</p>
-<p>Şimdiye kadar gösterilen lineer strateji basit: tek birimlik
-durağanlaştırılmış portföy eğer piyasanın yürüyen ortalama üzerinden olan
-fiyatın üzerine çıkmışsa, bu çıkış oranında varlık al, düşüşte satmaya
-başla. Bölüştürme oranı iki kere kullanılıyor yani, ilk önce yürüyen
-ortalama fiyatlarını birleştirmek için, ve sonra en son piyasa fiyatlarını
-birleştirmek için. Bu iki serinin birisi durağan serinin son hali,
-ortalamadan sapmayı bu ikinci serinin birincisine oranla ölçüyoruz. </p>
-<p>Bu strateji seçildi çünkü hiçbir dış parametre gerektirmeyen bir
-strateji. Az parametre iyi bir şey, böylece aşırı uygunluk (overfitting)
-gibi problemlerden biraz daha uzaklaşmış oluyoruz (parametreler geçmiş
-veriye aşırı iyi uyuyor, bu sebeple geleceği tahmin yeteneği kayboluyor). </p>
-<p>Bollinger bantları üstteki stratejinin bir uzantısı, yine ortalamadan
-uzaklaşınca pozisyona giriyoruz, fakat bu uzaklaşmanın kaç standart sapma
-oranında olduğuna bakıyoruz. Mesela uzaklaşma 1 standart sapma oranından
-fazla ise girebiliriz, 0 standart sapma oranında ise (yani ortalama
-üzerinde) pozisyondan çıkarız (bu parametre isimleri sırasıyla
-<code>entryZscore</code>, <code>exitZscore</code>. Ya da <code>entryZscore=1</code>,
-<code>exitZscore=-1</code> diyebilirdik, bu durumda üstte ve altta 1 standart
-sapmadan fazla olduğu zaman alım, satım olurdu.</p>
-<pre><code class="python">lookback=20;
+<p>Şimdiye kadar gösterilen lineer strateji basit: tek birimlik durağanlaştırılmış portföy eğer piyasanın yürüyen ortalama üzerinden olan fiyatın üzerine çıkmışsa, bu çıkış oranında varlık al, düşüşte satmaya başla. Bölüştürme oranı iki kere kullanılıyor yani, ilk önce yürüyen ortalama fiyatlarını birleştirmek için, ve sonra en son piyasa fiyatlarını birleştirmek için. Bu iki serinin birisi durağan serinin son hali, ortalamadan sapmayı bu ikinci serinin birincisine oranla ölçüyoruz.</p>
+<p>Bu strateji seçildi çünkü hiçbir dış parametre gerektirmeyen bir strateji. Az parametre iyi bir şey, böylece aşırı uygunluk (overfitting) gibi problemlerden biraz daha uzaklaşmış oluyoruz (parametreler geçmiş veriye aşırı iyi uyuyor, bu sebeple geleceği tahmin yeteneği kayboluyor).</p>
+<p>Bollinger bantları üstteki stratejinin bir uzantısı, yine ortalamadan uzaklaşınca pozisyona giriyoruz, fakat bu uzaklaşmanın kaç standart sapma oranında olduğuna bakıyoruz. Mesela uzaklaşma 1 standart sapma oranından fazla ise girebiliriz, 0 standart sapma oranında ise (yani ortalama üzerinde) pozisyondan çıkarız (bu parametre isimleri sırasıyla <code>entryZscore</code>, <code>exitZscore</code>. Ya da <code>entryZscore=1</code>, <code>exitZscore=-1</code> diyebilirdik, bu durumda üstte ve altta 1 standart sapmadan fazla olduğu zaman alım, satım olurdu.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">lookback<span class="op">=</span><span class="dv">20</span><span class="op">;</span>
 
-df['hedgeRatio'] = np.nan
-for t in range(lookback,len(df)):
-    x = np.array(df['GLD'])[t-lookback:t]
-    x = sm.add_constant(x)
-    y = np.array(df['USO'])[t-lookback:t]
-    df.loc[t,'hedgeRatio'] = sm.OLS(y,x).fit().params[1]   
-</code></pre>
+df[<span class="st">&#39;hedgeRatio&#39;</span>] <span class="op">=</span> np.nan
+<span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(lookback,<span class="bu">len</span>(df)):
+    x <span class="op">=</span> np.array(df[<span class="st">&#39;GLD&#39;</span>])[t<span class="op">-</span>lookback:t]
+    x <span class="op">=</span> sm.add_constant(x)
+    y <span class="op">=</span> np.array(df[<span class="st">&#39;USO&#39;</span>])[t<span class="op">-</span>lookback:t]
+    df.loc[t,<span class="st">&#39;hedgeRatio&#39;</span>] <span class="op">=</span> sm.OLS(y,x).fit().params[<span class="dv">1</span>]   </code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">cols <span class="op">=</span> [<span class="st">&#39;GLD&#39;</span>,<span class="st">&#39;USO&#39;</span>]
 
-<pre><code class="python">cols = ['GLD','USO']
+yport <span class="op">=</span> np.ones(df[cols].shape)
+yport[:,<span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span>df[<span class="st">&#39;hedgeRatio&#39;</span>]
+yport <span class="op">=</span> yport <span class="op">*</span> df[cols]
+yport <span class="op">=</span> yport[cols].<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)
 
-yport = np.ones(df[cols].shape)
-yport[:,0] = -df['hedgeRatio']
-yport = yport * df[cols]
-yport = yport[cols].sum(axis=1)
+data_mean <span class="op">=</span> pd.rolling_mean(yport, window<span class="op">=</span><span class="dv">20</span>)
+data_std <span class="op">=</span> pd.rolling_std(yport, window<span class="op">=</span><span class="dv">20</span>)
+zScore<span class="op">=</span>(yport<span class="op">-</span>data_mean)<span class="op">/</span>data_std
 
-data_mean = pd.rolling_mean(yport, window=20)
-data_std = pd.rolling_std(yport, window=20)
-zScore=(yport-data_mean)/data_std
+entryZscore<span class="op">=</span><span class="fl">1.</span>
+exitZscore<span class="op">=</span><span class="dv">0</span>
 
-entryZscore=1.
-exitZscore=0
+longsEntry<span class="op">=</span>zScore <span class="op">&lt;</span> <span class="op">-</span>entryZscore
+longsExit<span class="op">=</span>zScore <span class="op">&gt;</span> <span class="op">-</span>exitZscore
+shortsEntry<span class="op">=</span>zScore <span class="op">&gt;</span> entryZscore
+shortsExit<span class="op">=</span>zScore <span class="op">&lt;</span> exitZscore
 
-longsEntry=zScore &lt; -entryZscore
-longsExit=zScore &gt; -exitZscore
-shortsEntry=zScore &gt; entryZscore
-shortsExit=zScore &lt; exitZscore
+numUnitsLong <span class="op">=</span> pd.Series([np.nan <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(df))])
+numUnitsShort <span class="op">=</span> pd.Series([np.nan <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(df))])
+numUnitsLong[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.</span>
+numUnitsShort[<span class="dv">0</span>] <span class="op">=</span> <span class="fl">0.</span>
 
-numUnitsLong = pd.Series([np.nan for i in range(len(df))])
-numUnitsShort = pd.Series([np.nan for i in range(len(df))])
-numUnitsLong[0] = 0.
-numUnitsShort[0] = 0.
+numUnitsLong[longsEntry] <span class="op">=</span> <span class="fl">1.0</span>
+numUnitsLong[longsExit] <span class="op">=</span> <span class="fl">0.0</span>
+numUnitsLong <span class="op">=</span> numUnitsLong.fillna(method<span class="op">=</span><span class="st">&#39;ffill&#39;</span>)
 
-numUnitsLong[longsEntry] = 1.0
-numUnitsLong[longsExit] = 0.0
-numUnitsLong = numUnitsLong.fillna(method='ffill')
+numUnitsShort[shortsEntry] <span class="op">=</span> <span class="fl">-1.0</span>
+numUnitsShort[shortsExit] <span class="op">=</span> <span class="fl">0.0</span>
+numUnitsShort <span class="op">=</span> numUnitsShort.fillna(method<span class="op">=</span><span class="st">&#39;ffill&#39;</span>)
+df[<span class="st">&#39;numUnits&#39;</span>] <span class="op">=</span> numUnitsShort <span class="op">+</span> numUnitsLong
 
-numUnitsShort[shortsEntry] = -1.0
-numUnitsShort[shortsExit] = 0.0
-numUnitsShort = numUnitsShort.fillna(method='ffill')
-df['numUnits'] = numUnitsShort + numUnitsLong
-
-tmp1 = np.ones(df[cols].shape) * np.array([df['numUnits']]).T
-tmp2 = np.ones(df[cols].shape); tmp2[:, 0] = -df['hedgeRatio']
-positions = pd.DataFrame(tmp1 * tmp2 * df[cols])
-pnl = positions.shift(1) * (df[cols] - df[cols].shift(1))  / df[cols].shift(1)
-pnl = pnl.sum(axis=1)
-ret=pnl / np.sum(np.abs(positions.shift(1)),axis=1)
-ret=ret.fillna(0)
-print 'APR', ((np.prod(1.+ret))**(252./len(ret)))-1
-print 'Sharpe', np.sqrt(252.)*np.mean(ret)/np.std(ret)
-</code></pre>
-
+tmp1 <span class="op">=</span> np.ones(df[cols].shape) <span class="op">*</span> np.array([df[<span class="st">&#39;numUnits&#39;</span>]]).T
+tmp2 <span class="op">=</span> np.ones(df[cols].shape)<span class="op">;</span> tmp2[:, <span class="dv">0</span>] <span class="op">=</span> <span class="op">-</span>df[<span class="st">&#39;hedgeRatio&#39;</span>]
+positions <span class="op">=</span> pd.DataFrame(tmp1 <span class="op">*</span> tmp2 <span class="op">*</span> df[cols])
+pnl <span class="op">=</span> positions.shift(<span class="dv">1</span>) <span class="op">*</span> (df[cols] <span class="op">-</span> df[cols].shift(<span class="dv">1</span>))  <span class="op">/</span> df[cols].shift(<span class="dv">1</span>)
+pnl <span class="op">=</span> pnl.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)
+ret<span class="op">=</span>pnl <span class="op">/</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(positions.shift(<span class="dv">1</span>)),axis<span class="op">=</span><span class="dv">1</span>)
+ret<span class="op">=</span>ret.fillna(<span class="dv">0</span>)
+<span class="bu">print</span> <span class="st">&#39;APR&#39;</span>, ((np.prod(<span class="fl">1.</span><span class="op">+</span>ret))<span class="op">**</span>(<span class="fl">252.</span><span class="op">/</span><span class="bu">len</span>(ret)))<span class="op">-</span><span class="dv">1</span>
+<span class="bu">print</span> <span class="st">&#39;Sharpe&#39;</span>, np.sqrt(<span class="fl">252.</span>)<span class="op">*</span>np.mean(ret)<span class="op">/</span>np.std(ret)</code></pre></div>
 <pre><code>APR 0.197715854801
-Sharpe 1.06408761242
-</code></pre>
+Sharpe 1.06408761242</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">plt.plot(np.cumprod(<span class="dv">1</span><span class="op">+</span>ret)<span class="op">-</span><span class="dv">1</span>)
+plt.hold(<span class="va">False</span>)
+plt.title(<span class="st">u&#39;Kümülatif Birleşik Getiri&#39;</span>)
+plt.savefig(<span class="st">&#39;tser_mrimp_02.png&#39;</span>)
+plt.hold(<span class="va">False</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_02.png" />
 
-<pre><code class="python">plt.plot(np.cumprod(1+ret)-1)
-plt.hold(False)
-plt.title(u'Kümülatif Birleşik Getiri')
-plt.savefig('tser_mrimp_02.png')
-plt.hold(False)
-</code></pre>
-
-<p><img alt="" src="tser_mrimp_02.png" /></p>
+</div>
 <p>Kalman Filtreleri ile Dinamik Lineer Regresyon</p>
-<p>Gerçekten koentegre halinde olan iki fiyat zaman serisi için yapılacaklar
-basit - bulabildiğin kadar tarihi veri bul, basit lineer regresyon ya da
-Johansen test kullanarak özvektörleri bul. Fakat diğer yazılarda gördüğümüz
-gibi pür koentegresyon çok az sayıda fiyat zaman serisinin erişebildiği bir
-mertebe. O zaman, zamana göre değişebilecek yatırım bölüştürme oranını
-(hedge ratio) nasıl hesaplayacağız? Diğer örneklerde gördük, bir geriye
-bakış penceresi kararlaştır, ve oranı sadece bu pencere içindeki tarihe
-veriden hesapla. Bu yaklaşımın dezavantajı, eğer pencere ufak ise pencere
-kaydırıldıkça yatırım oranı aşırı sapmalar gösterebilmesi. Aynı durum
-ortalamayı ve standard sapma için yürüyen ortalama ve yürüyen sapma
-kullanırken de ortaya çıkacak. O zaman eğer en sondaki verilere
-öncekilerden daha fazla ağırlık veren, ve kullanıcının kafasından attığı
-bir başlangıç noktasına göre pencere oluşturmayan bir yöntem olsa bu bir
-ilerleme olurdu. Yatırım bölüştürme oranını Kalman filtresi (KF) kullanarak
-hesaplayarak bu ilerlemeyi sağlamayı umuyoruz [1, sf 74].</p>
-<p>KF hakkında detaylar [2] yazısında bulunabilir; KF formüllerinin
-türetilmesi orada anlatıldı. Bu yazıda gereken bölüştürme oranı, ve yan
-ürün olarak bu oranın ortalamasını ve uçuculuğunu (volatility) hesaplamak,
-o zaman gizli değişken bölüştürme oranı $\beta$, görünen (observable)
-değişken ise fiyat zaman serisi $y$ olacak, yani daha önce basit lineer
-regresyona $y$ olarak verilen fiyat serisi. Tüm KF modeli,</p>
-<p>$$ \beta_t = I \cdot \beta_{t-1} + \omega_{t-1}$$</p>
-<p>$$ y_t = x_t \beta_t + \epsilon_t $$</p>
-<p>$\omega_{t-1},\epsilon_t$ Gaussian gürültü olmak üzere. </p>
-<p>Yukarıda ilginç birkaç "numara" yapıldı; aslında her iki seriyi de, hem
-$x$'i, hem $y$'yi biliyoruz, yani onlar "görünüyor". Ama yapmak
-istediğimiz numara bağlamında onlardan sadece birini görünen yaptık, ayrıca
-gizli değişkeni $\beta$ yaptık, genellikle bu tür bir parametre gizli
-değişkeni transforme eden matris olarak ele alınırdı. Görünen tek veri ise
-modele göre $y$. Bu durumda $x$ gizli değişkeni transforme eden matris gibi
-kullanılıyor, bu da ilginç. </p>
-<p>Üstteki formüllerden birincisi geçiş (transition) formülü, ve biz eldeki
-tüm verileri temsil eden tek bir $\beta$ aradığımız için bu $\beta$'nin
-değişmediğini modele söylüyoruz, bu sebeple geçiş matrisi $I$, yani birim
-matris, bu matris çarpımda hiçbir etki yaratmıyor.</p>
-<pre><code class="python">import numpy as np
+<p>Gerçekten koentegre halinde olan iki fiyat zaman serisi için yapılacaklar basit - bulabildiğin kadar tarihi veri bul, basit lineer regresyon ya da Johansen test kullanarak özvektörleri bul. Fakat diğer yazılarda gördüğümüz gibi pür koentegresyon çok az sayıda fiyat zaman serisinin erişebildiği bir mertebe. O zaman, zamana göre değişebilecek yatırım bölüştürme oranını (hedge ratio) nasıl hesaplayacağız? Diğer örneklerde gördük, bir geriye bakış penceresi kararlaştır, ve oranı sadece bu pencere içindeki tarihe veriden hesapla. Bu yaklaşımın dezavantajı, eğer pencere ufak ise pencere kaydırıldıkça yatırım oranı aşırı sapmalar gösterebilmesi. Aynı durum ortalamayı ve standard sapma için yürüyen ortalama ve yürüyen sapma kullanırken de ortaya çıkacak. O zaman eğer en sondaki verilere öncekilerden daha fazla ağırlık veren, ve kullanıcının kafasından attığı bir başlangıç noktasına göre pencere oluşturmayan bir yöntem olsa bu bir ilerleme olurdu. Yatırım bölüştürme oranını Kalman filtresi (KF) kullanarak hesaplayarak bu ilerlemeyi sağlamayı umuyoruz [1, sf 74].</p>
+<p>KF hakkında detaylar [2] yazısında bulunabilir; KF formüllerinin türetilmesi orada anlatıldı. Bu yazıda gereken bölüştürme oranı, ve yan ürün olarak bu oranın ortalamasını ve uçuculuğunu (volatility) hesaplamak, o zaman gizli değişken bölüştürme oranı <span class="math inline">\(\beta\)</span>, görünen (observable) değişken ise fiyat zaman serisi <span class="math inline">\(y\)</span> olacak, yani daha önce basit lineer regresyona <span class="math inline">\(y\)</span> olarak verilen fiyat serisi. Tüm KF modeli,</p>
+<p><span class="math display">\[ \beta_t = I \cdot \beta_{t-1} + \omega_{t-1}\]</span></p>
+<p><span class="math display">\[ y_t = x_t \beta_t + \epsilon_t \]</span></p>
+<p><span class="math inline">\(\omega_{t-1},\epsilon_t\)</span> Gaussian gürültü olmak üzere.</p>
+<p>Yukarıda ilginç birkaç &quot;numara'' yapıldı; aslında her iki seriyi de, hem <span class="math inline">\(x\)</span>'i, hem <span class="math inline">\(y\)</span>'yi biliyoruz, yani onlar &quot;görünüyor''. Ama yapmak istediğimiz numara bağlamında onlardan sadece birini görünen yaptık, ayrıca gizli değişkeni <span class="math inline">\(\beta\)</span> yaptık, genellikle bu tür bir parametre gizli değişkeni transforme eden matris olarak ele alınırdı. Görünen tek veri ise modele göre <span class="math inline">\(y\)</span>. Bu durumda <span class="math inline">\(x\)</span> gizli değişkeni transforme eden matris gibi kullanılıyor, bu da ilginç.</p>
+<p>Üstteki formüllerden birincisi geçiş (transition) formülü, ve biz eldeki tüm verileri temsil eden tek bir <span class="math inline">\(\beta\)</span> aradığımız için bu <span class="math inline">\(\beta\)</span>'nin değişmediğini modele söylüyoruz, bu sebeple geçiş matrisi <span class="math inline">\(I\)</span>, yani birim matris, bu matris çarpımda hiçbir etki yaratmıyor.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> numpy <span class="im">as</span> np
 
-def kalman_filter(x,y):
+<span class="kw">def</span> kalman_filter(x,y):
 
-    delta=0.0001
-    Ve=0.001
+    delta<span class="op">=</span><span class="fl">0.0001</span>
+    Ve<span class="op">=</span><span class="fl">0.001</span>
 
-    yhat = np.ones(len(y))*np.nan
-    e = np.ones(len(y))*np.nan
-    Q = np.ones(len(y))*np.nan
-    R = np.zeros((2,2))
-    P = np.zeros((2,2))
+    yhat <span class="op">=</span> np.ones(<span class="bu">len</span>(y))<span class="op">*</span>np.nan
+    e <span class="op">=</span> np.ones(<span class="bu">len</span>(y))<span class="op">*</span>np.nan
+    Q <span class="op">=</span> np.ones(<span class="bu">len</span>(y))<span class="op">*</span>np.nan
+    R <span class="op">=</span> np.zeros((<span class="dv">2</span>,<span class="dv">2</span>))
+    P <span class="op">=</span> np.zeros((<span class="dv">2</span>,<span class="dv">2</span>))
 
-    beta = np.matrix(np.zeros((2,len(y)))*np.nan)
+    beta <span class="op">=</span> np.matrix(np.zeros((<span class="dv">2</span>,<span class="bu">len</span>(y)))<span class="op">*</span>np.nan)
 
-    Vw=delta/(1-delta)*np.eye(2)
+    Vw<span class="op">=</span>delta<span class="op">/</span>(<span class="dv">1</span><span class="op">-</span>delta)<span class="op">*</span>np.eye(<span class="dv">2</span>)
 
-    beta[:, 0]=0.
+    beta[:, <span class="dv">0</span>]<span class="op">=</span><span class="fl">0.</span>
 
-    for t in range(len(y)):
-        if (t &gt; 0):
-            beta[:, t]=beta[:, t-1]
-            R=P+Vw
+    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(y)):
+        <span class="cf">if</span> (t <span class="op">&gt;</span> <span class="dv">0</span>):
+            beta[:, t]<span class="op">=</span>beta[:, t<span class="dv">-1</span>]
+            R<span class="op">=</span>P<span class="op">+</span>Vw
 
-        yhat[t]=np.dot(x[t, :],beta[:, t])
+        yhat[t]<span class="op">=</span>np.dot(x[t, :],beta[:, t])
 
-        xt = np.matrix(x[t, :])
-        Q[t] = np.dot(np.dot(xt,R),xt.T) + Ve
+        xt <span class="op">=</span> np.matrix(x[t, :])
+        Q[t] <span class="op">=</span> np.dot(np.dot(xt,R),xt.T) <span class="op">+</span> Ve
 
-        e[t]=y[t]-yhat[t]
+        e[t]<span class="op">=</span>y[t]<span class="op">-</span>yhat[t]
 
-        K=np.dot(R,np.matrix(x[t, :]).T) / Q[t]
+        K<span class="op">=</span>np.dot(R,np.matrix(x[t, :]).T) <span class="op">/</span> Q[t]
 
-        beta[:, t]=beta[:, t]+np.dot(K,np.matrix(e[t]))
+        beta[:, t]<span class="op">=</span>beta[:, t]<span class="op">+</span>np.dot(K,np.matrix(e[t]))
 
-        P=R-np.dot(np.dot(K,xt),R)
+        P<span class="op">=</span>R<span class="op">-</span>np.dot(np.dot(K,xt),R)
 
-    return beta, e, Q
-</code></pre>
+    <span class="cf">return</span> beta, e, Q</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> pandas <span class="im">as</span> pd, kf
+ewdf <span class="op">=</span> pd.read_csv(<span class="st">&#39;../tser_coint/ETF.csv&#39;</span>)
 
-<pre><code class="python">import pandas as pd, kf
-ewdf = pd.read_csv('../tser_coint/ETF.csv')
+x <span class="op">=</span> ewdf[[<span class="st">&#39;ewa&#39;</span>]].copy()
+y <span class="op">=</span> ewdf[[<span class="st">&#39;ewc&#39;</span>]].copy()
+x[<span class="st">&#39;intercept&#39;</span>] <span class="op">=</span> <span class="fl">1.</span>
 
-x = ewdf[['ewa']].copy()
-y = ewdf[['ewc']].copy()
-x['intercept'] = 1.
+x <span class="op">=</span> np.array(x)
+y <span class="op">=</span> np.array(y)
 
-x = np.array(x)
-y = np.array(y)
+beta, e, Q <span class="op">=</span> kf.kalman_filter(x,y)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">plt.plot(beta[<span class="dv">0</span>, :].T)
+plt.hold(<span class="va">True</span>)
+plt.title(<span class="st">&#39;EWC(y) ve EWA(x) Arasındaki Eğim - Beta[0,t]&#39;</span>)
+plt.savefig(<span class="st">&#39;tser_mrimp_03.png&#39;</span>)
+plt.hold(<span class="va">False</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_03.png" />
 
-beta, e, Q = kf.kalman_filter(x,y)
-</code></pre>
+</div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">plt.plot(beta[<span class="dv">1</span>, :].T)
+plt.hold(<span class="va">True</span>)
+plt.title(<span class="st">&#39;Kesi, Beta[1,t]&#39;</span>)
+plt.savefig(<span class="st">&#39;tser_mrimp_04.png&#39;</span>)
+plt.hold(<span class="va">False</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_04.png" />
 
-<pre><code class="python">plt.plot(beta[0, :].T)
-plt.hold(True)
-plt.title('EWC(y) ve EWA(x) Arasındaki Eğim - Beta[0,t]')
-plt.savefig('tser_mrimp_03.png')
-plt.hold(False)
-</code></pre>
+</div>
+<p>Bu modelin güzel yan etkilerinden biri şu oldu: KF'in doğal olarak hesapladığı parametreler ile direk bir ortalamaya-dönüş stratejisi kodlayabiliriz. <span class="math inline">\(e_t\)</span> içinde ölçüm tahmin hatası var, ki bu hata EWC-EWA'nın tahmin edilen ortalamasından sapmasından başka bir şey değil. Bu sapmayı satın alırız, eğer çok pozitif ise al-tut yaparız, çok negatif ise açığa satış. Çok pozitif, çok negatif neye göre belirlenir? Bu da <span class="math inline">\(e_t\)</span>'nin tahmin edilen standart sapmasından başka bir şey değil, ki bu bilgi de <span class="math inline">\(\sqrt{Q_t}\)</span> içinde! Her iki parametreyi grafiklersek alttaki görüntü çıkıyor.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">plt.plot(e[<span class="dv">2</span>:], <span class="st">&#39;r&#39;</span>)
+plt.hold(<span class="va">True</span>)
+plt.plot(np.sqrt(Q[<span class="dv">2</span>:]))
+plt.hold(<span class="va">True</span>)
+plt.savefig(<span class="st">&#39;tser_mrimp_05.png&#39;</span>)
+plt.hold(<span class="va">False</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_05.png" />
 
-<p><img alt="" src="tser_mrimp_03.png" /></p>
-<pre><code class="python">plt.plot(beta[1, :].T)
-plt.hold(True)
-plt.title('Kesi, Beta[1,t]')
-plt.savefig('tser_mrimp_04.png')
-plt.hold(False)
-</code></pre>
-
-<p><img alt="" src="tser_mrimp_04.png" /></p>
-<p>Bu modelin güzel yan etkilerinden biri şu oldu: KF'in doğal olarak
-hesapladığı parametreler ile direk bir ortalamaya-dönüş stratejisi
-kodlayabiliriz. $e_t$ içinde ölçüm tahmin hatası var, ki bu hata
-EWC-EWA'nın tahmin edilen ortalamasından sapmasından başka bir şey
-değil. Bu sapmayı satın alırız, eğer çok pozitif ise al-tut yaparız, çok
-negatif ise açığa satış. Çok pozitif, çok negatif neye göre belirlenir? Bu
-da $e_t$'nin tahmin edilen standart sapmasından başka bir şey değil, ki bu
-bilgi de $\sqrt{Q_t}$ içinde! Her iki parametreyi grafiklersek alttaki
-görüntü çıkıyor.</p>
-<pre><code class="python">plt.plot(e[2:], 'r')
-plt.hold(True)
-plt.plot(np.sqrt(Q[2:]))
-plt.hold(True)
-plt.savefig('tser_mrimp_05.png')
-plt.hold(False)
-</code></pre>
-
-<p><img alt="" src="tser_mrimp_05.png" /></p>
+</div>
 <p>Geri kalanlar daha önce Bollinger bantlarında gördüğümüz gibi.</p>
-<pre><code class="python">cols = ['ewa','ewc']
-y2 = ewdf[cols]
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">cols <span class="op">=</span> [<span class="st">&#39;ewa&#39;</span>,<span class="st">&#39;ewc&#39;</span>]
+y2 <span class="op">=</span> ewdf[cols]
 
-longsEntry=e &lt; -1*np.sqrt(Q)
-longsExit=e &gt; -1*np.sqrt(Q)
+longsEntry<span class="op">=</span>e <span class="op">&lt;</span> <span class="dv">-1</span><span class="op">*</span>np.sqrt(Q)
+longsExit<span class="op">=</span>e <span class="op">&gt;</span> <span class="dv">-1</span><span class="op">*</span>np.sqrt(Q)
 
-shortsEntry=e &gt; np.sqrt(Q)
-shortsExit=e &lt; np.sqrt(Q)
+shortsEntry<span class="op">=</span>e <span class="op">&gt;</span> np.sqrt(Q)
+shortsExit<span class="op">=</span>e <span class="op">&lt;</span> np.sqrt(Q)
 
-numUnitsLong = pd.Series([np.nan for i in range(len(ewdf))])
-numUnitsShort = pd.Series([np.nan for i in range(len(ewdf))])
-numUnitsLong[0]=0.
-numUnitsShort[0]=0.
+numUnitsLong <span class="op">=</span> pd.Series([np.nan <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ewdf))])
+numUnitsShort <span class="op">=</span> pd.Series([np.nan <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(ewdf))])
+numUnitsLong[<span class="dv">0</span>]<span class="op">=</span><span class="fl">0.</span>
+numUnitsShort[<span class="dv">0</span>]<span class="op">=</span><span class="fl">0.</span>
 
-numUnitsLong[longsEntry]=1.
-numUnitsLong[longsExit]=0
-numUnitsLong = numUnitsLong.fillna(method='ffill')
+numUnitsLong[longsEntry]<span class="op">=</span><span class="fl">1.</span>
+numUnitsLong[longsExit]<span class="op">=</span><span class="dv">0</span>
+numUnitsLong <span class="op">=</span> numUnitsLong.fillna(method<span class="op">=</span><span class="st">&#39;ffill&#39;</span>)
 
-numUnitsShort[shortsEntry]=-1.
-numUnitsShort[shortsExit]=0
-numUnitsShort = numUnitsShort.fillna(method='ffill')
+numUnitsShort[shortsEntry]<span class="op">=-</span><span class="fl">1.</span>
+numUnitsShort[shortsExit]<span class="op">=</span><span class="dv">0</span>
+numUnitsShort <span class="op">=</span> numUnitsShort.fillna(method<span class="op">=</span><span class="st">&#39;ffill&#39;</span>)
 
-ewdf['numUnits']=numUnitsLong+numUnitsShort
+ewdf[<span class="st">&#39;numUnits&#39;</span>]<span class="op">=</span>numUnitsLong<span class="op">+</span>numUnitsShort
 
-tmp1 = np.tile(np.matrix(ewdf.numUnits).T, len(cols))
-tmp2 = np.hstack((-1*beta[0, :].T,np.ones((len(ewdf),1))))
-positions = np.array(tmp1)*np.array(tmp2)*y2
-positions = pd.DataFrame(positions)
+tmp1 <span class="op">=</span> np.tile(np.matrix(ewdf.numUnits).T, <span class="bu">len</span>(cols))
+tmp2 <span class="op">=</span> np.hstack((<span class="op">-</span><span class="dv">1</span><span class="op">*</span>beta[<span class="dv">0</span>, :].T,np.ones((<span class="bu">len</span>(ewdf),<span class="dv">1</span>))))
+positions <span class="op">=</span> np.array(tmp1)<span class="op">*</span>np.array(tmp2)<span class="op">*</span>y2
+positions <span class="op">=</span> pd.DataFrame(positions)
 
-tmp1 = np.tile(np.matrix(ewdf.numUnits).T, len(cols))
-tmp2 = np.hstack((-1*beta[0, :].T,np.ones((len(ewdf),1))))
-positions = np.array(tmp1)*np.array(tmp2)*y2
+tmp1 <span class="op">=</span> np.tile(np.matrix(ewdf.numUnits).T, <span class="bu">len</span>(cols))
+tmp2 <span class="op">=</span> np.hstack((<span class="op">-</span><span class="dv">1</span><span class="op">*</span>beta[<span class="dv">0</span>, :].T,np.ones((<span class="bu">len</span>(ewdf),<span class="dv">1</span>))))
+positions <span class="op">=</span> np.array(tmp1)<span class="op">*</span>np.array(tmp2)<span class="op">*</span>y2
 
-positions = pd.DataFrame(positions)
+positions <span class="op">=</span> pd.DataFrame(positions)
 
-tmp1 = np.array(positions.shift(1))
-tmp2 = np.array(y2-y2.shift(1))
-tmp3 = np.array(y2.shift(1))
-pnl = np.sum(tmp1 * tmp2 / tmp3,axis=1)
-ret = pnl / np.sum(np.abs(positions.shift(1)),axis=1)
-ret = ret.fillna(0)
-print 'APR', ((np.prod(1.+ret))**(252./len(ret)))-1
-print 'Sharpe', np.sqrt(252.)*np.mean(ret)/np.std(ret)
-</code></pre>
-
+tmp1 <span class="op">=</span> np.array(positions.shift(<span class="dv">1</span>))
+tmp2 <span class="op">=</span> np.array(y2<span class="op">-</span>y2.shift(<span class="dv">1</span>))
+tmp3 <span class="op">=</span> np.array(y2.shift(<span class="dv">1</span>))
+pnl <span class="op">=</span> np.<span class="bu">sum</span>(tmp1 <span class="op">*</span> tmp2 <span class="op">/</span> tmp3,axis<span class="op">=</span><span class="dv">1</span>)
+ret <span class="op">=</span> pnl <span class="op">/</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(positions.shift(<span class="dv">1</span>)),axis<span class="op">=</span><span class="dv">1</span>)
+ret <span class="op">=</span> ret.fillna(<span class="dv">0</span>)
+<span class="bu">print</span> <span class="st">&#39;APR&#39;</span>, ((np.prod(<span class="fl">1.</span><span class="op">+</span>ret))<span class="op">**</span>(<span class="fl">252.</span><span class="op">/</span><span class="bu">len</span>(ret)))<span class="op">-</span><span class="dv">1</span>
+<span class="bu">print</span> <span class="st">&#39;Sharpe&#39;</span>, np.sqrt(<span class="fl">252.</span>)<span class="op">*</span>np.mean(ret)<span class="op">/</span>np.std(ret)</code></pre></div>
 <pre><code>APR 0.262251943494
-Sharpe 2.36194908518
-</code></pre>
-
+Sharpe 2.36194908518</code></pre>
 <p>ETF ve ETF'in Öğe Hisseleri Arasında Arbitraj</p>
-<p>Bir ETF ve onu oluşturan öğe hisseler arasında da arbitraj fırsatları
-vardır. Bu portföyü oluşturmak için her öğe hisse ile ETF arasında teker
-teker koentegrasyon aranır, diğerleri atılır. Bu örneği dünyanın belki de
-en ünlü ETF'i üzerinde göstereceğiz. Standart \&amp; Poors endeksini baz alan
-SPY.</p>
-<p>Tarihi veri olarak Ocak 1, 2007 ile Aralık 31, 2007 arasını seçtik, bu
-aralıktaki SPY öğelerinin SPY'in kendisi ile en az yüzde 90 koentegre olma
-şartını Johansen testi ile kontrol edeceğiz. Ardından bu seçilen senetlerin
-her birine eşit sermaye ayıracağız, ve tüm portföy üzerinde tekrar Johansen
-testi uygulayıp hala koentegre olup olmadığını kontrol edeceğiz. Bu ikinci
-test lazım çünkü her öğeye verilen kafamıza göre verdiğimiz (burada eşit)
-sermaye ağırlığı üzerinden oluşturulmuş portföyün illa koentegre olacağı
-gibi bir şart yoktur. Bu ikinci test için log fiyat kullanacağız, çünkü bu
-portföyü her gün tekrar dengeleyeceğimizi bekliyoruz, yani senet miktarı
-üzerinden değil sermaye seviyesini sabit tutacağız. </p>
-<pre><code class="python">import pandas as pd, zipfile
+<p>Bir ETF ve onu oluşturan öğe hisseler arasında da arbitraj fırsatları vardır. Bu portföyü oluşturmak için her öğe hisse ile ETF arasında teker teker koentegrasyon aranır, diğerleri atılır. Bu örneği dünyanın belki de en ünlü ETF'i üzerinde göstereceğiz. Standart &amp; Poors endeksini baz alan SPY.</p>
+<p>Tarihi veri olarak Ocak 1, 2007 ile Aralık 31, 2007 arasını seçtik, bu aralıktaki SPY öğelerinin SPY'in kendisi ile en az yüzde 90 koentegre olma şartını Johansen testi ile kontrol edeceğiz. Ardından bu seçilen senetlerin her birine eşit sermaye ayıracağız, ve tüm portföy üzerinde tekrar Johansen testi uygulayıp hala koentegre olup olmadığını kontrol edeceğiz. Bu ikinci test lazım çünkü her öğeye verilen kafamıza göre verdiğimiz (burada eşit) sermaye ağırlığı üzerinden oluşturulmuş portföyün illa koentegre olacağı gibi bir şart yoktur. Bu ikinci test için log fiyat kullanacağız, çünkü bu portföyü her gün tekrar dengeleyeceğimizi bekliyoruz, yani senet miktarı üzerinden değil sermaye seviyesini sabit tutacağız.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> pandas <span class="im">as</span> pd, zipfile
 
-with zipfile.ZipFile('SPY3.zip', 'r') as z:
-    dfspy3 =  pd.read_csv(z.open('SPY3.csv'),sep=',')
+<span class="cf">with</span> zipfile.ZipFile(<span class="st">&#39;SPY3.zip&#39;</span>, <span class="st">&#39;r&#39;</span>) <span class="im">as</span> z:
+    dfspy3 <span class="op">=</span>  pd.read_csv(z.<span class="bu">open</span>(<span class="st">&#39;SPY3.csv&#39;</span>),sep<span class="op">=</span><span class="st">&#39;,&#39;</span>)
 
-dfspy3 = dfspy3.set_index('Date')
-train = dfspy3[(dfspy3.index&gt;=20070101) &amp; (dfspy3.index&lt;=20071231)]
-testspy3 = dfspy3[(dfspy3.index &gt; 20071231)]
-resdf = pd.DataFrame(index=dfspy3.columns)
-resdf['isCoint'] = np.nan
+dfspy3 <span class="op">=</span> dfspy3.set_index(<span class="st">&#39;Date&#39;</span>)
+train <span class="op">=</span> dfspy3[(dfspy3.index<span class="op">&gt;=</span><span class="dv">20070101</span>) <span class="op">&amp;</span> (dfspy3.index<span class="op">&lt;=</span><span class="dv">20071231</span>)]
+testspy3 <span class="op">=</span> dfspy3[(dfspy3.index <span class="op">&gt;</span> <span class="dv">20071231</span>)]
+resdf <span class="op">=</span> pd.DataFrame(index<span class="op">=</span>dfspy3.columns)
+resdf[<span class="st">&#39;isCoint&#39;</span>] <span class="op">=</span> np.nan
 
-import sys; sys.path.append('../tser_coint')
-from johansen import coint_johansen, print_johan_stats
+<span class="im">import</span> sys<span class="op">;</span> sys.path.append(<span class="st">&#39;../tser_coint&#39;</span>)
+<span class="im">from</span> johansen <span class="im">import</span> coint_johansen, print_johan_stats
 
-for s in dfspy3.columns: 
-   if s == 'SPY': continue
-   # johansen cagrisini kullaniyoruz boylece y,x hangisi secmemiz 
-   # gerekmiyor
-   data = train[[s,'SPY']].dropna()
-   if len(data) &lt; 250: continue
-   res = coint_johansen(data, 0, 1)
-   if res.lr1[0] &gt; res.cvt[0][0]: 
-       resdf.loc[s,'isCoint'] = True
-print resdf.isCoint.sum()
-</code></pre>
-
-<pre><code>98
-</code></pre>
-
-<p>98 tane senet koentegre imiş. Şimdi bu senetlerle portföy oluşturalım, ve
-tekrar koentegrasyon testi yapalım,</p>
-<pre><code class="python">coint_cols = list(resdf[resdf.isCoint==True].index)
-yN = train[coint_cols]
-logMktVal_long = np.log(yN).sum(axis=1)
-ytest = pd.concat([logMktVal_long, np.log(train.SPY)],axis=1)
-res = coint_johansen(ytest, 0, 1)
-print_johan_stats(res)
-</code></pre>
-
+<span class="cf">for</span> s <span class="kw">in</span> dfspy3.columns: 
+   <span class="cf">if</span> s <span class="op">==</span> <span class="st">&#39;SPY&#39;</span>: <span class="cf">continue</span>
+   <span class="co"># johansen cagrisini kullaniyoruz boylece y,x hangisi secmemiz </span>
+   <span class="co"># gerekmiyor</span>
+   data <span class="op">=</span> train[[s,<span class="st">&#39;SPY&#39;</span>]].dropna()
+   <span class="cf">if</span> <span class="bu">len</span>(data) <span class="op">&lt;</span> <span class="dv">250</span>: <span class="cf">continue</span>
+   res <span class="op">=</span> coint_johansen(data, <span class="dv">0</span>, <span class="dv">1</span>)
+   <span class="cf">if</span> res.lr1[<span class="dv">0</span>] <span class="op">&gt;</span> res.cvt[<span class="dv">0</span>][<span class="dv">0</span>]: 
+       resdf.loc[s,<span class="st">&#39;isCoint&#39;</span>] <span class="op">=</span> <span class="va">True</span>
+<span class="bu">print</span> resdf.isCoint.<span class="bu">sum</span>()</code></pre></div>
+<pre><code>98</code></pre>
+<p>98 tane senet koentegre imiş. Şimdi bu senetlerle portföy oluşturalım, ve tekrar koentegrasyon testi yapalım,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">coint_cols <span class="op">=</span> <span class="bu">list</span>(resdf[resdf.isCoint<span class="op">==</span><span class="va">True</span>].index)
+yN <span class="op">=</span> train[coint_cols]
+logMktVal_long <span class="op">=</span> np.log(yN).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>)
+ytest <span class="op">=</span> pd.concat([logMktVal_long, np.log(train.SPY)],axis<span class="op">=</span><span class="dv">1</span>)
+res <span class="op">=</span> coint_johansen(ytest, <span class="dv">0</span>, <span class="dv">1</span>)
+print_johan_stats(res)</code></pre></div>
 <pre><code>trace statistic [ 15.86864835   6.19735725]
 critical vals %90,%95,%99
 r&lt;=0 [ 13.4294  15.4943  19.9349]
@@ -454,113 +364,95 @@ ozdegerler [ 0.0380959   0.02458181]
 ozvektorler
 
 [[   1.09386171   -0.27989806]
- [-105.55999232   56.09328286]]
-</code></pre>
+ [-105.55999232   56.09328286]]</code></pre>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">tmp1 <span class="op">=</span> np.ones((<span class="bu">len</span>(testspy3),resdf.isCoint.<span class="bu">sum</span>()))<span class="op">*</span>res.evec[<span class="dv">0</span>,<span class="dv">0</span>]
+tmp2 <span class="op">=</span> np.ones((<span class="bu">len</span>(testspy3),<span class="dv">1</span>))<span class="op">*</span>res.evec[<span class="dv">1</span>,<span class="dv">0</span>]
+weights <span class="op">=</span> np.hstack((tmp1,tmp2))
+yNplus <span class="op">=</span> testspy3[coint_cols <span class="op">+</span> [<span class="st">&#39;SPY&#39;</span>]]
+logMktVal <span class="op">=</span> np.<span class="bu">sum</span>(weights <span class="op">*</span> np.log(yNplus),axis<span class="op">=</span><span class="dv">1</span>)
+lookback<span class="op">=</span><span class="dv">5</span>
+data_mean <span class="op">=</span> pd.rolling_mean(logMktVal, window<span class="op">=</span>lookback)
+data_std <span class="op">=</span> pd.rolling_std(logMktVal, window<span class="op">=</span>lookback)
+numUnits <span class="op">=</span> <span class="dv">-1</span><span class="op">*</span>(logMktVal<span class="op">-</span>data_mean) <span class="op">/</span> data_std
 
-<pre><code class="python">tmp1 = np.ones((len(testspy3),resdf.isCoint.sum()))*res.evec[0,0]
-tmp2 = np.ones((len(testspy3),1))*res.evec[1,0]
-weights = np.hstack((tmp1,tmp2))
-yNplus = testspy3[coint_cols + ['SPY']]
-logMktVal = np.sum(weights * np.log(yNplus),axis=1)
-lookback=5
-data_mean = pd.rolling_mean(logMktVal, window=lookback)
-data_std = pd.rolling_std(logMktVal, window=lookback)
-numUnits = -1*(logMktVal-data_mean) / data_std
-
-numUnits2 = np.reshape(numUnits, (len(numUnits),1))
-positions = pd.DataFrame(np.tile(numUnits2, weights.shape[1]),\
-                        columns=yNplus.columns)*weights
-tmp1 = np.log(yNplus)-np.log(yNplus.shift(1))
-pnl = np.sum(np.array(positions.shift(1)) * np.array(tmp1), axis=1)
-ret = pnl / np.sum(np.abs(positions.shift(1)),axis=1)
-print 'APR', ((np.prod(1.+ret))**(252./len(ret)))-1
-print 'Sharpe', np.sqrt(252.)*np.mean(ret)/np.std(ret)
-</code></pre>
-
+numUnits2 <span class="op">=</span> np.reshape(numUnits, (<span class="bu">len</span>(numUnits),<span class="dv">1</span>))
+positions <span class="op">=</span> pd.DataFrame(np.tile(numUnits2, weights.shape[<span class="dv">1</span>]),<span class="op">\</span>
+                        columns<span class="op">=</span>yNplus.columns)<span class="op">*</span>weights
+tmp1 <span class="op">=</span> np.log(yNplus)<span class="op">-</span>np.log(yNplus.shift(<span class="dv">1</span>))
+pnl <span class="op">=</span> np.<span class="bu">sum</span>(np.array(positions.shift(<span class="dv">1</span>)) <span class="op">*</span> np.array(tmp1), axis<span class="op">=</span><span class="dv">1</span>)
+ret <span class="op">=</span> pnl <span class="op">/</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(positions.shift(<span class="dv">1</span>)),axis<span class="op">=</span><span class="dv">1</span>)
+<span class="bu">print</span> <span class="st">&#39;APR&#39;</span>, ((np.prod(<span class="fl">1.</span><span class="op">+</span>ret))<span class="op">**</span>(<span class="fl">252.</span><span class="op">/</span><span class="bu">len</span>(ret)))<span class="op">-</span><span class="dv">1</span>
+<span class="bu">print</span> <span class="st">&#39;Sharpe&#39;</span>, np.sqrt(<span class="fl">252.</span>)<span class="op">*</span>np.mean(ret)<span class="op">/</span>np.std(ret)</code></pre></div>
 <pre><code>APR 0.0449298745128
-Sharpe 1.32310985261
-</code></pre>
+Sharpe 1.32310985261</code></pre>
+<p>Sonuç ilk deneme için fena sayılmaz; Bazı basit ilerlemeler mümkündür, mesela her zaman aralığı için portföyü oluşturan senetleri değiştirmek.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">plt.plot(np.cumprod(<span class="dv">1</span><span class="op">+</span>ret)<span class="op">-</span><span class="dv">1</span>)
+plt.hold(<span class="va">True</span>)
+plt.savefig(<span class="st">&#39;tser_mrimp_06.png&#39;</span>)
+plt.hold(<span class="va">False</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_06.png" />
 
-<p>Sonuç ilk deneme için fena sayılmaz; Bazı basit ilerlemeler mümkündür,
-mesela her zaman aralığı için portföyü oluşturan senetleri değiştirmek.</p>
-<pre><code class="python">plt.plot(np.cumprod(1+ret)-1)
-plt.hold(True)
-plt.savefig('tser_mrimp_06.png')
-plt.hold(False)
-</code></pre>
-
-<p><img alt="" src="tser_mrimp_06.png" /></p>
+</div>
 <p>Trendli Ortalamaya Dönüş</p>
-<p>Bir tane de benden. Finans zaman serilerinin çoğunlukla bir trend'e dönüş
-yaptığını görebiliriz. Eğer bu trend'i çıkartırsak geriye kalan nedir?
-Ortalamaya dönüş yapan, durağan bir zaman serisi değil mi? S\&amp;P 500 üzerinde
-görelim,</p>
-<pre><code class="python">import pandas as pd
-df = pd.read_csv('../tser_draw_sharpe/SPY.csv',index_col='Date',parse_dates=True)
-df['SPY'] = df[['Adj Close']]
-df = df[df.index &lt; '2005-01-01']
+<p>Bir tane de benden. Finans zaman serilerinin çoğunlukla bir trend'e dönüş yaptığını görebiliriz. Eğer bu trend'i çıkartırsak geriye kalan nedir? Ortalamaya dönüş yapan, durağan bir zaman serisi değil mi? S&amp;P 500 üzerinde görelim,</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> pandas <span class="im">as</span> pd
+df <span class="op">=</span> pd.read_csv(<span class="st">&#39;../tser_draw_sharpe/SPY.csv&#39;</span>,index_col<span class="op">=</span><span class="st">&#39;Date&#39;</span>,parse_dates<span class="op">=</span><span class="va">True</span>)
+df[<span class="st">&#39;SPY&#39;</span>] <span class="op">=</span> df[[<span class="st">&#39;Adj Close&#39;</span>]]
+df <span class="op">=</span> df[df.index <span class="op">&lt;</span> <span class="st">&#39;2005-01-01&#39;</span>]
 df.SPY.plot()
-plt.savefig('tser_mrimp_07.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;tser_mrimp_07.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_07.png" />
 
-<p><img alt="" src="tser_mrimp_07.png" /></p>
-<p>Belli noktalarda geriye dönerek belli bir pencere içindeki zaman seri parçası
-üzerinde lineer regresyon uyguluyoruz. Daha sonra bu uydurduğumuz çizgiyi ileri
-dönük tahmin olarak kullanıyoruz, bu tahminin altına düşüşlerde alım, yukarı
-çıkışlarda satım yapıyoruz. </p>
-<pre><code class="python">import statsmodels.api as sm
-lookback = 100; forward = 30
-forward_points = range(lookback, len(df), forward)
-#print forward_points
+</div>
+<p>Belli noktalarda geriye dönerek belli bir pencere içindeki zaman seri parçası üzerinde lineer regresyon uyguluyoruz. Daha sonra bu uydurduğumuz çizgiyi ileri dönük tahmin olarak kullanıyoruz, bu tahminin altına düşüşlerde alım, yukarı çıkışlarda satım yapıyoruz.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> statsmodels.api <span class="im">as</span> sm
+lookback <span class="op">=</span> <span class="dv">100</span><span class="op">;</span> forward <span class="op">=</span> <span class="dv">30</span>
+forward_points <span class="op">=</span> <span class="bu">range</span>(lookback, <span class="bu">len</span>(df), forward)
+<span class="co">#print forward_points</span>
 
-x = np.ones((lookback,2))
-x[:,1] = np.array(range(lookback))
+x <span class="op">=</span> np.ones((lookback,<span class="dv">2</span>))
+x[:,<span class="dv">1</span>] <span class="op">=</span> np.array(<span class="bu">range</span>(lookback))
 
-for t in forward_points:    
-    y = df.SPY[t-lookback:t]
-    f = sm.OLS(y,x).fit()
-    df.loc[df.index[t],'intercept'] = f.params[0]
-    df.loc[df.index[t],'slope'] = f.params[1]
-    #print t, f.params[0], f.params[1]
+<span class="cf">for</span> t <span class="kw">in</span> forward_points:    
+    y <span class="op">=</span> df.SPY[t<span class="op">-</span>lookback:t]
+    f <span class="op">=</span> sm.OLS(y,x).fit()
+    df.loc[df.index[t],<span class="st">&#39;intercept&#39;</span>] <span class="op">=</span> f.params[<span class="dv">0</span>]
+    df.loc[df.index[t],<span class="st">&#39;slope&#39;</span>] <span class="op">=</span> f.params[<span class="dv">1</span>]
+    <span class="co">#print t, f.params[0], f.params[1]</span>
+    
+df[<span class="st">&#39;ols&#39;</span>] <span class="op">=</span> np.nan
+x_lookback <span class="op">=</span> np.array(<span class="bu">range</span>(lookback))
+<span class="cf">for</span> t <span class="kw">in</span> forward_points:
+   y <span class="op">=</span> x_lookback <span class="op">*</span> df.ix[t].slope <span class="op">+</span> df.ix[t].intercept
+   df.loc[t<span class="op">-</span>lookback:t,<span class="st">&#39;ols&#39;</span>] <span class="op">=</span> y
+df[[<span class="st">&#39;SPY&#39;</span>,<span class="st">&#39;ols&#39;</span>]].plot()
+plt.savefig(<span class="st">&#39;tser_mrimp_08.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_08.png" />
 
-df['ols'] = np.nan
-x_lookback = np.array(range(lookback))
-for t in forward_points:
-   y = x_lookback * df.ix[t].slope + df.ix[t].intercept
-   df.loc[t-lookback:t,'ols'] = y
-df[['SPY','ols']].plot()
-plt.savefig('tser_mrimp_08.png')
-</code></pre>
-
-<p><img alt="" src="tser_mrimp_08.png" /></p>
+</div>
 <p>Trend'i çıkartınca geriye kalanın hakikaten durağan olduğunu görelim,</p>
-<pre><code class="python">df['MR'] = df.SPY - df.ols
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">df[<span class="st">&#39;MR&#39;</span>] <span class="op">=</span> df.SPY <span class="op">-</span> df.ols
 df.MR.plot()
-plt.savefig('tser_mrimp_09.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;tser_mrimp_09.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="tser_mrimp_09.png" />
 
-<p><img alt="" src="tser_mrimp_09.png" /></p>
-<pre><code class="python">win=5
-data_mean = pd.rolling_mean(df.MR, window=win)
-data_std = pd.rolling_std(df.MR, window=win)
-df['mktVal'] = -1*(df.MR-data_mean) / data_std
-pnl = df['mktVal'].shift(1) * (df['MR']-df['MR'].shift(1))/ df['MR'].shift(1)
-ret=pnl.fillna(0) / np.sum(np.abs(df['mktVal'].shift(1)))
-print 'APR', ((np.prod(1.+ret))**(252./len(ret)))-1.
-print 'Sharpe', np.sqrt(252.)*np.mean(ret)/np.std(ret)
-</code></pre>
-
+</div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">win<span class="op">=</span><span class="dv">5</span>
+data_mean <span class="op">=</span> pd.rolling_mean(df.MR, window<span class="op">=</span>win)
+data_std <span class="op">=</span> pd.rolling_std(df.MR, window<span class="op">=</span>win)
+df[<span class="st">&#39;mktVal&#39;</span>] <span class="op">=</span> <span class="dv">-1</span><span class="op">*</span>(df.MR<span class="op">-</span>data_mean) <span class="op">/</span> data_std
+pnl <span class="op">=</span> df[<span class="st">&#39;mktVal&#39;</span>].shift(<span class="dv">1</span>) <span class="op">*</span> (df[<span class="st">&#39;MR&#39;</span>]<span class="op">-</span>df[<span class="st">&#39;MR&#39;</span>].shift(<span class="dv">1</span>))<span class="op">/</span> df[<span class="st">&#39;MR&#39;</span>].shift(<span class="dv">1</span>)
+ret<span class="op">=</span>pnl.fillna(<span class="dv">0</span>) <span class="op">/</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(df[<span class="st">&#39;mktVal&#39;</span>].shift(<span class="dv">1</span>)))
+<span class="bu">print</span> <span class="st">&#39;APR&#39;</span>, ((np.prod(<span class="fl">1.</span><span class="op">+</span>ret))<span class="op">**</span>(<span class="fl">252.</span><span class="op">/</span><span class="bu">len</span>(ret)))<span class="op">-</span><span class="fl">1.</span>
+<span class="bu">print</span> <span class="st">&#39;Sharpe&#39;</span>, np.sqrt(<span class="fl">252.</span>)<span class="op">*</span>np.mean(ret)<span class="op">/</span>np.std(ret)</code></pre></div>
 <pre><code>APR 0.280181769408
-Sharpe 0.888414859744
-</code></pre>
-
+Sharpe 0.888414859744</code></pre>
 <p>Kaynaklar</p>
 <p>[1] Chan, <em>Algorithmic Trading</em></p>
 <p>[2] Bayramlı, Fizik, <em>Kalman Filtreleri</em></p>
-          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
-
-          <br/><a href="../index.html">Yukarı</a>
-        </section>          
-      </div>
-    </body>
+</body>
 </html>

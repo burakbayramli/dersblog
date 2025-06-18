@@ -1,173 +1,146 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Birleşme Noktaları, Çizgiler, Hiperdüzlemler (Vanishing Points, Lines, Hyperplanes)
-</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {inlineMath: [["$","$"]]}
-      });
-    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
-      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
-        cancel: ["Extension","cancel"],
-        bcancel: ["Extension","cancel"],
-        xcancel: ["Extension","cancel"],
-        cancelto: ["Extension","cancel"]
-      });
-    });
-    </script>
-   <script type="text/javascript"
-       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
-   </script>
-   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <title></title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+  </style>
+  <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  
+  
+  
+  
+</head>
+<body>
+<h1 id="birleşme-noktaları-çizgiler-hiperdüzlemler-vanishing-points-lines-hyperplanes">Birleşme Noktaları, Çizgiler, Hiperdüzlemler (Vanishing Points, Lines, Hyperplanes)</h1>
+<p>Görüntü işlemede birleşme noktaları ufuk çizginde, dış dünyadaki genel yapının &quot;aktığı'' yer olarak tanımlanabilir. Mesela önümüzde düz giden bir yol var ise o yolun ufuk çizgisine değdiği yer birleşme noktasıdır. Birleşme noktalarının bir nokta olarak ortaya çıkmasının sebebi 3D-2D dönüşümüyle alakalı; üç boyutta parallel olan çizgilerin iki boyuta (diijal kameraya) yansıması onlarin tek noktada birleşmesine sebep olur.</p>
+<p><img src="vision_40lines_05.png" /> <img src="vision_40lines_07.png" /> <img src="vision_40lines_10.png" /></p>
+<p>Üstte bazı örnekler görüyoruz. Soldaki imajda birleşme noktası tren raylarının görülebilen son noktasıdır. Ortadaki imajda kırmızı çizgilerin birleştiği yer. Bir resimde birden fazla birleşme noktası da olabilir, mesela sağdaki resimde bu örnek görülüyor. Birleşme noktası imaj dışına da düşüyor olabilir, yine sağdaki resim.</p>
+<p>Görüntülerde derinliği anlamak, bu konuyu incelemek Rönesans'da başladı. Bu çağda görüntünün ne olduğu ciddi şekilde araştırıldı, ressamlar perspektifi dikkate alıp, birleşme noktalarını seçip ona göre resimlerini yapmaya başladılar. Mesela ünlü ressam Raphael'ın <em>Atina Okulu</em> adlı resmi [4].</p>
+<div class="figure">
+<img src="athens.jpg" />
 
-<p><link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
-  </head>
-    <body>
-      <div id="header_wrap" class="outer">
-        <header class="inner">
-          <h1 id="project_title">
-            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
-          </h1>
-          <h2 id="project_tagline"></h2>        <br />
-        </header>
-      </div>
-      <div id="main_content_wrap" class="outer">      <br />
-        <section id="main_content" class="inner">
-        <h1>Birleşme Noktaları, Çizgiler, Hiperdüzlemler (Vanishing Points, Lines, Hyperplanes)
-</h1></p>
-<p>Görüntü işlemede birleşme noktaları ufuk çizginde, dış dünyadaki genel
-yapının "aktığı" yer olarak tanımlanabilir. Mesela önümüzde düz giden bir
-yol var ise o yolun ufuk çizgisine değdiği yer birleşme
-noktasıdır. Birleşme noktalarının bir nokta olarak ortaya çıkmasının sebebi
-3D-2D dönüşümüyle alakalı; üç boyutta parallel olan çizgilerin iki boyuta
-(diijal kameraya) yansıması onlarin tek noktada birleşmesine sebep olur.</p>
-<p><img alt="" src="vision_40lines_05.png" />
-<img alt="" src="vision_40lines_07.png" />
-<img alt="" src="vision_40lines_10.png" /></p>
-<p>Üstte bazı örnekler görüyoruz. Soldaki imajda birleşme noktası tren
-raylarının görülebilen son noktasıdır. Ortadaki imajda kırmızı çizgilerin
-birleştiği yer. Bir resimde birden fazla birleşme noktası da olabilir,
-mesela sağdaki resimde bu örnek görülüyor. Birleşme noktası imaj dışına da
-düşüyor olabilir, yine sağdaki resim.</p>
-<p>Görüntülerde derinliği anlamak, bu konuyu incelemek Rönesans'da başladı. Bu
-çağda görüntünün ne olduğu ciddi şekilde araştırıldı, ressamlar perspektifi
-dikkate alıp, birleşme noktalarını seçip ona göre resimlerini yapmaya
-başladılar. Mesela ünlü ressam Raphael'ın <em>Atina Okulu</em> adlı resmi [4].</p>
-<p><img alt="" src="athens.jpg" /></p>
-<p>Bu resimde birleşme noktası filozof Sokrat'ın sol elinde, resimdeki tüm
-objeler bu noktaya göre şekillendirilmiş.</p>
+</div>
+<p>Bu resimde birleşme noktası filozof Sokrat'ın sol elinde, resimdeki tüm objeler bu noktaya göre şekillendirilmiş.</p>
 <p>Birleşme Noktalarını Bulmak</p>
-<p>Görüntü işleme çerçevesinde verili herhangi bir görüntüde birleşme
-noktalarını bulmak faydalı oluyor; bu noktalar robotik, yer bulma amaçlı
-olarak kullanılabiliyor. Çünkü eğer görüntüdeki genel yapının nereye doğru
-aktığını bulabiliyorsak, oraya doğru bir fiziksel gidiş de vardır demektir,
-ve otonom hareket eden robotlar bu bilgiyi kullanabilirler, ya da bu bilgi
-diğer ek görüntü işleme adımları için bir girdi olabilir. Belki elde
-tutulan kamera sürekli sallanıyordur, ama birleşim noktasını her görüntüde
-doğru bulabiliyorsak bu bu bilgiyi bir stabilizasyon amaçlı kullanabiliriz.</p>
-<p>Hesap icin ilk aşama görüntüdeki ana çizgileri bulmak. Ana çizgileri bulmak
-artık görüntü işlem biliminde demirbaş haline gelmiş Canny kenar bulucusu
-ve Hough transformu ile yapılabilir.</p>
-<pre><code class="python">from PIL import Image, ImageDraw
-from skimage.transform import  probabilistic_hough_line
-from skimage.feature import canny
-from skimage import data
-import pandas as pd
-</code></pre>
-
-<pre><code class="python">im1 = Image.open('in1.jpg').convert('L')
-edges1 = canny(np.array(im1), 2, 1, 25)
-lines1 = probabilistic_hough_line(edges1, threshold=10, line_length=30,line_gap=3)
-im1 = Image.open('in1.jpg')
-for line in lines1:
-    p0, p1 = line
-    plt.plot((p0[0], p1[0]), (p0[1], p1[1]))
+<p>Görüntü işleme çerçevesinde verili herhangi bir görüntüde birleşme noktalarını bulmak faydalı oluyor; bu noktalar robotik, yer bulma amaçlı olarak kullanılabiliyor. Çünkü eğer görüntüdeki genel yapının nereye doğru aktığını bulabiliyorsak, oraya doğru bir fiziksel gidiş de vardır demektir, ve otonom hareket eden robotlar bu bilgiyi kullanabilirler, ya da bu bilgi diğer ek görüntü işleme adımları için bir girdi olabilir. Belki elde tutulan kamera sürekli sallanıyordur, ama birleşim noktasını her görüntüde doğru bulabiliyorsak bu bu bilgiyi bir stabilizasyon amaçlı kullanabiliriz.</p>
+<p>Hesap icin ilk aşama görüntüdeki ana çizgileri bulmak. Ana çizgileri bulmak artık görüntü işlem biliminde demirbaş haline gelmiş Canny kenar bulucusu ve Hough transformu ile yapılabilir.</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">from</span> PIL <span class="im">import</span> Image, ImageDraw
+<span class="im">from</span> skimage.transform <span class="im">import</span>  probabilistic_hough_line
+<span class="im">from</span> skimage.feature <span class="im">import</span> canny
+<span class="im">from</span> skimage <span class="im">import</span> data
+<span class="im">import</span> pandas <span class="im">as</span> pd</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">im1 <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">&#39;in1.jpg&#39;</span>).convert(<span class="st">&#39;L&#39;</span>)
+edges1 <span class="op">=</span> canny(np.array(im1), <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">25</span>)
+lines1 <span class="op">=</span> probabilistic_hough_line(edges1, threshold<span class="op">=</span><span class="dv">10</span>, line_length<span class="op">=</span><span class="dv">30</span>,line_gap<span class="op">=</span><span class="dv">3</span>)
+im1 <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">&#39;in1.jpg&#39;</span>)
+<span class="cf">for</span> line <span class="kw">in</span> lines1:
+    p0, p1 <span class="op">=</span> line
+    plt.plot((p0[<span class="dv">0</span>], p1[<span class="dv">0</span>]), (p0[<span class="dv">1</span>], p1[<span class="dv">1</span>]))
 plt.imshow(im1)
-plt.savefig('vision_40lines_08.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;vision_40lines_08.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="vision_40lines_08.png" />
 
-<p><img alt="" src="vision_40lines_08.png" /></p>
-<pre><code class="python">im2 = Image.open('in2.jpg').convert('L')
-edges2 = canny(np.array(im2), 2, 1, 25)
-lines2 = probabilistic_hough_line(edges2, threshold=10, line_length=30,line_gap=3)
-im2 = Image.open('in2.jpg')
-for line in lines2:
-    p0, p1 = line
-    plt.plot((p0[0], p1[0]), (p0[1], p1[1]))
+</div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">im2 <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">&#39;in2.jpg&#39;</span>).convert(<span class="st">&#39;L&#39;</span>)
+edges2 <span class="op">=</span> canny(np.array(im2), <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">25</span>)
+lines2 <span class="op">=</span> probabilistic_hough_line(edges2, threshold<span class="op">=</span><span class="dv">10</span>, line_length<span class="op">=</span><span class="dv">30</span>,line_gap<span class="op">=</span><span class="dv">3</span>)
+im2 <span class="op">=</span> Image.<span class="bu">open</span>(<span class="st">&#39;in2.jpg&#39;</span>)
+<span class="cf">for</span> line <span class="kw">in</span> lines2:
+    p0, p1 <span class="op">=</span> line
+    plt.plot((p0[<span class="dv">0</span>], p1[<span class="dv">0</span>]), (p0[<span class="dv">1</span>], p1[<span class="dv">1</span>]))
 plt.imshow(im2)
-plt.savefig('vision_40lines_09.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;vision_40lines_09.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="vision_40lines_09.png" />
 
-<p><img alt="" src="vision_40lines_09.png" /></p>
-<p>Hough transformuna verilen <code>threshold</code>, <code>line_length</code>,
-<code>line_gap</code> parametreleri algoritmanın hassasiyetini ayarlıyor, mesela
-<code>line_length</code> bulunan çizgilerin en az kaç piksel olması gerektiğini
-tanımlıyor.</p>
-<p>Bir sonraki adım bu ana çizgileri alıp onların birleşebilecek olanlarını
-seçmek, ve en çok birleşim yapabilenleri üzerinden bir birleşim noktası
-bulmak. Ama önce iki boyutta çizgiler nasıl formüle edilir, ve kesişim
-nasıl bulunur, onu görelim.</p>
+</div>
+<p>Hough transformuna verilen <code>threshold</code>, <code>line_length</code>, <code>line_gap</code> parametreleri algoritmanın hassasiyetini ayarlıyor, mesela <code>line_length</code> bulunan çizgilerin en az kaç piksel olması gerektiğini tanımlıyor.</p>
+<p>Bir sonraki adım bu ana çizgileri alıp onların birleşebilecek olanlarını seçmek, ve en çok birleşim yapabilenleri üzerinden bir birleşim noktası bulmak. Ama önce iki boyutta çizgiler nasıl formüle edilir, ve kesişim nasıl bulunur, onu görelim.</p>
 <p>Çizgiler</p>
-<p>Bir çizgiyi $ax+by+c = 0$ genel formülüyle gösterebiliriz. $a,b,c$
-parametreleri özgün olarak iki boyutta bir çizgiyi tanımlayabilir, bu
-formülü tatmin eden sonsuza kadar tüm $x,y$ değerleri çizginin
-parçasıdır. </p>
-<p>Üstteki formülü lise matematiğinden bilinen $y=mx+i$'e ilişkilendirmek
-için, ki $m$ eğim (slope) ve $i$ kesi (intercept),</p>
-<p>$$ ax+by+c = 0 $$</p>
-<p>$$ by = -ax -c$$</p>
-<p>$$ y = -a/b x -c/b$$</p>
-<p>Yani eğim $m=-a/b$, kesi $-c/b$. Bu bilgiyi vektörel bir yön tanımlamak
-için şöyle düşünebiliriz, eğime göre $x$ yönünde atılan her $b$ adımı için
-$y$ yönünde $-a$ adımı atılacağına göre (ya da $-b$ için $a$ adımı), vektör
-alttaki gibi olur.</p>
-<p><img alt="" src="vision_40lines_06.png" /></p>
+<p>Bir çizgiyi <span class="math inline">\(ax+by+c = 0\)</span> genel formülüyle gösterebiliriz. <span class="math inline">\(a,b,c\)</span> parametreleri özgün olarak iki boyutta bir çizgiyi tanımlayabilir, bu formülü tatmin eden sonsuza kadar tüm <span class="math inline">\(x,y\)</span> değerleri çizginin parçasıdır.</p>
+<p>Üstteki formülü lise matematiğinden bilinen <span class="math inline">\(y=mx+i\)</span>'e ilişkilendirmek için, ki <span class="math inline">\(m\)</span> eğim (slope) ve <span class="math inline">\(i\)</span> kesi (intercept),</p>
+<p><span class="math display">\[ ax+by+c = 0 \]</span></p>
+<p><span class="math display">\[ by = -ax -c\]</span></p>
+<p><span class="math display">\[ y = -a/b x -c/b\]</span></p>
+<p>Yani eğim <span class="math inline">\(m=-a/b\)</span>, kesi <span class="math inline">\(-c/b\)</span>. Bu bilgiyi vektörel bir yön tanımlamak için şöyle düşünebiliriz, eğime göre <span class="math inline">\(x\)</span> yönünde atılan her <span class="math inline">\(b\)</span> adımı için <span class="math inline">\(y\)</span> yönünde <span class="math inline">\(-a\)</span> adımı atılacağına göre (ya da <span class="math inline">\(-b\)</span> için <span class="math inline">\(a\)</span> adımı), vektör alttaki gibi olur.</p>
+<div class="figure">
+<img src="vision_40lines_06.png" />
+
+</div>
 <p>Birkaç örneği grafikleyelim,</p>
-<pre><code class="python">import pandas as pd
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> pandas <span class="im">as</span> pd
 
-def plot_line(a,b,c):
-    # Formula is ax+by+c = 0 
-    x = np.linspace(-20,20,1000)    
-    m = -a/b # slope
-    i = -c/b # intercept
-    y = m*x + i
-    plt.plot(x,y,'.')
+<span class="kw">def</span> plot_line(a,b,c):
+    <span class="co"># Formula is ax+by+c = 0 </span>
+    x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>,<span class="dv">1000</span>)    
+    m <span class="op">=</span> <span class="op">-</span>a<span class="op">/</span>b <span class="co"># slope</span>
+    i <span class="op">=</span> <span class="op">-</span>c<span class="op">/</span>b <span class="co"># intercept</span>
+    y <span class="op">=</span> m<span class="op">*</span>x <span class="op">+</span> i
+    plt.plot(x,y,<span class="st">&#39;.&#39;</span>)
 
-l1 = np.array([1,1,-5])
-plot_line(l1[0],l1[1],l1[2])
-l2 = np.array([2,-1,10])
-plot_line(l2[0],l2[1],l2[2])
-plt.xlim(-10,10)
-plt.ylim(0,30)
-plt.grid(True)
-plt.savefig('vision_40lines_01.png')
-</code></pre>
+l1 <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">1</span>,<span class="op">-</span><span class="dv">5</span>])
+plot_line(l1[<span class="dv">0</span>],l1[<span class="dv">1</span>],l1[<span class="dv">2</span>])
+l2 <span class="op">=</span> np.array([<span class="dv">2</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">10</span>])
+plot_line(l2[<span class="dv">0</span>],l2[<span class="dv">1</span>],l2[<span class="dv">2</span>])
+plt.xlim(<span class="op">-</span><span class="dv">10</span>,<span class="dv">10</span>)
+plt.ylim(<span class="dv">0</span>,<span class="dv">30</span>)
+plt.grid(<span class="va">True</span>)
+plt.savefig(<span class="st">&#39;vision_40lines_01.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="vision_40lines_01.png" />
 
-<p><img alt="" src="vision_40lines_01.png" /></p>
+</div>
 <p>Homojen Kordinatlar, Kesişim</p>
-<p>Homojen kordinatların $(u,v,1)$ şeklinde olduğunu hatırlayalım, ki
-$(uw,vw, w)$ aynı kordinat oluyordu, çünkü bir homojen kordinatin
-3. hücresinde ne varsa tüm kordinat degerlerini onunla bölebiliyorduk [1].</p>
-<p>Kartezyen düzlemde çizgi denklemi $ax+by+c=0$'i şu şekilde görebiliriz,
-$x,y$ çizgi üzerinde birer noktadır, homojen bağlamda $x=u/w$, $y=v/w$
-olsun, o zaman $w$ ile çarparak, yani bu homojen $(u,v,w)$ noktasını ileri
-/ geri hareket ettirerek tüm çizgiyi kapsayabiliriz. Bu tanımları Kartezyen
-çizgi denklemine geri sokarsak, çizgiyi homojen olarak
-tanımlayabileceğimizi görürüz,</p>
-<p>$$ au + bv + w = 0$$</p>
-<p>Bu denklem homojen çizgi denklemi olarak biliniyor. Yani bir çizgiyi </p>
-<p>$$ \ell = (a,b,c)$$</p>
-<p>homojen kordinatlarıyla tanımlayabiliriz. $\ell$'in sıfır olmayan herhangi
-bir katı aynı çizgiyi tanımlayacağına göre $\ell$'yi bir yön olarak
-düşünmek te mümkün, ve çizgi için yönden başka bir şeye zaten ihtiyaç yok.</p>
-<p>Tüm bu tanımlara göre $p=(u,v,w)$'nin homojen kordinatta bir nokta olduğunu
-düşünelim. O zaman $p$'nin bir çizgi üzerinde olması demek, $p$ ve
-$\ell$'nin noktasal çarpımının sıfır olması demektir,</p>
-<p>$$ p \cdot \ell = 0$$</p>
-<p>Değil mi? Çünkü </p>
-<p>$$ 
+<p>Homojen kordinatların <span class="math inline">\((u,v,1)\)</span> şeklinde olduğunu hatırlayalım, ki <span class="math inline">\((uw,vw, w)\)</span> aynı kordinat oluyordu, çünkü bir homojen kordinatin 3. hücresinde ne varsa tüm kordinat degerlerini onunla bölebiliyorduk [1].</p>
+<p>Kartezyen düzlemde çizgi denklemi <span class="math inline">\(ax+by+c=0\)</span>'i şu şekilde görebiliriz, <span class="math inline">\(x,y\)</span> çizgi üzerinde birer noktadır, homojen bağlamda <span class="math inline">\(x=u/w\)</span>, <span class="math inline">\(y=v/w\)</span> olsun, o zaman <span class="math inline">\(w\)</span> ile çarparak, yani bu homojen <span class="math inline">\((u,v,w)\)</span> noktasını ileri / geri hareket ettirerek tüm çizgiyi kapsayabiliriz. Bu tanımları Kartezyen çizgi denklemine geri sokarsak, çizgiyi homojen olarak tanımlayabileceğimizi görürüz,</p>
+<p><span class="math display">\[ au + bv + w = 0\]</span></p>
+<p>Bu denklem homojen çizgi denklemi olarak biliniyor. Yani bir çizgiyi</p>
+<p><span class="math display">\[ \ell = (a,b,c)\]</span></p>
+<p>homojen kordinatlarıyla tanımlayabiliriz. <span class="math inline">\(\ell\)</span>'in sıfır olmayan herhangi bir katı aynı çizgiyi tanımlayacağına göre <span class="math inline">\(\ell\)</span>'yi bir yön olarak düşünmek te mümkün, ve çizgi için yönden başka bir şeye zaten ihtiyaç yok.</p>
+<p>Tüm bu tanımlara göre <span class="math inline">\(p=(u,v,w)\)</span>'nin homojen kordinatta bir nokta olduğunu düşünelim. O zaman <span class="math inline">\(p\)</span>'nin bir çizgi üzerinde olması demek, <span class="math inline">\(p\)</span> ve <span class="math inline">\(\ell\)</span>'nin noktasal çarpımının sıfır olması demektir,</p>
+<p><span class="math display">\[ p \cdot \ell = 0\]</span></p>
+<p>Değil mi? Çünkü</p>
+<p><span class="math display">\[ 
 au + bv + cw = 
 \left[\begin{array}{r}
 a \\ b \\ c
@@ -176,189 +149,149 @@ a \\ b \\ c
 \left[\begin{array}{r}
 u \\ v \\ w
 \end{array}\right] = 0
-$$</p>
-<p>O zaman iki çizginin kesişimini şöyle buluruz. Diyelim ki iki çizgi $\ell_1$
-ve $\ell_2$'nin kesişme noktası $p$, o zaman</p>
-<p>$$ \ell_1 \cdot p = 0, \qquad \ell_2 \cdot p = 0$$</p>
-<p>ki herşey homojen kordinatta. Üstteki tanımlardan şu sonuç çıkıyor, $p$ hem
-$\ell_1$ hem de $\ell_2$'ye dikgendir. İki vektöre dikgen olan üçüncü bir
-vektörü nasıl buluruz? Çapraz çarpımla! Yani $p = \ell_1 \times \ell_2$. O
-zaman kesişim noktasının hesabı gayet basit, mesela üstteki örnek için</p>
-<pre><code class="python">p = np.cross(l1,l2) 
-print p / p[2]
-</code></pre>
-
-<pre><code>[-2  6  1]
-</code></pre>
-
-<p>Hakikaten de kesişim noktasının $x=-2,y=6$'da olduğunu görebiliyoruz. </p>
-<p>Aynı mantıkla iki noktadan geçen bir çizginin formülünü bulmak için şunun
-doğru olduğundan hareket edebiliriz,</p>
-<p>$$ p_1 \cdot \ell = 0, \qquad p_2 \cdot \ell = 0$$</p>
-<p>O zaman bilinen iki noktadan geçen çizgi bu iki noktanın (homojen
-kordinatındaki) çapraz çarpımıdır! </p>
+\]</span></p>
+<p>O zaman iki çizginin kesişimini şöyle buluruz. Diyelim ki iki çizgi <span class="math inline">\(\ell_1\)</span> ve <span class="math inline">\(\ell_2\)</span>'nin kesişme noktası <span class="math inline">\(p\)</span>, o zaman</p>
+<p><span class="math display">\[ \ell_1 \cdot p = 0, \qquad \ell_2 \cdot p = 0\]</span></p>
+<p>ki herşey homojen kordinatta. Üstteki tanımlardan şu sonuç çıkıyor, <span class="math inline">\(p\)</span> hem <span class="math inline">\(\ell_1\)</span> hem de <span class="math inline">\(\ell_2\)</span>'ye dikgendir. İki vektöre dikgen olan üçüncü bir vektörü nasıl buluruz? Çapraz çarpımla! Yani <span class="math inline">\(p = \ell_1 \times \ell_2\)</span>. O zaman kesişim noktasının hesabı gayet basit, mesela üstteki örnek için</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">p <span class="op">=</span> np.cross(l1,l2) 
+<span class="bu">print</span> p <span class="op">/</span> p[<span class="dv">2</span>]</code></pre></div>
+<pre><code>[-2  6  1]</code></pre>
+<p>Hakikaten de kesişim noktasının <span class="math inline">\(x=-2,y=6\)</span>'da olduğunu görebiliyoruz.</p>
+<p>Aynı mantıkla iki noktadan geçen bir çizginin formülünü bulmak için şunun doğru olduğundan hareket edebiliriz,</p>
+<p><span class="math display">\[ p_1 \cdot \ell = 0, \qquad p_2 \cdot \ell = 0\]</span></p>
+<p>O zaman bilinen iki noktadan geçen çizgi bu iki noktanın (homojen kordinatındaki) çapraz çarpımıdır!</p>
 <p>Örnek</p>
-<p>(3,1) ve (-4,5)'den geçen çizginin formülü nedir? </p>
+<p>(3,1) ve (-4,5)'den geçen çizginin formülü nedir?</p>
 <p>Cevap</p>
-<p>Bu formül </p>
-<p>$$ \ell \cdot (3,1,1) = 0$$</p>
-<p>$$ \ell \cdot (-4,5,1) = 0$$</p>
-<p>denklemlerini tatmin etmelidir. O zaman çizgi </p>
-<pre><code class="python">print np.cross(np.array([3,1,1]), np.array([-4,5,1]))
-</code></pre>
-
-<pre><code>[-4 -7 19]
-</code></pre>
-
-<p>olacaktır. Yani çizgi formülü $4x + 7y - 19 = 0$. </p>
-<p>Yol bulmak amaçlı yol sonunu gösteren kesişim noktasını bulmak için bir
-algoritma şöyle olabilir,</p>
-<ol>
-<li>
-<p>Görüntüdeki yeterince büyük olan tüm çizgileri bul (çizgiler Hough
-transformdan başlangıç bitiş noktaları ile tanımlı, bunları çapraz çarpımı
-ile çizgi formülüne çevir).</p>
-</li>
-<li>
-<p>Tüm çizgiler arasındaki ikili kombinasyonlara teker teker bak, ve
-aralarındaki kesişim noktasını hesapla. </p>
-</li>
-<li>
-<p>İmajın orta noktasına uzak olan noktaları ele. </p>
-</li>
-<li>
-<p>Ortalamayı al.</p>
-</li>
+<p>Bu formül</p>
+<p><span class="math display">\[ \ell \cdot (3,1,1) = 0\]</span></p>
+<p><span class="math display">\[ \ell \cdot (-4,5,1) = 0\]</span></p>
+<p>denklemlerini tatmin etmelidir. O zaman çizgi</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="bu">print</span> np.cross(np.array([<span class="dv">3</span>,<span class="dv">1</span>,<span class="dv">1</span>]), np.array([<span class="op">-</span><span class="dv">4</span>,<span class="dv">5</span>,<span class="dv">1</span>]))</code></pre></div>
+<pre><code>[-4 -7 19]</code></pre>
+<p>olacaktır. Yani çizgi formülü <span class="math inline">\(4x + 7y - 19 = 0\)</span>.</p>
+<p>Yol bulmak amaçlı yol sonunu gösteren kesişim noktasını bulmak için bir algoritma şöyle olabilir,</p>
+<ol style="list-style-type: decimal">
+<li><p>Görüntüdeki yeterince büyük olan tüm çizgileri bul (çizgiler Hough transformdan başlangıç bitiş noktaları ile tanımlı, bunları çapraz çarpımı ile çizgi formülüne çevir).</p></li>
+<li><p>Tüm çizgiler arasındaki ikili kombinasyonlara teker teker bak, ve aralarındaki kesişim noktasını hesapla.</p></li>
+<li><p>İmajın orta noktasına uzak olan noktaları ele.</p></li>
+<li><p>Ortalamayı al.</p></li>
 </ol>
-<pre><code class="python">import itertools
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="im">import</span> itertools
 
-def vanish(fin):
-    im = Image.open(fin).convert('L')
-    edges = canny(np.array(im), 2, 1, 25)
-    lines = probabilistic_hough_line(edges, threshold=20, line_length=30,line_gap=3)
-    im = Image.open(fin)
-    new_lines = []
-    for line in lines:
-        p1 = np.array([1,1,1]); p1[:2] = line[0] 
-        p2 = np.array([1,1,1]); p2[:2] = line[1] 
+<span class="kw">def</span> vanish(fin):
+    im <span class="op">=</span> Image.<span class="bu">open</span>(fin).convert(<span class="st">&#39;L&#39;</span>)
+    edges <span class="op">=</span> canny(np.array(im), <span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">25</span>)
+    lines <span class="op">=</span> probabilistic_hough_line(edges, threshold<span class="op">=</span><span class="dv">20</span>, line_length<span class="op">=</span><span class="dv">30</span>,line_gap<span class="op">=</span><span class="dv">3</span>)
+    im <span class="op">=</span> Image.<span class="bu">open</span>(fin)
+    new_lines <span class="op">=</span> []
+    <span class="cf">for</span> line <span class="kw">in</span> lines:
+        p1 <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])<span class="op">;</span> p1[:<span class="dv">2</span>] <span class="op">=</span> line[<span class="dv">0</span>] 
+        p2 <span class="op">=</span> np.array([<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])<span class="op">;</span> p2[:<span class="dv">2</span>] <span class="op">=</span> line[<span class="dv">1</span>] 
         new_lines.append(np.cross(p1,p2))
-    res = []
-    for (l1,l2) in itertools.product(new_lines,new_lines):
-        if np.all(l1==l2): continue
-        inters = np.cross(l1,l2) 
-        inters = inters / inters[2]
-        if np.sqrt((160-inters[0])**2 + (120-inters[1])**2) &lt; 100: 
+    res <span class="op">=</span> []
+    <span class="cf">for</span> (l1,l2) <span class="kw">in</span> itertools.product(new_lines,new_lines):
+        <span class="cf">if</span> np.<span class="bu">all</span>(l1<span class="op">==</span>l2): <span class="cf">continue</span>
+        inters <span class="op">=</span> np.cross(l1,l2) 
+        inters <span class="op">=</span> inters <span class="op">/</span> inters[<span class="dv">2</span>]
+        <span class="cf">if</span> np.sqrt((<span class="dv">160</span><span class="op">-</span>inters[<span class="dv">0</span>])<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> (<span class="dv">120</span><span class="op">-</span>inters[<span class="dv">1</span>])<span class="op">**</span><span class="dv">2</span>) <span class="op">&lt;</span> <span class="dv">100</span>: 
             res.append(inters)
-    res = np.array(res)
-    vanish = res.mean(axis=0)
-    return im, lines, vanish
-</code></pre>
-
-<pre><code class="python">im, lines, vp = vanish('in1.jpg')
-for line in lines:
-    p0, p1 = line
-    plt.plot((p0[0], p1[0]), (p0[1], p1[1]))
-plt.plot(vp[0], vp[1],'rd')
+    res <span class="op">=</span> np.array(res)
+    vanish <span class="op">=</span> res.mean(axis<span class="op">=</span><span class="dv">0</span>)
+    <span class="cf">return</span> im, lines, vanish</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">im, lines, vp <span class="op">=</span> vanish(<span class="st">&#39;in1.jpg&#39;</span>)
+<span class="cf">for</span> line <span class="kw">in</span> lines:
+    p0, p1 <span class="op">=</span> line
+    plt.plot((p0[<span class="dv">0</span>], p1[<span class="dv">0</span>]), (p0[<span class="dv">1</span>], p1[<span class="dv">1</span>]))
+plt.plot(vp[<span class="dv">0</span>], vp[<span class="dv">1</span>],<span class="st">&#39;rd&#39;</span>)
 plt.imshow(im)
-plt.savefig('vision_40lines_11.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;vision_40lines_11.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="vision_40lines_11.png" />
 
-<p><img alt="" src="vision_40lines_11.png" /></p>
-<pre><code class="python">im, lines, vp = vanish('in2.jpg')
-for line in lines:
-    p0, p1 = line
-    plt.plot((p0[0], p1[0]), (p0[1], p1[1]))
-plt.plot(vp[0], vp[1],'rd')
+</div>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">im, lines, vp <span class="op">=</span> vanish(<span class="st">&#39;in2.jpg&#39;</span>)
+<span class="cf">for</span> line <span class="kw">in</span> lines:
+    p0, p1 <span class="op">=</span> line
+    plt.plot((p0[<span class="dv">0</span>], p1[<span class="dv">0</span>]), (p0[<span class="dv">1</span>], p1[<span class="dv">1</span>]))
+plt.plot(vp[<span class="dv">0</span>], vp[<span class="dv">1</span>],<span class="st">&#39;rd&#39;</span>)
 plt.imshow(im)
-plt.savefig('vision_40lines_12.png')
-</code></pre>
+plt.savefig(<span class="st">&#39;vision_40lines_12.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="vision_40lines_12.png" />
 
-<p><img alt="" src="vision_40lines_12.png" /></p>
+</div>
 <p>Farklı birleşim nokta hesapları [2, sf. 21]'de bulunabilir.</p>
 <p>Hiperdüzlemler</p>
-<p>Hiperdüzlemler ve yarı uzaylar (halfspace) konusuna da bakalım. Bu kavram
-Destek Vektör Makinaları tekniği için çok önemli.</p>
-<p>Bir düzlemi tanımlamak için bir vektör yeterli, mesela 2 boyutta düşünelim,
-$\left[\begin{array}{cc}1 &amp; 2 \end{array}\right]^T$ vektörü, bu vektöre
-dikgen olan tüm vektörlerin uzayı sonsuza giden bir çizgi oluşturur. Örnek
-[4, sf. 378], orijinden geçen çizgi.</p>
-<p><img alt="" src="vision_40lines_02.png" /></p>
-<p>Bu çizgi $x + 2y = 0$, $w^Tu = 0 $ olarak ta temsil edilebilir, vektör çarpım
-sonucunun sıfır olduğuna dikkat, bu dikgenlikten ileri geliyor. İkinci çarpımda
-notasyon değişti, $u = \left[\begin{array}{cc}x &amp; y \end{array}\right]^T$, ve $w
-= \left[\begin{array}{cc}1 &amp; 2 \end{array}\right]^T$ oldu, ama sonuç aynı.</p>
-<p>Bu çizginin tüm uzayı ikiye böldüğü de söylenebilir, ortaya iki yarı uzay ortaya
-çıkartarak.</p>
-<p>Yarı uzayın nasıl tanımlandığını anlamadan önce, eğer $x + 2y = 0$'i 2 yukarı
-çıkartmak istesek, $x + 2y = 4$ kullanabileceğimizi görelim, grafikte görüldüğü
-gibi. O zaman $x + 2y = 4$ çizgisinin böldüğü yarı uzaylar,</p>
-<p>$$ x = 2y \ge 4  $$</p>
-<p>$$ x = 2y &lt; 4  $$</p>
-<p>olarak tanımlanabilir, çünkü bir çizginin üstünde ya da altında kalmak üstteki
-şekilde eşitsizlikler olarak ortaya çıkartacaktır.</p>
+<p>Hiperdüzlemler ve yarı uzaylar (halfspace) konusuna da bakalım. Bu kavram Destek Vektör Makinaları tekniği için çok önemli.</p>
+<p>Bir düzlemi tanımlamak için bir vektör yeterli, mesela 2 boyutta düşünelim, <span class="math inline">\(\left[\begin{array}{cc}1 &amp; 2 \end{array}\right]^T\)</span> vektörü, bu vektöre dikgen olan tüm vektörlerin uzayı sonsuza giden bir çizgi oluşturur. Örnek [4, sf. 378], orijinden geçen çizgi.</p>
+<div class="figure">
+<img src="vision_40lines_02.png" />
+
+</div>
+<p>Bu çizgi <span class="math inline">\(x + 2y = 0\)</span>, $w^Tu = 0 $ olarak ta temsil edilebilir, vektör çarpım sonucunun sıfır olduğuna dikkat, bu dikgenlikten ileri geliyor. İkinci çarpımda notasyon değişti, <span class="math inline">\(u = \left[\begin{array}{cc}x &amp; y \end{array}\right]^T\)</span>, ve <span class="math inline">\(w = \left[\begin{array}{cc}1 &amp; 2 \end{array}\right]^T\)</span> oldu, ama sonuç aynı.</p>
+<p>Bu çizginin tüm uzayı ikiye böldüğü de söylenebilir, ortaya iki yarı uzay ortaya çıkartarak.</p>
+<p>Yarı uzayın nasıl tanımlandığını anlamadan önce, eğer <span class="math inline">\(x + 2y = 0\)</span>'i 2 yukarı çıkartmak istesek, <span class="math inline">\(x + 2y = 4\)</span> kullanabileceğimizi görelim, grafikte görüldüğü gibi. O zaman <span class="math inline">\(x + 2y = 4\)</span> çizgisinin böldüğü yarı uzaylar,</p>
+<p><span class="math display">\[ x = 2y \ge 4  \]</span></p>
+<p><span class="math display">\[ x = 2y &lt; 4  \]</span></p>
+<p>olarak tanımlanabilir, çünkü bir çizginin üstünde ya da altında kalmak üstteki şekilde eşitsizlikler olarak ortaya çıkartacaktır.</p>
 <p>Bazı örnekler, ve grafikleme rutinleri görelim,</p>
-<pre><code class="python">def plot_sep(w,color='blue'):
-    Q = np.array([[0, -1],[1, 0]])
-    x = np.linspace(-20,20,1000)
-    w2 = np.dot(Q,w[:2])
-    m = w2[1]/w2[0]
-    y = m*x + (-w[2]/w[1])
-    plt.plot(x,y,'.',color=color)
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python"><span class="kw">def</span> plot_sep(w,color<span class="op">=</span><span class="st">&#39;blue&#39;</span>):
+    Q <span class="op">=</span> np.array([[<span class="dv">0</span>, <span class="dv">-1</span>],[<span class="dv">1</span>, <span class="dv">0</span>]])
+    x <span class="op">=</span> np.linspace(<span class="op">-</span><span class="dv">20</span>,<span class="dv">20</span>,<span class="dv">1000</span>)
+    w2 <span class="op">=</span> np.dot(Q,w[:<span class="dv">2</span>])
+    m <span class="op">=</span> w2[<span class="dv">1</span>]<span class="op">/</span>w2[<span class="dv">0</span>]
+    y <span class="op">=</span> m<span class="op">*</span>x <span class="op">+</span> (<span class="op">-</span>w[<span class="dv">2</span>]<span class="op">/</span>w[<span class="dv">1</span>])
+    plt.plot(x,y,<span class="st">&#39;.&#39;</span>,color<span class="op">=</span>color)
 
-a = np.array([1., 2., -4])
+a <span class="op">=</span> np.array([<span class="fl">1.</span>, <span class="fl">2.</span>, <span class="dv">-4</span>])
 plot_sep(a)
-plt.xlim(-5,5)
-plt.ylim(-5,5)
-plt.grid(True)
-plt.savefig('14_4.png')
-</code></pre>
+plt.xlim(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>)
+plt.ylim(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>)
+plt.grid(<span class="va">True</span>)
+plt.savefig(<span class="st">&#39;14_4.png&#39;</span>)</code></pre></div>
+<div class="figure">
+<img src="vision_40lines_03.png" />
 
-<p><img alt="" src="vision_40lines_03.png" /></p>
-<p>Noktaların çizginin neresine düştüğünden hareketle bazı $wx + b$ sonuçları</p>
-<pre><code class="python">a1 = np.array([2., 2., -50.])
-plot_sep(a1,color='green')
-a2 = np.array([-1., 1., -4.])
-plot_sep(a2,color='blue')
+</div>
+<p>Noktaların çizginin neresine düştüğünden hareketle bazı <span class="math inline">\(wx + b\)</span> sonuçları</p>
+<div class="sourceCode"><pre class="sourceCode python"><code class="sourceCode python">a1 <span class="op">=</span> np.array([<span class="fl">2.</span>, <span class="fl">2.</span>, <span class="fl">-50.</span>])
+plot_sep(a1,color<span class="op">=</span><span class="st">&#39;green&#39;</span>)
+a2 <span class="op">=</span> np.array([<span class="op">-</span><span class="fl">1.</span>, <span class="fl">1.</span>, <span class="fl">-4.</span>])
+plot_sep(a2,color<span class="op">=</span><span class="st">&#39;blue&#39;</span>)
 
-pt = np.array([10.,10.,1.])
-plt.plot(pt[0],pt[1],'gd')
-print np.dot(a1,pt)
-print np.dot(a2,pt)
+pt <span class="op">=</span> np.array([<span class="fl">10.</span>,<span class="fl">10.</span>,<span class="fl">1.</span>])
+plt.plot(pt[<span class="dv">0</span>],pt[<span class="dv">1</span>],<span class="st">&#39;gd&#39;</span>)
+<span class="bu">print</span> np.dot(a1,pt)
+<span class="bu">print</span> np.dot(a2,pt)
 
-pt = np.array([14.,15.,1.])
-plt.plot(pt[0],pt[1],'rd')
-print np.dot(a1,pt)
-print np.dot(a2,pt)
+pt <span class="op">=</span> np.array([<span class="fl">14.</span>,<span class="fl">15.</span>,<span class="fl">1.</span>])
+plt.plot(pt[<span class="dv">0</span>],pt[<span class="dv">1</span>],<span class="st">&#39;rd&#39;</span>)
+<span class="bu">print</span> np.dot(a1,pt)
+<span class="bu">print</span> np.dot(a2,pt)
 
-pt = np.array([8.,18.,1.])
-plt.plot(pt[0],pt[1],'rx')
-print np.dot(a1,pt)
-print np.dot(a2,pt)
+pt <span class="op">=</span> np.array([<span class="fl">8.</span>,<span class="fl">18.</span>,<span class="fl">1.</span>])
+plt.plot(pt[<span class="dv">0</span>],pt[<span class="dv">1</span>],<span class="st">&#39;rx&#39;</span>)
+<span class="bu">print</span> np.dot(a1,pt)
+<span class="bu">print</span> np.dot(a2,pt)
 
-plt.xlim(5,15)
-plt.ylim(0,20)
-plt.savefig('14_5.png')
-</code></pre>
-
+plt.xlim(<span class="dv">5</span>,<span class="dv">15</span>)
+plt.ylim(<span class="dv">0</span>,<span class="dv">20</span>)
+plt.savefig(<span class="st">&#39;14_5.png&#39;</span>)</code></pre></div>
 <pre><code>-10.0
 -4.0
 8.0
 -3.0
 2.0
-6.0
-</code></pre>
+6.0</code></pre>
+<div class="figure">
+<img src="vision_40lines_04.png" />
 
-<p><img alt="" src="vision_40lines_04.png" /></p>
-<p>Kaynaklar </p>
-<p>[1] Jia, <em>Problem Solving Techniques for Applied Computer Science</em>,
-    <a href="http://web.cs.iastate.edu/~cs577/">http://web.cs.iastate.edu/~cs577/</a></p>
+</div>
+<p>Kaynaklar</p>
+<p>[1] Jia, <em>Problem Solving Techniques for Applied Computer Science</em>, <a href="http://web.cs.iastate.edu/~cs577/" class="uri">http://web.cs.iastate.edu/~cs577/</a></p>
 <p>[2] Hoiem, <em>Representations and Techniques for 3D Object Recognition and Scene Interpretation</em></p>
 <p>[3] Strang, <em>Linear Algebra and Its Applications, 4th Ed</em></p>
-<p>[4] Taylor, Kubovy, <em>The Role of Perspective</em>, <a href="http://www.webexhibits.org/sciartperspective/perspective3.html">http://www.webexhibits.org/sciartperspective/perspective3.html</a></p>
-          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
-
-          <br/><a href="../index.html">Yukarı</a>
-        </section>          
-      </div>
-    </body>
+<p>[4] Taylor, Kubovy, <em>The Role of Perspective</em>, <a href="http://www.webexhibits.org/sciartperspective/perspective3.html" class="uri">http://www.webexhibits.org/sciartperspective/perspective3.html</a></p>
+</body>
 </html>

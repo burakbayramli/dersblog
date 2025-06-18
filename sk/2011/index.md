@@ -22,8 +22,6 @@
 
 [Sembolik Matematik - Sympy](04/sympy.html)
 
-[Ses Kayit, audiolab](06/ses-kayit-audiolab.html)
-
 [Ubuntu 11](06/ubuntu-11.html)
 
 [Web Sayfalarından Görünen Metni Kazımak (Scraping)](06/web-sayfalarindan-gorunen-metni-kazimak.html)

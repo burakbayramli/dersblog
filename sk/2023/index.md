@@ -52,10 +52,6 @@
 
 [Tarayıcı ve Statik Dosya Servisi ile Uygulama](09/tarayici-statik-dosya-mimarisi.html)
 
-[Kümeleme (Clustering) ile Tavsiye Sistemi](09/tavsite-sistemi-kumeleme-kmeans-movielens.html)
-
-[Tavsiye Sistemi](09/tavsiye-sistemi-anons.html)
-
 [Kümeleme (Clustering) ile Tavsiye Sistemi](09/tavsiye-sistemi-kumeleme-kmeans-movielens.html)
 
 [Hava Kirliliği, SILAM, AQI](11/hava-kirliligi-aqi-silam.html)

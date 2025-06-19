@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yükseklik (Elevation) Verileri</h1>
+
+<p>Hangi servis ile yükseklik verisi alınır? Google Elevation servisi
+var, belli miktarda kullanım için bedava, sonrası için fiyatlı. Google
+Console'dan proje yaratıp projede elevation servisini aktif hale
+getirmek lazım, bundan sonra proje API kodunu kullanıp ES çağrılabilir.</p>
+
+<h3>Google</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">polyline</span><span class="o">,</span> <span class="nn">json</span>
+
+<span class="n">elev_query</span> <span class="o">=</span> <span class="s2">&quot;https://maps.googleapis.com/maps/api/elevation/json?&quot;</span> <span class="o">+</span> \
+          <span class="s2">&quot;locations=enc:</span><span class="si">%s</span><span class="s2">&amp;key=</span><span class="si">%s</span><span class="s2">&quot;</span>
+<span class="c1">#key = &quot;[ANAHTAR DEGERI]&quot;</span>
+<span class="n">locs</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">40.994252</span><span class="p">,</span> <span class="mf">29.037847</span><span class="p">],[</span><span class="mf">40.991771</span><span class="p">,</span> <span class="mf">29.061873</span><span class="p">]]</span>
+<span class="n">locs</span> <span class="o">=</span> <span class="n">polyline</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">locs</span><span class="p">)</span>
+<span class="n">url</span> <span class="o">=</span> <span class="n">elev_query</span> <span class="o">%</span> <span class="p">(</span><span class="n">locs</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+<span class="n">html</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">json_res</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">html</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">json_res</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>{&#39;status&#39;: &#39;OK&#39;, &#39;results&#39;: [{&#39;resolution&#39;: 610.8129272460938,
+&#39;location&#39;: {&#39;lng&#39;: 29.03785, &#39;lat&#39;: 40.99425}, &#39;elevation&#39;:
+9.726478576660156}, {&#39;resolution&#39;: 610.8129272460938, &#39;location&#39;:
+{&#39;lng&#39;: 29.06187, &#39;lat&#39;: 40.99177}, &#39;elevation&#39;: 58.94558334350586}]}
+</code></pre>
+</div>
+
+<h3>Velroutes (Bedava)</h3>
+
+<p>Bir diğer seçenek veloroutes.org adresi; burada arkadaş bedava servis
+veriyor; onun sayfalarından "kazıyarak" istenen veriyi alabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="n">url</span> <span class="o">=</span> <span class="s2">&quot;http://veloroutes.org/elevation/?&quot;</span> <span class="o">+</span> \
+      <span class="s2">&quot;location=41.40000%2C28.15000&amp;units=m&quot;</span>
+<span class="n">html</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">html</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="s2">&quot;Elevation for .*? &lt;span style=</span><span class="se">\&quot;</span><span class="s2">font-size\:20px</span><span class="se">\&quot;</span><span class="s2">&gt;(\d*)&lt;/span&gt; meters&quot;</span>
+<span class="n">rres</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">rres</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>    
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>215.0
+</code></pre>
+</div>
+
+<p>Daha Çetrefil Kullanım</p>
+
+<p>Alttaki örnekte bir kordinat alanıda 7 x 7 büyüklüğünde bir ızgara yaratıyoruz,
+o ızgara öğe kordinatları için yükseklik verisini alıyoruz, ve RBF tekniği [1]
+ile aradeğerleme (interpolation) yaparak yüksekliği yaklaşık şekilde temsil
+ediyoruz. </p>
+
+<p>Veri alındı, şimdi RBF,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.interpolate</span> <span class="kn">import</span> <span class="n">Rbf</span>
+
+<span class="n">latlow</span> <span class="o">=</span> <span class="mi">36</span><span class="p">;</span> <span class="n">lathigh</span> <span class="o">=</span> <span class="mi">37</span>
+<span class="n">lonlow</span> <span class="o">=</span> <span class="mi">29</span><span class="p">;</span> <span class="n">lonhigh</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="k">def</span> <span class="nf">get_elev_data</span><span class="p">(</span><span class="n">coords</span><span class="p">):</span>
+    <span class="o">...</span>
+
+
+<span class="n">D</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lonlow</span><span class="p">,</span><span class="n">lonhigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">latlow</span><span class="p">,</span><span class="n">lathigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">xxf</span> <span class="o">=</span> <span class="n">xx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">D</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
+<span class="n">yyf</span> <span class="o">=</span> <span class="n">yy</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">D</span><span class="o">*</span><span class="n">D</span><span class="p">)</span>
+<span class="n">sampleCoords</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">yyy</span><span class="p">,</span><span class="n">xxx</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">yyf</span><span class="p">,</span><span class="n">xxf</span><span class="p">):</span>
+    <span class="n">sampleCoords</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">yyy</span><span class="p">,</span><span class="n">xxx</span><span class="p">])</span>
+<span class="n">sampleCoords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">sampleCoords</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">sampleCoords</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">zr</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">get_elev_data</span><span class="p">(</span><span class="n">sampleCoords</span><span class="p">))</span>
+
+<span class="n">yr</span> <span class="o">=</span> <span class="n">sampleCoords</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">xr</span> <span class="o">=</span> <span class="n">sampleCoords</span><span class="p">[:,</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">rbfi</span> <span class="o">=</span> <span class="n">Rbf</span><span class="p">(</span><span class="n">xr</span><span class="p">,</span><span class="n">yr</span><span class="p">,</span><span class="n">zr</span><span class="p">,</span><span class="n">function</span><span class="o">=</span><span class="s1">&#39;multiquadric&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(49, 2)
+</code></pre>
+</div>
+
+<p>Şimdi RBF kullanarak daha yüksek çözünürlü bir ızgara için yüksekliği
+aradeğerleme ile hesaplatabiliriz, altta 15 x 15 büyüklüğünde bir ızgara
+için bunu yapıyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">D</span> <span class="o">=</span> <span class="mi">15</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lonlow</span><span class="p">,</span><span class="n">lonhigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">latlow</span><span class="p">,</span><span class="n">lathigh</span><span class="p">,</span><span class="n">D</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">yhat</span> <span class="o">=</span> <span class="n">rbfi</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="n">CS</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">yhat</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;elev1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="elev1.png" alt="" /></p>
+
+<h3>DEM, GeoTiff</h3>
+
+<p>Yüksekliği gösteren ısı / renk haritaları görmüşüzdür, daha yüksek
+yerler daha kırmızımsı, daha alçaklar daha koyu gibi.. O zaman piksel
+yükseklik gösteriyorsa ve pikselleri depolayan teknoloji iyi durumdaysa,
+aynı işi yükseklik verisi kodlamak için de kullanabiliriz. DEM,
+GeoTiff formatı bunu yapar. Dünya verisi [2]'de, Zipped DEM GeoTiff
+indirilir, okumak için [3]. Örnek (İtalya'da bir yer)</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">geotiff</span> <span class="kn">import</span> <span class="n">GeoTiff</span> 
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+<span class="n">tiff_file</span> <span class="o">=</span> <span class="s2">&quot;/tmp/alwdgg.tif&quot;</span>
+
+<span class="n">area_box</span> <span class="o">=</span> <span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">45</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">46</span><span class="p">))</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">GeoTiff</span><span class="p">(</span><span class="n">tiff_file</span><span class="p">,</span> <span class="n">crs_code</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span> <span class="n">as_crs</span><span class="o">=</span><span class="mi">4326</span><span class="p">,</span>  <span class="n">band</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">read_box</span><span class="p">(</span><span class="n">area_box</span><span class="p">)</span>
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">flip</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">arr</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">area_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">area_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">area_box</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="n">area_box</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="mi">11</span><span class="p">)</span>
+<span class="n">X</span><span class="p">,</span><span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">)</span>
+
+<span class="n">CS</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">,</span><span class="n">arr</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;elev2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(11, 11)
+</code></pre>
+</div>
+
+<p><img src="elev2.png" alt="" /></p>
+
+<p><code>area_box</code> içinde alt sol köse ve üşe sağ köşe verildi, bir kutu oluşturuldu,
+ve kutu içine düşen yükseklik verisi <code>read_box</code> ile alındı.</p>
+
+<p>[2] verisinin çözünülürlüğü en yüksek olduğu yerde "1 dakika" olarak
+verilmiş, yani aşağı yukarı 1 km x 1 km karelerinin yükseklik verisi
+alınabilir. Dosyanin büyüklüğü 20 MB'dan daha az. [3] kullanımı önemli
+çünkü bazı alternatif GeoTiff okuma yöntemleri GDAL kurulmasının
+gerektirir, [3] kütüphanesi hafif, direk DEM dosyalarının içeriğini
+okuyabilir.</p>
+
+<h3>GLOBE</h3>
+
+<p>Bir yöntem daha. GLOBE veri seti [4], tam ismiyle Global Land
+One-kilometer Base Elevation, NOAA kurumu tarafından
+paylaşılıyor. Kabaca verideki frekansa bakılırsa kilometre kare başına
+bir yükseklik noktası olduğu söylenebilir. Çok detaylı grafikleme için
+yeterli olmayabilir fakat geniş alanların yükseklik haritası için
+yeterli.</p>
+
+<p>Bu verinin iyi bir tarafı verinin Numpy matrisi olarak direk
+okunabilmesi. [4] bağlantısındaki haritaya bakılınca dünya A,B,C,D vs
+parçalarına bölünmüş, her bölümün yükseklik verisi ayrı bir
+dosyada. Tüm verileri tek bir zip dosyası olarak indirebiliriz, 300 MB
+civarı, A,B,C,D bölge dosyaları bu zip içinde, "All Tiles in One .zip
+file" seçeneği. Çoğu yükseklik matrisi 10800 kolon, 4800 satır
+olacaktır, bazıları daha az, altta her bölgenin boyutları var.</p>
+
+<p>Python</p>
+
+<p>Zip dosyasını açalım, alttaki kod <code>g10g</code> bölgesini okuyup haritalıyor,
+[5] kodu örnek alındı. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">gltiles</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;a10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">6098</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;b10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3940</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;c10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">4010</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;d10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4588</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;e10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">84</span><span class="p">,</span> <span class="mi">5443</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;f10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">6085</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;g10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">407</span><span class="p">,</span> <span class="mi">8752</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;h10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">63</span><span class="p">,</span> <span class="mi">7491</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;i10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2732</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;j10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">127</span><span class="p">,</span> <span class="mi">6798</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;k10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5825</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;l10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5179</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">6000</span><span class="p">],</span>
+    <span class="s2">&quot;m10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">180</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4009</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;n10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4743</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;o10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4039</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">],</span>
+    <span class="s2">&quot;p10g&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">90</span><span class="p">,</span> <span class="mi">180</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">4363</span><span class="p">,</span> <span class="mi">10800</span><span class="p">,</span> <span class="mi">4800</span><span class="p">]</span> <span class="p">}</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="s1">&#39;all10g/all10/g10g&#39;</span><span class="p">,</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;&lt;i2&#39;</span><span class="p">)</span>
+
+<span class="n">lat_min</span><span class="p">,</span> <span class="n">lat_max</span><span class="p">,</span> <span class="n">lon_min</span><span class="p">,</span> <span class="n">lon_max</span><span class="p">,</span> <span class="n">elev_min</span><span class="p">,</span> <span class="n">elev_max</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">rows</span> <span class="o">=</span> <span class="n">gltiles</span><span class="p">[</span><span class="s1">&#39;g10g&#39;</span><span class="p">]</span>
+
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">z</span><span class="p">,(</span><span class="nb">round</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="fm">__len__</span><span class="p">()</span><span class="o">/</span><span class="n">cols</span><span class="p">),</span> <span class="n">cols</span><span class="p">))</span>
+
+<span class="n">z</span><span class="p">[</span><span class="n">z</span><span class="o">==-</span><span class="mi">500</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
+
+<span class="n">lon</span> <span class="o">=</span> <span class="n">lon_min</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">lat_max</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">size</span><span class="o">/</span><span class="n">cols</span><span class="p">))</span>
+
+<span class="n">downsample</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">lat_select</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span><span class="n">downsample</span><span class="p">)</span>
+<span class="n">lon_select</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span><span class="n">downsample</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="n">lat</span><span class="p">[</span><span class="n">lat_select</span><span class="p">]</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">lon</span><span class="p">[</span><span class="n">lon_select</span><span class="p">]</span>
+
+<span class="n">xg</span><span class="p">,</span> <span class="n">yg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+<span class="n">zm</span> <span class="o">=</span> <span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="n">lat_select</span><span class="p">,</span><span class="n">lon_select</span><span class="p">)]</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xg</span><span class="p">,</span><span class="n">yg</span><span class="p">,</span><span class="n">zm</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gltiles1.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="gltiles1.png" alt="" /></p>
+
+<p>Alternatif bir Python kodu (alttaki Javascript kodunu baz alıyor),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">math</span><span class="o">,</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">BytesIO</span>
+
+<span class="n">RESOLUTION</span> <span class="o">=</span> <span class="mi">120</span>
+
+<span class="n">dataFiles</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;g10g&quot;</span><span class="p">,</span> <span class="s2">&quot;latMin&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;latMax&quot;</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span> <span class="s2">&quot;lngMin&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;lngMax&quot;</span><span class="p">:</span><span class="mi">90</span><span class="p">,</span> <span class="s2">&quot;elMin&quot;</span><span class="p">:</span><span class="o">-</span><span class="mi">407</span><span class="p">,</span> <span class="s2">&quot;elMax&quot;</span><span class="p">:</span><span class="mi">8752</span><span class="p">,</span> <span class="s2">&quot;columns&quot;</span><span class="p">:</span><span class="mi">10800</span><span class="p">,</span> <span class="s2">&quot;rows&quot;</span><span class="p">:</span><span class="mi">6000</span> <span class="p">}</span>
+<span class="p">]</span>
+
+<span class="k">def</span> <span class="nf">readNumberFromFile</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">position</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;rb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fh</span><span class="p">:</span>
+        <span class="n">buf</span> <span class="o">=</span> <span class="n">BytesIO</span><span class="p">(</span><span class="n">fh</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="n">buf</span><span class="o">.</span><span class="n">seek</span><span class="p">(</span><span class="n">position</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;H&quot;</span><span class="p">,</span> <span class="n">buf</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="mi">2</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">fh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span> <span class="k">return</span> <span class="mi">0</span>
+        <span class="k">return</span> <span class="n">val</span>
+
+<span class="k">def</span> <span class="nf">fileIndex</span><span class="p">(</span><span class="n">lng</span><span class="p">,</span><span class="n">lat</span><span class="p">,</span><span class="n">fileEntry</span><span class="p">):</span>
+    <span class="n">column</span><span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">lng</span><span class="o">*</span><span class="n">RESOLUTION</span><span class="p">);</span>
+    <span class="n">row</span><span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">lat</span><span class="o">*</span><span class="n">RESOLUTION</span><span class="p">);</span>
+    <span class="n">rowIndex</span><span class="o">=</span> <span class="n">row</span> <span class="o">-</span> <span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;latMin&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">RESOLUTION</span><span class="p">;</span>
+    <span class="n">columnIndex</span><span class="o">=</span> <span class="n">column</span> <span class="o">-</span> <span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;lngMin&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="n">RESOLUTION</span><span class="p">;</span>
+    <span class="n">index</span><span class="o">=</span> <span class="p">((</span><span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;rows&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">rowIndex</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">fileEntry</span><span class="p">[</span><span class="s1">&#39;columns&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="n">columnIndex</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">index</span>
+
+<span class="k">def</span> <span class="nf">getElevation</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span> <span class="n">lng</span><span class="p">,</span> <span class="n">findex</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">fileIndex</span><span class="p">(</span><span class="n">lng</span><span class="p">,</span> <span class="n">lat</span><span class="p">,</span> <span class="n">dataFiles</span><span class="p">[</span><span class="n">findex</span><span class="p">]);</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">readNumberFromFile</span><span class="p">(</span><span class="n">dataFiles</span><span class="p">[</span><span class="n">findex</span><span class="p">][</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="n">idx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span>
+</code></pre>
+</div>
+
+<p>Eğer belli bir bölgeyi çekip çıkartmak istiyorsak biraz daha ek işlem
+gerekli. Mesela sol alt köşe 35,25 sağ üst köşe 42,46 olacak şekilde
+(TR bölgesi) bir dikdörtgenin içine düşen yükseklikleri istiyoruz. Bu
+durumda <code>lat</code>, <code>lon</code> vektörleri içindeki o alana düşen kordinat
+indislerini bulup, onlara göre <code>zm</code> matrisi içindeki o veriyi almak
+gerekir.</p>
+
+<p>Burada bize yardımcı olabilecek bir kod türü aslında görüntü işlem
+kodlarıdır. Eğer yükseklik verisini gri görüntüdeki piksel değerleri
+gibi görürsek görüntü işlem kütüphanelerinin küçültme, büyültme, bölge
+çekip çıkartma gibi pek çok yardımcı fonksiyonlarını kullanabiliriz [7].</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+<span class="n">lon</span> <span class="o">=</span> <span class="n">lon_min</span> <span class="o">+</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">lat</span> <span class="o">=</span> <span class="n">lat_max</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="mi">120</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span>
+
+<span class="n">latidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="p">(</span><span class="n">lat</span> <span class="o">&gt;</span> <span class="mi">35</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lat</span> <span class="o">&lt;</span> <span class="mi">42</span><span class="p">)</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">latidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">latidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">lonidx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span> <span class="p">(</span><span class="n">lon</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">lon</span> <span class="o">&lt;</span> <span class="mi">46</span><span class="p">)</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lonidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lonidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">zm</span><span class="p">[</span><span class="n">zm</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">zm</span><span class="p">)</span>
+
+<span class="n">img2</span> <span class="o">=</span> <span class="n">img</span><span class="o">.</span><span class="n">crop</span><span class="p">((</span><span class="n">lonidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">latidx</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">lonidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">latidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span> <span class="n">H</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">new_img</span> <span class="o">=</span> <span class="n">img2</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">W</span><span class="p">,</span><span class="n">H</span><span class="p">),</span> <span class="n">Image</span><span class="o">.</span><span class="n">BICUBIC</span><span class="p">)</span>
+
+<span class="n">arr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">new_img</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lon</span><span class="p">[</span><span class="n">lonidx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">lon</span><span class="p">[</span><span class="n">lonidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">W</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">lat</span><span class="p">[</span><span class="n">latidx</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span><span class="n">lat</span><span class="p">[</span><span class="n">latidx</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span><span class="n">H</span><span class="p">)</span>
+<span class="n">xx</span><span class="p">,</span><span class="n">yy</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+
+<span class="n">CS</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">xx</span><span class="p">,</span><span class="n">yy</span><span class="p">,</span><span class="n">arr</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">binary</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clabel</span><span class="p">(</span><span class="n">CS</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">inline</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gltiles2.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="gltiles2.jpg" alt="" /></p>
+
+<p>Javascript</p>
+
+<p>Alttaki kod [8] kod deposunu baz almıştır, komut satırında <code>node</code> ile işletilebilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="s1">&#39;use strict&#39;</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">path</span><span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">fs</span><span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">resolution</span><span class="o">=</span> <span class="mf">120</span><span class="p">;</span>
+
+<span class="kd">var</span> <span class="nx">dataFiles</span><span class="o">=</span> <span class="p">[</span>
+    <span class="c1">// ...</span>
+    <span class="p">{</span> <span class="nx">name</span><span class="o">:</span> <span class="s1">&#39;g10g&#39;</span><span class="p">,</span> <span class="nx">latMin</span><span class="o">:</span>     <span class="mf">0</span><span class="p">,</span> <span class="nx">latMax</span><span class="o">:</span>     <span class="mf">50</span><span class="p">,</span> <span class="nx">lngMin</span><span class="o">:</span>      <span class="mf">0</span><span class="p">,</span> <span class="nx">lngMax</span><span class="o">:</span>     <span class="mf">90</span><span class="p">,</span> <span class="nx">elMin</span><span class="o">:</span>   <span class="o">-</span><span class="mf">407</span><span class="p">,</span> <span class="nx">elMax</span><span class="o">:</span>    <span class="mf">8752</span><span class="p">,</span> <span class="nx">columns</span><span class="o">:</span>    <span class="mf">10800</span><span class="p">,</span> <span class="nx">rows</span><span class="o">:</span>   <span class="mf">6000</span> <span class="p">}</span>
+    <span class="c1">// ...</span>
+<span class="p">];</span>
+
+<span class="kd">var</span> <span class="nx">baseDir</span> <span class="o">=</span> <span class="s1">&#39;./all10&#39;</span><span class="p">;</span>
+
+<span class="kd">function</span> <span class="nx">findFile</span><span class="p">(</span> <span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span> <span class="kd">var</span> <span class="nx">i</span> <span class="k">in</span> <span class="nx">dataFiles</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">df</span><span class="o">=</span> <span class="nx">dataFiles</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">df</span><span class="p">.</span><span class="nx">latMin</span> <span class="o">&lt;=</span> <span class="nx">lat</span> <span class="o">&amp;&amp;</span> <span class="nx">df</span><span class="p">.</span><span class="nx">latMax</span> <span class="o">&gt;</span> <span class="nx">lat</span> <span class="o">&amp;&amp;</span> <span class="nx">df</span><span class="p">.</span><span class="nx">lngMin</span> <span class="o">&lt;=</span> <span class="nx">lng</span> <span class="o">&amp;&amp;</span> <span class="nx">df</span><span class="p">.</span><span class="nx">lngMax</span> <span class="o">&gt;</span> <span class="nx">lng</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">df</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">fileIndex</span><span class="p">(</span><span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">fileEntry</span><span class="p">,</span> <span class="nx">resolution</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">column</span><span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">lng</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">row</span><span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">floor</span><span class="p">(</span><span class="nx">lat</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">rowIndex</span><span class="o">=</span> <span class="nx">row</span> <span class="o">-</span> <span class="nx">fileEntry</span><span class="p">.</span><span class="nx">latMin</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">columnIndex</span><span class="o">=</span> <span class="nx">column</span> <span class="o">-</span> <span class="nx">fileEntry</span><span class="p">.</span><span class="nx">lngMin</span> <span class="o">*</span> <span class="nx">resolution</span><span class="p">;</span>
+    <span class="kd">var</span> <span class="nx">index</span><span class="o">=</span> <span class="p">((</span><span class="nx">fileEntry</span><span class="p">.</span><span class="nx">rows</span> <span class="o">-</span> <span class="nx">rowIndex</span> <span class="o">-</span> <span class="mf">1</span><span class="p">)</span> <span class="o">*</span> <span class="nx">fileEntry</span><span class="p">.</span><span class="nx">columns</span> <span class="o">+</span> <span class="nx">columnIndex</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2</span><span class="p">;</span>
+    <span class="k">return</span> <span class="nx">index</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">function</span> <span class="nx">openFile</span><span class="p">(</span> <span class="nx">name</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">openSync</span><span class="p">(</span><span class="nx">baseDir</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="nx">name</span> <span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">readNumberFromFile</span><span class="p">(</span><span class="nx">name</span><span class="p">,</span><span class="nx">position</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">buffer</span><span class="o">=</span> <span class="k">new</span> <span class="nx">Buffer</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">fd</span> <span class="o">=</span> <span class="nx">openFile</span><span class="p">(</span><span class="nx">name</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span> <span class="nx">fs</span><span class="p">.</span><span class="nx">readSync</span><span class="p">(</span><span class="nx">fd</span><span class="p">,</span> <span class="nx">buffer</span><span class="p">,</span> <span class="mf">0</span><span class="p">,</span> <span class="mf">2</span><span class="p">,</span> <span class="nx">position</span><span class="p">)</span> <span class="o">!==</span> <span class="mf">2</span> <span class="p">)</span> <span class="k">return</span> <span class="k">new</span> <span class="nb">Error</span><span class="p">(</span><span class="s1">&#39;Could not fetch value from file&#39;</span><span class="p">);</span>
+
+    <span class="kd">var</span> <span class="nx">int16</span><span class="o">=</span> <span class="nx">buffer</span><span class="p">.</span><span class="nx">readInt16LE</span><span class="p">(</span><span class="mf">0</span><span class="p">);</span>
+
+    <span class="c1">// return 0 for oceans</span>
+    <span class="k">return</span> <span class="nx">int16</span> <span class="o">===</span> <span class="o">-</span><span class="mf">500</span> <span class="o">?</span> <span class="mf">0</span> <span class="o">:</span> <span class="nx">int16</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">function</span> <span class="nx">getElevation</span><span class="p">(</span> <span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">onError</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">fileEntry</span><span class="o">=</span> <span class="nx">findFile</span><span class="p">(</span><span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">);</span>
+    <span class="kd">var</span> <span class="nx">result</span><span class="o">=</span> <span class="nx">readNumberFromFile</span><span class="p">(</span><span class="nx">fileEntry</span><span class="p">.</span><span class="nx">name</span><span class="p">,</span> <span class="nx">fileIndex</span><span class="p">(</span><span class="nx">lng</span><span class="p">,</span> <span class="nx">lat</span><span class="p">,</span> <span class="nx">fileEntry</span><span class="p">,</span> <span class="nx">resolution</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="nx">result</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">getElevation</span><span class="p">(</span><span class="mf">29</span><span class="p">,</span><span class="mf">37</span><span class="p">);</span>
+
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
+</code></pre>
+</div>
+
+<p>Eğer Javascript ortamında GLOBE veri dosyalarını okuyup işlemek istiyorsak,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/vs/vs/all10/g10g&quot;</span><span class="p">;</span>    
+<span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="p">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">())</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="nx">arrayBuffer</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">byteArray</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">);</span>
+    <span class="p">})</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">done</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">);</span>
+        <span class="c1">// Alttaki indis degeri enlem,boylam icin fileIndex</span>
+        <span class="c1">// cagrisindan alinabilir, ornek 37,29 icin olan degerler bunlar</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">byteArray</span><span class="p">[</span><span class="mf">33681360</span><span class="p">]);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">byteArray</span><span class="p">[</span><span class="mf">33681361</span><span class="p">]);</span>
+        <span class="kd">var</span> <span class="nx">buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ArrayBuffer</span><span class="p">(</span><span class="mf">2</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">Uint8View</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+        <span class="nx">Uint8View</span><span class="p">[</span><span class="mf">0</span><span class="p">]</span> <span class="o">=</span> <span class="nx">byteArray</span><span class="p">[</span><span class="mf">33681360</span><span class="p">];</span>
+        <span class="nx">Uint8View</span><span class="p">[</span><span class="mf">1</span><span class="p">]</span> <span class="o">=</span> <span class="nx">byteArray</span><span class="p">[</span><span class="mf">33681361</span><span class="p">]</span>
+        <span class="kd">var</span> <span class="nx">Uint16View</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint16Array</span><span class="p">(</span><span class="nx">buffer</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">Uint16View</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>     
+    <span class="p">})</span>
+    <span class="p">.</span><span class="k">catch</span><span class="p">(</span><span class="nx">error</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">);</span>           
+    <span class="p">});</span>
+</code></pre>
+</div>
+
+<p>gibi bir kalıp takip edebiliriz.</p>
+
+<p>Muhakkak her dosya parçası, <code>a10g</code>, <code>b10g</code> 100 MB civarı, bunları
+Internet'ten indirmek zaman alır. Fakat belki yerel web uygulaması
+yazdık, ya da bahsedilen dosyalar parçalara bölündü ve parça parça
+alınıp önbelleğe alıyoruz, üstteki koda bu tür uzatmalar yapılabilir.</p>
+
+<p>Bir diğer seçenek (belki bu en iyisi) kapsam isteği (range request)
+kavramını kullanmak [9]. Kİ ile çoğu statik web servisinin ne kadar
+büyük olursa olsun servis ettiği dosyalara noktasal erişim elde
+edebiliyoruz.  Kİ web standartının bir parçası, yani çoğu web servisi
+(Apache gibi) bu tür erişimi sağlayacaktır, böylece dosya <code>data.bin</code>
+diyelim, 1 GB olsa bile kapsam isteği ile 1000'inci ve 1010'uncu
+baytları arasındaki ufak bölgeyi çekip çıkartabiliyoruz.</p>
+
+<p>GLOBE verisine erişim için bu çok faydalı çünkü zaten üstte görüldüğü
+gibi o veriye de baytsal indis vererek erişim yapıyoruz. O zaman o
+erişimi kapsam isteği haline çevirirsek bellege büyük dosyalar almadan
+direk erişim yapabiliriz. Alttaki kod bunu gösteriyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/static/elev/data/g10g2&quot;</span><span class="p">;</span>
+    <span class="c1">// g10g dosyalari dort parcaya bolundu, bu durumda 33681360-33681361</span>
+    <span class="c1">// erisimi ikinci ufak parcada 1281360-1281361 erisimine tekabul eder</span>
+    <span class="c1">// aslinda dort parcaya bolmeye gerek yoktu direk g10g uzerinde de</span>
+    <span class="c1">// erisim yapabilirdik fakat Github dosya limiti icin boyle yapmak gerekti</span>
+    <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
+        <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
+            <span class="s1">&#39;content-type&#39;</span><span class="o">:</span> <span class="s1">&#39;multipart/byteranges&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;range&#39;</span><span class="o">:</span> <span class="s1">&#39;bytes=1281360-1281361&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">response</span><span class="p">.</span><span class="nx">ok</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nx">response</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint8Array</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">a</span><span class="p">[</span><span class="mf">1</span><span class="p">]);</span>
+    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Uint16Array</span><span class="p">(</span><span class="nx">response</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+    <span class="p">});</span>
+
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Bu kod çıktı olarak 756 (metre) değerini basacaktır.</p>
+
+<p>Not: GLOBE verileri, mesela <code>a10g</code>, <code>b10g</code> gibi nasıl alt parçalara
+ayrılır?  Dosyaların büyüklüğüne bakarız, eğer 200000 diyorsa mesela,
+dört parçaya bölmek için Unix komut satırında <code>split</code> kullanılabilir,
+<code>split -b 50000 a10g</code> çağrısı <code>xaa</code>, <code>xab</code>, .. şeklinde dört tane
+dosya yaratacaktır.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://burakbayramli.github.io/dersblog/stat/stat_175_rbf/dairesel_baz_fonksiyonlari__radial_basis_functions_rbf__yukseklik_verisi_daglar.html">RBF</a></p>
+
+<p>[2] <a href="https://www.eea.europa.eu/data-and-maps/data/world-digital-elevation-model-etopo5">World digital elevation model (ETOPO5)</a></p>
+
+<p>[3] <a href="https://github.com/KipCrossing/geotiff">geotiff</a></p>
+
+<p>[4] <a href="https://www.ngdc.noaa.gov/mgg/topo/gltiles.html">GLOBE</a></p>
+
+<p>[5] <a href="https://github.com/developmentseed/landsat-util">landsat-util</a></p>
+
+<p>[6] <a href="../../2021/11/yukseklik-kontur-folium-harita.html">Yükseklik Verisini Kontur olarak Folium Haritasında Göstermek</a></p>
+
+<p>[7] <a href="https://burakbayramli.github.io/dersblog/sk/2023/06/imaj-isleme-teknikleri.html">İmaj / Görüntü İşleme Teknikleri</a></p>
+
+<p>[8] <a href="https://github.com/rl3/nodejs-globe-elevation">nodejs-globe-elevation</a></p>
+
+<p>[9] <a href="https://github.com/burakbayramli/nomadicterrain/blob/main/static/elev/elev.js">Github</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

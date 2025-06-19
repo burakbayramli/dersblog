@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Yol Dosyaları, GPX Formatı</h1>
+
+<p>Wikiloc gibi servisler yol tariflerini çoğunlukla GPX formatında
+paylaşırlar. Paket <code>gpxpy</code> ile bu dosyaları işleyebiliriz. Bu yazıyla
+aynı dizinde <code>yol1.gpx</code> dosyası var, içeriği,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="n">bs</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;yol1.gpx&quot;</span><span class="p">),</span> <span class="s1">&#39;xml&#39;</span><span class="p">)</span>
+<span class="n">pretty_xml</span> <span class="o">=</span> <span class="n">bs</span><span class="o">.</span><span class="n">prettify</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pretty_xml</span><span class="p">[:</span><span class="mi">900</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;gpx creator=&quot;Wikiloc - https://www.wikiloc.com&quot; version=&quot;1.1&quot; xmlns=&quot;http://www.topografix.com/GPX/1/1&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd&quot;&gt;
+ &lt;metadata&gt;
+  &lt;name&gt;
+   Wikiloc - Harita1
+  &lt;/name&gt;
+  &lt;author&gt;
+   &lt;name&gt;
+    Kullanici1
+   &lt;/name&gt;
+   &lt;link href=&quot;https://www.wikiloc.com/wikiloc/user.do?id=2088213&quot;&gt;
+    &lt;text&gt;
+     Kullanici1 on Wikiloc
+    &lt;/text&gt;
+   &lt;/link&gt;
+  &lt;/author&gt;
+  &lt;link href=&quot;https://www.wikiloc.com/hiking-trails/falan-filan&quot;&gt;
+   &lt;text&gt;
+    Yer1 on Wikiloc
+   &lt;/text&gt;
+  &lt;/link&gt;
+  &lt;time&gt;
+   2016-09-21T19:40:58Z
+  &lt;/time&gt;
+ &lt;/metadata&gt;
+ &lt;trk&gt;
+  &lt;name&gt;
+   Yer1
+  &lt;/name&gt;
+  &lt;cmt/&gt;
+  &lt;desc/&gt;
+  &lt;trkseg&gt;
+   &lt;trkpt lat=&quot;40.964344&quot; lon=&quot;41.010343&quot;&gt;
+    &lt;ele&gt;
+     1983.363
+    &lt;/ele&gt;
+    &lt;time&gt;
+     2022-08-10T00:09:01Z
+    &lt;/time&gt;
+</code></pre>
+</div>
+
+<p>Kordinat listesini bu dosyadan şöyle çıkartabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">gpxpy</span><span class="o">,</span> <span class="nn">gpxpy.gpx</span>
+<span class="n">gpx</span> <span class="o">=</span> <span class="n">gpxpy</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;yol1.gpx&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+<span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">track</span> <span class="ow">in</span> <span class="n">gpx</span><span class="o">.</span><span class="n">tracks</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">track</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">points</span><span class="p">:</span>
+            <span class="n">lat</span><span class="p">,</span><span class="n">lon</span> <span class="o">=</span> <span class="n">point</span><span class="o">.</span><span class="n">latitude</span><span class="p">,</span> <span class="n">point</span><span class="o">.</span><span class="n">longitude</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">points</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>170
+[[40.964344, 41.010343], [40.964344, 41.010344], [40.964344, 41.010344], [40.964325, 41.010299]]
+</code></pre>
+</div>
+
+<p>Yeni bir GPX dosyası sıfırdan yaratmak için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">gpx</span> <span class="o">=</span> <span class="n">gpxpy</span><span class="o">.</span><span class="n">gpx</span><span class="o">.</span><span class="n">GPX</span><span class="p">()</span>
+
+<span class="n">gpx_track</span> <span class="o">=</span> <span class="n">gpxpy</span><span class="o">.</span><span class="n">gpx</span><span class="o">.</span><span class="n">GPXTrack</span><span class="p">()</span>
+<span class="n">gpx</span><span class="o">.</span><span class="n">tracks</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gpx_track</span><span class="p">)</span>
+
+<span class="n">gpx_segment</span> <span class="o">=</span> <span class="n">gpxpy</span><span class="o">.</span><span class="n">gpx</span><span class="o">.</span><span class="n">GPXTrackSegment</span><span class="p">()</span>
+<span class="n">gpx_track</span><span class="o">.</span><span class="n">segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gpx_segment</span><span class="p">)</span>
+
+<span class="n">gpx_segment</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gpxpy</span><span class="o">.</span><span class="n">gpx</span><span class="o">.</span><span class="n">GPXTrackPoint</span><span class="p">(</span><span class="mf">40.964344</span><span class="p">,</span> <span class="mf">41.010343</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mi">1234</span><span class="p">))</span>
+<span class="n">gpx_segment</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gpxpy</span><span class="o">.</span><span class="n">gpx</span><span class="o">.</span><span class="n">GPXTrackPoint</span><span class="p">(</span><span class="mf">40.964344</span><span class="p">,</span> <span class="mf">41.010344</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mi">1235</span><span class="p">))</span>
+<span class="n">gpx_segment</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gpxpy</span><span class="o">.</span><span class="n">gpx</span><span class="o">.</span><span class="n">GPXTrackPoint</span><span class="p">(</span><span class="mf">40.964325</span><span class="p">,</span> <span class="mf">41.010299</span><span class="p">,</span> <span class="n">elevation</span><span class="o">=</span><span class="mi">1236</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;GPX:&#39;</span><span class="p">,</span> <span class="n">gpx</span><span class="o">.</span><span class="n">to_xml</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Created GPX: &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;gpx xmlns=&quot;http://www.topografix.com/GPX/1/1&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd&quot; version=&quot;1.1&quot; creator=&quot;gpx.py -- https://github.com/tkrajina/gpxpy&quot;&gt;
+  &lt;trk&gt;
+    &lt;trkseg&gt;
+      &lt;trkpt lat=&quot;40.964344&quot; lon=&quot;41.010343&quot;&gt;
+        &lt;ele&gt;1234&lt;/ele&gt;
+      &lt;/trkpt&gt;
+      &lt;trkpt lat=&quot;40.964344&quot; lon=&quot;41.010344&quot;&gt;
+        &lt;ele&gt;1235&lt;/ele&gt;
+      &lt;/trkpt&gt;
+      &lt;trkpt lat=&quot;40.964325&quot; lon=&quot;41.010299&quot;&gt;
+        &lt;ele&gt;1236&lt;/ele&gt;
+      &lt;/trkpt&gt;
+    &lt;/trkseg&gt;
+  &lt;/trk&gt;
+&lt;/gpx&gt;
+</code></pre>
+</div>
+
+<p>Eğer birden fazla yol parçası (track) var ise, bunları yeni </p>
+
+<pre><code>... = gpxpy.gpx.GPXTrack()
+gpx.tracks.append(..)
+</code></pre>
+
+<p>çağrıları ile ekleyebiliriz. Eğer birden fazla yol parçasını geziyorsak, üstteki</p>
+
+<pre><code>for track in gpx.tracks:
+    for segment in track.segments:
+       ..
+</code></pre>
+
+<p>döngüdeki dış döngü tüm yol parçalarını gezecektir. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://pypi.org/project/gpxpy/">PyPI</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

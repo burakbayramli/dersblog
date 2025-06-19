@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>HTML -> Ajax -> AppEngine</h1>
+
+<p>Akilli telefonlar icin mobil kod gelistirilmesinde bir alternatif daha
+sekillenmeye basliyor. iPhone dunyasinda AppStore uygulama deposuna
+giren programlarin bazen cok uzun suren kabul surecinden gecmesi,
+programcilari alternatif yollar aramaya itti. Diger yandan ayni kodla
+birden fazla marka telefon uzerinde program isletebilmek ozelligi
+aranir oldu, ve isletilen programin surum yapilir yapilmaz devreye
+sokulabilmesi istegi, aynen masaustu ortaminda oldugu gibi tekrar
+Web'den servis edilen HTML secenegini gundeme getirdi. Bu sekilde,
+hicbir kabul surecinden gecmeden, bir URL uzerinden uygulama HTML
+olarak servis edilebilmis olacakti. Ayrica HTML'in bir sonraki surumu
+HTML5 mobil icin faydali ozellikler sunuyor; lokasyon verisini
+saglayabilme, Net'e baglantisiz (offline) calisabilme, tarayici
+uzerinde lokal veri depolayabilme gibi servisleri var.</p>
+
+<p>Hem Android, hem iPhone baglaminda, HTML secenegiyle gorsel kodlama
+icin yeni bir dil (API) ogrenmeye gerek kalmayacak, piyasada yaygin
+bir HTML / CSS / Javascript tecrubesi mevcut.Bu durum telefon uzerinde
+Java kodlamasi acisindan biraz kotu haber olabilir: Su anda Android
+dahil olmak uzere mobil kodlama icin HTML5 + Servis Kodlarinin Java
+icermesi gerekmiyor. Illa Android Market'ten indirilebilecek bir
+uygulama istense dahi, bu tek class'lik bir Java kodu olabilir;
+program baslar baslamaz WebView.loadUrl cagrisini yapar ve aradan
+cekilir.Biz de bu secenegi takip edecegiz; teknoloji yelpazesindeki
+son durum, telefon uzerinde HTML5, CSS / Javascript kodlarinin Ajax
+uzerinden Google App Engine Python servis kodlarina baglanip bilgi
+alip verdigi bir ortam olacak.Basit bir ornek ile baslayalim: Bir
+test.html sayfasi, yuklenir yuklenmez bir GAE servisine baglanip, HTTP
+GET uzerinden bilgi alacak, ve bunu Javascript uzerinden Document
+objesiyle HTML icine yazacak.</p>
+
+<p>Javascript ile Ajax cagrisi yapmanin en basit yolu bir Javascript
+kutuphanesi kullanmak. Prototype kutuphanesi ile bu is cok
+basit. prototype.js dosyasini indirip /files/ altina
+koyuyoruz.</p>
+
+<pre><code>&lt;html&gt;&lt;head&gt;&lt;/head&gt;&lt;body&gt;
+&lt;script type="text/javascript" src="/files/prototype.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;new Ajax.Request( "http://localhost:8080/test",
+{ method: "get", parameters: { "test": "value1"}, onSuccess: function(response){
+   document.getElementById("test").innerHTML = response.responseText
+},
+onFailure: function(){ alert('ERROR'); } });
+&lt;/script&gt;
+&lt;h3&gt;
+
+&lt;div id="test"&gt; &lt;/div&gt; &lt;/h3&gt;&lt;/body&gt;&lt;/html&gt;
+</code></pre>
+
+<p>Bu servisin baglandigi Python kodlarina gelelim:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># main.py</span>
+<span class="kn">import</span> <span class="nn">cgi</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">wsgiref.handlers</span>
+
+<span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">webapp</span>
+<span class="kn">from</span> <span class="nn">testpage</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">webapp</span><span class="o">.</span><span class="n">WSGIApplication</span><span class="p">([(</span><span class="s1">&#39;/test&#39;</span><span class="p">,</span> <span class="n">Test</span><span class="p">),],</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+  <span class="n">wsgiref</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">CGIHandler</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+  <span class="n">main</span><span class="p">()</span>
+
+<span class="c1"># testpage.py#</span>
+<span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">webapp</span>
+<span class="kn">from</span> <span class="nn">google.appengine.ext.webapp</span> <span class="kn">import</span> <span class="n">template</span>
+
+<span class="k">class</span> <span class="nc">Test</span><span class="p">(</span><span class="n">webapp</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span> <span class="n">tt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;test&#39;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tt</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;item1,&quot;</span><span class="p">)</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;item2,&quot;</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;item3&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Uygulamayi ayarlamak icin app.yaml dosyasi soyle olacak:</p>
+
+<pre><code>application: testapp
+version: 1
+runtime: python
+api_version: 1
+handlers:- url:/filesstatic_dir:
+files-url: .*
+script: main.py
+</code></pre>
+
+<p>Simdi GAE gelistirme servisini dev_appserver.py ile baslatalim, ve
+http://localhost:8080/files/test.html adresini ziyaret edelim. HTML
+icinde Ajax ile GET cagrisi yaparken URL uzerinden 'test' adli
+parametreyle servise 'value1' degeri gonderdik, bu deger ve onun
+yaninda diger bazi degerler geri gonderilecek. Tum bu degerlerin
+ekranda basildigini gorecegiz; Javascript bunu bos biraktigimiz 'div'
+icinde innerHTML'e degerleri gecerek yapacak.Not: HTML icinde gorulen
+http://localhost:8080/test referansi anlatim kolayligi icin
+kullanildi, aslinda tum URL yerine sadece /test kullanmak ta
+yeterli. Hatta gelistirme, sonuc ortami arasinda rahat gidip
+gelebilmek icin boyle yapmak daha mantikli.</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

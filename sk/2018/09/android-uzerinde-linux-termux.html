@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Android Uzerinde Linux - Termux, Samsung J6</h1>
+
+<p>Android işletim sisteminin temeli Linux işletim sistemidir, en azından
+çekirdek seviyesinde bu böyle. Peki madem böyle niye Ubuntu'da, ya da
+diğer Debian bazlı sistemlerde olduğu gibi <code>apt-get</code>, <code>python</code>,
+<code>ruby</code>, komutlari ile ya da Flask gibi uygulamalari kurup,
+geliştirmeyi direk Android telefonu üzerinde yapamıyoruz? Hatta cep
+telefonları artık iyice kuvvetlendi, dizüstü bilgisayarı atsak, sadece
+cep telefonu üzerinde geliştirme yapsak?</p>
+
+<p>Bunların yapılamamasının sebebi Linux temelli olsa da Android'de her
+şeyi Java bazlı işletebilmek için katman üzerine katman koyarak Linux
+baz sisteminden uzaklaşılmış olması. Fakat bazıları bayağı uğraşarak
+Linux temelli geliştirmeyi Android'e taşımışlar. Google Play'den
+indirilebilecek bir uygulama Termux.</p>
+
+<p>Termux'a bir "app" demek basit kaçar aslında, daha çok bir başlangıç
+kabuğu denebilir, Termux bize telefon içinde bir komut satırı verir,
+bu satırda <code>apt install</code> ya da <code>pkg install</code> ile ek uygulamaları
+Ubuntu'da olduğu gibi kurarız. Mesela apt-install python
+gibi. Termux'u yazanlar bir sürü Linux bazlı programı bu şekilde
+Android için hazır hale getirmişler. Liste tüm programları kapsamıyor,
+ama şaşırtıcı derecede faydalı programlar var. C++ icin clang, ya da
+Tex icin texlive hatta emacs! Ben denedim, yeterince buyuk ekran var
+ise cep telefon üzerinde emacs rahatca kullaniliyor. Tabii Samsung bu
+baglamda DevX sistemi ile / gibi dışarıdan bir Bluetooth klavyesi
+bağlayıp görüntüyü bir büyük ekrana yansıtacak türden kullanım
+dusunuyor, ki bu tür kullanım başta değindiğimiz pür cep telefon bazlı
+geliştirmedir.</p>
+
+<p>Python sistemı daha önce bahsedildiği gibi mevcut, <code>pkg install
+python3</code> ardından, <code>pip install virtualenv</code> deriz, ve <code>python3</code> için
+bir sanal ortam yaratabiliriz. Cep telefonu üzerinde virtualenv'e
+girmek bazılarımızı şaşırtabilir. Fakat işliyor.</p>
+
+<p><img src="Screenshot_20180924-212304_Termux.jpg" alt="" />
+<img src="https://1.bp.blogspot.com/-1NCOxOn9Sc8/W6k6K1zRZII/AAAAAAAABtU/7UeTrHxFTlArLVr7I_MTOgKDrTglwHcHgCLcBGAs/s400/Screenshot_20180924-212304_Termux.jpg" alt="" /></p>
+
+<p>Sanal ortama girince burada <code>pip install</code> ile <code>ipython</code>, <code>numpy</code>,
+<code>scipy</code> kurabiliriz. Bazı paketlerde sorun çıkabilir, mesela <code>zmq</code>
+için bizde bir sorun çıktı ki bu sorun jupyter ile de yasanabilir,
+once <code>pgk install libzmq libzmq-dev python-dev libcrypt-dev</code>
+kurulur. Ardından, eğer zmq import edilmesi problem veriyorsa, komut
+satırına çıkıp ana dizinde bir <code>.bash_profile</code> dosyası yaratıp onun
+içine alttakini yazarız,</p>
+
+<p><code>export LD_PRELOAD=$LD_PRELOAD:"/data/data/com.termux/files/usr/lib/libzmq.so"</code></p>
+
+<p>exit ile Termux'dan çıkıp tekrar girersek, artık zmq çalışıyor olacak.</p>
+
+<p>Paketler pandas, matplotlib icin ek bazi kurma islemleri</p>
+
+<p><code>pkg install clang freetype-dev libpng-dev python2-dev</code></p>
+
+<p>Matpotlib icin <code>$HOME/.config/matplotlib/matplotlibrc</code> icinde <code>backend : agg</code>
+yazmak lazim, komut satirindan cikip tekrar girin, sonra</p>
+
+<p><code>LDFLAGS=" -lm -lcompiler_rt -lpython" pip install cython pandas matplotlib</code></p>
+
+<p>Eger Python 2 ortami icin kurulum yapiliyorsa ustteki  -lpython2.7 yapilabilir.</p>
+
+<p>Geri Sürüm Paket</p>
+
+<p>"Dışarısı" ile Dosya Paylaşmak</p>
+
+<p>Termux kendi izole alanında işliyor. Eğer Android ana dizinlerine
+Termux komut satırından erişmek istersek,  <code>termux-setup-storage</code>
+deriz, izin isteyen diyalog kutusu gelince ona 'allow (izin ver)'
+deriz. Artık ana dizinde bir <code>storage</code> adlı bir alt dizin olacak, bu
+alt dizine bakınca içinde downloads, movies, music gibi Anroid'in
+bilinen dizinlerini göreceğiz. Bu dizinlere yazılan her dosya dışarıda
+da gözükecektir. Ya da ters yönde oraya yazılan Termux'da okunur.</p>
+
+<p><code>ssh</code> var, dışarı bağlanılıp envai türden iş yapılabilir. Kimisi web
+geliştirmeyi DevX üzerinden direk telefonda yapıyor, flask, django
+var, mikroservis ya da apache başlatılabilir, yerel servis yerel
+tarayıcı ile ziyaret edilip sayfalar, servis tarafı kodu test
+edilebilir.</p>
+
+<p>Veri tabanlarına bağlanmak için PostgreSql var. <code>pkg install
+postgresql-dev python-dev make clang</code>, ve python seviyesinde pip
+install <code>psycopg2</code>. Yok yok.</p>
+
+<p>Tüm Termux dizinlerini yedeklemek için [1].</p>
+
+<p>Latex</p>
+
+<p><code>pkg install texlive</code> ile kapsamlı bir TeX kurulabileceğini
+gördük. Ama ekler için TeX paket sistemi ile kuruluş mümkün, tlmgr
+ınstall [paket]. Ama ayrı ayrı her paket kurmak yerine daha rahatı</p>
+
+<pre><code>tlmgr install collection-fontsrecommended
+tlmgr install collection-latexextra
+tlmgr install collection-mathscience
+</code></pre>
+
+<p>isletmek.</p>
+
+<p>Scipy</p>
+
+<p>Bu paket çok kritik, mesela <code>statsmodels</code> için lazım. Fakat <code>pip
+install</code> ile kurulumda problem çıkıyor. Termux'ta paket</p>
+
+<pre><code>pkg install scipy
+</code></pre>
+
+<p>ile kurulabilir. Fakat böyle yapınca kurulum global python için
+oluyor, virtualenv ortamlarında nasıl görülecek? Bunu basit bir
+sembolik bağlantı ile halledebiliriz, global python'a girip import
+scipy ve print (scipy) derseniz kütüphane yeri gösterilecek. Bu adresi
+alıp mesela <code>env3/lib/site-packages</code> altında <code>ln -s</code> ile bağlantılarsanız
+(ki scipy dizini orada görülsün) scipy işleyecektir.</p>
+
+<p>Şimdi bir pürüz ortaya çıkabilir; Eğer pip ınstall keras ile kuruluş
+yapmaya çalışırsak bazen bu ve benzeri paketler scipy'in zaten kurulu
+olduğunun farkedemeyebiliyorlar. Bu durumda bu
+paketleri <code>--no-dependencies</code> seçeneği ile kurmak lazım. Tabii böyle
+olunca gerçekten ihtiyaç olan paketleri kurmadan atlayacaktır, keras
+durumunda bu paketleri teker teker elle kurmak lazım. Mesela</p>
+
+<pre><code>pip install theano --no-dependencies
+pip install keras-applications --no-dependencies
+pip install keras-preprocessing --no-dependencies
+</code></pre>
+
+<p>Tum bunlardan sonra keras ayni sekilde kurulur.</p>
+
+<p>Keras icin arka plan hesap motorunu theano sectirmek icin kodun en
+basinda alttaki kullanilabilir.</p>
+
+<pre><code>import os; os.environ['KERAS_BACKEND'] = 'theano'
+</code></pre>
+
+<p>Arka plan motor Tensorflow da olabilir, ona girmiyorum, çünkü Termux
+ile problem çıktı. Fakat Keras işliyorsa (theano üzerinden) bu yeterli
+olabilir. Altta basit örnek bir YSA'yı Keras ile telefonum üzerinde
+eğitirken görüyoruz.</p>
+
+<p><img src="https://4.bp.blogspot.com/-iglpG8Gy7Og/W8tA4O_uJ8I/AAAAAAAABuQ/ETLPpmmJ1sAeMX_aD_YsrWm4-isuQm3owCLcBGAs/s400/Dp5x_-wX0AIX6RR.jpg" alt="" />
+<img src="Dp5x_-wX0AIX6RR.jpg" alt="" /></p>
+
+<p>Pillow</p>
+
+<p>Her paketin sanki Termux'a has bir kurulus sekli var :) Pillow
+kurulumu hata verirse,</p>
+
+<p><code>pkg install python python-dev libjpeg-turbo-dev libcrypt-dev ndk-sysroot clang</code></p>
+
+<pre><code>LDFLAGS="-L/system/lib/" CFLAGS="-I/data/data/com.termux/files/usr/include/" pip install Pillow
+</code></pre>
+
+<p>h5py</p>
+
+<p>Keras'in modellerini kaydettigi h5 formati icin <code>pkg
+install libhdf5-dev</code> ve <code>pip install h5py</code>.</p>
+
+<p>Samsung</p>
+
+<p>Fakat Termux yine de izole bir ortam. Docker'vari daha geniş kapsamlı
+Linux işletmek için Samsung kolları sıvadı ve Linux on Galaxy adlı bir
+proje üzerinde çalışıyorlar. Bu şekilde telefon, tablet sahibi
+geliştiricileri kendilerine çekmeye uğraşıyorlar, ekonomik kısmı
+mantıklı.</p>
+
+<p><em>Not</em>: Google Playstore'daki Termux artık desteklenmiyor, fakat hala
+içinde <code>ssh</code> olan iskelet bir komut satırı kuruluşu yapılabiliyor.
+Alttaki yazının bazı kısımları hala geçerli.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://wiki.termux.com/wiki/Backing_up_Termux">Backing up Termux</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

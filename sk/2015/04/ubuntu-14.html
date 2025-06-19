@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ubuntu 14</h1>
+
+<p>sudo apt-get install gnome-shell gnome-session-fallback xkbset git ubuntu-restricted-extras compiz compizconfig-settings-manager texlive vlc default-jdk transmission  imagemagick mplayer compiz-plugins emacs auctex gksu dvipng texlive-fonts-extra calibre djvulibre-bin recoll pdftk gimp x11-utils r-base-core</p>
+
+<p>sudo apt-get remove rhythmbox </p>
+
+<p>Pencere Gecisi</p>
+
+<p>Applications | System Tools | Preferences | CompwizConfig Settings Manager</p>
+
+<p>Soldaki Windows bolumundeni "Static Application Switcher"'i secin,
+boylece Alt-Tab ile pencere gecisi yapilabilir. Eger Next window (All
+Windows) icin Alt-Tab demiyorsa, tus kombinasyonunu gosteren dugmeye
+basin, ve oradan "Grab key combination" dugmesine basin, ve Alt-Tab
+tuslarina basin, boylece bu tus kombinasyonu kaydedilmis olur.</p>
+
+<p>Tuslar Ile Mouse Tiklamasi</p>
+
+<p>Bizim Github kod deposunde remap_mouse.sh'e cagri yap, /etc/profile
+icinden, boylece bazi tuslar mouse tiklamasi haline gelir.</p>
+
+<p>Caps Control Yapmak</p>
+
+<p>.bashrc icinde</p>
+
+<pre><code>setxkbmap -option ctrl:nocaps
+</code></pre>
+
+<p>Bazi tuslari sol ve sag fare tiklamasi yapmak icin</p>
+
+<pre><code>xmodmap -e "keycode 133 = Pointer_Button1"
+xmodmap -e "keycode 108 = Pointer_Button1"
+xmodmap -e "keycode 135 = Pointer_Button3"
+xkbset m
+</code></pre>
+
+<p>ustteki iki blok kodu bir sh dosyasi icine yazip .bashrc icinden de
+cagirabilirsiniz. Eger farkli tuslar kullanmak istenilirse xev ile bu
+tuslarin kodlari ogrenilebilir.</p>
+
+<p>Firefox</p>
+
+<p>Zoom Page eklentisi, default zoom 120 yap.</p>
+
+<p>Ses Efektleri</p>
+
+<p>Eger konsol icine mesela gidilemeyecek durumda bile backspace
+yapilinca cikan bip, tan, tun seslerini kapatmak istiyorsak System
+Tools | System Settings, oradan Sound ve Sound Effects. Bir ses
+kontrol ayari var, onun yaninda Mute secilirse artik uyarici sesleri
+cikmaz.</p>
+
+<p>Baslangic Davul Sesini Yokedin</p>
+
+<pre><code>sudo rm /usr/share/sounds/ubuntu/stereo/system-ready.ogg
+</code></pre>
+
+<p>Balon tavsiyelerini yoketmek icin</p>
+
+<pre><code>sudo mv /usr/share/dbus-1/services/org.freedesktop.Notifications.service
+
+/usr/share/dbus-1/services/org.freedesktop.Notifications.service.disabled  
+</code></pre>
+
+<p>Uyuma (sleep) ve tekrar geri gelme sonrasi (resume) eger Wifi /
+network baglanmiyorsa,</p>
+
+<pre><code>sudo touch /etc/pm/sleep.d/wakenet.shsudo chmod +x /etc/pm/sleep.d/wakenet.shsudo gedit -H /etc/pm/sleep.d/wakenet.sh
+</code></pre>
+
+<p>Dosya icine</p>
+
+<pre><code>#!/bin/bash
+
+case "$1" in
+
+    thaw|resume)
+      nmcli nm sleep false;;*);;
+  esac
+
+exit $?
+</code></pre>
+
+<p>Sag ust kosedeki kisayollar</p>
+
+<p>Eger gnome panelden ikon silmek istiyorsak, Alt Super + sag mouse
+tiklamasi yapilir ve "Remove from Panel" secilir. Ya da
+<code>$HOME/.config/gnome-panel</code> altinda ikona tekabul eden dosya silinir.</p>
+
+<p>Hata Mesajlari</p>
+
+<p>Bir sistem hatasi ciktiginda surekli "sorry ubuntu has experienced
+internal error ..." gibi bir diyalog kutusu ekrana geliyor. Bunu iptal
+etmek icin sudo gedit /etc/default/apport ile ayar dosyasina girin
+ve enabled=0 haline getirin, bilgisayari tekrar baslatin.</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

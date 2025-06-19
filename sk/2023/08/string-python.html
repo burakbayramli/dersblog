@@ -1,0 +1,270 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>String Yapısı ve Python</h1>
+
+<p>Metin bilgisini depolayabilen Python <code>str</code> yani kelime dizisi string
+yapısına bakalım. Bu tip temel olarak değiştirilemez (immutable) bir
+tiptir, yani bir kere bir kelime, cümle bir obje haline geldiğine
+içeriği değiştirilemez, ona yapılan ekler, işlemler <em>yeni</em> bir <code>str</code>
+yaratacaktır.</p>
+
+<h3>String Birleştirmek</h3>
+
+<p>Python ile String parcalarini biraraya getirmenin birkac yolu
+var. Bunlardan en basiti ve ilk akla geleni + isaretini kullanmaktir:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s1</span> <span class="o">=</span> <span class="s2">&quot;aaa&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="s2">&quot;bbb&quot;</span> <span class="o">+</span> <span class="s2">&quot;-&quot;</span> <span class="o">+</span> <span class="s2">&quot;ccc&quot;</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">s1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>aaa-bbb-ccc
+</code></pre>
+</div>
+
+<p>Diğer bir yöntem yerine geçen String (subsitution) yöntemi. Bu yöntem
+aslında C/++ dilinde bilinen <code>sprintf</code> mantığına benziyor. Format
+belirleyen bir kısım var, bir de formatın tanımladığı yerlere yeni
+değerler parametre olarak geçilen değerler var, ve bu değerler ile
+yeni bir String oluşturuluyor. Örnek:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s2</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">-</span><span class="si">%s</span><span class="s2">-</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s2">&quot;aaa&quot;</span><span class="p">,</span><span class="s2">&quot;bbb&quot;</span><span class="p">,</span><span class="s2">&quot;ccc&quot;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">s2</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>aaa-bbb-ccc
+</code></pre>
+</div>
+
+<p>Bu kullanımın birkaç avantajı var, String tipini temsil eden <code>%s</code>
+yerine diğer tipler de kullanılabilir, mesela float'ları temsil eden
+<code>%f</code>. O zaman hem String birleştirme hem de tiplere göre formatlama
+aynı anda yapılabilecektir.</p>
+
+<p>Örnek</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s3</span> <span class="o">=</span> <span class="s2">&quot;Burada bir float deger var: </span><span class="si">%f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mf">3.43455</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">s3</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Burada bir float deger var: 3.434550
+</code></pre>
+</div>
+
+<p><code>%f</code> daha sofistike şekilde de kullanılabilir. Mesela: <code>s = "Burada
+bir float değer var: %3.2f" % (3.43455)</code>. Bu formatlamaya göre float
+değerini noktadan sonra sadece 2 basamak olacak şekilde ayarladık. O
+zaman sonuç: <code>Burada bir float değer var: 3.43</code> olacaktır</p>
+
+<h3>Eşitlik</h3>
+
+<p>Bir <code>str</code> diğerine ne zaman eşittir? Eğer içerikleri aynı ise,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s5</span> <span class="o">=</span> <span class="s2">&quot;bir kelime&quot;</span>
+<span class="n">s6</span> <span class="o">=</span> <span class="s2">&quot;bir kelime&quot;</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">s5</span> <span class="o">==</span> <span class="n">s6</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>True
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">s5</span> <span class="o">==</span> <span class="s2">&quot;baska bir kelime&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>False
+</code></pre>
+</div>
+
+<p>Bazen pür eşitlik aşırı olabilir, bir kelimeyi diğeri içinde varsa eşit kabul
+etmek için <code>in</code> kullanılabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;bir&quot;</span> <span class="ow">in</span> <span class="n">s5</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>True
+</code></pre>
+</div>
+
+<h3>Bir Dizin Olarak String</h3>
+
+<p>Fakat sonuçta <code>str</code> tipinin bir harf dizini olduğunu unutmayalım. Eğer bu dizini
+aynen bir listeyi gezer gibi gezmek istersek bunu yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">s5</span><span class="p">:</span> <span class="nb">print</span> <span class="p">(</span><span class="n">s</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>b
+i
+r
+
+k
+e
+l
+i
+m
+e
+</code></pre>
+</div>
+
+<p>Ve doğal olarak indis bazlı erişim de işleyecektir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s5</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: &#39;k&#39;
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s5</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: &#39;e&#39;
+</code></pre>
+</div>
+
+<h3>Harf Bloklarını Değiştirmek</h3>
+
+<p>Bu işlem için <code>replace</code> çağrısı yeterli,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s4</span> <span class="o">=</span> <span class="s2">&quot;bir berber bir berbere ne demis&quot;</span>
+<span class="n">s4</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ne demis&quot;</span><span class="p">,</span><span class="s2">&quot;gel beraber berber dukkan acalim demis&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: &#39;bir berber bir berbere gel beraber berber dukkan acalim demis&#39;
+</code></pre>
+</div>
+
+<h3>Harf(lerin) Yerini Bulmak</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s4</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;berber&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 4
+</code></pre>
+</div>
+
+<p>Bu çağrı aranan metnin ilk görüldüğü yerin indisini döndürdü. Diğer
+<code>berber</code> kelimelerini bulmak için <code>find</code> çağrısını bir aralık üzerinde
+işletmek mümkündür, yani başlangıç, bitiş değerleri verebiliriz,
+üstteki örnekte ilk bulunan kısmı atlayarak oradan itibaren arama
+yaparsak, bir sonraki uyumun yeri döndürülür,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s4</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;berber&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">s4</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 15
+</code></pre>
+</div>
+
+<p>Aslında sadece başlangıç değeri verilebilirdi, bitiş verilmezse kelime sonu
+kabul edilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">s4</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;berber&quot;</span><span class="p">,</span><span class="mi">5</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 15
+</code></pre>
+</div>
+
+<h3>ASCII Haline Getirmek</h3>
+
+<p>Her dilden farklı karakterleri ascii haline çevirmek için, <code>unidecode</code>
+paketi var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">unidecode</span> <span class="kn">import</span> <span class="n">unidecode</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">unidecode</span><span class="p">(</span><span class="sa">u</span><span class="s2">&quot;çagrı&quot;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>cagri
+</code></pre>
+</div>
+
+<p>olacak, yani TR karakterleri İngilizce harflerden en yakın olanlarına
+tercüme edilecek. Bu niye yapılır? Belki metin arama yaparken lazım
+olabilir.</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

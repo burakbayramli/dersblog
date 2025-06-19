@@ -1,0 +1,528 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>AABB, Üçgen Kesişmesi, Hızlı Çarpışma Saptaması</h1>
+
+<p>Fiziksel dünyada hesaplanan bir simülasyon düşünelim, objeler var,
+hareket ediyorlar, bu objelerin çarpışıp çarpışmadığını her animasyon
+karesi (frame) içinde saptamamız gerekir, ki bu durumun bir sonraki
+karede fiziksel sonucunu gösterelim. Çarpışan bilardo topları çarpışma
+sonucu yer değiştirmelidir. Bir taşıt bir duvara çarpımışsa
+durmalıdır, gibi.</p>
+
+<p>İki obje arasında detaylı çarpışma hesabını yapabilen yaklaşımlar
+mevcut, [1]'de bunlardan birini gördük, fakat bu hesaplar her ikili
+kombinasyonuna teker teker bakmayı gerektirir, eğer irili ufaklı 1000
+obje simüle ediliyorsa bu 1000 x 1000 bir milyon işlem demektir!
+Çarpışmaları daha hızlı ve en detaylı şekilde acaba nasıl hesaplarız?
+Burada ele alacağımız çözüm birkaç aşamadan oluşuyor olacak.</p>
+
+<ol>
+<li><p>İlk aşama obje çiftlerinin birbirinden çarpışamayacak kadar uzak
+olanları saptayarak, ya da bu objelere hiç bakmayarak, bir sonraki
+fazdaki detaylı hesap yükünü azaltmak. Çarpışma saptama literatüründen
+bu aşamaya genel faz (broad phase) ismi veriliyor.</p></li>
+<li><p>Birbiri ile çarpışması muhtemel olan objeler bulunduktan sonra,
+çarpışması muhtemel iki objenin yüzey parçalarının da birbirine uzak
+olanlarını elemek.</p></li>
+<li><p>İki aday obje arasındaki aday yüzey parçalarını bulduktan sonra,
+artık detaylı kesişim testlerini yapabiliriz, bu testler / hesaplar
+nihai kesişim noktasını bulacaktır. Bu son iki kalem literatürde
+daraltılmış faz (narrow phase) olarak anılıyor.</p></li>
+</ol>
+
+<p>Bu kalemlerden ilki için AABB Ağacı yaklaşımını [2] yazısında gördük.
+O yazıda verilen <code>AABB.py</code> kodunu kullanarak etrafında birer
+"eksenlere hizalı sınırlayıcı kutu (axis aligned bounding box -AABB-)"
+tanımlanan objeler arasında kabaca çakışma olup olmayacağını anlamak
+mümkündür. AABB Ağaç yapısı içindeki AABB kutularını hızlı bir şekilde
+indisleyip birbirine uzak olan objelere bakmamak için optimize
+edilmiştir.</p>
+
+<p>İkinci kalem için ilginç bir yaklaşım şudur, aslında AABB Ağaç
+tekniğini iki aday obje arasındaki "kesişme adayı yüzey parçaları"
+(çoğunlukla bu parçalar 3D üçgendir) için de kullanabiliriz.  Çünkü
+aynen objeler etrafında AABB kutuları tanımlanabildiği gibi üç boyutlu
+yüzey parçaları etrafında da AABB kutuları tanımlanabilir, ve mesela
+bir objenin tüm yüzey parçaları bir ağaç oluşturur, ve bu ağaca artık
+çarpışma adayı diğer objenin tüm yüzey parçalarını teker teker alıp
+"çarpışma var mı?" diye sorabiliriz. Bu işlem de, aynen objeler
+arasında olduğu gibi, birbirinden uzak olan parçalara bakmayarak
+sadece aday parçalara bakarak sonuca ulaşmayı hızlandıracaktır.</p>
+
+<p>Üçüncü kalemde artık uzak objeler elenmiştir, bakılan iki obje
+arasında onların uzak yüzey parçaları elenmiştir, ve geri kalan
+parçalar arasında nihai kesişme hesabı zamanı gelmiştir. Bu aşamada
+yüzey parçaları üçgen ise, [1]'de görülen çizgi/üçgen kesişme hesabı
+kullanılabilir, her üçgenin her kenarını bir çizgi parçası olarak alıp
+diğer üçgen ile kesişmesinin testi/hesabı yapılır, bu her seferinde 6
+tane işlem demektir, hızlı bir şekilde yapılabilir.</p>
+
+<h3>Objeler, AABB</h3>
+
+<p>Örnek obje olarak bir STL cismi [4] kullanacağız. STL cisimlerinin
+yüzeyleri birbiri ile bağlı üçgen parçalarıdır, en ufak parçanın üçgen
+olması çok iyi çünkü üç boyutta üçgen, çizgi kesişmeleri için elimizde
+gerekli kodlar var.</p>
+
+<p>Altta örnek seçilen ve yazının geri kalanında kullanılacak olan cisim
+prizma heksagon'dur, [4]'teki örnek cisimler arasından
+seçilmiştir. Onu grafikleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+<span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;../../2020/08/shapes/Prism_hexagon.stl&#39;</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">60</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;coll_01.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;dış üçgen sayısı =&#39;</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>dış üçgen sayısı = 20
+(20, 3, 3)
+</code></pre>
+</div>
+
+<p><img src="coll_01.jpg" alt="" /></p>
+
+<p>Bu objenin dış yüzeyi 20 tane üçgen ile tanımlı, yani STL dosyası 20
+tane üçgen kordinatı taşıyor. Bu temel objeyi birden fazla yerde
+kullanmak basit, STL dosyasında tanımlı olan obje belli kordinat
+sisteminde spesifik bir yerde, ama biz bir <code>offset</code> parametresi
+üzerinden bu kordinata ekleme, çıkartmalar yaparak yeni bir prizmayı
+herhangi bir yerde dünyaya yerleştirebiliriz. Şimdi objemizi temsil
+eden sınıfı yaratalım ve üç tane farklı yerlerde cisim yaratalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;randall&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">as</span> <span class="nn">a3</span>
+<span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">import</span> <span class="nn">AABB</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="k">class</span> <span class="nc">STLObj</span><span class="p">(</span><span class="n">AABB</span><span class="o">.</span><span class="n">IAABB</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">offset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_triangles</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Obje offset </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">init_triangles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;../../2020/08/shapes/Prism_hexagon.stl&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">vectors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+
+    <span class="k">def</span> <span class="nf">set_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">offset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_triangles</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">:</span> 
+            <span class="n">tri</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+            <span class="n">tri</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+            <span class="n">tri</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="s1">&#39;dotted&#39;</span><span class="p">)</span>
+            <span class="n">tri</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">tri</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axx</span><span class="p">):</span>
+        <span class="n">aabb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_aabb</span><span class="p">()</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">plot_box_imp</span><span class="p">(</span><span class="n">aabb</span><span class="o">.</span><span class="n">min_x</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">min_y</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">min_z</span><span class="p">,</span>
+                          <span class="n">aabb</span><span class="o">.</span><span class="n">max_x</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">max_y</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">max_z</span><span class="p">,</span><span class="n">axx</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">)</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mins</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">maxs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABB</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Dikkat edersek <code>STLObj</code> sınıfı <code>AABB.IAABB</code> arayüzünden kod mirası
+yapıyor, bu miras sayesinde ve onun <code>get_aabb</code> metotunu tanımladıktan
+sonra, bir <code>STLObj</code> program objesi artık AABB Ağacı ile aranabilir
+hale gelir. Burada kullanılan bir nesnesel temelli çok yüzlülük
+(polymorphism) [5] prensibidir, <code>AABB.py</code> kodu <code>AABB.IAABB</code>
+arayüzünden miras almış objelerle ilgilenir, bu objelerin bir
+<code>get_aabb</code> metotu tanımlı olduğu sürece onlar ağaç tarafından
+tanınır.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">o1</span> <span class="o">=</span> <span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">o2</span> <span class="o">=</span> <span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">]))</span>
+<span class="n">o3</span> <span class="o">=</span> <span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">]))</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>        
+<span class="n">o1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">o2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">o3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">70</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;coll_02.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="coll_02.jpg" alt="" /></p>
+
+<p>Biz kabaca bakarak iki tane obje arasında çarpışma olduğunu
+görebiliyoruz.  O zaman ağaca sorduğumuzda bize bir ve ikinci objeler
+arasında potansiyel çarpışma var demelidir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">o2</span><span class="p">)</span>
+<span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">o3</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">o1</span><span class="p">,</span> <span class="sa">u</span><span class="s1">&#39;çarpışma testi&#39;</span><span class="p">)</span>
+<span class="n">overlaps</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">o1</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="sa">u</span><span class="s1">&#39;Sonuçlar:&#39;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">overlaps</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Çakışma </span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2"> ile&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Obje offset [0 0 0] çarpışma testi
+Sonuçlar:
+  - Çakışma Obje offset [ 5 -7  0] ile
+</code></pre>
+</div>
+
+<p>Hakikaten çarpışma bulundu. Objeler etrafındaki AABB kutularını da
+grafiklersek görsel olarak durum daha açık hale gelir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>        
+<span class="n">o1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o1</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">o2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o2</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">o3</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">);</span> <span class="n">o3</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">70</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;coll_03.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="coll_03.jpg" alt="" /></p>
+
+<h3>Daha Detaylı Saptama</h3>
+
+<p>Şimdi ikinci kalemdeki kodlamaya gelelim, ve tüm fikirleri bir araya
+koyarak içinde objelerin hareket ettiği bir animasyon yaratalım. Dikkat
+bu faz da hala 100% detaylı saptama yapmıyor, tüm objenin etrafındaki
+AABB kutusundan sonra objenin şimdi dış cephesindeki üçgenlerin AABB
+kutularını ek bir eleme için kullanıyor.</p>
+
+<p>Objeleri hareket ettirmek kolay, her obje için bir yön vektörü
+tanımlarız, ve her karede objenin <code>offset</code> değerine bu yön çarpı bir
+sabit değerini ekleyerek objenin o yöne gitmesini sağlarız.  Ayrıca
+alttaki kodda yüzeyler arası çarpışma adayları gerektiği için AABB
+Ağacının bu parçaları indisleyebilmesi gerekir, bunun için bir
+<code>Triangle</code> sınıfı yarattık, her prizma objesinin yüzeyini oluşturan 20
+tane üçgen objesi bu sınıftan yaratılıyor olacak. Bu sınıf aynen ana
+objelerde olduğu gibi <code>AABB.IAABB</code> arayüzünden miras alımı yapacak.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">sys</span><span class="p">;</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;randall&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">mpl_toolkits.mplot3d</span> <span class="k">as</span> <span class="nn">a3</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">import</span> <span class="nn">AABB</span><span class="o">,</span> <span class="nn">util</span>
+
+<span class="k">class</span> <span class="nc">Triangle</span><span class="p">(</span><span class="n">AABB</span><span class="o">.</span><span class="n">IAABB</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">corners</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corners</span> <span class="o">=</span> <span class="n">corners</span>
+
+    <span class="k">def</span> <span class="nf">get_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mins</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">maxs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABB</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">aabb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_aabb</span><span class="p">()</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;T </span><span class="si">{</span><span class="n">aabb</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axx</span><span class="p">):</span>
+        <span class="n">xs</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">ys</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">zs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fr</span><span class="p">,</span><span class="n">to</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">pairwise</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners</span><span class="p">)):</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fr</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fr</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span> <span class="n">zs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fr</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+            <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="mi">0</span><span class="p">]);</span> <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span> <span class="n">zs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">to</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>        
+        <span class="n">axx</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">zs</span><span class="p">,</span> <span class="s1">&#39;red&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axx</span><span class="p">):</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">corners</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mins</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">maxs</span><span class="p">)</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">plot_box_imp</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span><span class="p">,</span><span class="n">axx</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">STLObj</span><span class="p">(</span><span class="n">AABB</span><span class="o">.</span><span class="n">IAABB</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">offset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_triangles</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">get_aabb_triangles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Triangle</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">init_triangles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;../../2020/08/shapes/Prism_hexagon.stl&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">vectors</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">offset</span>
+
+    <span class="k">def</span> <span class="nf">set_offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">offset</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_triangles</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ax</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">:</span> 
+            <span class="n">tri</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">([</span><span class="n">x</span><span class="p">])</span>
+            <span class="n">tri</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+            <span class="n">tri</span><span class="o">.</span><span class="n">set_linestyle</span><span class="p">(</span><span class="s1">&#39;dotted&#39;</span><span class="p">)</span>
+            <span class="n">tri</span><span class="o">.</span><span class="n">set_alpha</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">tri</span><span class="p">)</span>
+            <span class="n">Triangle</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">plot_box</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">plot_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">axx</span><span class="p">):</span>
+        <span class="n">aabb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_aabb</span><span class="p">()</span>
+        <span class="n">util</span><span class="o">.</span><span class="n">plot_box_imp</span><span class="p">(</span><span class="n">aabb</span><span class="o">.</span><span class="n">min_x</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">min_y</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">min_z</span><span class="p">,</span>
+                          <span class="n">aabb</span><span class="o">.</span><span class="n">max_x</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">max_y</span><span class="p">,</span> <span class="n">aabb</span><span class="o">.</span><span class="n">max_z</span><span class="p">,</span><span class="n">axx</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;STLObj </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">offset</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="nf">get_aabb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">triangles</span><span class="p">)</span>
+        <span class="n">mins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">maxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">mins</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">maxs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABB</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">z</span><span class="p">,</span><span class="n">w</span><span class="p">,</span><span class="n">h</span><span class="p">,</span><span class="n">d</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Üçgenlerin AABB kutusunu da çizelim, nasıl gözüktüğü belli olsun,
+altta görüldüğü gibi tek kutu yok, üçgenleri kapsayan birkaç tane kutu
+var.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">())</span>        
+<span class="n">o1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">tri</span> <span class="ow">in</span> <span class="n">o1</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> <span class="n">tri</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span><span class="mi">65</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;coll_04.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="coll_04.jpg" alt="" /></p>
+
+<h3>Animasyon</h3>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">run_animation</span><span class="p">(</span><span class="n">offsets</span><span class="p">,</span> <span class="n">dirs</span><span class="p">,</span> <span class="n">azim</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">):</span> <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span> <span class="p">(</span><span class="s2">&quot;/tmp/coll&quot;</span><span class="p">)</span>
+
+    <span class="n">dirs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dirs</span><span class="p">)</span>
+    <span class="n">sobjs</span> <span class="o">=</span> <span class="p">[</span><span class="n">STLObj</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">o</span><span class="p">))</span> <span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">]</span>
+
+    <span class="n">tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>    
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">sobjs</span><span class="p">:</span> <span class="n">tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">15</span><span class="p">):</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">a3</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="n">azim</span><span class="p">)</span>
+
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">80</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+        <span class="n">olsum</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sobjs</span><span class="p">)):</span>
+            <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">set_offset</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="n">dirs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">*</span><span class="mf">0.5</span><span class="p">)</span>
+            <span class="n">tree</span><span class="o">.</span><span class="n">update_object</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+            <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">plot_aabb</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+        <span class="c1"># kesisme olan objeler icin</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sobjs</span><span class="p">)):</span>
+            <span class="n">overlaps</span> <span class="o">=</span> <span class="n">tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">other</span> <span class="ow">in</span> <span class="n">overlaps</span><span class="p">:</span>
+                <span class="c1"># A-B kesismesi tahmin edilen her B objesinin ucgenleri icin bir</span>
+                <span class="c1"># aabb agaci yarat</span>
+                <span class="n">narrow_tree</span> <span class="o">=</span> <span class="n">AABB</span><span class="o">.</span><span class="n">AABBTree</span><span class="p">(</span><span class="n">initial_size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">other</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> <span class="n">narrow_tree</span><span class="o">.</span><span class="n">insert_object</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+                <span class="c1"># A objesinin ucgenlerini alip B agacina kesisip kesismedigini sor</span>
+                <span class="k">for</span> <span class="n">a_tri</span> <span class="ow">in</span> <span class="n">sobjs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_aabb_triangles</span><span class="p">():</span> 
+                    <span class="n">overlaps_narrow</span> <span class="o">=</span> <span class="n">narrow_tree</span><span class="o">.</span><span class="n">query_overlaps</span><span class="p">(</span><span class="n">a_tri</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">b_tri</span> <span class="ow">in</span> <span class="n">overlaps_narrow</span><span class="p">:</span>
+                        <span class="c1"># burada a_tri ile b_tri arasinda nihai</span>
+                        <span class="c1"># kesisme noktasi bulunabilir</span>
+                        <span class="n">b_tri</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+
+
+
+            <span class="n">olsum</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">overlaps</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="s2">&quot;Overlaps: </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">olsum</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;x axis&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;y axis&quot;</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_zlabel</span><span class="p">(</span><span class="s2">&quot;z axis&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;/tmp/coll/coll_</span><span class="si">%02d</span><span class="s1">.jpg&#39;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">run_animation</span><span class="p">(</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Animasyonun her karesi bir JPG olarak yaratıldı, bu resimleri birleştirip bir
+GIF yaratalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">convert</span> <span class="o">-</span><span class="n">delay</span> <span class="mi">20</span> <span class="o">-</span><span class="n">loop</span> <span class="mi">0</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">coll</span><span class="o">/*.</span><span class="n">jpg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">aabb1</span><span class="o">.</span><span class="n">gif</span>
+</code></pre>
+</div>
+
+<p>Nihai animasyon [6]'da bulunabilir.</p>
+
+<p>Animasyonda muhtemel çarpışma genel fazda saptanınca görüntünün
+üstündeki çarpışma sayacı arttırılıyor. Bu genel adaylar arasında
+üçgenleri çarpışanlar var ise, bu çarpışması muhtemel üçgenler kırmızı
+ile gösteriliyor. Muhtemel çarpışma anında her iki objede aydınlatılan
+üçgen sayısına dikkat edersek 20'den daha az sayıda olduğunu
+görebiliriz, ve her iki objenin birbirine yakın üçgenleri potansiyel
+çarpışmış olarak işaretlendi. Demek ki teknik ise yaradı, daraltılmış
+fazda kesişme hesabının yapılacağı üçgen sayısını azaltmış olduk.</p>
+
+<p>İki obje arasında üçgenler arası çarpışmalar için de ağaç
+kullanmamızın önemini bir daha vurgulamak iyi olur, üstteki basit
+objede 20 tane yüzey üçgeni vardı. Fakat daha çetrefil objelerde,
+mesela [4] yazısında görülen pervane cisminin yüzeyinde 1000'den fazla
+üçgen mevcuttur. Böyle bir objenin benzer bir diğer obje ile
+üçgenlerini birer birer karşılaştırıp detaylı kesişme testi
+yaptığımızı düşünelim, bu 1000 x 1000, yine bir milyondan fazla hesap
+yapmak anlamına gelecektir. Ağaç araması (ve elemesi) ile bu yükten
+kurtulmuş olduk.</p>
+
+<p>Ayrıca objeler hareket ettikten sonra yapılan <code>update_object</code>
+çağrısına dikkat. Bu çağrı ile objenin yeri AABB Ağacı içinde
+güncellenmiş oldu. Kullandığımız AABB Ağaç kodunu seçmemizin bir
+sebebi bu tür güncellemeye izin vermesiydi, eğer güncelleme mümkün
+değilse ya da hızlı bir şekilde yapılamıyorsa obje yerlerini
+indisleyen bu yaklaşımı kullanmak anlamsız olurdu. Yüzlerce objenin
+olduğu bir animasyon düşünsek her karede her seferinde ağacı silbaştan
+yaratmak performanta düşüşe sebep olacaktı.</p>
+
+<p>Not</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">run_animation</span><span class="p">(</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">azim</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">convert</span> <span class="o">-</span><span class="n">delay</span> <span class="mi">20</span> <span class="o">-</span><span class="n">loop</span> <span class="mi">0</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">coll</span><span class="o">/*.</span><span class="n">jpg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">aabb2</span><span class="o">.</span><span class="n">gif</span>
+</code></pre>
+</div>
+
+<p>İlk animasyondaki genel çarpışma saptamasına üstteki kodla farklı
+açıdan [7] bakınca detayda çarpışma olmadığını görüyoruz. Ödev olarak
+okuyucu bu çarpışmanın olmadığını [1]'deki determinant yöntemi ile
+bulabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">run_animation</span><span class="p">(</span><span class="n">offsets</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">]],</span><span class="n">dirs</span> <span class="o">=</span> <span class="p">[[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">]],</span><span class="n">azim</span><span class="o">=</span><span class="mi">220</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="err">!</span> <span class="n">convert</span> <span class="o">-</span><span class="n">delay</span> <span class="mi">20</span> <span class="o">-</span><span class="n">loop</span> <span class="mi">0</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">coll</span><span class="o">/*.</span><span class="n">jpg</span> <span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">aabb3</span><span class="o">.</span><span class="n">gif</span>
+</code></pre>
+</div>
+
+<p>Üstteki parametrelerle animasyon objenin gerçekten çarpışma olduğu bir
+örnek gibi duruyor [8], yine aynı determinant testi ve nihai
+çizgi/üçgen kesişme yöntemi burada kullanılabilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Bayramlı, 
+    <a href="https://burakbayramli.github.io/dersblog/calc_multi/calc_multi_75_app/green_in_teorisi_duzlem_kesismeleri_egriler.html">
+    Green'in Teorisi, Düzlem Kesişmeleri, Eğriler
+    </a></p>
+
+<p>[2] Randall, <a href="aabb-randall-tr.html">AABB Ağaçları ile Çarpışma Saptamasına Giriş</a></p>
+
+<p>[4] Bayramlı, <a href="../../2020/08/stl-3d-cad.html">3D Baskıya Hazır CAD Tasarım Formatı, STL</a></p>
+
+<p>[5] Bayramlı, 
+    <a href="../../2000/10/nesnesel-programlama.html">Nesnesel Programlama</a></p>
+
+<p>[6] Bayramlı, 
+    <a href="https://www.dropbox.com/scl/fi/m0x1170yc8duo80c0592k/aabb1.gif?rlkey=08gwsgwiqnk09smpe6bbz2tpi&amp;st=2s2voz8k&amp;raw=1">Animasyon 1</a></p>
+
+<p>[7] Bayramlı, 
+    <a href="https://www.dropbox.com/scl/fi/ymaug651wik2hpi2o2m20/aabb2.gif?rlkey=xxkds9oa7w7bca67yz9ravuse&amp;st=ui77u6vy&amp;raw=1">Animasyon 2</a></p>
+
+<p>[8] Bayramlı, 
+    <a href="https://www.dropbox.com/scl/fi/seuqx5hrgfhyhfxpzohyp/aabb3.gif?rlkey=hae5dr0ukfm7e47vcnwkprk20&amp;st=0i47cieb&amp;raw=1">Animasyon 3</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

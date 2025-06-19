@@ -1,0 +1,292 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>En Kısa Yol Algoritması, Yol Ağı, OSMNX</h1>
+
+<p>OpenStreetMap verisi tüm dünya coğrafi verilerini kapsayan açık
+kaynak, herkesin bilgi ekleyebildiği devasa bir veri deposudur, bedava
+olarak paylaşılır. İçinde yollar, restoranlar, dükkanlar, önemli
+yerler gibi pek çok coğrafi bilgileri içerir. Fakat veriyi işlemek
+bazıları için zor olabilir.</p>
+
+<p>Bu verinin daha rahat işlenmesini sağlayan bir paket OSMNX. Özellikle
+yol ağ yapısını rahat şekilde indirilmesini ve çizit (graph) olarak
+doğru şekilde gelmesini sağlıyor. Çizitler bilindiği gibi matematiğin
+bir dalı, bize düğüm-bağlantı yapılarını işleyen algoritmalar sağlar,
+tabii ki bir yol ağı çizit teorisinin en bariz uygulama alanıdır,
+düğümler duraklar, köşe başları vs olabilir bağlantılar onlar
+arasındaki yollar olacaktır.</p>
+
+<p>OSMNX kullanıcının tanımladığı bölgeler içindeki yol yapısını döndürme
+kabiliyetine sahiptir, ve bu veriyi diskte önbellekleme yaparak
+saklayabilir, böylece aynı bölge için sonraki yükleme çağrılarının
+OSM'e bağlanması gerekmez. Eğer veride çizit yapısına uymayan yerler
+varsa bunlar döndürülmeden önce tamir edilir.</p>
+
+<p>Kurmak icin Ubuntu uzerinde <code>gdal-bin</code>, <code>libgdal-dev</code>, <code>libspatialindex-dev</code>
+<code>apt install</code> ile kurulmali. Sonra <code>pip install</code>
+ile <code>scikit-learn</code> ve <code>osmnx</code>.</p>
+
+<p>Örnek olarak [1]'deki yere bakalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+
+<span class="n">ox</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_folder</span><span class="o">=</span><span class="s1">&#39;/tmp/osmnx&#39;</span><span class="p">)</span>
+
+<span class="n">north</span><span class="p">,</span> <span class="n">south</span><span class="p">,</span> <span class="n">east</span><span class="p">,</span> <span class="n">west</span> <span class="o">=</span> <span class="mf">37.79</span><span class="p">,</span> <span class="mf">37.78</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.41</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.43</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_bbox</span><span class="p">(</span><span class="n">north</span><span class="p">,</span> <span class="n">south</span><span class="p">,</span> <span class="n">east</span><span class="p">,</span> <span class="n">west</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;walk&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">plot_graph</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">node_color</span><span class="o">=</span><span class="s2">&quot;r&quot;</span><span class="p">,</span><span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">7</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;osmnx-01.jpg&#39;</span><span class="p">,</span><span class="n">quality</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="osmnx-01.jpg" alt="" /></p>
+
+<p><code>cache_folder</code> ile önbellek dosyalarının yazılacağı yer tanımlandı. Üstteki çağrı
+için baktık <code>30 520ecdb05972a5893b8a541266157cd0b30a6381.json</code> diye bir dosya
+oraya yazılmış, büyüklüğü 1.8 MB.</p>
+
+<p><code>graph_from_bbox</code> ile belli kuzey, güney, doğu, batı uç noktalarının
+oluşturduğu kutunun içine düşen yol ağını aldık, fakat tek bir nokta
+verip ona belli uzaklıktaki tüm yol ağını da alabilirdik, mesela
+<code>graph_from_point((37.79, -122.41), dist=750</code> ile verili noktanın 750
+metre çevresindeki ağ alınabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+
+<span class="n">ox</span><span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="n">use_cache</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">cache_folder</span><span class="o">=</span><span class="s1">&#39;/tmp/osmnx&#39;</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_point</span><span class="p">((</span><span class="mf">37.79</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.41</span><span class="p">),</span> <span class="n">dist</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span> <span class="n">network_type</span><span class="o">=</span><span class="s2">&quot;walk&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Network tipi <code>network_type</code> ile tanımlanıyor, <code>walk</code>, <code>drive</code>, <code>bike</code>
+değerleri geçilebiliyor, bu değerler sırasıyla arabaların geçebildiği, ya da
+bisiklet, ya da yürünebilen yol yapılarını döndürür. Uygulamanın
+ihtiyacına göre farklı ağ yapıları gerekebilir (arabaların geçebildiği her
+yol bisiklete uygun olmayabilir mesela), bu sebeple bu seçenek gerekli.</p>
+
+<p>Çağrı yapıldı, ve artık geri döndürülen <code>G</code> değişkeni içinde yol yapısı var,
+buna düğümlerden oluşan bir liste olarak erişilebilir, mesela 0'inci
+ve 20'inci düğümler</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[</span><span class="mi">20</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>65281835
+65295291
+</code></pre>
+</div>
+
+<p>İlk 10 düğüm</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">G</span><span class="p">)[:</span><span class="mi">10</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[65281835, 65281838, 65287183, 65287185, 65290169, 65290173, 65290750, 65290756, 65291738, 65291741]
+</code></pre>
+</div>
+
+<p>Kısa yol bulmaya gelelim; ilk önce eldeki başlangıç ve bitiş coğrafi
+kordinatlarına en yakın çizit düğümlerini bulmak lazım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">origin</span> <span class="o">=</span> <span class="p">(</span><span class="mf">37.784825495166544</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.40208526405367</span><span class="p">)</span>
+<span class="n">destination</span> <span class="o">=</span> <span class="p">(</span><span class="mf">37.79584463577157</span><span class="p">,</span> <span class="o">-</span><span class="mf">122.40724290129684</span><span class="p">)</span>
+<span class="n">origin_res</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">get_nearest_node</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span><span class="n">return_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">destination_res</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">get_nearest_node</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">destination</span><span class="p">,</span><span class="n">method</span><span class="o">=</span><span class="s1">&#39;euclidean&#39;</span><span class="p">,</span><span class="n">return_dist</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">origin_res</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">destination_res</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(5554084244, 5.332404779362496)
+(7233579607, 15.949918872077847)
+</code></pre>
+</div>
+
+<p>Sonuçlar bir Python tüpü (tuple) olarak verildi, birinci değer düğüm
+kimliği, ikincisi bizim verdiğimiz kordinata olan metre olarak yakınlık.
+Şimdi bu ID'ler ile yine OSMNX içinde mevcut olan en kısa yol algoritmasını
+işletiyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">route</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">shortest_path</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">origin_res</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">destination_res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">route</span><span class="p">[:</span><span class="mi">10</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+[5554084244,
+ 5554084275,
+ 5554084256,
+ 5554084269,
+ 995847660,
+ 5554084309,
+ 1270745639,
+ 275431510,
+ 5554083274,
+ 1332541752]
+</code></pre>
+</div>
+
+<p>Geçilecek yolun ilk 10 düğümü listeledik, en kısa yol bu noktalardan
+oluşuyor. Noktalar hakkında daha detaylı bilgiyi <code>G</code> çizit objesinden
+alabiliriz, mesela enlem, boylam değerleri bu objeye sorulabiliyor,
+ilk noktayı soralım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: {&#39;y&#39;: 37.7848105, &#39;x&#39;: -122.4021429, &#39;street_count&#39;: 3}
+</code></pre>
+</div>
+
+<p>Tüm noktaları enlem/boylam listesine çevirelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">coords</span> <span class="o">=</span> <span class="p">[[</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;y&#39;</span><span class="p">],</span><span class="n">G</span><span class="o">.</span><span class="n">nodes</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">route</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">coords</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[37.7848105, -122.4021429], [37.7845016, -122.4030429], [37.7846474, -122.4031738], [37.7847412, -122.4032112], [37.784882, -122.403207], [37.7850366, -122.4034089], [37.7850702, -122.4034505], [37.7851231, -122.4035159], [37.7851702, -122.4035743], [37.7855328, -122.40403], [37.7862746, -122.4049529], [37.7864463, -122.404735], [37.7865865, -122.4048136], [37.7867459, -122.4048752], [37.7868265, -122.4049267], [37.7868355, -122.4048551], [37.7869147, -122.404873], [37.7877685, -122.4050568], [37.788237, -122.4051523], [37.7887033, -122.4052473], [37.7891462, -122.4053364], [37.7892111, -122.4053494], [37.7893261, -122.4053725], [37.7896352, -122.4054347], [37.7901017, -122.4055285], [37.7905698, -122.4055991], [37.7915047, -122.4057597], [37.7917761, -122.4058148], [37.7923696, -122.4059355], [37.7924582, -122.4059535], [37.7925624, -122.4059745], [37.7933866, -122.4061403], [37.793828, -122.4062291], [37.7942666, -122.4063174], [37.7950988, -122.4064848], [37.7951483, -122.4064948], [37.7952034, -122.4065059], [37.7959786, -122.4066619], [37.7959709, -122.4067263], [37.7959246, -122.4070922]]
+</code></pre>
+</div>
+
+<p>Kordinatları bir Folium haritasında gösterebiliriz artık,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+<span class="nb">map</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span><span class="n">zoom_start</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span><span class="n">control_scale</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s2">&quot;Park&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">Marker</span><span class="p">(</span><span class="n">destination</span><span class="p">,</span> <span class="n">popup</span><span class="o">=</span><span class="s2">&quot;Çin Mahallesi&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
+<span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="nb">map</span><span class="p">)</span>
+<span class="nb">map</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;direction1.html&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><a href="direction1.html">Tarif</a></p>
+
+<p>Haritada görülen kırmızı çizgiler yürünüş için en kısa yolu gösteriyor.</p>
+
+<p>Ham OSM Dosyaları, Format Değişimi</p>
+
+<p>Eger bir OSM dosyasini indirip direk kendi yerel diskimizden okutmak istiyorsak
+<code>graph_from_xml</code> cagrisi var. [7]'den mesela ufak bir dosya Seychelles indirelim,
+<code>.osm.bz2</code> dosyasi</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">osmnx</span> <span class="k">as</span> <span class="nn">ox</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="n">ox</span><span class="o">.</span><span class="n">graph_from_xml</span><span class="p">(</span><span class="s2">&quot;seychelles-latest.osm.bz2&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>ile okuyabiliriz. Eğer bu çiziti başka bir formatta yazmak istiyorsak,
+mesela her satır "düğüm1 - düğüm2 - değerler" olacak şekilde, yani
+1'inci düğümün bağlı olduğu 2'inci düğüm ve aralarındaki kenar
+ağırlığı her satıra yazılacak, bunu</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+
+<span class="n">nx</span><span class="o">.</span><span class="n">write_edgelist</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="s2">&quot;test.edgelist.gz&quot;</span><span class="p">,</span><span class="n">data</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;oneway&quot;</span><span class="p">,</span><span class="s2">&quot;length&quot;</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p>ile yapabiliriz. Her düğümün coğrafi kordinatını .osm dosyasını direk
+tarayarak yapabiliriz, okunabilir bir dosya bu, ve <code>lat</code>, <code>lon</code> değerleri
+her düğüm için var.</p>
+
+<h3>Dezavantajlar</h3>
+
+<p>Bu paketin hafıza idare problemi var. Eğer .osm dosyası çok büyük ise
+<code>graph_from_xml</code> için yerel bilgisayarın hafızası yetmeyebilir, mesela
+Lüksemburg gibi ufak bir harita için bile 4 GB yeterli olmadı.</p>
+
+<p>Bölge tanımlayıp o bölge için gerekli OSM bilgilerini indirmek, aynı
+anda onu işleyip başka bir formata döndürmek teoride iyi fakat
+pratikte network yavaşlığı, kesilmesi gibi envai türden problemde bizi
+yolda bırakabilir. Bazı kavramları öğrenmek için bu paket faydalı olsa
+da nihai bir uygulama için eksikler olacaktır. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://geoffboeing.com/2016/11/osmnx-python-street-networks/">Geoff Boeing</a></p>
+
+<p>[2] <a href="../../2016/11/yol-tarifi-harita-bilgisi-osrm-backend.html">OSRM Yol Tarifi</a></p>
+
+<p>[3] <a href="https://networkx.org/documentation/stable/reference/classes/multidigraph.html">NetworkX Multidigraph</a></p>
+
+<p>[4] <a href="https://github.com/gboeing/osmnx-examples/blob/main/notebooks/01-overview-osmnx.ipynb">OSMNX Belge 1</a></p>
+
+<p>[5] <a href="https://github.com/bryanvallejo16/shortest-path-osm/blob/main/shortest_path_osm_updated_example.ipynb">OSMNX Belge 2</a></p>
+
+<p>[6] <a href="https://github.com/gboeing/osmnx-examples/blob/main/notebooks/02-routing-speed-time.ipynb">OSMNX Belge 3</a></p>
+
+<p>[7] http://download.geofabrik.de</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

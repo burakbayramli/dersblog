@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>IP ve Bölge Eşlemesi, Python</h1>
+
+<p>IP adresini yaklasik olarak bir bolgeye, sehre, hatta enlem boylam
+kordinatina eslemek icin pygeoip adli Python paketi var. Kurmak icin</p>
+
+<pre><code>sudo easy_install pygeoip
+</code></pre>
+
+<p>Kodun ek veri dosyalarina ihtiyaci var. Bu dosyalar</p>
+
+<pre><code>http://dev.maxmind.com/geoip/geolite#IP_Geolocation-1
+</code></pre>
+
+<p>adresinde Downloads bolumunden indirilebilir, GeoIP.dat.gz,
+GeoIPv6.dat.gz, GeoLiteCity.dat.gz dosyalari mesela. Ornek kod, mesela
+212.174.157.30 ip adresi icin (adresi nslookup www.tbmm.gov.tr ile
+bulduk)</p>
+
+<pre><code>import pygeoipgi = pygeoip.GeoIP('[DIZIN]/GeoLiteCity.dat')
+print gi.record_by_addr('212.174.157.30')
+</code></pre>
+
+<p>Sonuc</p>
+
+<pre><code>{'city': u'B\xfcy\xfck', 'region_name': u'61', 'area_code': 0,
+'time_zone': 'Asia/Istanbul', 'dma_code': 0, 'metro_code': None,
+'country_code3': 'TUR', 'latitude': 40.66669999999999, 'postal_code':
+'', 'longitude': 40.400000000000006, 'country_code': 'TR',
+'country_name': 'Turkey', 'continent': 'EU'}
+</code></pre>
+
+<p>Sonuc Istanbul (sitenin barindirma servisi degisik bir sehirde demek
+ki). Diger ornekler</p>
+
+<p>https://github.com/appliedsec/pygeoip</p>
+
+<p>Eger mesela Pandas DataFrame objesi uzerindeki bir IP adresini
+isleyip, hesaplanan enlem / boylam degerlerini ayni satira ayri
+kolonlar olarak yazmak isteseydiniz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">pygeoip</span><span class="o">,</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">gi</span> <span class="o">=</span> <span class="n">pygeoip</span><span class="o">.</span><span class="n">GeoIP</span><span class="p">(</span><span class="s1">&#39;[DIZIN]/GeoLiteCity.dat&#39;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">ip_loc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">gi</span><span class="o">.</span><span class="n">record_by_addr</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">]</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="n">rec</span><span class="p">[</span><span class="s1">&#39;longitude&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="n">lat</span><span class="p">,</span> <span class="n">lon</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span><span class="s1">&#39;longitude&#39;</span><span class="p">])</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;ip&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;212.174.157.30&#39;</span><span class="p">,</span><span class="s1">&#39;212.174.157.30&#39;</span><span class="p">,</span><span class="s1">&#39;212.174.157.30&#39;</span><span class="p">]})</span>
+<span class="n">df</span><span class="p">[[</span><span class="s1">&#39;latitude&#39;</span><span class="p">,</span><span class="s1">&#39;longitude&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;ip&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">ip_loc</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">df</span>
+</code></pre>
+</div>
+
+<p>Buradan gelen sonuc</p>
+
+<pre><code>ip  latitude  longitude0  212.174.157.30   40.6667       40.41 
+212.174.157.30   40.6667       40.42  212.174.157.30   40.6667      
+40.4
+</code></pre>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

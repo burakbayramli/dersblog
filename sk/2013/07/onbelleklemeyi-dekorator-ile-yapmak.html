@@ -1,0 +1,315 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Dekoratörler, Önbellek Kodlaması, Fonksiyon Değiştirmek</h1>
+
+<p>Bir fonksiyonu çağırıyoruz, ona bazı parametreler geçiyoruz, bu
+parametrelerle fonksiyon bir hesap yapıyor, bize sonucu veriyor.
+Mesela bir sayıya kadar olan tüm tam sayıları toplayan bir fonksiyon
+olsun,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">n_topla1</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+   <span class="n">tmp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+   <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+   <span class="k">return</span> <span class="n">res</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_topla1</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_topla1</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_topla1</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+55
+[0, 1, 2, 3, 4, 5]
+15
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+55
+</code></pre>
+</div>
+
+<p>Toplam 1 + 2 + 3 + .. + 10 diye 10'a kadar olan sayıları topladı ve
+döndürdü.  Sonra 5 ve tekrar 10 için aynı teknik kullanıldı.</p>
+
+<p>Fakat diyelim ki bu fonksiyonu pek çok kez ardı ardına çağırmak
+gerekiyor, ve çağrıların çoğu benzer parametreleri kullanacak, mesela
+10'a kadar olan toplam pek çok kez yapılabilecek.. Acaba üstteki
+toplam işlemini bir kez yapıp ikinci, üçüncü çağrılarda aynı hesabı
+döndürsek olmaz mı?</p>
+
+<p>Koda böyle bir ek yapılabilir. Mesela <code>n_topla1</code> fonksiyonunda daha
+başka bir şey yapmadan önce parametreleri biraraya koyarak bir tür
+anahtar oluşturabiliriz, bu anahtarı bir sözlükte arama için
+kullanırız, eğer değer bulunursa birisi önceden o hesabı yapıp oraya
+koymuş demektir, fonksiyonda devam etmek yerine sözlükteki değeri
+döndürürüz, hesaba gerek kalmaz. Tabii ki eğer sözlükte o değer yoksa,
+hesabı yapıp sözlüğe bizim koymamız gerekir, böylece bir sonraki çağrı
+yapan o değerleri bulsun.</p>
+
+<p>"Parametrelerden anahtar oluşturmak", "varsa döndürmek yoksa oraya
+koymak" - burada bir sürü hamaliyesi fazla kodlama var. Bu kodları bir
+paket üzerinden, hatta bir fonksiyon başına koyulacak bir etiket /
+işaret / dekoratör üzerinden Python'a yaptırsak iyi olacak.</p>
+
+<h3>Hazır Paket Kullanarak</h3>
+
+<p>Paket <code>cachetools</code> içinde böyle kodlar var [1]. Toplam foksiyonunu etiketleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">cachetools</span> <span class="kn">import</span> <span class="n">cached</span>
+
+<span class="nd">@cached</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="p">{})</span>
+<span class="k">def</span> <span class="nf">n_topla2</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+   <span class="n">tmp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+   <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+   <span class="k">return</span> <span class="n">res</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>5 =&gt; [0, 1, 2, 3, 4, 5]
+15
+10 =&gt; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+55
+55
+</code></pre>
+</div>
+
+<p>10 toplamı önbellekten geldi, onun listesi basılmadı dikkat edersek
+çünkü fonksiyonun o kısmına gidilmesi gerekmedi.</p>
+
+<p>Önbellekleme etiketi <code>@cached</code> ile kullanılacak sözlük tipini de
+tanımlayabiliyoruz, üstteki örnekte standart bir Python sözlüğü <code>{}</code>
+kullanıldı. Başka türlü sözlükler de var, bu sözlükler ayrıca
+önbellekleme stratejisini değiştirmemize yarıyor. Mesela "sadece en
+son 2 konulan öğe hatırlansın" istiyorsam, yani büyüklüğü 2'den fazla
+olmasın, ve üçüncü öğeyi koymaya çalışırsam ilk eklediğim atılsın
+istiyorsam, bu bir ilk giren ilk çıkar (first in first out -FIFO-)
+mantığıdır, ve böyle bir sözlük tipi vardır, <code>FIFOCache</code>.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">cachetools</span> <span class="kn">import</span> <span class="n">FIFOCache</span>
+
+<span class="nd">@cached</span><span class="p">(</span><span class="n">cache</span><span class="o">=</span><span class="n">FIFOCache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+<span class="k">def</span> <span class="nf">n_topla2</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+   <span class="n">tmp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="s2">&quot;=&gt;&quot;</span><span class="p">,</span> <span class="n">tmp</span><span class="p">)</span>
+   <span class="n">res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+   <span class="k">return</span> <span class="n">res</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;5 Toplami&#39;</span><span class="p">,</span> <span class="n">n_topla2</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;10 Toplami&#39;</span><span class="p">,</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;20 Toplami&#39;</span><span class="p">,</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+
+<span class="c1"># tersten sor, son girenleri bulalim</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;20 Toplami&#39;</span><span class="p">,</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">20</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;10 Toplami&#39;</span><span class="p">,</span><span class="n">n_topla2</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;5 Toplami&#39;</span><span class="p">,</span> <span class="n">n_topla2</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>5 =&gt; [0, 1, 2, 3, 4, 5]
+5 Toplami 15
+10 =&gt; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+10 Toplami 55
+20 =&gt; [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+20 Toplami 210
+20 Toplami 210
+10 Toplami 55
+5 =&gt; [0, 1, 2, 3, 4, 5]
+5 Toplami 15
+</code></pre>
+</div>
+
+<p>20,10 toplamları hatırlandı, ama 5 için tekrar hesap yapıldı çünkü büyüklüğü 2
+olan <code>FIFOCache</code> o sonuçları atmıştı.</p>
+
+<p>Diğer bazı önbellek tipleri mesela <code>LRUCache</code> en az kullanılan
+objeleri atar. <code>TTLCache</code> ise konulan her obje üzerinde bir zaman
+aşımını kontrol eder, bunu <code>ttl</code> parametresi ile saniye üzerinden
+kullanıcı ayarlayabilir, mesela <code>ttl=600</code> ile objeler konulduktan 10
+dakika sonra onbellekten çıkartılırlar, "eskimiş" olurlar.</p>
+
+<p>Diğer önbellek tipleri için [2].</p>
+
+<h3>Kendi Kodumuz İle</h3>
+
+<p>Önbellek kullanımını kendi kodumuz ile de ekleyebiliriz. Mesela kare
+almakla yükümlü bir fonksiyonumuz var diyelim (altta ise yaramaz bir
+değişken dummy ekledik, bazı püf noktaları gösterebilmek için),</p>
+
+<pre><code>def kare(dummy, a):    return a*a
+</code></pre>
+
+<p>Bu fonksiyonu</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">kare</span><span class="p">(</span><span class="s2">&quot;filan&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>diye çağırıyoruz ve sonuç olarak 9 gelmesini bekliyoruz. </p>
+
+<p>Önbellekleme için, diyelim ki, eğer a değeri önceden görülmüşse, kare
+işlemi sonucunun tekrar hesaplanmasını istemiyoruz, onu onbellekten
+bulup hızlı bir şekilde geri döndürmek tercihimiz (tabii çarpım işlemi
+de çok hızlı işler, ama bu örnek için yavaş olabileceğini hayal
+edelim).</p>
+
+<p>Bu kod uzerinde onbelleklemeyi eski usulle yapsaydik, kod suna
+benzerdi:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">cache</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">def</span> <span class="nf">kare</span><span class="p">(</span><span class="n">dummy</span><span class="p">,</span> <span class="n">a</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">cache</span><span class="p">:</span> <span class="n">cache</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="n">a</span>
+    <span class="k">return</span> <span class="n">cache</span><span class="p">[</span><span class="n">a</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>Değişken cache bir Python sözlüğüdür ve onbelleğimiz onun üzerinde
+duruyor. Görüldüğü gibi kod biraz kalabalıklaştı. Onbellek objesi
+alanen ortada, ayrıca ıf gibi çok ciddi bir ibareyi koda sokuşturmak
+zorunda kaldık. Genellikle bu ifade önemli bir işlem mantığı var ise
+kullanılır - en azından kod okunabilirliği açısından böyle olması daha
+iyidir. Peki bu isi daha temiz bir sekilde yapamaz miydik?</p>
+
+<p>Python dekoratör fonksiyonları işte tam burada ise yarar. Bir
+dekoratör bir fonsiyonu "sarmalayabilir (wrap)", ve o fonksiyona giren
+çıkan tüm değerler üzerinde işlem yapabilir, ve onları istediği gibi
+değiştirebilir, bu sayede o fonksiyona "çaktırmadan" ek özellikler
+verebilir. Sözdizim açısından da temiz dururlar, çünkü dekoratör
+fonksiyon üzerinde '@' ile tanımlanan bir şeydir, başka bir eke
+ihtiyaç yoktur. O zaman (önce dekoratörün kendisi)</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">cache</span><span class="p">(</span><span class="n">function</span><span class="p">):</span>  <span class="n">memo</span> <span class="o">=</span> <span class="p">{}</span>
+  <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">memo</span><span class="p">:</span>
+      <span class="nb">print</span> <span class="s2">&quot;cache hit&quot;</span>
+      <span class="k">return</span> <span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="nb">print</span> <span class="s2">&quot;cache miss&quot;</span>
+      <span class="n">rv</span> <span class="o">=</span> <span class="n">function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+      <span class="n">memo</span><span class="p">[</span><span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">rv</span>
+      <span class="k">return</span> <span class="n">rv</span>  <span class="k">return</span> <span class="n">wrapper</span>
+</code></pre>
+</div>
+
+<p>Üstteki kod ana kodunuzdan ayrı bir yerde, bir dosyada durabilir
+mesela, sadece bir kere yazılır zaten, ve kullanılması gerektiği zaman
+şu ibare yeterlidir,</p>
+
+<pre><code>@cache
+def kare(dummy, a):
+   return a*a
+</code></pre>
+
+<p>Görüldüğü gibi gayet temiz. Onbellek kodu hiç etrafta gözükmüyor, bu
+da kod bakımını daha rahatlaştıran bir özellik. Böylece kare
+fonksiyonunu normalde olması gerektiği gibi yazıyoruz, kod onbellek
+olsa da olmasa da aynı şekilde yazılıyor, sadece çarpım için gereken
+işlem mantığını içeriyor.</p>
+
+<p>Not: dummy değişkenini dekoratör içinde istediğimiz herhangi fonksiyon
+argümanı ile iş yapabileceğimizi göstermek için kullandık, args[1] ile
+sadece ikinci argümana baktık mesela.</p>
+
+<p>Koda Ekler Enjekte Etmek</p>
+
+<p>Diyelim ki mevcut bir kod parcasi var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">randomclass</span> <span class="n">Foo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">xo</span> <span class="o">=</span> <span class="n">Foo</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Biz bu kodun <code>f()</code> çağrısını "yakalayıp" ona ek bir şeyler yaptırtmak
+istiyoruz, ve mevcut koda hiç dokunmadan bunu yapmak istiyoruz. Belki
+f() çağrısı bir başka yazılım paketi içinde, vs. Bu fonsiyonu dekore
+ederek bunu yapabiliriz, fakat mevcut fonksiyon koduna dokunmak
+istemediğimiz için metot üstünde @birdekoratör gibi bir kullanım
+yapamayız. Bu durumda başka bir seçenek sudur,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span> <span class="nf">decorated_f</span><span class="p">(</span><span class="n">fn</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">new_f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">fn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">&quot;was&quot;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+    <span class="k">return</span> <span class="n">new_f</span>
+<span class="n">Foo</span><span class="o">.</span><span class="n">f</span> <span class="o">=</span> <span class="n">decorated_f</span><span class="p">(</span><span class="n">Foo</span><span class="o">.</span><span class="n">f</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Simdi</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="s2">&quot;o&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">f</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;was&quot;</span><span class="p">,</span> <span class="n">o</span><span class="o">.</span><span class="n">was</span>
+</code></pre>
+</div>
+
+<p>Yeni ekleri de işletecek, bu ek Foo üzerinde yeni bir öğe yarattı, ve
+bu öğeye <code>o.was</code> diye erişiyoruz.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://pypi.org/project/cachetools/</p>
+
+<p>[2] https://cachetools.readthedocs.io/en/latest/</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

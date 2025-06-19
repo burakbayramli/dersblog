@@ -1,0 +1,424 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>3D Baskıya Hazır CAD Tasarım Formatı, STL</h1>
+
+<p>3 boyutlu baskı (3d printing) için tasarım dosyaları hazırlamaya
+yardım eden STL formatı var. Bir objeyi mesela Tinkercad ile
+tasarlayıp objeyi STL formatında kaydedebiliriz, bu dosya 3 boyutlu
+baskıya hazırdır.</p>
+
+<p>Örnek bir objeye bakalım [1], bir pervane bu, <code>propeller1.stl</code> olarak
+kaydedelim. Obje tasarımına, verisine Python'dan erişmek istersek,
+<code>numpy-stl</code> kullanılabilir.</p>
+
+<pre><code>pip install numpy-stl
+</code></pre>
+
+<p>Şimdi</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
+
+<span class="c1"># Create a new plot</span>
+<span class="n">figure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">figure</span><span class="p">)</span>
+
+<span class="c1"># Load the STL files and add the vectors to the plot</span>
+<span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;propeller1.stl&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">))</span>
+
+<span class="c1"># Auto scale to the mesh size</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+
+<span class="c1"># Show the plot to the screen</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;prop.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="prop.png" alt="" /></p>
+
+<p>Daha detaylı işlemler için dokümana [2] bakılabilir. Temel, dış üçgen
+sayısı az olan geometrik bazı obje örnekleri için [8]'den indirdiğimiz
+objelerin STL dosyalari <code>shapes</code> dizini altinda bulunabilir.</p>
+
+<p>STL Veri Yapısı</p>
+
+<p>Şekil dosyaları bir objenin yüzeyini kapsayan ve birbirini tamamlayan
+üçgenler üzerinden tanımlanıyor. Bu yassı iki boyutlu üçgenleri temsil
+etmek için üç tane 3D nokta bir de yüzeyin hangi yöne işaret ettiği
+(bir normal vektör üzerinden) yeterli. Mesela biraz önceki şekil için,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
+
+<span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;propeller1.stl&#39;</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">))</span>
+<span class="n">ns</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">get_unit_normals</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">ns</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>7668
+(7668, 3)
+[[ 42.881 -14.357   0.562]
+ [ 43.095 -15.066   0.752]
+ [ 41.793 -14.443   0.463]]
+</code></pre>
+</div>
+
+<p>Görüldüğü gibi 7668 tane üçgen ve normal vektör var. Üçgenlerden
+sıfırıncı olana baktık ve üstteki 3x3 matris geldi, bu matrislerden
+ilk satır üçgenin bir köşesi, ikinci satır ikinci köşesi, vs. Aynı
+üçgene tekabül eden normal vektör yine aynı indiste, onu
+<code>your_mesh.get_unit_normals()[0]</code> ile alabilirdik.</p>
+
+<p>Üçgenler hakkında bir fikir olması için iki tanesini, normalleriyle beraber
+grafikleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">))</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">plot_vector</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">orig</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">):</span>
+   <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+   <span class="n">orig</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">orig</span><span class="p">);</span> <span class="n">v</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+   <span class="n">ax</span><span class="o">.</span><span class="n">quiver</span><span class="p">(</span><span class="n">orig</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">orig</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">orig</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+   <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">gca</span><span class="p">(</span><span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>  
+   <span class="k">return</span> <span class="n">fig</span>
+
+<span class="n">SCALE</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">tidx</span> <span class="o">=</span> <span class="mi">2314</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span> <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span> <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span> <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+
+<span class="n">o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">get_unit_normals</span><span class="p">()[</span><span class="n">tidx</span><span class="p">]</span>
+<span class="n">plot_vector</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="o">*</span><span class="n">SCALE</span><span class="p">)</span>
+
+<span class="n">tidx</span> <span class="o">=</span> <span class="mi">314</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span> <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span> <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">tc</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span> <span class="p">(</span><span class="n">tc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">tc</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+
+<span class="n">o</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">[</span><span class="n">tidx</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">get_unit_normals</span><span class="p">()[</span><span class="n">tidx</span><span class="p">]</span>
+<span class="n">plot_vector</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">o</span><span class="p">,</span> <span class="n">n</span><span class="o">*</span><span class="n">SCALE</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mi">40</span><span class="p">);</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;prop2.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="prop2.png" alt="" /></p>
+
+<p>İki tane üçgeni gösterdik, yön oklarında okun başlangıcı için üçgenin üç
+noktasının ortalamasını aldık, böylece kabaca bir orta noktadan çıkan
+<code>SCALE</code> ile ölçeklediğimiz normal yönde bir ok çizebilmiş olduk.</p>
+
+<p>Not: İlginç ve daha basit bazı objeler bu dizinde <code>shapes</code> altında bulunabilir.</p>
+
+<p>Özet Verileri</p>
+
+<p>Küre, kare gibi basit objelerin analitik hacim formülü bilinir. Fakat
+elimizde çetrefil bir şekilde ve ayrıksal olarak yüzeyi tanımlanmış
+bir nesne var, onun hacmi için ayrıksal, hesapsal bazı teknikler
+gerekebilirdi, neyse ki <code>numpy-stl</code> içinde bu fonksiyonlar var,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">prop</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">get_mass_properties</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;hacim&#39;</span><span class="p">,</span><span class="n">prop</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">yercekim merkezi (COG)&#39;</span><span class="p">,</span><span class="n">prop</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">COG noktasinda atalet matrisi&#39;</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">prop</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>hacim 508.81107187133966
+
+yercekim merkezi (COG) [ 14.99940119 -14.99999338   1.13988199]
+
+COG noktasinda atalet matrisi
+[[ 2.14550670e+03 -2.23269194e-03 -2.31301332e-02]
+ [-2.23269194e-03  1.01219910e+05  6.33494132e+01]
+ [-2.31301332e-02  6.33494132e+01  1.02767050e+05]]
+</code></pre>
+</div>
+
+<p>3D Döndürme</p>
+
+<p>Bir objeyi döndürmek için gereken matematiği [6]'da görmüştük. Eğer bir simit
+şeklindeki bir objeyi bir eksen, mesela x, etrafında döndürmek istiyorsak,
+gerekli döndürme matris şekli [6]'da işlendi. Bu matris yaratıldıktan sonra
+mesh üzerinde <code>rotate_using_matrix</code> çağrısı yapılabilir. Matrisi yaratmanın
+farklı yolları var tabii, bunlar detaylı olarak yazıda işlendi. Örnek olarak
+yatay şekilde başlayan bir simit (torus) şeklini x ekseni etrafında 90 derece
+döndürelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">ftor</span> <span class="o">=</span> <span class="s1">&#39;../../../phy/phy_005_basics_05/torus.stl&#39;</span>
+<span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">ftor</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">))</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+<span class="n">AS</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">AS</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">AS</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">AS</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">LIM</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">LIM</span><span class="p">,</span><span class="n">LIM</span><span class="p">);</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">LIM</span><span class="p">,</span><span class="n">LIM</span><span class="p">);</span><span class="n">axes</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="n">LIM</span><span class="p">,</span><span class="n">LIM</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">elev</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;torus-begin.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="torus-begin.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">your_mesh</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="n">ftor</span><span class="p">)</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span> <span class="c1"># 90 derece x ekseni etrafinda dondur</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+  <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)],</span>
+  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)]])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="n">your_mesh</span><span class="o">.</span><span class="n">rotate_using_matrix</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">axes</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">Axes3D</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">your_mesh</span><span class="o">.</span><span class="n">points</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">your_mesh</span><span class="o">.</span><span class="n">vectors</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">))</span>
+<span class="n">AS</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="n">AS</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">AS</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="n">AS</span><span class="p">],</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">auto_scale_xyz</span><span class="p">(</span><span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
+<span class="n">LIM</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="n">LIM</span><span class="p">,</span><span class="n">LIM</span><span class="p">);</span><span class="n">axes</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="n">LIM</span><span class="p">,</span><span class="n">LIM</span><span class="p">);</span><span class="n">axes</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="n">LIM</span><span class="p">,</span><span class="n">LIM</span><span class="p">)</span>
+<span class="n">axes</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span><span class="n">elev</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;torus-rotated.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>[[ 1.000000e+00  0.000000e+00  0.000000e+00]
+ [ 0.000000e+00  6.123234e-17  1.000000e+00]
+ [ 0.000000e+00 -1.000000e+00  6.123234e-17]]
+</code></pre>
+</div>
+
+<p><img src="torus-rotated.png" alt="" /></p>
+
+<p>Bir örnek daha</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">stl</span> <span class="kn">import</span> <span class="n">mesh</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits</span> <span class="kn">import</span> <span class="n">mplot3d</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">mesh1</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;shapes/Prism_hexagon.stl&#39;</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">70</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="mi">90</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+  <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)],</span>
+  <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)]])</span>
+<span class="n">mesh1</span><span class="o">.</span><span class="n">rotate_using_matrix</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span><span class="mi">70</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">21</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;stl1.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="stl1.jpg" alt="" /></p>
+
+<p>Hareket Ettirme</p>
+
+<p>Objeyi X ekseni boyunca 5 birim kaydırmak istersek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">mesh1</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">Mesh</span><span class="o">.</span><span class="n">from_file</span><span class="p">(</span><span class="s1">&#39;shapes/Prism_hexagon.stl&#39;</span><span class="p">)</span>
+<span class="n">prop</span> <span class="o">=</span> <span class="n">mesh1</span><span class="o">.</span><span class="n">get_mass_properties</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;yercekim merkezi (COG)&#39;</span><span class="p">,</span><span class="n">prop</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">XLIMS</span> <span class="o">=</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span><span class="mi">60</span><span class="p">);</span> <span class="n">YLIMS</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">);</span> <span class="n">ZLIMS</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="mi">21</span><span class="p">;</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">XLIMS</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">YLIMS</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">ZLIMS</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="n">e</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="n">a</span><span class="p">)</span>
+
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s1">&#39;3d&#39;</span><span class="p">)</span>
+<span class="n">STEP</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">mesh1</span><span class="o">.</span><span class="n">vectors</span> <span class="o">=</span> <span class="n">mesh1</span><span class="o">.</span><span class="n">vectors</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">prop</span> <span class="o">=</span> <span class="n">mesh1</span><span class="o">.</span><span class="n">get_mass_properties</span><span class="p">()</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;yercekim merkezi (COG)&#39;</span><span class="p">,</span><span class="n">prop</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">obj</span> <span class="o">=</span> <span class="n">mplot3d</span><span class="o">.</span><span class="n">art3d</span><span class="o">.</span><span class="n">Poly3DCollection</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">vectors</span><span class="p">)</span>
+<span class="n">obj</span><span class="o">.</span><span class="n">set_edgecolor</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">add_collection3d</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">XLIMS</span><span class="p">);</span><span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">YLIMS</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_zlim</span><span class="p">(</span><span class="n">ZLIMS</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;stl2.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>yercekim merkezi (COG) [49.99998897  4.99999966  4.99999962]
+yercekim merkezi (COG) [54.99999348  4.99999966  4.99999962]
+</code></pre>
+</div>
+
+<p><img src="stl2.jpg" alt="" /></p>
+
+<p>Ubuntu Linux</p>
+
+<p>STL dosyalarını çabuk bir şekilde Ubuntu'da görebilmek için, bir program <code>meshlab</code>.</p>
+
+<pre><code>sudo apt-get install meshlab
+
+meshlab dosya.stl
+</code></pre>
+
+<p>Javascript - STL Viewer</p>
+
+<p>Eğer tarayıcı içinde STL dosyalarını gösterebilmek istersek, STL
+Viewer kodu var [7]. Basit bir örnek için zip dosyası indirilir bir
+<code>static</code> dizini altında açılır, aynı dizinde bir Web servisi
+başlatmak için şu kod yeterli,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">secret_key</span> <span class="o">=</span> <span class="s2">&quot;secretkeyverysecret&quot;</span> <span class="c1"># needed for session[] to work</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span><span class="n">port</span><span class="o">=</span><span class="mi">5000</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Aynı <code>static</code> dizini altına bir <code>index.html</code> yazarız,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">div</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;stl_cont&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width:500px;height:500px;margin:0 auto;&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;stl_viewer.min.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>        
+        <span class="p">&lt;</span><span class="nt">script</span><span class="p">&gt;</span>
+            <span class="kd">var</span> <span class="nx">stl_viewer</span><span class="o">=</span><span class="k">new</span> <span class="nx">StlViewer</span>
+            <span class="p">(</span>
+                <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;stl_cont&quot;</span><span class="p">),</span>
+                <span class="p">{</span>
+                    <span class="nx">models</span><span class="o">:</span>
+                    <span class="p">[</span>
+                        <span class="p">{</span><span class="nx">filename</span><span class="o">:</span><span class="s2">&quot;propeller1.stl&quot;</span><span class="p">}</span>
+                    <span class="p">]</span>
+                <span class="p">}</span>
+            <span class="p">);</span>
+        <span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>        
+    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>Tarayıcıda <code>http://localhost:5000/static/index.html</code> ziyaret edilince STL objesi
+gösterilecektir. Objeye klasik fare hareketleri ile yakından bakmak, çevirmek, vs
+mümkündür.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://www.tinkercad.com/things/h3gtFbihOx3-helice-2-pales-arrondies-propeller-2-rounded-blades">Tinkercad</a></p>
+
+<p>[2] <a href="https://pythonhosted.org/numpy-stl/">Numpy STL</a></p>
+
+<p>[3] <a href="http://www.sgh1.net/posts/read-stl-file.html">C++ ile STL Dosyası Okumak</a></p>
+
+<p>[4] <a href="http://www.cs.cornell.edu/courses/cs4620/2014fa/lectures/02trimesh1.pdf">Cornell, Triangle meshes I, PDF</a></p>
+
+<p>[5] <a href="https://all3dp.com/what-is-stl-file-format-extension-3d-printing/#pointone">STL File Format, Simply Explained</a></p>
+
+<p>[6] <a href="https://burakbayramli.github.io/dersblog/phy/phy_072_rot/dondurme__rotation_.html">Döndürme (Rotation)</a></p>
+
+<p>[7] <a href="https://www.viewstl.com/plugin/">STL Viewer</a></p>
+
+<p>[8] <a href="https://www.printables.com/model/568502-basic-geometric-shapes-3d/files">
+      Basic Geometric Shapes, STL
+    </a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

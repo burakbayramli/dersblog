@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Javascript - 2</h1>
+
+<h3>Zip Dosyası Okumak, İşlemek</h3>
+
+<p>Statik dosya servisinde duran zip edilmiş bir CSV (düz metin)
+dosyasını İnternet'ten çekip, ters zip (unzip) yapıp, içindeki CSV
+dosyasını nasıl tararız? Alttaki kod ile,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">function</span> <span class="nx">read_zip</span><span class="p">()</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;https://vs.vs.com/dosya.zip&quot;</span><span class="p">;</span>
+
+    <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="nx">res</span> <span class="p">=&gt;</span> <span class="nx">res</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">()).</span><span class="nx">then</span><span class="p">(</span><span class="nx">arrayBuffer</span> <span class="p">=&gt;</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">new_zip</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">JSZip</span><span class="p">();</span>
+    <span class="nx">new_zip</span><span class="p">.</span><span class="nx">loadAsync</span><span class="p">(</span><span class="nx">arrayBuffer</span><span class="p">)</span>
+    <span class="p">.</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">zip</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">zip</span><span class="p">.</span><span class="nx">file</span><span class="p">(</span><span class="s1">&#39;veri.csv&#39;</span><span class="p">).</span><span class="nx">async</span><span class="p">(</span><span class="s1">&#39;string&#39;</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nx">res</span><span class="p">;</span>
+    <span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">text</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">lines</span> <span class="o">=</span> <span class="nx">text</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;\n&#39;</span><span class="p">);</span>
+        <span class="nx">lines</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">line</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="nx">line</span><span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">tokens</span> <span class="o">=</span> <span class="nx">line</span><span class="p">.</span><span class="nx">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">);</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">tokens</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span> 
+        <span class="p">});</span>
+    <span class="p">});</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>Üstteki kod CSV dosyasının her kaydının ayrı bir satırda ve
+kolonlarının virgül ile ayrılmış olduğunu farz ediyor, bu sebeple önce
+ters zip yapar, sonra yeni satır <code>\n</code> karakteri üzerinden ayırma
+(split) yapar, ve en son elde edilen her satırda virgül üzerinden bir
+ayrım daha yapar. Bu işlem sonunda her satır işlenirken <code>tokens</code>
+dizini icinde gerekli kolon bilgileri alinabilecektir.</p>
+
+<p>Not: <code>JSZip</code> ve <code>zip.file</code> ile yapılan tüm işlemler bellekte olmakta,
+diske hiçbir noktada yazım yapılmıyor. Tarayıcı ortamında bunun nasıl
+faydalı olacağını görebiliriz, çünkü tarayıcının kullanıcının diskine
+yazma izni yoktur, fakat eğer zip çok büyük değilse tarayıcı üstteki
+kodla zip indirip, içindeki dosyayı açıp onu rahat bir şekilde
+tarayıp, işlemini yapabilir.</p>
+
+<h3>Düzenli İfadeler (Regex)</h3>
+
+<p>Regex desteği dil seviyesinde dahil edilmiş, ek paket dahil etmeye
+gerek yok. İki yana yatık çubuk arasında bilinen regex ifadeleri
+kullanılabilir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kr">const</span> <span class="nx">re</span> <span class="o">=</span> <span class="sr">/d(b+)d/g</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="s2">&quot;cdbbdbsbza&quot;</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">re</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">s</span><span class="p">));</span>
+</code></pre>
+</div>
+
+<pre><code>[ 'dbbd', 'bb', index: 1, input: 'cdbbdbsbza' ]
+</code></pre>
+
+<p>Sonuç bir liste olarak geldi, ilk öğe uyan tüm ifade için, ikinci öğe
+ifadenin uyan parantez içindeki kısmı, <code>g</code> ile global bir uydurma
+istediğimizi belirtiyoruz.</p>
+
+<p>Üstteki örnek tek bir uyumu gösterdi, eğer aynı ifade metin içinde
+birden çok yere uysaydı? Bu durumda sonuçları gezmek gerekiyor,
+<code>re.exec</code> global bir yerde / değişkende o uyum listesinde nerede
+olduğunu hatırlıyor, aynı çağrıyı birkaç kez yapınca farklı sonuçlar
+gelecek, sonuçlar bitince <code>null</code> döndürülüyor, <code>while</code> ile bunu test
+ederek döngüden çıkıyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kr">const</span> <span class="nx">re</span> <span class="o">=</span> <span class="sr">/d(b+)d/g</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">s</span> <span class="o">=</span> <span class="s2">&quot;cdbbdbsbzaaaadbbbbbbd&quot;</span><span class="p">;</span>
+
+<span class="kd">let</span> <span class="nx">result</span><span class="p">;</span>
+<span class="k">while</span><span class="p">(</span><span class="nx">result</span> <span class="o">=</span> <span class="nx">re</span><span class="p">.</span><span class="nx">exec</span><span class="p">(</span><span class="nx">s</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">result</span><span class="p">);</span>
+<span class="p">}</span> 
+</code></pre>
+</div>
+
+<pre><code>[ 'dbbd', 'bb', index: 1, input: 'cdbbdbsbzaaaadbbbbbbd' ]
+[ 'dbbbbbbd',
+  'bbbbbb',
+  index: 13,
+  input: 'cdbbdbsbzaaaadbbbbbbd' ]
+</code></pre>
+
+<h3>Girdi Tamamlamak (Autocomplete)</h3>
+
+<p>HTML sayfasındaki bir giriş kutusuna girilen birkaç kelime sonrası
+gerisini tamamlama amaçlı seçenek listesi veren (autocomplete) kodu
+[1] altta görülüyor.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="p">&lt;</span><span class="nt">html</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+<span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width, initial-scale=1.0&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>     
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">h2</span><span class="p">&gt;</span>Autocomplete<span class="p">&lt;/</span><span class="nt">h2</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">p</span><span class="p">&gt;</span>Start typing:<span class="p">&lt;/</span><span class="nt">p</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">form</span> <span class="na">autocomplete</span><span class="o">=</span><span class="s">&quot;off&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">div</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;autocomplete&quot;</span> <span class="na">style</span><span class="o">=</span><span class="s">&quot;width:300px;&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">input</span> <span class="na">id</span><span class="o">=</span><span class="s">&quot;myInput&quot;</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;text&quot;</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;myCountry&quot;</span> <span class="na">placeholder</span><span class="o">=</span><span class="s">&quot;Country&quot;</span><span class="p">&gt;</span>
+  <span class="p">&lt;/</span><span class="nt">div</span><span class="p">&gt;</span>
+  <span class="p">&lt;</span><span class="nt">input</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;submit&quot;</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">form</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">script</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;common.js&quot;</span><span class="p">&gt;&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>Javascript kodlari <code>common.js</code> icinde</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kd">function</span> <span class="nx">autocomplete</span><span class="p">(</span><span class="nx">inp</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="kd">var</span> <span class="nx">arr</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;aa&#39;</span><span class="p">,</span><span class="s1">&#39;bb&#39;</span><span class="p">,</span><span class="s1">&#39;aaa&#39;</span><span class="p">]</span>
+
+    <span class="kd">var</span> <span class="nx">currentFocus</span><span class="p">;</span>
+    <span class="nx">inp</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">a</span><span class="p">,</span> <span class="nx">b</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">val</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+    <span class="nx">closeAllLists</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">val</span><span class="p">)</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;}</span>
+    <span class="nx">currentFocus</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1</span><span class="p">;</span>
+    <span class="nx">a</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;DIV&quot;</span><span class="p">);</span>
+    <span class="nx">a</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot;autocomplete-list&quot;</span><span class="p">);</span>
+    <span class="nx">a</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s2">&quot;class&quot;</span><span class="p">,</span> <span class="s2">&quot;autocomplete-items&quot;</span><span class="p">);</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">a</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">arr</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">substr</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nx">val</span><span class="p">.</span><span class="nx">length</span><span class="p">).</span><span class="nx">toUpperCase</span><span class="p">()</span> <span class="o">==</span> <span class="nx">val</span><span class="p">.</span><span class="nx">toUpperCase</span><span class="p">())</span> <span class="p">{</span>
+        <span class="nx">b</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="s2">&quot;DIV&quot;</span><span class="p">);</span>
+        <span class="nx">b</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">=</span> <span class="s2">&quot;&lt;strong&gt;&quot;</span> <span class="o">+</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">substr</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span> <span class="nx">val</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&lt;/strong&gt;&quot;</span><span class="p">;</span>
+        <span class="nx">b</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">substr</span><span class="p">(</span><span class="nx">val</span><span class="p">.</span><span class="nx">length</span><span class="p">);</span>
+        <span class="nx">b</span><span class="p">.</span><span class="nx">innerHTML</span> <span class="o">+=</span> <span class="s2">&quot;&lt;input type=&#39;hidden&#39; value=&#39;&quot;</span> <span class="o">+</span> <span class="nx">arr</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;&#39;&gt;&quot;</span><span class="p">;</span>
+        <span class="nx">b</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">inp</span><span class="p">.</span><span class="nx">value</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">)[</span><span class="mf">0</span><span class="p">].</span><span class="nx">value</span><span class="p">;</span>
+            <span class="nx">closeAllLists</span><span class="p">();</span>
+        <span class="p">});</span>
+        <span class="nx">a</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">b</span><span class="p">);</span>
+            <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="nx">inp</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;keydown&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="nx">id</span> <span class="o">+</span> <span class="s2">&quot;autocomplete-list&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="nx">x</span> <span class="o">=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">getElementsByTagName</span><span class="p">(</span><span class="s2">&quot;div&quot;</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">==</span> <span class="mf">40</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">currentFocus</span><span class="o">++</span><span class="p">;</span>
+            <span class="nx">addActive</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">==</span> <span class="mf">38</span><span class="p">)</span> <span class="p">{</span> <span class="c1">//up</span>
+            <span class="nx">currentFocus</span><span class="o">--</span><span class="p">;</span>
+            <span class="nx">addActive</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">keyCode</span> <span class="o">==</span> <span class="mf">13</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">currentFocus</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="nx">x</span><span class="p">[</span><span class="nx">currentFocus</span><span class="p">].</span><span class="nx">click</span><span class="p">();</span>
+            <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">});</span>
+    <span class="kd">function</span> <span class="nx">addActive</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">x</span><span class="p">)</span> <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="nx">removeActive</span><span class="p">(</span><span class="nx">x</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">currentFocus</span> <span class="o">&gt;=</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">)</span> <span class="nx">currentFocus</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">currentFocus</span> <span class="o">&lt;</span> <span class="mf">0</span><span class="p">)</span> <span class="nx">currentFocus</span> <span class="o">=</span> <span class="p">(</span><span class="nx">x</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mf">1</span><span class="p">);</span>
+    <span class="nx">x</span><span class="p">[</span><span class="nx">currentFocus</span><span class="p">].</span><span class="nx">classList</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="s2">&quot;autocomplete-active&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">removeActive</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">classList</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="s2">&quot;autocomplete-active&quot;</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="kd">function</span> <span class="nx">closeAllLists</span><span class="p">(</span><span class="nx">elmnt</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">x</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementsByClassName</span><span class="p">(</span><span class="s2">&quot;autocomplete-items&quot;</span><span class="p">);</span>
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mf">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">x</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">elmnt</span> <span class="o">!=</span> <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="nx">elmnt</span> <span class="o">!=</span> <span class="nx">inp</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">].</span><span class="nx">parentNode</span><span class="p">.</span><span class="nx">removeChild</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="nx">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="nb">document</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">closeAllLists</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">);</span>
+    <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">autocomplete</span><span class="p">(</span><span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="s2">&quot;myInput&quot;</span><span class="p">));</span>
+</code></pre>
+</div>
+
+<p>Kaynaklar</p>
+
+<p>[1] https://www.w3schools.com/howto/howto<em>js</em>autocomplete.asp</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

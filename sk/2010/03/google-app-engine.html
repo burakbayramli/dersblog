@@ -1,0 +1,184 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Google App Engine</h1>
+
+<p>Android mobil uygulamamiz icin bazi servis tarafi ekler gerekince,
+test olarak Google App Engine'i (GAE) denedik. GAE'nin Amazon EC2'den
+farki belli kendine has API'lar uzerine kurulmus olmasi, Web
+uygulamalari Google'in sagladigi fonksiyonlarla calismali. GAE Java
+dilini destekliyor, fakat biz Python kullanmaya karar
+verdik. Gelistirme daha hizli oldu, Python dilinin esnekligi faydali
+oldu. Mevcut cozum yelpazemiz, telefon / client uzerinde Java, servis
+tarafinda Python + GAE yonune dogru evriliyor.Ozelde GAE + Python ile,
+genelde "bulut" kavrami ile servis tarafi kodlamasi kolaylasmis. En
+basit servis Python kodu bir CGI islemcisi (daha cetrefil, taslak HTML
+bazli Web kodlamasi icin Django altyapisi destekleniyor), request
+uzerinden alinan bilgi islenip response uzerinden cikti verebilen
+turden.</p>
+
+<p>Boyle bir kod, bir ayar dosyasi, bir tane Python dosyasi uzerinden
+yapilabiliyor. Script bir main() cagrisi aslinda, CGI mentalitesine
+gore Web Server (Apache gibi) istegi alir, (eskiden) C ile yazilmis
+bir main islerkodu (executable) isletir, ve sonuc o script icinde
+uretilirdi. Yorumlanan dillerde daha esnek olunabiliyor tabii, tum
+script onbellege tasinabiliyor, bu sayede script seviyesinde (scope)
+olan her degisken onbellege alinmis oluyor. Bizim kodun hazirlik
+olarak uzun bir dosyayi isleyip sonucu hash olarak tutmasi
+gerekiyordu, bunu script seviyesinde bir degisken ile hallettik. Dosya
+okumasi bir kere yapildi, ardindan tum islemler hash ile
+calisti.Gelistirme icin suradan Python SDK
+indirilebilir</p>
+
+<p>http://code.google.com/appengine/downloads.html</p>
+
+<p>Dosyayi indirip acinca, appcfg.py ve dev_appserver.py gibi dosyalar
+goruluyor. Gelistirme yapmak icin bir gelistirme dizini acip, orada
+app.yaml adli bir dosya yaratmak lazim. Bu uygulamanizi tarif eden bir
+dosya. Icerigi cok basit:</p>
+
+<pre><code>application: [UYGULAMA ISMI]
+
+version: 1
+
+runtime: python
+
+api_version: 1
+
+handlers:- url: /images
+
+static_dir: images-
+
+url: .*
+
+script: main.py
+</code></pre>
+
+<p>Ana CGI script main.py, ki bu script'e en ust dizin / uzerinden hemen
+erisilebilir, images adinda statik dosyalar iceren bir dizinimiz
+var. Not: Statik dosyalarda 3000 sinirinin uzerine cikilamiyor. Google
+GAE sisteminin bir dosya paylasma aracina donusmesini istemiyor
+herhalde. Her durumda, bu rakam herhangi bir uygulama icin yeterli bir
+rakam.Gelistirme sureci soyle baslatilir:</p>
+
+<pre><code>python dev_appserver.py [GELISTIRME DIZINI]
+</code></pre>
+
+<p>Ornek bir kod soyle olabilir:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span> <span class="nn">cgiimport</span> <span class="n">logging</span>
+<span class="kn">import</span> <span class="nn">wsgiref.handlers</span>
+<span class="kn">from</span> <span class="nn">google.appengine.ext</span> <span class="kn">import</span> <span class="n">webapp</span>
+
+<span class="k">class</span> <span class="nc">MainPage</span><span class="p">(</span><span class="n">webapp</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+     <span class="n">astro</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;param1&#39;</span><span class="p">)</span>
+     <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;....&quot;</span><span class="p">)</span>
+     <span class="o">...</span> <span class="bp">self</span><span class="o">.</span><span class="n">response</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;[HTML BURAYA]&#39;</span><span class="p">)</span>
+     <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">()</span><span class="o">.</span><span class="n">setLevel</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span>
+
+<span class="n">application</span> <span class="o">=</span> <span class="n">webapp</span><span class="o">.</span><span class="n">WSGIApplication</span><span class="p">([</span> <span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">MainPage</span><span class="p">),</span> <span class="p">],</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+   <span class="n">wsgiref</span><span class="o">.</span><span class="n">handlers</span><span class="o">.</span><span class="n">CGIHandler</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">application</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+   <span class="n">main</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Ustteki kod param1 adinda bir parametreyi URL'den okur ve HTML
+ureterek bunu response olarak gonderir, arada loglama
+yapar. Gelistirme / test sureci Java ortamindan daha iyi, Python
+kodunu degistirdiginiz anda degisiklikler hemen kullanima giriyor,
+servisi tekrar baslatmak gerekmiyor.GAE sonuc ortaminda kullanim /
+performans acisindan su nokta onemli: Bir servis sureci
+"baslatmiyoruz", ihtiyaca gore bulut script'i cagiriyor veya
+cagirmiyor. Ortam konumsuz (stateless) bir ortam, arda arda iki cagri,
+ayni kullanicidan gelse bile degisik server makinalara gidebilir, bu
+yuzden konum bilgisi veri tabani ya da onbellek uzerinde
+tutulmali.</p>
+
+<p>Dert degil.Surec idaresinin bulutta olmasi, ekonomik ayni
+zamanda. Eger uygulamayi kullanan yoksa, cagri yapilmaz, ve degerli
+mikroislemci zamani, bellek yeri heba edilmis olmaz.Bir diger sinir,
+bir request / response dongusunun 30 saniye uzerine cikamamasi. Eger
+bu olursa, izleyici bir program istegi otomatik olarak iptal
+ediyor. Kontrollu bir ortam olan bulutta bunun yapilmasi da mantikli,
+hem sistemin isleyisi, hem de istismar amacli kullanabilecek kisiler
+baglaminda. Servis bir Web ortami, ve 30 saniyeden fazla surecek bir
+islem ne kullanici, ne de servisci acisindan anlamli bir
+islemdir.Gelistirme boyle. Gelistirme bitince, uygulamayi Google'da
+kayit etmek lazim.https://appengine.google.com/adresine gidip
+kullanici programini kayit eder.</p>
+
+<p>Kodu servis tarafina gondermek icin</p>
+
+<pre><code>python appcfg.py update [GELISTIRME
+</code></pre>
+
+<p>Script appcfg.py program ismini nereden biliyor? app.yaml icinde
+yazili. Bu update islemi kodlarinizi, dosyalarinizi alip sonuc
+ortamina gonderiyor. Bir kere Google hesabiniz email ve sifre ile
+kontrol ediliyor (bir dahaki seferde edilmeyecek) ve kod sonuc
+ortamina gonderiliyor. Uygulama artik [UYGULAMA ISMI].appspot.com
+uzerinden cagrilabilir.Veri tabani icin de durum ayni; kontrollu bir
+ortam, tabanin dosyalarini nerede tuttugu, nasil dagittigi programciyi
+ilgilendirmiyor. Google API uzerinden veri depolama, okunma yapildigi
+takdirde, verinin dagitimi, erisiminin olceklenmesi GAE tarafindan
+hallediliyor.Gelistirme sirasinda log mesajlarini dev_appserver.py
+baslattiginiz ekranda goreceksiniz. Sonuc ortaminda ise log
+mesajlarina uygulamanizin admin konsolundan
+erisebilirsiniz.</p>
+
+<p>Fiyatlandirma baglaminda, GAE ayda 5 milyon sayfa altindaki
+kullanimlar icin bedava. Bu rakam ufak olcekli bir uygulamayi idare
+eder, bundan daha fazlasi oldugu durumda ya uygulama kar etmeye
+baslamistir, ya da bir sekilde sponsor edilebilecek durumdadir. Fakat
+bedava bir baslangic yolunun olmasi iyi, ve Web girisimci
+mentalitesine uygun. Denemek bedava, cunku Web dunyasinda bazen pek
+cok deney gerekebiliyor.</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

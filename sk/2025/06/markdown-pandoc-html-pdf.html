@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Markdown ile PDF ve HTML Üretmek, Pandoc</h1>
+
+<p>Markdown formatı basit şekilde doküman yazmamıza izin veriyor,
+başlıklar tek <code>#</code> alt başlıklar <code>##</code> ile belirtilebilir, listeler,
+yana yatik fontlar için basit metin bazlı komutları vardır, ve bu
+metin bazlı komutları içeren belgeler derlenip PDF ya da HTML
+üretilebilir.  Mesela tıklanabilir bağlantılar,</p>
+
+<pre><code>[Bir baglanti](https://www.google.com)
+</code></pre>
+
+<p>Resimler,</p>
+
+<pre><code>![](resim.jpg)
+</code></pre>
+
+<p>Tıklanabilir ve tarif edilmiş resim için</p>
+
+<pre><code>[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/YOUTUBE ID/0.jpg)](http://www.youtube.com/watch?v=YOUTUBE ID)
+</code></pre>
+
+<p>komutlarını kullanabiliriz.</p>
+
+<p>Biz bu blog'u markdown ile yazıp HTML'e çevirip sonucu blogger'a
+veriyoruz. Matematiksel belgeler yine markdown formatindan hem PDF hem
+HTML'e cevriliyorlar.</p>
+
+<p>Çevrimi yapmak için bazı araçlar var.</p>
+
+<h2>Pandoc</h2>
+
+<p>En basit kullanım,</p>
+
+<pre><code>pandoc dosya.md &gt; out.html
+</code></pre>
+
+<p>Daha çetrefil bir örnek, MathJax içeren markdown dosyasından HTML
+üretmek için</p>
+
+<pre><code>pandoc --mathjax -f markdown -t html doc.md -o out.html
+</code></pre>
+
+<p>Üstteki tanımla markdown ıcinde <code>$$</code> ve <code>$</code> arasındaki metinler
+matematik formülü olarak kabul edilir ve Javascript üzerinden HTML
+içinde MathJax ile ekrana basılır. Eğer HTML üretimini bir şablon
+(template) üzerinden yapmak istersek önce <code>pandoc</code>'un kendi kullandığı
+olağan şablona bakabiliriz,</p>
+
+<pre><code>pandoc -D &gt; template.html
+</code></pre>
+
+<p>Sonra gereken eklerimizi bu şablon içinde yapabiliriz. Sıfırdan yazmak
+ta mümkün tabii. Şablon hazırlandıktan sonra</p>
+
+<pre><code>pandoc --template=my_template.html --mathjax -f markdown -t html doc.md -o out.html
+</code></pre>
+
+<p>PDF uretmek icin</p>
+
+<pre><code>pandoc doc.md metadata.yaml -t latex  -fmarkdown-implicit_figures -o out.pdf
+</code></pre>
+
+<p>Dosya <code>metadata.yaml</code> içinde LaTeX'e gereken ek kütüphaneler tanımlanabilir. Mesela
+bizim tanım,</p>
+
+<pre><code>---
+header-includes:
+- \usepackage{cancel}
+---
+</code></pre>
+
+<p>Not: Ek kütüphaneleri HTML'e vermek yine şablonla mümkün, mesela
+şablonda <code>head</code> kısmına</p>
+
+<pre><code>&lt;script type="text/x-mathjax-config"&gt;
+MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+  MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+    cancel: ["Extension","cancel"], cancelto: ["Extension","cancel"]
+  });
+});
+&lt;/script&gt;
+</code></pre>
+
+<p>eklersek <code>pandoc</code> üretim sırasında bu şablon üzerinden gerekli
+referansları dahil edecektir.</p>
+
+<p>Not: PDF üretimi için <code>pandoc</code> bir noktada sisteminizdeki LaTeX
+komutunu kullanır, bunun için minimal bir LaTeX kurulumu olmalıdır,
+mesela Ubuntu üzerinde baz seviyede</p>
+
+<pre><code>sudo apt install texlive-latex-base texlive-formats-extra
+</code></pre>
+
+<p>kurulumu gerekebilir.</p>
+
+<h2>Grip</h2>
+
+<pre><code>sudo pip install grip
+</code></pre>
+
+<p>Dokümanı derlemek için</p>
+
+<pre><code>grip README.md --export out.html
+</code></pre>
+
+<p>Artık out.html içinde markdown dokümanının görüntüsü var. </p>
+
+<h2>Python Paketi markdown</h2>
+
+<p><code>markdown</code> adli bir paketin python icinden yukleyip
+kullanabiliriz. Kurmak icin <code>pip install markdown</code>, sonra mesela soyle
+bir md icin,</p>
+
+<pre><code>import markdown, sys, os
+content=open('dosya.md').read()
+print (markdown.markdown(content, extensions=['fenced_code']))
+</code></pre>
+
+<p><code>fenced_code</code> kullanimi birden fazla satira yayilan kodlari halletmek icin.</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

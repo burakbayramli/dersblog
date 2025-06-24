@@ -47,43 +47,43 @@ olmasa bile, properties dosyasinda degisim yapabiliriz. Alttaki class
 sabitleri okumak icin yazildi.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">org.apache.log4j.Logger</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.io.IOException</span><span class="p">;</span><span class="kn">import</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.apache.log4j.Logger</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.io.IOException</span><span class="p">;</span><span class="kn">import</span>
 <span class="nn">java.io.FileInputStream</span><span class="p">;</span>
-<span class="kn">import</span> <span class="nn">java.util.Properties</span><span class="p">;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.util.Properties</span><span class="p">;</span>
 
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Constants</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Constants</span>
 <span class="p">{</span>
-    <span class="kd">transient</span> <span class="n">Logger</span> <span class="n">log</span> <span class="o">=</span> <span class="n">Logger</span><span class="p">.</span><span class="na">getLogger</span><span class="p">(</span><span class="s">&quot;logger&quot;</span><span class="p">);</span>
-    <span class="kd">private</span> <span class="kd">static</span> <span class="n">Constants</span> <span class="n">_instance</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
-    <span class="n">Properties</span> <span class="n">properties</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Properties</span><span class="p">();</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="n">Constants</span> <span class="nf">instance</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">_instance</span> <span class="o">==</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">_instance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Constants</span><span class="p">();</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">_instance</span><span class="p">;</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="kd">transient</span><span class="w"> </span><span class="n">Logger</span><span class="w"> </span><span class="n">log</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Logger</span><span class="p">.</span><span class="na">getLogger</span><span class="p">(</span><span class="s">&quot;logger&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Constants</span><span class="w"> </span><span class="n">_instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="w">    </span><span class="n">Properties</span><span class="w"> </span><span class="n">properties</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Properties</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">Constants</span><span class="w"> </span><span class="nf">instance</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">_instance</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">_instance</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Constants</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">_instance</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
 
-    <span class="kd">public</span> <span class="nf">Constants</span><span class="p">()</span> <span class="p">{</span>
-    <span class="n">String</span> <span class="n">userHome</span> <span class="o">=</span> <span class="n">System</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="s">&quot;user.home&quot;</span><span class="p">).</span><span class="na">toLowerCase</span><span class="p">();</span>
-    <span class="k">try</span> <span class="p">{</span>
-        <span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;userHome =&quot;</span> <span class="o">+</span> <span class="n">userHome</span> <span class="o">+</span> <span class="s">&quot;/etc/pocketbudda.properties&quot;</span><span class="p">);</span>
-        <span class="n">properties</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="k">new</span> <span class="n">FileInputStream</span><span class="p">(</span><span class="n">userHome</span> <span class="o">+</span><span class="s">&quot;/etc/app.properties&quot;</span><span class="p">));</span>
-    <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span> <span class="n">Util</span><span class="p">.</span><span class="na">log</span><span class="p">(</span><span class="n">e</span><span class="p">);</span> <span class="p">}</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Constants</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">userHome</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="s">&quot;user.home&quot;</span><span class="p">).</span><span class="na">toLowerCase</span><span class="p">();</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">log</span><span class="p">.</span><span class="na">debug</span><span class="p">(</span><span class="s">&quot;userHome =&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">userHome</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/etc/pocketbudda.properties&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">properties</span><span class="p">.</span><span class="na">load</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">FileInputStream</span><span class="p">(</span><span class="n">userHome</span><span class="w"> </span><span class="o">+</span><span class="s">&quot;/etc/app.properties&quot;</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">Util</span><span class="p">.</span><span class="na">log</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
 
-    <span class="kd">public</span> <span class="n">String</span> <span class="nf">getString</span><span class="p">(</span><span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getString</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 
-    <span class="k">return</span> <span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">);</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 
-    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">getInt</span><span class="p">(</span><span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
-    <span class="k">return</span> <span class="k">new</span> <span class="n">Integer</span><span class="p">(</span><span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">)).</span><span class="na">intValue</span><span class="p">();</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getInt</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Integer</span><span class="p">(</span><span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">)).</span><span class="na">intValue</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
 
-    <span class="kd">public</span> <span class="n">String</span><span class="o">[]</span> <span class="nf">getList</span><span class="p">(</span><span class="n">String</span> <span class="n">arg</span><span class="p">)</span> <span class="p">{</span>
-    <span class="n">String</span> <span class="n">s</span> <span class="o">=</span> <span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">);</span> <span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
-    <span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="nf">getList</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">properties</span><span class="p">.</span><span class="na">getProperty</span><span class="p">(</span><span class="n">arg</span><span class="p">);</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">split</span><span class="p">(</span><span class="s">&quot;,&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
 <span class="p">}</span>
 </code></pre>
 </div>

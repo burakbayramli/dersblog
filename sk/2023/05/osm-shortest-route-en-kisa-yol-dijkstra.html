@@ -165,14 +165,14 @@ hızlı, mesafe hesabı yapılıyor ama sadece 12 ızgara noktası için
 yapıldığı için çok performans kaybı yok.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">re</span><span class="o">,</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">shutil</span><span class="o">,</span> <span class="nn">pickle</span><span class="o">,</span> <span class="nn">sqlite3</span>
-<span class="kn">from</span> <span class="nn">pygeodesy.sphericalNvector</span> <span class="kn">import</span> <span class="n">LatLon</span>
-<span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">csv</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span><span class="o">,</span><span class="w"> </span><span class="nn">pickle</span><span class="o">,</span><span class="w"> </span><span class="nn">sqlite3</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pygeodesy.sphericalNvector</span><span class="w"> </span><span class="kn">import</span> <span class="n">LatLon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdist</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="n">dbfile</span> <span class="o">=</span> <span class="s2">&quot;nodes.db&quot;</span>
 
-<span class="k">def</span> <span class="nf">grid_assign_centers</span><span class="p">(</span><span class="n">corner1</span><span class="p">,</span><span class="n">corner2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">grid_assign_centers</span><span class="p">(</span><span class="n">corner1</span><span class="p">,</span><span class="n">corner2</span><span class="p">):</span>
 
     <span class="n">p1</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">corner1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">corner1</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">p2</span> <span class="o">=</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">corner2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">corner2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -254,7 +254,7 @@ mühendislik kar/zarar denge hesabı (trade-off).</p>
 OSM id'sini bul" mantığını kodlayabiliriz.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">find_closest_node</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_closest_node</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">):</span>
     <span class="n">mids</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;centers.pkl&quot;</span><span class="p">,</span><span class="s2">&quot;rb&quot;</span><span class="p">))</span>
 
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbfile</span><span class="p">)</span>
@@ -335,12 +335,12 @@ için hazırlayacağız, yani <code>car</code>, <code>bike</code> gibi seçenekl
 yürüyüşe izin vermeyen yollar alınmayacak.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">diskdict</span> <span class="kn">import</span> <span class="n">DiskDict</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">csv</span><span class="o">,</span> <span class="nn">shutil</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">diskdict</span><span class="w"> </span><span class="kn">import</span> <span class="n">DiskDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">csv</span><span class="o">,</span><span class="w"> </span><span class="nn">shutil</span>
 
 <span class="n">dictdir</span> <span class="o">=</span> <span class="s2">&quot;walkdict&quot;</span>
 
-<span class="k">def</span> <span class="nf">diskdict</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">diskdict</span><span class="p">():</span>
 
     <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">dictdir</span><span class="p">):</span> <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">dictdir</span><span class="p">)</span>
     <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;bos hucreleri yarat&#39;</span><span class="p">)</span>
@@ -421,9 +421,9 @@ satir 7000
 işledik ve bu yazıdaki formu direk [8] bağlantısından aldık. </p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">priodict</span> <span class="kn">import</span> <span class="n">priorityDictionary</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">priodict</span><span class="w"> </span><span class="kn">import</span> <span class="n">priorityDictionary</span>
 
-<span class="k">def</span> <span class="nf">Dijkstra</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">Dijkstra</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">D</span> <span class="o">=</span> <span class="p">{}</span>  
     <span class="n">P</span> <span class="o">=</span> <span class="p">{}</span>  
     <span class="n">Q</span> <span class="o">=</span> <span class="n">priorityDictionary</span><span class="p">()</span>  
@@ -445,7 +445,7 @@ işledik ve bu yazıdaki formu direk [8] bağlantısından aldık. </p>
 
     <span class="k">return</span> <span class="p">(</span><span class="n">D</span><span class="p">,</span> <span class="n">P</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">shortestPath</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">shortestPath</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">):</span>
 
     <span class="n">D</span><span class="p">,</span> <span class="n">P</span> <span class="o">=</span> <span class="n">Dijkstra</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
     <span class="n">Path</span> <span class="o">=</span> <span class="p">[]</span>
@@ -479,9 +479,9 @@ noktalarının kordinat değerlerini bulup grafiklersek yolu göstermiş oluruz.
 ID kullanıp enlem/boylam almak için bir fonksiyon yazalım, ve çevrimi yapalım,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
 
-<span class="k">def</span> <span class="nf">get_osm_info</span><span class="p">(</span><span class="n">osmid</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_osm_info</span><span class="p">(</span><span class="n">osmid</span><span class="p">):</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">dbfile</span><span class="p">)</span>
     <span class="n">sql</span> <span class="o">=</span> <span class="s2">&quot;select lat,lon from osm_nodes where id==?&quot;</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
@@ -503,7 +503,7 @@ ID kullanıp enlem/boylam almak için bir fonksiyon yazalım, ve çevrimi yapal�
 <p>Artık bu kordinatları bir haritada gösterebiliriz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">folium</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">folium</span>
 <span class="n">m</span> <span class="o">=</span> <span class="n">folium</span><span class="o">.</span><span class="n">Map</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="n">fr</span><span class="p">,</span> <span class="n">zoom_start</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">folium</span><span class="o">.</span><span class="n">PolyLine</span><span class="p">(</span><span class="n">locations</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;red&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_to</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
 <span class="n">m</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;seychelles-route.html&quot;</span><span class="p">)</span>

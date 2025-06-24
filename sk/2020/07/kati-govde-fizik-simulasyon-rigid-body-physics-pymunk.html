@@ -79,14 +79,14 @@ alanı simule edilmiş olur.</p>
 <p>Bu ikinci simülasyonun daha dengeli olduğu görülecektir. </p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pymunk</span><span class="o">,</span> <span class="nn">pygame</span><span class="o">,</span> <span class="nn">random</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">pyglet</span>
-<span class="kn">from</span> <span class="nn">pymunk.pygame_util</span> <span class="kn">import</span> <span class="n">DrawOptions</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymunk</span><span class="o">,</span><span class="w"> </span><span class="nn">pygame</span><span class="o">,</span><span class="w"> </span><span class="nn">random</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">pyglet</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pymunk.pygame_util</span><span class="w"> </span><span class="kn">import</span> <span class="n">DrawOptions</span>
 
 <span class="n">width</span> <span class="o">=</span> <span class="mi">600</span>
 <span class="n">height</span> <span class="o">=</span> <span class="mi">600</span>
 
-<span class="k">class</span> <span class="nc">Dualcopter</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dualcopter</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">position</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mass</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Poly</span><span class="o">.</span><span class="n">create_box</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">moment</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">moment_for_poly</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mass</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">get_vertices</span><span class="p">())</span>
@@ -97,14 +97,14 @@ alanı simule edilmiş olur.</p>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="n">position</span>
         <span class="n">space</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="n">top</span><span class="p">,</span> <span class="n">bottom</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">Ground</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Ground</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">space</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">body</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Body</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">body_type</span><span class="o">=</span><span class="n">pymunk</span><span class="o">.</span><span class="n">Body</span><span class="o">.</span><span class="n">STATIC</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span> <span class="o">=</span> <span class="n">pymunk</span><span class="o">.</span><span class="n">Poly</span><span class="o">.</span><span class="n">create_box</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
         <span class="n">space</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">body</span><span class="p">)</span>
 
-<span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
 
     <span class="n">pygame</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
     <span class="n">screen</span> <span class="o">=</span> <span class="n">pygame</span><span class="o">.</span><span class="n">display</span><span class="o">.</span><span class="n">set_mode</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>

@@ -66,34 +66,34 @@ ArrayList olarak döndürmemiz gereksin. XML içindeki referans sözdizimi
 <div class="codehilite">
 <pre><span></span><code><span class="c1">// butun dosyayi hafizaya yukle</span>
 
-<span class="n">File</span> <span class="n">f</span> <span class="o">=</span> <span class="k">new</span> <span class="n">File</span><span class="p">(</span><span class="s">&quot;c:/dizin/yazi.xml&quot;</span><span class="p">);</span>
+<span class="n">File</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">File</span><span class="p">(</span><span class="s">&quot;c:/dizin/yazi.xml&quot;</span><span class="p">);</span>
 
-<span class="n">FileReader</span> <span class="n">oku</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FileReader</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="n">FileReader</span><span class="w"> </span><span class="n">oku</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FileReader</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
 
-<span class="kt">char</span><span class="o">[]</span> <span class="n">icerik</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="n">f</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="o">]</span><span class="p">;</span>
+<span class="kt">char</span><span class="o">[]</span><span class="w"> </span><span class="n">icerik</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="kt">char</span><span class="o">[</span><span class="n">f</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="o">]</span><span class="p">;</span>
 
 <span class="n">oku</span><span class="p">.</span><span class="na">read</span><span class="p">(</span><span class="n">icerik</span><span class="p">);</span>
 
-<span class="n">String</span> <span class="n">bellekteDosya</span> <span class="o">=</span> <span class="k">new</span> <span class="n">String</span><span class="p">(</span><span class="n">icerik</span><span class="p">);</span>
+<span class="n">String</span><span class="w"> </span><span class="n">bellekteDosya</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">(</span><span class="n">icerik</span><span class="p">);</span>
 
 <span class="n">oku</span><span class="p">.</span><span class="na">close</span><span class="p">()</span>
 
 <span class="c1">// simdi ORO kullanmaya baslayabiliriz</span>
 
-<span class="n">ArrayList</span> <span class="n">sonuc</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="p">();</span>
+<span class="n">ArrayList</span><span class="w"> </span><span class="n">sonuc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ArrayList</span><span class="p">();</span>
 
-<span class="n">PatternMatcherInput</span> <span class="n">giris</span> <span class="o">=</span> <span class="k">new</span> <span class="n">PatternMatcherInput</span><span class="p">(</span><span class="n">bellekteDosya</span><span class="p">);</span>
+<span class="n">PatternMatcherInput</span><span class="w"> </span><span class="n">giris</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PatternMatcherInput</span><span class="p">(</span><span class="n">bellekteDosya</span><span class="p">);</span>
 
-<span class="n">PatternCompiler</span> <span class="n">derleyici</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Perl5Compiler</span><span class="p">();</span>
+<span class="n">PatternCompiler</span><span class="w"> </span><span class="n">derleyici</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Perl5Compiler</span><span class="p">();</span>
 
-<span class="n">PatternMatcher</span> <span class="n">arayici</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Perl5Matcher</span><span class="p">();</span>
+<span class="n">PatternMatcher</span><span class="w"> </span><span class="n">arayici</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Perl5Matcher</span><span class="p">();</span>
 
-<span class="n">String</span> <span class="n">ara</span> <span class="o">=</span> <span class="s">&quot;/images\\/(.+)\&quot;/&quot;</span><span class="p">;</span>
+<span class="n">String</span><span class="w"> </span><span class="n">ara</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/images\\/(.+)\&quot;/&quot;</span><span class="p">;</span>
 
-<span class="n">Pattern</span> <span class="n">ifade</span> <span class="o">=</span> <span class="n">derleyici</span><span class="p">.</span><span class="na">compile</span><span class="p">(</span><span class="n">ara</span><span class="p">);</span>
+<span class="n">Pattern</span><span class="w"> </span><span class="n">ifade</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">derleyici</span><span class="p">.</span><span class="na">compile</span><span class="p">(</span><span class="n">ara</span><span class="p">);</span>
 
-<span class="k">while</span><span class="p">(</span><span class="n">arayici</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">giris</span><span class="p">,</span> <span class="n">ifade</span><span class="p">))</span> <span class="p">{</span>
-  <span class="n">sonuc</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">arayici</span><span class="p">.</span><span class="na">getMatch</span><span class="p">().</span><span class="na">group</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="k">while</span><span class="p">(</span><span class="n">arayici</span><span class="p">.</span><span class="na">contains</span><span class="p">(</span><span class="n">giris</span><span class="p">,</span><span class="w"> </span><span class="n">ifade</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="n">sonuc</span><span class="p">.</span><span class="na">add</span><span class="p">(</span><span class="n">arayici</span><span class="p">.</span><span class="na">getMatch</span><span class="p">().</span><span class="na">group</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
 <span class="p">}</span>
 </code></pre>
 </div>
@@ -127,11 +127,11 @@ değiştirelim.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="c1">// dosyayi tekrar hafizaya yukle ...</span>
-<span class="n">String</span> <span class="n">degistir</span> <span class="o">=</span> <span class="s">&quot;s/images/resimler/g&quot;</span><span class="p">;</span>
+<span class="n">String</span><span class="w"> </span><span class="n">degistir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;s/images/resimler/g&quot;</span><span class="p">;</span>
 
-<span class="n">Perl5Util</span> <span class="n">yardimci</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Perl5Util</span><span class="p">();</span>
+<span class="n">Perl5Util</span><span class="w"> </span><span class="n">yardimci</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Perl5Util</span><span class="p">();</span>
 
-<span class="n">bellekteDosya</span> <span class="o">=</span> <span class="n">yardimci</span><span class="p">.</span><span class="na">substitute</span><span class="p">(</span><span class="n">degistir</span><span class="p">,</span> <span class="n">bellekteDosya</span><span class="p">);</span>
+<span class="n">bellekteDosya</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">yardimci</span><span class="p">.</span><span class="na">substitute</span><span class="p">(</span><span class="n">degistir</span><span class="p">,</span><span class="w"> </span><span class="n">bellekteDosya</span><span class="p">);</span>
 </code></pre>
 </div>
 

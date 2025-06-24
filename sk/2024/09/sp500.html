@@ -49,7 +49,7 @@ piyasalarındaki 500 tane en büyük şirketin senet fiyatlarını yansıtır.
 Bu indisin kapsadığı sembolleri almak için</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">DATA</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/alldata/sp500&quot;</span>
 <span class="n">link</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;https://en.wikipedia.org/wiki/List_of_S%26P_500_companies#S&amp;P_500_component_stocks&quot;</span><span class="p">)</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_html</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">header</span><span class="o">=</span><span class="mi">0</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -65,7 +65,7 @@ indirdik, mesela Apple seneti için, 2010 ve 2024 Eylül arasındaki
 tarihler için,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/2010-2024/AAPL.csv&quot;</span><span class="p">)</span>
 <span class="n">df</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
 </code></pre>
@@ -87,14 +87,14 @@ yaratalım, SQlite tabanı olacak, başlangıç verilerinin olduğu dizindeki t�
 CSV dosyaları okunup tabana yüklenecek,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">sqlite3</span><span class="o">,</span> <span class="nn">glob</span><span class="o">,</span> <span class="nn">os</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span><span class="o">,</span><span class="w"> </span><span class="nn">glob</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">db_conn</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">db_conn</span><span class="p">():</span>
     <span class="n">db_file</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/sp500.db&quot;</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_file</span><span class="p">)</span>    
     <span class="k">return</span> <span class="n">conn</span>
 
-<span class="k">def</span> <span class="nf">db_create</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">db_create</span><span class="p">():</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">res</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;DROP TABLE IF EXISTS TICKER; &#39;&#39;&#39;</span><span class="p">)</span>
@@ -110,7 +110,7 @@ operasyonu hala düzgün çalışacaktır, çünkü mesela 20240201 sayısı
 <p>İlk verileri yükleyelim,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">db_load_2010</span><span class="p">():</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">db_load_2010</span><span class="p">():</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>    
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;2010-2024&quot;</span>
@@ -150,7 +150,7 @@ fiyatı verisi bulunur.  Mesela Eylül 3 için,</p>
 <p>Artıksal dosyaları yüklemek için</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">db_load_inc</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">db_load_inc</span><span class="p">(</span><span class="nb">dir</span><span class="p">):</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span>    
     <span class="n">cursor</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">gdir</span> <span class="o">=</span> <span class="n">DATA</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/**/*.csv&quot;</span>
@@ -184,7 +184,7 @@ fazla yükleme çağrısı yapılabilir.</p>
 istediğimiz SP 500 verisini bir zaman serisi olarak alabiliyoruz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">get_db_tickers</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">tickers</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_db_tickers</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="n">tickers</span><span class="p">):</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">db_conn</span><span class="p">()</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
     <span class="n">year</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;0101&quot;</span><span class="p">)</span>
     <span class="n">dfs</span> <span class="o">=</span> <span class="p">[]</span>

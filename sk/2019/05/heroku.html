@@ -264,7 +264,7 @@ sağlıyor, hatta tabloları sıfırdan yaratmamızı sağlıyor. Bu paket için
 bir kullanım kalıbı şöyle olabilir, Flask <code>app.py</code> içinde, ana script seviyesinde</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">class</span> <span class="nc">ConfigClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">ConfigClass</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="o">...</span>
     <span class="n">SQLALCHEMY_DATABASE_URI</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;DATABASE_URL&#39;</span><span class="p">]</span>
     <span class="n">SQLALCHEMY_TRACK_MODIFICATIONS</span> <span class="o">=</span> <span class="kc">False</span>
@@ -276,13 +276,13 @@ bir kullanım kalıbı şöyle olabilir, Flask <code>app.py</code> içinde, ana 
 
 <span class="n">db</span> <span class="o">=</span> <span class="n">SQLAlchemy</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
-<span class="k">class</span> <span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">UserMixin</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">User</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Model</span><span class="p">,</span> <span class="n">UserMixin</span><span class="p">):</span>
     <span class="n">__tablename__</span> <span class="o">=</span> <span class="s1">&#39;users&#39;</span>
     <span class="nb">id</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="n">db</span><span class="o">.</span><span class="n">Integer</span><span class="p">,</span> <span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">active</span> <span class="o">=</span> <span class="n">db</span><span class="o">.</span><span class="n">Column</span><span class="p">(</span><span class="s1">&#39;is_active&#39;</span><span class="p">,</span> <span class="n">db</span><span class="o">.</span><span class="n">Boolean</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">server_default</span><span class="o">=</span><span class="s1">&#39;1&#39;</span><span class="p">)</span>
     <span class="o">...</span>
 
-<span class="k">def</span> <span class="nf">create_all</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">create_all</span><span class="p">():</span>
     <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">()</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">User</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">():</span>
         <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">(</span>

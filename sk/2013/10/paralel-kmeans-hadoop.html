@@ -92,7 +92,7 @@ ve işlem tekrar başlayacak.</p>
 <p>Şimdi ham veriyi gösterelim,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="o">*</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="n">df1</span> <span class="o">=</span> <span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../kmeans/synthetic.txt&quot;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;kmeans_1.png&#39;</span><span class="p">)</span>
@@ -102,29 +102,29 @@ ve işlem tekrar başlayacak.</p>
 <p><img src="kmeans_1.png" alt="" /></p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
-<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">random</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleProtocol</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">random</span>
 
-<span class="k">def</span> <span class="nf">euc_to_clusters</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">euc_to_clusters</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">x</span><span class="o">-</span><span class="n">y</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
 
-<span class="k">class</span> <span class="nc">MRKMeans</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MRKMeans</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
     <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MRKMeans</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">centers_</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/tmp/centers.csv&quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">15</span>
 
-    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="n">point</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;   &#39;</span><span class="p">)))</span>
         <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">euc_to_clusters</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">centers_</span><span class="p">),</span> <span class="n">point</span><span class="p">))</span>
         <span class="k">yield</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
         <span class="n">new_centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
         <span class="n">counts</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
@@ -132,7 +132,7 @@ ve işlem tekrar başlayacak.</p>
             <span class="n">counts</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="k">yield</span><span class="p">(</span><span class="s1">&#39;final&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">new_centers</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">counts</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">reduce_all_centers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reduce_all_centers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
         <span class="n">new_centers</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">=</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/centers.csv&quot;</span><span class="p">,</span><span class="s2">&quot;w&quot;</span><span class="p">)</span>
         <span class="k">for</span> <span class="p">(</span><span class="n">cluster</span><span class="p">,</span><span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="n">values</span><span class="p">:</span>
@@ -143,7 +143,7 @@ ve işlem tekrar başlayacak.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">steps</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="p">(</span><span class="n">mapper</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">mapper</span><span class="p">,</span><span class="n">reducer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reducer</span><span class="p">),</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">mr</span><span class="p">(</span><span class="n">reducer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">reduce_all_centers</span><span class="p">)]</span>
 
@@ -252,7 +252,7 @@ writing to /tmp/kmeans.burak.20131202.234456.597838/step-1-reducer_part-00000
 </code></pre>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;../kmeans/synthetic.txt&quot;</span><span class="p">,</span><span class="n">comment</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s2">&quot;   &quot;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">0</span><span class="p">],</span><span class="n">df1</span><span class="o">.</span><span class="n">ix</span><span class="p">[:,</span><span class="mi">1</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">hold</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
@@ -283,7 +283,7 @@ Data) olayı işte bu.</p>
 
 <p>Kaynaklar</p>
 
-<p>[1] [K-Means Kümeleme Metodu](https://burakbayramli.github.io/dersblog/algs/algs<em>080</em>kmeans/kmeans<em>kumeleme</em>metodu.html)</p>
+<p>[1] <a href="https://burakbayramli.github.io/dersblog/algs/algs_080_kmeans/kmeans_kumeleme_metodu.html">K-Means Kümeleme Metodu</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

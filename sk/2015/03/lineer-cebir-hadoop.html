@@ -102,21 +102,21 @@ ve satır no'ya göre doğal olarak sıralanmış halde nihai sonuç çıkıyor.
 Ama toplama işlemi paralel. Kod alttaki gibi</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
-<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">sys</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleProtocol</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="k">class</span> <span class="nc">MRAtA</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MRAtA</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
     <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MRAtA</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">A_sum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="n">line_vals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line_vals</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">:</span>
@@ -125,18 +125,18 @@ Ama toplama işlemi paralel. Kod alttaki gibi</p>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mult</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span>        
 
-    <span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">A_sum</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
         <span class="k">yield</span> <span class="n">i</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">A_sum</span><span class="p">[</span><span class="n">i</span><span class="p">,:])</span>
 
-    <span class="sd">&#39;&#39;&#39;</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    At the end of processing a file, we might have some left over</span>
 <span class="sd">    rows in self.data that were not multiplied because we did not</span>
 <span class="sd">    reach buffer size. That condition is handled here. Whatever is</span>
 <span class="sd">    left over, is simply multiplied and emitted.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="k">def</span> <span class="nf">mapper_final</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper_final</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">))</span>
             <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">mult</span><span class="p">):</span>
@@ -203,7 +203,7 @@ removing tmp directory /tmp/AtA.burak.20131202.225802.256844
 <p>Şimdi bu sonuç üzerinde Cholesky yapalım</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">lin</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lin</span>
 <span class="nb">print</span> <span class="n">lin</span><span class="o">.</span><span class="n">cholesky</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="p">,</span><span class="n">A</span><span class="p">))</span>
 </code></pre>
 </div>
@@ -254,14 +254,14 @@ MRJob işlemine verilmiş olması lazım. Bir işleme zinciri var, zincirde
 aktarılıyor.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
-<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">sys</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleProtocol</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
 
-<span class="k">class</span> <span class="nc">MRAB</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MRAB</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
     <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MRAB</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span> <span class="o">=</span> <span class="mi">4</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
@@ -273,7 +273,7 @@ aktarılıyor.</p>
                            <span class="p">[</span><span class="o">-</span><span class="mf">12.93067597</span><span class="p">,</span> <span class="o">-</span><span class="mf">12.53849977</span><span class="p">,</span>   <span class="mf">2.54158031</span><span class="p">,</span>  <span class="o">-</span><span class="mf">4.37310096</span><span class="p">]])</span>
 
 
-    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="n">line_vals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line_vals</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer_size</span><span class="p">:</span>
@@ -281,7 +281,7 @@ aktarılıyor.</p>
             <span class="bp">self</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
             <span class="k">yield</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">mult</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
             <span class="k">yield</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
 
@@ -462,7 +462,7 @@ başlayan rasgele sayı üretim zinciri hep aynı olur. Rasgele sayı
 geçer.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
 <span class="c1"># tohumsuz, bu kod her seferinde degisik sayi uretir</span>
 <span class="nb">print</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -475,7 +475,7 @@ geçer.</p>
 </code></pre>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">random</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 <span class="c1"># tohumlu</span>
 <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span>
 <span class="nb">print</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">random</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
@@ -507,20 +507,20 @@ uğraşıyoruz, "yeterince raslantısal olmaları" kafi.</p>
 matrisi üreten mrjob programını bulabilirsiniz.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
-<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span><span class="p">,</span> <span class="n">RawValueProtocol</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">random</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleProtocol</span><span class="p">,</span> <span class="n">RawValueProtocol</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
-<span class="k">class</span> <span class="nc">MRProj</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MRProj</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
     <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
     <span class="n">OUTPUT_PROTOCOL</span> <span class="o">=</span> <span class="n">RawValueProtocol</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MRProj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
 
-    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="n">line_vals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">j</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">line_vals</span><span class="p">):</span>
@@ -597,21 +597,21 @@ vektörleri / matrisleri seyrek matrisler ile çok rahat şekilde temsil
 edebiliriz.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
-<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span><span class="p">,</span> <span class="n">RawValueProtocol</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">itertools</span>
-<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">sparse</span>
-<span class="kn">import</span> <span class="nn">random</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleProtocol</span><span class="p">,</span> <span class="n">RawValueProtocol</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">itertools</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">sparse</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
-<span class="k">class</span> <span class="nc">MRProj</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MRProj</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
     <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
     <span class="n">OUTPUT_PROTOCOL</span> <span class="o">=</span> <span class="n">RawValueProtocol</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MRProj</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
 
-    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>
         <span class="n">line_vals</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
         <span class="n">line_sps</span> <span class="o">=</span> <span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">line_vals</span><span class="p">,</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">line_vals</span><span class="p">)))</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
@@ -688,7 +688,7 @@ removing tmp directory /tmp/mrprojs.burak.20140104.064956.493025
 </code></pre>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy.linalg</span> <span class="k">as</span> <span class="nn">lin</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lin</span>
 
 <span class="n">n</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s1">&#39;A_matrix2&#39;</span><span class="p">)</span>

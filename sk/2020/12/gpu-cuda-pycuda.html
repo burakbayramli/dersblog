@@ -147,7 +147,7 @@ yokolmuş oluyor, her seferinde yeni bir makinada, yeni bir süreçteyiz.</p>
 ne tür bir GPU var?</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pycuda.driver</span> <span class="k">as</span> <span class="nn">drv</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pycuda.driver</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">drv</span>
 <span class="n">drv</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
 
 <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">drv</span><span class="o">.</span><span class="n">Device</span><span class="o">.</span><span class="n">count</span><span class="p">()):</span>
@@ -169,9 +169,9 @@ ne tür bir GPU var?</p>
 <p>En basit işlemle başlayalım. Bir vektör üzerindeki sayıları 2 ile çarpalım.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
-<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpuarray</span>
 
 <span class="n">host_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">),</span><span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
 
@@ -224,11 +224,11 @@ temelli işler, dışarıdan programcının verdiği bir kod, veri üzerinde
 Python'un <code>map</code>, ya da Pandas <code>apply</code> operasyonuna benzer.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
-<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
-<span class="kn">from</span> <span class="nn">pycuda.elementwise</span> <span class="kn">import</span> <span class="n">ElementwiseKernel</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">time</span><span class="w"> </span><span class="kn">import</span> <span class="n">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda.elementwise</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementwiseKernel</span>
 
 <span class="n">host_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">(</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">7</span><span class="p">)</span> <span class="p">)</span>
 
@@ -281,16 +281,16 @@ parçacığı oluşturulacağını biliyor muyuz?</p>
 <p>C ile iki vektörü toplayan bir kod suna benzer,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">__global__</span> <span class="kt">void</span> <span class="n">VecAdd</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">C</span><span class="p">)</span>
+<pre><span></span><code><span class="n">__global__</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">VecAdd</span><span class="p">(</span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">C</span><span class="p">)</span>
 <span class="p">{</span>
-   <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
-   <span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">   </span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+<span class="w">   </span><span class="n">C</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
 <span class="p">}</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">()</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">()</span>
 <span class="p">{</span>
-   <span class="p">...</span>
-   <span class="n">VecAdd</span><span class="o">&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="n">N</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">C</span><span class="p">);</span>
-   <span class="p">...</span>
+<span class="w">   </span><span class="p">...</span>
+<span class="w">   </span><span class="n">VecAdd</span><span class="o">&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">N</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="w"> </span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">C</span><span class="p">);</span>
+<span class="w">   </span><span class="p">...</span>
 <span class="p">}</span>
 </code></pre>
 </div>
@@ -308,10 +308,10 @@ yaklaşımda her hücre üzerinde teker teker bir hesap yapıldığını
 görüyoruz. Bu hesabı GPU üzerinde eşzamanlı olarak işletmek mümkün.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">pycuda.autoinit</span>
-<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
-<span class="kn">from</span> <span class="nn">pycuda.elementwise</span> <span class="kn">import</span> <span class="n">ElementwiseKernel</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pycuda.autoinit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda.elementwise</span><span class="w"> </span><span class="kn">import</span> <span class="n">ElementwiseKernel</span>
 
 <span class="n">mandel_ker</span> <span class="o">=</span> <span class="n">ElementwiseKernel</span><span class="p">(</span>
 <span class="s2">&quot;pycuda::complex&lt;float&gt; *lattice, float *mandelbrot_graph, int max_iters, float upper_bound&quot;</span><span class="p">,</span>
@@ -352,7 +352,7 @@ görüyoruz. Bu hesabı GPU üzerinde eşzamanlı olarak işletmek mümkün.</p>
 </div>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">mandelbrot_graph</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;inferno&#39;</span><span class="p">)</span>
 </code></pre>
@@ -384,11 +384,11 @@ tanımlayacağız. Kodlayacağımız yine vektörü skalar ile çarpmak olacak
 ama bu sefer skaların kendisi bir parametre. </p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pycuda.autoinit</span><span class="o">,</span> <span class="nn">time</span>
-<span class="kn">import</span> <span class="nn">pycuda.driver</span> <span class="k">as</span> <span class="nn">drv</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pycuda</span> <span class="kn">import</span> <span class="n">gpuarray</span>
-<span class="kn">from</span> <span class="nn">pycuda.compiler</span> <span class="kn">import</span> <span class="n">SourceModule</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pycuda.autoinit</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pycuda.driver</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">drv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda</span><span class="w"> </span><span class="kn">import</span> <span class="n">gpuarray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pycuda.compiler</span><span class="w"> </span><span class="kn">import</span> <span class="n">SourceModule</span>
 
 <span class="n">ker</span> <span class="o">=</span> <span class="n">SourceModule</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">__global__ void scalar_multiply_kernel(float *outvec, float scalar, float *vec)</span>
@@ -437,15 +437,15 @@ Cuda compilation tools, release 10.1, V10.1.243
 <p>C++ kodu yazıp derlemek</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="o">%%</span><span class="n">writefile</span> <span class="n">test</span><span class="p">.</span><span class="n">cpp</span>
-<span class="cp">#include</span> <span class="cpf">&lt;stdio.h&gt;</span><span class="cp"></span>
+<pre><span></span><code><span class="o">%%</span><span class="n">writefile</span><span class="w"> </span><span class="n">test</span><span class="p">.</span><span class="n">cpp</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;stdio.h&gt;</span>
 <span class="c1">//Main function</span>
-<span class="kt">int</span> <span class="n">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">Argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span> <span class="n">Args</span><span class="p">[]){</span>
-   <span class="n">printf</span><span class="p">(</span><span class="s">&quot;hello collab&quot;</span><span class="p">);</span>
-   <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">main</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">Argc</span><span class="p">,</span><span class="kt">char</span><span class="o">*</span><span class="w"> </span><span class="n">Args</span><span class="p">[]){</span>
+<span class="w">   </span><span class="n">printf</span><span class="p">(</span><span class="s">&quot;hello collab&quot;</span><span class="p">);</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="p">}</span>
 
-<span class="n">Writing</span> <span class="n">test</span><span class="p">.</span><span class="n">cpp</span>
+<span class="n">Writing</span><span class="w"> </span><span class="n">test</span><span class="p">.</span><span class="n">cpp</span>
 </code></pre>
 </div>
 
@@ -475,11 +475,11 @@ hello collab
 
 <p>[3] https://gist.github.com/jfpuget/60e07a82dece69b011bb</p>
 
-<p>[4] [Gayri Lineer Dinamik, Ders 19](https://burakbayramli.github.io/dersblog/chaos/chaos<em>19/ders</em>19.html)</p>
+<p>[4] <a href="https://burakbayramli.github.io/dersblog/chaos/chaos_19/ders_19.html">Gayri Lineer Dinamik, Ders 19</a></p>
 
 <p>[5] https://developer.nvidia.com/blog/even-easier-introduction-cuda/</p>
 
-<p>[6] [Jetson Nano](nvidia-jetson-nano-2GB-wifi.html)</p>
+<p>[6] <a href="nvidia-jetson-nano-2GB-wifi.html">Jetson Nano</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

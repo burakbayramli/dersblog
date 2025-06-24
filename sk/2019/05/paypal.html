@@ -128,16 +128,16 @@ Flask ile servis ettiğimiz / dinlediğimiz bir adres olacak. Flask'te
 şu kodlar kullanılabilir,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span>
-<span class="kn">import</span> <span class="nn">requests</span>
-<span class="kn">import</span> <span class="nn">urllib.parse</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">render_template</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">requests</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">urllib.parse</span>
 <span class="o">...</span>
 <span class="n">VERIFY_URL_PROD</span> <span class="o">=</span> <span class="s1">&#39;https://ipnpb.paypal.com/cgi-bin/webscr&#39;</span>
 <span class="n">VERIFY_URL_TEST</span> <span class="o">=</span> <span class="s1">&#39;https://ipnpb.sandbox.paypal.com/cgi-bin/webscr&#39;</span>
 <span class="n">VERIFY_URL</span> <span class="o">=</span> <span class="n">VERIFY_URL_TEST</span>
 <span class="o">...</span>
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/paypal_ipn&#39;</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">,</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
-<span class="k">def</span> <span class="nf">paypal_ipn</span><span class="p">():</span>    
+<span class="k">def</span><span class="w"> </span><span class="nf">paypal_ipn</span><span class="p">():</span>    
     <span class="n">params</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
     <span class="n">params</span><span class="p">[</span><span class="s1">&#39;cmd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;_notify-validate&#39;</span>
     <span class="nb">print</span> <span class="p">(</span><span class="n">params</span><span class="p">)</span>

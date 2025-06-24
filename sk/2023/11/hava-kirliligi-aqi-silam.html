@@ -66,9 +66,9 @@ olup bir anahtar almak yeterli, biz anahtarı</p>
 bilgiyi alıyoruz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">json</span><span class="o">,</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">os</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">pollution</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">pollution</span><span class="p">(</span><span class="n">lat</span><span class="p">,</span><span class="n">lon</span><span class="p">):</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;http://api.openweathermap.org/data/2.5/air_pollution?&#39;</span>
     <span class="n">params</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/.nomterr.conf&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lat</span><span class="p">),</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">lon</span><span class="p">),</span> <span class="s1">&#39;appid&#39;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s1">&#39;weatherapi&#39;</span><span class="p">]</span> <span class="p">}</span>
@@ -108,10 +108,10 @@ kirlilik problemi var, ve AQI maksimum olan 5 seviyesinde çıktı.</p>
 için olan nc4 dosyasını alıyoruz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">requests</span><span class="o">,</span> <span class="nn">os</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">requests</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
 
 
-<span class="k">def</span> <span class="nf">download_silam</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_silam</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">outdir</span><span class="p">):</span>
    <span class="n">base_url</span> <span class="o">=</span> <span class="s2">&quot;https://silam.fmi.fi/thredds/fileServer/dailysilam_glob06_v5_8/files/&quot;</span>
    <span class="n">target_file</span> <span class="o">=</span> <span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span>
    <span class="n">url</span> <span class="o">=</span> <span class="n">base_url</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span>
@@ -128,7 +128,7 @@ için olan nc4 dosyasını alıyoruz,</p>
 <p>Dosyada paylaşılan bilgilere bakalım,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">netCDF4</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">netCDF4</span>
 
 <span class="n">sf</span> <span class="o">=</span> <span class="n">netCDF4</span><span class="o">.</span><span class="n">Dataset</span><span class="p">(</span><span class="n">outdir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
 
@@ -178,7 +178,7 @@ olduğunu biliyoruz, bunları eldeki veri noktasına bölerek bir ızgara
 (grid) yaratabiliriz, ve verileri bu ızgarada basabiliriz.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">simplegeomap</span> <span class="k">as</span> <span class="nn">sm</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">simplegeomap</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 
 <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">180</span><span class="p">,</span><span class="mi">180</span><span class="p">,</span><span class="mi">600</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">297</span><span class="p">))</span>
 <span class="n">z</span> <span class="o">=</span> <span class="n">sf</span><span class="o">.</span><span class="n">variables</span><span class="p">[</span><span class="s1">&#39;daymax_cnc_PM2_5&#39;</span><span class="p">][</span><span class="mi">4</span><span class="p">,</span><span class="mi">0</span><span class="p">,:,:]</span> 

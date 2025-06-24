@@ -41,7 +41,7 @@
 <p>Telefon tarafından toplanan verileri nasıl kullanırız? </p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;./data/mitte4/&quot;</span>
 <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">fromfile</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;cam.bin&quot;</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
@@ -55,8 +55,8 @@
 <p>Herhangi bir video karesini çekip çıkarmak</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
 <span class="n">frame</span> <span class="o">=</span> <span class="mi">30</span>
 <span class="n">arr</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="s1">&#39;fr&#39;</span><span class="p">])</span> <span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">ix</span><span class="p">[</span><span class="n">frame</span><span class="p">][</span><span class="s1">&#39;to&#39;</span><span class="p">])]</span>
 <span class="n">im</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">arr</span><span class="p">))</span>
@@ -101,7 +101,7 @@
 <p>Dört köşesi üzerinden belirtilen bir dörtgeni ekrana basmak.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">util</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">util</span>
 <span class="n">im</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="mi">105</span><span class="p">)</span>
 <span class="n">quad</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">143</span><span class="p">,</span><span class="mf">100.</span><span class="p">],[</span><span class="mi">202</span><span class="p">,</span><span class="mi">100</span><span class="p">],[</span><span class="mi">224</span><span class="p">,</span><span class="mi">0</span><span class="p">]])</span>
 <span class="n">h</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">im</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -160,7 +160,7 @@ eder. O zaman bu dağılıma herhangi bir HSV değerinin ne kadar olası olduğu
 "sorabiliriz". </p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">eval</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">eval</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
     <span class="n">i</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">j</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="n">k</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">&lt;</span><span class="n">edges</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
@@ -181,10 +181,10 @@ eder. O zaman bu dağılıma herhangi bir HSV değerinin ne kadar olası olduğu
 istersek, mesela alttaki gayet basit bir gosterim kodu,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">io</span><span class="o">,</span> <span class="nn">cv2</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
-<span class="kn">import</span> <span class="nn">util</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">io</span><span class="o">,</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">util</span>
 
 <span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;./data/mitte4/&quot;</span>
 <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">150</span><span class="p">):</span>
@@ -219,12 +219,12 @@ istersek, şu ekleri yaparız,</p>
 <p>Tek imajlar üzerinde, mesela kişi (ya da dik duran objeler) bulmak,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">io</span><span class="o">,</span> <span class="nn">cv2</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
-<span class="kn">import</span> <span class="nn">util</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">io</span><span class="o">,</span><span class="w"> </span><span class="nn">cv2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageDraw</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">util</span>
 
-<span class="k">def</span> <span class="nf">draw_detections</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">rects</span><span class="p">,</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_detections</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">rects</span><span class="p">,</span> <span class="n">thickness</span> <span class="o">=</span> <span class="mi">1</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">rects</span><span class="p">:</span>
         <span class="n">pad_w</span><span class="p">,</span> <span class="n">pad_h</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.15</span><span class="o">*</span><span class="n">w</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mf">0.05</span><span class="o">*</span><span class="n">h</span><span class="p">)</span>
         <span class="n">cv2</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">pad_w</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">pad_h</span><span class="p">),</span> <span class="p">(</span><span class="n">x</span><span class="o">+</span><span class="n">w</span><span class="o">-</span><span class="n">pad_w</span><span class="p">,</span> <span class="n">y</span><span class="o">+</span><span class="n">h</span><span class="o">-</span><span class="n">pad_h</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">thickness</span><span class="p">)</span>
@@ -264,8 +264,8 @@ resim lazım. OpenCV dizini altında verilen örneklerden bir tanesine
 bakalım, ve köşelerini otomatik olarak gösterelim,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">cv2</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">6</span><span class="p">)</span>
 <span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;/home/burak/Downloads/opencv-master/samples/data&#39;</span>
 <span class="n">img</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/left01.jpg&quot;</span><span class="p">)</span>
@@ -285,7 +285,7 @@ bakalım, ve köşelerini otomatik olarak gösterelim,</p>
 <p>Birden fazla imajla köşeleri bulup kalibre etmek</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">get_sample</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">iscolor</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_COLOR</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">get_sample</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">iscolor</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">IMREAD_COLOR</span><span class="p">):</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
         <span class="n">filedata</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">cv2</span><span class="o">.</span><span class="n">imdecode</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">fromstring</span><span class="p">(</span><span class="n">filedata</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">),</span> <span class="n">iscolor</span><span class="p">)</span>
@@ -347,9 +347,9 @@ verir. Mesela bir hesap bize "bir obje 10 yüksekliğinde" diyorsa bu
 <code>scikit-image</code> kütüphanesinde kodlanmış. Örnek altta,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">skimage.segmentation</span> <span class="kn">import</span> <span class="n">felzenszwalb</span>
-<span class="kn">from</span> <span class="nn">skimage.segmentation</span> <span class="kn">import</span> <span class="n">mark_boundaries</span>
-<span class="kn">import</span> <span class="nn">util</span><span class="o">,</span> <span class="nn">cv2</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">skimage.segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">felzenszwalb</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">skimage.segmentation</span><span class="w"> </span><span class="kn">import</span> <span class="n">mark_boundaries</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">util</span><span class="o">,</span><span class="w"> </span><span class="nn">cv2</span>
 <span class="nb">dir</span> <span class="o">=</span> <span class="s2">&quot;./data/mitte4/&quot;</span>
 <span class="n">frame</span> <span class="o">=</span> <span class="mi">195</span>
 <span class="n">im</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">get_frame</span><span class="p">(</span><span class="nb">dir</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">hsv</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>

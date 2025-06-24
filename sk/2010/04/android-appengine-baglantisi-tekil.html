@@ -90,8 +90,8 @@ olacak.</p>
 <p>Servis tarafi:</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">class</span> <span class="nc">NewUser</span><span class="p">(</span><span class="n">webapp</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
-  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NewUser</span><span class="p">(</span><span class="n">webapp</span><span class="o">.</span><span class="n">RequestHandler</span><span class="p">):</span>
+  <span class="k">def</span><span class="w"> </span><span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
      <span class="n">param1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;param1&#39;</span><span class="p">)</span> <span class="o">..</span>
      <span class="n">user</span> <span class="o">=</span> <span class="n">AppUser</span><span class="p">(</span><span class="n">param1</span><span class="o">=</span><span class="n">param1</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
      <span class="n">user</span><span class="o">.</span><span class="n">put</span><span class="p">()</span>
@@ -102,28 +102,28 @@ olacak.</p>
 <p>Android tarafinda ise genel baglanma, sonucu okuma kodu soyle:</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kd">public</span> <span class="n">String</span> <span class="nf">visitUrl</span><span class="p">(</span><span class="n">String</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span>
+<pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">visitUrl</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">url</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
 
-<span class="n">HttpClient</span> <span class="n">httpclient</span> <span class="o">=</span> <span class="k">new</span> <span class="n">DefaultHttpClient</span><span class="p">();</span> <span class="c1">// Prepare a request object</span>
+<span class="n">HttpClient</span><span class="w"> </span><span class="n">httpclient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DefaultHttpClient</span><span class="p">();</span><span class="w"> </span><span class="c1">// Prepare a request object</span>
 
-<span class="n">HttpGet</span> <span class="n">httpget</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HttpGet</span><span class="p">(</span><span class="n">url</span><span class="p">);</span> <span class="c1">// Execute the request HttpResponse response;</span>
-  <span class="k">try</span> <span class="p">{</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">httpclient</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="n">httpget</span><span class="p">);</span>
-    <span class="n">HttpEntity</span> <span class="n">entity</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="na">getEntity</span><span class="p">();</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">entity</span> <span class="o">!=</span> <span class="kc">null</span><span class="p">)</span> <span class="p">{</span>
-      <span class="n">InputStream</span> <span class="n">instream</span> <span class="o">=</span> <span class="n">entity</span><span class="p">.</span><span class="na">getContent</span><span class="p">();</span>
-      <span class="n">String</span> <span class="n">result</span><span class="o">=</span> <span class="n">convertStreamToString</span><span class="p">(</span><span class="n">instream</span><span class="p">);</span>
-     <span class="n">instream</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
-     <span class="k">return</span> <span class="n">result</span><span class="p">;</span> <span class="p">}</span>
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">ClientProtocolException</span> <span class="n">e</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
-  <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="n">IOException</span> <span class="n">e</span><span class="p">)</span>
-  <span class="p">{</span>
-    <span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
-  <span class="p">}</span>
+<span class="n">HttpGet</span><span class="w"> </span><span class="n">httpget</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">HttpGet</span><span class="p">(</span><span class="n">url</span><span class="p">);</span><span class="w"> </span><span class="c1">// Execute the request HttpResponse response;</span>
+<span class="w">  </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">response</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">httpclient</span><span class="p">.</span><span class="na">execute</span><span class="p">(</span><span class="n">httpget</span><span class="p">);</span>
+<span class="w">    </span><span class="n">HttpEntity</span><span class="w"> </span><span class="n">entity</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">response</span><span class="p">.</span><span class="na">getEntity</span><span class="p">();</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">entity</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="n">InputStream</span><span class="w"> </span><span class="n">instream</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">entity</span><span class="p">.</span><span class="na">getContent</span><span class="p">();</span>
+<span class="w">      </span><span class="n">String</span><span class="w"> </span><span class="n">result</span><span class="o">=</span><span class="w"> </span><span class="n">convertStreamToString</span><span class="p">(</span><span class="n">instream</span><span class="p">);</span>
+<span class="w">     </span><span class="n">instream</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">result</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">ClientProtocolException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="n">e</span><span class="p">.</span><span class="na">printStackTrace</span><span class="p">();</span>
+<span class="w">  </span><span class="p">}</span>
 
-  <span class="k">return</span> <span class="s">&quot;&quot;</span><span class="p">;</span>
+<span class="w">  </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;&quot;</span><span class="p">;</span>
 <span class="p">}</span>
 </code></pre>
 </div>

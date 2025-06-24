@@ -39,17 +39,17 @@
 <h1>ipyvolume</h1>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">ipyvolume</span> <span class="k">as</span> <span class="nn">ipv</span> 
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">ipyvolume</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ipv</span> 
 
-<span class="k">class</span> <span class="nc">Particle</span><span class="p">():</span>
-    <span class="k">def</span> <span class="fm">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos_vec</span><span class="p">,</span> <span class="n">vel_vec</span><span class="p">,</span> <span class="n">box_size</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">grav</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Particle</span><span class="p">():</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos_vec</span><span class="p">,</span> <span class="n">vel_vec</span><span class="p">,</span> <span class="n">box_size</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">grav</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="n">pos_vec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vec</span> <span class="o">=</span> <span class="n">vel_vec</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">grav</span> <span class="o">=</span> <span class="n">grav</span> 
         <span class="bp">self</span><span class="o">.</span><span class="n">box_size</span> <span class="o">=</span> <span class="n">box_size</span>
 
-    <span class="k">def</span> <span class="nf">pos_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">pos_update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">box_size</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vec</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*-</span><span class="mi">1</span>
@@ -71,7 +71,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">time_step</span>
 
 
-<span class="k">def</span> <span class="nf">initialize_particles</span><span class="p">(</span><span class="n">number_of_particles</span><span class="p">,</span><span class="n">box_size</span><span class="p">,</span><span class="n">time_step</span><span class="p">,</span> <span class="n">grav</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">initialize_particles</span><span class="p">(</span><span class="n">number_of_particles</span><span class="p">,</span><span class="n">box_size</span><span class="p">,</span><span class="n">time_step</span><span class="p">,</span> <span class="n">grav</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 
     <span class="n">velocities</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">number_of_particles</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span>
 
@@ -90,7 +90,7 @@
 
     <span class="k">return</span> <span class="n">particle_list</span>
 
-<span class="k">def</span> <span class="nf">bounce</span><span class="p">(</span><span class="n">particle1</span><span class="p">,</span><span class="n">particle2</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">bounce</span><span class="p">(</span><span class="n">particle1</span><span class="p">,</span><span class="n">particle2</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
     <span class="n">a</span> <span class="o">=</span> <span class="n">particle1</span><span class="o">.</span><span class="n">pos</span> <span class="o">-</span> <span class="n">particle2</span><span class="o">.</span><span class="n">pos</span>
     <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">,</span><span class="n">out</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">where</span><span class="o">=</span><span class="n">b</span><span class="o">!=</span><span class="mi">0</span><span class="p">)</span>       
@@ -107,7 +107,7 @@
         <span class="n">particle2</span><span class="o">.</span><span class="n">pos_update</span><span class="p">(</span><span class="n">time_step</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">particledist</span><span class="p">(</span><span class="n">particle1</span><span class="p">,</span> <span class="n">particle2</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">particledist</span><span class="p">(</span><span class="n">particle1</span><span class="p">,</span> <span class="n">particle2</span><span class="p">):</span>
     <span class="n">r_x</span> <span class="o">=</span> <span class="n">particle1</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">particle2</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">r_y</span> <span class="o">=</span> <span class="n">particle1</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">particle2</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">r_z</span> <span class="o">=</span> <span class="n">particle1</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">particle2</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
@@ -116,7 +116,7 @@
 
     <span class="k">return</span> <span class="n">r</span>
 
-<span class="k">def</span> <span class="nf">isbounce</span><span class="p">(</span><span class="n">particle_list</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">isbounce</span><span class="p">(</span><span class="n">particle_list</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span> <span class="n">time_step</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">particle1</span> <span class="ow">in</span> <span class="n">particle_list</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">particle2</span> <span class="ow">in</span> <span class="n">particle_list</span><span class="p">:</span>
 
@@ -124,7 +124,7 @@
 
                 <span class="n">bounce</span><span class="p">(</span><span class="n">particle1</span><span class="p">,</span> <span class="n">particle2</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span> <span class="n">time_step</span><span class="p">)</span> <span class="c1">#Call bounce function</span>
 
-<span class="k">def</span> <span class="nf">avgvel</span><span class="p">(</span><span class="n">particle_list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">avgvel</span><span class="p">(</span><span class="n">particle_list</span><span class="p">):</span>
     <span class="n">vel_vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="n">particle_list</span><span class="p">:</span>
         <span class="n">vel_vec</span> <span class="o">=</span><span class="n">vel_vec</span> <span class="o">+</span> <span class="n">particle</span><span class="o">.</span><span class="n">vec</span>
@@ -133,14 +133,14 @@
 
     <span class="k">return</span> <span class="n">avg_vec</span>
 
-<span class="k">def</span> <span class="nf">tot_eng</span><span class="p">(</span><span class="n">particle_list</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">tot_eng</span><span class="p">(</span><span class="n">particle_list</span><span class="p">):</span>
     <span class="n">tot_eng</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">particle</span> <span class="ow">in</span> <span class="n">particle_list</span><span class="p">:</span>
         <span class="n">tot_eng</span> <span class="o">=</span> <span class="n">tot_eng</span> <span class="o">+</span> <span class="n">particle</span><span class="o">.</span><span class="n">vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">particle</span><span class="o">.</span><span class="n">vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">particle</span><span class="o">.</span><span class="n">vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
 
     <span class="k">return</span> <span class="n">tot_eng</span>
 
-<span class="k">def</span> <span class="nf">particleSimulate</span><span class="p">(</span><span class="n">num_particles</span><span class="p">,</span> <span class="n">box_size</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">particleSimulate</span><span class="p">(</span><span class="n">num_particles</span><span class="p">,</span> <span class="n">box_size</span><span class="p">,</span> <span class="n">total_time</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">particle_radius</span><span class="p">,</span>
                      <span class="n">grav</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">save</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
 
     <span class="n">particle_list</span> <span class="o">=</span> <span class="n">initialize_particles</span><span class="p">(</span><span class="n">num_particles</span><span class="p">,</span> <span class="n">box_size</span><span class="p">,</span> <span class="n">time_step</span><span class="p">,</span> <span class="n">grav</span><span class="p">)</span> <span class="c1">#Generate starting points</span>

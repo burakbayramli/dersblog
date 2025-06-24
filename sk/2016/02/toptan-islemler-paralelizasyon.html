@@ -186,7 +186,7 @@ böylece oradan satır satır işlem yapabilelim.</p>
 <p>Bu dosyayı 2 parçaya bölelim, </p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="n">file_name</span> <span class="o">=</span> <span class="s1">&#39;in2.csv&#39;</span>
 <span class="n">N</span> <span class="o">=</span> <span class="mi">2</span>
 <span class="n">file_size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
@@ -278,9 +278,9 @@ arıyor).</p></li>
 <p>Şöyle bir kod yazabiliriz,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">hookobj</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">process</span><span class="p">(</span><span class="n">file_name</span><span class="p">,</span><span class="n">N</span><span class="p">,</span><span class="n">hookobj</span><span class="p">):</span>
     <span class="n">file_size</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getsize</span><span class="p">(</span><span class="n">file_name</span><span class="p">)</span>
     <span class="n">beg</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
@@ -311,14 +311,14 @@ parçaları bir iç listeye eklesin. Tüm işlemler bitince <code>post</code> i�
 tüm iç listeyi ekrana bassın.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">class</span> <span class="nc">SimpleJob</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+<pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">SimpleJob</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
-    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
         <span class="n">tok</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tok</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">print</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">res</span><span class="p">)</span>
 
 <span class="c1"># iki parca icinden ilkini isle</span>
@@ -353,7 +353,7 @@ bir merkezi kordinasyon mekanizmasına ihtiyaç yoktur.</p>
 <p>Demo amaçlı olarak her parçayı şimdi ayrı bir Thread üzerinde işletelim,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">threading</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
 
 <span class="n">thread1</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
 <span class="n">thread2</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
@@ -372,7 +372,7 @@ bir merkezi kordinasyon mekanizmasına ihtiyaç yoktur.</p>
 <p>Eğer Thread yerine farklı süreçlerde [2] işlem yapılsın istersek,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">multiprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Process</span>
 
 <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
 <span class="n">p1</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;in2.csv&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">SimpleJob</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
@@ -453,7 +453,7 @@ dosyasına ek yapmış oluruz, önceki sonuçları ezmeyiz.</p>
 <p>Örnek üzerinde görelim, standart Pandas bazlı satır satır işlemi kalıbı,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;in1.csv&#39;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
     <span class="nb">print</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">],</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">])</span>
@@ -478,9 +478,9 @@ dosyasına ek yapmış oluruz, önceki sonuçları ezmeyiz.</p>
 <p>Oldukça basmakalıp. Bu tema ile bir script şöyle olabilir,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span><span class="o">,</span> <span class="nn">sys</span><span class="o">,</span> <span class="nn">os</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="k">def</span> <span class="nf">ext_proc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">ext_proc</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="c1"># dis web sitesi baglantisi bu olsun, degil ama</span>
     <span class="c1"># yapay kodlarla oymus gibi yapalim</span>
     <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">())</span> <span class="c1"># suni bekleme ekledik</span>
@@ -542,11 +542,11 @@ stream=sys.stdout kullanabiliriz.</p>
 
 <p>Kaynaklar</p>
 
-<p>[1] [Hava Verisi Islemek](hava-verisi-islemek.html)</p>
+<p>[1] <a href="hava-verisi-islemek.html">Hava Verisi Islemek</a></p>
 
-<p>[2] [Ne Zaman Thread Ne Zaman Süreç?](thread-process-surec.html)</p>
+<p>[2] <a href="thread-process-surec.html">Ne Zaman Thread Ne Zaman Süreç?</a></p>
 
-<p>[4] [Bir Makinaya SSH ile Şifresiz Giriş](../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html)</p>
+<p>[4] <a href="../../2005/10/bir-makinaya-ssh-ile-sifresiz-giris.html">Bir Makinaya SSH ile Şifresiz Giriş</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

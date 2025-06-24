@@ -148,8 +148,8 @@ B'nin hafızada olduğu durum için klasik matris çarpımı da işleyecektir.</
 <p>Pür <code>numpy</code> ile A çarpı B işlemini yapalım, bu işlem hafızada olacaktır.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">timedelta</span>
-<span class="kn">from</span> <span class="nn">timeit</span> <span class="kn">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">timeit</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
 
 <span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/A.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
@@ -171,14 +171,14 @@ B'nin hafızada olduğu durum için klasik matris çarpımı da işleyecektir.</
 [4]'teki altyapıyı kullanmıştır,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">class</span> <span class="nc">MultJob</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">,</span><span class="n">bfile</span><span class="p">):</span>
+<pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">MultJob</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">,</span><span class="n">bfile</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">afile</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="n">bfile</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
         <span class="n">cname</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2">/C-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">afile</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cname</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>        
-    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>        
+    <span class="k">def</span><span class="w"> </span><span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>        
         <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;;&quot;</span><span class="p">)])</span>
         <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span><span class="mi">1</span><span class="p">))</span>
         <span class="n">res</span> <span class="o">=</span> <span class="p">(</span><span class="n">vec</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">B</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>  
@@ -186,7 +186,7 @@ B'nin hafızada olduğu durum için klasik matris çarpımı da işleyecektir.</
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
-    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <span class="nb">dir</span> <span class="o">=</span> <span class="s1">&#39;/tmp&#39;</span>
@@ -315,14 +315,14 @@ mümkün çünkü B üretmeden önce tohumu başa döndürüyoruz.</p></li>
 <p>İzdüşümü yapılmış yeni matris budur. Paralel kodu yazalım,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">util</span>
 
-<span class="k">class</span> <span class="nc">RandomProjJob</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">RandomProjJob</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="mi">7</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/Y-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>        
-    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
         <span class="n">toks</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">toks</span><span class="p">[</span><span class="mi">1</span><span class="p">:]])</span>
@@ -333,7 +333,7 @@ mümkün çünkü B üretmeden önce tohumu başa döndürüyoruz.</p></li>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">flush</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
 <span class="n">infile</span> <span class="o">=</span> <span class="s1">&#39;../../../linear/linear_app10rndsvd/w1.dat&#39;</span>
@@ -361,7 +361,7 @@ mümkün çünkü B üretmeden önce tohumu başa döndürüyoruz.</p></li>
 <p>Orijinal veriye bakarsak,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">infile</span><span class="p">,</span><span class="n">sep</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">:]</span>
 <span class="nb">print</span> <span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
@@ -379,7 +379,7 @@ her seferinde sadece k boyutlu bir vektörü hafızada yaratıyor.</p>
 <p>Satırlararası mesafeler,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">scipy.spatial.distance</span> <span class="kn">import</span> <span class="n">cdist</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdist</span>
 
 <span class="n">d1</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">A</span><span class="p">,</span><span class="n">metric</span><span class="o">=</span><span class="s1">&#39;euclid&#39;</span><span class="p">)</span>
 <span class="n">d1</span> <span class="o">=</span> <span class="n">d1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">d1</span><span class="p">)</span>
@@ -499,7 +499,7 @@ birbiri ile toplanacak, ve nihai matrisi elde edilecek.</p>
 <p>Kodlamaya gelirsek, veri yaratalım,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="n">M</span> <span class="o">=</span> <span class="mi">3000</span><span class="p">;</span> <span class="n">D</span> <span class="o">=</span> <span class="mi">20</span>
 <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">D</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span>
@@ -515,17 +515,17 @@ kullanıyoruz, kod bu dizin içindeki <code>util.py</code> dosyasında da
 bulunabilir,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span><span class="o">,</span> <span class="nn">util</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">util</span>
 
-<span class="k">class</span> <span class="nc">ATAJob</span><span class="p">:</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ATAJob</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">D</span><span class="p">,</span><span class="n">ci</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">D</span><span class="p">,</span><span class="n">D</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ci</span> <span class="o">=</span> <span class="n">ci</span>
-    <span class="k">def</span> <span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">exec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">line</span><span class="p">):</span>
         <span class="n">tok</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
         <span class="n">vec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">tok</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">vec</span><span class="p">,</span> <span class="n">vec</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">outfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/C-</span><span class="si">%d</span><span class="s2">.csv&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">ci</span>
         <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="n">outfile</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">C</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">,</span><span class="n">fmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%1.6f</span><span class="s1">&#39;</span><span class="p">)</span>
 
@@ -546,7 +546,7 @@ artık paralellik için yapılacakları biliyoruz. Şimdi pür hafıza ve bizim
 yöntemin sonuçlarını karşılaştıralım,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="n">Cf1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/Cf-1.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
 <span class="n">Cf2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/Cf-2.csv&quot;</span><span class="p">,</span><span class="n">delimiter</span><span class="o">=</span><span class="s1">&#39;;&#39;</span><span class="p">)</span>
 <span class="nb">print</span> <span class="p">((</span><span class="n">Cf1</span><span class="o">-</span><span class="n">Cf2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
@@ -585,7 +585,7 @@ ederiz.</p>
 
 <p>[1] https://www.adityaagrawal.net/blog/architecture/matrix_multiplication</p>
 
-<p>[2] [GeeksforGeeks](https://www.geeksforgeeks.org/strassens-matrix-multiplication/)</p>
+<p>[2] <a href="https://www.geeksforgeeks.org/strassens-matrix-multiplication/">GeeksforGeeks</a></p>
 
 <p>[3] Bayramlı, <a href="https://burakbayramli.github.io/dersblog/linear/linear_01/ders_1.html">Lineer Cebir Ders 1</a></p>
 

@@ -68,9 +68,9 @@ sınırlamaları aşmışsa onlara 429 hata kodu donduruluyor. Özgün
 IP adresi olabilir.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">flask</span> <span class="kn">import</span> <span class="n">Flask</span>
-<span class="kn">from</span> <span class="nn">flask_limiter</span> <span class="kn">import</span> <span class="n">Limiter</span>
-<span class="kn">from</span> <span class="nn">flask_limiter.util</span> <span class="kn">import</span> <span class="n">get_remote_address</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">flask</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_limiter</span><span class="w"> </span><span class="kn">import</span> <span class="n">Limiter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">flask_limiter.util</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_remote_address</span>
 
 <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="n">limiter</span> <span class="o">=</span> <span class="n">Limiter</span><span class="p">(</span>
@@ -81,16 +81,16 @@ IP adresi olabilir.</p>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/slow&quot;</span><span class="p">)</span>
 <span class="nd">@limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="s2">&quot;1 per day&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">slow</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">slow</span><span class="p">():</span>
     <span class="k">return</span> <span class="s2">&quot;24&quot;</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/slowmin&quot;</span><span class="p">)</span>
 <span class="nd">@limiter</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="s2">&quot;2 per minute&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">slowmin</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">slowmin</span><span class="p">():</span>
     <span class="k">return</span> <span class="s2">&quot;24&quot;</span>
 
 <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s2">&quot;/fast&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">fast</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">fast</span><span class="p">():</span>
     <span class="k">return</span> <span class="s2">&quot;42&quot;</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>

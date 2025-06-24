@@ -62,7 +62,7 @@ elimizde o kadar çok veri olacak ki bu verinin tamamını işleyince zaten
 <p>Örnek veri olarak alttakini ürettik,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kn">from</span> <span class="nn">pandas</span> <span class="kn">import</span> <span class="o">*</span>
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
 <span class="n">mean1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">]</span>
 <span class="n">mean2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span>
 <span class="n">cov</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">0</span><span class="p">],[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]]</span>             
@@ -104,15 +104,15 @@ elimizde o kadar çok veri olacak ki bu verinin tamamını işleyince zaten
 <span class="sd">Logistic regression for map/reduce written for MRJob,</span>
 <span class="sd">uses stochastic gradient descent.</span>
 <span class="sd">&#39;&#39;&#39;</span>
-<span class="kn">from</span> <span class="nn">mrjob.job</span> <span class="kn">import</span> <span class="n">MRJob</span>
-<span class="kn">from</span> <span class="nn">mrjob.protocol</span> <span class="kn">import</span> <span class="n">PickleProtocol</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">os</span><span class="o">,</span> <span class="nn">thread</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.job</span><span class="w"> </span><span class="kn">import</span> <span class="n">MRJob</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mrjob.protocol</span><span class="w"> </span><span class="kn">import</span> <span class="n">PickleProtocol</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">thread</span>
 
-<span class="k">class</span> <span class="nc">MRLogisticRegression</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MRLogisticRegression</span><span class="p">(</span><span class="n">MRJob</span><span class="p">):</span>
     <span class="n">INTERNAL_PROTOCOL</span> <span class="o">=</span> <span class="n">PickleProtocol</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">MRLogisticRegression</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">n</span>  <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">m</span> <span class="o">=</span> <span class="mi">3</span>
@@ -120,26 +120,26 @@ elimizde o kadar çok veri olacak ki bu verinin tamamını işleyince zaten
         <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">final_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arr</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arr</span><span class="p">):</span>
         <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">arr</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">stoc_grad_ascent0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_mat</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">stoc_grad_ascent0</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data_mat</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
         <span class="n">alpha</span> <span class="o">=</span> <span class="mf">0.01</span>
         <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">data_mat</span><span class="p">,</span><span class="n">theta</span><span class="p">))</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">data_mat</span> <span class="o">*</span> <span class="p">(</span><span class="n">label</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span>
         <span class="n">theta</span> <span class="o">=</span> <span class="n">theta</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">m</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">n</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">theta</span>
 
-    <span class="k">def</span> <span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>        
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">line</span><span class="p">):</span>        
         <span class="n">tokens</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">,</span><span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">))</span>
         <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tokens</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
         <span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">theta</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stoc_grad_ascent0</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">mapper_final</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+    <span class="k">def</span><span class="w"> </span><span class="nf">mapper_final</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
         <span class="k">yield</span> <span class="p">(</span><span class="s2">&quot;key1&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reducer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">tokens</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">final_theta</span> <span class="o">+=</span> <span class="n">val</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
@@ -201,7 +201,7 @@ removing tmp directory /tmp/logreg.burak.20131201.234703.391390
 </code></pre>
 
 <div class="codehilite">
-<pre><span></span><code><span class="k">def</span> <span class="nf">plot_theta</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_theta</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
     <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">((</span><span class="o">-</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">/</span><span class="n">theta</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
     <span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>

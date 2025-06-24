@@ -48,29 +48,29 @@ beklemek senkron olmak gerektiriyorsa, Javascript'in <code>await</code> ve
 dosyaları,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="kr">const</span> <span class="nx">fetchURLs</span> <span class="o">=</span> <span class="nx">async</span> <span class="p">(</span><span class="nx">urls</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+<pre><span></span><code><span class="kd">const</span><span class="w"> </span><span class="nx">fetchURLs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">async</span><span class="w"> </span><span class="p">(</span><span class="nx">urls</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 
-    <span class="kd">var</span> <span class="nx">promises</span> <span class="o">=</span> <span class="nx">urls</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">url</span> <span class="p">=&gt;</span> <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">));</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">promises</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">urls</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">url</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">));</span>
 
-    <span class="kr">const</span> <span class="nx">responses</span> <span class="o">=</span> <span class="nx">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">promises</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">responses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">promises</span><span class="p">);</span>
 
-    <span class="kr">const</span> <span class="nx">data</span> <span class="o">=</span> <span class="nx">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">responses</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">())</span> <span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="w"> </span><span class="nx">responses</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">text</span><span class="p">())</span><span class="w"> </span><span class="p">);</span>
 
-    <span class="k">return</span> <span class="nx">data</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="nx">data</span><span class="p">;</span>
 
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;done&#39;</span><span class="p">)</span>
 
 <span class="p">}</span>
 
-<span class="nx">async</span> <span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
+<span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 
-    <span class="kr">const</span> <span class="nx">urls</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;https://raw.githubusercontent.com/tj/histo/master/examples/small.txt&#39;</span><span class="p">,</span>
-                  <span class="s1">&#39;https://raw.githubusercontent.com/tj/histo/master/examples/medium.txt&#39;</span><span class="p">];</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">);</span>
-    <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="nx">await</span> <span class="nx">fetchURLs</span><span class="p">(</span><span class="nx">urls</span><span class="p">);</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="s1">&#39;https://raw.githubusercontent.com/tj/histo/master/examples/small.txt&#39;</span><span class="p">,</span>
+<span class="w">                  </span><span class="s1">&#39;https://raw.githubusercontent.com/tj/histo/master/examples/medium.txt&#39;</span><span class="p">];</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;start&#39;</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nx">fetchURLs</span><span class="p">(</span><span class="nx">urls</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;end&#39;</span><span class="p">);</span>
 
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">res</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre>
 </div>
@@ -97,39 +97,39 @@ paralel işletim, senkron bekleme ve ek olarak GLOBE için gereken
 <code>arrayBuffer</code> ve <code>Uint16Array</code> kullanımlarını gösteriyor.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="nx">async</span> <span class="kd">function</span> <span class="nx">init</span><span class="p">()</span> <span class="p">{</span>
+<pre><span></span><code><span class="k">async</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="nx">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 
-    <span class="kd">var</span> <span class="nx">url</span> <span class="o">=</span> <span class="s2">&quot;/vs/vs/data/g10g&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">url</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;/vs/vs/data/g10g&quot;</span><span class="p">;</span>
 
-    <span class="kd">var</span> <span class="nx">promises</span> <span class="o">=</span> <span class="p">[];</span>
+<span class="w">    </span><span class="kd">var</span><span class="w"> </span><span class="nx">promises</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[];</span>
 
-    <span class="nx">promises</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
-        <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
-            <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s1">&#39;content-type&#39;</span><span class="o">:</span> <span class="s1">&#39;multipart/byteranges&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;range&#39;</span><span class="o">:</span> <span class="s1">&#39;bytes=33681360-33681361&#39;</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">})</span>
-    <span class="p">);</span>
+<span class="w">    </span><span class="nx">promises</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+<span class="w">        </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="s1">&#39;content-type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;multipart/byteranges&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="s1">&#39;range&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bytes=33681360-33681361&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">        </span><span class="p">})</span>
+<span class="w">    </span><span class="p">);</span>
 
-    <span class="nx">promises</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
-        <span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span> <span class="p">{</span>
-            <span class="nx">headers</span><span class="o">:</span> <span class="p">{</span>
-                <span class="s1">&#39;content-type&#39;</span><span class="o">:</span> <span class="s1">&#39;multipart/byteranges&#39;</span><span class="p">,</span>
-                <span class="s1">&#39;range&#39;</span><span class="o">:</span> <span class="s1">&#39;bytes=33681362-33681363&#39;</span><span class="p">,</span>
-            <span class="p">},</span>
-        <span class="p">})</span>
-    <span class="p">);</span>
+<span class="w">    </span><span class="nx">promises</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span>
+<span class="w">        </span><span class="nx">fetch</span><span class="p">(</span><span class="nx">url</span><span class="p">,</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="nx">headers</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="s1">&#39;content-type&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;multipart/byteranges&#39;</span><span class="p">,</span>
+<span class="w">                </span><span class="s1">&#39;range&#39;</span><span class="o">:</span><span class="w"> </span><span class="s1">&#39;bytes=33681362-33681363&#39;</span><span class="p">,</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">        </span><span class="p">})</span>
+<span class="w">    </span><span class="p">);</span>
 
-    <span class="kr">const</span> <span class="nx">responses</span> <span class="o">=</span> <span class="nx">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">promises</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">responses</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="nx">promises</span><span class="p">);</span>
 
-    <span class="kr">const</span> <span class="nx">data1</span> <span class="o">=</span> <span class="nx">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">responses</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="nx">response</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">()</span> <span class="p">));</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="w"> </span><span class="nx">responses</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">response</span><span class="p">.</span><span class="nx">arrayBuffer</span><span class="p">()</span><span class="w"> </span><span class="p">));</span>
 
-    <span class="kr">const</span> <span class="nx">data2</span> <span class="o">=</span> <span class="nx">await</span> <span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span> <span class="nx">data1</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nx">Uint16Array</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span> <span class="p">));</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">data2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">await</span><span class="w"> </span><span class="nb">Promise</span><span class="p">.</span><span class="nx">all</span><span class="p">(</span><span class="w"> </span><span class="nx">data1</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">response</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nb">Uint16Array</span><span class="p">(</span><span class="nx">response</span><span class="p">)</span><span class="w"> </span><span class="p">));</span>
 
-    <span class="nx">data2</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
-    <span class="p">});</span>
+<span class="w">    </span><span class="nx">data2</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">x</span><span class="p">[</span><span class="mf">0</span><span class="p">]);</span>
+<span class="w">    </span><span class="p">});</span>
 
 <span class="p">}</span>
 </code></pre>

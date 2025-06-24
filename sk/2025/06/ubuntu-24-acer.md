@@ -22,7 +22,8 @@ Makina açılınca `sudo apt install` ile kurulacak programlar,
 ```
 gnome-tweaks python3-virtualenv git emacs texlive-latex-base net-tools
 mpv emacs chromium-browser texlive-base djvulibre-bin imagemagick recoll
-texlive-fonts-recommended texlive-fonts-extra python3-pandoc
+texlive-fonts-recommended texlive-fonts-extra python3-pandoc gimp xkbset
+nodejs ccrypt
 ```
 
 Biz CAPS tuşunu hep CTRL yaparız, bu versiyonda bunu Gnome Tweaks ile

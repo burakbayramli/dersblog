@@ -23,7 +23,7 @@ Makina açılınca `sudo apt install` ile kurulacak programlar,
 gnome-tweaks python3-virtualenv git emacs texlive-latex-base net-tools
 mpv emacs chromium-browser texlive-base djvulibre-bin imagemagick recoll
 texlive-fonts-recommended texlive-fonts-extra python3-pandoc gimp xkbset
-nodejs ccrypt
+nodejs ccrypt htop
 ```
 
 Biz CAPS tuşunu hep CTRL yaparız, bu versiyonda bunu Gnome Tweaks ile
@@ -72,7 +72,7 @@ ortamda kurmak iyidir,
 virtualenv -p /usr/bin/python3 env3
 ```
 
-Artık `env3` dizini altında bir Python ortamı var. Aktıve etmek için
+Artık `env3` dizini altında bir Python ortamı var. Aktive etmek için
 `source env3/bin/activate`.
 
 Burada `pip install` ile
@@ -120,9 +120,42 @@ index 36fca2e..2bc68cc 100644
          f.close()
 ```
 
+Tıklama ile Masaüstünü Göster (Show Desktop)
+
+Bazen pencereler çok birikir, tek bir tuşa basıp hepsini minimize
+etmek isteyebiliriz. Önce
+
+```
+sudo apt install wmctrl
+```
+
+Bu program komutu satırından herşeyi `wmctrln -k on` ile minimize edebilir.
+Şimdi bir ikon yaratalım,
+
+```
+gedit ~/.local/share/applications/show-desktop.desktop
+```
+
+Dosya icine
+
+```
+[Desktop Entry]
+Type=Application
+Name=Show Desktop
+Icon=desktop
+Exec=wmctrl -k on
+```
+
+Bir uygulama yaratmış olduk, artık uygulamalar içinde "Show Desktop"
+kelimesini ararsak ikonumuzu bulabiliriz, ve bulunca sağ tıklama ve
+"Pin to Dash" ile programı sol taraftaki erişim bölgesine
+yapıştırabiliriz.
+
 Kaynaklar
 
 [1] https://www.youtube.com/watch?v=eMHr9jsbJG4
 
 [2] https://github.com/pinard/Pymacs
+
+
 

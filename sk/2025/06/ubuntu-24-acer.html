@@ -60,7 +60,7 @@ kurulumu yapın.</p>
 <pre><code>gnome-tweaks python3-virtualenv git emacs texlive-latex-base net-tools
 mpv emacs chromium-browser texlive-base djvulibre-bin imagemagick recoll
 texlive-fonts-recommended texlive-fonts-extra python3-pandoc gimp xkbset
-nodejs ccrypt
+nodejs ccrypt htop
 </code></pre>
 
 <p>Biz CAPS tuşunu hep CTRL yaparız, bu versiyonda bunu Gnome Tweaks ile
@@ -107,7 +107,7 @@ ortamda kurmak iyidir,</p>
 <pre><code>virtualenv -p /usr/bin/python3 env3
 </code></pre>
 
-<p>Artık <code>env3</code> dizini altında bir Python ortamı var. Aktıve etmek için
+<p>Artık <code>env3</code> dizini altında bir Python ortamı var. Aktive etmek için
 <code>source env3/bin/activate</code>.</p>
 
 <p>Burada <code>pip install</code> ile</p>
@@ -152,6 +152,34 @@ index 36fca2e..2bc68cc 100644
      finally:
          f.close()
 </code></pre>
+
+<p>Tıklama ile Masaüstünü Göster (Show Desktop)</p>
+
+<p>Bazen pencereler çok birikir, tek bir tuşa basıp hepsini minimize
+etmek isteyebiliriz. Önce</p>
+
+<pre><code>sudo apt install wmctrl
+</code></pre>
+
+<p>Bu program komutu satırından herşeyi <code>wmctrln -k on</code> ile minimize edebilir.
+Şimdi bir ikon yaratalım,</p>
+
+<pre><code>gedit ~/.local/share/applications/show-desktop.desktop
+</code></pre>
+
+<p>Dosya icine</p>
+
+<pre><code>[Desktop Entry]
+Type=Application
+Name=Show Desktop
+Icon=desktop
+Exec=wmctrl -k on
+</code></pre>
+
+<p>Bir uygulama yaratmış olduk, artık uygulamalar içinde "Show Desktop"
+kelimesini ararsak ikonumuzu bulabiliriz, ve bulunca sağ tıklama ve
+"Pin to Dash" ile programı sol taraftaki erişim bölgesine
+yapıştırabiliriz.</p>
 
 <p>Kaynaklar</p>
 

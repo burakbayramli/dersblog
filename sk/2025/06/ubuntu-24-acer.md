@@ -82,6 +82,8 @@ matplotlib pytest-shutil jupyter-notebook markdown numpy-stl
 ipython zmq importlib numpy Shutil pandas
 ```
 
+![](acer1.jpg)
+
 Pymacs
 
 Emacs içinde Python işletenler için faydalı bir yazılım. Kurulum

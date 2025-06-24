@@ -16,5 +16,5 @@
 
 [Markdown ile PDF ve HTML Üretmek, Pandoc](06/markdown-pandoc-html-pdf.html)
 
-[Ubuntu 24 Acer](06/ubuntu-24-acer.html)
+[Ubuntu 24, Acer Swift 3](06/ubuntu-24-acer.html)
 

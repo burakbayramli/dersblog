@@ -6,15 +6,16 @@ Ubuntu versiyonu iso olarak alttan indirilir,
 https://ubuntu.com/download/alternative-downloads
 
 Dosya 6 GB civarı. Sonra mevcut (eski) Ubuntu üzerinde bu iso Startup
-Disk Creatör programı ile bir usb flash diske yazılır. Artık üzerinden
+Disk Creator programı ile bir usb flash diske yazılır. Artık üzerinden
 yükleme (boot) edilebilir bir diskimiz var.
 
 Şimdi Acer'da açılış sırasında F2 basılı tutularak BIOS'a girilir
 (sifre sorarsa boş ya da 0000 denenebilir). `Main` menüden `F12 Boot
 Menü` seçeneği `Enable` yapılır. Kaydedilip tekrar başlatılır, bu
-sırada ardı ardına F12 tuşuna basılmalı. Görülen ekranda sadece bir
-yükleme seçeneği var, ama flask diski USB porta sokar sokmaz Ubuntu
-seçeneği de görülecek. Bunu seçin ve kurulumu yapın.
+sırada ardı ardına F12 tuşuna basılmalı. Bu bizi yeni bir ekrana
+götürür, o ekranda sadece bir yükleme seçeneği var, ama flask diski
+USB porta sokar sokmaz Ubuntu seçeneği de görülecek. Bunu seçin ve
+kurulumu yapın.
 
 Makina açılınca `sudo apt install` ile kurulacak programlar,
 
@@ -27,11 +28,10 @@ Biz CAPS tuşunu hep CTRL yaparız, bu versiyonda bunu Gnome Tweaks ile
 yapmak kolay, `gnome-tweaks` işletelim, "Keyboard | Additional Layout
 Options" seçelim, orada "Caps Lock Behavior" var, değişimi oradan
 yaparız.  Biz ayrıca "Alt Win behavior" seçeneğinde "Ctrl is mapped to
-Win and the usual Ctrl" dedik ama herkesin tercihi farklı olabilir.
-
-Ayrıca boşluk tuşunun yanındaki Alt Gr ve Ctrl tuşlarını fare sol ve
-sağ tıklaması yapmayı seviyoruz, fakat dikkat, bunun için daha önce
-`.bashrc` içinde yaptığımız
+Win and the usual Ctrl" dedik ama herkesin tercihi farklı
+olabilir. Ayrıca boşluk tuşunun yanındaki Alt Gr ve Ctrl tuşlarını
+fare sol ve sağ tıklaması yapmayı seviyoruz, fakat dikkat, bunun için
+daha önce `.bashrc` içinde yaptığımız
 
 ```
 xmodmap -e "keycode 108 = Pointer_Button1"
@@ -54,7 +54,12 @@ ikonu orada kalır. Sonraki başlatımları artık oradan yapabiliriz.
 Komut satırı Terminal programında bazı değişimler; `Preferences` ile
 girilir, sol kısımda `Unnamed` bölümüne gidilip orada pencere, font
 büyüklüğü (`Custom font` ile) ayarlanır.  Ayrıca "Terminal bell"
-kapatmak iyi olur, sürekli dan dun sesler gelmesin.
+kapatmak iyi olur, sürekli dan dun sesler gelmesin. Bundan sonraki
+komut satırı pencereleri bu ayarları hatırlar.
+
+Shortcuts altında Copy ve Paste komutlarını biz Ctrl X ve Ctrl V
+yapmayı tercih ediyoruz, mevcut ayarı silmek için listeden seçip
+Delete tuşuna basılır, ve yeni ayar tuşlaması verilir.
 
 Kaynaklar
 

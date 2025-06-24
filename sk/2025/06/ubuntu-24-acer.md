@@ -62,17 +62,19 @@ Shortcuts altında Copy ve Paste komutlarını biz Ctrl X ve Ctrl V
 yapmayı tercih ediyoruz, mevcut ayarı silmek için listeden seçip
 Delete tuşuna basılır, ve yeni ayar tuşlaması verilir.
 
-Python Ayarlari
+Python 
 
-Sistem icin bile olsa gerekli olacak Python paketleri bir sanal ortamda
-kurmak iyidir,
+Sistem için bile olsa sık kullanılan Python paketleri bir sanal
+ortamda kurmak iyidir,
 
 ```
 virtualenv -p /usr/bin/python3 env3
 ```
 
 Artık `env3` dizini altında bir Python ortamı var. Aktıve etmek için
-`source env3/bin/activate`. Burada `pip install` ile
+`source env3/bin/activate`.
+
+Burada `pip install` ile
 
 ```
 matplotlib pytest-shutil jupyter-notebook markdown numpy-stl
@@ -81,10 +83,9 @@ ipython zmq importlib numpy Shutil pandas
 
 Pymacs
 
-Emacs içinde Python işletenler için faydalı bir yazılım.
-
-Kurulum önceden olduğu gibi, [2]'den repo alınır, ardından `make` ve
-`python setup.py build` ve `ınstall`. Fakat Ubuntu'nun olağan Python
+Emacs içinde Python işletenler için faydalı bir yazılım. Kurulum
+önceden olduğu gibi, [2]'den repo alınır, ardından `make` ve `python
+setup.py build` ve `install`. Fakat Ubuntu'nun olağan Python
 yorumlayıcısı 3.12 üzerinde bazı farklılıklar var, alttaki değişimleri
 yaparsak Pymacs [2] tekrar çalışır hale gelir, değişimler `git diff`
 ile üretildi,
@@ -121,3 +122,4 @@ Kaynaklar
 [1] https://www.youtube.com/watch?v=eMHr9jsbJG4
 
 [2] https://github.com/pinard/Pymacs
+

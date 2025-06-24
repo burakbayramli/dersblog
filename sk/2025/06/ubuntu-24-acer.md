@@ -21,7 +21,8 @@ Makina açılınca `sudo apt install` ile kurulacak programlar,
 
 ```
 gnome-tweaks python3-virtualenv git emacs texlive-latex-base net-tools
-mpv emacs chromium-browser texlive-base djvulibre-bin imagemagick
+mpv emacs chromium-browser texlive-base djvulibre-bin imagemagick recoll
+texlive-fonts-recommended texlive-fonts-extra python3-pandoc
 ```
 
 Biz CAPS tuşunu hep CTRL yaparız, bu versiyonda bunu Gnome Tweaks ile
@@ -61,7 +62,62 @@ Shortcuts altında Copy ve Paste komutlarını biz Ctrl X ve Ctrl V
 yapmayı tercih ediyoruz, mevcut ayarı silmek için listeden seçip
 Delete tuşuna basılır, ve yeni ayar tuşlaması verilir.
 
+Python Ayarlari
+
+Sistem icin bile olsa gerekli olacak Python paketleri bir sanal ortamda
+kurmak iyidir,
+
+```
+virtualenv -p /usr/bin/python3 env3
+```
+
+Artık `env3` dizini altında bir Python ortamı var. Aktıve etmek için
+`source env3/bin/activate`. Burada `pip install` ile
+
+```
+matplotlib pytest-shutil jupyter-notebook markdown numpy-stl
+ipython zmq importlib numpy Shutil pandas
+```
+
+Pymacs
+
+Emacs içinde Python işletenler için faydalı bir yazılım.
+
+Kurulum önceden olduğu gibi, [2]'den repo alınır, ardından `make` ve
+`python setup.py build` ve `ınstall`. Fakat Ubuntu'nun olağan Python
+yorumlayıcısı 3.12 üzerinde bazı farklılıklar var, alttaki değişimleri
+yaparsak Pymacs [2] tekrar çalışır hale gelir, değişimler `git diff`
+ile üretildi,
+
+```
+index 08e3d4d..577c151 100755
+--- a/Pymacs.py.in
++++ b/Pymacs.py.in
+@@ -44,7 +44,7 @@ if PYTHON3:
+         return isinstance(value, collections.Callable)
+ 
+     basestring = str
+-    from imp import reload
++    from importlib import reload
+ else:
+     __metaclass__ = type
+ 
+diff --git a/setup.py b/setup.py
+index 36fca2e..2bc68cc 100644
+--- a/setup.py
++++ b/setup.py
+@@ -70,7 +70,7 @@ def cfg_to_args(path='setup.cfg'):
+     config = RawConfigParser()
+     f = codecs.open(path, encoding='utf-8')
+     try:
+-        config.readfp(f)
++        config.read_file(f)
+     finally:
+         f.close()
+```
+
 Kaynaklar
 
 [1] https://www.youtube.com/watch?v=eMHr9jsbJG4
 
+[2] https://github.com/pinard/Pymacs

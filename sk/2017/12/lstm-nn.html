@@ -1,0 +1,580 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Uzun Kısa-Vade Hafıza Ağları (Long Short-Term Memory Networks, LSTM)</h1>
+
+<p>Kendini tekrarlayan YSA (RNN) yapılarının içindeki gizli konum $h<em>t$
+(önceki yazıda $s</em>t$) olarak bir zaman diliminden bir diğerine
+aktarılabiliyordu, ve bu sırada bir matris çarpımı üzerinden değişime
+uğrayabiliyordu. Böylece her zaman diliminde yeni görülen verinin
+"hafıza'' olarak ta tanımlanabilen $h_t$'ye etkisi olabiliyordu. RNN dış
+dünya hakkındaki iç modelini böyle güncelliyordu.</p>
+
+<p>Fakat RNN ile tarif edilen bu güncellemeye hiç bir sınır getirmedik. Biraz
+düşünürsek bu güncellemenin biraz kaotik bir hal alabileceğini görebiliriz
+[1]. Mesela bir filmi kare kare izleyerek filmde neler olduğunu tarif
+etmeye uğraşan bir RNN düşünelim. Bir karede bir karakterin ABD'de olduğunu
+düşünebilir, ama sonraki karede karakterin suşi yediğini görüyor ve
+Japonya'da olduğuna karar verebilir, sonra Panda ayısı görüyor ve karakteri
+kuzey kutbunda zannediyor.</p>
+
+<p>Bu tarif edilen kaos enformasyonun çok hızlı etki ettiğini ve aynı hızda
+yokolduğuna işaret. Bu tür bir yapıda modelin uzun vadeli hafıza tutması
+oldukça zor. Bize gereken modelin sadece güncelleme yapması değil,
+güncelleme yapmayı da öğrenmesi. Ali adlı bir karakter film karesinde yoksa
+o kareler Ali hakkındaki bilgiyi güncellemek için kullanılmamalı, aynı
+şekilde Ayşe'nin içinde olmadığı kareler onun hakkındaki bilgiyi
+güncellemek için kullanılmamalı. </p>
+
+<p>Çözüm için şöyle bir yaklaşım kullanabiliriz. </p>
+
+<p>1) Bir "unutma'' mekanizması ekle. Film seyrediyoruz, bir sahne bitiyor, o
+sahnenin hangi gün, saat kaçta, nerede olduğunu unutuyoruz. Fakat bir
+karakter o sahnede ölmüşse, bunu hatırlıyoruz. Modelin ne zaman
+hatırlayacağını, ne zaman unutacağını öğrenmesini istiyoruz (dikkat sadece
+belli bir şekilde unutması, hatırlaması değil, tüm bunları nasıl, ne zaman
+yapacağını öğrenmesi).</p>
+
+<p>2) Bir belleğe yazma (zulaya atma?) mekanizması. Modelin yeni bir kare
+gördüğünde o karedeki bilginin kaydetmeye değer olup olmadığına karar
+vermesi lazım, ve bu öğrenilse iyi olur.</p>
+
+<p>3) .. ki yeni bir girdi gelince model ihtiyacı olmadığı bilgiyi
+unutacak. Sonra girdinin hangi kısmının faydalı olduğuna karar verecek ve o
+kısmı uzun-vadeli hafızasına kaydedecek.</p>
+
+<p>4) Bir odaklanma mekanizması. Uzun-vadeli hafızanın hangi kısmı sık
+kullanım gerekiriyor, işlem hafızası (working memory) hangisi, buna karar
+vermek.</p>
+
+<p>Bize gereken bir uzun kısa-vade hafıza ağıdır, teknik ismiyle LSTM. RNN her
+zaman adımında hafızasını kontrolsüz bir şekilde güncelleyebiliyorken, bir
+LSTM hafızasını çok daha seçici, kararlı bir şekilde günceller, bunu
+yaparken spesifik öğrenme mekanizmaları kullanır ki bu mekanizma ona
+görülen bilginin hangi kısmının hatırlanmaya değer, hangisinin
+güncellenmesinin gerekli olduğunu, ve hangisinin daha fazla odaklanılmaya
+ihtiyaç duyduğunu belirler.</p>
+
+<p>Matematiksel olarak $t$ anında bir $x<em>t$ girdisi alıyoruz, uzun-vadeli ve
+işlem hafızası $C</em>{t-1}$ ve $h_{t-1}$ bir önceki zaman diliminden bir
+önceki bu zamana aktarılıyor ve onları bir şekilde güncellemek
+istiyoruz. Bize gereken bir tür hatırlama geçidi (remember gate), bu
+elektronik devrelerdeki gibi bir geçit, 0 ile 1 arasında olacak $n$ tane
+sayı, bu sayı $n$ hafıza ögesinin ne kadar hatırlanacağını, yani ne kadar
+uzun-vadeli olup olmayacağını belirleyecek. 1 tut, 0 unut demek olacak.</p>
+
+<p>Ufak bir YSA kullanarak bu geçidi öğrenebiliriz,</p>
+
+<p>$$ f<em>t = \sigma (W</em>r x<em>t + U</em>r h_{t-1}) $$</p>
+
+<p>Bu basit, sığ (derin olmayan) bir YSA, $\sigma$ sigmoid aktivasyonu. Sigmoid
+kullandık çünkü 0 ile 1 arasında çıktıya ihtiyacımız var. Şimdi girdiden
+öğreneceğimiz bilgiyi hesaplamamız lazım, bu bilgi uzun-vadeli hafızamız
+için bir aday olacak. </p>
+
+<p>$$ C<em>t' = \phi(W</em>l x<em>t + U</em>l h_{t-1})$$</p>
+
+<p>$\phi$ bir aktivasyon fonksiyonu, çoğunlukla $\tanh$ olarak seçilir. </p>
+
+<p>Fakat bir adayı hafızamıza eklemeden önce hangi bölümlerinin kullanıma,
+kaydetmeye değer olduğunu öğrenmemiz gerekir. Web'de bir şey okurken kendi
+zihnimizde neler olduğunu düşünelim. Bir haber makalesi okuyoruz mesela,
+Trabzonspor'un hep kötüye gittiğini, hep yanlış tranferler yaptığını
+anlatan bir haber okuyoruz, ama bu haberi fenerbahce.org sitesinde
+okuyorsak o habere daha az önem verebiliriz.</p>
+
+<p>$$ i<em>t = \sigma (W</em>s x<em>t + U</em>s h_{t-1}) $$</p>
+
+<p>Şimdi tüm bu basamakları birleştirelim. İhtiyacımız olmayan hafızaları
+unuttuktan ve bilgilerin faydalı olabilecek kısımlarını sakladıktan sonra,
+elimize bir güncellenmiş uzun-vadeli bellek geçer, </p>
+
+<p>$$ C<em>t = f</em>t \circ c<em>{t-1} \circ i</em>t \circ \tilde{C}_t $$</p>
+
+<p>ki $\circ$ operasyonu her iki taraftaki değişkenin içindeki her ögenin
+birer birer çarpılması (element-wise multiplication) demek.</p>
+
+<p>Sonra işlem hafızasını güncellememiz lazım, uzun-vade belleğimizi anlık
+işlem için faydalı olabilecek şekilde nasıl odaklarız, onu öğrenmek
+istiyoruz. O zaman bir odaklanma vektörü öğreniriz,</p>
+
+<p>$$ o<em>t = \sigma (W</em>f x<em>t + U</em>f h_{t-1}) $$</p>
+
+<p>O zaman işlem hafızamız</p>
+
+<p>$$ h<em>t = o</em>t \circ \phi (C_t)$$</p>
+
+<p>Yani odak değeri 1 olan öğelere tam dikkatimizi veriyoruz, 0 olanlara hiç
+dikkat etmiyoruz. </p>
+
+<p>Kuşbakışı ile tüm resmi görelim, kendini tekrar eden LSTM yapısı alttaki gibi,</p>
+
+<p><img src="lstm_02.png" alt="" /></p>
+
+<p>Sol ve sağdaki hücreler ortadakinin kopyası. </p>
+
+<p>Kıyasla bir RNN'nin iç yapısı çok daha basittir, </p>
+
+<p><img src="lstm_03.png" alt="" /></p>
+
+<p>LSTM resmindeki her birimin formülleriyle beraber teker teker tekrar
+üzerinden geçmek gerekirse [2] - ilk adım hücre bilgisinden neleri
+atacağımıza karar vermek. Bu karar unutma karar tabakası adı verilen bir
+sigmoid tabakasında veriliyor, tabaka $h<em>{t-1}$ ve $x</em>t$'ye bakıyor ve
+$C_{t-1}$ hücre konumundaki her değer için 0 ile 1 arasında bir sayı
+üretiyor. 1 değeri tamamen tut, 0 değeri tamamen unut anlamına geliyor (tüm
+$b$ değerleri yanlılık -bias- için).</p>
+
+<p><img src="lstm_04.png" alt="" /></p>
+
+<p>Bir sonraki adım hücrede hangi yeni bilgiyi depolayacağımıza karar
+vermek. Bu kararın iki parçası var, önce girdi geçit tabakası (input gate
+layer) hangi değerleri güncelleyeceğimize karar veriyor, ardından bir
+$\tanh$ tabakası bir "aday vektörü'' $\tilde{C}_t$ üretiyor, bu vektör,
+adı üzerinde, hücre konumuna eklenmeye aday bilgiler. Ardından bu iki
+vektör birleştirilip konumu güncellemek için yeni bir vektör yaratılıyor.</p>
+
+<p><img src="lstm_05.png" alt="" /></p>
+
+<p>Sıra güncelleme iş bantına (update conveyor) geldi. Herhalde bu isim
+verilmiş çünkü hücrenin en üstünde direk soldan sağa giden bu ok bir tür
+fabrika iş bantı gibi, bir ana akım hattı. Bir kaç bilgi akımı bu ana kola
+giriyor. Bu iş bantının görevi hücrenin eski konum bilgisini güncellemek,
+$C<em>{t-1}$'i $C</em>t$ haline getirmek. Önceki adımlar ne yapılması gerektiğine
+karar vermişti, şimdi bu kararları eyleme geçirme zamanı. Eski konum
+bilgisini $f<em>t$ ile çarpıyoruz, böylece unutmak istediklerimizi
+unutuyoruz. Sonra $i</em>t * C_t'$'yi ekliyoruz, bunlar yeni konumu ne kadar
+güncellemek istediğimizi belirleyen ağırlıklarla ölçeklenmiş yeni aday
+değerler.</p>
+
+<p><img src="lstm_06.png" alt="" /></p>
+
+<p>En son adım tahmin adımı, bu adımda artık çıktının ne olacağına karar
+veriyoruz. Çıktı mevcut hücre konumunu baz alacak, ama onun filtrelenmiş
+bir hali olacak. İlk önce bir sigmoid işleterek konumun hangi kısmının
+çıktıya verileceğini kararlaştırıyoruz. Ardından mevcut konum bilgisini bir
+$\tanh$'e veriyoruz, ki bu değerlerin $-1,+1$ arasında gelmesini
+sağlıyoruz, ve bu sonucu sigmoid'den gelen değer ile çarpıyoruz, ki sadece
+istediğimiz kısmın dışarı verilmesini sağlayalım. </p>
+
+<p><img src="lstm_07.png" alt="" /></p>
+
+<p>Şimdi üstteki formülleri kullanarak TensorFlow ile sıfırdan bir LSTM
+kodlayalım. Amacımız daha önce RNN için gördüğümüz zaman serisini öğrenmek,
+bu seriyi 5'er 5'er okuyacağız, yani yanyana 5 seri öğesini okuyacağız, ve
+6. seri değeri hedef değeri olacak, seri içinden bu şekilde örneklem
+yaparak bir ufak toptan eğitim seti yaratacağız. Sonra serinin hiç
+görmediğimiz "geleceğini'' tahmin etmeye uğraşacağız.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">LSTM_SIZE</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">sequence_length</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">instruction_count</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">epoch</span> <span class="o">=</span> <span class="mi">500</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">next_batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span> <span class="o">-</span> <span class="n">n_steps</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
+    <span class="n">Ts</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">resolution</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Ts</span><span class="p">)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">ys</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="p">[:,</span><span class="o">-</span><span class="mi">1</span><span class="p">,:]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span>    
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">X</span><span class="p">),</span><span class="n">y</span>
+
+<span class="n">reference_input_data</span><span class="p">,</span><span class="n">reference_output_data</span> <span class="o">=</span> <span class="n">next_batch</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">)</span>
+
+<span class="c1"># verinin 1/4&#39;u egitim gerisi test</span>
+<span class="n">NUM_EXAMPLES</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">reference_input_data</span><span class="p">)</span> <span class="o">/</span> <span class="mi">4</span> 
+<span class="n">test_input</span> <span class="o">=</span> <span class="n">reference_input_data</span><span class="p">[</span><span class="n">NUM_EXAMPLES</span><span class="p">:]</span>
+<span class="n">test_output</span> <span class="o">=</span> <span class="n">reference_output_data</span><span class="p">[</span><span class="n">NUM_EXAMPLES</span><span class="p">:]</span> 
+<span class="n">train_input</span> <span class="o">=</span> <span class="n">reference_input_data</span><span class="p">[:</span><span class="n">NUM_EXAMPLES</span><span class="p">]</span>
+<span class="n">train_output</span> <span class="o">=</span> <span class="n">reference_output_data</span><span class="p">[:</span><span class="n">NUM_EXAMPLES</span><span class="p">]</span>
+
+<span class="nb">print</span> <span class="n">train_input</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span> <span class="n">train_output</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> 
+                      <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">,</span> <span class="n">instruction_count</span><span class="p">],</span> 
+                      <span class="n">name</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">)</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;target&#39;</span><span class="p">))</span>
+
+<span class="n">FEATURE_SIZE</span> <span class="o">=</span> <span class="mi">1</span> 
+
+<span class="k">def</span><span class="w"> </span><span class="nf">default_weights_and_bias</span><span class="p">():</span>
+    <span class="n">Weights</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="n">LSTM_SIZE</span><span class="p">,</span> 
+                                               <span class="n">LSTM_SIZE</span> <span class="o">+</span> <span class="n">FEATURE_SIZE</span><span class="p">],</span> 
+                                               <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+    <span class="n">bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">LSTM_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+
+    <span class="k">return</span> <span class="n">Weights</span><span class="p">,</span> <span class="n">bias</span>
+
+<span class="n">W_f</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">default_weights_and_bias</span><span class="p">()</span>
+
+<span class="n">b_f</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">LSTM_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+
+<span class="c1"># Unutma tabakasi</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">f_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">W_f</span><span class="p">,</span> <span class="n">ht_minus_1_and_xt</span><span class="p">)</span> <span class="o">+</span> <span class="n">b_f</span><span class="p">)</span>
+
+<span class="n">W_i</span><span class="p">,</span> <span class="n">b_i</span> <span class="o">=</span> <span class="n">default_weights_and_bias</span><span class="p">()</span>
+
+<span class="c1"># Girdi gecidi tabakasi</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">i_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">W_i</span><span class="p">,</span> <span class="n">ht_minus_1_and_xt</span><span class="p">)</span> <span class="o">+</span> <span class="n">b_i</span><span class="p">)</span>
+
+<span class="n">W_C</span><span class="p">,</span> <span class="n">b_c</span> <span class="o">=</span> <span class="n">default_weights_and_bias</span><span class="p">()</span>
+
+<span class="c1"># is banti icin adaylar</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">candidate_C_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">W_C</span><span class="p">,</span> <span class="n">ht_minus_1_and_xt</span><span class="p">)</span> <span class="o">+</span> <span class="n">b_c</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">C_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">,</span> <span class="n">Conveyor</span><span class="p">,</span> <span class="n">CandConv</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">f_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">)</span> <span class="o">*</span> <span class="n">Conveyor</span> <span class="o">+</span> <span class="n">i_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">)</span> <span class="o">*</span> <span class="n">CandConv</span>
+
+<span class="n">W_o</span><span class="p">,</span> <span class="n">b_o</span> <span class="o">=</span> <span class="n">default_weights_and_bias</span><span class="p">()</span>
+
+<span class="c1"># guncellenmis is banti</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">h_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">,</span> <span class="n">FinalConveyor</span><span class="p">):</span>
+    <span class="n">o_t</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">W_o</span><span class="p">,</span> <span class="n">ht_minus_1_and_xt</span><span class="p">)</span> <span class="o">+</span> <span class="n">b_o</span><span class="p">)</span>    
+    <span class="k">return</span> <span class="n">o_t</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">FinalConveyor</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lstm_cell</span><span class="p">(</span><span class="n">ht_minus_1_and_Conveyor</span><span class="p">,</span> <span class="n">xt</span><span class="p">):</span>
+    <span class="n">ht_minus_1</span><span class="p">,</span> <span class="n">Conveyor</span> <span class="o">=</span> <span class="n">ht_minus_1_and_Conveyor</span>
+
+    <span class="n">ht_minus_1_and_xt</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">ht_minus_1</span><span class="p">,</span> <span class="n">xt</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">CandidateConveyor</span> <span class="o">=</span> <span class="n">candidate_C_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">)</span>
+
+    <span class="n">FinalConveyor</span> <span class="o">=</span> <span class="n">C_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">,</span> <span class="n">Conveyor</span><span class="p">,</span> <span class="n">CandidateConveyor</span><span class="p">)</span>
+
+    <span class="n">lstm_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">h_t</span><span class="p">(</span><span class="n">ht_minus_1_and_xt</span><span class="p">,</span> <span class="n">FinalConveyor</span><span class="p">))</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">lstm_prediction</span><span class="p">,</span> <span class="n">FinalConveyor</span><span class="p">)</span>
+
+<span class="n">data_length</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">data</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lstm_loop</span><span class="p">(</span><span class="n">last_lstm_prediction</span><span class="p">,</span> <span class="n">last_state</span><span class="p">,</span> <span class="n">step</span><span class="p">):</span>
+    <span class="n">lstm_prediction</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">lstm_cell</span><span class="p">((</span><span class="n">last_lstm_prediction</span><span class="p">,</span> <span class="n">last_state</span><span class="p">),</span>
+                                       <span class="n">data</span><span class="p">[:,</span> <span class="n">step</span><span class="p">,</span> <span class="p">:])</span>
+    <span class="k">return</span> <span class="n">lstm_prediction</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">initial_Conveyor</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">LSTM_SIZE</span><span class="p">,</span> <span class="n">data_length</span><span class="p">])</span>
+
+<span class="n">initial_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="n">data_length</span><span class="p">,</span> <span class="n">LSTM_SIZE</span><span class="p">])</span>
+
+<span class="n">timesteps</span> <span class="o">=</span> <span class="n">sequence_length</span>
+
+<span class="n">for_each_time_step</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">step</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">less</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">timesteps</span><span class="p">)</span>
+
+<span class="n">arg</span> <span class="o">=</span> <span class="p">(</span><span class="n">initial_prediction</span><span class="p">,</span> <span class="n">initial_Conveyor</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">lstm_prediction</span><span class="p">,</span> <span class="n">lstm_state</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">while_loop</span><span class="p">(</span><span class="n">for_each_time_step</span><span class="p">,</span>
+                                               <span class="n">lstm_loop</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span>
+                                               <span class="n">parallel_iterations</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="n">weight</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal</span><span class="p">([</span><span class="n">LSTM_SIZE</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">bias</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+<span class="n">prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">lstm_prediction</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span> <span class="o">+</span> <span class="n">bias</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="s1">&#39;mean_square_error&#39;</span><span class="p">):</span>
+    <span class="n">mean_square_error</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">subtract</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))))</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">summary</span><span class="o">.</span><span class="n">scalar</span><span class="p">(</span><span class="s1">&#39;mean_square_error&#39;</span><span class="p">,</span> <span class="n">mean_square_error</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">()</span>
+
+<span class="n">minimize</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">mean_square_error</span><span class="p">)</span>
+
+<span class="n">mistakes</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">not_equal</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">InteractiveSession</span><span class="p">()</span>
+
+<span class="n">date</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+<span class="n">init_op</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+
+<span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span> 
+
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init_op</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">epoch</span><span class="p">):</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="mi">20</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">mean_squ_err</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">mean_square_error</span><span class="p">,</span> <span class="p">{</span><span class="n">data</span><span class="p">:</span> <span class="n">test_input</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">test_output</span><span class="p">})</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Epoch </span><span class="si">{:4d}</span><span class="s1"> | mean squ error </span><span class="si">{: 3.1f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mean_squ_err</span><span class="p">))</span>
+
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">minimize</span><span class="p">,{</span><span class="n">data</span><span class="p">:</span> <span class="n">train_input</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">train_output</span><span class="p">})</span>
+</code></pre>
+</div>
+
+<pre><code>(400,)
+[[ 4.00159218]
+ [ 4.4298434 ]
+ [ 4.67217731]
+ [ 4.52697138]]
+3.87853505042
+Epoch   20 | mean squ error  3181.8
+Epoch   40 | mean squ error  1860.6
+Epoch   60 | mean squ error  1307.7
+Epoch   80 | mean squ error  903.1
+Epoch  100 | mean squ error  628.8
+Epoch  120 | mean squ error  477.8
+Epoch  140 | mean squ error  390.5
+Epoch  160 | mean squ error  323.5
+Epoch  180 | mean squ error  271.9
+Epoch  200 | mean squ error  233.8
+Epoch  220 | mean squ error  204.4
+Epoch  240 | mean squ error  180.8
+Epoch  260 | mean squ error  161.2
+Epoch  280 | mean squ error  144.9
+Epoch  300 | mean squ error  131.7
+Epoch  320 | mean squ error  121.4
+Epoch  340 | mean squ error  113.0
+Epoch  360 | mean squ error  105.7
+Epoch  380 | mean squ error  99.0
+Epoch  400 | mean squ error  92.6
+Epoch  420 | mean squ error  86.6
+Epoch  440 | mean squ error  80.9
+Epoch  460 | mean squ error  75.4
+Epoch  480 | mean squ error  70.1
+Epoch  500 | mean squ error  64.9
+</code></pre>
+
+<p>Tahminleri üretirken eğitim verisinin en sonundaki <code>sequence_length</code>
+kadar öğeyi alıp sonraki 1 değeri üretiyoruz, bu değeri alıp tahmin için
+kullanılan biraz önce kullandığımız <code>sequence_length</code> kadar değerin
+sonuna ekleyip son <code>sequence_length</code> değer üzerinden tekrar bir
+tahmin üretiyoruz, böyle gidiyor, ve bu şekilde serinin hiç görmediğimiz
+kısmını tahmin ediyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="n">newx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="n">sequence_length</span><span class="p">:])</span>
+<span class="n">newy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="n">sequence_length</span><span class="p">:])</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span> <span class="c1"># bu kadar daha uret</span>
+   <span class="n">tst_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newy</span><span class="p">[</span><span class="o">-</span><span class="n">sequence_length</span><span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">sequence_length</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>   
+   <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">prediction</span><span class="p">,</span> <span class="p">{</span> <span class="n">data</span><span class="p">:</span> <span class="p">[</span> <span class="n">tst_input</span> <span class="p">]</span>  <span class="p">}</span> <span class="p">)</span>
+   <span class="n">newy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+   <span class="n">newx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_max</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">resolution</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">newx</span><span class="p">,</span><span class="n">newy</span><span class="p">,</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;lstm_01.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="lstm_01.png" alt="" /></p>
+
+<p>Yeşil renkli kısım tahmin. Fena değil.</p>
+
+<p>Zaman Serisi Sınıflandırmak</p>
+
+<p>Şimdi TF'in kendi LSTM çağrısını kullanarak zaman serisi sınıflandırması
+yapalım. İki farklı sınıfa ait olan zaman serisi verimiz var [3],
+mikroelektronik yarı-iletken üretiminden gelen bir veri, fabrikasyon
+sırasında algılayıcılar bu iki türlü seriyi kaydediyor, onları ayırtetmek
+bizim görevimiz. Okuma yöntemi kodlayalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">zipfile</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib</span><span class="w"> </span><span class="kn">import</span> <span class="n">rnn</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.001</span>
+<span class="n">training_iters</span> <span class="o">=</span> <span class="mi">100000</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">display_step</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">n_input</span> <span class="o">=</span> <span class="mi">1</span> 
+<span class="n">n_steps</span> <span class="o">=</span> <span class="mi">152</span> 
+<span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">128</span> 
+<span class="n">n_classes</span> <span class="o">=</span> <span class="mi">2</span>
+
+<span class="k">with</span> <span class="n">zipfile</span><span class="o">.</span><span class="n">ZipFile</span><span class="p">(</span><span class="s1">&#39;wafer.zip&#39;</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">z</span><span class="p">:</span>
+      <span class="n">df_train</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;Wafer/wafer_TRAIN.txt&#39;</span><span class="p">),</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+      <span class="n">df_test</span> <span class="o">=</span>  <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="s1">&#39;Wafer/wafer_TEST.txt&#39;</span><span class="p">),</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">minibatches</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span><span class="nb">input</span><span class="o">=</span><span class="s2">&quot;train&quot;</span><span class="p">):</span>
+      <span class="n">df</span> <span class="o">=</span> <span class="kc">None</span>
+      <span class="k">if</span> <span class="nb">input</span><span class="o">==</span><span class="s2">&quot;train&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">=</span><span class="n">df_train</span>
+      <span class="k">if</span> <span class="nb">input</span><span class="o">==</span><span class="s2">&quot;test&quot;</span><span class="p">:</span> <span class="n">df</span><span class="o">=</span><span class="n">df_test</span>
+      <span class="n">df</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)):</span>
+            <span class="n">batch_x</span> <span class="o">=</span> <span class="p">[];</span> <span class="n">batch_y</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">batch_size</span><span class="p">):</span>
+                  <span class="n">batch_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">1</span><span class="p">:]))</span>
+                  <span class="n">batch_y</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">==-</span><span class="mi">1</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="mi">1</span><span class="p">)</span> <span class="p">])</span>
+            <span class="n">batch_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span><span class="n">n_steps</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">batch_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_y</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span>                  
+</code></pre>
+</div>
+
+<p>TF hesap çizitini kodlayalım ve eğitelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">reset_graph</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="n">reset_graph</span><span class="p">()</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">n_input</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="s2">&quot;float&quot;</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">])</span>
+
+<span class="n">weights</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">n_hidden</span><span class="p">,</span> <span class="n">n_classes</span><span class="p">]))</span>
+<span class="p">}</span>
+<span class="n">biases</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;out&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">([</span><span class="n">n_classes</span><span class="p">]))</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">LSTM</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">biases</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">lstm_cell</span> <span class="o">=</span> <span class="n">rnn</span><span class="o">.</span><span class="n">BasicLSTMCell</span><span class="p">(</span><span class="n">n_hidden</span><span class="p">)</span>
+    <span class="n">outputs</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">rnn</span><span class="o">.</span><span class="n">static_rnn</span><span class="p">(</span><span class="n">lstm_cell</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">outputs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">weights</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="n">biases</span><span class="p">[</span><span class="s1">&#39;out&#39;</span><span class="p">]</span>
+
+<span class="n">pred</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">biases</span><span class="p">)</span>
+
+<span class="n">correct_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">correct_pred</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+<span class="n">new_pred</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span> <span class="s1">&#39;cost&#39;</span>
+<span class="n">scf</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax_cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">pred</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="n">cost</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">scf</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s1">&#39;optimizer&#39;</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+
+<span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="c1"># Keep training until reach max iterations</span>
+    <span class="n">b_it</span> <span class="o">=</span> <span class="n">minibatches</span><span class="p">(</span><span class="n">batch_size</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">step</span> <span class="o">&lt;</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1000</span> <span class="o">/</span> <span class="n">batch_size</span><span class="p">):</span>
+          <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">b_it</span><span class="p">)</span>
+          <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">optimizer</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">batch_y</span><span class="p">})</span>
+          <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="n">display_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Calculate batch accuracy</span>
+                <span class="n">acc</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">accuracy</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">batch_y</span><span class="p">})</span>
+                <span class="c1"># Calculate batch loss</span>
+                <span class="n">loss</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">batch_y</span><span class="p">})</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iter &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">step</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, Minibatch Loss= &quot;</span> <span class="o">+</span> \
+                      <span class="s2">&quot;</span><span class="si">{:.6f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;, Training Accuracy= &quot;</span> <span class="o">+</span> \
+                      <span class="s2">&quot;</span><span class="si">{:.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">acc</span><span class="p">))</span>
+          <span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimization Finished!&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>cost
+optimizer
+Iter 10, Minibatch Loss= 1.847300, Training Accuracy= 0.00000
+Iter 20, Minibatch Loss= 0.049264, Training Accuracy= 1.00000
+Iter 30, Minibatch Loss= 0.176535, Training Accuracy= 1.00000
+Optimization Finished!
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn</span><span class="w"> </span><span class="kn">import</span> <span class="n">metrics</span>
+<span class="n">real</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">batch_y</span> <span class="ow">in</span> <span class="n">minibatches</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">input</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">):</span>
+      <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">new_pred</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">x</span><span class="p">:</span> <span class="n">batch_x</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">batch_y</span><span class="p">})</span>
+      <span class="n">pred</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+      <span class="n">real</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">batch_y</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">roc_curve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">pred</span><span class="p">))</span>
+    <span class="nb">print</span> <span class="s1">&#39;AUC&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>      
+</code></pre>
+</div>
+
+<pre><code>AUC 1.0
+</code></pre>
+
+<p>Sonuç yüzde 100. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Chen, <em>Exploring LSTMs: Understanding Basics (Part One)</em>, <a href="https://www.topbots.com/exploring-lstm-tutorial-part-1-recurrent-neural-network-deep-learning/">https://www.topbots.com/exploring-lstm-tutorial-part-1-recurrent-neural-network-deep-learning/</a></p>
+
+<p>[2] Shell, <em>Do It Yourself LSTM with TensorFlow</em>, <a href="https://chrisschell.de/2017/07/10/do_it_yourself_lstm_with_tensorflow.html">https://chrisschell.de/2017/07/10/do<em>it</em>yourself<em>lstm</em>with_tensorflow.html</a></p>
+
+<p>[3] Olszewski, <em>Wafer Dataset</em>, <a href="http://timeseriesclassification.com/description.php?Dataset=Wafer">http://timeseriesclassification.com/description.php?Dataset=Wafer</a></p>
+
+<p>[4] Olah, <em>Understanding LSTM Networks</em>, <a href="https://colah.github.io/posts/2015-08-Understanding-LSTMs">https://colah.github.io/posts/2015-08-Understanding-LSTMs</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

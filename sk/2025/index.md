@@ -18,3 +18,5 @@
 
 [Ubuntu 24, Acer Swift 3](06/ubuntu-24-acer.html)
 
+[Tavsiye Sistemleri, Derin Öğrenme (Deep Recommender Systems)](07/recommend-nn.html)
+

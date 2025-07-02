@@ -1,0 +1,641 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Optik Karakter Tanıma, Yazı Tanıma (Optical Character Recognition -OCR-)</h1>
+
+<p>OCR, iki dizini birbiriyle uyuşturma problemi olarak görülebilir. Dizi
+derken neden bahsetmek istediğimi anlatmaya uğrasayım. Çoğunlukla tanımak
+istediğimiz görüntü bir kelime, bir sayı dizisidir, ve bu dizi ufak ya da
+büyük bir kelime olabilir. Girdi ise boyutları önceden tanımlanan görüntüyü
+temsil eden veri parçaları olacaktır, bu görüntü bir kelimeye
+odaklanabilir, görüntü aktarılmadan önce o kelime bir kare içine alınmaya
+çalışır.</p>
+
+<p>Kelime görüntüsünü bir evrişim tabakası üzerinden mesela işlenmiş veriler
+olarak parça parça, kesitler olarak alabiliriz. Ardından veri parçalarının
+zamansal ilintilerini yakalayabilmek için onları bir LSTM katmanına
+verebiliriz, ve her zaman adımındaki alfabe boyutundaki çıktılar, bir
+vektör olarak, her hücrede belli bir harfin olma olasılığı olarak
+ayarlanabilir. Eğer en son katmandan sonra uygun bir hata fonksiyonu
+tanımlayabilirsek bilinen etiketli kelimeler, onların görüntüsünü içeren
+eğitim verisi üzerinden tüm bu yapıyı eğitebiliriz.</p>
+
+<p><img src="ocr_01.png" alt="" /></p>
+
+<p>Üstteki figürde İngilizce apple (elma) kelimesini görüyoruz. Girdi görüntü
+(input image) genişliği 128, yüksekliği 64 ve üç kanal var, bu kanallar her
+renk için R,G,B olabilir. İlk önce evrişimsel sinir ağı özellik çıkartma
+(CNN feature extraction) katmanı ile özellik bulmaya uğraşılıyor, buradan
+(4,8,4) boyutunda bir tensor elde ediliyor. Bu tensor (16,8) boyutuna
+getiriliyor, bu yeni tensor'daki her kolon (biri yeşille işaretli) önceki
+tensorda bir parçaya tekabül eder, yani kelime görüntüsünün bir parçasına.</p>
+
+<p>Ardından şekillendirme (reshape) sonrası alınan yeni tensoru parça parça
+LSTM tabakasına veriyoruz, ilk LSTM hücresi mesela alttaki gibi,</p>
+
+<p><img src="ocr_02.png" alt="" /></p>
+
+<p>LSTM sonrası tamamen bağlanmış (fully-connected) tabaka ve softmax ile
+alfabe tahmini üretiliyor. Bu örnekte alfabede 6 karakter var, bu sebeple
+vektör (6,1) boyutlu, karakterler 'a','e','l','p','z','-'. En son '-'
+karakteri "boş karakter'' demek, boş karakterin niye lazım olduğunu
+göreceğiz. Vektördeki ilk hücre $y<em>a^1$ yani 'a', o noktada 'a'
+karakterinin olma olasılığı. Diğerleri o birinci hücre için aşağı doğru
+$y</em>e^1$, $y_l^1$, vs. diye devam edecek. Şimdi tüm LSTM hücrelerini iceren
+resme bakalım,</p>
+
+<p><img src="ocr_03.png" alt="" /></p>
+
+<p>Şimdi elimizde 8 tane 6 boyutlu softmax vektörü var. </p>
+
+<p>Bu noktada iki sorumuz var: ilki YSA eğitimi bağlamında nasıl bir kayıp
+fonksiyonu bulalım ki uyan kelimeler için az, kötü uyanlar için yüksek
+rakam üretsin, ikincisi farklı boyutlardaki iki vektörün birbirine uyması
+ne demektir? Tüm bunlar tabii ki üstteki softmax vektörlerini nasıl dekode
+edip bir kelime üretiriz sorusu ile yakın alakalı.</p>
+
+<p>Uyum konusu önemli çünkü el yazısı, ya da font seçimi dolasıyla bazı
+karakterler diğerlerinden daha fazla yer tutuyor olabilir. Aynı şey ses
+tanıma için de geçerli, "merhaba'' derken kimisi "meeeerhaba'' demiş
+olabilir, burada 'e' harfinden daha fazla ses verisi alınacaktır, ama o
+noktada üzerinde olunan harf değişmemiştir.</p>
+
+<p>Dekode için akla gelebilecek ilk yaklaşım her vektör için en yüksek
+olasılıktaki hücreye tekabül eden karakteri seçmek (find the most probable
+symbol), sonra bir ek işlem tabakasına giderek bazı elemeler, düzeltmeler
+yaparak bir kelimeye erişmeye uğraşmak. Mesela en olasılı karakter seçimi
+sonrası arka arka gelen tekrar eden harfleri çıkartırız, sonra boş
+karakteri çıkartırız,</p>
+
+<p><img src="ocr_04.png" alt="" /></p>
+
+<p>Tüm bunlar oldukca basit görünüyor. Fakat tüm bu işlemleri bir kayıp
+fonksiyonu olarak kullanmak istersek işler karışıyor. Çünkü kelime bulmaya
+uğraşırken softmax'lerde başlangıçtan sona pek çok farklı gidiş yolu var,
+tüm kombinasyonları işlemek zor.</p>
+
+<p><img src="ocr_05.png" alt="" /></p>
+
+<p>Ayrıca üstteki kısaltma algoritması en iyi sonucu da her zaman
+vermeyebilir. Kombinasyon derken üstteki örnek için bile $6^8 = 1,679,616$
+tane seçenekten bahsediyoruz. Daha büyük bir sözlük, ve daha fazla LSTM
+adımı için bu sayı astronomik boyutlara varabilir.</p>
+
+<p>Çözüm nedir? Seçenekler arasından uygun yolu bulup hesaplayan, ya da verili
+bir etiket için olurluk (likelihood) hesabı yapan bir yaklaşım var, buna
+bağlantısal zamansal bedel (connectionist temporal cost) adı veriliyor,
+detaylar için [1,2,3]. CTC dinamik programlama kullanır, ayrıca yolu
+hesaplarken Gizli Markov Modellerine benzer $\alpha,\beta$ fonksiyonları
+yaratır, ve YSA öğrenimi bağlamında bu fonksiyonlar üzerinden gradyan
+hesabı mümkün oluyor, ve farklı boyuttaki girdi / çıktı arasındaki uyuşma,
+eğitim işte bu şekilde yapılıyor.</p>
+
+<p>TensorFlow ile CTC</p>
+
+<p>TF ile CTC hesabını görelim. Alttaki çıktının daha önce şemasını verdiğimiz
+YSA'ya benzer bir yapının son adımından çıkan softmax olasılıkları olduğunu
+düşünelim. Verinin satırları her LSTM adımı, her kolon alfabedeki farklı
+bir karakter. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">train_inputs_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+    <span class="p">[[</span><span class="mf">0.633766</span><span class="p">,</span> <span class="mf">0.221185</span><span class="p">,</span> <span class="mf">0.0917319</span><span class="p">,</span> <span class="mf">0.0129757</span><span class="p">,</span> <span class="mf">0.0142857</span><span class="p">,</span> <span class="mf">0.0260553</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.111121</span><span class="p">,</span> <span class="mf">0.588392</span><span class="p">,</span> <span class="mf">0.278779</span><span class="p">,</span> <span class="mf">0.0055756</span><span class="p">,</span> <span class="mf">0.00569609</span><span class="p">,</span> <span class="mf">0.010436</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.0357786</span><span class="p">,</span> <span class="mf">0.633813</span><span class="p">,</span> <span class="mf">0.321418</span><span class="p">,</span> <span class="mf">0.00249248</span><span class="p">,</span> <span class="mf">0.00272882</span><span class="p">,</span> <span class="mf">0.0037688</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.0663296</span><span class="p">,</span> <span class="mf">0.643849</span><span class="p">,</span> <span class="mf">0.280111</span><span class="p">,</span> <span class="mf">0.00283995</span><span class="p">,</span> <span class="mf">0.0035545</span><span class="p">,</span> <span class="mf">0.00331533</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.458235</span><span class="p">,</span> <span class="mf">0.396634</span><span class="p">,</span> <span class="mf">0.123377</span><span class="p">,</span> <span class="mf">0.00648837</span><span class="p">,</span> <span class="mf">0.00903441</span><span class="p">,</span> <span class="mf">0.00623107</span><span class="p">]],</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Bu yapı üzerinde için mesela <code>[0, 1, 2, 1, 0]</code> dizisini kontrol
+etmemiz istense dizinin kaybı / hatası nedir?</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sparse_tuple_from</span><span class="p">(</span><span class="n">sequences</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">):</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">seq</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">sequences</span><span class="p">):</span>
+        <span class="n">indices</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="nb">zip</span><span class="p">([</span><span class="n">n</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">),</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seq</span><span class="p">))))</span>
+        <span class="n">values</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">seq</span><span class="p">)</span>
+    <span class="n">indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">sequences</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">0</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">indices</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">shape</span>
+
+<span class="n">train_seq_len</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">num_features</span> <span class="o">=</span> <span class="mi">6</span>
+
+<span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+
+<span class="n">targets</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">logits1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_features</span><span class="p">]</span> <span class="p">)</span>
+<span class="n">logits2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">logits1</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">num_features</span><span class="p">])</span>
+<span class="n">logits3</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">logits2</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">seq_len</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">])</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ctc_loss</span><span class="p">(</span><span class="n">targets</span><span class="p">,</span> <span class="n">logits3</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
+<span class="n">decoded</span><span class="p">,</span> <span class="n">log_prob</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">ctc_greedy_decoder</span><span class="p">(</span><span class="n">logits3</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+
+     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+     <span class="n">train_targets</span> <span class="o">=</span> <span class="n">sparse_tuple_from</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>     
+     <span class="n">feed_t</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_0</span><span class="p">,</span> 
+                <span class="n">targets</span><span class="p">:</span> <span class="n">train_targets</span><span class="p">,</span> 
+                <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">feed_t</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="sa">u</span><span class="s1">&#39;kayıp&#39;</span><span class="p">,</span> <span class="n">res</span>
+</code></pre>
+</div>
+
+<pre><code>kayıp [ 7.27719784]
+</code></pre>
+
+<p>Farklı veri, farklı çıktı,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">train_inputs_1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+    <span class="p">[[</span><span class="mf">0.30176</span><span class="p">,</span> <span class="mf">0.28562</span><span class="p">,</span> <span class="mf">0.0831517</span><span class="p">,</span> <span class="mf">0.0862751</span><span class="p">,</span> <span class="mf">0.0816851</span><span class="p">,</span> <span class="mf">0.161508</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.24082</span><span class="p">,</span> <span class="mf">0.397533</span><span class="p">,</span> <span class="mf">0.0557226</span><span class="p">,</span> <span class="mf">0.0546814</span><span class="p">,</span> <span class="mf">0.0557528</span><span class="p">,</span> <span class="mf">0.19549</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.230246</span><span class="p">,</span> <span class="mf">0.450868</span><span class="p">,</span> <span class="mf">0.0389607</span><span class="p">,</span> <span class="mf">0.038309</span><span class="p">,</span> <span class="mf">0.0391602</span><span class="p">,</span> <span class="mf">0.202456</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.280884</span><span class="p">,</span> <span class="mf">0.429522</span><span class="p">,</span> <span class="mf">0.0326593</span><span class="p">,</span> <span class="mf">0.0339046</span><span class="p">,</span> <span class="mf">0.0326856</span><span class="p">,</span> <span class="mf">0.190345</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.423286</span><span class="p">,</span> <span class="mf">0.315517</span><span class="p">,</span> <span class="mf">0.0338439</span><span class="p">,</span> <span class="mf">0.0393744</span><span class="p">,</span> <span class="mf">0.0339315</span><span class="p">,</span> <span class="mf">0.154046</span><span class="p">]],</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+
+     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+     <span class="n">train_targets</span> <span class="o">=</span> <span class="n">sparse_tuple_from</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span>     
+     <span class="n">feed_t</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_1</span><span class="p">,</span> 
+                <span class="n">targets</span><span class="p">:</span> <span class="n">train_targets</span><span class="p">,</span> 
+                <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">feed_t</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="sa">u</span><span class="s1">&#39;kayıp&#39;</span><span class="p">,</span> <span class="n">res</span>
+</code></pre>
+</div>
+
+<pre><code>kayıp [ 8.08572388]
+</code></pre>
+
+<p>Şimdi ilginç bir veri, burada veri direk 2. karakter olsun diyor. O zaman
+buna uyan çıktılar alçak (kayıp az), uymayanlar yüksek sonuç vermeli,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">train_inputs_2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span>
+    <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+     <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]],</span>
+    <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+
+     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+     <span class="n">train_targets</span> <span class="o">=</span> <span class="n">sparse_tuple_from</span><span class="p">([[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]])</span> 
+     <span class="n">feed_t</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_2</span><span class="p">,</span> 
+                <span class="n">targets</span><span class="p">:</span> <span class="n">train_targets</span><span class="p">,</span> 
+                <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">feed_t</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="sa">u</span><span class="s1">&#39;kayıp&#39;</span><span class="p">,</span> <span class="n">res</span>
+
+     <span class="n">train_targets</span> <span class="o">=</span> <span class="n">sparse_tuple_from</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]])</span> 
+     <span class="n">feed_t</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_2</span><span class="p">,</span> 
+                <span class="n">targets</span><span class="p">:</span> <span class="n">train_targets</span><span class="p">,</span> 
+                <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span> <span class="n">feed_t</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="sa">u</span><span class="s1">&#39;kayıp&#39;</span><span class="p">,</span> <span class="n">res</span>
+</code></pre>
+</div>
+
+<pre><code>kayıp [ 7.21795845]
+kayıp [ 10.21795845]
+</code></pre>
+
+<p>Dekode</p>
+
+<p>TF CTC ile dekode işlemi de yapılabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+
+     <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+     <span class="n">feed_dec</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_0</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">decoded_res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">feed_dec</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="s1">&#39;dekode&#39;</span><span class="p">,</span> <span class="n">decoded_res</span>
+
+     <span class="n">feed_dec</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_1</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">decoded_res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">feed_dec</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="s1">&#39;dekode&#39;</span><span class="p">,</span> <span class="n">decoded_res</span>
+
+     <span class="n">feed_dec</span> <span class="o">=</span> <span class="p">{</span> <span class="n">logits1</span><span class="p">:</span> <span class="n">train_inputs_2</span><span class="p">,</span> <span class="n">seq_len</span><span class="p">:</span> <span class="n">train_seq_len</span> <span class="p">}</span>
+     <span class="n">decoded_res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">decoded</span><span class="p">,</span> <span class="n">feed_dec</span><span class="p">)</span>     
+     <span class="nb">print</span> <span class="s1">&#39;dekode&#39;</span><span class="p">,</span> <span class="n">decoded_res</span>
+</code></pre>
+</div>
+
+<pre><code>dekode [SparseTensorValue(indices=array([[0, 0],
+       [0, 1],
+       [0, 2]]), values=array([0, 1, 0]), dense_shape=array([1, 3]))]
+dekode [SparseTensorValue(indices=array([[0, 0],
+       [0, 1],
+       [0, 2]]), values=array([0, 1, 0]), dense_shape=array([1, 3]))]
+dekode [SparseTensorValue(indices=array([[0, 0]]), values=array([2]), dense_shape=array([1, 1]))]
+</code></pre>
+
+<p>En son örnekte <code>values=array([2])</code> sonucu geldi, yani dekode işlemi
+doğru bir şekilde tüm adımlar için tek bir seçim olan 2 seçimini yaptı. Bu
+seçim arka arkaya tekrarlanmış olacaktı tabii ki bu sebeple bir kez
+gösteriliyor, appleeee yerine apple demek gibi.</p>
+
+<p>Ağ Yapısı ve Kod</p>
+
+<p>Şimdi örnek veriyi, alfabeyi genişletelim ve ağ yapısını daha
+derinleştirelim. Altta gösterilen ağ yapısı [4] tezi ve onun esinlendiği
+[5] kütüphanesini baz alıyor. Nihai kodda teze göre bazı boyut
+değişiklikleri var, okur bunu akılda tutarak diyagramları, işlemleri takip
+edebilir. Mimaride ilk evrişim tabakasında arka arkaya iki evrişim ve max
+pool operasyonları var, sonra bir boyut değiştirme sonrası tamamen
+bağlanmış (fully connected) bir tabakaya sonuç geçiliyor, oradan çıkan
+sonuç iki yönlü (bi-directional) GRU tabakasına veriliyor. Bu zamansal YSA
+ilk başta görülen tek LSTM seviyesinden daha çetrefil yani. GRU hücreleri,
+LSTM hücre yapısının biraz daha basitleştirilmiş halidir. Devam edelim,
+buradan çıkan sonuçlar bir başka yoğun tabakaya oradan da softmax
+aktivasyonuna veriliyor, kayıp fonksiyonu CTC.</p>
+
+<p><img src="ocr_07.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># -*- coding: utf-8 -*-</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">util</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">datetime</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.convolutional</span><span class="w"> </span><span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">MaxPooling2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Activation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">Lambda</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.merge</span><span class="w"> </span><span class="kn">import</span> <span class="n">add</span><span class="p">,</span> <span class="n">concatenate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.recurrent</span><span class="w"> </span><span class="kn">import</span> <span class="n">GRU</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SGD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.utils.data_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_file</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.preprocessing</span><span class="w"> </span><span class="kn">import</span> <span class="n">image</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keras.callbacks</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ctc_lambda_func</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">y_pred</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">input_length</span><span class="p">,</span> <span class="n">label_length</span> <span class="o">=</span> <span class="n">args</span>
+    <span class="c1"># the 2 is critical here since the first couple outputs of the RNN</span>
+    <span class="c1"># tend to be garbage:</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">y_pred</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">ctc_batch_cost</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">input_length</span><span class="p">,</span> <span class="n">label_length</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span><span class="n">img_h</span><span class="p">,</span><span class="n">minibatch_size</span><span class="p">,</span><span class="n">pool_size</span><span class="p">):</span>
+    <span class="n">conv_filters</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="n">kernel_size</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">time_dense_size</span> <span class="o">=</span> <span class="mi">32</span>
+    <span class="n">rnn_size</span> <span class="o">=</span> <span class="mi">256</span>
+
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">img_w</span><span class="p">,</span> <span class="n">img_h</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">img_gen</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">TextImageGenerator</span><span class="p">(</span><span class="n">minibatch_size</span><span class="o">=</span><span class="n">minibatch_size</span><span class="p">,</span>
+                                      <span class="n">img_w</span><span class="o">=</span><span class="n">img_w</span><span class="p">,</span>
+                                      <span class="n">img_h</span><span class="o">=</span><span class="n">img_h</span><span class="p">,</span>
+                                      <span class="n">downsample_factor</span><span class="o">=</span><span class="p">(</span><span class="n">pool_size</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+                                      <span class="n">absolute_max_string_len</span><span class="o">=</span><span class="mi">12</span>
+    <span class="p">)</span>
+
+    <span class="n">act</span> <span class="o">=</span> <span class="s1">&#39;relu&#39;</span>
+
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;the_input&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">conv_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
+                   <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;conv1&#39;</span><span class="p">)(</span><span class="n">input_data</span><span class="p">)</span>
+
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;max1&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">Conv2D</span><span class="p">(</span><span class="n">conv_filters</span><span class="p">,</span> <span class="n">kernel_size</span><span class="p">,</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
+                   <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                   <span class="n">name</span><span class="o">=</span><span class="s1">&#39;conv2&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">MaxPooling2D</span><span class="p">(</span><span class="n">pool_size</span><span class="o">=</span><span class="p">(</span><span class="n">pool_size</span><span class="p">,</span> <span class="n">pool_size</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;max2&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">conv_to_rnn_dims</span> <span class="o">=</span> <span class="p">(</span><span class="n">img_w</span> <span class="o">//</span> <span class="p">(</span><span class="n">pool_size</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="n">img_h</span> <span class="o">//</span> <span class="p">(</span><span class="n">pool_size</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+                        <span class="o">*</span> <span class="n">conv_filters</span><span class="p">)</span>
+
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">Reshape</span><span class="p">(</span><span class="n">target_shape</span><span class="o">=</span><span class="n">conv_to_rnn_dims</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;reshape&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">time_dense_size</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">act</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dense1&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">gru_1</span> <span class="o">=</span> <span class="n">GRU</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gru1&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">gru_1b</span> <span class="o">=</span> <span class="n">GRU</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">go_backwards</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gru1_b&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">gru1_merged</span> <span class="o">=</span> <span class="n">add</span><span class="p">([</span><span class="n">gru_1</span><span class="p">,</span> <span class="n">gru_1b</span><span class="p">])</span>
+
+    <span class="n">gru_2</span> <span class="o">=</span> <span class="n">GRU</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gru2&#39;</span><span class="p">)(</span><span class="n">gru1_merged</span><span class="p">)</span>
+
+    <span class="n">gru_2b</span> <span class="o">=</span> <span class="n">GRU</span><span class="p">(</span><span class="n">rnn_size</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                 <span class="n">go_backwards</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s1">&#39;gru2_b&#39;</span><span class="p">)(</span><span class="n">gru1_merged</span><span class="p">)</span>
+
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">img_gen</span><span class="o">.</span><span class="n">get_output_size</span><span class="p">(),</span>
+                  <span class="n">kernel_initializer</span><span class="o">=</span><span class="s1">&#39;he_normal&#39;</span><span class="p">,</span>
+                  <span class="n">name</span><span class="o">=</span><span class="s1">&#39;dense2&#39;</span><span class="p">)(</span><span class="n">concatenate</span><span class="p">([</span><span class="n">gru_2</span><span class="p">,</span> <span class="n">gru_2b</span><span class="p">]))</span>
+
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">)(</span><span class="n">inner</span><span class="p">)</span>
+
+    <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">input_data</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+    <span class="n">labels</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;the_labels&#39;</span><span class="p">,</span>
+                   <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">img_gen</span><span class="o">.</span><span class="n">absolute_max_string_len</span><span class="p">],</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span>
+
+    <span class="n">input_length</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;input_length&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int64&#39;</span><span class="p">)</span>
+
+    <span class="n">label_length</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;label_length&#39;</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;int64&#39;</span><span class="p">)</span>
+
+    <span class="n">loss_out</span> <span class="o">=</span> <span class="n">Lambda</span><span class="p">(</span><span class="n">ctc_lambda_func</span><span class="p">,</span> <span class="n">output_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;ctc&#39;</span><span class="p">)([</span><span class="n">y_pred</span><span class="p">,</span>
+                                                                       <span class="n">labels</span><span class="p">,</span>
+                                                                       <span class="n">input_length</span><span class="p">,</span>
+                                                                       <span class="n">label_length</span><span class="p">])</span>
+
+    <span class="n">sgd</span> <span class="o">=</span> <span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span> <span class="n">nesterov</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">clipnorm</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">input_data</span><span class="p">,</span>
+                          <span class="n">labels</span><span class="p">,</span>
+                          <span class="n">input_length</span><span class="p">,</span>
+                          <span class="n">label_length</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="n">loss_out</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;ctc&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">:</span> <span class="n">y_pred</span><span class="p">},</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">sgd</span><span class="p">)</span>
+
+    <span class="n">test_func</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">function</span><span class="p">([</span><span class="n">input_data</span><span class="p">],</span> <span class="p">[</span><span class="n">y_pred</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">test_func</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">pool_size</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">img_w</span> <span class="o">=</span> <span class="mi">256</span>
+    <span class="n">img_h</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">minibatch_size</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">img_gen</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">TextImageGenerator</span><span class="p">(</span><span class="n">minibatch_size</span><span class="o">=</span><span class="n">minibatch_size</span><span class="p">,</span>
+                                      <span class="n">img_w</span><span class="o">=</span><span class="n">img_w</span><span class="p">,</span>
+                                      <span class="n">img_h</span><span class="o">=</span><span class="n">img_h</span><span class="p">,</span>
+                                      <span class="n">downsample_factor</span><span class="o">=</span><span class="p">(</span><span class="n">pool_size</span> <span class="o">**</span> <span class="mi">2</span><span class="p">),</span>
+                                      <span class="n">absolute_max_string_len</span><span class="o">=</span><span class="mi">12</span>
+    <span class="p">)</span>
+    <span class="n">model</span><span class="p">,</span> <span class="n">dummy</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span><span class="n">img_h</span><span class="p">,</span><span class="n">minibatch_size</span><span class="p">,</span><span class="n">pool_size</span><span class="p">)</span>
+    <span class="n">mfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/ocr.h5&quot;</span>
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">mfile</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="s1">&#39;Loaded&#39;</span><span class="p">,</span> <span class="n">mfile</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">mfile</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">fit_generator</span><span class="p">(</span><span class="n">generator</span><span class="o">=</span><span class="n">img_gen</span><span class="o">.</span><span class="n">next_train</span><span class="p">(),</span>
+                        <span class="n">steps_per_epoch</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+                        <span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                        <span class="n">validation_steps</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                        <span class="n">callbacks</span><span class="o">=</span><span class="p">[</span><span class="n">img_gen</span><span class="p">],</span>
+                        <span class="n">initial_epoch</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">mfile</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Eğitim verisi ne olacak? Burada ilginç bir teknik kullanacağız, bir
+kelimenin imajını üretebilen yazılımlar var, yani masaüstünde Paint ya da
+Gimp ile bir imaj içine yazı yazmak gibi, bu kodlardan birini kullanıp,
+hatta üretilen imajı deforme bile ederek tanıma algoritmasının işini
+bilerek zorlaştırabiliriz, ve eğitime bu verileri sokarak, hiç ek eğitim
+verisi diskte tutmadan eğitim operasyonunu istediğimiz şekilde
+gerçekleştiririz. Bir örnek kelime imajı üretelim mesela,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">util</span>
+
+<span class="n">img_w</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">img_h</span> <span class="o">=</span> <span class="mi">64</span>
+
+<span class="n">img_gen</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">TextImageGenerator</span><span class="p">(</span><span class="n">minibatch_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                                  <span class="n">img_w</span><span class="o">=</span><span class="n">img_w</span><span class="p">,</span>
+                                  <span class="n">img_h</span><span class="o">=</span><span class="n">img_h</span><span class="p">,</span>
+                                  <span class="n">downsample_factor</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+                                  <span class="n">absolute_max_string_len</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">img_gen</span><span class="o">.</span><span class="n">next_train</span><span class="p">():</span> <span class="k">break</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;the_input&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span><span class="n">img_h</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+<span class="nb">print</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;source_str&#39;</span><span class="p">],</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gray&#39;</span><span class="p">,</span><span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;ocr_06.png&#39;</span><span class="p">)</span>    
+</code></pre>
+</div>
+
+<pre><code>[u'daxco7mu1']
+</code></pre>
+
+<p>İmaj neye benziyor?</p>
+
+<p><img src="ocr_06.png" alt="" /></p>
+
+<p>Eğitim verisini üreteç (generator) tekniği [6] üzerinden yaratıyoruz dikkat
+edildiyse, üreteç eğitim verisini bir gezici arayüzü üzerinden eğitim
+rutinine vermemizi sağlıyor. Üreteç, döngüsünde her dönüldüğünde ve çağıran
+veri istendiğinde rasgele bir kelime üretir, bu kelimeyi imaja çevirip
+etiketi ile birlikte çağrıyı yapana veriyor. Üreteç yapısını kullanmanın
+güzel tarafı çağıran tarafın döngü sözdizimini kullanabilmesi. Üstte tek
+bir kere dönüp çıktık (tek imaj istiyorduk), eğitim mekanizması istediği
+kadar dönerek istediği kadar eğtim verisi alabilir.</p>
+
+<p>Görüldüğü gibi imaj biraz aşağı doğru eğimli çıktı, bu iyi, çünkü gerçek
+dünyada olan şartları tekrarlamak istiyoruz, belki bir cep telefonunun
+çektiği resimdeki kelimeleri tanıyacağız ve telefonu mükemmel şekilde
+tutmak mümkün değil, farklı açılardan kelimeleri tanıyabilmek çok iyi
+olur. Ayrıca kullandığımız rutin suni "gürültü'' bile ekliyor, karlandırma
+yapıyor mesela, hatta kelimenin imajın çok farklı yerlerinden
+başlatabiliyor. </p>
+
+<p>Neyse, işte bu şekilde üretilen veri üzerinden eğitimi yapıp raporlanan
+kaybı belli bir seviyeye indirdikten sonra (5,6 civarı mesela, fakat uzun
+süre sonra 2 seviyesi de mümkün), YSA hazır demektir. Bizim önceden
+eğittiğimiz YSA'yı yükleyelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">train</span>
+<span class="n">mfile</span> <span class="o">=</span> <span class="s1">&#39;/tmp/ocr.h5&#39;</span>
+
+<span class="n">pool_size</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">img_w</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">img_h</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">minibatch_size</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">model</span><span class="p">,</span> <span class="n">test_func</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">get_model</span><span class="p">(</span><span class="n">img_w</span><span class="p">,</span><span class="n">img_h</span><span class="p">,</span><span class="n">minibatch_size</span><span class="p">,</span><span class="n">pool_size</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">mfile</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>____________________________________________________________________________________________________
+Layer (type)                     Output Shape          Param #     Connected to                     
+====================================================================================================
+the_input (InputLayer)           (None, 256, 64, 1)    0                                            
+____________________________________________________________________________________________________
+conv1 (Conv2D)                   (None, 256, 64, 20)   100         the_input[0][0]                  
+____________________________________________________________________________________________________
+max1 (MaxPooling2D)              (None, 85, 21, 20)    0           conv1[0][0]                      
+____________________________________________________________________________________________________
+conv2 (Conv2D)                   (None, 85, 21, 20)    1620        max1[0][0]                       
+____________________________________________________________________________________________________
+max2 (MaxPooling2D)              (None, 28, 7, 20)     0           conv2[0][0]                      
+____________________________________________________________________________________________________
+reshape (Reshape)                (None, 28, 140)       0           max2[0][0]                       
+____________________________________________________________________________________________________
+dense1 (Dense)                   (None, 28, 32)        4512        reshape[0][0]                    
+____________________________________________________________________________________________________
+gru1 (GRU)                       (None, 28, 256)       221952      dense1[0][0]                     
+____________________________________________________________________________________________________
+gru1_b (GRU)                     (None, 28, 256)       221952      dense1[0][0]                     
+____________________________________________________________________________________________________
+add_1 (Add)                      (None, 28, 256)       0           gru1[0][0]                       
+                                                                   gru1_b[0][0]                     
+____________________________________________________________________________________________________
+gru2 (GRU)                       (None, 28, 256)       393984      add_1[0][0]                      
+____________________________________________________________________________________________________
+gru2_b (GRU)                     (None, 28, 256)       393984      add_1[0][0]                      
+____________________________________________________________________________________________________
+concatenate_1 (Concatenate)      (None, 28, 512)       0           gru2[0][0]                       
+                                                                   gru2_b[0][0]                     
+____________________________________________________________________________________________________
+dense2 (Dense)                   (None, 28, 40)        20520       concatenate_1[0][0]              
+____________________________________________________________________________________________________
+softmax (Activation)             (None, 28, 40)        0           dense2[0][0]                     
+====================================================================================================
+Total params: 1,258,624
+Trainable params: 1,258,624
+Non-trainable params: 0
+____________________________________________________________________________________________________
+</code></pre>
+
+<p>Şimdi üstteki örnek imajı tanımaya uğraşalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">labels_to_text</span><span class="p">(</span><span class="n">labels</span><span class="p">):</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">c</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">alphabet</span><span class="p">):</span>  <span class="c1"># CTC Blank</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">util</span><span class="o">.</span><span class="n">alphabet</span><span class="p">[</span><span class="n">c</span><span class="p">])</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">decode_batch</span><span class="p">(</span><span class="n">test_func</span><span class="p">,</span> <span class="n">word_batch</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">test_func</span><span class="p">([</span><span class="n">word_batch</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">out_best</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="mi">2</span><span class="p">:],</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">out_best</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">out_best</span><span class="p">)]</span>
+        <span class="n">outstr</span> <span class="o">=</span> <span class="n">labels_to_text</span><span class="p">(</span><span class="n">out_best</span><span class="p">)</span>
+        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">outstr</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ret</span>
+
+<span class="n">pred_result</span> <span class="o">=</span> <span class="n">decode_batch</span><span class="p">(</span><span class="n">test_func</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;the_input&#39;</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span> <span class="n">pred_result</span>
+</code></pre>
+</div>
+
+<pre><code>qaxco7mu4
+</code></pre>
+
+<p>Fena değil.</p>
+
+<p>Gerekli kurulum</p>
+
+<pre><code>sudo apt-get install python-pip
+sudo apt-get install build-essential
+sudo apt-get install libffi-dev
+sudo apt-get install libcairo
+sudo apt-get install libcairo2
+
+sudo pip install keras
+sudo pip install tensorflow
+sudo pip install pandas
+sudo pip install cffi
+sudo pip install cairocffi
+sudo pip install editdistance
+sudo pip install cairo
+sudo pip install pygtk
+sudo pip install cairocffi
+sudo pip install h5py
+</code></pre>
+
+<p>Kaynaklar</p>
+
+<p>[1] Graves, <em>Supervised Sequence Labelling with Recurrent Neural Networks</em>, 
+    <a href="https://www.cs.toronto.edu/~graves/preprint.pdf">https://www.cs.toronto.edu/~graves/preprint.pdf</a></p>
+
+<p>[2] Graves, <em>How to build a recognition system (Part 2): CTC Loss</em>, 
+    <a href="https://docs.google.com/presentation/d/12gYcPft9_4cxk2AD6Z6ZlJNa3wvZCW1ms31nhq51vMk">https://docs.google.com/presentation/d/12gYcPft9_4cxk2AD6Z6ZlJNa3wvZCW1ms31nhq51vMk</a></p>
+
+<p>[3] Graves, <em>How to build a recognition system (Part 1): CTC Loss</em>, 
+    <a href="https://docs.google.com/presentation/d/1AyLOecmW1k9cIbfexOT3dwoUU-Uu5UqlJZ0w3cxilkI">https://docs.google.com/presentation/d/1AyLOecmW1k9cIbfexOT3dwoUU-Uu5UqlJZ0w3cxilkI</a></p>
+
+<p>[4] Troller, <em>Practical OCR system based on state of art neural networks</em>, 
+    <a href="https://support.dce.felk.cvut.cz/mediawiki/images/2/24/Bp_2017_troller_milan.pdf">https://support.dce.felk.cvut.cz/mediawiki/images/2/24/Bp<em>2017</em>troller_milan.pdf</a></p>
+
+<p>[5] Chollet, <em>Keras</em>, 
+    <a href="https://github.com/fchollet/keras/blob/master/examples/image_ocr.py">https://github.com/fchollet/keras/blob/master/examples/image_ocr.py</a></p>
+
+<p>[6] Bayramlı, <em>Fonksiyon Gezmek ve Yield</em>, 
+    <a href="https://burakbayramli.github.io/dersblog/sk/2011/02/fonksiyon-gezmek-ve-yield.html">https://burakbayramli.github.io/dersblog/sk/2011/02/fonksiyon-gezmek-ve-yield.html</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

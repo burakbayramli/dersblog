@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<div class="codehilite">
+<pre><span></span><code><span class="n">train_file</span> <span class="o">=</span> <span class="s2">&quot;work/data/adult.data.csv&quot;</span>
+<span class="n">test_file</span> <span class="o">=</span> <span class="s2">&quot;work/data/adult.test.csv&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="s2">&quot;fnlwgt&quot;</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">,</span> <span class="s2">&quot;education_num&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;marital_status&quot;</span><span class="p">,</span> <span class="s2">&quot;occupation&quot;</span><span class="p">,</span> <span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;capital_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_loss&quot;</span><span class="p">,</span> <span class="s2">&quot;hours_per_week&quot;</span><span class="p">,</span> <span class="s2">&quot;native_country&quot;</span><span class="p">,</span>
+           <span class="s2">&quot;income_bracket&quot;</span><span class="p">]</span>
+<span class="n">df_train</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">train_file</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">COLUMNS</span><span class="p">,</span> <span class="n">skipinitialspace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">test_file</span><span class="p">,</span> <span class="n">names</span><span class="o">=</span><span class="n">COLUMNS</span><span class="p">,</span> <span class="n">skipinitialspace</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">skiprows</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">LABEL_COLUMN</span> <span class="o">=</span> <span class="s2">&quot;label&quot;</span>
+<span class="n">df_train</span><span class="p">[</span><span class="n">LABEL_COLUMN</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_train</span><span class="p">[</span><span class="s2">&quot;income_bracket&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;&gt;50K&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df_test</span><span class="p">[</span><span class="n">LABEL_COLUMN</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_test</span><span class="p">[</span><span class="s2">&quot;income_bracket&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;&gt;50K&quot;</span> <span class="ow">in</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">CATEGORICAL_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="s2">&quot;education&quot;</span><span class="p">,</span> <span class="s2">&quot;marital_status&quot;</span><span class="p">,</span> <span class="s2">&quot;occupation&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="s2">&quot;native_country&quot;</span><span class="p">]</span>
+<span class="n">CONTINUOUS_COLUMNS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="s2">&quot;education_num&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_gain&quot;</span><span class="p">,</span> <span class="s2">&quot;capital_loss&quot;</span><span class="p">,</span> <span class="s2">&quot;hours_per_week&quot;</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">input_fn</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+  <span class="c1"># Creates a dictionary mapping from each continuous feature column name (k) to</span>
+  <span class="c1"># the values of that column stored in a constant Tensor.</span>
+  <span class="n">continuous_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">CONTINUOUS_COLUMNS</span><span class="p">}</span>
+  <span class="c1"># Creates a dictionary mapping from each categorical feature column name (k)</span>
+  <span class="c1"># to the values of that column stored in a tf.SparseTensor.</span>
+  <span class="n">categorical_cols</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">SparseTensor</span><span class="p">(</span>
+      <span class="n">indices</span><span class="o">=</span><span class="p">[[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">)],</span>
+      <span class="n">values</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+      <span class="n">dense_shape</span><span class="o">=</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">CATEGORICAL_COLUMNS</span><span class="p">}</span>
+  <span class="c1"># Merges the two dictionaries into one.</span>
+  <span class="n">feature_cols</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">continuous_cols</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="o">+</span> <span class="n">categorical_cols</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+  <span class="c1"># Converts the label column into a constant Tensor.</span>
+  <span class="n">label</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">LABEL_COLUMN</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+  <span class="c1"># Returns the feature columns and the label.</span>
+  <span class="k">return</span> <span class="n">feature_cols</span><span class="p">,</span> <span class="n">label</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train_input_fn</span><span class="p">():</span>
+  <span class="k">return</span> <span class="n">input_fn</span><span class="p">(</span><span class="n">df_train</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">eval_input_fn</span><span class="p">():</span>
+  <span class="k">return</span> <span class="n">input_fn</span><span class="p">(</span><span class="n">df_test</span><span class="p">)</span>
+
+<span class="n">gender</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_keys</span><span class="p">(</span>
+  <span class="n">column_name</span><span class="o">=</span><span class="s2">&quot;gender&quot;</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Female&quot;</span><span class="p">,</span> <span class="s2">&quot;Male&quot;</span><span class="p">])</span>
+
+<span class="n">education</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;education&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">race</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;race&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">marital_status</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;marital_status&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">relationship</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;relationship&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">workclass</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;workclass&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="n">occupation</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;occupation&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">native_country</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">sparse_column_with_hash_bucket</span><span class="p">(</span><span class="s2">&quot;native_country&quot;</span><span class="p">,</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">age</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">real_valued_column</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">)</span>
+<span class="n">education_num</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">real_valued_column</span><span class="p">(</span><span class="s2">&quot;education_num&quot;</span><span class="p">)</span>
+<span class="n">capital_gain</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">real_valued_column</span><span class="p">(</span><span class="s2">&quot;capital_gain&quot;</span><span class="p">)</span>
+<span class="n">capital_loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">real_valued_column</span><span class="p">(</span><span class="s2">&quot;capital_loss&quot;</span><span class="p">)</span>
+<span class="n">hours_per_week</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">real_valued_column</span><span class="p">(</span><span class="s2">&quot;hours_per_week&quot;</span><span class="p">)</span>
+<span class="n">age_buckets</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">bucketized_column</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">boundaries</span><span class="o">=</span><span class="p">[</span><span class="mi">18</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">55</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">65</span><span class="p">])</span>
+<span class="n">education_x_occupation</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">crossed_column</span><span class="p">([</span><span class="n">education</span><span class="p">,</span> <span class="n">occupation</span><span class="p">],</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e4</span><span class="p">))</span>
+<span class="n">age_buckets_x_education_x_occupation</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">crossed_column</span><span class="p">(</span>
+  <span class="p">[</span><span class="n">age_buckets</span><span class="p">,</span> <span class="n">education</span><span class="p">,</span> <span class="n">occupation</span><span class="p">],</span> <span class="n">hash_bucket_size</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="mf">1e6</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">model_dir</span> <span class="o">=</span> <span class="s2">&quot;/tmp&quot;</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">LinearClassifier</span><span class="p">(</span><span class="n">feature_columns</span><span class="o">=</span><span class="p">[</span>
+  <span class="n">gender</span><span class="p">,</span> <span class="n">native_country</span><span class="p">,</span> <span class="n">education</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">workclass</span><span class="p">,</span> <span class="n">marital_status</span><span class="p">,</span> <span class="n">race</span><span class="p">,</span>
+  <span class="n">age_buckets</span><span class="p">,</span> <span class="n">education_x_occupation</span><span class="p">,</span> <span class="n">age_buckets_x_education_x_occupation</span><span class="p">],</span>
+  <span class="n">model_dir</span><span class="o">=</span><span class="n">model_dir</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">train_input_fn</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+LinearClassifier(params={&#39;gradient_clip_norm&#39;: None, &#39;head&#39;: &lt;tensorflow.contrib.learn.python.learn.estimators.head._BinaryLogisticHead object at 0x7f923dc14250&gt;, &#39;joint_weights&#39;: False, &#39;optimizer&#39;: None, &#39;feature_columns&#39;: [_SparseColumn(column_name=&#39;gender&#39;, is_integerized=False, bucket_size=None, lookup_config=_SparseIdLookupConfig(vocabulary_file=None, keys=(&#39;Female&#39;, &#39;Male&#39;), num_oov_buckets=0, vocab_size=2, default_value=-1), combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;native_country&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;education&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;occupation&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;workclass&#39;, is_integerized=False, bucket_size=100, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;marital_status&#39;, is_integerized=False, bucket_size=100, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;race&#39;, is_integerized=False, bucket_size=100, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _BucketizedColumn(source_column=_RealValuedColumn(column_name=&#39;age&#39;, dimension=1, default_value=None, dtype=tf.float32, normalizer=None), boundaries=(18, 25, 30, 35, 40, 45, 50, 55, 60, 65)), _CrossedColumn(columns=(_SparseColumn(column_name=&#39;education&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;occupation&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string)), hash_bucket_size=10000, hash_key=None, combiner=&#39;sum&#39;, ckpt_to_load_from=None, tensor_name_in_ckpt=None), _CrossedColumn(columns=(_BucketizedColumn(source_column=_RealValuedColumn(column_name=&#39;age&#39;, dimension=1, default_value=None, dtype=tf.float32, normalizer=None), boundaries=(18, 25, 30, 35, 40, 45, 50, 55, 60, 65)), _SparseColumn(column_name=&#39;education&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;occupation&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string)), hash_bucket_size=1000000, hash_key=None, combiner=&#39;sum&#39;, ckpt_to_load_from=None, tensor_name_in_ckpt=None)]})
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">eval_input_fn</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>accuracy: 0.834675
+accuracy/baseline_label_mean: 0.236223
+accuracy/threshold_0.500000_mean: 0.834675
+auc: 0.879206
+auc_precision_recall: 0.684307
+global_step: 200
+labels/actual_label_mean: 0.236223
+labels/prediction_mean: 0.241313
+loss: 0.358859
+precision/positive_threshold_0.500000_mean: 0.711046
+recall/positive_threshold_0.500000_mean: 0.505592
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">m</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">learn</span><span class="o">.</span><span class="n">LinearClassifier</span><span class="p">(</span><span class="n">feature_columns</span><span class="o">=</span><span class="p">[</span>
+  <span class="n">gender</span><span class="p">,</span> <span class="n">native_country</span><span class="p">,</span> <span class="n">education</span><span class="p">,</span> <span class="n">occupation</span><span class="p">,</span> <span class="n">workclass</span><span class="p">,</span> <span class="n">marital_status</span><span class="p">,</span> <span class="n">race</span><span class="p">,</span>
+  <span class="n">age_buckets</span><span class="p">,</span> <span class="n">education_x_occupation</span><span class="p">,</span> <span class="n">age_buckets_x_education_x_occupation</span><span class="p">],</span>
+  <span class="n">optimizer</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">FtrlOptimizer</span><span class="p">(</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+    <span class="n">l1_regularization_strength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">l2_regularization_strength</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
+  <span class="n">model_dir</span><span class="o">=</span><span class="n">model_dir</span><span class="p">)</span>
+<span class="n">m</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">train_input_fn</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Out[1]: 
+LinearClassifier(params={&#39;gradient_clip_norm&#39;: None, &#39;head&#39;: &lt;tensorflow.contrib.learn.python.learn.estimators.head._BinaryLogisticHead object at 0x7f9236f4c890&gt;, &#39;joint_weights&#39;: False, &#39;optimizer&#39;: &lt;tensorflow.python.training.ftrl.FtrlOptimizer object at 0x7f9236f40510&gt;, &#39;feature_columns&#39;: [_SparseColumn(column_name=&#39;gender&#39;, is_integerized=False, bucket_size=None, lookup_config=_SparseIdLookupConfig(vocabulary_file=None, keys=(&#39;Female&#39;, &#39;Male&#39;), num_oov_buckets=0, vocab_size=2, default_value=-1), combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;native_country&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;education&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;occupation&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;workclass&#39;, is_integerized=False, bucket_size=100, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;marital_status&#39;, is_integerized=False, bucket_size=100, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;race&#39;, is_integerized=False, bucket_size=100, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _BucketizedColumn(source_column=_RealValuedColumn(column_name=&#39;age&#39;, dimension=1, default_value=None, dtype=tf.float32, normalizer=None), boundaries=(18, 25, 30, 35, 40, 45, 50, 55, 60, 65)), _CrossedColumn(columns=(_SparseColumn(column_name=&#39;education&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;occupation&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string)), hash_bucket_size=10000, hash_key=None, combiner=&#39;sum&#39;, ckpt_to_load_from=None, tensor_name_in_ckpt=None), _CrossedColumn(columns=(_BucketizedColumn(source_column=_RealValuedColumn(column_name=&#39;age&#39;, dimension=1, default_value=None, dtype=tf.float32, normalizer=None), boundaries=(18, 25, 30, 35, 40, 45, 50, 55, 60, 65)), _SparseColumn(column_name=&#39;education&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string), _SparseColumn(column_name=&#39;occupation&#39;, is_integerized=False, bucket_size=1000, lookup_config=None, combiner=&#39;sum&#39;, dtype=tf.string)), hash_bucket_size=1000000, hash_key=None, combiner=&#39;sum&#39;, ckpt_to_load_from=None, tensor_name_in_ckpt=None)]})
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">results</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">input_fn</span><span class="o">=</span><span class="n">eval_input_fn</span><span class="p">,</span> <span class="n">steps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">results</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">results</span><span class="p">[</span><span class="n">key</span><span class="p">]))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>accuracy: 0.823493
+accuracy/baseline_label_mean: 0.236223
+accuracy/threshold_0.500000_mean: 0.823493
+auc: 0.860434
+auc_precision_recall: 0.635671
+global_step: 400
+labels/actual_label_mean: 0.236223
+labels/prediction_mean: 0.246117
+loss: 0.389911
+precision/positive_threshold_0.500000_mean: 0.721918
+recall/positive_threshold_0.500000_mean: 0.411183
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df2</span> <span class="o">=</span> <span class="n">train_input_fn</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>({&#39;hours_per_week&#39;: &lt;tf.Tensor &#39;Const_4:0&#39; shape=(32561,) dtype=int64&gt;, &#39;workclass&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225aa4c90&gt;, &#39;relationship&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225b04a50&gt;, &#39;gender&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225b040d0&gt;, &#39;age&#39;: &lt;tf.Tensor &#39;Const:0&#39; shape=(32561,) dtype=int64&gt;, &#39;marital_status&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225aa4d10&gt;, &#39;race&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225b04110&gt;, &#39;capital_gain&#39;: &lt;tf.Tensor &#39;Const_2:0&#39; shape=(32561,) dtype=int64&gt;, &#39;native_country&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225b04210&gt;, &#39;capital_loss&#39;: &lt;tf.Tensor &#39;Const_3:0&#39; shape=(32561,) dtype=int64&gt;, &#39;education&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225aa4d50&gt;, &#39;education_num&#39;: &lt;tf.Tensor &#39;Const_1:0&#39; shape=(32561,) dtype=int64&gt;, &#39;occupation&#39;: &lt;tensorflow.python.framework.sparse_tensor.SparseTensor object at 0x7f9225b04f10&gt;}, &lt;tf.Tensor &#39;Const_5:0&#39; shape=(32561,) dtype=int64&gt;)
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="n">df2</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;hours_per_week&#39;</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Tensor(&quot;Const_10:0&quot;, shape=(32561,), dtype=int64)
+</code></pre>
+</div>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

@@ -52,5 +52,7 @@
 
 [Emacs](12/emacs.html)
 
+[Uzun Kısa-Vade Hafıza Ağları (Long Short-Term Memory Networks, LSTM)](12/lstm-nn.html)
+
 [Optik Karakter Tanıma, Yazı Tanıma (Optical Character Recognition -OCR-)](12/ocr-nn.html)
 

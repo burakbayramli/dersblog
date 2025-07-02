@@ -46,6 +46,8 @@
 
 [YOLO - Evrişimsel Derin Ağlar ile Hızlı Obje Tanıma (Object Recognition)](10/yolo-evrisimsel-derin-aglar-ile-hizli.html)
 
+[Derin Takviyeli Öğrenme, İlke Gradyanları (Deep Reinforcement Learning, Policy Gradients )](11/deep-reinforced-takviyeli-ogren.html)
+
 [MathJax: Web Sayfalarinda Javascript ile Matematik Formülleri](11/mathjax-javascript-ile-matematik.html)
 
 [Serviste İşleyen Komut Satırı - tmux](11/serviste-isleyen-komut-satr-tmux.html)

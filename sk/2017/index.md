@@ -52,3 +52,5 @@
 
 [Emacs](12/emacs.html)
 
+[Optik Karakter Tanıma, Yazı Tanıma (Optical Character Recognition -OCR-)](12/ocr-nn.html)
+

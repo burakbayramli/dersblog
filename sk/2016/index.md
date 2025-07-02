@@ -36,6 +36,8 @@
 
 [Flask ile Dinamik Web Sayfalari Gelistirmek](09/fla-ile-dinamik-web-sayfalari.html)
 
+[Derin Öğrenme ile Doğal Dil İşlemek (Natural Language Processing -NLP-)](10/nlp-natural-language-processing.html)
+
 [Numpy](10/numpy.html)
 
 [Ubuntu 16 ve Acer Aspire R11](10/ubuntu-16-ve-acer-aspire-r11.html)

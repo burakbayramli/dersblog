@@ -1,0 +1,601 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Derin Takviyeli Öğrenme, İlke Gradyanları (Deep Reinforcement Learning, Policy Gradients )</h1>
+
+<p>Bilgisayar otomatik olarak oyun oynamayı öğrenebilir mi? Diyelim herhangi
+bir bilgisayar oyunu, dama, satranç, ya da eğlence oyunlarından Pong. Eğer
+elimizde bir simülasyon ortamı var ise, ve takviyeli öğrenme teknikleri ile
+bu sorunun cevabı evet. Simülasyon ortamında bilgisayara karşı istediğimiz
+kadar oynayıp RL teknikleri bir oyunu oynamayı öğrenebilir.</p>
+
+<p>Daha önce [7] yazısında farklı bir yaklaşım gördük, bir değer fonksiyonu
+vardı, bu fonksiyona tahtanın son halini veriyorduk, değer fonksiyonu bize
+pozisyonun taraflar için ne kadar avantajlı olduğunu raporluyordu (tek bir
+sayı). Bu fonksiyon bir kez, ve önceden kodlanmaktaydı, ve oyun oynayan
+yapay zeka altüst (minimax) algoritması ile kendisi için en avantajlı karşı
+taraf için en avantajsız pozisyonları bu fonksiyon ile değerlendirerek ve
+arama yaparak buluyordu. Fakat değer fonksiyonu yaklaşımının bazı
+dezavantajları var, birincisi fonksiyonun deterministik olması. Oyun
+sırasında değişmiyor, önceden kodlanmış.</p>
+
+<p>Daha iyi bir yaklaşım olasılıksal bir ilke $\pi_\theta(a,s)$ kodlamak,
+atılan adımları örnekleme ile atmak, ve ilkeyi her oyun sonunda
+güncellemek. Böylece oyun sırasında hem oyuncu yeni şeyler denemeye (açık
+fikirli!) hazır oluyor, takılıp kalmıyor, oyun durumundan tam emin
+olunamadığı durumlar icin bile hazır oluyor, ve kazandıran ilkeler daha
+yoğun olasılıklara tekabül ettiği için yine iyi bir oyun oynama becerisine
+kavuşuyor, ve kendini sürekli güncelliyor.</p>
+
+<p>İlke $\pi<em>\theta(a,s)$, oyun konumu (state) $s$ ile, yapılacak hareket
+(action) ise $a$ ile belirtilir. Pong örneğinde konum tüm oyunun o andaki
+piksel görüntüsü olarak bize bildiriliyor olabilir, hareket ise raketin
+yukarı mı aşağı mı gideceği; verili konum $s$ için $\pi</em>\theta(a|s)$
+(kazanmak için optimallik bağlamında) mümkün tüm davranışların dağılımını
+verecek.</p>
+
+<p>Peki ilke fonksiyonunu nasıl güncelleriz? İlke gradyanı (policy gradient)
+kavramı ile. İlke bir fonksiyondur, bir softmax fonksiyonu ile ya da yapay
+sinir ağı ile temsil edilebilir. YSA'lar her türlü fonksiyonu temsil
+edebildikleri için sofistike kabiliyetleri için daha tercih ediliyorlar
+(daha önemlisi gradyanları otomatik alınabiliyor, bunun niye faydalı
+olduğunu birazdan göreceğiz). </p>
+
+<p><img src="policy.png" alt="" /></p>
+
+<p>Güncelleme nasıl olacak? Burada skor fonksiyonunu kavramı gerekli, optimize
+etmek istediğimiz bir skor fonksiyonunun beklentisinin optimize edilmesi,
+skor fonksiyonu tabii ki ilke fonksiyonuna bağlıdır, yani skor beklentisi
+en iyi olacak ilkeyi arıyoruz. Bu beklentinin gradyanını istiyoruz, çünkü
+ilkeyi tanımlayan $\theta$'yi skor bağlamında öyle güncelleyeceğiz ki eğer
+aynı konumu tekrar gelmiş olsak, daha iyi hareketlerle daha iyi skora
+erişelim. Aradığımız gradyan ($s,a$ yerine kısaca $x$ kullanalım, skor $Q$
+olsun [2]),</p>
+
+<p>$$ 
+\nabla<em>\theta E</em>{x \sim \pi_\theta(x)} [Q(x)] 
+$$</p>
+
+<p>Üstteki ifadeyi açalım, beklentinin tanımı üzerinden,</p>
+
+<p>$$ \nabla<em>\theta E</em>{x \sim \pi<em>\theta(s)} [Q(x)] = 
+\nabla</em>\theta \sum_x \pi(x) Q(x)
+$$</p>
+
+<p>Gradyan içeri nüfuz edebilir,</p>
+
+<p>$$ 
+= \sum<em>x \nabla</em>\theta \pi_\theta(x) Q(x)
+$$</p>
+
+<p>$\pi(x)$ ile çarpıp bölersek hiç bir şey değişmemiş olur,</p>
+
+<p>$$ 
+= \sum<em>x \pi(x) \frac{\nabla</em>\theta \pi(x)}{\pi(x)} Q(x)
+$$</p>
+
+<p>Cebirsel olarak biliyoruz ki $\nabla<em>\theta \log(z) =
+\frac{1}{z}\nabla</em>\theta$, o zaman,</p>
+
+<p>$$ 
+= \sum<em>x \pi(x) \nabla</em>\theta \log \pi(x)Q(x)
+$$</p>
+
+<p>Yine beklenti tanımından hareketle</p>
+
+<p>$$ 
+= E<em>x \big[ \nabla</em>\theta \log \pi(x) Q(x) \big]
+$$</p>
+
+<p>$x = (s,a)$ demistik, o zaman nihai denklem</p>
+
+<p>$$ 
+\nabla<em>\theta E</em>{x \sim \pi<em>\theta(s,a)} [Q(s,a)] 
+= E</em>{s,a} \big[ \nabla<em>\theta \log \pi</em>\theta(s,a) Q(s,a) \big]
+$$</p>
+
+<p>Eşitliğin sağ tarafı bize güzel bir kabiliyet sunmuş oldu, orada bir
+beklenti var, bu hesabı analitik olarak yapmak çok zor olabilir, fakat
+beklentilerin örneklem alarak nasıl hesaplanacağını biliyoruz! Detaylar
+için <em>İstatistik, Monte Carlo, Entegraller, MCMC</em> yazısı. O zaman
+$v_t \sim Q(s,a)$ örneklemi alırız, yani oyunu baştan sonra kadar oynarız
+ve skora bakarız, ve $\theta$ güncellemesi için [5],</p>
+
+<p>$$ \Delta \theta<em>t = \alpha \nabla</em>\theta \log \pi<em>\theta (s</em>t,a<em>t) v</em>t$$</p>
+
+<p>Oyun oynamak ile örneklemin alakası ne? Oynanan bir oyun mümkün tüm oyunlar
+içinden alınan bir örneklem değil midir? Evet. Ayrıca DYSA durumunda da
+olası her aksiyonun olasılığını hesaplıyoruz ve bu olasıklar üzerinden zar
+atarak bir hareket seçiyoruz. Daha olası olan daha fazla seçiliyor tabii
+ama az olası olan da bazen seçilebiliyor.</p>
+
+<p>Tabii mesela Pong oyunu bir sürü adım $a<em>1,..,a</em>n$ sonrası bitiyor, bu
+durumda en sondaki kazanç (ya da kaybı) o oyundaki tüm adımlara geriye
+giderek uyguluyoruz. Güncelleme sonrası ilke fonksiyonumuz değişiyor, ve
+bir oyun daha oynayarak aynı şeyi tekrarlıyoruz.</p>
+
+<p>$\pi<em>\theta (s,a)$'nin ilke fonksiyonu olduğunu söyledik, bu fonksiyon DYSA
+olabilir, ya da daha basit, sonlu sayıda seçenek üzerinden ayrıksal
+olasılıkları depolayan softmax olabilir (bu durum için gradyan türetmesi
+altta). DYSA durumunda üstteki formüle göre $\log \pi</em>\theta (s,a)$'un
+gradyanının gerektiğini görüyoruz, otomatik türev uzerinden bu gradyan DYSA
+paketinden rahatça alınabilir.</p>
+
+<p>Pong oyunu kodunu göreceğiz, ama ondan önce daha basit çubuk dengeleme
+problemine bakalım [1], kuruluş, oyun açıklaması için [3]. Bir simulasyon
+ortamındayız, ve bu ortamda bize bir çubuk veriliyor, ve çubuğun konumu
+dört tane sayı üzerinden bildirilir, ödül her adımda anında alınır (çubuk
+düşmediyse, ekrandan çıkmadıysa o anda başarı).</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># cartpole_train.py - egitim</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span><span class="o">,</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_graph</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">discount_rewards</span><span class="p">(</span><span class="n">rewards</span><span class="p">,</span> <span class="n">discount_rate</span><span class="p">):</span>
+    <span class="n">discounted_rewards</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rewards</span><span class="p">))</span>
+    <span class="n">cumulative_rewards</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">rewards</span><span class="p">))):</span>
+        <span class="n">cumulative_rewards</span> <span class="o">=</span> <span class="n">rewards</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">+</span> <span class="n">cumulative_rewards</span> <span class="o">*</span> <span class="n">discount_rate</span>
+        <span class="n">discounted_rewards</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">cumulative_rewards</span>
+    <span class="k">return</span> <span class="n">discounted_rewards</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">discount_and_normalize_rewards</span><span class="p">(</span><span class="n">all_rewards</span><span class="p">,</span> <span class="n">discount_rate</span><span class="p">):</span>
+    <span class="n">all_discounted_rewards</span> <span class="o">=</span> <span class="p">[</span><span class="n">discount_rewards</span><span class="p">(</span><span class="n">rewards</span><span class="p">,</span> <span class="n">discount_rate</span><span class="p">)</span> \
+                              <span class="k">for</span> <span class="n">rewards</span> <span class="ow">in</span> <span class="n">all_rewards</span><span class="p">]</span>
+    <span class="n">flat_rewards</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">all_discounted_rewards</span><span class="p">)</span>
+    <span class="n">reward_mean</span> <span class="o">=</span> <span class="n">flat_rewards</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">reward_std</span> <span class="o">=</span> <span class="n">flat_rewards</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[(</span><span class="n">discounted_rewards</span> <span class="o">-</span> <span class="n">reward_mean</span><span class="p">)</span><span class="o">/</span><span class="n">reward_std</span> <span class="k">for</span> \
+            <span class="n">discounted_rewards</span> <span class="ow">in</span> <span class="n">all_discounted_rewards</span><span class="p">]</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="n">reset_graph</span><span class="p">()</span>
+
+<span class="n">n_inputs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n_outputs</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="n">initializer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">variance_scaling_initializer</span><span class="p">()</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+
+<span class="n">hidden</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span>
+                         <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">elu</span><span class="p">,</span>
+                         <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">initializer</span><span class="p">)</span>
+
+<span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">)</span>
+
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>
+
+<span class="n">p_left_and_right</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">outputs</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">outputs</span><span class="p">])</span>
+
+<span class="n">action</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_left_and_right</span><span class="p">),</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">to_float</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+<span class="n">cross_entropy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid_cross_entropy_with_logits</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span>
+
+<span class="n">grads_and_vars</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">cross_entropy</span><span class="p">)</span>
+<span class="n">gradients</span> <span class="o">=</span> <span class="p">[</span><span class="n">grad</span> <span class="k">for</span> <span class="n">grad</span><span class="p">,</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">grads_and_vars</span><span class="p">]</span>
+<span class="n">gradient_placeholders</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">grads_and_vars_feed</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">grad</span><span class="p">,</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">grads_and_vars</span><span class="p">:</span>
+    <span class="n">gradient_placeholder</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">grad</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
+    <span class="n">gradient_placeholders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gradient_placeholder</span><span class="p">)</span>
+    <span class="n">grads_and_vars_feed</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">gradient_placeholder</span><span class="p">,</span> <span class="n">variable</span><span class="p">))</span>
+<span class="n">training_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">grads_and_vars_feed</span><span class="p">)</span>
+
+<span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+
+<span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>        
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;CartPole-v0&quot;</span><span class="p">)</span>
+
+<span class="n">n_games_per_update</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n_max_steps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">save_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">discount_rate</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">ffile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cartpole.ckpt&quot;</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\r</span><span class="s2">Iteration: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">iteration</span><span class="p">))</span>
+    <span class="n">all_rewards</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">all_gradients</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">game</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_games_per_update</span><span class="p">):</span>
+        <span class="n">current_rewards</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_gradients</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_max_steps</span><span class="p">):</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">X</span><span class="p">:</span> <span class="n">obs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">)}</span>
+            <span class="n">action_val</span><span class="p">,</span> <span class="n">gradients_val</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">action</span><span class="p">,</span> <span class="n">gradients</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action_val</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="n">current_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+            <span class="n">current_gradients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gradients_val</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span> <span class="k">break</span>
+        <span class="n">all_rewards</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_rewards</span><span class="p">)</span>
+        <span class="n">all_gradients</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_gradients</span><span class="p">)</span>
+
+    <span class="n">all_rewards</span> <span class="o">=</span> <span class="n">discount_and_normalize_rewards</span><span class="p">(</span><span class="n">all_rewards</span><span class="p">,</span>
+                                                 <span class="n">discount_rate</span><span class="o">=</span><span class="n">discount_rate</span><span class="p">)</span>
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">var_index</span><span class="p">,</span> <span class="n">gradient_placeholder</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">gradient_placeholders</span><span class="p">):</span>
+        <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">reward</span> <span class="o">*</span> <span class="n">all_gradients</span><span class="p">[</span><span class="n">game_index</span><span class="p">][</span><span class="n">step</span><span class="p">][</span><span class="n">var_index</span><span class="p">]</span> \
+               <span class="k">for</span> <span class="n">game_index</span><span class="p">,</span> <span class="n">rewards</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_rewards</span><span class="p">)</span> \
+               <span class="k">for</span> <span class="n">step</span><span class="p">,</span> <span class="n">reward</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rewards</span><span class="p">)]</span>
+        <span class="n">mean_gradients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">feed_dict</span><span class="p">[</span><span class="n">gradient_placeholder</span><span class="p">]</span> <span class="o">=</span> <span class="n">mean_gradients</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_op</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="n">save_iterations</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">ffile</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Eğitim fazla sürmüyor. Bittikten sonra alttaki kodla sonucu
+görebiliriz. Çubuğun dengeli bir şekilde tutulabildiğini göreceğiz. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># cartpole_play.py - oyunu oyna</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.animation</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">animation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_graph</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_cart_pole</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">obs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">env</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;rgb_array&quot;</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">update_scene</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">patch</span><span class="p">):</span>
+    <span class="n">patch</span><span class="o">.</span><span class="n">set_data</span><span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="n">num</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">patch</span><span class="p">,</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_policy_net</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">n_max_steps</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">):</span>
+    <span class="n">frames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;CartPole-v0&quot;</span><span class="p">)</span>
+    <span class="n">obs</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+        <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">model_path</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_max_steps</span><span class="p">):</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">render_cart_pole</span><span class="p">(</span><span class="n">env</span><span class="p">,</span> <span class="n">obs</span><span class="p">)</span>
+            <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
+            <span class="n">action_val</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">X</span><span class="p">:</span> <span class="n">obs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">)})</span>
+            <span class="n">obs</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action_val</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+                <span class="k">break</span>
+    <span class="n">env</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">frames</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="n">reset_graph</span><span class="p">()</span>
+
+<span class="n">n_inputs</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n_hidden</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n_outputs</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="n">initializer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">variance_scaling_initializer</span><span class="p">()</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+
+<span class="n">hidden</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">n_hidden</span><span class="p">,</span>
+                         <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">elu</span><span class="p">,</span>
+                         <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">initializer</span><span class="p">)</span>
+<span class="n">logits</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">layers</span><span class="o">.</span><span class="n">dense</span><span class="p">(</span><span class="n">hidden</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">)</span>
+<span class="n">outputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">logits</span><span class="p">)</span>  <span class="c1"># probability of action 0 (left)</span>
+<span class="n">p_left_and_right</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">[</span><span class="n">outputs</span><span class="p">,</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">outputs</span><span class="p">])</span>
+<span class="n">action</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">multinomial</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">p_left_and_right</span><span class="p">),</span> <span class="n">num_samples</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">y</span> <span class="o">=</span> <span class="mf">1.</span> <span class="o">-</span> <span class="n">tf</span><span class="o">.</span><span class="n">to_float</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+<span class="n">cross_entropy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid_cross_entropy_with_logits</span><span class="p">(</span><span class="n">labels</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">logits</span><span class="o">=</span><span class="n">logits</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">)</span>
+<span class="n">grads_and_vars</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">cross_entropy</span><span class="p">)</span>
+<span class="n">gradients</span> <span class="o">=</span> <span class="p">[</span><span class="n">grad</span> <span class="k">for</span> <span class="n">grad</span><span class="p">,</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">grads_and_vars</span><span class="p">]</span>
+<span class="n">gradient_placeholders</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">grads_and_vars_feed</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">grad</span><span class="p">,</span> <span class="n">variable</span> <span class="ow">in</span> <span class="n">grads_and_vars</span><span class="p">:</span>
+    <span class="n">gradient_placeholder</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="n">grad</span><span class="o">.</span><span class="n">get_shape</span><span class="p">())</span>
+    <span class="n">gradient_placeholders</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">gradient_placeholder</span><span class="p">)</span>
+    <span class="n">grads_and_vars_feed</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">gradient_placeholder</span><span class="p">,</span> <span class="n">variable</span><span class="p">))</span>
+<span class="n">training_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">grads_and_vars_feed</span><span class="p">)</span>
+
+<span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+<span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">()</span>        
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;CartPole-v0&quot;</span><span class="p">)</span>
+
+<span class="n">n_games_per_update</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">n_max_steps</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">250</span>
+<span class="n">save_iterations</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">discount_rate</span> <span class="o">=</span> <span class="mf">0.95</span>
+<span class="n">ffile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/cartpole.ckpt&quot;</span>
+
+<span class="n">frames</span> <span class="o">=</span> <span class="n">render_policy_net</span><span class="p">(</span><span class="n">ffile</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">n_max_steps</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Pong oyunu kodu alttadır [6]. Bu eğitim paralellik özelliği olmayan normal
+bilgisayarda uzun sürüyor (ben birkaç gün eğittim), fakat TensorFlow
+çizitini arada sırada kaydedip kaldığı yerden devam edebildiği için parça
+parça işletilebilir. Oyunun otomatik nasıl oynandığını görmek için alttaki
+<code>env.render</code> satırını aktive etmek yeterli. Bilgisayarın kendi başına
+öğrenip oynaması müthiş!</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># pong.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">gym</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="n">n_obs</span> <span class="o">=</span> <span class="mi">80</span> <span class="o">*</span> <span class="mi">80</span>          
+<span class="n">h</span> <span class="o">=</span> <span class="mi">200</span>                  
+<span class="n">n_actions</span> <span class="o">=</span> <span class="mi">3</span>            
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">1e-3</span>
+<span class="n">gamma</span> <span class="o">=</span> <span class="mf">.99</span>              
+<span class="n">decay</span> <span class="o">=</span> <span class="mf">0.99</span>             
+<span class="n">save_path</span><span class="o">=</span><span class="s1">&#39;/home/burak/Downloads/scikit-data/models/pong/pong.ckpt&#39;</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">gym</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Pong-v0&quot;</span><span class="p">)</span>
+<span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="n">prev_x</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">xs</span><span class="p">,</span><span class="n">rs</span><span class="p">,</span><span class="n">ys</span> <span class="o">=</span> <span class="p">[],[],[]</span>
+<span class="n">running_reward</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="n">reward_sum</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">episode_number</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="n">tf_model</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;layer_one&#39;</span><span class="p">,</span><span class="n">reuse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">xavier_l1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal_initializer</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">stddev</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">n_obs</span><span class="p">),</span>
+                                                <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">tf_model</span><span class="p">[</span><span class="s1">&#39;W1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;W1&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">n_obs</span><span class="p">,</span> <span class="n">h</span><span class="p">],</span> <span class="n">initializer</span><span class="o">=</span><span class="n">xavier_l1</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="s1">&#39;layer_two&#39;</span><span class="p">,</span><span class="n">reuse</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">xavier_l2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">truncated_normal_initializer</span><span class="p">(</span><span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                                                <span class="n">stddev</span><span class="o">=</span><span class="mf">1.</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">h</span><span class="p">),</span>
+                                                <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">tf_model</span><span class="p">[</span><span class="s1">&#39;W2&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_variable</span><span class="p">(</span><span class="s2">&quot;W2&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">h</span><span class="p">,</span><span class="n">n_actions</span><span class="p">],</span> <span class="n">initializer</span><span class="o">=</span><span class="n">xavier_l2</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tf_discount_rewards</span><span class="p">(</span><span class="n">tf_r</span><span class="p">):</span>
+    <span class="n">discount_f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="n">a</span><span class="o">*</span><span class="n">gamma</span> <span class="o">+</span> <span class="n">v</span><span class="p">;</span>
+    <span class="n">tf_r_reverse</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">scan</span><span class="p">(</span><span class="n">discount_f</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">tf_r</span><span class="p">,[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]))</span>
+    <span class="n">tf_discounted_r</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reverse</span><span class="p">(</span><span class="n">tf_r_reverse</span><span class="p">,[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">tf_discounted_r</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tf_policy_forward</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="c1">#x ~ [1,D]</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">tf_model</span><span class="p">[</span><span class="s1">&#39;W1&#39;</span><span class="p">])</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">logp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">tf_model</span><span class="p">[</span><span class="s1">&#39;W2&#39;</span><span class="p">])</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="n">logp</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">p</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prepro</span><span class="p">(</span><span class="n">I</span><span class="p">):</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="p">[</span><span class="mi">35</span><span class="p">:</span><span class="mi">195</span><span class="p">]</span> 
+    <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="p">[::</span><span class="mi">2</span><span class="p">,::</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">I</span><span class="p">[</span><span class="n">I</span> <span class="o">==</span> <span class="mi">144</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="n">I</span><span class="p">[</span><span class="n">I</span> <span class="o">==</span> <span class="mi">109</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> 
+    <span class="n">I</span><span class="p">[</span><span class="n">I</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>   
+    <span class="k">return</span> <span class="n">I</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="n">tf_x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_obs</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;tf_x&quot;</span><span class="p">)</span>
+<span class="n">tf_y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_actions</span><span class="p">],</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;tf_y&quot;</span><span class="p">)</span>
+<span class="n">tf_epr</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;tf_epr&quot;</span><span class="p">)</span>
+
+<span class="n">tf_discounted_epr</span> <span class="o">=</span> <span class="n">tf_discount_rewards</span><span class="p">(</span><span class="n">tf_epr</span><span class="p">)</span>
+<span class="n">tf_mean</span><span class="p">,</span> <span class="n">tf_variance</span><span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">moments</span><span class="p">(</span><span class="n">tf_discounted_epr</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+                                    <span class="n">shift</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;reward_moments&quot;</span><span class="p">)</span>
+<span class="n">tf_discounted_epr</span> <span class="o">-=</span> <span class="n">tf_mean</span>
+<span class="n">tf_discounted_epr</span> <span class="o">/=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">tf_variance</span> <span class="o">+</span> <span class="mf">1e-6</span><span class="p">)</span>
+
+<span class="n">tf_aprob</span> <span class="o">=</span> <span class="n">tf_policy_forward</span><span class="p">(</span><span class="n">tf_x</span><span class="p">)</span>
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">l2_loss</span><span class="p">(</span><span class="n">tf_y</span><span class="o">-</span><span class="n">tf_aprob</span><span class="p">)</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">RMSPropOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="n">decay</span><span class="p">)</span>
+<span class="n">tf_grads</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="n">loss</span><span class="p">,</span>
+                                       <span class="n">var_list</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">trainable_variables</span><span class="p">(),</span>
+                                       <span class="n">grad_loss</span><span class="o">=</span><span class="n">tf_discounted_epr</span><span class="p">)</span>
+<span class="n">train_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">apply_gradients</span><span class="p">(</span><span class="n">tf_grads</span><span class="p">)</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">InteractiveSession</span><span class="p">()</span>
+<span class="n">tf</span><span class="o">.</span><span class="n">initialize_all_variables</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+<span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">all_variables</span><span class="p">())</span>
+<span class="n">load_was_success</span> <span class="o">=</span> <span class="kc">True</span> 
+<span class="k">try</span><span class="p">:</span>
+    <span class="c1"># mevcut TF ciziti varsa yuklemeye ugras, kaldigi yerden devam icin</span>
+    <span class="n">save_dir</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">save_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ckpt</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">get_checkpoint_state</span><span class="p">(</span><span class="n">save_dir</span><span class="p">)</span>
+    <span class="n">load_path</span> <span class="o">=</span> <span class="n">ckpt</span><span class="o">.</span><span class="n">model_checkpoint_path</span>
+    <span class="n">saver</span><span class="o">.</span><span class="n">restore</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">load_path</span><span class="p">)</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="s2">&quot;no saved model to load. starting new session&quot;</span>
+    <span class="n">load_was_success</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span> <span class="s2">&quot;loaded model: </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">load_path</span><span class="p">)</span>
+    <span class="n">saver</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">Saver</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">all_variables</span><span class="p">())</span>
+    <span class="n">episode_number</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">load_path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="c1"># oyunu seyretmek icin bir sure egitildikten sonra</span>
+    <span class="c1"># alttaki satiri aktif hale getirebiliriz</span>
+    <span class="c1"># env.render() </span>
+    <span class="n">cur_x</span> <span class="o">=</span> <span class="n">prepro</span><span class="p">(</span><span class="n">observation</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">cur_x</span> <span class="o">-</span> <span class="n">prev_x</span> <span class="k">if</span> <span class="n">prev_x</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_obs</span><span class="p">)</span>
+    <span class="n">prev_x</span> <span class="o">=</span> <span class="n">cur_x</span>
+
+    <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="n">tf_x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))}</span>
+    <span class="n">aprob</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf_aprob</span><span class="p">,</span><span class="n">feed</span><span class="p">)</span> <span class="p">;</span> <span class="n">aprob</span> <span class="o">=</span> <span class="n">aprob</span><span class="p">[</span><span class="mi">0</span><span class="p">,:]</span>
+    <span class="n">action</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">n_actions</span><span class="p">,</span> <span class="n">p</span><span class="o">=</span><span class="n">aprob</span><span class="p">)</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">aprob</span><span class="p">)</span> <span class="p">;</span> <span class="n">label</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">observation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">done</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">action</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">reward_sum</span> <span class="o">+=</span> <span class="n">reward</span>
+
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">;</span> <span class="n">ys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">label</span><span class="p">)</span> <span class="p">;</span> <span class="n">rs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reward</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">done</span><span class="p">:</span>
+        <span class="n">running_reward</span> <span class="o">=</span> <span class="n">reward_sum</span> <span class="k">if</span> <span class="n">running_reward</span> \
+                         <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">running_reward</span> <span class="o">*</span> <span class="mf">0.99</span> <span class="o">+</span> <span class="n">reward_sum</span> <span class="o">*</span> <span class="mf">0.01</span>
+
+        <span class="n">feed</span> <span class="o">=</span> <span class="p">{</span><span class="n">tf_x</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="n">tf_epr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">rs</span><span class="p">),</span> <span class="n">tf_y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">(</span><span class="n">ys</span><span class="p">)}</span>
+        <span class="n">_</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">train_op</span><span class="p">,</span><span class="n">feed</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">episode_number</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;ep </span><span class="si">{}</span><span class="s1">: reward: </span><span class="si">{}</span><span class="s1">, mean reward: </span><span class="si">{:3f}</span><span class="s1">&#39;</span><span class="o">.</span>\
+                <span class="nb">format</span><span class="p">(</span><span class="n">episode_number</span><span class="p">,</span> <span class="n">reward_sum</span><span class="p">,</span> <span class="n">running_reward</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">ep </span><span class="si">{}</span><span class="s1">: reward: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">episode_number</span><span class="p">,</span> <span class="n">reward_sum</span><span class="p">)</span>
+
+        <span class="n">xs</span><span class="p">,</span><span class="n">rs</span><span class="p">,</span><span class="n">ys</span> <span class="o">=</span> <span class="p">[],[],[]</span> 
+        <span class="n">episode_number</span> <span class="o">+=</span> <span class="mi">1</span> 
+        <span class="n">observation</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span> 
+        <span class="n">reward_sum</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">if</span> <span class="n">episode_number</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">saver</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">sess</span><span class="p">,</span> <span class="n">save_path</span><span class="p">,</span> <span class="n">global_step</span><span class="o">=</span><span class="n">episode_number</span><span class="p">)</span>
+            <span class="nb">print</span> <span class="s2">&quot;SAVED MODEL #</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">episode_number</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Softmax</p>
+
+<p>Softmax sonlu sayıda seçenek üzerinden bir dağılım tanımlar,</p>
+
+<p>$$ 
+\pi<em>\theta(s,a) = \frac{e^{h(s,a,\theta)}}{\sum</em>b e^{h(s,b,\theta)} }
+$$</p>
+
+<p>ki $h(s,a,\theta) = \phi(s,a)^T\theta$. Şimdi ilke gradyanını softmax ile
+nasıl işletiriz onu görelim. Softmax'in kodlaması için bir çözüm ayrıksal
+olarak (bir matriste mesela) her $s,a$ kombinasyonu için gerekli
+ağırlıkları tutmak. O zaman spesifik bir $\phi$ çağrısı sonrası $\theta$
+ile bu katsayılar çarpılır ve sonuç alınır. $\theta$ ilkenin ne olduğunu,
+onun özünü tanımlar. DYSA durumundan bir fark softmax için otomatik
+türeve gerek olmadan direk türevi kendimiz hesaplayabiliriz [4]. Üstteki
+formülün log gradyanı</p>
+
+<p>$$ 
+\nabla<em>\theta \log \pi</em>\theta = 
+\nabla<em>\theta \log \frac{e^{h(s,a,\theta)}}{\sum</em>b e^{h(s,b,\theta)} }
+$$</p>
+
+<p>$$ = \nabla<em>\theta \big[ \log e^{h(s,a,\theta)} - \log \sum</em>b e^{h(s,b,\theta)}\big]$$</p>
+
+<p>çünkü </p>
+
+<p>$$ \log(\frac{x}{y}) = \log x - \log y $$</p>
+
+<p>Devam edelim</p>
+
+<p>$$ = \nabla<em>\theta \big[ h(s,a,\theta) - \log \sum</em>b e^{h(s,b,\theta)} \big]$$</p>
+
+<p>Gradyan her iki terime de uygulanır,</p>
+
+<p>$$ 
+= \phi(s,a) - \sum<em>b h(s,b,\theta)\frac{e^{h(s,b,\theta)}}{\sum</em>b e^{h(s,b,\theta)}} 
+$$</p>
+
+<p>$$ 
+= \phi(s,a) - \sum<em>b h(s,b,\theta) \pi</em>\theta(b,s)
+$$</p>
+
+<p>$$ 
+= \phi(s,a) - E<em>{\pi</em>\theta} \big[ \phi(s,\cdot) \big]
+$$</p>
+
+<p>İlginç ve ilk bakışta anlaşılabilen / akla yatacak (intuitive) bir sonuca
+ulaştık. Log gradyanı içinde bulunduğumuz konum ve attığımız adım için
+hesaplanan $\phi$'den mevcut atılabilecek tüm adımlar üzerinden hesaplanan
+bir $\phi$ ortalamasının çıkartılmış hali. Yani "bu spesifik $\phi$
+normalden ne kadar fazla?'' sorusunu sormuş oluyorum, ve gradyanın gideceği,
+iyileştirme yönünü bu sayı belirliyor. Yani bir $\phi$ eğer normalden fazla
+ortaya çıkıyorsa ve iyi sonuç alıyorsa (skorla çarpım yaptığımızı
+unutmayalım), ilkeyi o yönde daha fazla güncelliyoruz ki bu başarılı
+sonuçları daha fazla alabilelim.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Géron, <em>Hands-On Machine Learning with Scikit-Learn and TensorFlow</em></p>
+
+<p>[2] Karpathy, <em>Deep Reinforcement Learning: Pong from Pixels</em>, 
+    <a href="http://karpathy.github.io/2016/05/31/rl/">http://karpathy.github.io/2016/05/31/rl/</a></p>
+
+<p>[3] Bayramlı, <em>OpenAI Gym, Pong, Derin Takviyeli Öğrenme</em>,
+    <a href="https://burakbayramli.github.io/dersblog/sk/2017/09/openai-gym-pong-derin-takviyeli-ogrenme.html">https://burakbayramli.github.io/dersblog/sk/2017/09/openai-gym-pong-derin-takviyeli-ogrenme.html</a></p>
+
+<p>[3] Bayramlı, <em>OpenAI, Çubuklu Araba, CartPole</em>,
+   <a href="https://burakbayramli.github.io/dersblog/sk/2017/09/openai-cubuklu-araba-cartpole.html">https://burakbayramli.github.io/dersblog/sk/2017/09/openai-cubuklu-araba-cartpole.html</a></p>
+
+<p>[4] Silver, <em>Monte-Carlo Simulation Balancing</em>,
+    <a href="http://www.machinelearning.org/archive/icml2009/papers/500.pdf">http://www.machinelearning.org/archive/icml2009/papers/500.pdf</a></p>
+
+<p>[5] Silver, <em>Reinforcement Learning</em>, 
+    <a href="http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html">http://www0.cs.ucl.ac.uk/staff/d.silver/web/Teaching.html</a></p>
+
+<p>[6] Greydanus, <em>Solves Pong with Policy Gradients in Tensorflow</em>, 
+    <a href="https://gist.github.com/greydanus/5036f784eec2036252e1990da21eda18">https://gist.github.com/greydanus/5036f784eec2036252e1990da21eda18</a></p>
+
+<p>[7] Bayramlı, Bilgisayar Bilim, <em>Yapay Zeka ve Müsabaka</em></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

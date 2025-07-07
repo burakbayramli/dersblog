@@ -4,6 +4,8 @@
 
 [Marioflow](01/marioflow.html)
 
+[Konuşma Tanıma (Speech Recognition)](01/speech-recognition.html)
+
 [Elde Olmayan Eğitim Verisi](02/elde-olmayan-egitim-verisi.html)
 
 [Go Oyunu, GnuGo](02/go-gnugo.html)

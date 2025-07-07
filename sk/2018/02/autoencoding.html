@@ -1,0 +1,877 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Özkodlama (Autoencoding)</h1>
+
+<p>Özkodlamanın yaptığının bir tür "veriyi sıkıştırma" işlemi olduğu
+söylenebilir. Yapay öğrenmede algoritmaların denetimli ve denetimsiz olarak
+ikiye ayrıldığından bahsetmiştik, özkodlama denetimsiz çalışır yani ortada
+etiket yoktur, daha doğrusu özkodlama verinin kendisini etiket olarak
+kullanır.</p>
+
+<p><img src="autoenc_02.png" alt="" /></p>
+
+<p>Yani girdi olarak verilen veriyi çıktı olarak ta kullanırsak, YSA'yı
+kendi çıktısını tekrar oluşturmayı öğrenmeye zorlamış oluruz, bu
+YSA'yı veriyi özetlemeye doğru yöneltecektir, ve bu tekrar oluşturma
+için ileri besleme sırasında veriyi dar bir noktadan geçmeye zorlarsak
+(üstteki resimde görülüyor, 7 nöronluk girdi 5 nöronluk "daha dar" bir
+katmandan geçmeye zorlanıyor), bu YSA'yı "sıkıştırma" yapmaya daha da
+meyillendirecektir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+
+<span class="c1"># gizli katman</span>
+<span class="n">encoding_dim</span> <span class="o">=</span> <span class="mi">32</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">():</span>
+    <span class="c1"># girdi</span>
+    <span class="n">input_img</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">784</span><span class="p">,))</span>
+    <span class="c1"># kodlanmis temsil</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">encoding_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">input_img</span><span class="p">)</span>
+    <span class="c1"># kodcozulmus temsil</span>
+    <span class="n">decoded</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="mi">784</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">)(</span><span class="n">encoded</span><span class="p">)</span>
+
+    <span class="c1"># bu model girdiyi tekrar olusturulmus hale cevirir</span>
+    <span class="n">autoencoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">input_img</span><span class="p">,</span> <span class="n">decoded</span><span class="p">)</span>
+
+    <span class="c1"># bu model girdiyi kodlanmis hale getirir</span>
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">input_img</span><span class="p">,</span> <span class="n">encoded</span><span class="p">)</span>
+
+    <span class="n">encoded_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">encoding_dim</span><span class="p">,))</span>
+    <span class="c1"># ozkodlayicinin son tabakasini al bu kodcozulmus katman</span>
+    <span class="n">decoder_layer</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="o">.</span><span class="n">layers</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># kodcozucu model</span>
+    <span class="n">decoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">encoded_input</span><span class="p">,</span> <span class="n">decoder_layer</span><span class="p">(</span><span class="n">encoded_input</span><span class="p">))</span>
+
+    <span class="n">autoencoder</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">autoencoder</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> 
+
+    <span class="n">autoencoder</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">()</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+    <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+    <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x_train</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">x_test</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])))</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">autoencoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span>
+                    <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                    <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                    <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                    <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">x_test</span><span class="p">))</span>
+
+    <span class="n">autoencoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mod-autoenc-1.h5&#39;</span><span class="p">)</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mod-enc-1.h5&#39;</span><span class="p">)</span>
+    <span class="n">decoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mod-dec-1.h5&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Üstteki kodla modeli eğittikten sonra herhangi bir sayı resmini alıyoruz,
+kodluyoruz, kodçözme yapıyoruz ve tekrar oluşturulmuş hali ekrana
+basıyoruz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">mnist_autoenc</span>
+
+<span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+<span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+<span class="n">autoencoder</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">decoder</span> <span class="o">=</span> <span class="n">mnist_autoenc</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s2">&quot;mod-enc-1.h5&quot;</span><span class="p">)</span>
+<span class="n">decoder</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s2">&quot;mod-dec-1.h5&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">idx</span> <span class="o">=</span> <span class="mi">1090</span>  <span class="c1"># herhangi bir sayi resmini al</span>
+<span class="nb">print</span> <span class="n">y_test</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">tmp</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="o">*</span><span class="mi">28</span><span class="p">)</span>
+<span class="n">encoded</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">encoded</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">decoded</span> <span class="o">=</span> <span class="n">decoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;autoenc_01.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>9
+(1, 32)
+(28, 28)
+</code></pre>
+
+<p><img src="autoenc_01.png" alt="" /></p>
+
+<p>9 resmini elde ettik. </p>
+
+<p>Biraz onceki resmin kodlanmis halini gosterelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>[[ 13.18540382   9.90277767   2.81214857  14.67686176   3.90287089
+    0.95043498   4.25797892  13.59305477   8.71218967   2.61786652
+    8.67911053   5.27269077   3.68898463   6.26301765   0.           3.73920846
+    4.90339994   6.61260319   8.80308342   5.41205883   0.           6.12768221
+   11.42174625   3.13173342   3.79943371  11.27116108   6.003757
+   10.82552242   8.44533443   4.84582376   5.63021088  11.27607727]]
+</code></pre>
+
+<p>32 boyutlu bir vektör içinde reel sayılar bunlar. Şimdi bu sayıları alıp
+başka bir sınıflayıcı içinde kullanabilirdim. Öyle bir uygulama düşünelim
+ki mesela müşterilerin yaşı, cinsiyeti bilgisi var, biz ayrıca herkesin
+fotoğrafları üzerinden bir özkodlayıcı eğitiyoruz, ve müşterinin resmi
+üzerinden elde edilen üstteki gibi bir temsili sıkıştırılmış gizli tabaka
+verisini yaş, cinsiyet ile beraber bu ayrı sınıflayıcıya verip cevap
+bekliyoruz. Bu sınıflayıcı "potansiyel yaz alışverişçisi mi / değil mi''
+şeklinde bir sınıflama yapıyor olabilir mesela, belki kişilerin resminde bu
+sınıflayıcıya yardım edecek bir şeyler vardır.. Bu ayrı sınıflayıcı bir YSA
+olabilir, ama çoğu zaman basit lojistik regresyon bile kullanılabiliyor.
+Ayrıca sadece bir değil, farklı veriler üzerinde işletilmiş pek çok
+özkodlayıcıdan gelen özet bilgisini de yan yana aynı lojistik regresyona
+verebiliriz.</p>
+
+<p>Zaman Serisi Özkodlaması, RNN </p>
+
+<p>Eğer zamana bağlı bir veri yapısını özkodlamak istesek nasıl bir model
+kullanırdık? Mesela birkaç boyutlu bir finans verisini (bir andaki hisse
+fiyatı, satım miktarı çok boyutlu bir vektörde olabilirdi) modelliyor
+olabilidiik. MNIST verisini bu şekilde kullanabiliriz aslında, 28 x 28
+boyutlu veride sanki 28 tane 28 boyutlu veriyi zamana bağlı alıyormuşuz
+gibi görebilirdik, sanki resimde soldan sağa doğru dikey şeritler alıp
+teker teker bunları işlediğimizi düşünebiliriz. MNIST sayı görüntülerine bu
+şekilde bakmak aslında çok anlamsız değil, mesela bir altı görüntüsünü
+düşünürsek soldan sağa giderken kavisli yukarı doğru bir gidiş vardır, bu
+gidişi zamana bağlı bir NN yakalayabilir. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">concatenate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">LSTMCell</span><span class="p">,</span> <span class="n">RNN</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">RepeatVector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span>
+
+<span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">20</span><span class="p">;</span> <span class="n">timesteps</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span> <span class="n">input_dim</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span> <span class="n">hist_dim</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">():</span>
+    <span class="n">inputs</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">))</span>
+
+    <span class="n">encoded</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">decoded</span> <span class="o">=</span> <span class="n">encoded</span>
+    <span class="n">decoded</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">decoded</span><span class="p">)</span>
+
+    <span class="n">seq_autoencoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">decoded</span><span class="p">)</span>
+
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">encoded</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">seq_autoencoder</span><span class="p">,</span> <span class="n">encoder</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> 
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+
+    <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+
+    <span class="n">seq_autoencoder</span><span class="p">,</span> <span class="n">encoder</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">()</span>
+
+    <span class="n">seq_autoencoder</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adadelta&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">)</span>
+
+    <span class="n">seq_autoencoder</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">x_train</span><span class="p">,</span>
+                        <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+                        <span class="n">batch_size</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+                        <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">x_test</span><span class="p">))</span>
+
+    <span class="n">seq_autoencoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mod-rnn-autoenc-sim.h5&#39;</span><span class="p">)</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mod-rnn-enc-sim.h5&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">mnist_autoenc_rnn_simple</span>
+
+<span class="n">seq_autoencoder</span><span class="p">,</span> <span class="n">encoder</span> <span class="o">=</span> <span class="n">mnist_autoenc_rnn_simple</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span>
+<span class="n">seq_autoencoder</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s2">&quot;mod-rnn-autoenc-sim.h5&quot;</span><span class="p">)</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s2">&quot;mod-rnn-enc-sim.h5&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">decoded</span> <span class="o">=</span> <span class="n">seq_autoencoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">decoded</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">decoded</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;autoenc_03.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="autoenc_03.png" alt="" /></p>
+
+<p>Varyasyonel Özkodlayıcılar (Variational Autoencoder -VAE-)</p>
+
+<p>Standard özkodlayıcıların bir problemi kodlama yaptıkları daralmış
+alandaki vektörlerin sürekli olmayabileceği, ve buradaki değerlerin
+kolay bir şekilde interpolasyon yapılmasındaki bazı zorluklar.</p>
+
+<p>VAE özkodlayıcılarda, kodlayıcı tabaka bir tamamen bağlanmış / yoğun
+(dense) bir katmandan geçiyor ama bir değişiklik var; yoğun katman
+$\mu,\sigma$ rasgele <em>değişkenleri</em> haline geliyor ve ondan bir sonraki
+katman bu değişkenlerden örneklem alıyor! Bu dahiyene bir düşünce. Fakat
+akla gelebilir - YSA yapısı deterministik bir yapıdır, örneklem, yani zar
+atma rasgele (stochastic) bir hesap. Bu kavramı YSA mekanizmasına nasıl
+dahil ediyoruz?</p>
+
+<p><img src="autoenc_06.png" alt="" /></p>
+
+<p>Çözüm örneklem operasyonunu gürültü, yani Gaussian $N(0,1)$ + $\mu$ çarpı
+$\sigma$ olarak modellemek, bu şekilde sanki $N(\mu,\sigma)$'dan örneklem
+alıyoruz, ama eğitilen, optimize edilen çarpma, toplama üzerinden
+$\mu,\sigma$ değişkenleri, ve halen YSA mekanizması devrede ve bu
+değişkenler deterministik değişkenler. Gürültü işin içinde var, ama gürültü
+eh, Gaussian sıfır merkezli bir stardart sapmalı gürültü. Bir gürültü bir
+diğerinden farklı değil, model için hepsi aynı gürültü.</p>
+
+<p>Üstteki mantığın temelinde şu bilgi  var: Biliyoruz ki herhangi bir
+dağılıma sahip rasgele değişken $z$'yi bir $g$ fonksiyonu kullanarak
+$X=g(z)$ ile başka bir dağılıma çevirebiliyoruz. Altta örneği görülüyor,
+soldaki resim Gaussian dağılımdan, sağdaki resim soldaki verilerin
+$g(z) = z/10 + z/||z||$ ile başka bir dağılıma eşlenmiş hali ve bu yeni
+dağılım bir çember şeklini oluşturmuş. VAE'nin rasgele dağılımlar
+yaratabilmesinin arkasında yatan gizem bu işte. Eğitim ile VAE $g$'yi
+öğrenmiş oluyor, ki bu bir determinstik fonksiyon.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span><span class="o">,</span><span class="w"> </span><span class="nn">numpy.linalg</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">lin</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="n">x</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">x</span><span class="p">[</span><span class="s1">&#39;g0&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
+<span class="n">x</span><span class="p">[</span><span class="s1">&#39;g1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;n&#39;</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;g0&#39;</span><span class="p">],</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;g1&#39;</span><span class="p">],</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;autoenc_10.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="autoenc_10.png" alt="" /></p>
+
+<p><img src="autoenc_07.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Based on https://github.com/keras-team/keras/blob/master/examples/variational_autoencoder.py</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keras</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">RepeatVector</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Flatten</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Lambda</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">SGD</span><span class="p">,</span> <span class="n">RMSprop</span><span class="p">,</span> <span class="n">Adam</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">objectives</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">timesteps</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span> <span class="n">input_dim</span> <span class="o">=</span> <span class="mi">28</span><span class="p">;</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">30</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_lstm_vae</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> 
+    <span class="n">timesteps</span><span class="p">,</span> 
+    <span class="n">batch_size</span><span class="p">,</span> 
+    <span class="n">intermediate_dim</span><span class="p">,</span> 
+    <span class="n">latent_dim</span><span class="p">,</span>
+    <span class="n">epsilon_std</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">timesteps</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,))</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x</span><span class="p">)</span>
+
+    <span class="c1"># LSTM encoding</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="n">intermediate_dim</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">h</span><span class="p">)</span>
+
+    <span class="c1"># VAE Z layer</span>
+    <span class="n">z_mean</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">z_log_sigma</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sampling</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">z_mean</span><span class="p">,</span> <span class="n">z_log_sigma</span> <span class="o">=</span> <span class="n">args</span>
+        <span class="n">epsilon</span> <span class="o">=</span> <span class="n">K</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">),</span>
+                                  <span class="n">mean</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">stddev</span><span class="o">=</span><span class="n">epsilon_std</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z_mean</span> <span class="o">+</span> <span class="n">z_log_sigma</span> <span class="o">*</span> <span class="n">epsilon</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Lambda</span><span class="p">(</span><span class="n">sampling</span><span class="p">,</span> <span class="n">output_shape</span><span class="o">=</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,))([</span><span class="n">z_mean</span><span class="p">,</span> <span class="n">z_log_sigma</span><span class="p">])</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="c1"># decoded LSTM layer</span>
+    <span class="n">decoder_h</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="n">intermediate_dim</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">decoder_mean</span> <span class="o">=</span> <span class="n">LSTM</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="n">h_decoded</span> <span class="o">=</span> <span class="n">RepeatVector</span><span class="p">(</span><span class="n">timesteps</span><span class="p">)(</span><span class="n">z</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">h_decoded</span><span class="p">)</span>
+    <span class="n">h_decoded</span> <span class="o">=</span> <span class="n">decoder_h</span><span class="p">(</span><span class="n">h_decoded</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">h_decoded</span><span class="p">)</span>
+
+    <span class="c1"># decoded layer</span>
+    <span class="n">x_decoded_mean</span> <span class="o">=</span> <span class="n">decoder_mean</span><span class="p">(</span><span class="n">h_decoded</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_decoded_mean</span><span class="p">)</span>
+
+    <span class="c1"># end-to-end autoencoder</span>
+    <span class="n">vae</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_decoded_mean</span><span class="p">)</span>
+
+    <span class="c1"># encoder, from inputs to latent space</span>
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z_mean</span><span class="p">)</span>
+
+    <span class="c1"># generator, from latent space to reconstructed inputs</span>
+    <span class="n">decoder_input</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,))</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">decoder_input</span><span class="p">)</span>
+
+    <span class="n">_h_decoded</span> <span class="o">=</span> <span class="n">RepeatVector</span><span class="p">(</span><span class="n">timesteps</span><span class="p">)(</span><span class="n">decoder_input</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">_h_decoded</span><span class="p">)</span>
+    <span class="n">_h_decoded</span> <span class="o">=</span> <span class="n">decoder_h</span><span class="p">(</span><span class="n">_h_decoded</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">_h_decoded</span><span class="p">)</span>
+
+    <span class="n">_x_decoded_mean</span> <span class="o">=</span> <span class="n">decoder_mean</span><span class="p">(</span><span class="n">_h_decoded</span><span class="p">)</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">decoder_input</span><span class="p">,</span> <span class="n">_x_decoded_mean</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">vae_loss</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_decoded_mean</span><span class="p">):</span>
+        <span class="n">xent_loss</span> <span class="o">=</span> <span class="n">objectives</span><span class="o">.</span><span class="n">mse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x_decoded_mean</span><span class="p">)</span>
+        <span class="n">kl_loss</span> <span class="o">=</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">z_log_sigma</span> <span class="o">-</span> <span class="n">K</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">z_mean</span><span class="p">)</span> <span class="o">-</span> <span class="n">K</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">z_log_sigma</span><span class="p">))</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">xent_loss</span> <span class="o">+</span> <span class="n">kl_loss</span>
+        <span class="k">return</span> <span class="n">loss</span>
+
+
+    <span class="n">vae</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;rmsprop&#39;</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">vae_loss</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">vae</span><span class="p">,</span> <span class="n">encoder</span><span class="p">,</span> <span class="n">generator</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+
+    <span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">_</span><span class="p">),</span> <span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+    <span class="n">x_train</span> <span class="o">=</span> <span class="n">x_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+    <span class="c1">#x_train = x_train[:200]</span>
+    <span class="n">x_test</span> <span class="o">=</span> <span class="n">x_test</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float32&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.</span>
+    <span class="c1">#x_test = x_test[:200]</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_train</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">x_test</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>    
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x_train</span>
+    <span class="n">vae</span><span class="p">,</span> <span class="n">enc</span><span class="p">,</span> <span class="n">gen</span> <span class="o">=</span> <span class="n">create_lstm_vae</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> 
+        <span class="n">timesteps</span><span class="o">=</span><span class="n">timesteps</span><span class="p">,</span> 
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span> 
+        <span class="n">intermediate_dim</span><span class="o">=</span><span class="n">latent_dim</span><span class="p">,</span>
+        <span class="n">latent_dim</span><span class="o">=</span><span class="n">latent_dim</span><span class="p">,</span>
+        <span class="n">epsilon_std</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+
+    <span class="n">vae</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">x_test</span><span class="p">),</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+    <span class="n">vae</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mnist_lstm_vae.h5&#39;</span><span class="p">)</span>
+    <span class="n">enc</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mnist_lstm_enc.h5&#39;</span><span class="p">)</span>
+    <span class="n">gen</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;mnist_lstm_gen.h5&#39;</span><span class="p">)</span>
+
+
+    <span class="c1">#preds = vae.predict(x, batch_size=batch_size)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">mnist_lstm_vae</span>
+
+<span class="n">vae</span><span class="p">,</span> <span class="n">enc</span><span class="p">,</span> <span class="n">gen</span> <span class="o">=</span> <span class="n">mnist_lstm_vae</span><span class="o">.</span><span class="n">create_lstm_vae</span><span class="p">(</span><span class="n">mnist_lstm_vae</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span> 
+    <span class="n">timesteps</span><span class="o">=</span><span class="n">mnist_lstm_vae</span><span class="o">.</span><span class="n">timesteps</span><span class="p">,</span> 
+    <span class="n">batch_size</span><span class="o">=</span><span class="n">mnist_lstm_vae</span><span class="o">.</span><span class="n">batch_size</span><span class="p">,</span> 
+    <span class="n">intermediate_dim</span><span class="o">=</span><span class="n">mnist_lstm_vae</span><span class="o">.</span><span class="n">latent_dim</span><span class="p">,</span>
+    <span class="n">latent_dim</span><span class="o">=</span><span class="n">mnist_lstm_vae</span><span class="o">.</span><span class="n">latent_dim</span><span class="p">,</span>
+    <span class="n">epsilon_std</span><span class="o">=</span><span class="mf">1.</span><span class="p">)</span>
+<span class="n">vae</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;mnist_lstm_vae.h5&#39;</span><span class="p">)</span>
+<span class="n">enc</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;mnist_lstm_enc.h5&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="mi">400</span> <span class="c1"># herhangi bir imaji sec</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">tmp</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">x_test_tmp</span> <span class="o">=</span> <span class="n">x_test</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">vae</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test_tmp</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">x_test_tmp</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;autoenc_04.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="autoenc_04.png" alt="" /></p>
+
+<p>Gördüğümüz gibi zamansal işlem yaptık ama VAE çok iyi sonuç verdi. Hatta
+test imajını daha netleştirdi!</p>
+
+<p>Hasımsal Özkodlayıcı (Adverserial Autoencoder -AA-)</p>
+
+<p>Üretici Hasımsal Ağlar (Generative Adverserial Networks -GAN-) kavramının
+özkodlayıcılara uygulanmış hali AA olur. </p>
+
+<p><img src="autoenc_09.png" alt="" /></p>
+
+<p>Burada bir kodlayıcı / kodçözücü yapısı var (üst blok) bu yapıdan kodlanmış ara
+tabaka $z \sim q(z)$ "kötü'' örnekler çekilip $p(z)$'den gelen "iyi'' örnekler
+ile birleştiriliyor ve ayırdedici yine bu iki grup arasında ayırım yapmayı
+öğreniyor. Bu durumda üst bloktaki kodçözücü GAN'deki üretici gibi olur, ona
+dönüşür bir bakıma, çünkü öyle iyi üretim yapmaya çalışacaktır ki $p(z)$
+gürültüsü ile onun aldığı kodlanmış tabaka verisi ayiredilemez hale gelmelidir.
+Tabii ki üst soldaki kodlayıcı bu ara tabakaya o şekilde temsili veri üretmeye
+çalışacaktır, bu arada kodlayıcı / kodçözücü yapısı da eğitilmiş olur. Yani $z$
+bir anlamda alt soldaki gerçek gürültüye yaklaşır, bu gürültüden sayı üretebilir
+hale geliriz, bu klasik GAN, ayrıca bu "kodlanmış'' gürültüyü üreten kodlayıcı
+/ kodçözücü tabaka da ayrı bir şekilde kendini optimize eder ve kodlama işini
+yapar hale gelir.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># import os</span>
+<span class="c1"># os.environ[&quot;THEANO_FLAGS&quot;] = &quot;mode=FAST_COMPILE,device=cpu,floatX=float32&quot;</span>
+
+<span class="c1"># This line allows mpl to run with no DISPLAY defined</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">Flatten</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">merge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">legacy</span><span class="w"> </span><span class="kn">import</span> <span class="n">l1l2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keras.backend</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">K</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adversarial_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdversarialModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adversarial_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">fix_names</span><span class="p">,</span> <span class="n">n_choice</span><span class="p">,</span> <span class="n">normal_latent_sampling</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adversarial_optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdversarialOptimizerSimultaneous</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeakyReLU</span><span class="p">,</span> <span class="n">Activation</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mnist_process</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mnist_data</span><span class="p">():</span>
+    <span class="p">(</span><span class="n">xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">),</span> <span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="n">ytest</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mnist_process</span><span class="p">(</span><span class="n">xtrain</span><span class="p">),</span> <span class="n">mnist_process</span><span class="p">(</span><span class="n">xtest</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_generator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span>
+                    <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                    <span class="n">reg</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">l1l2</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="n">Sequential</span><span class="p">([</span>
+        <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator_h1&quot;</span><span class="p">,</span>
+              <span class="n">input_dim</span><span class="o">=</span><span class="n">latent_dim</span><span class="p">,</span>
+              <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">()),</span>
+        <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
+        <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span>
+              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator_h2&quot;</span><span class="p">,</span>
+              <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">()),</span>
+        <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">),</span>
+        <span class="n">Dense</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">input_shape</span><span class="p">),</span>
+              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator_x_flat&quot;</span><span class="p">,</span>
+              <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">()),</span>
+        <span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">),</span>
+        <span class="n">Reshape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator_x&quot;</span><span class="p">)],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_encoder</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span>
+                  <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                  <span class="n">reg</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">l1l2</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Flatten</span><span class="p">()(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_h1&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_h2&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_mu&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">log_sigma_sq</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_log_sigma_sq&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">merge</span><span class="p">([</span><span class="n">mu</span><span class="p">,</span> <span class="n">log_sigma_sq</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+              <span class="n">output_shape</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_discriminator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span>
+                        <span class="n">reg</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">l1l2</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Input</span><span class="p">((</span><span class="n">latent_dim</span><span class="p">,))</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discriminator_h1&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discriminator_h2&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discriminator_y&quot;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="n">adversarial_optimizer</span><span class="p">):</span>
+    <span class="c1"># z \in R^100</span>
+    <span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="c1"># x \in R^{28x28}</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+    <span class="c1"># generator (z -&gt; x)</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">model_generator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+    <span class="c1"># encoder (x -&gt;z)</span>
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">model_encoder</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+    <span class="c1"># autoencoder (x -&gt; x&#39;)</span>
+    <span class="n">autoencoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">generator</span><span class="p">(</span><span class="n">encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">)))</span>
+    <span class="c1"># discriminator (z -&gt; y)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">model_discriminator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">)</span>
+
+    <span class="c1"># assemple AAE</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">xpred</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">zreal</span> <span class="o">=</span> <span class="n">normal_latent_sampling</span><span class="p">((</span><span class="n">latent_dim</span><span class="p">,))(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">yreal</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">zreal</span><span class="p">)</span>
+    <span class="n">yfake</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">aae</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fix_names</span><span class="p">([</span><span class="n">xpred</span><span class="p">,</span> <span class="n">yfake</span><span class="p">,</span> <span class="n">yreal</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;xpred&quot;</span><span class="p">,</span> <span class="s2">&quot;yfake&quot;</span><span class="p">,</span> <span class="s2">&quot;yreal&quot;</span><span class="p">]))</span>
+
+    <span class="c1"># print summary of models</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">autoencoder</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+    <span class="c1"># build adversarial model</span>
+    <span class="n">generative_params</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">trainable_weights</span> <span class="o">+</span> <span class="n">encoder</span><span class="o">.</span><span class="n">trainable_weights</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">AdversarialModel</span><span class="p">(</span><span class="n">base_model</span><span class="o">=</span><span class="n">aae</span><span class="p">,</span>
+                             <span class="n">player_params</span><span class="o">=</span><span class="p">[</span><span class="n">generative_params</span><span class="p">,</span> <span class="n">discriminator</span><span class="o">.</span><span class="n">trainable_weights</span><span class="p">],</span>
+                             <span class="n">player_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generator&quot;</span><span class="p">,</span> <span class="s2">&quot;discriminator&quot;</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">adversarial_compile</span><span class="p">(</span><span class="n">adversarial_optimizer</span><span class="o">=</span><span class="n">adversarial_optimizer</span><span class="p">,</span>
+                              <span class="n">player_optimizers</span><span class="o">=</span><span class="p">[</span><span class="n">Adam</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> <span class="n">Adam</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)],</span>
+                              <span class="n">loss</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yfake&quot;</span><span class="p">:</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;yreal&quot;</span><span class="p">:</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;xpred&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_squared_error&quot;</span><span class="p">},</span>
+                              <span class="n">player_compile_kwargs</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;loss_weights&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;yfake&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="s2">&quot;yreal&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="s2">&quot;xpred&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># load mnist data</span>
+    <span class="n">xtrain</span><span class="p">,</span> <span class="n">xtest</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">()</span>
+
+    <span class="c1"># callback for image grid of generated samples</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generator_sampler</span><span class="p">():</span>
+        <span class="n">zsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">zsamples</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+
+    <span class="c1"># callback   for image grid of autoencoded samples</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">autoencoder_sampler</span><span class="p">():</span>
+        <span class="n">xsamples</span> <span class="o">=</span> <span class="n">n_choice</span><span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">xrep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">xsamples</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xgen</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xrep</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+        <span class="n">xsamples</span> <span class="o">=</span> <span class="n">xsamples</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">xsamples</span><span class="p">,</span> <span class="n">xgen</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">samples</span>
+
+    <span class="c1"># train network</span>
+    <span class="c1"># generator, discriminator; pred, yfake, yreal</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">xtrain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">xtrain</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">xtrain</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+    <span class="n">ntest</span> <span class="o">=</span> <span class="n">xtest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ytest</span> <span class="o">=</span> <span class="p">[</span><span class="n">xtest</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">xtest</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xtrain</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="n">ytest</span><span class="p">),</span> <span class="n">nb_epoch</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+
+    <span class="c1"># save model</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;aae-norm-encoder.h5&quot;</span><span class="p">)</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;aae-norm-generator.h5&quot;</span><span class="p">)</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;aae-norm-discriminator.h5&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">AdversarialOptimizerSimultaneous</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">aae_normal</span>
+<span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">aae_normal</span><span class="o">.</span><span class="n">model_encoder</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;aae-norm-encoder.h5&#39;</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">aae_normal</span><span class="o">.</span><span class="n">model_generator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;aae-norm-generator.h5&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">idx</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># herhangi bir imaji sec</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">res</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">pixels</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;autoenc_05.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="autoenc_05.png" alt="" /></p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># import os</span>
+<span class="c1"># os.environ[&quot;THEANO_FLAGS&quot;] = &quot;mode=FAST_COMPILE,device=cpu,floatX=float32&quot;</span>
+
+<span class="c1"># This line allows mpl to run with no DISPLAY defined</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">Flatten</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">merge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequential</span><span class="p">,</span> <span class="n">Model</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">legacy</span><span class="w"> </span><span class="kn">import</span> <span class="n">l1l2</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">keras.backend</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">K</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adversarial_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdversarialModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adversarial_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">fix_names</span><span class="p">,</span> <span class="n">n_choice</span><span class="p">,</span> <span class="n">normal_latent_sampling</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">adversarial_optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdversarialOptimizerSimultaneous</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeakyReLU</span><span class="p">,</span> <span class="n">Activation</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">GRU</span><span class="p">,</span> <span class="n">RepeatVector</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mnist_process</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="mf">255.0</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mnist_data</span><span class="p">():</span>
+    <span class="p">(</span><span class="n">xtrain</span><span class="p">,</span> <span class="n">ytrain</span><span class="p">),</span> <span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="n">ytest</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">mnist_process</span><span class="p">(</span><span class="n">xtrain</span><span class="p">),</span> <span class="n">mnist_process</span><span class="p">(</span><span class="n">xtest</span><span class="p">)</span>
+
+<span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_generator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span>
+                    <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                    <span class="n">reg</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">l1l2</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="n">Sequential</span><span class="p">([</span>
+        <span class="n">Dense</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">input_shape</span><span class="p">),</span> <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator_h1&quot;</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="n">latent_dim</span><span class="p">,</span>
+              <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">()),</span>
+        <span class="n">Reshape</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator_x&quot;</span><span class="p">),</span>
+        <span class="n">GRU</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="n">GRU</span><span class="p">(</span><span class="mi">28</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+        <span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;generator&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_encoder</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">,</span>
+                  <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                  <span class="n">reg</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">l1l2</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mi">0</span><span class="p">)):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">input_shape</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">GRU</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">)(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">GRU</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">activation</span><span class="p">,</span>
+              <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_h3&quot;</span><span class="p">,</span>
+              <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>    
+
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_mu&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+
+    <span class="n">log_sigma_sq</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder_log_sigma_sq&quot;</span><span class="p">,</span>
+                         <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+
+    <span class="n">z</span> <span class="o">=</span> <span class="n">merge</span><span class="p">([</span><span class="n">mu</span><span class="p">,</span> <span class="n">log_sigma_sq</span><span class="p">],</span>
+              <span class="n">mode</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">K</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span><span class="n">K</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">*</span> <span class="n">K</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mi">2</span><span class="p">),</span>
+              <span class="n">output_shape</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;encoder&quot;</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">model_discriminator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hidden_dim</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+                        <span class="n">reg</span><span class="o">=</span><span class="k">lambda</span><span class="p">:</span> <span class="n">l1l2</span><span class="p">(</span><span class="mf">1e-7</span><span class="p">,</span> <span class="mf">1e-7</span><span class="p">)):</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">Input</span><span class="p">((</span><span class="n">latent_dim</span><span class="p">,))</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">z</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discriminator_h1&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">hidden_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discriminator_h2&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)(</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Dense</span><span class="p">(</span><span class="n">output_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;discriminator_y&quot;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s2">&quot;sigmoid&quot;</span><span class="p">,</span> <span class="n">W_regularizer</span><span class="o">=</span><span class="n">reg</span><span class="p">())(</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">Model</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">example_aae</span><span class="p">(</span><span class="n">adversarial_optimizer</span><span class="p">):</span>
+    <span class="c1"># z \in R^100</span>
+    <span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="c1"># x \in R^{28x28}</span>
+    <span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+    <span class="c1"># generator (z -&gt; x)</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">model_generator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+    <span class="c1"># encoder (x -&gt;z)</span>
+    <span class="n">encoder</span> <span class="o">=</span> <span class="n">model_encoder</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+    <span class="c1"># autoencoder (x -&gt; x&#39;)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="n">autoencoder</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+    <span class="c1"># discriminator (z -&gt; y)</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">model_discriminator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">)</span>
+
+    <span class="c1"># assemple AAE</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">xpred</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">zreal</span> <span class="o">=</span> <span class="n">normal_latent_sampling</span><span class="p">((</span><span class="n">latent_dim</span><span class="p">,))(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">yreal</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">zreal</span><span class="p">)</span>
+    <span class="n">yfake</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="n">aae</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">fix_names</span><span class="p">([</span><span class="n">xpred</span><span class="p">,</span> <span class="n">yfake</span><span class="p">,</span> <span class="n">yreal</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;xpred&quot;</span><span class="p">,</span> <span class="s2">&quot;yfake&quot;</span><span class="p">,</span> <span class="s2">&quot;yreal&quot;</span><span class="p">]))</span>
+
+    <span class="c1"># print summary of models</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+    <span class="n">autoencoder</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+
+    <span class="c1"># build adversarial model</span>
+    <span class="n">generative_params</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">trainable_weights</span> <span class="o">+</span> <span class="n">encoder</span><span class="o">.</span><span class="n">trainable_weights</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">AdversarialModel</span><span class="p">(</span><span class="n">base_model</span><span class="o">=</span><span class="n">aae</span><span class="p">,</span>
+                             <span class="n">player_params</span><span class="o">=</span><span class="p">[</span><span class="n">generative_params</span><span class="p">,</span> <span class="n">discriminator</span><span class="o">.</span><span class="n">trainable_weights</span><span class="p">],</span>
+                             <span class="n">player_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;generator&quot;</span><span class="p">,</span> <span class="s2">&quot;discriminator&quot;</span><span class="p">])</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">adversarial_compile</span><span class="p">(</span><span class="n">adversarial_optimizer</span><span class="o">=</span><span class="n">adversarial_optimizer</span><span class="p">,</span>
+                              <span class="n">player_optimizers</span><span class="o">=</span><span class="p">[</span><span class="n">Adam</span><span class="p">(</span><span class="mf">1e-4</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">),</span> <span class="n">Adam</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="n">decay</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)],</span>
+                              <span class="n">loss</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;yfake&quot;</span><span class="p">:</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span> <span class="s2">&quot;yreal&quot;</span><span class="p">:</span> <span class="s2">&quot;binary_crossentropy&quot;</span><span class="p">,</span>
+                                    <span class="s2">&quot;xpred&quot;</span><span class="p">:</span> <span class="s2">&quot;mean_squared_error&quot;</span><span class="p">},</span>
+                              <span class="n">player_compile_kwargs</span><span class="o">=</span><span class="p">[{</span><span class="s2">&quot;loss_weights&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;yfake&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="s2">&quot;yreal&quot;</span><span class="p">:</span> <span class="mf">1e-2</span><span class="p">,</span> <span class="s2">&quot;xpred&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}}]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># load mnist data</span>
+    <span class="n">xtrain</span><span class="p">,</span> <span class="n">xtest</span> <span class="o">=</span> <span class="n">mnist_data</span><span class="p">()</span>
+
+    <span class="c1"># callback for image grid of generated samples</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generator_sampler</span><span class="p">():</span>
+        <span class="n">zsamples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">10</span><span class="p">,</span> <span class="n">latent_dim</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">zsamples</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+
+    <span class="c1"># callback   for image grid of autoencoded samples</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">autoencoder_sampler</span><span class="p">():</span>
+        <span class="n">xsamples</span> <span class="o">=</span> <span class="n">n_choice</span><span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">xrep</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">xsamples</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">xgen</span> <span class="o">=</span> <span class="n">autoencoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">xrep</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+        <span class="n">xsamples</span> <span class="o">=</span> <span class="n">xsamples</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+        <span class="n">samples</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">xsamples</span><span class="p">,</span> <span class="n">xgen</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">samples</span>
+
+    <span class="c1"># train network</span>
+    <span class="c1"># generator, discriminator; pred, yfake, yreal</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">xtrain</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="n">xtrain</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">xtrain</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+    <span class="n">ntest</span> <span class="o">=</span> <span class="n">xtest</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">ytest</span> <span class="o">=</span> <span class="p">[</span><span class="n">xtest</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">xtest</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">ntest</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">xtrain</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">xtest</span><span class="p">,</span> <span class="n">ytest</span><span class="p">),</span> <span class="n">nb_epoch</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+    <span class="c1"># save model</span>
+    <span class="n">encoder</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;aae-lstm-encoder.h5&quot;</span><span class="p">)</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;aae-lstm-generator.h5&quot;</span><span class="p">)</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;aae-lstm-discriminator.h5&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">example_aae</span><span class="p">(</span><span class="n">AdversarialOptimizerSimultaneous</span><span class="p">())</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">aae_lstm</span>
+<span class="n">latent_dim</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">input_shape</span> <span class="o">=</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+<span class="n">encoder</span> <span class="o">=</span> <span class="n">aae_lstm</span><span class="o">.</span><span class="n">model_encoder</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+<span class="n">encoder</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;aae-lstm-encoder.h5&#39;</span><span class="p">)</span>
+<span class="n">generator</span> <span class="o">=</span> <span class="n">aae_lstm</span><span class="o">.</span><span class="n">model_generator</span><span class="p">(</span><span class="n">latent_dim</span><span class="p">,</span> <span class="n">input_shape</span><span class="p">)</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s1">&#39;aae-lstm-generator.h5&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">idx</span> <span class="o">=</span> <span class="mi">1030</span> <span class="c1"># herhangi bir imaji sec</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">encoder</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x_test</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">pixels</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;autoenc_08.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="autoenc_08.png" alt="" /></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://blog.keras.io/building-autoencoders-in-keras.html">https://blog.keras.io/building-autoencoders-in-keras.html</a></p>
+
+<p>[2] <em>Adverserial Autoencoder Keras</em>, 
+    <a href="https://github.com/bstriner/keras-adversarial/blob/master/examples/example_aae.py">https://github.com/bstriner/keras-adversarial/blob/master/examples/example_aae.py</a></p>
+
+<p>[3] <a href="https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf">https://towardsdatascience.com/intuitively-understanding-variational-autoencoders-1bfe67eb5daf</a></p>
+
+<p>[4] <a href="https://hsaghir.github.io/data_science/denoising-vs-variational-autoencoder/">https://hsaghir.github.io/data_science/denoising-vs-variational-autoencoder/</a></p>
+
+<p>[5] Doersch, Tutorial on Variational Autoencoders, 
+    <a href="https://arxiv.org/pdf/1606.05908.pdf">https://arxiv.org/pdf/1606.05908.pdf</a></p>
+
+<p>[6] Goodfellow, Adversarial Autoencoders, 
+    <a href="https://arxiv.org/pdf/1511.05644.pdf">https://arxiv.org/pdf/1511.05644.pdf</a></p>
+
+<p>[7] What is Adversarial Autoencoder?, 
+    <a href="https://www.quora.com/What-is-Adversarial-Autoencoder">https://www.quora.com/What-is-Adversarial-Autoencoder</a></p>
+
+<p>[8] <a href="http://www.inference.vc/adversarial-autoencoders/">http://www.inference.vc/adversarial-autoencoders/</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

@@ -226,37 +226,27 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, b <span class="kw">in</span> <span class="bu">enumerate</span>(bs):</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        fr <span class="op">=</span> b[<span class="dv">0</span>]  <span class="co"># (x0, y0) original top-left</span></span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        to <span class="op">=</span> b[<span class="dv">1</span>]  <span class="co"># (x1, y1) original bottom-right</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="co"># In PIL, y-coordinates increase downwards.</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Your original transformation was (arr.shape[0]-fr[1]) and (arr.shape[0]-to[1]).</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># This effectively flips the y-axis, which might cause y1 &lt; y0 if the original y0 &lt; y1.</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        x0_new <span class="op">=</span> fr[<span class="dv">0</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        y0_new <span class="op">=</span> arr.shape[<span class="dv">0</span>] <span class="op">-</span> fr[<span class="dv">1</span>]</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        x1_new <span class="op">=</span> to[<span class="dv">0</span>]</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        y1_new <span class="op">=</span> arr.shape[<span class="dv">0</span>] <span class="op">-</span> to[<span class="dv">1</span>]</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Ensure that y_min is always less than or equal to y_max for the rectangle function.</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The x-coordinates should be fine as they are not being inverted.</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        x0_new <span class="op">=</span> fr[<span class="dv">0</span>]</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        y0_new <span class="op">=</span> arr.shape[<span class="dv">0</span>] <span class="op">-</span> fr[<span class="dv">1</span>]</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        x1_new <span class="op">=</span> to[<span class="dv">0</span>]</span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        y1_new <span class="op">=</span> arr.shape[<span class="dv">0</span>] <span class="op">-</span> to[<span class="dv">1</span>]</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Use min/max to ensure correct ordering for PIL&#39;s rectangle function</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The rectangle function expects (x_min, y_min, x_max, y_max)</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        left <span class="op">=</span> <span class="bu">min</span>(x0_new, x1_new)</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        top <span class="op">=</span> <span class="bu">min</span>(y0_new, y1_new)</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        right <span class="op">=</span> <span class="bu">max</span>(x0_new, x1_new)</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>        bottom <span class="op">=</span> <span class="bu">max</span>(y0_new, y1_new)</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>        bnew <span class="op">=</span> [(left, top), (right, bottom)]</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        draw.rectangle(bnew, outline<span class="op">=</span>colors[i <span class="op">%</span> <span class="bu">len</span>(colors)]) <span class="co"># Use modulo for colors to avoid index error</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    plt.imshow(im, cmap<span class="op">=</span>plt.cm.Greys_r)</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>box1 <span class="op">=</span> [(<span class="dv">79</span>,<span class="dv">144</span>),(<span class="dv">100</span>,<span class="dv">282</span>)]</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>box2 <span class="op">=</span> [(<span class="dv">63</span>,<span class="dv">154</span>),(<span class="dv">117</span>,<span class="dv">287</span>)]</span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>draw_boxes([box1,box2],<span class="st">&#39;t00100.jpg&#39;</span>)</span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;vision_50colreg_03.png&#39;</span>)</span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>box3 <span class="op">=</span> [(<span class="dv">80</span>,<span class="dv">63</span>),(<span class="dv">95</span>,<span class="dv">260</span>)]</span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>draw_boxes([box1,box3],<span class="st">&#39;t00100.jpg&#39;</span>)</span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;vision_50colreg_04.png&#39;</span>)</span></code></pre></div>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        left <span class="op">=</span> <span class="bu">min</span>(x0_new, x1_new)</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        top <span class="op">=</span> <span class="bu">min</span>(y0_new, y1_new)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        right <span class="op">=</span> <span class="bu">max</span>(x0_new, x1_new)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        bottom <span class="op">=</span> <span class="bu">max</span>(y0_new, y1_new)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        bnew <span class="op">=</span> [(left, top), (right, bottom)]</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        draw.rectangle(bnew, outline<span class="op">=</span>colors[i <span class="op">%</span> <span class="bu">len</span>(colors)]) <span class="co"># Use modulo for colors to avoid index error</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    plt.imshow(im, cmap<span class="op">=</span>plt.cm.Greys_r)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>box1 <span class="op">=</span> [(<span class="dv">79</span>,<span class="dv">144</span>),(<span class="dv">100</span>,<span class="dv">282</span>)]</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>box2 <span class="op">=</span> [(<span class="dv">63</span>,<span class="dv">154</span>),(<span class="dv">117</span>,<span class="dv">287</span>)]</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>draw_boxes([box1,box2],<span class="st">&#39;t00100.jpg&#39;</span>)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;vision_50colreg_03.png&#39;</span>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>box3 <span class="op">=</span> [(<span class="dv">80</span>,<span class="dv">63</span>),(<span class="dv">95</span>,<span class="dv">260</span>)]</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>draw_boxes([box1,box3],<span class="st">&#39;t00100.jpg&#39;</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;vision_50colreg_04.png&#39;</span>)</span></code></pre></div>
 <p><img src="vision_50colreg_03.png" /></p>
 <p><img src="vision_50colreg_04.png" /></p>
 <div class="sourceCode" id="cb4"><pre
@@ -275,7 +265,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a hr
 <span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>arr1 <span class="op">=</span> get_pixels(box1, im) </span>
 <span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>arr2 <span class="op">=</span> get_pixels(box2, im) </span>
 <span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (arr1.shape, arr2.shape)</span></code></pre></div>
-<pre><code>(138, 21) (133, 54)</code></pre>
+<pre class="text"><code>(138, 21) (133, 54)</code></pre>
 <p>Olurluk oranının log’unu alarak hesap yapınca</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> likratio(arr1, arr2):</span>
@@ -294,7 +284,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a hr
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> likratio(arr1, arr2)</span>
 <span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (L)</span></code></pre></div>
-<pre><code>419.6536187</code></pre>
+<pre class="text"><code>419.3404055757783</code></pre>
 <p>İkinci resimde her iki dikdörtgen aynı direğin üzerinde, yani aynı
 obje üzerindeler. Bu durumda oranın daha düşük olmasını bekleriz,</p>
 <div class="sourceCode" id="cb8"><pre
@@ -302,7 +292,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a hr
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>arr2 <span class="op">=</span> get_pixels(box3, im)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> likratio(arr1, arr2)</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (L)</span></code></pre></div>
-<pre><code>244.473078548</code></pre>
+<pre class="text"><code>247.8054950906153</code></pre>
 <p>Hakikaten de öyle.</p>
 <p>Çok Boyutlu Gaussian Kullanmak</p>
 <p>Eğer renkli resimleri işlemek istiyorsak, her pikselin H,S,V

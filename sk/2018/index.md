@@ -6,6 +6,8 @@
 
 [Konuşma Tanıma (Speech Recognition)](01/speech-recognition.html)
 
+[Özkodlama (Autoencoding)](02/autoencoding.html)
+
 [Elde Olmayan Eğitim Verisi](02/elde-olmayan-egitim-verisi.html)
 
 [Go Oyunu, GnuGo](02/go-gnugo.html)

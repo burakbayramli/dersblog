@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Numba ile SVD Hızlandırma</h1>
+
+<p>Numba ve Funk SVD</p>
+
+<p>Eğer Numba [2] kullanırsak, SVD kodunu çok daha hızlı işletebiliriz. Ayrıca
+Funk'ın kodlaması (ki alttaki kodu onu temel alacak) biraz daha ilginç, mesela
+en dış döngü özellikler (feature) geziyor, onun içindeki birkaç yüz kez yine
+kendi içinde olan tahmin/hata hesabını yapıyor, tüm veri seti üzerinde. Bunun
+için Movielens 100k verisi lazım, ardından <a href="data_m100k.py">data_m100k.py</a> ile veri
+yaratılır [1],</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Requires Movielens 100k data </span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">mmread</span><span class="p">,</span> <span class="n">mmwrite</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">jit</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_user_feature_matrix</span><span class="p">(</span><span class="n">review_matrix</span><span class="p">,</span> <span class="n">NUM_FEATURES</span><span class="p">):</span>
+    <span class="n">num_users</span> <span class="o">=</span> <span class="n">review_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">user_feature_matrix</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">NUM_FEATURES</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">NUM_FEATURES</span><span class="p">,</span> <span class="n">num_users</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">user_feature_matrix</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_movie_feature_matrix</span><span class="p">(</span><span class="n">review_matrix</span><span class="p">,</span> <span class="n">NUM_FEATURES</span><span class="p">):</span>
+    <span class="n">num_movies</span> <span class="o">=</span> <span class="n">review_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">movie_feature_matrix</span> <span class="o">=</span> <span class="mf">1.</span><span class="o">/</span><span class="n">NUM_FEATURES</span> <span class="o">*</span> \
+        <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">NUM_FEATURES</span><span class="p">,</span> <span class="n">num_movies</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">movie_feature_matrix</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_rating</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">movie_id</span><span class="p">,</span> <span class="n">user_feature_matrix</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">):</span>
+    <span class="n">rating</span> <span class="o">=</span> <span class="mf">1.</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">user_feature_matrix</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">rating</span> <span class="o">+=</span> \
+            <span class="n">user_feature_matrix</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">user_id</span><span class="p">]</span> <span class="o">*</span> \
+            <span class="n">movie_feature_matrix</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">movie_id</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">rating</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">:</span> <span class="n">rating</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">elif</span> <span class="n">rating</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span> <span class="n">rating</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">rating</span>
+
+<span class="nd">@jit</span><span class="p">(</span><span class="n">nopython</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">sgd_inner</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">A_row</span><span class="p">,</span> <span class="n">A_col</span><span class="p">,</span> <span class="n">A_data</span><span class="p">,</span>
+              <span class="n">user_feature_matrix</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">,</span>
+              <span class="n">NUM_FEATURES</span><span class="p">):</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="mf">0.015</span>
+    <span class="n">LEARNING_RATE</span> <span class="o">=</span> <span class="mf">0.001</span>
+    <span class="n">squared_error</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">A_data</span><span class="p">)):</span>
+        <span class="n">user_id</span> <span class="o">=</span> <span class="n">A_row</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">movie_id</span> <span class="o">=</span> <span class="n">A_col</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">rating</span> <span class="o">=</span> <span class="n">A_data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">predict_rating</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span>
+                           <span class="n">movie_id</span><span class="p">,</span>
+                           <span class="n">user_feature_matrix</span><span class="p">,</span>
+                           <span class="n">movie_feature_matrix</span><span class="p">)</span>
+        <span class="n">err</span> <span class="o">=</span> <span class="n">rating</span> <span class="o">-</span> <span class="n">p</span>            
+        <span class="n">squared_error</span> <span class="o">+=</span> <span class="n">err</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="n">user_feature_value</span> <span class="o">=</span> <span class="n">user_feature_matrix</span><span class="p">[</span><span class="n">feature</span><span class="p">,</span> <span class="n">user_id</span><span class="p">]</span>
+        <span class="n">movie_feature_value</span> <span class="o">=</span> <span class="n">movie_feature_matrix</span><span class="p">[</span><span class="n">feature</span><span class="p">,</span> <span class="n">movie_id</span><span class="p">]</span>
+        <span class="n">user_feature_matrix</span><span class="p">[</span><span class="n">feature</span><span class="p">,</span> <span class="n">user_id</span><span class="p">]</span> <span class="o">+=</span> \
+            <span class="n">LEARNING_RATE</span> <span class="o">*</span> <span class="p">(</span><span class="n">err</span> <span class="o">*</span> <span class="n">movie_feature_value</span> <span class="o">-</span> <span class="n">K</span> <span class="o">*</span> <span class="n">user_feature_value</span><span class="p">)</span>
+        <span class="n">movie_feature_matrix</span><span class="p">[</span><span class="n">feature</span><span class="p">,</span> <span class="n">movie_id</span><span class="p">]</span> <span class="o">+=</span> \
+            <span class="n">LEARNING_RATE</span> <span class="o">*</span> <span class="p">(</span><span class="n">err</span> <span class="o">*</span> <span class="n">user_feature_value</span> <span class="o">-</span> <span class="n">K</span> <span class="o">*</span> <span class="n">movie_feature_value</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">squared_error</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">calculate_features</span><span class="p">(</span><span class="n">A_row</span><span class="p">,</span> <span class="n">A_col</span><span class="p">,</span> <span class="n">A_data</span><span class="p">,</span>
+                       <span class="n">user_feature_matrix</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">,</span>
+                       <span class="n">NUM_FEATURES</span><span class="p">):</span>
+    <span class="n">MIN_IMPROVEMENT</span> <span class="o">=</span> <span class="mf">0.0001</span>
+    <span class="n">MIN_ITERATIONS</span> <span class="o">=</span> <span class="mi">200</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">last_rmse</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">A_data</span><span class="p">))</span>
+    <span class="n">num_ratings</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">A_data</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">xrange</span><span class="p">(</span><span class="n">NUM_FEATURES</span><span class="p">):</span>
+        <span class="nb">iter</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">while</span> <span class="p">(</span><span class="nb">iter</span> <span class="o">&lt;</span> <span class="n">MIN_ITERATIONS</span><span class="p">)</span> <span class="ow">or</span>  <span class="p">(</span><span class="n">rmse</span> <span class="o">&lt;</span> <span class="n">last_rmse</span> <span class="o">-</span> <span class="n">MIN_IMPROVEMENT</span><span class="p">):</span>
+            <span class="n">last_rmse</span> <span class="o">=</span> <span class="n">rmse</span>
+            <span class="n">squared_error</span> <span class="o">=</span> <span class="n">sgd_inner</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">A_row</span><span class="p">,</span> <span class="n">A_col</span><span class="p">,</span> <span class="n">A_data</span><span class="p">,</span>
+                                      <span class="n">user_feature_matrix</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">,</span>
+                                      <span class="n">NUM_FEATURES</span><span class="p">)</span>
+            <span class="n">rmse</span> <span class="o">=</span> <span class="p">(</span><span class="n">squared_error</span> <span class="o">/</span> <span class="n">num_ratings</span><span class="p">)</span>
+            <span class="nb">iter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="nb">print</span> <span class="p">((</span><span class="s1">&#39;Squared error = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">squared_error</span><span class="p">))</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;RMSE = </span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">rmse</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Feature = </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">feature</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">last_rmse</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
+    <span class="n">LAMBDA</span> <span class="o">=</span> <span class="mf">0.02</span>
+    <span class="n">NUM_FEATURES</span> <span class="o">=</span> <span class="mi">30</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">mmread</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/Downloads/A_m100k_train&#39;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">])</span>
+
+    <span class="n">user_feature_matrix</span> <span class="o">=</span> <span class="n">create_user_feature_matrix</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">NUM_FEATURES</span><span class="p">)</span>
+    <span class="n">movie_feature_matrix</span> <span class="o">=</span> <span class="n">create_movie_feature_matrix</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">NUM_FEATURES</span><span class="p">)</span>
+
+    <span class="n">A</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
+
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">calculate_features</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">col</span><span class="p">,</span> <span class="n">A</span><span class="o">.</span><span class="n">data</span><span class="p">,</span>
+                              <span class="n">user_feature_matrix</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">,</span>
+                              <span class="n">NUM_FEATURES</span> <span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;rmse&#39;</span><span class="p">,</span> <span class="n">rmse</span><span class="p">)</span>
+
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;/tmp/user_feature_matrix2.dat&quot;</span><span class="p">,</span> <span class="n">user_feature_matrix</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">savetxt</span><span class="p">(</span><span class="s2">&quot;/tmp/movie_feature_matrix2.dat&quot;</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span> 
+    <span class="n">main</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Üstteki script'i işlettikten sonra bazı tavsiyeleri gösterebiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="n">items_file</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/Downloads/ml-100k/u.item&#39;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span>
+<span class="n">item_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">items_file</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;|&#39;</span><span class="p">,</span><span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">item_df</span><span class="p">[</span><span class="s1">&#39;idx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item_df</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="n">item_df</span> <span class="o">=</span> <span class="n">item_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;idx&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">mmread</span><span class="p">,</span> <span class="n">mmwrite</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">funk2</span><span class="o">,</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">user_feature_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/user_feature_matrix2.dat&quot;</span><span class="p">)</span>
+<span class="n">movie_feature_matrix</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">loadtxt</span><span class="p">(</span><span class="s2">&quot;/tmp/movie_feature_matrix2.dat&quot;</span><span class="p">)</span>
+
+<span class="n">preds</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">user_id</span> <span class="o">=</span> <span class="mi">110</span>
+<span class="k">for</span> <span class="n">movie_id</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1682</span><span class="p">):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">funk2</span><span class="o">.</span><span class="n">predict_rating</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">movie_id</span><span class="p">,</span> <span class="n">user_feature_matrix</span><span class="p">,</span> <span class="n">movie_feature_matrix</span><span class="p">)</span>
+    <span class="n">preds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">movie_id</span><span class="p">,</span> <span class="n">pred</span><span class="p">])</span>
+
+<span class="n">preds_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">preds</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;movie&#39;</span><span class="p">,</span><span class="s1">&#39;score&#39;</span><span class="p">])</span>
+<span class="n">preds_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;score&#39;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">preds_df</span><span class="p">[</span><span class="s1">&#39;movie_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item_df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">preds_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>      movie     score                                         movie_name
+1448   1448  4.600873                             Pather Panchali (1955)
+407     407  4.538450                              Close Shave, A (1995)
+168     168  4.424078                         Wrong Trousers, The (1993)
+482     482  4.406603                                  Casablanca (1942)
+99       99  4.402690                                       Fargo (1996)
+11       11  4.362673                         Usual Suspects, The (1995)
+319     319  4.323309  Paradise Lost: The Child Murders at Robin Hood...
+49       49  4.315158                                   Star Wars (1977)
+113     113  4.308009  Wallace &amp; Gromit: The Best of Aardman Animatio...
+172     172  4.288836                         Princess Bride, The (1987)
+</code></pre>
+
+<p>Bu kişinin seyrettiği ve en çok beğendiği filmler altta</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="n">mmread</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/Downloads/A_m100k_train&#39;</span> <span class="o">%</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">tocsc</span><span class="p">()</span>
+<span class="n">movies</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">user_id</span><span class="p">,:]</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">user_id</span><span class="p">,</span><span class="n">A</span><span class="p">[</span><span class="n">user_id</span><span class="p">,:]</span><span class="o">.</span><span class="n">nonzero</span><span class="p">()[</span><span class="mi">1</span><span class="p">]]</span>
+<span class="n">ratings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ravel</span><span class="p">(</span><span class="n">ratings</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span>
+<span class="n">likes_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+<span class="n">likes_df</span><span class="p">[</span><span class="s1">&#39;movie&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">movies</span><span class="p">;</span> <span class="n">likes_df</span><span class="p">[</span><span class="s1">&#39;rating&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">ratings</span>
+<span class="n">likes_df</span> <span class="o">=</span> <span class="n">likes_df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;movie&#39;</span><span class="p">)</span>
+<span class="n">likes_df</span><span class="o">.</span><span class="n">sort_index</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;rating&#39;</span><span class="p">,</span><span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">likes_df</span><span class="p">[</span><span class="s1">&#39;movie_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">item_df</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">likes_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>       rating                     movie_name
+movie                                       
+301         5       L.A. Confidential (1997)
+314         5               Apt Pupil (1998)
+257         4                 Contact (1997)
+285         4    English Patient, The (1996)
+303         4           Fly Away Home (1996)
+310         4  Wings of the Dove, The (1997)
+353         4     Wedding Singer, The (1998)
+302         3             Ulee's Gold (1997)
+320         3                  Mother (1996)
+304         2          Ice Storm, The (1997)
+</code></pre>
+
+<p>Kaynaklar</p>
+
+<p>[1] Bayramli, Lineer Cebir, Yaklaşıksal SVD ile Tavsiye Sistemleri</p>
+
+<p>[2] Bayramlı, <em>Numba, LLVM, ve SVD</em>, 
+     <a href="https://burakbayramli.github.io/dersblog/sk/2014/09/numba-llvm-ve-svd.html">https://burakbayramli.github.io/dersblog/sk/2014/09/numba-llvm-ve-svd.html</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

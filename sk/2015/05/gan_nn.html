@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Üretici Hasımsal Ağlar (Generative Adverserial Networks -GAN-)</h1>
+
+<p>Derin Öğrenme ustalarından Yann LeCun GAN'leri "son 10 senede yapay öğrenmede
+görülen en büyük ilerleme'' olarak tarif ediyor. Burada haksız değil. YSA'lar
+ilk başta (geri gelişinden sonraki ilk evresinde de) bir resimde kedi, köpek ya
+da uçak olup olmadığını sınıflayabiliyordu. Yeni evrişimsel (convolutional) yapı
+ile çetrefil görüntü ilişkilerini öğrenip bunları sınıflama özelliği kazandı,
+fakat bunlar basit bir etikete bağlı olarak denetimli (süpervised) olarak
+yapıyordu.</p>
+
+<p>GAN'ler denetimsiz olarak eğitilebiliyor, ve daha ilginci "üretimsel
+(generative)'' olarak kullanılabiliyor. Mesela pek çok görüntüye bakıp yeni
+görüntüler üreten bir GAN olabilir, ya da, sözel tarif verilince o tarifteki
+söylenen görüntüyü üreten bir GAN olabilir! Öyle ya sonuçta verilen girdi bir
+takım reel sayılar içeren çok boyutlu vektörlerdir, bu sayıların kelimeleri,
+başka görüntüleri temsil etmesi mimarı açısından çok fark yaratmaz.</p>
+
+<p><img src="gan_02.png" alt="" /></p>
+
+<p>Resimden resime tercüme edebilmek, "üretim yapmak'' elle çizilmiş taslakları
+gerçeğe çok yakın resimlere dönüştürmek, ya da tam tersi yönde gitmek mesela
+bir uydunun çektiği şehir resmini haritasal yollar, evler şemasına tercüme
+etmek, vs.</p>
+
+<p><img src="gan_04.png" alt="" /></p>
+
+<p>Mimari</p>
+
+<p>Şimdi GAN'lerin nasıl kurulduğuna gelelim. Bir GAN yapısı kabaca bir kalpazan
+(üretimsel) ve polis (ayırtaç -discriminatör-) arasındaki ilişkiyi
+benzetilebilir. İlk başta kalpazan polise bir sahte para gösterir, polis buna
+sahte der. Bu noktada polis kalpazana önemli bir bilgi / geri besleme vermiş
+olur, kalpazan bu bilgiyi kullanarak bir sonraki sefere daha iyi sahte para
+basmaya uğraşabilir. Bu döngü uzun süre devam ettirilir ta ki kalpazan işleri
+iyice ilerletip polisi tamamen aldatabilinceye kadar. </p>
+
+<p>İmajlar bağlamında düşünelim şimdi; sahte imajlar üretmek ve onları
+ayırdedebilmek. Üstteki anlatımdan bize iki tane ağ gerektiğinin
+anlayabiliriz. Birincisi ayırtaç, bu ağa imaj verilir, o da cevap olarak 0/1
+olarak sahte / değil, doğru / yanlış şeklinde bir cevap hesaplar. </p>
+
+<p><img src="gan_05.png" alt="" /></p>
+
+<p>İkinci ağ yapısı sahte imaj üretmeye uğraşıyor, ve bu üretimi çok iyi yapmaya
+uğraşıyor. Peki girdi nedir? Gürültü! İkinci ağa 100 boyutlu gürültü vereceğiz
+(başka boyutlar da olabilir), ve bu gürültüyü işleyerek 28x28 boyutlarında bir
+imaj üretmesini bekleyeceğiz. Bu dahiyane bir yöntem. Ağın hayal görmesini,
+üretmesini istiyoruz, bu tür bir ağa gürültü, ya da hiçlikten daha iyi bir girdi
+verilemezdi herhalde. Bu arada eğitildikten sonra YSA'nın deterministik bir
+yapıda olduğunu unutmayalım, yani eğitim bitince aynı gürültü iki kere verilince
+aynı imaj üretilir. Değişik imajlar için değişik gürültüler vermek lazım!
+Değişik gürültü nasıl olur? Gaussian bazlı N(0,1) gürültü ürettiğimizi
+düşünelim, bazen 0'in solundan bazen sağından değer üretiyor olabiliriz. Müthiş
+olan YSA'nın eğitim sırasında bu tür gürültü farklarına hassas hale
+gelmesidir! İkinci ağ altta,</p>
+
+<p><img src="gan_06.png" alt="" /></p>
+
+<p>Peki eğitim verisi $X,y$ nedir, yani kaynak etiket nasıl ayarlanır? Eğitim
+sırasında gerçek görüntüler arasından belli sayıda dosya toplanır, bunlar
+"gerçek'' yani 1 etiketi, ardından elde en son olan üretece görüntü üretmesi
+söylenir ve bu veriler 0 etiketi ile eğitim verisine dahil edilir. Dikkat
+edersek MNIST bağlamında mesela bu tabandan gelen 0,1,2,. gibi etiketleri
+kullanmıyoruz, etiketleri kendimiz üretiyoruz. </p>
+
+<p><img src="gan_07.png" alt="" /></p>
+
+<p>Amaç üretecin o kadar iyi hale gelmesi ki ayırtaç gerçek imaj ile hayali
+olanı birbirinden ayırt edemesin.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">From https://github.com/eriklindernoren/Keras-GAN/tree/master/dcgan</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Input</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Sequential</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">Reshape</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">Flatten</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.advanced_activations</span><span class="w"> </span><span class="kn">import</span> <span class="n">LeakyReLU</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.layers.convolutional</span><span class="w"> </span><span class="kn">import</span> <span class="n">Conv2D</span><span class="p">,</span> <span class="n">UpSampling2D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.datasets</span><span class="w"> </span><span class="kn">import</span> <span class="n">mnist</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">initializers</span>
+
+<span class="n">K</span><span class="o">.</span><span class="n">set_image_dim_ordering</span><span class="p">(</span><span class="s1">&#39;th&#39;</span><span class="p">)</span>
+
+<span class="c1"># Deterministic output.</span>
+<span class="c1"># Tired of seeing the same results every time? Remove the line below.</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="c1"># The results are a little better when the dimensionality of the</span>
+<span class="c1"># random vector is only 10.  The dimensionality has been left at 100</span>
+<span class="c1"># for consistency with other GAN implementations.</span>
+<span class="n">randomDim</span> <span class="o">=</span> <span class="mi">200</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_model</span><span class="p">():</span>
+    <span class="c1"># Optimizer</span>
+    <span class="n">adam</span> <span class="o">=</span> <span class="n">Adam</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">0.0002</span><span class="p">,</span> <span class="n">beta_1</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+    <span class="c1"># Generator</span>
+    <span class="n">generator</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">128</span><span class="o">*</span><span class="mi">7</span><span class="o">*</span><span class="mi">7</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="n">randomDim</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">initializers</span><span class="o">.</span><span class="n">RandomNormal</span><span class="p">(</span><span class="n">stddev</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Reshape</span><span class="p">((</span><span class="mi">128</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">7</span><span class="p">)))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">UpSampling2D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">UpSampling2D</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">))</span>
+    <span class="n">generator</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">adam</span><span class="p">)</span>
+
+    <span class="c1"># Discriminator</span>
+    <span class="n">discriminator</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">28</span><span class="p">,</span> <span class="mi">28</span><span class="p">),</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="n">initializers</span><span class="o">.</span><span class="n">RandomNormal</span><span class="p">(</span><span class="n">stddev</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Conv2D</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="n">kernel_size</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="n">strides</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LeakyReLU</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.3</span><span class="p">))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Flatten</span><span class="p">())</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;sigmoid&#39;</span><span class="p">))</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">adam</span><span class="p">)</span>
+
+    <span class="c1"># Combined network</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">ganInput</span> <span class="o">=</span> <span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="n">randomDim</span><span class="p">,))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">generator</span><span class="p">(</span><span class="n">ganInput</span><span class="p">)</span>
+    <span class="n">ganOutput</span> <span class="o">=</span> <span class="n">discriminator</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">gan</span> <span class="o">=</span> <span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="n">ganInput</span><span class="p">,</span> <span class="n">outputs</span><span class="o">=</span><span class="n">ganOutput</span><span class="p">)</span>
+    <span class="n">gan</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s1">&#39;binary_crossentropy&#39;</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="n">adam</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">generator</span><span class="p">,</span> <span class="n">discriminator</span><span class="p">,</span> <span class="n">gan</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">train</span><span class="p">(</span><span class="n">epochs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">batchSize</span><span class="o">=</span><span class="mi">128</span><span class="p">):</span>
+
+    <span class="c1"># Load MNIST data</span>
+    <span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">),</span> <span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span> <span class="o">=</span> <span class="n">mnist</span><span class="o">.</span><span class="n">load_data</span><span class="p">()</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">X_train</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">-</span> <span class="mf">127.5</span><span class="p">)</span><span class="o">/</span><span class="mf">127.5</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+    <span class="n">batchCount</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">batchSize</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Epochs: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">epochs</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Batch size: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">batchSize</span><span class="p">)</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Batches per epoch: </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">batchCount</span><span class="p">)</span>
+    <span class="n">generator</span><span class="p">,</span> <span class="n">discriminator</span><span class="p">,</span> <span class="n">gan</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;Epoch </span><span class="si">%d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">batchCount</span><span class="p">))):</span>
+            <span class="c1"># Get a random set of input noise and images</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">randomDim</span><span class="p">])</span>
+            <span class="n">imageBatch</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="n">batchSize</span><span class="p">)]</span>
+
+            <span class="c1"># Generate fake MNIST images</span>
+            <span class="n">generatedImages</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">imageBatch</span><span class="p">,</span> <span class="n">generatedImages</span><span class="p">])</span>
+
+            <span class="c1"># Labels for generated and real data</span>
+            <span class="n">yDis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">batchSize</span><span class="p">)</span>
+            <span class="c1"># One-sided label smoothing</span>
+            <span class="n">yDis</span><span class="p">[:</span><span class="n">batchSize</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.9</span>
+
+            <span class="c1"># Train discriminator</span>
+            <span class="n">discriminator</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">dloss</span> <span class="o">=</span> <span class="n">discriminator</span><span class="o">.</span><span class="n">train_on_batch</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">yDis</span><span class="p">)</span>
+
+            <span class="c1"># Train generator</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">[</span><span class="n">batchSize</span><span class="p">,</span> <span class="n">randomDim</span><span class="p">])</span>
+            <span class="n">yGen</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">batchSize</span><span class="p">)</span>
+            <span class="n">discriminator</span><span class="o">.</span><span class="n">trainable</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="n">gloss</span> <span class="o">=</span> <span class="n">gan</span><span class="o">.</span><span class="n">train_on_batch</span><span class="p">(</span><span class="n">noise</span><span class="p">,</span> <span class="n">yGen</span><span class="p">)</span>
+
+    <span class="n">generator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;dcgan_generator_epoch_</span><span class="si">%d</span><span class="s1">.h5&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+    <span class="n">discriminator</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s1">&#39;dcgan_discriminator_epoch_</span><span class="si">%d</span><span class="s1">.h5&#39;</span> <span class="o">%</span> <span class="n">e</span><span class="p">)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">train</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">128</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Eğittikten sonra bir gürültü verip üretim yapalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">mnist_dcgan</span>
+<span class="n">generator</span><span class="p">,</span> <span class="n">discriminator</span><span class="p">,</span> <span class="n">gan</span> <span class="o">=</span> <span class="n">mnist_dcgan</span><span class="o">.</span><span class="n">get_model</span><span class="p">()</span>
+<span class="n">generator</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="s2">&quot;dcgan_generator_epoch_50.h5&quot;</span><span class="p">)</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gan_01.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="gan_01.png" alt="" /></p>
+
+<p>Bir kez daha gürültü üretelim ve imaj üretelim,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">pixels</span> <span class="o">=</span> <span class="n">generator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">noise</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">28</span><span class="p">,</span><span class="mi">28</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">pixels</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">gray</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;gan_03.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="gan_03.png" alt="" /></p>
+
+<p>Bu çıktıların görüntüsü ilginç değil mi? Aslında MNİST imajlarına tıpatıp
+benzemiyorlar, "hayal edilmiş'' ya da "tekrar oluşturulmuş'' bir halleri
+var sanki. GAN'lerin sihri burada. </p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://towardsdatascience.com/gans-n-roses-c6652d513260">https://towardsdatascience.com/gans-n-roses-c6652d513260</a></p>
+
+<p>[2] <a href="https://towardsdatascience.com/gan-by-example-using-keras-on-tensorflow-backend-1a6d515a60d0">https://towardsdatascience.com/gan-by-example-using-keras-on-tensorflow-backend-1a6d515a60d0</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

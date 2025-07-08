@@ -1,0 +1,612 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Evrişimsel Çizit Ağları (Graph Convolutional Networks)</h1>
+
+<p>Gerçek dünyadaki pek çok veriyi çizit olarak temsil etmek doğal; arkadaşlık
+verisi, bilgi temsili. Çizitler bildiğimiz gibi düğümler ve o düğümler
+arasındaki bağlantılardan oluşur, bilgi temsili örneğinde mesela A kişisi B
+okulunda okudu için A ve B düğümleri arasında "okudu'' bağlantısı konur,
+ve yine bu kişinin C şehrinde "yaşamış'' olduğu yine bir bağlantı ile
+temsil edilebilir. Bu şekilde tüm çizit kurulabilir, ve sonra çizitin
+özetsel bir halini hesaplattırabiliriz (temsili gömme verisi yaratmak
+mümkün), sonra bu "öğrenilmiş'' özet üzerinden eksik bilgileri çizite
+sormak mümkün olabilir. Acaba A kişisi D işinde "çalışmış mıdır?''. Bu
+eksik bir bağlantı, belki veride yok ama olması gerekiyor, eldeki özetten
+bu bilgi tamamlanabilir. </p>
+
+<p>Matematiksel olarak bir düğüm verisinin etrafındaki komşu düğümlerin bir
+fonksiyonu olarak modellenir.</p>
+
+<p><img src="graphconv_02.png" alt="" /></p>
+
+<p>Yaklaşıma evrişimsel denmesinin sebebi tüm 1. derece komşuluk ilişkilerinin
+aynı ağırlıklar ile hesaplanıyor olması. Bu isim yaklaşımın ismi derin
+yapay sinir ağlarındaki evrişimsel operatörlere benzemesinden geliyor, bir
+evrişimsel operatörü veri üzerinde gezdirdiğimiz zaman o gezdirme
+yapılırken operatörün hep aynı ağırlıkları kullanıldığı varsayarız / o
+şekilde kodlarız.</p>
+
+<p>$$ h<em>v = ReLU(W</em>{loop}h<em>v + \sum</em>{u \in N(v)} W h_u ) $$</p>
+
+<p>$W_{loop}$ düğümlerin kendilerine olan bağlantısını (loop) modelliyor, buna
+etraftaki bağlantılar ekleniyor. Fakat bir DYSA'da evrişimsel (ve diğer)
+tabakalar, katmanlar vardır, GCN'de katmanlar nerede? Katmanlar bir düğümün
+hesabı için kaç komşuluk seviyesi geriye gitmesi üzerinden
+hesaplanıyor. Eğer bir düğüm için komşunun komşusuna gidiyorsak bu ilişki
+ağın ikinci katmanını oluşturur.</p>
+
+<p><img src="graphconv_01.png" alt="" /></p>
+
+<p>Üstteki figürde gördüğümüz gibi ilk seviye komşuluklar mavi komşular ve
+kırmızı düğüm arasında, bu birinci katman (her kırmızı düğüm için komşuluk
+aynı ağırlıklarla). İkinci katmanda komşunun komşusu sarı düğümler de dahil
+ediliyor, ve bunlar da farklı (ama yine her ikinci seviye komşuluk için
+aynı) ağırlıklarla hallediliyor.</p>
+
+<p>GCN'lerin diğer çizit işleyen yaklaşımlara göre bir diğer avantajı hem
+bağlantı yapısını, hem de düğümler üzerindeki referans bilgisini de (mesela
+kişileri temsil eden düğümlerde yaş, cinsiyet gibi bilgiler)
+kullanabilmesi. </p>
+
+<p>[2] konudaki yayınlardan biri, örnek olarak bilimsel yayınların
+birbirini referansını analiz etmişler, ayrıca tavsiye sistemleriyle kendi
+yaklaşımlarını yarıştırmışlar, sonuçlar oldukca iyi [3].</p>
+
+<p>Kod</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pkl</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">average_precision_score</span>
+
+<span class="n">flags</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">flags</span>
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="n">flags</span><span class="o">.</span><span class="n">FLAGS</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">OptimizerAE</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">preds</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="n">pos_weight</span><span class="p">,</span> <span class="n">norm</span><span class="p">):</span>
+        <span class="n">preds_sub</span> <span class="o">=</span> <span class="n">preds</span>
+        <span class="n">labels_sub</span> <span class="o">=</span> <span class="n">labels</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">weighted_cross_entropy_with_logits</span><span class="p">(</span><span class="n">logits</span><span class="o">=</span><span class="n">preds_sub</span><span class="p">,</span> <span class="n">targets</span><span class="o">=</span><span class="n">labels_sub</span><span class="p">,</span> <span class="n">pos_weight</span><span class="o">=</span><span class="n">pos_weight</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cost</span> <span class="o">=</span> <span class="n">norm</span> <span class="o">*</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tmp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">learning_rate</span><span class="p">)</span>  <span class="c1"># Adam Optimizer</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">opt_op</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grads_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">compute_gradients</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cost</span><span class="p">)</span>
+
+        <span class="n">tmp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">greater_equal</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">preds_sub</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">correct_prediction</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">labels_sub</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accuracy</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">correct_prediction</span><span class="p">,</span> <span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">parse_index_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+        <span class="n">index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
+    <span class="k">return</span> <span class="n">index</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">load_data</span><span class="p">(</span><span class="n">dataset</span><span class="p">):</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;tx&#39;</span><span class="p">,</span> <span class="s1">&#39;allx&#39;</span><span class="p">,</span> <span class="s1">&#39;graph&#39;</span><span class="p">]</span>
+    <span class="n">objects</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)):</span>
+        <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pkl</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="s2">&quot;data/ind.</span><span class="si">{}</span><span class="s2">.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">,</span> <span class="n">names</span><span class="p">[</span><span class="n">i</span><span class="p">]))))</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">tx</span><span class="p">,</span> <span class="n">allx</span><span class="p">,</span> <span class="n">graph</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">objects</span><span class="p">)</span>
+    <span class="n">test_idx_reorder</span> <span class="o">=</span> <span class="n">parse_index_file</span><span class="p">(</span><span class="s2">&quot;data/ind.</span><span class="si">{}</span><span class="s2">.test.index&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">dataset</span><span class="p">))</span>
+    <span class="n">test_idx_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">test_idx_reorder</span><span class="p">)</span>
+
+    <span class="n">test_idx_range_full</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">test_idx_reorder</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">test_idx_reorder</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">tx_extended</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">lil_matrix</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">test_idx_range_full</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">tx_extended</span><span class="p">[</span><span class="n">test_idx_range</span><span class="o">-</span><span class="nb">min</span><span class="p">(</span><span class="n">test_idx_range</span><span class="p">),</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">tx</span>
+    <span class="n">tx</span> <span class="o">=</span> <span class="n">tx_extended</span>
+
+    <span class="n">features</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">allx</span><span class="p">,</span> <span class="n">tx</span><span class="p">))</span><span class="o">.</span><span class="n">tolil</span><span class="p">()</span>
+    <span class="n">features</span><span class="p">[</span><span class="n">test_idx_reorder</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="n">test_idx_range</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="n">adj</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">adjacency_matrix</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">from_dict_of_lists</span><span class="p">(</span><span class="n">graph</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">adj</span><span class="p">,</span> <span class="n">features</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">weight_variable_glorot</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">init_range</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">6.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">input_dim</span> <span class="o">+</span> <span class="n">output_dim</span><span class="p">))</span>
+    <span class="n">initial</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">([</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">output_dim</span><span class="p">],</span> <span class="n">minval</span><span class="o">=-</span><span class="n">init_range</span><span class="p">,</span>
+                                <span class="n">maxval</span><span class="o">=</span><span class="n">init_range</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">initial</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+
+<span class="n">_LAYER_UIDS</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_layer_uid</span><span class="p">(</span><span class="n">layer_name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">layer_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_LAYER_UIDS</span><span class="p">:</span>
+        <span class="n">_LAYER_UIDS</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">_LAYER_UIDS</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">_LAYER_UIDS</span><span class="p">[</span><span class="n">layer_name</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dropout_sparse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">keep_prob</span><span class="p">,</span> <span class="n">num_nonzero_elems</span><span class="p">):</span>
+    <span class="n">noise_shape</span> <span class="o">=</span> <span class="p">[</span><span class="n">num_nonzero_elems</span><span class="p">]</span>
+    <span class="n">random_tensor</span> <span class="o">=</span> <span class="n">keep_prob</span>
+    <span class="n">random_tensor</span> <span class="o">+=</span> <span class="n">tf</span><span class="o">.</span><span class="n">random_uniform</span><span class="p">(</span><span class="n">noise_shape</span><span class="p">)</span>
+    <span class="n">dropout_mask</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">random_tensor</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">bool</span><span class="p">)</span>
+    <span class="n">pre_out</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_retain</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dropout_mask</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pre_out</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.</span><span class="o">/</span><span class="n">keep_prob</span><span class="p">)</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Layer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">allowed_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;logging&#39;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">allowed_kwargs</span><span class="p">,</span> <span class="s1">&#39;Invalid keyword argument: &#39;</span> <span class="o">+</span> <span class="n">kwarg</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="n">layer</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">get_layer_uid</span><span class="p">(</span><span class="n">layer</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">logging</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logging&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logging</span> <span class="o">=</span> <span class="n">logging</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">issparse</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">inputs</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">name_scope</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+            <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_call</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GraphConvolution</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span>
+                 <span class="n">output_dim</span><span class="p">,</span> <span class="n">adj</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span>
+                 <span class="n">act</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GraphConvolution</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_vars&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_variable_glorot</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span>
+                                                          <span class="n">output_dim</span><span class="p">,</span>
+                                                          <span class="n">name</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adj</span> <span class="o">=</span> <span class="n">adj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">act</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_tensor_dense_matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adj</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GraphConvolutionSparse</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span>
+                 <span class="n">output_dim</span><span class="p">,</span> <span class="n">adj</span><span class="p">,</span>
+                 <span class="n">features_nonzero</span><span class="p">,</span>
+                 <span class="n">dropout</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GraphConvolutionSparse</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_vars&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">weight_variable_glorot</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span>
+                                                          <span class="n">output_dim</span><span class="p">,</span>
+                                                          <span class="n">name</span><span class="o">=</span><span class="s2">&quot;weights&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adj</span> <span class="o">=</span> <span class="n">adj</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">act</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">issparse</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features_nonzero</span> <span class="o">=</span> <span class="n">features_nonzero</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">inputs</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">dropout_sparse</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">features_nonzero</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_tensor_dense_matmul</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vars</span><span class="p">[</span><span class="s1">&#39;weights&#39;</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_tensor_dense_matmul</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">adj</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">InnerProductDecoder</span><span class="p">(</span><span class="n">Layer</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">,</span> <span class="n">dropout</span><span class="o">=</span><span class="mf">0.</span><span class="p">,</span> <span class="n">act</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">InnerProductDecoder</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">dropout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">act</span> <span class="o">=</span> <span class="n">act</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_call</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+        <span class="n">inputs</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dropout</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="mi">1</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">outputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">outputs</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Model</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">allowed_kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;logging&#39;</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">allowed_kwargs</span><span class="p">,</span> <span class="s1">&#39;Invalid keyword argument: &#39;</span> <span class="o">+</span> <span class="n">kwarg</span>
+
+        <span class="k">for</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="k">assert</span> <span class="n">kwarg</span> <span class="ow">in</span> <span class="n">allowed_kwargs</span><span class="p">,</span> <span class="s1">&#39;Invalid keyword argument: &#39;</span> <span class="o">+</span> <span class="n">kwarg</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
+            <span class="n">name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+
+        <span class="n">logging</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;logging&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logging</span> <span class="o">=</span> <span class="n">logging</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; Wrapper for _build() &quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">variable_scope</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_build</span><span class="p">()</span>
+        <span class="n">variables</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">get_collection</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">GraphKeys</span><span class="o">.</span><span class="n">GLOBAL_VARIABLES</span><span class="p">,</span> <span class="n">scope</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vars</span> <span class="o">=</span> <span class="p">{</span><span class="n">var</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">var</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">variables</span><span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">GCNModelAE</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">placeholders</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">features_nonzero</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">GCNModelAE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">inputs</span> <span class="o">=</span> <span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span> <span class="o">=</span> <span class="n">num_features</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">features_nonzero</span> <span class="o">=</span> <span class="n">features_nonzero</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">adj</span> <span class="o">=</span> <span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;adj&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dropout</span> <span class="o">=</span> <span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;dropout&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">build</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hidden1</span> <span class="o">=</span> <span class="n">GraphConvolutionSparse</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">input_dim</span><span class="p">,</span>
+                                              <span class="n">output_dim</span><span class="o">=</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">hidden1</span><span class="p">,</span>
+                                              <span class="n">adj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adj</span><span class="p">,</span>
+                                              <span class="n">features_nonzero</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">features_nonzero</span><span class="p">,</span>
+                                              <span class="n">act</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">,</span>
+                                              <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+                                              <span class="n">logging</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logging</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">inputs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span> <span class="o">=</span> <span class="n">GraphConvolution</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">hidden1</span><span class="p">,</span>
+                                           <span class="n">output_dim</span><span class="o">=</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">hidden2</span><span class="p">,</span>
+                                           <span class="n">adj</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">adj</span><span class="p">,</span>
+                                           <span class="n">act</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+                                           <span class="n">dropout</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dropout</span><span class="p">,</span>
+                                           <span class="n">logging</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logging</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">hidden1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">z_mean</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reconstructions</span> <span class="o">=</span> <span class="n">InnerProductDecoder</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">hidden2</span><span class="p">,</span>
+                                      <span class="n">act</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+                                      <span class="n">logging</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">logging</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">embeddings</span><span class="p">)</span>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sparse_to_tuple</span><span class="p">(</span><span class="n">sparse_mx</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">sp</span><span class="o">.</span><span class="n">isspmatrix_coo</span><span class="p">(</span><span class="n">sparse_mx</span><span class="p">):</span>
+        <span class="n">sparse_mx</span> <span class="o">=</span> <span class="n">sparse_mx</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
+    <span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">sparse_mx</span><span class="o">.</span><span class="n">row</span><span class="p">,</span> <span class="n">sparse_mx</span><span class="o">.</span><span class="n">col</span><span class="p">))</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">sparse_mx</span><span class="o">.</span><span class="n">data</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">sparse_mx</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">return</span> <span class="n">coords</span><span class="p">,</span> <span class="n">values</span><span class="p">,</span> <span class="n">shape</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">preprocess_graph</span><span class="p">(</span><span class="n">adj</span><span class="p">):</span>
+    <span class="n">adj</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="n">adj_</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">rowsum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">adj_</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">degree_mat_inv_sqrt</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">diags</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">rowsum</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>
+    <span class="n">adj_normalized</span> <span class="o">=</span> <span class="n">adj_</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">degree_mat_inv_sqrt</span><span class="p">)</span><span class="o">.</span>\
+                     <span class="n">transpose</span><span class="p">()</span><span class="o">.</span>\
+                     <span class="n">dot</span><span class="p">(</span><span class="n">degree_mat_inv_sqrt</span><span class="p">)</span><span class="o">.</span><span class="n">tocoo</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">sparse_to_tuple</span><span class="p">(</span><span class="n">adj_normalized</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">construct_feed_dict</span><span class="p">(</span><span class="n">adj_normalized</span><span class="p">,</span> <span class="n">adj</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">placeholders</span><span class="p">):</span>
+    <span class="c1"># construct feed dictionary</span>
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+    <span class="n">feed_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]:</span> <span class="n">features</span><span class="p">})</span>
+    <span class="n">feed_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;adj&#39;</span><span class="p">]:</span> <span class="n">adj_normalized</span><span class="p">})</span>
+    <span class="n">feed_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;adj_orig&#39;</span><span class="p">]:</span> <span class="n">adj</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">feed_dict</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">mask_test_edges</span><span class="p">(</span><span class="n">adj</span><span class="p">):</span>
+    <span class="n">adj</span> <span class="o">=</span> <span class="n">adj</span> <span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">dia_matrix</span><span class="p">((</span><span class="n">adj</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">shape</span><span class="o">=</span><span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">adj</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">todense</span><span class="p">())</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span>
+
+    <span class="n">adj_triu</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+    <span class="n">adj_tuple</span> <span class="o">=</span> <span class="n">sparse_to_tuple</span><span class="p">(</span><span class="n">adj_triu</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="n">adj_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">edges_all</span> <span class="o">=</span> <span class="n">sparse_to_tuple</span><span class="p">(</span><span class="n">adj</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">num_test</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">10.</span><span class="p">))</span>
+    <span class="n">num_val</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">20.</span><span class="p">))</span>
+
+    <span class="n">all_edge_idx</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="n">edges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">all_edge_idx</span><span class="p">)</span>
+    <span class="n">val_edge_idx</span> <span class="o">=</span> <span class="n">all_edge_idx</span><span class="p">[:</span><span class="n">num_val</span><span class="p">]</span>
+    <span class="n">test_edge_idx</span> <span class="o">=</span> <span class="n">all_edge_idx</span><span class="p">[</span><span class="n">num_val</span><span class="p">:(</span><span class="n">num_val</span> <span class="o">+</span> <span class="n">num_test</span><span class="p">)]</span>
+    <span class="n">test_edges</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">test_edge_idx</span><span class="p">]</span>
+    <span class="n">val_edges</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">val_edge_idx</span><span class="p">]</span>
+    <span class="n">train_edges</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">test_edge_idx</span><span class="p">,</span> <span class="n">val_edge_idx</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ismember</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">rows_close</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">tol</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">rows_close</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="ow">and</span>
+                <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">rows_close</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+
+    <span class="n">test_edges_false</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_edges_false</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_edges</span><span class="p">):</span>
+        <span class="n">idx_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">idx_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">idx_i</span> <span class="o">==</span> <span class="n">idx_j</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">],</span> <span class="n">edges_all</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">test_edges_false</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_j</span><span class="p">,</span> <span class="n">idx_i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_edges_false</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">test_edges_false</span><span class="p">)):</span>
+                <span class="k">continue</span>
+        <span class="n">test_edges_false</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">])</span>
+
+    <span class="n">val_edges_false</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">val_edges_false</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">val_edges</span><span class="p">):</span>
+        <span class="n">idx_i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">idx_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">idx_i</span> <span class="o">==</span> <span class="n">idx_j</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">],</span> <span class="n">train_edges</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_j</span><span class="p">,</span> <span class="n">idx_i</span><span class="p">],</span> <span class="n">train_edges</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">],</span> <span class="n">val_edges</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_j</span><span class="p">,</span> <span class="n">idx_i</span><span class="p">],</span> <span class="n">val_edges</span><span class="p">):</span>
+            <span class="k">continue</span>
+        <span class="k">if</span> <span class="n">val_edges_false</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_j</span><span class="p">,</span> <span class="n">idx_i</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">val_edges_false</span><span class="p">)):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">ismember</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">val_edges_false</span><span class="p">)):</span>
+                <span class="k">continue</span>
+        <span class="n">val_edges_false</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">idx_i</span><span class="p">,</span> <span class="n">idx_j</span><span class="p">])</span>
+
+    <span class="k">assert</span> <span class="o">~</span><span class="n">ismember</span><span class="p">(</span><span class="n">test_edges_false</span><span class="p">,</span> <span class="n">edges_all</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="o">~</span><span class="n">ismember</span><span class="p">(</span><span class="n">val_edges_false</span><span class="p">,</span> <span class="n">edges_all</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="o">~</span><span class="n">ismember</span><span class="p">(</span><span class="n">val_edges</span><span class="p">,</span> <span class="n">train_edges</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="o">~</span><span class="n">ismember</span><span class="p">(</span><span class="n">test_edges</span><span class="p">,</span> <span class="n">train_edges</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="o">~</span><span class="n">ismember</span><span class="p">(</span><span class="n">val_edges</span><span class="p">,</span> <span class="n">test_edges</span><span class="p">)</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">train_edges</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">adj_train</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">csr_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">train_edges</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+                                      <span class="n">train_edges</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])),</span>
+                              <span class="n">shape</span><span class="o">=</span><span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+    <span class="n">adj_train</span> <span class="o">=</span> <span class="n">adj_train</span> <span class="o">+</span> <span class="n">adj_train</span><span class="o">.</span><span class="n">T</span>
+
+    <span class="k">return</span> \
+        <span class="n">adj_train</span><span class="p">,</span> <span class="n">train_edges</span><span class="p">,</span> <span class="n">val_edges</span><span class="p">,</span> \
+        <span class="n">val_edges_false</span><span class="p">,</span> <span class="n">test_edges</span><span class="p">,</span> \
+        <span class="n">test_edges_false</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">division</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">print_function</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">util</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">roc_auc_score</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">average_precision_score</span>
+
+<span class="n">flags</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">flags</span>
+<span class="n">FLAGS</span> <span class="o">=</span> <span class="n">flags</span><span class="o">.</span><span class="n">FLAGS</span>
+
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_float</span><span class="p">(</span><span class="s1">&#39;learning_rate&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="s1">&#39;Initial learning rate.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_integer</span><span class="p">(</span><span class="s1">&#39;epochs&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;Number of epochs to train.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_integer</span><span class="p">(</span><span class="s1">&#39;hidden1&#39;</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="s1">&#39;Number of units in hidden layer 1.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_integer</span><span class="p">(</span><span class="s1">&#39;hidden2&#39;</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">&#39;Number of units in hidden layer 2.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_float</span><span class="p">(</span><span class="s1">&#39;weight_decay&#39;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="s1">&#39;Weight for L2 loss on embedding matrix.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_float</span><span class="p">(</span><span class="s1">&#39;dropout&#39;</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="s1">&#39;Dropout rate (1 - keep probability).&#39;</span><span class="p">)</span>
+
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_string</span><span class="p">(</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="s1">&#39;gcn_ae&#39;</span><span class="p">,</span> <span class="s1">&#39;Model string.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_string</span><span class="p">(</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="s1">&#39;citeseer&#39;</span><span class="p">,</span> <span class="s1">&#39;Dataset string.&#39;</span><span class="p">)</span>
+<span class="n">flags</span><span class="o">.</span><span class="n">DEFINE_integer</span><span class="p">(</span><span class="s1">&#39;features&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Whether to use features (1) or not (0).&#39;</span><span class="p">)</span>
+
+<span class="n">model_str</span> <span class="o">=</span> <span class="n">FLAGS</span><span class="o">.</span><span class="n">model</span>
+<span class="n">dataset_str</span> <span class="o">=</span> <span class="n">FLAGS</span><span class="o">.</span><span class="n">dataset</span>
+
+<span class="n">adj</span><span class="p">,</span> <span class="n">features</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">load_data</span><span class="p">(</span><span class="n">dataset_str</span><span class="p">)</span>
+
+<span class="n">adj_orig</span> <span class="o">=</span> <span class="n">adj</span>
+<span class="n">adj_orig</span> <span class="o">=</span> <span class="n">adj_orig</span> <span class="o">-</span> <span class="n">sp</span><span class="o">.</span><span class="n">dia_matrix</span><span class="p">(</span>
+    <span class="p">(</span> <span class="n">adj_orig</span><span class="o">.</span><span class="n">diagonal</span><span class="p">()[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:],</span> <span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">shape</span><span class="o">=</span><span class="n">adj_orig</span><span class="o">.</span><span class="n">shape</span>
+<span class="p">)</span>
+<span class="n">adj_orig</span><span class="o">.</span><span class="n">eliminate_zeros</span><span class="p">()</span>
+
+<span class="n">adj_train</span><span class="p">,</span> <span class="n">train_edges</span><span class="p">,</span> <span class="n">val_edges</span><span class="p">,</span>\
+<span class="n">val_edges_false</span><span class="p">,</span> <span class="n">test_edges</span><span class="p">,</span>\
+<span class="n">test_edges_false</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">mask_test_edges</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+
+<span class="n">adj</span> <span class="o">=</span> <span class="n">adj_train</span>
+
+<span class="k">if</span> <span class="n">FLAGS</span><span class="o">.</span><span class="n">features</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">features</span> <span class="o">=</span> <span class="n">sp</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># featureless</span>
+
+<span class="n">adj_norm</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">preprocess_graph</span><span class="p">(</span><span class="n">adj</span><span class="p">)</span>
+
+<span class="n">placeholders</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;features&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="s1">&#39;adj&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="s1">&#39;adj_orig&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">sparse_placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">),</span>
+    <span class="s1">&#39;dropout&#39;</span><span class="p">:</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder_with_default</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">())</span>
+<span class="p">}</span>
+
+<span class="n">num_nodes</span> <span class="o">=</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">features</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">sparse_to_tuple</span><span class="p">(</span><span class="n">features</span><span class="o">.</span><span class="n">tocoo</span><span class="p">())</span>
+<span class="n">num_features</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">features_nonzero</span> <span class="o">=</span> <span class="n">features</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">GCNModelAE</span><span class="p">(</span><span class="n">placeholders</span><span class="p">,</span> <span class="n">num_features</span><span class="p">,</span> <span class="n">features_nonzero</span><span class="p">)</span>
+
+<span class="n">pos_weight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">adj</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="n">adj</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">norm</span> <span class="o">=</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="nb">float</span><span class="p">((</span><span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">adj</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">adj</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">*</span> <span class="mi">2</span><span class="p">)</span>
+
+<span class="n">tmp</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">sparse_tensor_to_dense</span><span class="p">(</span><span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;adj_orig&#39;</span><span class="p">],</span><span class="n">validate_indices</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">OptimizerAE</span><span class="p">(</span><span class="n">preds</span><span class="o">=</span><span class="n">model</span><span class="o">.</span><span class="n">reconstructions</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">tmp</span><span class="p">,</span>
+                       <span class="n">pos_weight</span><span class="o">=</span><span class="n">pos_weight</span><span class="p">,</span><span class="n">norm</span><span class="o">=</span><span class="n">norm</span><span class="p">)</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+<span class="n">cost_val</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">acc_val</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">get_roc_score</span><span class="p">(</span><span class="n">edges_pos</span><span class="p">,</span> <span class="n">edges_neg</span><span class="p">,</span> <span class="n">emb</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">emb</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">feed_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;dropout&#39;</span><span class="p">]:</span> <span class="mi">0</span><span class="p">})</span>
+        <span class="n">emb</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">z_mean</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+    <span class="c1"># Predict on test set of edges</span>
+    <span class="n">adj_rec</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">emb</span><span class="p">,</span> <span class="n">emb</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+    <span class="n">preds</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges_pos</span><span class="p">:</span>
+        <span class="n">preds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">adj_rec</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+        <span class="n">pos</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">adj_orig</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">preds_neg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">neg</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">edges_neg</span><span class="p">:</span>
+        <span class="n">preds_neg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">adj_rec</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]]))</span>
+        <span class="n">neg</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">adj_orig</span><span class="p">[</span><span class="n">e</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">e</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">preds_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">preds</span><span class="p">,</span> <span class="n">preds_neg</span><span class="p">])</span>
+    <span class="n">labels_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">preds</span><span class="p">)),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">preds</span><span class="p">))])</span>
+    <span class="n">roc_score</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">labels_all</span><span class="p">,</span> <span class="n">preds_all</span><span class="p">)</span>
+    <span class="n">ap_score</span> <span class="o">=</span> <span class="n">average_precision_score</span><span class="p">(</span><span class="n">labels_all</span><span class="p">,</span> <span class="n">preds_all</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">roc_score</span><span class="p">,</span> <span class="n">ap_score</span>
+
+
+<span class="n">cost_val</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">acc_val</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">val_roc_score</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="n">adj_label</span> <span class="o">=</span> <span class="n">adj_train</span> <span class="o">+</span> <span class="n">sp</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">adj_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">adj_label</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">sparse_to_tuple</span><span class="p">(</span><span class="n">adj_label</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">FLAGS</span><span class="o">.</span><span class="n">epochs</span><span class="p">):</span>
+
+    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+
+    <span class="n">feed_dict</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">construct_feed_dict</span><span class="p">(</span><span class="n">adj_norm</span><span class="p">,</span> <span class="n">adj_label</span><span class="p">,</span> <span class="n">features</span><span class="p">,</span> <span class="n">placeholders</span><span class="p">)</span>
+    <span class="n">feed_dict</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">placeholders</span><span class="p">[</span><span class="s1">&#39;dropout&#39;</span><span class="p">]:</span> <span class="n">FLAGS</span><span class="o">.</span><span class="n">dropout</span><span class="p">})</span>
+
+    <span class="n">outs</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">opt</span><span class="o">.</span><span class="n">opt_op</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">cost</span><span class="p">,</span> <span class="n">opt</span><span class="o">.</span><span class="n">accuracy</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="n">feed_dict</span><span class="p">)</span>
+
+    <span class="n">avg_cost</span> <span class="o">=</span> <span class="n">outs</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">avg_accuracy</span> <span class="o">=</span> <span class="n">outs</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+    <span class="n">roc_curr</span><span class="p">,</span> <span class="n">ap_curr</span> <span class="o">=</span> <span class="n">get_roc_score</span><span class="p">(</span><span class="n">val_edges</span><span class="p">,</span> <span class="n">val_edges_false</span><span class="p">)</span>
+    <span class="n">val_roc_score</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">roc_curr</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Epoch:&quot;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">%04d</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">&quot;train_loss=&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">avg_cost</span><span class="p">),</span>
+          <span class="s2">&quot;train_acc=&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">avg_accuracy</span><span class="p">),</span> <span class="s2">&quot;val_roc=&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">val_roc_score</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+          <span class="s2">&quot;val_ap=&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">ap_curr</span><span class="p">),</span>
+          <span class="s2">&quot;time=&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{:.5f}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Optimization Finished!&quot;</span><span class="p">)</span>
+
+<span class="n">roc_score</span><span class="p">,</span> <span class="n">ap_score</span> <span class="o">=</span> <span class="n">get_roc_score</span><span class="p">(</span><span class="n">test_edges</span><span class="p">,</span> <span class="n">test_edges_false</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test ROC score: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">roc_score</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Test AP score: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ap_score</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>Peki bu metotu keşfedenler çizitleri evrişimsel kavramlarla bağlantılamak
+istemişler? Bunun sebebi büyük bir ihtimalle mevcut DYSA hesaplayan kodlama
+altyapısından faydalanmak istemeleri. DYSA hesaplamak için Tensorflow gibi
+kütüphanelerden oluşan kuvvetli bir kod altyapısı var artık, eğer
+problemimizi bu kütüphanelerin çözebileceği formlara sokabilirsek pek çok
+yan faydayı bedava elde edebilmiş oluruz. </p>
+
+<p>Üstteki kodu <code>train.py</code>'dan işletince sonucu göreceğiz, AUC yüzde 90
+civarında olmalı.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Titov, <em>Extracting and Modeling Relations with Graph Convolutional Networks</em>, <a href="http://www.akbc.ws/2017/slides/ivan-titov-slides.pdf">http://www.akbc.ws/2017/slides/ivan-titov-slides.pdf</a></p>
+
+<p>[2] Kipf, <em>Variational Graph Auto-Encoders</em>, <a href="https://arxiv.org/abs/1611.07308">https://arxiv.org/abs/1611.07308</a></p>
+
+<p>[3] Kipf, <em>Implementation of Graph Auto-Encoders in TensorFlow</em>, <a href="https://github.com/tkipf/gae">https://github.com/tkipf/gae</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

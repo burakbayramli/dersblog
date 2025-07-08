@@ -22,6 +22,8 @@
 
 [Keras](06/keras.html)
 
+[Evrişimsel Çizit Ağları (Graph Convolutional Networks)](07/algs_185_graphconv.html)
+
 [Unicode, Ascii, Deascii, Python, Emacs](07/unicode-ascii-deascii-python-emacs.html)
 
 [Yerel, Network Dosyasını Canlı, Anlık, Azar Azar Islemek (Stream, Incremental File Processing),  Python](08/canl-aks-anlk-azar-azar-islem-stream.html)

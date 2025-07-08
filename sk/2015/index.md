@@ -22,6 +22,10 @@
 
 [Vagrant](04/vagrant.html)
 
+[](05/gan.html)
+
+[Üretici Hasımsal Ağlar (Generative Adverserial Networks -GAN-)](05/gan_nn.html)
+
 [ffmpeg, moviepy, melt](10/ffmpeg-avconv-moviepy.html)
 
 [Histogram Numaraları](10/histogram-numaralari.html)

@@ -8,6 +8,8 @@
 
 [Evrişimsel Sinir Ağları (Convolutional Neural Networks) Video](03/evrisimsel-neural-network-video.html)
 
+[Yapay Sinir Ağları (Neural Network)](03/neural-net.html)
+
 [Yapay Zeka](03/yapay-zeka.html)
 
 [Web, HTML](04/web-html.html)

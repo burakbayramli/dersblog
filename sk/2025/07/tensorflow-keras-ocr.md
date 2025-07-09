@@ -96,7 +96,7 @@ sample
 text
 ```
 
-Çıktıda "sample" "text" sonuçlarını görüyoruz, demek ki KEras OCR
+Çıktıda "sample" "text" sonuçlarını görüyoruz, demek ki Keras OCR
 doğru sonucu buldu.
 
 Kaynaklar
@@ -104,3 +104,6 @@ Kaynaklar
 [1] [Virtualenv](../../2018/08/virtualenv-python-izole-sanal-calsma.html)
 
 [2] [Keras OCR](https://keras-ocr.readthedocs.io/en/latest/examples/using_pretrained_models.html)
+
+
+

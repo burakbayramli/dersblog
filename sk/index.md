@@ -27,6 +27,8 @@
 
 [Web, HTML](2023/04/web-html.html)
 
+[Yapay Zeka](2023/03/yapay-zeka.html), [YSA](2023/03/neural-net.html)
+
 [Network, TCP/IP, Internet](2000/10/network.html)
 
 [Android](2023/05/android.html)

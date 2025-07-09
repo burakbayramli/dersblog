@@ -1,0 +1,655 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Kendini Tekrarlayan Yapay Sinir Ağları (Recurrent Neural Network -RNN-)</h1>
+
+<p>RNN'ler zaman serilerini, sıralı olan verileri modellemek için
+kullanılır. Mesela 2 3 1 2 3 1 2 3 1 2 3 gibi bir girdi olabilir, girdi
+arka arkaya gelen her 3 karakter, hedef ise 4. karakter. Bu veri üzerinde
+RNN eğitilebilir, ve mesela verili 2 3 1'den sonra hangi 4. sayı geldiği
+tahmin edilmeye uğraşılabilir. Ayrıksal olarak girdi bir harf dizisi de
+olabilir. </p>
+
+<p><img src="rnn_01.png" alt="" /></p>
+
+<p>Daha önce işlediğimiz Öne Doğru Beslemeli (Feed-Forward) YSA'lar en temel,
+klasik yapılardır. Eğer bir $N$ boyutlu girdi alıyorlarsa bu verinin tüm
+boyutlarını aynı anda işlerler. RNN için [3] yapı şöyle değişiyor (tek bir
+nöron için),</p>
+
+<p>$x_t$: $t$ anındaki girdi. </p>
+
+<p>$s_t$: $t$ anındaki gizli konum. </p>
+
+<p>$$ s<em>t = f(U x</em>t +  W s_{t-1})$$</p>
+
+<p>$o<em>t$: $t$ anındaki çıktı, $o</em>t = g(V s_t)$</p>
+
+<p>İlginç olan $U,V,W$ ağırlık matrislerinin, parametrelerinin her zaman anı,
+her veri noktası için aynı olması. Yani farklı zaman dilimleri için farklı
+ağırlıklar atanmıyor. $t$ anındaki gizli (hidden) konum $s<em>t$, bu bir nevi
+"hafıza''. Bu fonksiyon $x</em>t$ girdisinin $W$ ile çarpılması, artı bir
+önceki konumun bir başka $W$ ile çarpılması sonucundan elde ediliyor. $W$
+matrisi geçmişe ne kadar önem verileceğini tanımlıyorlar. Ardından tüm
+hesap bir $\phi$ ile "eziliyor'' yani belli aralıklara düşmesi zorlanıyor,
+bunun için tipik olarak sigmoid, ya da $tanh$ kullanılır.</p>
+
+<p><img src="rnn_07.jpg" alt="" /></p>
+
+<p>Bu kavramlar, konumlararası geçiş, $t$ anındaki girdilerin ondan önceki
+girdileri nasıl bağlı olduğunun ağırlıklar üzerinden ayarlanması, yani
+filtrelenmesi, aslında Markov zincirlerine benziyor (diğer bir açıdan
+benzemiyor çünkü MZ matematiğinde bir zaman sadece bir öncekinden
+etkilenir, RNN durumunda en baştaki adım en sondakini etkileyebilir
+[4]). Bu hesaplar sonucu elde edilen tahmin ve hata geriye yayma
+(backpropagation) ile ağırlık matrislerini değiştirmek için kullanılacak.</p>
+
+<p>RNN ismindeki "tekrarlanma'' $U,V,W$'nin her zaman adımı için aynı
+olmasından geliyor. Ağ bir bakıma tek bir seviye için, bir kez
+tanımlanıyor, ve geriye ne kadar gidileceği üzerinden o yöne doğru
+kopyalanıyor, ya da "açılıyor (unfolding)''.  Bu açılma işlemini her zaman
+adımı için gösterebiliriz.  f Zaman İçinde Geriye Doğru Yayılma
+(Backpropagation Through Time -BPTT-)</p>
+
+<p>RNN Çesitleri, Numaraları</p>
+
+<p>İlla her biriminin çıktısını kullanmak gerekmez. Her RNN biriminin $h$
+formundaki gizli katman çıktısı bir sonraki birime girdi kabul edildiği
+için bu çıktılar RNN'nin bütününü etkilerler, fakat etiket / düzeltme
+bağlamında direk kullanılmaları şart değildir. Mesela bir RNN'e bir veri
+dizisi verip, çıktılarının en sonuncusu hariç geri kalanlarını yok
+sayabiliriz, o zaman bir dizi-vektör RNN'i elde ederiz. Ya da RNN'e bir
+film hakkındaki tüm yorumları kelime kelime veri dizisi olarak verebiliriz,
+RNN'in tek çıktısı -1/+1 şeklinde beğendi / beğenmedi skoru olabilir, bu
+ünlü hissiyat analizi (sentiment analyis) örneğidir. Altta diyagramı
+görüyoruz,</p>
+
+<p><img src="rnn_05.png" alt="" /></p>
+
+<p>Eğer zaman serisi tahmin etmek istiyorsak $x<em>1,x</em>2,..$ serisini alıp bir
+kaydırarak ona karşılık olan "etiketleri'' kendimiz yaratabiliriz. Bu
+durumda $y<em>1,y</em>2,..$ serisi $x<em>2,x</em>3,..$ serisi haline gelir.</p>
+
+<p>Bir RNN'in tekrar eden kısım bir nöron yerine bir katman da olabilir, yani
+bu katman içinde birden fazla nöron olur, ve bu katman zamanda geriye doğru
+kopyalanır. </p>
+
+<p><img src="rnn_06.png" alt="" /></p>
+
+<p>Eğer tüm çeşitleri göstermek gerekirse</p>
+
+<p><img src="rnn_08.png" alt="" /></p>
+
+<p>Bire bir (one to one) çok basit, diğerleri bire çok (one to many), çoka bir
+(many to one), ve iki çeşit çoka çok (many to many). RNN yapısındaki tek
+sınır herhalde tekrarlanan hücrelerden daha fazla girdi hücresi olamayacak
+olması, fakat onun haricinde neredeyse her tür olasılık mümkün. Mesela
+soldan 4. örnekte üç boyutlu bir girdi sadece ilk üç tekrarlanan hücreye
+veriliyor, geri kalanlara bir şey verilmiyor, çıktı ise son üç hücreden
+alınıyor.</p>
+
+<p>Şimdi TensorFlow ile en basit RNN'yi kendimiz yaratalım. Tekrar eden bir
+katman olacak, içinde 5 tane nöron,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_graph</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="n">reset_graph</span><span class="p">()</span>
+
+<span class="n">n_inputs</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">n_neurons</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">X0</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+
+<span class="n">W</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">n_inputs</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+<span class="n">U</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">random_normal</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">[</span><span class="n">n_neurons</span><span class="p">,</span><span class="n">n_neurons</span><span class="p">],</span><span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">zeros</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_neurons</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">))</span>
+
+<span class="n">Y0</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">X0</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">Y1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">Y0</span><span class="p">,</span> <span class="n">U</span><span class="p">)</span> <span class="o">+</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Şimdi iki veri noktası verip iki veri noktası çıktısına bakalım. Bu 2-2
+verisinden pek çok olacak, ki bu veriler ufak toptan setimizi (minibatch)
+oluşturacak. Alttaki ufak veride 4 tane o şekilde veri noktası var.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="c1"># ufak toptan veri</span>
+<span class="n">X0_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span> <span class="c1"># t = 0</span>
+<span class="n">X1_batch</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">]])</span> <span class="c1"># t = 1</span>
+
+<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
+    <span class="n">init</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+    <span class="n">Y0_val</span><span class="p">,</span> <span class="n">Y1_val</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="n">Y0</span><span class="p">,</span> <span class="n">Y1</span><span class="p">],</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">X0</span><span class="p">:</span> <span class="n">X0_batch</span><span class="p">,</span> <span class="n">X1</span><span class="p">:</span> <span class="n">X1_batch</span><span class="p">})</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;t=0&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y0_val</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;t=1&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y1_val</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>t=0
+[[-0.0664006   0.96257669  0.68105787  0.70918542 -0.89821595]
+ [ 0.9977755  -0.71978885 -0.99657625  0.9673925  -0.99989718]
+ [ 0.99999774 -0.99898815 -0.99999893  0.99677622 -0.99999988]
+ [ 1.         -1.         -1.         -0.99818915  0.99950868]]
+t=1
+[[ 1.         -1.         -1.          0.40200216 -1.        ]
+ [-0.12210433  0.62805319  0.96718419 -0.99371207 -0.25839335]
+ [ 0.99999827 -0.9999994  -0.9999975  -0.85943311 -0.9999879 ]
+ [ 0.99928284 -0.99999815 -0.99990582  0.98579615 -0.92205751]]
+</code></pre>
+
+<p>Dikkat, eğitim yapmadık, ayrıca çıktı da üretmedik, sadece her basamak için
+gizli katmanı hesapladık, ve RNN'e ileri yönde hesap yaptırdık, dört kez
+$x<em>0,x</em>1$ verdik o da bize dört tane $y<em>0,y</em>1$ verdi. RNN'i eğitiyor
+olsaydık üretilen dört $y<em>0,y</em>1$ için $V$ ile çarpım, onu "gerçek''
+veriyle / etiketlerle karşılaştırmamız gerekecekti, onun üzerinden düzeltme
+yapacaktık, vs.</p>
+
+<p>Üstteki kod kolaydı, fakat RNN iki yerine 100 zaman adımı geriye gitsin
+isteseydik, bu çizit çok daha büyük olurdu. O tür kodları kolaylaştırmak
+için TF'in özel çağrıları var, mesela <code>static_rnn</code> bunlardan
+biri. Üstteki ağı bu şekilde yaratabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">reset_graph</span><span class="p">()</span>
+
+<span class="n">X0</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+<span class="n">X1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+
+<span class="n">basic_cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">BasicRNNCell</span><span class="p">(</span><span class="n">num_units</span><span class="o">=</span><span class="n">n_neurons</span><span class="p">)</span>
+<span class="n">output_seqs</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">static_rnn</span><span class="p">(</span><span class="n">basic_cell</span><span class="p">,</span> <span class="p">[</span><span class="n">X0</span><span class="p">,</span> <span class="n">X1</span><span class="p">],</span>
+                                                <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">Y0</span><span class="p">,</span> <span class="n">Y1</span> <span class="o">=</span> <span class="n">output_seqs</span>
+
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;t=0&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y0_val</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;t=1&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Y1_val</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>t=0
+[[-0.0664006   0.96257669  0.68105787  0.70918542 -0.89821595]
+ [ 0.9977755  -0.71978885 -0.99657625  0.9673925  -0.99989718]
+ [ 0.99999774 -0.99898815 -0.99999893  0.99677622 -0.99999988]
+ [ 1.         -1.         -1.         -0.99818915  0.99950868]]
+t=1
+[[ 1.         -1.         -1.          0.40200216 -1.        ]
+ [-0.12210433  0.62805319  0.96718419 -0.99371207 -0.25839335]
+ [ 0.99999827 -0.9999994  -0.9999975  -0.85943311 -0.9999879 ]
+ [ 0.99928284 -0.99999815 -0.99990582  0.98579615 -0.92205751]]
+</code></pre>
+
+<p>YSA'lar kendini tekrarlayan olsun ya da olmasın aslında $f(g(h(x)))$
+şeklinde basit içiçe fonksiyondurlar. Klasik YSA'da en sondaki hata
+backprop ile ağırlıklardaki değişim girdiler yönünde geriye doğru yayılır,
+bunu yapmak için $-\frac{\partial E}{\partial w}$ hesaplanır, böylece tüm
+ağırlıklar hataya yaptıkları katkı (!) bağlamında değişikliğe uğrarlar,
+"düzeltilirler'', yani düzeltme Zincir Kanunu ile dış fonksiyonlardan içe
+doğru aktarılmış olur.</p>
+
+<p>RNN'de içiçe olma durumu zaman faktöründen kaynaklanıyor, fonksiyonlar
+önceki zaman dilimleri bağlamında içiçe geçmiş durumdadırlar, çünkü bir $t$
+anındaki tahmin önceki dilimlerdeki fonksiyonların sonucudur, bir
+geribesleme durumu vardır, her gizli konum $h<em>t$ sadece bir önceki
+$h</em>{t-1}$ değil ondan önceki tüm gizli konumlardan da etkilenir. O zaman
+eğitimin bunu gözönüne alması gerekir.</p>
+
+<p>Dikkat: RNN'lerde içiçe geçen fonksiyonlar sebebiyle hatalar ya çok büyüyüp
+ya da çok küçülebiliyor, normal derin YSA'lerde de problem olabilir bu,
+fakat RNN'lerde bu durum daha belirgin çünkü N adım geriye gitmek demek N
+kadar içiçe geçen fonksiyon demek, ve sıralı veriyi tahmin için N'in büyük
+olması gerekebilir.</p>
+
+<p>Örnek</p>
+
+<p>Alttaki kodda bir metin okunarak o metindeki harf sırası tahmin edilmeye
+uğraşılıyor. Metin tekrar sıfırdan üretilmeye çabalanıyor. Otomatik türev
+(automatic differentiation -AD-) alma ile içiçe geçmiş fonksiyonların
+zincirleme türevinin alınması sağlanıyor, <code>rnn_predict</code> hesabı 40
+geriye gider, AD tüm bu zinciri takip eder.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">autograd.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">autograd.numpy.random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">grad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autograd.scipy.misc</span><span class="w"> </span><span class="kn">import</span> <span class="n">logsumexp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">os.path</span><span class="w"> </span><span class="kn">import</span> <span class="n">dirname</span><span class="p">,</span> <span class="n">join</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">builtins</span><span class="w"> </span><span class="kn">import</span> <span class="nb">range</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sigmoid</span><span class="p">(</span><span class="n">x</span><span class="p">):</span> <span class="k">return</span> <span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">)</span>   
+
+<span class="k">def</span><span class="w"> </span><span class="nf">concat_and_multiply</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+    <span class="n">cat_state</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span><span class="n">args</span> <span class="o">+</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">)),))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">cat_state</span><span class="p">,</span> <span class="n">weights</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_rnn_params</span><span class="p">(</span><span class="n">input_size</span><span class="p">,</span> <span class="n">state_size</span><span class="p">,</span> <span class="n">output_size</span><span class="p">,</span>
+                      <span class="n">param_scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">rs</span><span class="o">=</span><span class="n">npr</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">0</span><span class="p">)):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;init hiddens&#39;</span><span class="p">:</span> <span class="n">rs</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">state_size</span><span class="p">)</span> <span class="o">*</span> <span class="n">param_scale</span><span class="p">,</span>
+            <span class="s1">&#39;change&#39;</span><span class="p">:</span>       <span class="n">rs</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">input_size</span> <span class="o">+</span> <span class="n">state_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                                     <span class="n">state_size</span><span class="p">)</span> <span class="o">*</span> <span class="n">param_scale</span><span class="p">,</span>
+            <span class="s1">&#39;predict&#39;</span><span class="p">:</span>      <span class="n">rs</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">state_size</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">output_size</span><span class="p">)</span> <span class="o">*</span> <span class="n">param_scale</span><span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rnn_predict</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">inputs</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_rnn</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">hiddens</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">concat_and_multiply</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;change&#39;</span><span class="p">],</span> <span class="nb">input</span><span class="p">,</span> <span class="n">hiddens</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">hiddens_to_output_probs</span><span class="p">(</span><span class="n">hiddens</span><span class="p">):</span>
+        <span class="n">output</span> <span class="o">=</span> <span class="n">concat_and_multiply</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;predict&#39;</span><span class="p">],</span> <span class="n">hiddens</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">output</span> <span class="o">-</span> <span class="n">logsumexp</span><span class="p">(</span><span class="n">output</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> 
+
+    <span class="n">num_sequences</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">hiddens</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s1">&#39;init hiddens&#39;</span><span class="p">],</span> <span class="n">num_sequences</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="p">[</span><span class="n">hiddens_to_output_probs</span><span class="p">(</span><span class="n">hiddens</span><span class="p">)]</span>
+
+    <span class="k">for</span> <span class="nb">input</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>  <span class="c1"># Iterate over time steps.</span>
+        <span class="n">hiddens</span> <span class="o">=</span> <span class="n">update_rnn</span><span class="p">(</span><span class="nb">input</span><span class="p">,</span> <span class="n">hiddens</span><span class="p">)</span>
+        <span class="n">output</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">hiddens_to_output_probs</span><span class="p">(</span><span class="n">hiddens</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">output</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">string_to_one_hot</span><span class="p">(</span><span class="n">string</span><span class="p">,</span> <span class="n">maxchar</span><span class="p">):</span>
+    <span class="n">ascii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">ord</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">string</span><span class="p">])</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ascii</span><span class="p">[:,</span><span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">maxchar</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">one_hot_to_string</span><span class="p">(</span><span class="n">one_hot_matrix</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">chr</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">c</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">one_hot_matrix</span><span class="p">])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rnn_log_likelihood</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+    <span class="n">logprobs</span> <span class="o">=</span> <span class="n">rnn_predict</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">inputs</span><span class="p">)</span>
+    <span class="n">loglik</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">num_time_steps</span><span class="p">,</span> <span class="n">num_examples</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">inputs</span><span class="o">.</span><span class="n">shape</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_time_steps</span><span class="p">):</span>
+        <span class="n">loglik</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">logprobs</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">*</span> <span class="n">targets</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">loglik</span> <span class="o">/</span> <span class="p">(</span><span class="n">num_time_steps</span> <span class="o">*</span> <span class="n">num_examples</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">training_loss</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="nb">iter</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="n">rnn</span><span class="o">.</span><span class="n">rnn_log_likelihood</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">train_inputs</span><span class="p">,</span> <span class="n">train_inputs</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">autograd.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">autograd.numpy.random</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">npr</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autograd</span><span class="w"> </span><span class="kn">import</span> <span class="n">grad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">autograd.optimizers</span><span class="w"> </span><span class="kn">import</span> <span class="n">adam</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">rnn</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_dataset</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">sequence_length</span><span class="p">,</span> <span class="n">alphabet_size</span><span class="p">,</span> <span class="n">max_lines</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="p">[:</span><span class="n">max_lines</span><span class="p">]</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">content</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>   
+    <span class="n">seqs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">sequence_length</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">content</span><span class="p">),</span> <span class="n">alphabet_size</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">content</span><span class="p">):</span>
+        <span class="n">padded_line</span> <span class="o">=</span> <span class="p">(</span><span class="n">line</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="n">sequence_length</span><span class="p">)[:</span><span class="n">sequence_length</span><span class="p">]</span>
+        <span class="n">seqs</span><span class="p">[:,</span> <span class="n">ix</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">string_to_one_hot</span><span class="p">(</span><span class="n">padded_line</span><span class="p">,</span> <span class="n">alphabet_size</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">seqs</span>
+
+<span class="n">num_chars</span> <span class="o">=</span> <span class="mi">128</span>
+<span class="n">text_filename</span> <span class="o">=</span> <span class="s1">&#39;rnn.py&#39;</span>
+<span class="n">train_inputs</span> <span class="o">=</span> <span class="n">build_dataset</span><span class="p">(</span><span class="n">text_filename</span><span class="p">,</span> <span class="n">sequence_length</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+                                 <span class="n">alphabet_size</span><span class="o">=</span><span class="n">num_chars</span><span class="p">,</span> <span class="n">max_lines</span><span class="o">=</span><span class="mi">60</span><span class="p">)</span>
+
+<span class="n">init_params</span> <span class="o">=</span> <span class="n">rnn</span><span class="o">.</span><span class="n">create_rnn_params</span><span class="p">(</span><span class="n">input_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">output_size</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+                                    <span class="n">state_size</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">param_scale</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_training_prediction</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training text                         Predicted text&quot;</span><span class="p">)</span>
+    <span class="n">logprobs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">rnn_predict</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="n">train_inputs</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">logprobs</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]):</span>
+        <span class="n">training_text</span>  <span class="o">=</span> <span class="n">one_hot_to_string</span><span class="p">(</span><span class="n">train_inputs</span><span class="p">[:,</span><span class="n">t</span><span class="p">,:])</span>
+        <span class="n">predicted_text</span> <span class="o">=</span> <span class="n">rnn</span><span class="o">.</span><span class="n">one_hot_to_string</span><span class="p">(</span><span class="n">logprobs</span><span class="p">[:,</span><span class="n">t</span><span class="p">,:])</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">training_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;|&quot;</span> <span class="o">+</span>
+              <span class="n">predicted_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="nb">iter</span><span class="p">,</span> <span class="n">gradient</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">iter</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">,</span> <span class="nb">iter</span><span class="p">,</span> <span class="s2">&quot;Train loss:&quot;</span><span class="p">,</span> <span class="n">training_loss</span><span class="p">(</span><span class="n">weights</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="c1">#print_training_prediction(weights)</span>
+
+<span class="c1"># Build gradient of loss function using autograd.</span>
+<span class="n">training_loss_grad</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">training_loss</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Training RNN...&quot;</span><span class="p">)</span>
+<span class="n">trained_params</span> <span class="o">=</span> <span class="n">adam</span><span class="p">(</span><span class="n">training_loss_grad</span><span class="p">,</span> <span class="n">init_params</span><span class="p">,</span> <span class="n">step_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+                      <span class="n">num_iters</span><span class="o">=</span><span class="mi">280</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="n">callback</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>Training RNN...
+('Iteration', 0, 'Train loss:', 4.854500980126768)
+('Iteration', 10, 'Train loss:', 3.069896973468059)
+('Iteration', 20, 'Train loss:', 2.9564946588218)
+('Iteration', 30, 'Train loss:', 2.590610887049078)
+('Iteration', 40, 'Train loss:', 2.3255385285729027)
+('Iteration', 50, 'Train loss:', 2.1211122619024696)
+('Iteration', 60, 'Train loss:', 1.9691676257416404)
+('Iteration', 70, 'Train loss:', 1.8868756780002685)
+('Iteration', 80, 'Train loss:', 1.7455098359656291)
+('Iteration', 90, 'Train loss:', 1.7750342336507772)
+('Iteration', 100, 'Train loss:', 1.6059292555729703)
+('Iteration', 110, 'Train loss:', 1.5077116694554635)
+('Iteration', 120, 'Train loss:', 1.437485110908115)
+('Iteration', 130, 'Train loss:', 1.4504849515039933)
+('Iteration', 140, 'Train loss:', 1.3480379515887519)
+('Iteration', 150, 'Train loss:', 1.4083643059429929)
+('Iteration', 160, 'Train loss:', 1.2655987546227996)
+('Iteration', 170, 'Train loss:', 1.2051278365327054)
+('Iteration', 180, 'Train loss:', 1.1561998913079512)
+('Iteration', 190, 'Train loss:', 1.1814640952544757)
+('Iteration', 200, 'Train loss:', 1.3673188298901471)
+('Iteration', 210, 'Train loss:', 1.1591863193874781)
+('Iteration', 220, 'Train loss:', 1.056688128805028)
+('Iteration', 230, 'Train loss:', 1.0465201536978259)
+('Iteration', 240, 'Train loss:', 1.0373081053464259)
+('Iteration', 250, 'Train loss:', 1.3591698106017474)
+('Iteration', 260, 'Train loss:', 1.1556108786809474)
+('Iteration', 270, 'Train loss:', 1.0323757883394502)
+</code></pre>
+
+<p>Üretmek / eğitim için <code>rnn.py</code> kodunun kendisi kullanıldı.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">num_letters</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_letters</span><span class="p">):</span>
+        <span class="n">seqs</span> <span class="o">=</span> <span class="n">rnn</span><span class="o">.</span><span class="n">string_to_one_hot</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">num_chars</span><span class="p">)[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">logprobs</span> <span class="o">=</span> <span class="n">rnn</span><span class="o">.</span><span class="n">rnn_predict</span><span class="p">(</span><span class="n">trained_params</span><span class="p">,</span> <span class="n">seqs</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">text</span> <span class="o">+=</span> <span class="nb">chr</span><span class="p">(</span><span class="n">npr</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">logprobs</span><span class="p">),</span> <span class="n">p</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logprobs</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>    rs.lepugnunpdit - cenedili
+def p.rnns, logs'ininpum, hid_
+    ngan rrad_ti, feturn ns.sc
+def catorrtar t  aut_re_strad.
+            hiddens_numumut in
+def hiddes = rhiddensdord.rato
+    return ncan((ponddens_tram
+ders minpperen(scnt_strt onut_
+    returnts, utete, jIoutdati
+    return oute_sthorn(pund_om
+dershgline nigms, conteme_sco_
+    return 0.5*(natorad.mincde
+    contse, hiddens_mihrra opu
+    [cran_put inhgto_tut= retu
+  # Ite, wItre =        retat 
+    ashis_lik[enutnoncam(nthen
+      oonname, jItogput_pre_sp
+    cet(fiddens = lot led_ome_
+def rinnam_idt(parddens_nnd(on
+    rs.leteqslind_tat  = [hipp
+</code></pre>
+
+<p>Fena değil; <code>def</code> ile başlanan satır ardından sonraki satır tab ile
+boşluk bıraktı, bunlar kolay şeyler değil.  Altta karşılaştırma amaçlı
+olarak sadece frekans sayarak üretim yapan bir kod görüyoruz. O da fena
+değil, bu konu hakkında daha fazla detay için [2].</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">f</span> <span class="o">=</span> <span class="s2">&quot;../../stat/stat_naive/data/a1.txt&quot;</span>
+<span class="nb">print</span> <span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()[:</span><span class="mi">300</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<pre><code>A well-known scientist (some say it was Bertrand Russell) once gave a
+public lecture on astronomy. He described how the earth orbits around
+the sun and how the sun, in turn, orbits around the center of a vast
+collection of stars called our galaxy. At the end of the lecture, a
+little old lady at the 
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">lm</span>
+<span class="n">lmm</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">train_char_lm</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">lm</span><span class="o">.</span><span class="n">generate_text</span><span class="p">(</span><span class="n">lmm</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">res</span><span class="p">[:</span><span class="mi">400</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<pre><code>A well-know
+better? What the moon were caused by Ptolemy in more the picture only late the Greeks even had
+been elongstanding that the sky what eclipses rather ridiculous, but why do we know about to someone looking the sun and the earth Star
+lies one looking the North orbiting questimate thought spheres the superior smile before think we go back of the really a flat plater see then? What disk, th
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">lmm</span><span class="o">.</span><span class="n">keys</span><span class="p">()[:</span><span class="mi">10</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">lmm</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;pla&#39;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<pre><code>['t w', 'Fir', 'all', 't t', 'sci', 'rom', 'ron', 'roo', 'thi', 'oss']
+[('t', 0.5), ('n', 0.5)]
+</code></pre>
+
+<p>Zaman Serisi Tahmini</p>
+
+<p>Tensorflow ile zaman serisi tahmini yapalım. Eğitim verisinin formülünü
+bildiğimiz bir sinüs eğrisinden alacağız, sanki eğriyi bilmiyormuş gibi
+yapalım, bu eğriyi sadece üretilen veriye bakarak "öğreneceğiz''. Eğrinin
+rasgele kısımlarından toptan veri parçaları üretmek için bir çağrı yazalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mf">0.1</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f</span><span class="p">(</span><span class="n">t</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">t</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">t</span><span class="o">*</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">next_batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">):</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span> <span class="o">-</span> <span class="n">n_steps</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
+    <span class="n">Ts</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">n_steps</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">resolution</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Ts</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ys</span><span class="p">[:,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ys</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Eğitim verisi zaman serisinin ufak bir parçası, ve hedef verisi onun bir
+ileri kaydırılmış hali. </p>
+
+<p>Zaman serisinin rasgele şekilde nasıl örneklendiğini göstermek için üstteki
+çağrı içindeki örnekleme kodunun benzerini altta tekrarlayalım ve
+grafikleyelim. Kırmızı noktalar örneklenen veri noktaları,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">batch_size</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">n_steps</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span> <span class="o">-</span> <span class="n">n_steps</span> <span class="o">*</span> <span class="n">resolution</span><span class="p">)</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="n">t0</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">n_steps</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">resolution</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">Ts</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>[[-2.3141651  -1.12233854  0.27200624  1.6253068 ]
+ [ 4.31878159  4.63599743  4.61528818  4.112844  ]
+ [ 0.03397153  0.99207952  1.71474727  2.02731967]
+ [ 2.87376693  3.00044595  2.62695206  1.77847377]
+ [-0.96970753 -2.03368272 -2.93926439 -3.47887785]]
+</code></pre>
+
+<p>Grafiklersek,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ts</span><span class="p">,</span><span class="n">ys</span><span class="p">,</span><span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;rnn_03.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="rnn_03.png" alt="" /></p>
+
+<p>Öğrenme amacıyla daha büyük adım, iç nöron sayısı tanımlayalım,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_graph</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">reset_default_graph</span><span class="p">()</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">set_random_seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+
+<span class="n">reset_graph</span><span class="p">()</span>
+
+<span class="n">n_steps</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="n">n_inputs</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">n_neurons</span> <span class="o">=</span> <span class="mi">200</span>
+<span class="n">n_outputs</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">n_inputs</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">,</span> <span class="n">n_outputs</span><span class="p">])</span>
+
+<span class="n">cell</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">OutputProjectionWrapper</span><span class="p">(</span>
+    <span class="n">tf</span><span class="o">.</span><span class="n">contrib</span><span class="o">.</span><span class="n">rnn</span><span class="o">.</span><span class="n">BasicRNNCell</span><span class="p">(</span><span class="n">num_units</span><span class="o">=</span><span class="n">n_neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">relu</span><span class="p">),</span>
+    <span class="n">output_size</span><span class="o">=</span><span class="n">n_outputs</span><span class="p">)</span>
+
+<span class="n">outputs</span><span class="p">,</span> <span class="n">states</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">dynamic_rnn</span><span class="p">(</span><span class="n">cell</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+<span class="n">learning_rate</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+<span class="n">loss</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_mean</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">square</span><span class="p">(</span><span class="n">outputs</span> <span class="o">-</span> <span class="n">y</span><span class="p">))</span> <span class="c1"># MSE</span>
+<span class="n">optimizer</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">train</span><span class="o">.</span><span class="n">AdamOptimizer</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="n">learning_rate</span><span class="p">)</span>
+<span class="n">training_op</span> <span class="o">=</span> <span class="n">optimizer</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span><span class="n">loss</span><span class="p">)</span>
+
+<span class="n">init</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">()</span>
+
+<span class="n">n_iterations</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">50</span>
+
+<span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
+
+<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">global_variables_initializer</span><span class="p">())</span>
+
+<span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_iterations</span><span class="p">):</span>
+    <span class="n">X_batch</span><span class="p">,</span> <span class="n">y_batch</span> <span class="o">=</span> <span class="n">next_batch</span><span class="p">(</span><span class="n">batch_size</span><span class="p">,</span> <span class="n">n_steps</span><span class="p">)</span>
+    <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">training_op</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">X</span><span class="p">:</span> <span class="n">X_batch</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_batch</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">iteration</span> <span class="o">%</span> <span class="mi">100</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">mse</span> <span class="o">=</span> <span class="n">loss</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">X</span><span class="p">:</span> <span class="n">X_batch</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">y_batch</span><span class="p">},</span> <span class="n">session</span><span class="o">=</span><span class="n">sess</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">iteration</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\t</span><span class="s2">MSE:&quot;</span><span class="p">,</span> <span class="n">mse</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>(0, '\tMSE:', 280.63486)
+(100, '\tMSE:', 0.089582793)
+(200, '\tMSE:', 0.044634577)
+</code></pre>
+
+<p>Öğrenme tamamlandı ve MSE hata raporu fena değil. Şimdi bu RNN'i hiç
+görmediğimiz geleceği tahmin için kullanalım, <code>n_more</code> adım ilerisini
+tahmin edeceğiz, yanlız <code>n_steps</code> zaman serisi kaydırılmış
+<code>n_steps</code> ilerisini tahmin için kullanılıyordu. Biz tahminleri
+üretirken tahmin bloğunun sadece en sondaki öğesini alacağız. Sonra bu
+ögeyi kaynak veriye dahil edip bir gelecek bloğu daha üreteceğiz (onun da
+son öğesini alacağız, vs), ve böyle gide gide <code>n_more</code> kadar geleceği
+bitiştirmiş olacağız. </p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">n_more</span> <span class="o">=</span> <span class="mi">40</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">t_min</span><span class="p">,</span> <span class="n">t_max</span><span class="p">,</span> <span class="nb">int</span><span class="p">((</span><span class="n">t_max</span> <span class="o">-</span> <span class="n">t_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">resolution</span><span class="p">))</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+
+<span class="n">newx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="p">[</span><span class="o">-</span><span class="n">n_steps</span><span class="p">:])</span>
+<span class="n">newy</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="o">-</span><span class="n">n_steps</span><span class="p">:])</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_more</span><span class="p">):</span> <span class="c1"># bu kadar daha uret</span>
+   <span class="n">tst_input</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">newy</span><span class="p">[</span><span class="o">-</span><span class="n">n_steps</span><span class="p">:])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">n_steps</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> 
+   <span class="n">res</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">outputs</span><span class="p">,</span> <span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">X</span><span class="p">:</span> <span class="n">tst_input</span><span class="p">})</span>
+   <span class="n">newy</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+   <span class="n">newx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t_max</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="n">resolution</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">newx</span><span class="p">[</span><span class="n">n_steps</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span><span class="n">newy</span><span class="p">[</span><span class="n">n_steps</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span><span class="s1">&#39;g&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;rnn_04.png&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="rnn_04.png" alt="" /></p>
+
+<p>Yeşil renkli tahmin bölümü. </p>
+
+<p>Problemler</p>
+
+<p>RNN problemlerinden biri şerisel olarak modellenen verinin ağ yapısında
+geriye doğru giderken eğitim sırasında yokolan gradyan (vanishing gradient)
+problemine sebep olabilmesi. Çünkü YSA yatay olarak derin, ve gradyan
+geriye doğru yayılma yaparken sayısal olarak problemlere yol
+açabiliyor. Çözümler adım sayısını azaltmak olabilir, ya da bu problemlerin
+bazılarını düzelten LSTM kullanmak olabilir.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <em>A Beginner's Guide to Recurrent Networks and LSTMs</em>, 
+    <a href="https://deeplearning4j.org/lstm#a-beginners-guide-to-recurrent-networks-and-lstms">https://deeplearning4j.org/lstm#a-beginners-guide-to-recurrent-networks-and-lstms</a></p>
+
+<p>[2] Bayramlı, 
+    <em>Derin Öğrenim ile Text Üretmek, RNN, LSTM</em>, 
+    <a href="https://burakbayramli.github.io/dersblog/sk/2017/01/derin-ogrenim-ile-text-uretmek-rnn-lstm.html">https://burakbayramli.github.io/dersblog/sk/2017/01/derin-ogrenim-ile-text-uretmek-rnn-lstm.html</a></p>
+
+<p>[3] Britz, <em>Recurrent Neural Networks Tutorial, Part 1</em>, <a href="http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/">http://www.wildml.com/2015/09/recurrent-neural-networks-tutorial-part-1-introduction-to-rnns/</a></p>
+
+<p>[4] Lipton, <em>A Critical Review of Recurrent Neural Networks for Sequence Learning</em>,<a href="https://arxiv.org/abs/1506.00019">https://arxiv.org/abs/1506.00019</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

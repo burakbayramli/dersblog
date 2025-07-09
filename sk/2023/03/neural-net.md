@@ -14,8 +14,6 @@
 
 [Derin Öğrenim ile Text Üretmek, RNN, LSTM](../../2017/01/derin-ogrenim-ile-text-uretmek-rnn-lstm.html)
 
-[Uzun Kısa-Vade Hafıza Ağları (Long Short-Term Memory Networks, LSTM)](../../../algs/algs_145_lstm/uzun_kisavade_hafiza_aglari__long_shortterm_memory_networks_lstm_.html)
-
 [Keras OCR, Hazır YSA Ağırlıkları, Tensorflow](../../2025/07/tensorflow-keras-ocr.html)
 
 [Derin Öğrenme ile Doğal Dil İşlemek (Natural Language Processing -NLP-)](../../2016/10/nlp-natural-language-processing.html)
@@ -24,4 +22,4 @@
 
 [Üretici Hasımsal Ağlar (Generative Adverserial Networks -GAN-)](../../2015/05/gan_nn.html)
 
-
+[Optik Karakter Tanıma, Yazı Tanıma (Optical Character Recognition -OCR-)](../../2017/12/ocr-nn.html)

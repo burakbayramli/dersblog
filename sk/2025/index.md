@@ -20,3 +20,5 @@
 
 [Tavsiye Sistemleri, Derin Öğrenme (Deep Recommender Systems)](07/recommend-nn.html)
 
+[Keras OCR, Hazır YSA Ağırlıkları, Tensorflow](07/tensorflow-keras-ocr.html)
+

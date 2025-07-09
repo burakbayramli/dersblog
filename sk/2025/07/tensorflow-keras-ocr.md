@@ -41,7 +41,7 @@ import os
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3' 
 os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 import tensorflow as tf
-``
+```
 
 ### Keras OCR
 
@@ -94,8 +94,10 @@ sample
 text
 ```
 
+Ciktida "sample" "text" sonuclarini gorduk 
+
 Kaynaklar
 
-[1] ../../2018/08/virtualenv-python-izole-sanal-calsma.html
+[1] [Virtualenv](../../2018/08/virtualenv-python-izole-sanal-calsma.html)
 
 [2] [Keras OCR](https://keras-ocr.readthedocs.io/en/latest/examples/using_pretrained_models.html)

@@ -76,31 +76,32 @@ pişirilmiş" bir YSA kullanacağız, Keras OCR.</p>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TF_CPP_MIN_LOG_LEVEL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span> 
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
-<span class="err">``</span>
+</code></pre>
+</div>
 
-<span class="c1">### Keras OCR</span>
+<h3>Keras OCR</h3>
 
-<span class="n">Imaja</span> <span class="n">bakarak</span> <span class="n">icindeki</span> <span class="n">yazi</span> <span class="n">karakterleri</span> <span class="n">tanimak</span> <span class="n">YSA</span><span class="s1">&#39;lar ile</span>
-<span class="n">yapilabiliyor</span><span class="o">.</span> <span class="n">Fakat</span> <span class="n">bilindigi</span> <span class="n">gibi</span> <span class="n">en</span> <span class="n">son</span> <span class="n">derin</span> <span class="n">YSA</span><span class="s1">&#39;larin egitimi</span>
-<span class="n">cogunlukla</span> <span class="n">cok</span> <span class="n">veri</span> <span class="n">gerektirir</span><span class="p">,</span> <span class="n">bu</span> <span class="n">sebeple</span> <span class="n">egitim</span> <span class="n">zamanlar</span> <span class="n">saatlar</span><span class="p">,</span>
-<span class="n">hatta</span> <span class="n">bazen</span> <span class="n">gunler</span> <span class="n">surebiliyor</span><span class="o">.</span> <span class="n">Egitimi</span> <span class="n">bitmis</span> <span class="n">bir</span> <span class="n">YSA</span><span class="s1">&#39;nin kullanimi,</span>
-<span class="n">yani</span> <span class="n">tahmin</span> <span class="n">fazi</span> <span class="n">daha</span> <span class="n">hizlidir</span><span class="o">.</span> <span class="n">YSA</span> <span class="n">egitmek</span> <span class="n">demek</span> <span class="n">onun</span> <span class="n">ic</span> <span class="n">agirlik</span>
-<span class="n">degerlerini</span> <span class="n">bulmaktan</span> <span class="n">ibarettir</span><span class="p">,</span> <span class="n">o</span> <span class="n">zaman</span> <span class="n">bir</span> <span class="n">YSA</span> <span class="n">hazir</span> <span class="n">agirliklarla</span>
-<span class="n">yuklenebilirse</span><span class="p">,</span> <span class="n">egitim</span> <span class="n">fazini</span> <span class="n">kendimiz</span> <span class="n">yapmaktan</span> <span class="n">kurtuluruz</span><span class="o">.</span>
+<p>Imaja bakarak icindeki yazi karakterleri tanimak YSA'lar ile
+yapilabiliyor. Fakat bilindigi gibi en son derin YSA'larin egitimi
+cogunlukla cok veri gerektirir, bu sebeple egitim zamanlar saatlar,
+hatta bazen gunler surebiliyor. Egitimi bitmis bir YSA'nin kullanimi,
+yani tahmin fazi daha hizlidir. YSA egitmek demek onun ic agirlik
+degerlerini bulmaktan ibarettir, o zaman bir YSA hazir agirliklarla
+yuklenebilirse, egitim fazini kendimiz yapmaktan kurtuluruz.</p>
 
-<span class="n">Keras</span> <span class="n">birkaç</span> <span class="n">problem</span> <span class="n">alanı</span> <span class="n">için</span> <span class="n">böyle</span> <span class="n">hazır</span> <span class="n">ağırlıkları</span> <span class="n">paylaşır</span><span class="p">,</span>
-<span class="n">mesela</span> <span class="n">Keras</span> <span class="n">OCR</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span> <span class="n">Bu</span> <span class="n">paket</span> <span class="n">üstteki</span> <span class="err">`</span><span class="n">pip</span><span class="err">`</span> <span class="n">komutu</span> <span class="n">ile</span> <span class="n">kuruldu</span><span class="p">,</span> <span class="n">ve</span>
-<span class="n">gerekli</span> <span class="n">hazır</span> <span class="n">pişmiş</span> <span class="n">YSA</span> <span class="n">ağırlıklarını</span> <span class="n">ilk</span> <span class="n">işlediğinde</span> <span class="n">otomatik</span> <span class="n">olarak</span>
-<span class="n">indirecektir</span><span class="o">.</span>
+<p>Keras birkaç problem alanı için böyle hazır ağırlıkları paylaşır,
+mesela Keras OCR [2]. Bu paket üstteki <code>pip</code> komutu ile kuruldu, ve
+gerekli hazır pişmiş YSA ağırlıklarını ilk işlediğinde otomatik olarak
+indirecektir.</p>
 
-<span class="n">Mesela</span> <span class="n">alttaki</span> <span class="n">resmi</span> <span class="n">işleyelim</span><span class="p">,</span>
+<p>Mesela alttaki resmi işleyelim,</p>
 
-<span class="err">!</span><span class="p">[](</span><span class="n">street1</span><span class="o">.</span><span class="n">jpg</span><span class="p">)</span>
+<p><img src="street1.jpg" alt="" /></p>
 
-<span class="n">Kodlar</span>
+<p>Kodlar</p>
 
-<span class="err">```</span><span class="n">python</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;TF_CPP_MIN_LOG_LEVEL&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;3&#39;</span> 
 <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;CUDA_VISIBLE_DEVICES&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">keras_ocr</span>
@@ -129,9 +130,11 @@ sample
 text
 </code></pre>
 
+<p>Ciktida "sample" "text" sonuclarini gorduk </p>
+
 <p>Kaynaklar</p>
 
-<p>[1] ../../2018/08/virtualenv-python-izole-sanal-calsma.html</p>
+<p>[1] <a href="../../2018/08/virtualenv-python-izole-sanal-calsma.html">Virtualenv</a></p>
 
 <p>[2] <a href="https://keras-ocr.readthedocs.io/en/latest/examples/using_pretrained_models.html">Keras OCR</a></p>
 

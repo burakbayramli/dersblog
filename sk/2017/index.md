@@ -28,6 +28,8 @@
 
 [Zaman Serilerinde Tepe Noktası Bulmak (Peak Detection)](06/zaman-serilerinde-tepe-noktasi-bulmak.html)
 
+[Kendini Tekrarlayan Yapay Sinir Ağları (Recurrent Neural Network -RNN-)](08/rnn-nn.html)
+
 [Derin Öğrenme, YSA, Teori](09/derin-ogrenme-ysa-teori.html)
 
 [Meteoroloji Verileri - ECMWF, NOAA, OpenWeatherMap](09/meteoroloji-verileri-ecmwf-noaa-openweathermap.html)

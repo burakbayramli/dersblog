@@ -26,7 +26,8 @@ Derlemeden önce dikkat, alttakiler lazım, yoksa SSL işlemiyor,
 sudo apt install libssl-dev libffi-dev zlib1g-dev
 ```
 
-Şimdi ortama girip,
+[1]'i takip ederek derlemeyi yapalım, sanal ortamı kuralım. Bitince
+ortama girip,
 
 ```
 pip install tensorflow==2.15.1 keras-ocr matplotlib
@@ -45,13 +46,14 @@ import tensorflow as tf
 
 ### Keras OCR
 
-Imaja bakarak icindeki yazi karakterleri tanimak YSA'lar ile
-yapilabiliyor. Fakat bilindigi gibi en son derin YSA'larin egitimi
-cogunlukla cok veri gerektirir, bu sebeple egitim zamanlar saatlar,
-hatta bazen gunler surebiliyor. Egitimi bitmis bir YSA'nin kullanimi,
-yani tahmin fazi daha hizlidir. YSA egitmek demek onun ic agirlik
-degerlerini bulmaktan ibarettir, o zaman bir YSA hazir agirliklarla
-yuklenebilirse, egitim fazini kendimiz yapmaktan kurtuluruz.
+İmaja bakarak içindeki yazı karakterleri tanımak YSA'lar ile
+yapılabiliyor. Fakat bilindiği gibi modern derin YSA'ların eğitimi
+çoğunlukla çok veri gerektirir, bu sebeple eğitim zamanlar saatlar,
+hatta bazen günler sürebiliyor. Fakat eğitimi bitmiş bir YSA'nın
+kullanımı, yani tahmin fazi daha hızlıdır. YSA eğitmek demek onun iç
+ağırlık değerlerini bulmaktan ibarettir, o zaman bir YSA hazır
+ağırlıklarla yüklenebilirse, eğitim fazını kendimiz yapmaktan
+kurtuluruz.
 
 Keras birkaç problem alanı için böyle hazır ağırlıkları paylaşır,
 mesela Keras OCR [2]. Bu paket üstteki `pip` komutu ile kuruldu, ve
@@ -94,7 +96,8 @@ sample
 text
 ```
 
-Ciktida "sample" "text" sonuclarini gorduk 
+Çıktıda "sample" "text" sonuçlarını görüyoruz, demek ki KEras OCR
+doğru sonucu buldu.
 
 Kaynaklar
 

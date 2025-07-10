@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Ses Komut Tanıma, Dikkat (Attention) Modeli</h1>
+
+<p>Ses tanıma için hazır pişirilmiş bir YSA modeli, [1] bağlantısından
+alınabilir. Kodlar eğitilmiş bir YSA ağırlıklarını içerir, ağırlıklar
+<code>model-attRNN.h5</code> dosyası içinde. Github projesinin <code>HOME//Documents/repos/SpeechCmdRecognition</code>
+altında olduğunu, ve [3] dosyasının <code>/opt/Downloads/voice_cmd</code> dizininde
+olduğunu farzedelim.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.keras.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">load_model</span>
+<span class="n">proj_src</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Documents/repos/SpeechCmdRecognition&quot;</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">proj_src</span><span class="p">)</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span><span class="o">,</span><span class="w"> </span><span class="nn">SpeechModels</span><span class="o">,</span><span class="w"> </span><span class="nn">zipfile</span><span class="o">,</span><span class="w"> </span><span class="nn">io</span>
+
+<span class="c1"># --- Model Loading (from your provided code) ---</span>
+<span class="n">sr</span> <span class="o">=</span> <span class="mi">16000</span>
+<span class="n">nCategs</span> <span class="o">=</span> <span class="mi">36</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">SpeechModels</span><span class="o">.</span><span class="n">AttRNNSpeechModel</span><span class="p">(</span><span class="n">nCategs</span><span class="p">,</span>
+                                        <span class="n">samplingrate</span> <span class="o">=</span> <span class="n">sr</span><span class="p">,</span>
+                                        <span class="n">inputLength</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> 
+
+<span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;adam&#39;</span><span class="p">,</span>
+              <span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sparse_categorical_crossentropy&#39;</span><span class="p">],</span>
+              <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;sparse_categorical_accuracy&#39;</span><span class="p">])</span>
+<span class="n">model</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+<span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">proj_src</span> <span class="o">+</span> <span class="s1">&#39;/model-attRNN.h5&#39;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Model loaded successfully and weights loaded.&quot;</span><span class="p">)</span>
+
+<span class="c1"># --- 🎤 Audio File Preprocessing and Prediction ---</span>
+
+<span class="c1"># Define the path to your sample audio file</span>
+<span class="n">audio_file_path</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/voice_cmd/wav/dog/fcb25a78_nohash_0.wav&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Processing audio file: </span><span class="si">{</span><span class="n">audio_file_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">audio</span><span class="p">,</span> <span class="n">current_sr</span> <span class="o">=</span> <span class="n">librosa</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">audio_file_path</span><span class="p">,</span> <span class="n">sr</span><span class="o">=</span><span class="n">sr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Original sampling rate of audio: </span><span class="si">{</span><span class="n">current_sr</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">current_sr</span> <span class="o">!=</span> <span class="n">sr</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Resampling audio from </span><span class="si">{</span><span class="n">current_sr</span><span class="si">}</span><span class="s2"> Hz to </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2"> Hz (model&#39;s expected SR).&quot;</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Audio file is empty or could not be loaded properly.&quot;</span><span class="p">)</span>
+
+<span class="n">target_length</span> <span class="o">=</span> <span class="n">sr</span> <span class="o">*</span> <span class="mi">1</span> 
+
+<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">target_length</span><span class="p">:</span>
+    <span class="n">audio</span> <span class="o">=</span> <span class="n">audio</span><span class="p">[:</span><span class="n">target_length</span><span class="p">]</span> <span class="c1"># Truncate if too long</span>
+<span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">target_length</span><span class="p">:</span>
+    <span class="n">padding</span> <span class="o">=</span> <span class="n">target_length</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
+    <span class="n">audio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pad</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">padding</span><span class="p">),</span> <span class="s1">&#39;constant&#39;</span><span class="p">)</span>
+
+<span class="n">processed_audio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">expand_dims</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># Shape: (1, 16000) for a 1-second clip</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   Processed audio shape for prediction: </span><span class="si">{</span><span class="n">processed_audio</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">predictions</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">processed_audio</span><span class="p">)</span>
+
+<span class="n">predicted_class_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">confidence</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">predictions</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+<span class="n">category_labels</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;nine&#39;</span><span class="p">,</span> <span class="s1">&#39;yes&#39;</span><span class="p">,</span> <span class="s1">&#39;no&#39;</span><span class="p">,</span> <span class="s1">&#39;up&#39;</span><span class="p">,</span> <span class="s1">&#39;down&#39;</span><span class="p">,</span> <span class="s1">&#39;left&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="s1">&#39;on&#39;</span><span class="p">,</span> <span class="s1">&#39;off&#39;</span><span class="p">,</span> <span class="s1">&#39;stop&#39;</span><span class="p">,</span> <span class="s1">&#39;go&#39;</span><span class="p">,</span> <span class="s1">&#39;zero&#39;</span><span class="p">,</span> <span class="s1">&#39;one&#39;</span><span class="p">,</span> <span class="s1">&#39;two&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;three&#39;</span><span class="p">,</span> <span class="s1">&#39;four&#39;</span><span class="p">,</span> <span class="s1">&#39;five&#39;</span><span class="p">,</span> <span class="s1">&#39;six&#39;</span><span class="p">,</span> <span class="s1">&#39;seven&#39;</span><span class="p">,</span> <span class="s1">&#39;eight&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;backward&#39;</span><span class="p">,</span> <span class="s1">&#39;bed&#39;</span><span class="p">,</span> <span class="s1">&#39;bird&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;follow&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;forward&#39;</span><span class="p">,</span> <span class="s1">&#39;happy&#39;</span><span class="p">,</span> <span class="s1">&#39;house&#39;</span><span class="p">,</span> <span class="s1">&#39;learn&#39;</span><span class="p">,</span> <span class="s1">&#39;marvin&#39;</span><span class="p">,</span> <span class="s1">&#39;sheila&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;tree&#39;</span><span class="p">,</span> <span class="s1">&#39;visual&#39;</span><span class="p">,</span> <span class="s1">&#39;wow&#39;</span><span class="p">]</span>    
+
+<span class="k">if</span> <span class="n">predicted_class_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">category_labels</span><span class="p">):</span>
+    <span class="n">predicted_label</span> <span class="o">=</span> <span class="n">category_labels</span><span class="p">[</span><span class="n">predicted_class_index</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Predicted command: &#39;</span><span class="si">{</span><span class="n">predicted_label</span><span class="si">}</span><span class="s2">&#39; with confidence: </span><span class="si">{</span><span class="n">confidence</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<pre><code>________
+ Layer (type)                Output Shape                 Param #   Connected to                  
+==================================================================================================
+ input (InputLayer)          [(None, None)]               0         []                            
+
+ normalized_spectrogram_mod  (None, None, 80)             0         ['input[0][0]']               
+ el (Functional)                                                                                  
+
+ tf.expand_dims (TFOpLambda  (None, None, 80, 1)          0         ['normalized_spectrogram_model
+ )                                                                  [0][0]']                      
+
+ conv2d (Conv2D)             (None, None, 80, 10)         60        ['tf.expand_dims[0][0]']      
+
+ batch_normalization (Batch  (None, None, 80, 10)         40        ['conv2d[0][0]']              
+ Normalization)                                                                                   
+
+ conv2d_1 (Conv2D)           (None, None, 80, 1)          51        ['batch_normalization[0][0]'] 
+
+ batch_normalization_1 (Bat  (None, None, 80, 1)          4         ['conv2d_1[0][0]']            
+ chNormalization)                                                                                 
+
+ squeeze_last_dim (Lambda)   (None, None, 80)             0         ['batch_normalization_1[0][0]'
+                                                                    ]                             
+
+ bidirectional (Bidirection  (None, None, 128)            74240     ['squeeze_last_dim[0][0]']    
+ al)                                                                                              
+
+ bidirectional_1 (Bidirecti  (None, None, 128)            98816     ['bidirectional[0][0]']       
+ onal)                                                                                            
+
+ lambda (Lambda)             (None, 128)                  0         ['bidirectional_1[0][0]']     
+
+ dense (Dense)               (None, 128)                  16512     ['lambda[0][0]']              
+
+ dot (Dot)                   (None, None)                 0         ['dense[0][0]',               
+                                                                     'bidirectional_1[0][0]']     
+
+ attSoftmax (Softmax)        (None, None)                 0         ['dot[0][0]']                 
+
+ dot_1 (Dot)                 (None, 128)                  0         ['attSoftmax[0][0]',          
+                                                                     'bidirectional_1[0][0]']     
+
+ dense_1 (Dense)             (None, 64)                   8256      ['dot_1[0][0]']               
+
+ dense_2 (Dense)             (None, 32)                   2080      ['dense_1[0][0]']             
+
+ output (Dense)              (None, 36)                   1188      ['dense_2[0][0]']             
+
+==================================================================================================
+Total params: 201247 (786.12 KB)
+Trainable params: 201225 (786.04 KB)
+Non-trainable params: 22 (88.00 Byte)
+__________________________________________________________________________________________________
+Model loaded successfully and weights loaded.
+
+Processing audio file: /opt/Downloads/voice_cmd/wav/dog/fcb25a78_nohash_0.wav
+   Original sampling rate of audio: 16000 Hz
+   Processed audio shape for prediction: (1, 16000)
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+W0000 00:00:1752147986.896920  100346 op_level_cost_estimator.cc:699] Error in PredictCost() for the op: op: "Softmax" attr { key: "T" value { type: DT_FLOAT } } inputs { dtype: DT_FLOAT shape { unknown_rank: true } } device { type: "CPU" vendor: "AuthenticAMD" model: "248" frequency: 2096 num_cores: 12 environment { key: "cpu_instruction_set" value: "AVX SSE, SSE2, SSE3, SSSE3, SSE4.1, SSE4.2" } environment { key: "eigen" value: "3.4.90" } l1_cache_size: 32768 l2_cache_size: 524288 l3_cache_size: 8388608 memory_size: 268435456 } outputs { dtype: DT_FLOAT shape { unknown_rank: true } }
+1/1 [==============================] - 2s 2s/step
+Predicted command: 'dog' with confidence: 1.0000
+</code></pre>
+
+<p>Doğru sonuç bulundu. [3] verisindeki tüm wav dosyalarının test
+edilmesi için gerekli kod <code>voice1.py</code> içinde. 500 kusur dosya
+üzerinden 90% başarı elde edildi.</p>
+
+<p>Kodlar</p>
+
+<p><a href="voice1.py">voice1.py</a></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="https://github.com/douglas125/SpeechCmdRecognition">Github</a></p>
+
+<p>[2] de Andrade, <em>A neural attention model for speech command recognition</em>,
+    <a href="https://arxiv.org/abs/1808.08929">ArXiv</a></p>
+
+<p>[3] https://www.dropbox.com/scl/fi/7bjyicydyyurizi314qp8/google<em>voice</em>small.zip?rlkey=l5ibbx480jld79exvkwih3szr&amp;st=ehyr58nt&amp;raw=1</p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

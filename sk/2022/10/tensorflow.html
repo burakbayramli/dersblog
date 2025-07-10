@@ -75,10 +75,11 @@ artık CPU, GPU yerine direk TF için optimize edilmiş yeni işlemciler
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 
-<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
-<span class="n">f</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mf">3.</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Variable</span><span class="p">(</span><span class="mf">4.</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+<span class="n">f</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="n">y</span> <span class="o">+</span> <span class="mi">2</span>
 </code></pre>
 </div>
 
@@ -91,33 +92,8 @@ başlangıç değerlerlerine eşitlenir, ve sonra f hesabı
 tetiklenir. Esas hesap bu şekilde ortaya çıkar.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">sess</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span>
-<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">initializer</span><span class="p">)</span>
-<span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">initializer</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">sess</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</code></pre>
-</div>
-
-<pre><code>42
-</code></pre>
-
-<p>Eğer işimiz bitti ise ve kaynakların (bellek, işlemci gibi) geri
-dönüşümünü, serbest bırakılmasını istiyorsak oturumu kapatırız,</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="n">sess</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</code></pre>
-</div>
-
-<p>Kodlama açısından biraz daha temiz bir yol, </p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="n">x</span><span class="o">.</span><span class="n">initializer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="n">y</span><span class="o">.</span><span class="n">initializer</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-<span class="nb">print</span> <span class="n">result</span>
+<pre><span></span><code><span class="n">result_f</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> 
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result of f: </span><span class="si">{</span><span class="n">result_f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -133,13 +109,12 @@ bakarak çizitte önce o düğümlerin hesabını yapacaktır, ve o çıktılar�
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">w</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
-<span class="n">x</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">2</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="n">z</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="n">x_const</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">2</span>
+<span class="n">y_const</span> <span class="o">=</span> <span class="n">x_const</span> <span class="o">+</span> <span class="mi">5</span>
+<span class="n">z_const</span> <span class="o">=</span> <span class="n">x_const</span> <span class="o">*</span> <span class="mi">3</span>
 
-<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="nb">print</span> <span class="s1">&#39;y =&#39;</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
-    <span class="nb">print</span> <span class="s1">&#39;z =&#39;</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y_const = </span><span class="si">{</span><span class="n">y_const</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;z_const = </span><span class="si">{</span><span class="n">z_const</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -159,13 +134,13 @@ yapılabilir. Mesela bir matrisin tümü, herhangi bir ekseni bazındaki toplam
 alttaki gibi alınabiliyor,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span><span class="mf">1.</span><span class="p">]])</span>
-<span class="n">c1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
-<span class="n">c1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="c1"># y ekseni uzerinden toplam</span>
-<span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c1</span><span class="p">)</span>
-<span class="n">c2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="c1"># x ekseni uzerinden toplam</span>
-<span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+<pre><span></span><code><span class="n">x_sum</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]])</span>
+<span class="n">c1_total</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x_sum</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total sum (c1_total): </span><span class="si">{</span><span class="n">c1_total</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">c1_axis0</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x_sum</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Toplam, eksen 0 (c1_axis0): </span><span class="si">{</span><span class="n">c1_axis0</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">c2_axis1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reduce_sum</span><span class="p">(</span><span class="n">x_sum</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> 
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Toplam eksen 1 (c2_axis1): </span><span class="si">{</span><span class="n">c2_axis1</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -180,17 +155,16 @@ tane <code>-1</code> kullanılabilir, ve bu durumda o boyutta "ne olduğu öneml
 değil" mesajı verilmiş olur.</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">x1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+<pre><span></span><code><span class="n">x1_reshape</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+<span class="n">x2_reshape</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span>
+                          <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span>
+                          <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]])</span>
 
-<span class="n">x2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]],</span>
-                 <span class="p">[[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">]],</span>
-                 <span class="p">[[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">],[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]])</span>
+<span class="n">res1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x1_reshape</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reshaped x1 to [3, 3]:</span><span class="se">\n</span><span class="si">{</span><span class="n">res1</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="n">res1</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
-    <span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">res1</span><span class="p">)</span>
-    <span class="n">res2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x2</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    <span class="nb">print</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">res2</span><span class="p">)</span>
+<span class="n">res2</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x2_reshape</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Reshaped x2 to [2, -1]:</span><span class="se">\n</span><span class="si">{</span><span class="n">res2</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -216,39 +190,41 @@ olsun, sonra <code>B</code> değerini hesaplamak için <code>eval</code> çağr�
 tutucunun içini o anda dolduralım, ve sonuca bakalım,</p>
 
 <div class="codehilite">
-<pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">placeholder</span><span class="p">(</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">B</span> <span class="o">=</span> <span class="n">A</span> <span class="o">+</span> <span class="mi">5</span>
-<span class="k">with</span> <span class="n">tf</span><span class="o">.</span><span class="n">Session</span><span class="p">()</span> <span class="k">as</span> <span class="n">sess</span><span class="p">:</span>
-    <span class="nb">print</span>  <span class="n">B</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">feed_dict</span><span class="o">=</span><span class="p">{</span><span class="n">A</span><span class="p">:</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]})</span>
+<pre><span></span><code><span class="n">A_input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">2.</span><span class="p">,</span> <span class="mf">3.</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">B_output</span> <span class="o">=</span> <span class="n">A_input</span> <span class="o">+</span> <span class="mi">5</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result of A_input + 5: </span><span class="si">{</span><span class="n">B_output</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <pre><code>[[ 6.  7.  8.]]
 </code></pre>
 
-<p>Yer tutucular tipik olarak gradyan inişi ile optimizasyon sırasında
-eğitim verisini ufak toptan parçalar olarak mesela X,y uzerinden
-çizite vermek için kullanılır.</p>
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># If you need a function that takes input, you&#39;d use tf.function</span>
+<span class="nd">@tf</span><span class="o">.</span><span class="n">function</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">add_five</span><span class="p">(</span><span class="n">input_tensor</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">input_tensor</span> <span class="o">+</span> <span class="mi">5</span>
 
-<h3>Tensorflow 2</h3>
-
-<p>Yeni versiyonda bazı değişiklikler var, mesela sürekli <code>Session</code>
-kullanımı gerekli değil,</p>
-
-<pre><code>import tensorflow as tf
-print("TensorFlow version:", tf.__version__)
+<span class="n">A_dynamic_input</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">20.</span><span class="p">,</span> <span class="mf">30.</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">B_dynamic_output</span> <span class="o">=</span> <span class="n">add_five</span><span class="p">(</span><span class="n">A_dynamic_input</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Result of add_five function with new input: </span><span class="si">{</span><span class="n">B_dynamic_output</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </code></pre>
-
-<pre><code>TensorFlow version: 2.9.2
-</code></pre>
+</div>
 
 <p>Basit bir çarpma örneği,</p>
 
-<pre><code>a = tf.constant([1, 2, 3, 4, 5, 6], shape=[2, 3])
-b = tf.constant([7, 8, 9, 10, 11, 12], shape=[3, 2])
-c = tf.matmul(a, b)
-print (c)
+<div class="codehilite">
+<pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># Changed to 4 elements</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">constant</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">tf</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="c1"># Changed to 4 elements</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">tf</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;a:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;b:</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;c (a @ b):</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span>
 </code></pre>
+</div>
 
 <pre><code>&lt;tf.Tensor: shape=(2, 2), dtype=int32, numpy=
 array([[ 58,  64],
@@ -259,19 +235,21 @@ array([[ 58,  64],
 
 <p>Tensorflow basit matris çarpımlarını ne kadar hızlandırıyor? Kontrol edelim,</p>
 
-<pre><code>import numpy as np
-N = 3000
-A = np.random.randn(N,N)
-B = np.random.randn(N,N)
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">3000</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">N</span><span class="p">,</span><span class="n">N</span><span class="p">)</span>
 
-from timeit import default_timer as timer
-from datetime import timedelta
+<span class="kn">from</span><span class="w"> </span><span class="nn">timeit</span><span class="w"> </span><span class="kn">import</span> <span class="n">default_timer</span> <span class="k">as</span> <span class="n">timer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">timedelta</span>
 
-start = timer()
-C = np.dot(A,B)
-end = timer()
-print('elapsed time', timedelta(seconds=end-start))
+<span class="n">start</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="n">C</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span><span class="n">B</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">timer</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;elapsed time&#39;</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">))</span>
 </code></pre>
+</div>
 
 <pre><code>elapsed time 0:00:01.292723
 </code></pre>

@@ -42,6 +42,8 @@
 
 [Derin Öğrenme ile Doğal Dil İşlemek (Natural Language Processing -NLP-)](10/nlp-natural-language-processing.html)
 
+[Otomatik Tercüme, Makine Tercümesi (Machine Translation)](10/nmt-nn.html)
+
 [Numpy](10/numpy.html)
 
 [Tensorflow ile Regresyon, YSA](10/tensorflow-regression.html)

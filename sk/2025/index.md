@@ -18,6 +18,8 @@
 
 [Ubuntu 24, Acer Swift 3](06/ubuntu-24-acer.html)
 
+[Dikkat (Attention) Modelleri, YSA](07/attention-dikkat-nn.html)
+
 [Tavsiye Sistemleri, Derin Öğrenme (Deep Recommender Systems)](07/recommend-nn.html)
 
 [Keras OCR, Hazır YSA Ağırlıkları, Tensorflow](07/tensorflow-keras-ocr.html)

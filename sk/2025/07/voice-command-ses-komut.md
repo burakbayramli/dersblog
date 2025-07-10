@@ -26,7 +26,6 @@ model.summary()
 model.load_weights(proj_src + '/model-attRNN.h5')
 print("Model loaded successfully and weights loaded.")
 
-# Define the path to your sample audio file
 audio_file_path = "/opt/Downloads/voice_cmd/wav/dog/fcb25a78_nohash_0.wav"
 print(f"\nProcessing audio file: {audio_file_path}")
 

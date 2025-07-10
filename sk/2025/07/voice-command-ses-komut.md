@@ -13,7 +13,6 @@ proj_src = os.environ['HOME'] + "/Documents/repos/SpeechCmdRecognition"
 sys.path.append(proj_src)
 import librosa, SpeechModels, zipfile, io
 
-# --- Model Loading (from your provided code) ---
 sr = 16000
 nCategs = 36
 model = SpeechModels.AttRNNSpeechModel(nCategs,
@@ -26,8 +25,6 @@ model.compile(optimizer='adam',
 model.summary()
 model.load_weights(proj_src + '/model-attRNN.h5')
 print("Model loaded successfully and weights loaded.")
-
-# --- 🎤 Audio File Preprocessing and Prediction ---
 
 # Define the path to your sample audio file
 audio_file_path = "/opt/Downloads/voice_cmd/wav/dog/fcb25a78_nohash_0.wav"
@@ -150,5 +147,5 @@ Kaynaklar
 [2] de Andrade, *A neural attention model for speech command recognition*,
     [ArXiv](https://arxiv.org/abs/1808.08929)
 
-[3] https://www.dropbox.com/scl/fi/7bjyicydyyurizi314qp8/google_voice_small.zip?rlkey=l5ibbx480jld79exvkwih3szr&st=ehyr58nt&raw=1
+[3] [Veri](https://www.dropbox.com/scl/fi/7bjyicydyyurizi314qp8/google_voice_small.zip?rlkey=l5ibbx480jld79exvkwih3szr&st=ehyr58nt&raw=1)
 

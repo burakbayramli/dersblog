@@ -46,7 +46,11 @@
 
 [Jupyter Not Defterleri](09/jupyter-not-defterleri.html)
 
+[Derin Öğrenme ile Go Oyununu Oynamak, DeepMind AlphaGo Zero](10/go-game-nn.html)
+
 [Kitap (epub, pdf) Icerigini Cikartmak](10/kitap-epub-pdf-icerigini-cikartmak.html)
+
+[`python](10/test.html)
 
 [](11/evrisimsel-ag-ile-hava-yagmur-tahmini.html)
 

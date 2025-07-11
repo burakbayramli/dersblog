@@ -160,15 +160,31 @@ if __name__ == "__main__":
     to = os.environ['HOME'] + "/Documents/dersblog"
     
     if sys.argv[1] == "test":
-        frdirs, todirs = copy_files_and_dirs(fr, to, ".git,.pdf,zwork")
-        os.chdir("/tmp/cltest")
+        tmpto = "/tmp/cltest"
+        frdirs, todirs = copy_files_and_dirs(fr, tmpto, ".git,.pdf,zwork")
+        if os.path.exists(tmpto) == False:            
+            os.mkdir(tmpto)            
+        os.chdir(tmpto)
         for topdir in dirs:
             print (topdir)
             for subdir in sorted(os.listdir(to + "/" + topdir)):
                 if not os.path.isdir(to + "/" + topdir + "/" + subdir): continue
                 if "cover" in subdir or "000" in subdir : continue
-                mdfile = to + "/" + topdir + "/" + subdir + "/" + subdir + ".md"
+                mdfile = tmpto + "/" + topdir + "/" + subdir + "/" + subdir + ".md"
                 print (mdfile)
+                foutname = tmpto + "/" + topdir + "/" + subdir + "/pout1111.py"
+                print (foutname)
+                fout = open(foutname,"w")
+                fout.write("""
+                import numpy as np
+                import matplotlib.pyplot as plt
+                """)
+                fname = sys.argv[1]
+                content = open(mdfile).read()
+                res = re.findall("```python(.*?)```", content, re.DOTALL)
+                for x in res: fout.write(x)
+                fout.close()
+                
                 
     if sys.argv[1] == "doc":
         if len(sys.argv) < 3:

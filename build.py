@@ -153,12 +153,23 @@ def remove_sci_md(to):
             print ('removing', mdfile)
             if os.path.exists(mdfile): os.remove(mdfile)
     
-    
+            
 if __name__ == "__main__": 
 
     fr = os.getcwd()
     to = os.environ['HOME'] + "/Documents/dersblog"
     
+    if sys.argv[1] == "test":
+        frdirs, todirs = copy_files_and_dirs(fr, to, ".git,.pdf,zwork")
+        os.chdir("/tmp/cltest")
+        for topdir in dirs:
+            print (topdir)
+            for subdir in sorted(os.listdir(to + "/" + topdir)):
+                if not os.path.isdir(to + "/" + topdir + "/" + subdir): continue
+                if "cover" in subdir or "000" in subdir : continue
+                mdfile = to + "/" + topdir + "/" + subdir + "/" + subdir + ".md"
+                print (mdfile)
+                
     if sys.argv[1] == "doc":
         if len(sys.argv) < 3:
             # for single file, command run inside working dir

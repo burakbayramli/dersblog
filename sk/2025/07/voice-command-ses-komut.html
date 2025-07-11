@@ -38,11 +38,31 @@
         <h1></h1>
 <h1>Ses Komut Tanıma, Dikkat (Attention) Modeli</h1>
 
-<p>Ses tanıma için hazır pişirilmiş bir YSA modeli, [1] bağlantısından
-alınabilir. Kodlar eğitilmiş bir YSA ağırlıklarını içerir, ağırlıklar
-<code>model-attRNN.h5</code> dosyası içinde. Github projesinin <code>HOME//Documents/repos/SpeechCmdRecognition</code>
-altında olduğunu, ve [3] dosyasının <code>/opt/Downloads/voice_cmd</code> dizininde
-olduğunu farzedelim.</p>
+<p>Ses komut tanıma için ünlü bir veri Kaggle'da paylaşılmıştır [4], bir
+saniyelik ses komutları wav dosyalarında var, ve farklı arka plan
+gürültüleri, kişiler tarafından kaydedilmiş. Bu veri bir Kaggle yarışması
+için de kullanılmıştı.</p>
+
+<p>Ses tanıma temel bir yapay zeka alanı. Amazon, Google, MS gibi
+şirketlerin ses tanıma servisleri var, fakat [2] araştırmasına göre bu
+yazılımlar çok yer tutuyor, çok fazla kaynağa ihtiyaç duyuyor. Bu
+sebeple onların kullandığı türden ses tanıma mekanizması küçük
+bilgisayarlarda kullanılamaz. Halbuki bu tür bir yazılım çok faydalı
+olacaktır, İnternet bağlantısı olmadan ses komut tanıma
+yapabilmeliyiz.</p>
+
+<p>Bu tür bir Keras / Tensorflow modeli [1]'de var. Araştırmacılar en son
+dil işleme mimarilerinde ilerleme sağlayan "dikkat bölgeleri
+(attention)" mekanizmasını kullanarak ses tanımayı daha verimli
+işletebilmeyi başarmışlar.</p>
+
+<p>YSA'yı kullanmak için tekrar eğitim yapmaya gerek yok, hazır
+pişirilmiş YSA modellerinin ağırlıkları kullanılabilir, 2.7 MB civarı
+yer tutuyor ve bir .h5 dosyasından hızlı bir şekilde yüklenebiliyor.
+Kodlar eğitilmiş bir ses tanıma YSA ağını içerir, <code>model-attRNN.h5</code> dosyasında.
+Github projesinin <code>HOME/Documents/repos/SpeechCmdRecognition</code> altında olduğunu,
+ve [3] dosyasının <code>/opt/Downloads/voice_cmd</code> dizininde olduğunu farzedersek,
+alttaki kodu işletebiliriz.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">tensorflow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">tf</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span>
@@ -169,9 +189,10 @@ W0000 00:00:1752147986.896920  100346 op_level_cost_estimator.cc:699] Error in P
 Predicted command: 'dog' with confidence: 1.0000
 </code></pre>
 
-<p>Doğru sonuç bulundu. [3] verisindeki tüm wav dosyalarının test
-edilmesi için gerekli kod <code>voice1.py</code> içinde. 500 kusur dosya
-üzerinden 90% başarı elde edildi.</p>
+<p>Test için bir örnek wav kullandık, içinde <code>dog</code> kelimesi söyleniyordu,
+ve üstteki test doğru sonuç bulundu. [3] verisindeki tüm wav
+dosyalarının test edilmesi için gerekli kod <code>voice1.py</code> içinde. 500
+kusur dosya üzerinden 90% başarı elde ediyor.</p>
 
 <p>Kodlar</p>
 
@@ -185,6 +206,8 @@ edilmesi için gerekli kod <code>voice1.py</code> içinde. 500 kusur dosya
     <a href="https://arxiv.org/abs/1808.08929">ArXiv</a></p>
 
 <p>[3] <a href="https://www.dropbox.com/scl/fi/7bjyicydyyurizi314qp8/google_voice_small.zip?rlkey=l5ibbx480jld79exvkwih3szr&st=ehyr58nt&raw=1">Veri</a></p>
+
+<p>[4] <a href="https://www.kaggle.com/datasets/neehakurelli/google-speech-commands">Kaggle</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

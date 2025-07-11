@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">gnu_to_agz</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">action</span><span class="o">==</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">):</span> <span class="k">return</span> <span class="kc">None</span>
+    <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">action</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">9</span><span class="o">-</span><span class="n">y</span><span class="p">,(</span><span class="n">x</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">agz_to_gnu</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">action</span><span class="p">:</span> <span class="k">return</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span> <span class="o">=</span> <span class="n">action</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">9</span><span class="o">-</span><span class="n">x</span><span class="p">)</span>
+
+
+<span class="nb">print</span> <span class="p">(</span><span class="n">gnu_to_agz</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">agz_to_gnu</span><span class="p">((</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">)))</span>
+<span class="nb">print</span> <span class="p">(</span><span class="n">agz_to_gnu</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">)))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>(6, 3)
+(4, 3)
+(8, 4)
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span><span class="o">,</span><span class="w"> </span><span class="nn">go</span><span class="o">,</span><span class="w"> </span><span class="nn">util</span>
+
+<span class="c1">#state, pi, reward = pickle.load(open(&quot;testdata.pkl&quot;))</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">GameState</span><span class="p">()</span>
+<span class="n">state</span><span class="o">.</span><span class="n">_create_neighbors_cache</span><span class="p">()</span>
+
+<span class="n">util</span><span class="o">.</span><span class="n">pprint_board</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">board</span><span class="p">)</span>
+<span class="c1">#state.do_move((3,3), go.WHITE)</span>
+<span class="c1">#state.do_move(gnu_to_agz((4,3)), go.WHITE)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>   A B C D E F G H I 
+ 9 . . . . . . . . . 9
+ 8 . . . . . . . . . 8
+ 7 . . . . . . . . . 7
+ 6 . . . . . . . . . 6
+ 5 . . . . . . . . . 5
+ 4 . . . . . . . . . 4
+ 3 . . . . . . . . . 3
+ 2 . . . . . . . . . 2
+ 1 . . . . . . . . . 1
+   A B C D E F G H I 
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">gtp</span>
+<span class="n">gnugo</span> <span class="o">=</span> <span class="n">gtp</span><span class="o">.</span><span class="n">GTPFacade</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;gnugo&quot;</span><span class="p">,</span> <span class="s2">&quot;--mode&quot;</span><span class="p">,</span> <span class="s2">&quot;gtp&quot;</span><span class="p">,</span> <span class="s2">&quot;--level&quot;</span><span class="p">,</span> <span class="s2">&quot;10&quot;</span><span class="p">])</span>
+
+<span class="n">gnugo</span><span class="o">.</span><span class="n">boardsize</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">gnugo</span><span class="o">.</span><span class="n">komi</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">gnugo</span><span class="o">.</span><span class="n">clear_board</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>white subprocess created
+sending white: boardsize 9
+
+got: = 
+
+sending white: komi 0.0
+
+got: = 
+
+sending white: clear_board
+
+got: = 
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">res</span> <span class="o">=</span> <span class="n">gnugo</span><span class="o">.</span><span class="n">genmove</span><span class="p">(</span><span class="n">gtp</span><span class="o">.</span><span class="n">WHITE</span><span class="p">)</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;res&#39;</span><span class="p">,</span><span class="n">res</span><span class="p">)</span>
+<span class="n">gnugo</span><span class="o">.</span><span class="n">showboard</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>sending white: genmove W
+
+got: = E5
+
+res (5, 5)
+sending white: showboard
+
+got: = 
+   A B C D E F G H J
+ 9 . . . . . . . . . 9
+ 8 . . . . . . . . . 8
+ 7 . . + . . . + . . 7
+ 6 . . . . . . . . . 6
+ 5 . . . . O . . . . 5
+ 4 . . . . . . . . . 4
+ 3 . . + . . . + . . 3
+ 2 . . . . . . . . . 2     WHITE (O) has captured 0 stones
+ 1 . . . . . . . . . 1     BLACK (X) has captured 0 stones
+   A B C D E F G H J
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">gnugo</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">gtp</span><span class="o">.</span><span class="n">BLACK</span><span class="p">,</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">gnugo</span><span class="o">.</span><span class="n">showboard</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>sending white: play B D2
+
+got: = 
+
+sending white: showboard
+
+got: = 
+   A B C D E F G H J
+ 9 . . . . . . . . . 9
+ 8 . . . . . . . . . 8
+ 7 . . + . . . + . . 7
+ 6 . . . . . . . . . 6
+ 5 . . . . O . . . . 5
+ 4 . . . . . . . . . 4
+ 3 . . + . . . + . . 3
+ 2 . . . X . . . . . 2     WHITE (O) has captured 0 stones
+ 1 . . . . . . . . . 1     BLACK (X) has captured 0 stones
+   A B C D E F G H J
+</code></pre>
+</div>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

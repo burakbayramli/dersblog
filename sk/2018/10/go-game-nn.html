@@ -1,0 +1,680 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+   <script async="async" data-cfasync="false" src="//pl22489825.profitablegatecpm.com/d84f574876e65b2d8f0c7bae784c22b3/invoke.js"></script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>Derin Öğrenme ile Go Oyununu Oynamak, DeepMind AlphaGo Zero</h1>
+
+<p>Yapay Zeka alanındaki heyecan verici ilerlemelerden biri Google DeepMind
+şirketinin AlphaGo programının 17 kez Go şampiyonu olmuş Lee Sedol'u
+yenmesiydi. Fakat DeepMind orada durmadı, mimariyi geliştirerek AlphaGo'yu
+100-0 yenecek AlphaGo Zero'yu geliştirdi! Yeni mimarinin ilginç tarafı
+YZ'nin hiç dış veriye ihtiyaç duymadan eğitilmiş olması. AGZ sıfır
+kabiliyet ile başlıyor (clean slate), ve kendisiyle oynaya oynaya Go
+şampiyonlarını yenecek hale geliyor.  Bu ve ek ilerlemeleri bu yazıda
+paylaşıyoruz.</p>
+
+<p>Mimari</p>
+
+<p>Genel olarak AG ve AGZ'nin benzer bazı özellikleri var. Bunlardan ilki
+Monte Carlo Ağaç Aramasının (Monte Carlo Tree Search -MCTS-) bir derin YSA
+ile genişletilerek kabiliyetinin ilerletilmiş olması. MCTS konusunu
+işledik, herhangi bir tahta pozisyonundan başlayarak simülasyon yapılır, ve
+kazanç / kayıp verisi yukarı alınarak karar mekanizması için
+kullanılır. Fakat simülasyon yapılırken ve her tahta pozisyonundan hamle
+seçenekleri üretilirken ne kadar derine inilecek? Oyun bitene kadar
+inilirse bu özellikle Go gibi bir oyunda çok derin ve geniş bir ağaç ortaya
+çıkartabilir, bilgisayarlar performans açısından böyle bir ağaçla
+zorlanırlar. Çözüm belli bir tahtaya bakarak o oyunun kazanılıp
+kazanılmayacağı hakkında "sezgisel'' bir karar verebilmek. Bu işi örüntü
+tanıma üzerinden YSA çok güzel yapabilir. Önceden (kendisiyle oynarken)
+elde edilen oyun verisine bakarak, tahta pozisyonları ve o oyunun kazanılıp
+kazanılmadığı verisiyle eğitilen "değer YSA'sı'' artık yeni bir tahtayı
+görünce o durumun kazanç şansının olup olmadığını -1,+1 arasında bir değer
+ile hesaplayabilir. Bu durumda MCTS'in herhangi bir dalda oyunu sonuna
+kadar simüle etmesine gerek yoktur, belli bir seviye sonra durup YSA'ya
+kazanç şansını sorar, bu değeri kullanır.</p>
+
+<p>İkinci özellik bir ilke / siyaset / strateji YSA'sı kullanmak, ilke YSA'sı
+bir tahtayı girdi olarak alıp, yapılabilecek tüm hamleler için bir kazanç
+olasılığı üretebilir, ilke YSA'sin çıktısı potansiyel olarak tüm tahta
+hücreleri olabilir [1,3]. MCTS bu çıktıları kazanma olasılığı daha yüksek
+olan hamle ağaç dallarını simüle etmek için kullanacaktır.</p>
+
+<p>Yazının geri kalanında 9x9 Go boyutlarını referans alacağız, AG ve AGZ
+19x19 oyunu üzerinde işliyor. </p>
+
+<p><img src="go_02.jpg" alt="" /></p>
+
+<p>Bir not düşelim, YSA "bir tahtayı girdi alıyor'' dedik ama girdi verisi
+oldukca zenginleştirilmiş halde, sadece (9,9) boyutunda tek bir tahta
+değil, (9,9,17) boyutunda yani 17 katmanlı bir veri "balyası''. Bu balyayı
+hazırlamak için herhangi bir oyun anında tahtaya bakılır, her renk için
+(siyah/beyaz) 8 katman yaratılır, bu katmanlardan biri o rengin o andaki
+tahtadaki pozisyonu, diğer 7'si hemen önceki 7 adımdaki aynı rengin
+pozisyonları, aynı şekilde diğer renk için 8 katman, ve ek bir katman
+sıranın kimde olduğu. Tüm bunlar istiflenerek toplam 17 katman
+yaratılır. Herhangi bir anda oyunun durumu bu tensor üzerinden
+belirtilir. Verinin bu şekilde zenginleştirilmesinin sebebi herhalde
+zamansal bağlantıları yakalamaya uğraşmak. </p>
+
+<p><img src="go_01.png" alt="" /></p>
+
+<p>AlphaGo Zero</p>
+
+<p>AGZ'nin yaptığı ilerlemeler ise şunlar [3]: AlphaGo değer ve ilke için iki
+ayrı ağ kullanıyordu. AGZ'de değer ve ilke YZ'leri birleştirilerek tek bir
+YSA ile iki çıktı üretilmesi sağlanıyor, bu yapıya esprili bir şekilde
+"iki başlı canavar (two-headed monster)'' ismi de veriliyor. Bu mimari
+biraz garip gelebilir, çünkü çoğu uygulamada genellikle tek bir çıktı
+kullanılır, mesela bir resimde kedi olup olmadığını tahmin edecek bir YZ
+tek bir ikisel çıktı ile bunu yapabilir, ya da resmin belli kategorilere
+ait olup olmadığı tek bir vektör çıktısı ile, bu vektörde obje olasılıkları
+vardır. Fakat biraz düşününce iki farklı çıktılı yapının niye işlediğini
+anlayabiliriz, sonuçta YZ bir fonksiyonu yaklaşık olarak temsil etmeye
+çabalar, eğitim sırasında kafa #1 fonksiyonu bir tahmin üretir, ve eğitim
+o kafanın yaptığı tahmine sonuç veren parametreleri günceller, aynı şekilde
+kafa #2 için düzeltme yapılır.</p>
+
+<p><img src="go_03.png" alt="" /></p>
+
+<p>İkinci bir AGZ ilerlemesi artıksal ağ (residual network) adı verilen bir
+derin YSA yapısı kullanmak. Artıksal ağlar pür evrişimsel ağların daha
+gelişmiş hali, bu yapılarda evrişimsel ağda bölge atlaması yapılarak
+sonraki bölgelere direk / kısayol bağlantıları koyuluyor [6]. Örnek bir
+yapı altta,</p>
+
+<p><img src="resnet34.png" alt="" /></p>
+
+<p>Üçüncü ilerleme ise AGZ'nin kendisine karşı oynayarak kendini eğitmesi (AG
+için başkaların oynadığı oyunların kayıtları kullanıldı). DeepMind
+bilimcileri araştırmaları sırasında şunu anladılar: hangi baz mimariyle
+başlarsak başlayalım, MCTS onu daha iyileştirir. Bu durumda herhangi bir YZ
+alınır ki başta ağırlık değerleri rasgele yani hiç bir doğru karar vermez,
+ama bu YZ, MCTS ile daha iyi performans gösterecektir, bu sırada oyundan
+eğitim verisi toplanır ve bu veri YZ'yi iyileştirmek için ağa uygulanır, ve
+işlem başa dönerek devam edilir. Bu sayede en kötü performanstan en iyisine
+doğru ilerlemek mümkündür.</p>
+
+<p>Eğitim verisinde hedefin ne olduğunu daha iyi vurgulamak gerekirse, değer
+kafası için bu tek bir değer, ilke kafası için tüm 9x9 tahta
+pozisyonlarında hangi hamlenin yapılmış olduğu, o hücre 1 diğerleri 0
+değerinde olacak. Bu şekilde eğitilen YSA, ilke tahmini üreteceği zaman tüm
+hücrelerde olasılık değerleri üretecektir.</p>
+
+<p>Alttaki kod [4]'u baz almıştır. Eğitmek için <code>train.py</code> kullanılır,
+eğitim sırasında en son YSA belli aralıklarla sürekli kaydedilecektir,
+eğitim sonunda ya da yeterince eğitilince işlem durulabilir, ve
+<code>gnugo_play.py</code> kaydedilen aynı modeli kullanarak GnuGo [1] programına
+karşı oynatılabilir. YSA olarak biz ResNet yerine daha basit bir yapı
+kullandık,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">simplenet</span>
+<span class="n">simplenet</span><span class="o">.</span><span class="n">PolicyValue</span><span class="o">.</span><span class="n">create_network</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<pre><code>Tensor("input_1:0", shape=(?, 17, 9, 9), dtype=float32)
+Tensor("conv2d/BiasAdd:0", shape=(?, 17, 9, 64), dtype=float32)
+Tensor("batch_normalization/batchnorm/add_1:0", shape=(?, 17, 9, 64), dtype=float32)
+Tensor("conv2d_2/BiasAdd:0", shape=(?, 17, 9, 128), dtype=float32)
+Tensor("batch_normalization_2/batchnorm/add_1:0", shape=(?, 17, 9, 128), dtype=float32)
+------------- value -------------------
+Tensor("conv2d_3/BiasAdd:0", shape=(?, 17, 9, 2), dtype=float32)
+Tensor("activation_3/Relu:0", shape=(?, 17, 9, 2), dtype=float32)
+Tensor("flatten/Reshape:0", shape=(?, 306), dtype=float32)
+policy_output Tensor("activation_4/Softmax:0", shape=(?, 82), dtype=float32)
+------------- policy -------------------
+Tensor("conv2d_4/BiasAdd:0", shape=(?, 17, 9, 1), dtype=float32)
+Tensor("activation_5/Relu:0", shape=(?, 17, 9, 1), dtype=float32)
+Tensor("flatten_2/Reshape:0", shape=(?, 153), dtype=float32)
+Tensor("dense_2/BiasAdd:0", shape=(?, 256), dtype=float32)
+Tensor("activation_6/Relu:0", shape=(?, 256), dtype=float32)
+Tensor("dense_3/BiasAdd:0", shape=(?, 1), dtype=float32)
+Tensor("dense_3/BiasAdd:0", shape=(?, 1), dtype=float32)
+Out[1]: &lt;tensorflow.python.keras._impl.keras.engine.training.Model at 0x7fa2dd30de50&gt;
+</code></pre>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">resource</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">operator</span><span class="w"> </span><span class="kn">import</span> <span class="n">itemgetter</span>
+
+<span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mi">1500</span><span class="p">)</span>
+<span class="n">resource</span><span class="o">.</span><span class="n">setrlimit</span><span class="p">(</span><span class="n">resource</span><span class="o">.</span><span class="n">RLIMIT_STACK</span><span class="p">,</span> <span class="p">[</span><span class="mh">0x10000000</span><span class="p">,</span> <span class="n">resource</span><span class="o">.</span><span class="n">RLIM_INFINITY</span><span class="p">])</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">setrecursionlimit</span><span class="p">(</span><span class="mh">0x100000</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">TreeNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;MCTS agacindaki bir dugum. Her dugum kendi Q degerini, onceki</span>
+<span class="sd">    olasiligi P&#39;yi, ve kac kez ziyaret edildigi sayisiyla duzeltilmis</span>
+<span class="sd">    onsel skoru u&#39;yu biliyor.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="n">prior_p</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_children</span> <span class="o">=</span> <span class="p">{}</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_visits</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_W</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">_Q</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_u</span> <span class="o">=</span> <span class="n">prior_p</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_P</span> <span class="o">=</span> <span class="n">prior_p</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">printing</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+            <span class="n">child</span><span class="o">.</span><span class="n">printing</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">expand</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action_priors</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">action</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">action_priors</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">action</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prob</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">select</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>        
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Cocuklar arasinda maksimum aksiyon Q + u(P)&#39;yi vereni sec</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(),</span>
+                   <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">act_node</span><span class="p">:</span> <span class="n">act_node</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_value</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">leaf_value</span><span class="p">,</span> <span class="n">c_puct</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dugumu altindaki cocuklardan gelen irdeleme uzerinden guncelle</span>
+
+<span class="sd">        Arguments:</span>
+
+<span class="sd">        leaf_value -- mevcut oyuncu perspektifinden alt agacin degeri</span>
+
+<span class="sd">        c_puct -- (0, inf) arasinda bir sayi, bu dugumun skoru</span>
+<span class="sd">        uzerinde Q ve P&#39;nun etkisini izafi olarak ayarlar</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">        None</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_visits</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_W</span> <span class="o">+=</span> <span class="n">leaf_value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_Q</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_W</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_visits</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_root</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_u</span> <span class="o">=</span> <span class="n">c_puct</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">_P</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">_n_visits</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_n_visits</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_recursive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">leaf_value</span><span class="p">,</span> <span class="n">c_puct</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span><span class="o">.</span><span class="n">update_recursive</span><span class="p">(</span><span class="n">leaf_value</span><span class="p">,</span> <span class="n">c_puct</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">leaf_value</span><span class="p">,</span> <span class="n">c_puct</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_value</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_Q</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_u</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_leaf</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_children</span> <span class="o">==</span> <span class="p">{}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_root</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parent</span> <span class="ow">is</span> <span class="kc">None</span>
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MCTS</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_fn</span><span class="p">,</span> <span class="n">policy_fn</span><span class="p">,</span> <span class="n">c_puct</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_playout</span><span class="o">=</span><span class="mi">1600</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">value_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span> <span class="o">=</span> <span class="n">policy_fn</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c_puct</span> <span class="o">=</span> <span class="n">c_puct</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_n_playout</span> <span class="o">=</span> <span class="n">n_playout</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_playout</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">self_play</span><span class="p">):</span>
+        <span class="n">node</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">()</span> <span class="ow">and</span> <span class="n">self_play</span><span class="p">:</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.03</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">node</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">items</span><span class="p">()))]</span>
+            <span class="n">etas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">dirichlet</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">action</span><span class="p">,</span> <span class="n">child_node</span> <span class="ow">in</span> <span class="n">node</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+                <span class="n">child_node</span><span class="o">.</span><span class="n">_P</span> <span class="o">=</span> <span class="mf">0.75</span><span class="o">*</span><span class="n">child_node</span><span class="o">.</span><span class="n">_P</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">etas</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_leaf</span><span class="p">():</span>
+                <span class="n">action_probs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_policy</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+                <span class="c1"># Check for end of game.</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_probs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">break</span>
+                <span class="k">if</span> <span class="n">node</span><span class="o">.</span><span class="n">is_root</span><span class="p">()</span> <span class="ow">and</span> <span class="n">self_play</span><span class="p">:</span>
+                    <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.03</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">action_probs</span><span class="p">))]</span>
+                    <span class="n">etas</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">dirichlet</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">new_action_probs</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="k">for</span> <span class="n">action</span><span class="p">,</span> <span class="n">prob</span> <span class="ow">in</span> <span class="n">action_probs</span><span class="p">:</span>
+                        <span class="n">prob</span> <span class="o">=</span> <span class="mf">0.75</span><span class="o">*</span><span class="n">prob</span> <span class="o">+</span> <span class="mf">0.25</span><span class="o">*</span><span class="n">etas</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                        <span class="n">new_action_probs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">action</span><span class="p">,</span> <span class="n">prob</span><span class="p">))</span>
+                        <span class="n">j</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="n">action_probs</span> <span class="o">=</span> <span class="n">new_action_probs</span>
+                <span class="n">node</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">action_probs</span><span class="p">)</span>
+                <span class="k">break</span>
+            <span class="c1"># Greedily select next move.</span>
+            <span class="n">action</span><span class="p">,</span> <span class="n">node</span> <span class="o">=</span> <span class="n">node</span><span class="o">.</span><span class="n">select</span><span class="p">()</span>
+            <span class="n">state</span><span class="o">.</span><span class="n">do_move</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+
+        <span class="c1"># Alt dugumunun degerini YSA&#39;yi kullanarak hesapla</span>
+        <span class="n">leaf_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+
+        <span class="n">node</span><span class="o">.</span><span class="n">update_recursive</span><span class="p">(</span><span class="n">leaf_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c_puct</span><span class="p">)</span>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">self_play</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_n_playout</span><span class="p">):</span>
+            <span class="n">state_copy</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_playout</span><span class="p">(</span><span class="n">state_copy</span><span class="p">,</span> <span class="n">self_play</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">temperature</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">childrens</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="n">actions</span><span class="p">,</span> <span class="n">next_states</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">childrens</span><span class="p">))</span>
+            <span class="n">tmp</span> <span class="o">=</span> <span class="p">[</span><span class="n">next_state</span><span class="o">.</span><span class="n">_n_visits</span> <span class="k">for</span> <span class="n">next_state</span> <span class="ow">in</span> <span class="n">next_states</span><span class="p">]</span>
+            <span class="n">exponentiated_n_visits</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">power</span><span class="p">(</span><span class="n">tmp</span><span class="p">,</span><span class="mf">1.</span><span class="o">/</span><span class="n">temperature</span><span class="p">)</span>
+            <span class="n">pi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">exponentiated_n_visits</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">exponentiated_n_visits</span><span class="p">))</span>
+            <span class="n">child_idx</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">childrens</span><span class="p">))</span>
+            <span class="n">child_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">child_idx</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">pi</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">actions</span><span class="p">[</span><span class="n">child_idx</span><span class="p">]</span>
+        <span class="k">else</span> <span class="p">:</span> <span class="c1"># when temperature is infinitesimal</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">iteritems</span><span class="p">(),</span>
+                       <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">act_node</span><span class="p">:</span> <span class="n">act_node</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">_n_visits</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_with_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">last_move</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">last_move</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_children</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_children</span><span class="p">[</span><span class="n">last_move</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_parent</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_root</span> <span class="o">=</span> <span class="n">TreeNode</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MCTSPlayer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value_function</span><span class="p">,</span> <span class="n">policy_function</span><span class="p">,</span> <span class="n">c_puct</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">n_playout</span><span class="o">=</span><span class="mi">1600</span><span class="p">,</span> <span class="n">evaluating</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">self_play</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mcts</span> <span class="o">=</span> <span class="n">MCTS</span><span class="p">(</span><span class="n">value_function</span><span class="p">,</span> <span class="n">policy_function</span><span class="p">,</span> <span class="n">c_puct</span><span class="p">,</span> <span class="n">n_playout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">move_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">evaluating</span> <span class="o">=</span> <span class="n">evaluating</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_play</span> <span class="o">=</span> <span class="n">self_play</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluating</span><span class="p">:</span>
+            <span class="n">temperature</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">temperature</span> <span class="o">=</span> <span class="mf">1.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="n">temperature</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_human</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># for playing a game in play.py</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">,</span> <span class="n">self_play</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">sensible_moves</span> <span class="o">=</span> <span class="p">[</span><span class="n">move</span> <span class="k">for</span> <span class="n">move</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">get_legal_moves</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sensible_moves</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">move</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mcts</span><span class="o">.</span><span class="n">get_move</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_play</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">self_play</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mcts</span><span class="o">.</span><span class="n">update_with_move</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">move_count</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluating</span> <span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">move_count</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="mf">0.</span>
+            <span class="k">return</span> <span class="n">move</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">move_count</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">evaluating</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">move_count</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">temperature</span> <span class="o">=</span> <span class="mf">0.</span>
+        <span class="k">return</span> <span class="n">go</span><span class="o">.</span><span class="n">PASS_MOVE</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">glob</span><span class="o">,</span><span class="w"> </span><span class="nn">pickle</span><span class="o">,</span><span class="w"> </span><span class="nn">go</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span><span class="o">,</span><span class="w"> </span><span class="nn">re</span><span class="o">,</span><span class="w"> </span><span class="nn">util</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">shutil</span><span class="w"> </span><span class="kn">import</span> <span class="n">copy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mcts</span><span class="w"> </span><span class="kn">import</span> <span class="n">MCTSPlayer</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">util</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten_idx</span><span class="p">,</span> <span class="n">pprint_board</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">optimizers</span> <span class="k">as</span> <span class="n">O</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">callbacks</span> <span class="k">as</span> <span class="n">C</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">resnet</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">simplenet</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">self_play_and_save</span><span class="p">(</span><span class="n">player</span><span class="p">,</span> <span class="n">opp_player</span><span class="p">):</span>
+
+    <span class="n">state_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">pi_list</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">player_list</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">state</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">GameState</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="n">komi</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">player_color</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">BLACK</span>
+    <span class="n">current</span> <span class="o">=</span> <span class="n">player</span>
+    <span class="n">other</span> <span class="o">=</span> <span class="n">opp_player</span>
+
+    <span class="n">step</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">state</span><span class="o">.</span><span class="n">is_end_of_game</span><span class="p">:</span>
+        <span class="n">move</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="n">get_move</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">self_play</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">childrens</span> <span class="o">=</span> <span class="n">current</span><span class="o">.</span><span class="n">mcts</span><span class="o">.</span><span class="n">_root</span><span class="o">.</span><span class="n">_children</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+
+        <span class="n">actions</span><span class="p">,</span> <span class="n">next_states</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">childrens</span><span class="p">))</span>
+        <span class="n">_n_visits</span> <span class="o">=</span> <span class="p">[</span><span class="n">next_state</span><span class="o">.</span><span class="n">_n_visits</span> <span class="k">for</span> <span class="n">next_state</span> <span class="ow">in</span> <span class="n">next_states</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">move</span> <span class="o">==</span> <span class="n">go</span><span class="o">.</span><span class="n">PASS_MOVE</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">step</span> <span class="o">&lt;</span> <span class="mi">25</span><span class="p">:</span> <span class="c1"># temperature is considered to be 1</span>
+                <span class="n">distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">_n_visits</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">_n_visits</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">max_visit_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">_n_visits</span><span class="p">)</span>
+                <span class="n">distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">_n_visits</span><span class="p">))</span>
+                <span class="n">distribution</span><span class="p">[</span><span class="n">max_visit_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># to prevent the model from overfitting to PASS_MOVE</span>
+            <span class="n">distribution</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">_n_visits</span><span class="p">))</span>
+
+        <span class="n">pi</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">actions</span><span class="p">,</span> <span class="n">distribution</span><span class="p">)</span>
+        <span class="n">pi_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pi</span><span class="p">)</span>
+
+        <span class="n">state_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+        <span class="n">current</span><span class="o">.</span><span class="n">mcts</span><span class="o">.</span><span class="n">update_with_move</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+        <span class="n">state</span><span class="o">.</span><span class="n">do_move</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+        <span class="n">other</span><span class="o">.</span><span class="n">mcts</span><span class="o">.</span><span class="n">update_with_move</span><span class="p">(</span><span class="n">move</span><span class="p">)</span>
+        <span class="n">current</span><span class="p">,</span> <span class="n">other</span> <span class="o">=</span> <span class="n">other</span><span class="p">,</span> <span class="n">current</span>
+        <span class="n">step</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="n">winner</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get_winner</span><span class="p">()</span>
+    <span class="nb">print</span> <span class="p">((</span><span class="s1">&#39;winner&#39;</span><span class="p">,</span> <span class="n">winner</span><span class="p">))</span>
+    <span class="c1"># oyun bitti kimin kazandigini biliyoruz, mesela siyah kazandiysa</span>
+    <span class="c1"># odulleri hamle bazinda +1,-1,+1,.. olacak sekilde ata, beyaz</span>
+    <span class="c1"># kazandiysa -1,+1,-1 seklinde. Siyah olunca +1 cunku oyuna hep siyah</span>
+    <span class="c1"># basliyor.</span>
+    <span class="k">if</span> <span class="n">winner</span> <span class="o">==</span> <span class="n">go</span><span class="o">.</span><span class="n">BLACK</span><span class="p">:</span>
+        <span class="n">reward_list</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_list</span><span class="p">))]</span>
+    <span class="k">else</span> <span class="p">:</span> <span class="c1"># winner == go.WHITE:</span>
+        <span class="n">reward_list</span> <span class="o">=</span> <span class="p">[(</span><span class="o">-</span><span class="mf">1.</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_list</span><span class="p">))]</span>
+    <span class="k">return</span> <span class="n">state_list</span><span class="p">,</span> <span class="n">pi_list</span><span class="p">,</span> <span class="n">reward_list</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">self_play_and_train</span><span class="p">(</span><span class="n">cmd_line_args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+    <span class="c1"># iki farkli ag yarat, egitim bunlardan ilkini gunceller.</span>
+    <span class="c1"># belli bir sure sonra oteki YSA ilkinin kaydettigi veriden guncellenir,</span>
+    <span class="c1"># ve ikisi tekrar esit hale gelir, bu boyle devam eder.</span>
+    <span class="n">policy</span> <span class="o">=</span> <span class="n">simplenet</span><span class="o">.</span><span class="n">PolicyValue</span><span class="p">(</span><span class="n">simplenet</span><span class="o">.</span><span class="n">PolicyValue</span><span class="o">.</span><span class="n">create_network</span><span class="p">())</span>
+    <span class="n">opp_policy</span> <span class="o">=</span> <span class="n">simplenet</span><span class="o">.</span><span class="n">PolicyValue</span><span class="p">(</span><span class="n">simplenet</span><span class="o">.</span><span class="n">PolicyValue</span><span class="o">.</span><span class="n">create_network</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">lr_scheduler</span><span class="p">(</span><span class="n">epoch</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">==</span> <span class="mi">5000</span><span class="p">:</span>
+            <span class="n">K</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="mf">.001</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">epoch</span> <span class="o">==</span> <span class="mi">7000</span><span class="p">:</span>
+            <span class="n">K</span><span class="o">.</span><span class="n">set_value</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">lr</span><span class="p">,</span> <span class="mf">.0001</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">K</span><span class="o">.</span><span class="n">get_value</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">lr</span><span class="p">)</span>
+
+    <span class="n">change_lr</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">LearningRateScheduler</span><span class="p">(</span><span class="n">lr_scheduler</span><span class="p">)</span>
+    <span class="n">sgd</span> <span class="o">=</span> <span class="n">O</span><span class="o">.</span><span class="n">SGD</span><span class="p">(</span><span class="n">lr</span><span class="o">=</span><span class="mf">.01</span><span class="p">,</span> <span class="n">momentum</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;categorical_crossentropy&#39;</span><span class="p">,</span><span class="s1">&#39;mean_squared_error&#39;</span><span class="p">],</span>
+                         <span class="n">optimizer</span><span class="o">=</span><span class="n">sgd</span><span class="p">)</span>        
+
+    <span class="n">batch_size</span> <span class="o">=</span> <span class="mi">50</span>
+    <span class="n">n_pick</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># her oyundan kac veri noktasi alalim</span>
+
+    <span class="k">for</span> <span class="n">epoch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+
+        <span class="n">state_list2</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">pi_list2</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">reward_list2</span> <span class="o">=</span> <span class="p">[]</span>        
+
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span> <span class="c1"># batch_size kadar veri toplayincaya kadar oyna</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">player</span> <span class="o">=</span> <span class="n">MCTSPlayer</span><span class="p">(</span><span class="n">policy</span><span class="o">.</span><span class="n">eval_value_state</span><span class="p">,</span>
+                                    <span class="n">policy</span><span class="o">.</span><span class="n">eval_policy_state</span><span class="p">,</span>
+                                    <span class="n">n_playout</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">evaluating</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                    <span class="n">self_play</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">opp_player</span><span class="o">=</span> <span class="n">MCTSPlayer</span><span class="p">(</span><span class="n">opp_policy</span><span class="o">.</span><span class="n">eval_value_state</span><span class="p">,</span>
+                                       <span class="n">opp_policy</span><span class="o">.</span><span class="n">eval_policy_state</span><span class="p">,</span>
+                                       <span class="n">n_playout</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">evaluating</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                                       <span class="n">self_play</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+                <span class="n">state_list</span><span class="p">,</span> <span class="n">pi_list</span><span class="p">,</span> <span class="n">reward_list</span> <span class="o">=</span> <span class="n">self_play_and_save</span><span class="p">(</span>
+                    <span class="n">opp_player</span><span class="p">,</span> <span class="n">player</span>
+                <span class="p">)</span>
+
+                <span class="c1"># oyunda atilan tum adimlar, sonuclar state_list,</span>
+                <span class="c1"># pi_list, reward_list listesi icinde. Simdi rasgele</span>
+                <span class="c1"># n_pick tane veri noktasi her oyun kaydindan cekip</span>
+                <span class="c1"># cikartilir.</span>
+                <span class="n">idxs</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">state_list</span><span class="p">)),</span><span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+                        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_pick</span><span class="p">)]</span>
+
+                <span class="nb">print</span> <span class="p">()</span>
+
+                <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">:</span>
+                    <span class="n">state_list2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state_list</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+                    <span class="n">pi_list2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pi_list</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+                    <span class="n">reward_list2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reward_list</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">state_list2</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">batch_size</span><span class="p">:</span> <span class="k">break</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;exception&#39;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+        <span class="n">pout</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">9</span><span class="o">*</span><span class="mi">9</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">vout</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="n">pout</span><span class="p">,</span> <span class="n">vout</span><span class="p">]</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">batch_size</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">state_list2</span><span class="p">)):</span>
+            <span class="n">vout</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">reward_list2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_board</span><span class="p">(</span><span class="n">state_list2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+            <span class="n">pout</span><span class="p">[</span><span class="n">i</span><span class="p">,:]</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">to_pi_mat</span><span class="p">(</span><span class="n">pi_list2</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+
+        <span class="n">policy</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">5</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;saving&#39;</span><span class="p">)</span>
+            <span class="n">policy</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">epoch</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;birincinin en son kayitli agirliklarindan bu agi guncelle&#39;</span><span class="p">)</span>
+            <span class="n">opp_policy</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">self_play_and_train</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">regularizers</span> <span class="k">as</span> <span class="n">R</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">models</span> <span class="k">as</span> <span class="n">M</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">layers</span> <span class="k">as</span> <span class="n">L</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tensorflow.contrib.keras</span><span class="w"> </span><span class="kn">import</span> <span class="n">backend</span> <span class="k">as</span> <span class="n">K</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">util</span><span class="w"> </span><span class="kn">import</span> <span class="n">flatten_idx</span><span class="p">,</span> <span class="n">random_transform</span><span class="p">,</span> <span class="n">idx_transformations</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span><span class="o">,</span><span class="w"> </span><span class="nn">util</span><span class="o">,</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="n">mfile</span> <span class="o">=</span> <span class="s2">&quot;/tmp/alphago-zero.h5&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PolicyValue</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">save_weights</span><span class="p">(</span><span class="n">mfile</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">load</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">load_weights</span><span class="p">(</span><span class="n">mfile</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval_policy_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_board</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="n">probs1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">probs2</span> <span class="o">=</span> <span class="n">probs1</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span><span class="mi">9</span><span class="p">)</span>
+        <span class="n">res_probs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">action</span><span class="p">,</span><span class="n">probs2</span><span class="p">[</span><span class="n">action</span><span class="p">])</span> \
+                     <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">get_legal_moves</span><span class="p">()</span> <span class="k">if</span> <span class="n">action</span><span class="p">]</span>
+        <span class="n">res_probs</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="n">probs1</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">res_probs</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">eval_value_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">util</span><span class="o">.</span><span class="n">get_board</span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">create_network</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">model_input</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Input</span><span class="p">(</span><span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">9</span><span class="p">))</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">model_input</span><span class="p">)</span>
+
+        <span class="n">convolution_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Convolution2D</span><span class="p">(</span>
+            <span class="n">input_shape</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">filters</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
+            <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+            <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">model_input</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="n">convolution_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">(</span>
+            <span class="n">beta_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+            <span class="n">gamma_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="n">convolution_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">convolution_path</span><span class="p">)</span>
+
+        <span class="n">convolution_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Convolution2D</span><span class="p">(</span>
+            <span class="n">input_shape</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">filters</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
+            <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+            <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="n">convolution_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">(</span>
+            <span class="n">beta_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+            <span class="n">gamma_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="n">convolution_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">convolution_path</span><span class="p">)</span>
+
+
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;------------- value -------------------&#39;</span> <span class="p">)</span>
+        <span class="c1"># policy head</span>
+        <span class="n">policy_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Convolution2D</span><span class="p">(</span>
+            <span class="n">input_shape</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">filters</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
+            <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+            <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="n">policy_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">(</span>
+                <span class="n">beta_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+                <span class="n">gamma_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="n">policy_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="n">policy_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="n">policy_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+                <span class="p">(</span><span class="mi">9</span><span class="o">*</span><span class="mi">9</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span>
+                <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+                <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="n">policy_output</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;softmax&#39;</span><span class="p">)(</span><span class="n">policy_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;policy_output&#39;</span><span class="p">,</span> <span class="n">policy_output</span><span class="p">)</span>
+
+        <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;------------- policy -------------------&#39;</span><span class="p">)</span>
+
+        <span class="c1"># value head</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Convolution2D</span><span class="p">(</span>
+            <span class="n">input_shape</span><span class="o">=</span><span class="p">(),</span>
+            <span class="n">filters</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">kernel_size</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+            <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">,</span>
+            <span class="n">padding</span><span class="o">=</span><span class="s1">&#39;same&#39;</span><span class="p">,</span>
+            <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+            <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">convolution_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">BatchNormalization</span><span class="p">(</span>
+                <span class="n">beta_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+                <span class="n">gamma_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Flatten</span><span class="p">()(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+                <span class="mi">256</span><span class="p">,</span>
+                <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+                <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;relu&#39;</span><span class="p">)(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_path</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Dense</span><span class="p">(</span>
+                <span class="mi">1</span><span class="p">,</span>
+                <span class="n">kernel_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">),</span>
+                <span class="n">bias_regularizer</span><span class="o">=</span><span class="n">R</span><span class="o">.</span><span class="n">l2</span><span class="p">(</span><span class="mf">.0001</span><span class="p">))(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="n">value_output</span> <span class="o">=</span> <span class="n">L</span><span class="o">.</span><span class="n">Activation</span><span class="p">(</span><span class="s1">&#39;tanh&#39;</span><span class="p">)(</span><span class="n">value_path</span><span class="p">)</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="n">value_path</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">M</span><span class="o">.</span><span class="n">Model</span><span class="p">(</span><span class="n">inputs</span><span class="o">=</span><span class="p">[</span><span class="n">model_input</span><span class="p">],</span> <span class="n">outputs</span><span class="o">=</span><span class="p">[</span><span class="n">policy_output</span><span class="p">,</span> <span class="n">value_output</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p>İki YSA kendisine karşı oynarken aynı ağırlıklara sahip iki farklı YSA ile
+başlıyoruz, ve oyun sonuçlarını kullanarak sadece birini
+güncelliyoruz. Eğer her toptan demeti (minibatch) ile her iki YSA'yı
+güncelleseydik birbirlerinden farklılaşmaları zorlaşabilirdi. Ama döngünün
+daha ileri bir noktasında esitleme yapariz yine de, ilk YSA'yı
+güncellenenin ağırlıklarını diskten okuyarak güncelliyoruz, ve böyle devam
+ediyor. AGZ tasarımcıları "en iyi'' olan ağırlıklara geçmeden yeni YSA'nın
+diğerini yüzde 55'ten fazla yenmesi şartını koymuşlar, tam donanımla
+testleri yapanlar bunu takip ederse iyi olur.</p>
+
+<p>Üstteki mimari birkaç saat eğitim sonrası GnuGo (kendi YZ'si olan bir dış
+Go programı) başlangıç, orta seviyelerini yenebiliyor. Okuyucular, grafik
+kartlı güçlü bir mimaride, ya üstteki YSA'yı derinleştirerek (daha fazla
+evrişim filtresi ekleyerek), ya da <code>resnet.py</code> ile, ve <code>n_play</code>'i
+arttırarak daha fazla simülasyonla sonuçları daha da iyileştirmeye
+uğraşabilirler.</p>
+
+<p>Kodlar</p>
+
+<p><a href="resnet.py">resnet.py</a>, <a href="train.py">train.py</a>, <a href="gnugo_play.py">gnugo_play.py</a>,
+<a href="mcts.py">mcts.py</a></p>
+
+<p>Kaynaklar</p>
+
+<p>[1] Bayramlı, 
+    <em>Go Oyunu, GnuGo</em>, 
+    <a href="https://burakbayramli.github.io/dersblog/sk/2018/02/go-gnugo.html">https://burakbayramli.github.io/dersblog/sk/2018/02/go-gnugo.html</a></p>
+
+<p>[2] Silver, <em>Mastering the game of Go with deep neural networks and tree search</em>, <a href="https://www.nature.com/articles/nature16961">https://www.nature.com/articles/nature16961</a></p>
+
+<p>[3] Weidman, <em>The 3 Tricks That Made AlphaGo Zero Work</em>, <a href="https://hackernoon.com/the-3-tricks-that-made-alphago-zero-work-f3d47b6686ef">https://hackernoon.com/the-3-tricks-that-made-alphago-zero-work-f3d47b6686ef</a></p>
+
+<p>[4] Yi, <em>A reproduction of Alphago Zero in 'Mastering the game of Go without human knowledge'</em>, <a href="https://github.com/sangyi92/alphago_zero">https://github.com/sangyi92/alphago_zero</a></p>
+
+<p>[5] <em>AlphaGo Zero Cheat Sheet</em>, <a href="https://applied-data.science/static/main/res/alpha_go_zero_cheat_sheet.png">https://applied-data.science/static/main/res/alpha<em>go</em>zero<em>cheat</em>sheet.png</a></p>
+
+<p>[6] Kristiadi, <em>Residual Net</em>, <a href="https://wiseodd.github.io/techblog/2016/10/13/residual-net/">https://wiseodd.github.io/techblog/2016/10/13/residual-net/</a></p>
+
+          <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

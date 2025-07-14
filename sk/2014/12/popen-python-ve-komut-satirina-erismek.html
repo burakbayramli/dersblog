@@ -57,7 +57,19 @@ res = p.stdout.read()
 print (res)
 </code></pre>
 
-<p>İş biraz daha zorlaştı ama kullana kullana alışılabilir. </p>
+<p>İş biraz daha zorlaştı ama kullana kullana alışılabilir.</p>
+
+<p>Bir yöntem daha</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">run</span><span class="p">([</span><span class="s1">&#39;ls&#39;</span><span class="p">,</span> <span class="s1">&#39;/nonexistent&#39;</span><span class="p">],</span> <span class="n">capture_output</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">returncode</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+   <span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Üstteki yöntem ile işlem hata / başarı durumuna rahat bir şekilde
+erisebiliriz.</p>
 
 <p>Bir diğer ihtiyaç komut "işlerken" onun çıktısını iterator ile
 gezebilmektir. Belki komut yavaş işleyecektir, beklerken belki o ana

@@ -170,6 +170,7 @@ if __name__ == "__main__":
                           'stat_085_multlev','tser_020_ar','tser_040_rwtst','vision_60track']
         
         frdirs, todirs = copy_files_and_dirs(fr, tmpto, ".git,.pdf,zwork")
+        shutil.copy(".gitignore", to + "/.gitignore")         
         os.chdir(tmpto)
         for topdir in dirs:
             print (topdir)

@@ -12,8 +12,6 @@
 
 [Geometrik Anahtarlama (Spatial Hashing) ve Izgara (Grid) ile En Yakın Noktaları Bulmak](04/hash-grid-coll.html)
 
-[Javascript ile Animasyon ThreeJS](04/threejs1.html)
-
 [Markdown ile PDF ve HTML Üretmek, Pandoc](06/markdown-pandoc-html-pdf.html)
 
 [Ubuntu 24, Acer Swift 3](06/ubuntu-24-acer.html)

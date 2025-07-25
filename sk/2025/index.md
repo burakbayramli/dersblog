@@ -22,5 +22,7 @@
 
 [Keras OCR, Hazır YSA Ağırlıkları, Tensorflow](07/tensorflow-keras-ocr.html)
 
+[Javascript ile Animasyon ThreeJS](07/threejs1.html)
+
 [Ses Komut Tanıma, Dikkat (Attention) Modeli](07/voice-command-ses-komut.html)
 

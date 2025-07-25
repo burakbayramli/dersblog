@@ -32,6 +32,7 @@ __revision__ = '$Revision$'
 import math
 import operator
 import types
+import numpy as np
 
 # Some magic here.  If _use_slots is True, the classes will derive from
 # object and will define a __slots__ class variable.  If _use_slots is
@@ -787,6 +788,16 @@ class Matrix3:
 
             return tmp
 
+    def to_numpy_array(self):
+        """
+        Converts this Matrix3 instance into a 3x3 NumPy array.
+        """
+        return np.array([
+            [self.a, self.b, self.c],
+            [self.e, self.f, self.g],
+            [self.i, self.j, self.k]
+        ])        
+
 # a b c d
 # e f g h
 # i j k l
@@ -1292,8 +1303,15 @@ class Quaternion:
 
     copy = __copy__
 
+    def add(self, other):
+        Q = Quaternion(self.w + other.w,
+                       self.x + other.x,
+                       self.y + other.y,
+                       self.z + other.z)
+        return Q
+    
     def __repr__(self):
-        return 'Quaternion(real=%.2f, imag=<%.2f, %.2f, %.2f>)' % \
+        return 'Quaternion(real=%f, imag=<%f, %f, %f>)' % \
             (self.w, self.x, self.y, self.z)
 
     def __mul__(self, other):
@@ -1371,6 +1389,13 @@ class Quaternion:
 
     magnitude = __abs__
 
+    def scalar_mul(self, s):
+        self.w = self.w * s
+        self.x = self.x * s
+        self.y = self.y * s
+        self.z = self.z * s
+        return self
+        
     def magnitude_squared(self):
         return self.w ** 2 + \
                self.x ** 2 + \
@@ -1593,6 +1618,45 @@ class Quaternion:
         Q.z = q1.z * ratio1 + q2.z * ratio2
         return Q
     new_interpolate = classmethod(new_interpolate)
+
+    def get_rotation_matrix_3x3(self):
+        """
+        Returns a 3x3 rotation matrix from this quaternion,
+        compatible with the Matrix3 class in euclid.py.
+        """
+        n = self.normalized()
+        x, y, z, w = n.x, n.y, n.z, n.w
+
+        xx = x * x
+        yy = y * y
+        zz = z * z
+        xy = x * y
+        xz = x * z
+        yz = y * z
+        wx = w * x
+        wy = w * y
+        wz = w * z
+
+        # Create a new Matrix3 instance
+        m = Matrix3()
+
+        # Assign values to the Matrix3 attributes based on its __slots__ and __repr__
+        # Row 1 (a, b, c)
+        m.a = 1 - 2 * (yy + zz)
+        m.b = 2 * (xy - wz)
+        m.c = 2 * (xz + wy)
+
+        # Row 2 (e, f, g) - skipping 'd'
+        m.e = 2 * (xy + wz)
+        m.f = 1 - 2 * (xx + zz)
+        m.g = 2 * (yz - wx)
+
+        # Row 3 (i, j, k) - skipping 'h'
+        m.i = 2 * (xz - wy)
+        m.j = 2 * (yz + wx)
+        m.k = 1 - 2 * (xx + yy)
+        
+        return m
 
 #
 # Geometry
@@ -2480,3 +2544,43 @@ class Plane:
 #p = Point3(1.0, 2.0, 3.0)
 #print(s, p)
 #print(s.intersect(p))
+
+def quaternion_rotation_matrix(Q):
+    """
+    Covert a quaternion into a full three-dimensional rotation matrix.
+ 
+    Input
+    :param Q: A 4 element array representing the quaternion (q0,q1,q2,q3) 
+ 
+    Output
+    :return: A 3x3 element matrix representing the full 3D rotation matrix. 
+             This rotation matrix converts a point in the local reference 
+             frame to a point in the global reference frame.
+    """
+    # Extract the values from Q
+    q0 = Q.w
+    q1 = Q.x
+    q2 = Q.y
+    q3 = Q.z
+     
+    # First row of the rotation matrix
+    r00 = 2 * (q0 * q0 + q1 * q1) - 1
+    r01 = 2 * (q1 * q2 - q0 * q3)
+    r02 = 2 * (q1 * q3 + q0 * q2)
+     
+    # Second row of the rotation matrix
+    r10 = 2 * (q1 * q2 + q0 * q3)
+    r11 = 2 * (q0 * q0 + q2 * q2) - 1
+    r12 = 2 * (q2 * q3 - q0 * q1)
+     
+    # Third row of the rotation matrix
+    r20 = 2 * (q1 * q3 - q0 * q2)
+    r21 = 2 * (q2 * q3 + q0 * q1)
+    r22 = 2 * (q0 * q0 + q3 * q3) - 1
+     
+    # 3x3 rotation matrix
+    rot_matrix = np.array([[r00, r01, r02],
+                           [r10, r11, r12],
+                           [r20, r21, r22]])
+                            
+    return rot_matrix

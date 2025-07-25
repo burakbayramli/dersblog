@@ -106,7 +106,7 @@ için servise tekrar sormak gerekecektir.</p></li>
 <span class="nd">@app</span><span class="o">.</span><span class="n">before_first_request</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">start_check_db</span><span class="p">():</span>
     <span class="n">sno</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;server_no&#39;</span><span class="p">)</span>
-    <span class="n">db</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/kvf-</span><span class="si">%d</span><span class="s2">.db&quot;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">sno</span><span class="p">)</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="s2">&quot;/opt/Downloads/skdata/kvf-</span><span class="si">%d</span><span class="s2">.db&quot;</span> <span class="o">%</span> <span class="nb">int</span><span class="p">(</span><span class="n">sno</span><span class="p">)</span>
     <span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
     <span class="n">OnlyOne</span><span class="p">()</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">db</span><span class="p">):</span> 
@@ -311,7 +311,7 @@ ki karmaşık objelere de izin veriyor,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
-<span class="n">c</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;/opt/Downloads/kvf-0.db&quot;</span> <span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;/opt/Downloads/skdata/kvf-0.db&quot;</span> <span class="p">)</span>
 <span class="n">cur</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">cursor</span><span class="p">()</span>
 <span class="n">res</span> <span class="o">=</span> <span class="n">cur</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT key,value FROM OBJ&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cur</span><span class="o">.</span><span class="n">fetchall</span><span class="p">():</span>

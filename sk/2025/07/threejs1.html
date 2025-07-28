@@ -38,9 +38,20 @@
         <h1></h1>
 <h1>Javascript ile Animasyon ThreeJS</h1>
 
-<p>https://github.com/mrdoob/three.js</p>
+<p>Üç boyutlu etkileşimli grafikleri Javascript Three.js paketi ile
+yapabiliriz. Temel bir 3D sahne oluşturmak, STL modeli yüklemek,
+farklı açılardan sahneye bakabilmek mevcut özelliklere dahildir.</p>
+
+<p>En iskelet kod için alttaki depo alınabilir,</p>
+
+<p><a href="https://github.com/mrdoob/three.js">https://github.com/mrdoob/three.js</a></p>
+
+<p>Versiyon</p>
 
 <p>0.178.0</p>
+
+<p>Bu depo içinde alttaki dosyalar alınır, ve bir <code>/lib</code> altına
+konabilir. </p>
 
 <pre><code>./examples/jsm/loaders/STLLoader.js
 ./examples/jsm/libs/lil-gui.module.min.js
@@ -49,10 +60,183 @@
 ./build/three.module.js
 </code></pre>
 
-<p>Three.js kullanarak temel bir 3D sahne oluşturur, bir STL modeli
-yükler ve bazı etkileşimlere izin verir. Three.js'e yeni başlayanlar
-için önemli kavramları ve potansiyel "gotcha"ları vurgulayarak aşağıda
-bir dökümünü bulabilirsiniz:</p>
+<p>Kodlar için <code>basic</code> dizini olsun. Test etmek için <code>python -m
+http.server</code> ile ufak bir web servisi başlatacağız. Gereken STL objesi
+[1]'de. JS ve HTML kodları <code>basic</code> dizininde demiştik, alttaki kodu mesela
+bir <code>mycode.js</code> içine yazabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">THREE</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;three&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">GUI</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;/lib/lil-gui.module.min.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OrbitControls</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;/lib/OrbitControls.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">STLLoader</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;/lib/STLLoader.js&#39;</span><span class="p">;</span>
+
+<span class="kd">let</span><span class="w"> </span><span class="nx">camera</span><span class="p">,</span><span class="w"> </span><span class="nx">scene</span><span class="p">,</span><span class="w"> </span><span class="nx">renderer</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">cameraControls</span><span class="p">;</span>
+<span class="kd">let</span><span class="w"> </span><span class="nx">ambientLight</span><span class="p">,</span><span class="w"> </span><span class="nx">light</span><span class="p">;</span>
+
+<span class="nx">init</span><span class="p">();</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">init</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">THREE</span><span class="p">.</span><span class="nx">REVISION</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">document</span><span class="p">.</span><span class="nx">createElement</span><span class="p">(</span><span class="w"> </span><span class="s1">&#39;div&#39;</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nb">document</span><span class="p">.</span><span class="nx">body</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="w"> </span><span class="nx">container</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">canvasWidth</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">canvasHeight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nx">camera</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">PerspectiveCamera</span><span class="p">(</span><span class="mf">75</span><span class="p">,</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="p">,</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span><span class="w"> </span><span class="mf">1000</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">,</span><span class="w"> </span><span class="mf">5</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">ambientLight</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">AmbientLight</span><span class="p">(</span><span class="w"> </span><span class="mh">0x7c7c7c</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">light</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">DirectionalLight</span><span class="p">(</span><span class="w"> </span><span class="mh">0xFFFFFF</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">light</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="w"> </span><span class="mf">0.32</span><span class="p">,</span><span class="w"> </span><span class="mf">0.39</span><span class="p">,</span><span class="w"> </span><span class="mf">0.7</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">renderer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">WebGLRenderer</span><span class="p">(</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">antialias</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">renderer</span><span class="p">.</span><span class="nx">setPixelRatio</span><span class="p">(</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">devicePixelRatio</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">renderer</span><span class="p">.</span><span class="nx">setSize</span><span class="p">(</span><span class="w"> </span><span class="nx">canvasWidth</span><span class="p">,</span><span class="w"> </span><span class="nx">canvasHeight</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">container</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="w"> </span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">raycaster</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Raycaster</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">pointer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Vector2</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kd">function</span><span class="w"> </span><span class="nx">onPointerMove</span><span class="p">(</span><span class="w"> </span><span class="nx">event</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nx">pointer</span><span class="p">.</span><span class="nx">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">event</span><span class="p">.</span><span class="nx">clientX</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">innerWidth</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">pointer</span><span class="p">.</span><span class="nx">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">event</span><span class="p">.</span><span class="nx">clientY</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nb">window</span><span class="p">.</span><span class="nx">innerHeight</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s2">&quot;keydown&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="p">(</span><span class="nx">e</span><span class="p">.</span><span class="nx">code</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s1">&#39;KeyR&#39;</span><span class="p">){</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">&quot;pressed&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="nx">raycaster</span><span class="p">.</span><span class="nx">setFromCamera</span><span class="p">(</span><span class="w"> </span><span class="nx">pointer</span><span class="p">,</span><span class="w"> </span><span class="nx">camera</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">intersects</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">raycaster</span><span class="p">.</span><span class="nx">intersectObjects</span><span class="p">(</span><span class="w"> </span><span class="nx">scene</span><span class="p">.</span><span class="nx">children</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nx">intersects</span><span class="p">.</span><span class="nx">length</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mf">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">sphereGeometry</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">SphereGeometry</span><span class="p">(</span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">,</span><span class="w"> </span><span class="mf">10</span><span class="p">);</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">sphereMaterial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshLambertMaterial</span><span class="p">({</span>
+<span class="w">            </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="mh">0x7777ff</span>
+<span class="w">        </span><span class="p">});</span>
+<span class="w">        </span><span class="kd">var</span><span class="w"> </span><span class="nx">sphere</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">sphereGeometry</span><span class="p">,</span><span class="w"> </span><span class="nx">sphereMaterial</span><span class="p">);</span>
+<span class="w">        </span><span class="nx">sphere</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">sphere</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">sphere</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">z</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">sphere</span><span class="p">.</span><span class="nx">castShadow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">        </span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">sphere</span><span class="p">);</span>
+
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">diffx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">x</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">diffy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">y</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">diffz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">z</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">dir</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Vector3</span><span class="p">(</span><span class="nx">diffx</span><span class="p">,</span><span class="w"> </span><span class="nx">diffy</span><span class="p">,</span><span class="w"> </span><span class="nx">diffz</span><span class="p">).</span><span class="nx">normalize</span><span class="p">();</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">origin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Vector3</span><span class="p">(</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span><span class="w"> </span><span class="nx">intersects</span><span class="p">[</span><span class="mf">0</span><span class="p">].</span><span class="nx">point</span><span class="p">.</span><span class="nx">z</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">1</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">hex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">0xffff00</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">arrowHelper</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">ArrowHelper</span><span class="p">(</span><span class="w"> </span><span class="nx">dir</span><span class="p">,</span><span class="w"> </span><span class="nx">origin</span><span class="p">,</span><span class="w"> </span><span class="nx">length</span><span class="p">,</span><span class="w"> </span><span class="nx">hex</span><span class="w"> </span><span class="p">);</span>
+<span class="w">        </span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="w"> </span><span class="nx">arrowHelper</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">        </span><span class="nx">render</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">});</span>
+
+<span class="w">    </span><span class="nb">window</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="w"> </span><span class="s1">&#39;pointermove&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">onPointerMove</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">cameraControls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">OrbitControls</span><span class="p">(</span><span class="w"> </span><span class="nx">camera</span><span class="p">,</span><span class="w"> </span><span class="nx">renderer</span><span class="p">.</span><span class="nx">domElement</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cameraControls</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="w"> </span><span class="s1">&#39;change&#39;</span><span class="p">,</span><span class="w"> </span><span class="nx">render</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cameraControls</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span><span class="w"> </span><span class="c1">// Important for initial state after target change</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s1">&#39;textures/cube/pisa/&#39;</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">urls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="s1">&#39;px.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;nx.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;py.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;ny.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;pz.png&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;nz.png&#39;</span><span class="w"> </span><span class="p">];</span>
+
+<span class="w">    </span><span class="nx">scene</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Scene</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">scene</span><span class="p">.</span><span class="nx">background</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Color</span><span class="p">(</span><span class="w"> </span><span class="mh">0xAAAAAA</span><span class="w"> </span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="w"> </span><span class="nx">ambientLight</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="w"> </span><span class="nx">light</span><span class="w"> </span><span class="p">);</span>
+<span class="w">    </span><span class="nx">createNewObject</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">renderer</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="w"> </span><span class="nx">scene</span><span class="p">,</span><span class="w"> </span><span class="nx">camera</span><span class="w"> </span><span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kd">function</span><span class="w"> </span><span class="nx">createNewObject</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">loader</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">STLLoader</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nx">loader</span><span class="p">.</span><span class="nx">load</span><span class="p">(</span><span class="w"> </span><span class="s1">&#39;/basic/Prism_hexagon.stl&#39;</span><span class="p">,</span><span class="w"> </span><span class="kd">function</span><span class="w"> </span><span class="p">(</span><span class="w"> </span><span class="nx">geometry</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">computeBoundingBox</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">boundingBox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">boundingBox</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">center</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Vector3</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">boundingBox</span><span class="p">.</span><span class="nx">getCenter</span><span class="p">(</span><span class="nx">center</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">translate</span><span class="p">(</span><span class="o">-</span><span class="nx">center</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="nx">center</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="nx">center</span><span class="p">.</span><span class="nx">z</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">computeBoundingBox</span><span class="p">();</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">newBoundingBox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">geometry</span><span class="p">.</span><span class="nx">boundingBox</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Vector3</span><span class="p">();</span>
+<span class="w">    </span><span class="nx">newBoundingBox</span><span class="p">.</span><span class="nx">getSize</span><span class="p">(</span><span class="nx">size</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">maxDimension</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">Math</span><span class="p">.</span><span class="nx">max</span><span class="p">(</span><span class="nx">size</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span><span class="w"> </span><span class="nx">size</span><span class="p">.</span><span class="nx">z</span><span class="p">);</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">targetSize</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2</span><span class="p">;</span><span class="w"> </span><span class="c1">// Desired size in world units</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">scaleFactor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">targetSize</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nx">maxDimension</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">material</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">MeshPhongMaterial</span><span class="p">({</span><span class="w"> </span><span class="nx">color</span><span class="o">:</span><span class="w"> </span><span class="mh">0xff9c7c</span><span class="p">,</span><span class="w"> </span><span class="nx">specular</span><span class="o">:</span><span class="w"> </span><span class="mh">0x494949</span><span class="p">,</span><span class="w"> </span><span class="nx">shininess</span><span class="o">:</span><span class="w"> </span><span class="mf">200</span><span class="w"> </span><span class="p">});</span>
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">mesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="ow">new</span><span class="w"> </span><span class="nx">THREE</span><span class="p">.</span><span class="nx">Mesh</span><span class="p">(</span><span class="nx">geometry</span><span class="p">,</span><span class="w"> </span><span class="nx">material</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">mesh</span><span class="p">.</span><span class="nx">scale</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">scaleFactor</span><span class="p">,</span><span class="w"> </span><span class="nx">scaleFactor</span><span class="p">,</span><span class="w"> </span><span class="nx">scaleFactor</span><span class="p">);</span>
+
+<span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">distanceInFrontOfCamera</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">5</span><span class="p">;</span><span class="w"> </span><span class="c1">// Adjust this value as needed. 5 is a good starting point for targetSize=2</span>
+<span class="w">    </span><span class="nx">mesh</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">x</span><span class="p">,</span><span class="w"> </span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">y</span><span class="p">,</span><span class="w"> </span><span class="nx">camera</span><span class="p">.</span><span class="nx">position</span><span class="p">.</span><span class="nx">z</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nx">distanceInFrontOfCamera</span><span class="p">);</span>
+
+
+<span class="w">    </span><span class="nx">mesh</span><span class="p">.</span><span class="nx">castShadow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">mesh</span><span class="p">.</span><span class="nx">receiveShadow</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="nx">scene</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">mesh</span><span class="p">);</span>
+
+<span class="w">    </span><span class="nx">cameraControls</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">copy</span><span class="p">(</span><span class="nx">mesh</span><span class="p">.</span><span class="nx">position</span><span class="p">);</span>
+<span class="w">    </span><span class="nx">cameraControls</span><span class="p">.</span><span class="nx">update</span><span class="p">();</span>
+
+<span class="w">    </span><span class="nx">render</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>HTML dosyası</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="cp">&lt;!DOCTYPE html&gt;</span>
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">lang</span><span class="o">=</span><span class="s">&quot;en&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">head</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">title</span><span class="p">&gt;</span>three.js webgl - teapot buffer geometry<span class="p">&lt;/</span><span class="nt">title</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">charset</span><span class="o">=</span><span class="s">&quot;utf-8&quot;</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">meta</span> <span class="na">name</span><span class="o">=</span><span class="s">&quot;viewport&quot;</span> <span class="na">content</span><span class="o">=</span><span class="s">&quot;width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0&quot;</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">head</span><span class="p">&gt;</span>
+    <span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;importmap&quot;</span><span class="p">&gt;</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="s2">&quot;imports&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s2">&quot;three&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;/lib/three.module.js&quot;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;module&quot;</span> <span class="na">src</span><span class="o">=</span><span class="s">&quot;mycode.js&quot;</span><span class="p">&gt;</span>
+<span class="w">    </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+    <span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>Neler Oldu</p>
+
+<p>'r' tuşuna basınca kamera'dan fare göstergeçinin olduğu yere doğru bir "ışın"
+gönderilir. Bu ışının ilk kesiştiği objenin üstteki nokta kesişme noktası
+olarak bize dondurulur. Bu noktadan ışın yönünde ufak bir vektörü biz demo amaçlı
+olarak oraya koyuyoruz.</p>
 
 <p>Temel Kavramlar</p>
 
@@ -77,34 +261,34 @@ bir dökümünü bulabilirsiniz:</p>
 <li><code>Geometry</code> (Geometri): 3D nesnenizin şeklini tanımlar (örn. bir küre, bir kutu veya STL gibi yüklü bir 3D model).</li>
 <li><code>Material</code> (Malzeme): Nesnenizin görünümünü (rengi, ne kadar parlak olduğu, ışığa nasıl tepki verdiği vb.) tanımlar. Kod, ışığa tepki veren ve yansımaları gösterebilen parlak, metalik görünümlü nesneler için iyi olan <code>MeshPhongMaterial</code> kullanır.</li>
 </ul></li>
-<li><p><strong>3D Modelleri Yükleme (<code>STLLoader</code>):</strong></p>
+<li><p>3D Modelleri Yükleme (<code>STLLoader</code>):</p>
 
 <ul>
 <li>Kod, STL formatında bir 3D model yüklemek için <code>STLLoader</code> kullanır (<code>Prism_hexagon.stl</code>). Bu, 3D baskı ve CAD yazılımı için yaygın bir formattır.</li>
 <li><code>loader.load()</code> fonksiyonu asenkrondur, yani modeli tarayıcınızı dondurmadan arka planda yükler. Yüklenen <code>geometry</code> daha sonra bir geri arama fonksiyonuna iletilir.</li>
 </ul></li>
-<li><p><strong>Işın Dökümü (<code>Raycaster</code>):</strong></p>
+<li><p>Işın Dökümü (<code>Raycaster</code>):</p>
 
 <ul>
 <li><code>Raycaster</code>, 3D sahnenizdeki hangi nesnelerin belirli bir noktadan (fare imleciniz gibi) çıkan bir "ışın" tarafından kesiştiğini tespit etmek için kullanılan güçlü bir araçtır.</li>
 <li>Bu kodda, 'R' tuşuna basıldığında fare imlecinizin altındaki 3D sahnedeki noktayı bulmak için kullanılır.</li>
 </ul></li>
-<li><p><strong>Kullanıcı Etkileşimi (<code>OrbitControls</code>, Olay Dinleyicileri):</strong></p>
+<li><p>Kullanıcı Etkileşimi (<code>OrbitControls</code>, Olay Dinleyicileri):</p>
 
 <ul>
-<li><strong><code>OrbitControls</code></strong>: Bu, farenizi kullanarak kameranızı bir hedef noktanın etrafında kolayca döndürmenizi, kaydırmanızı ve yakınlaştırmanızı sağlayan Three.js için çok kullanışlı bir yardımcı programdır. 3D sahnelerde gezinmek için vazgeçilmezdir.</li>
-<li><strong>Olay Dinleyicileri (Event Listeners)</strong>: <code>window.addEventListener('keydown', ...)</code> ve <code>window.addEventListener('pointermove', ...)</code> sırasıyla klavye tuş basmalarını ve fare hareketlerini algılamak için kullanılır.</li>
+<li><code>OrbitControls</code>: Bu, farenizi kullanarak kameranızı bir hedef noktanın etrafında kolayca döndürmenizi, kaydırmanızı ve yakınlaştırmanızı sağlayan Three.js için çok kullanışlı bir yardımcı programdır. 3D sahnelerde gezinmek için vazgeçilmezdir.</li>
+<li>Olay Dinleyicileri (Event Listeners): <code>window.addEventListener('keydown', ...)</code> ve <code>window.addEventListener('pointermove', ...)</code> sırasıyla klavye tuş basmalarını ve fare hareketlerini algılamak için kullanılır.</li>
 </ul></li>
 </ol>
 
 <p>Kod İncelemesi</p>
 
-<h4><code>init()</code> fonksiyonu:</h4>
+<p><code>init()</code> fonksiyonu:</p>
 
 <ul>
-<li><strong><code>console.log(THREE.REVISION);</code></strong>: Hangi Three.js sürümünü kullandığınızı görmek için iyi bir uygulamadır.</li>
-<li><strong>Kapsayıcı (Container) Kurulumu</strong>: <code>document.createElement('div'); document.body.appendChild(container);</code> Bu, Three.js tuvalini tutmak için bir <code>div</code> öğesi oluşturur ve bunu HTML gövdesine ekler.</li>
-<li><strong>Kamera Kurulumu</strong>:
+<li><code>console.log(THREE.REVISION);</code>: Hangi Three.js sürümünü kullandığınızı görmek için iyi bir uygulamadır.</li>
+<li>Kapsayıcı (Container) Kurulumu: <code>document.createElement('div'); document.body.appendChild(container);</code> Bu, Three.js tuvalini tutmak için bir <code>div</code> öğesi oluşturur ve bunu HTML gövdesine ekler.</li>
+<li>Kamera Kurulumu:
 <ul>
 <li><code>new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);</code>
 <ul>
@@ -115,49 +299,49 @@ bir dökümünü bulabilirsiniz:</p>
 </ul></li>
 <li><code>camera.position.set(0, 0, 5);</code>: Kamerayı Z ekseni boyunca 5 birim (ekrandan dışarı) yerleştirir.</li>
 </ul></li>
-<li><strong>Işık Kurulumu</strong>:
+<li>Işık Kurulumu:
 <ul>
 <li><code>0x7c7c7c</code> (ortam) ve <code>0xFFFFFF</code> (yönlü) için değerler onaltılık renk kodlarıdır. <code>2.0</code> yoğunluktur.</li>
 <li><code>light.position.set( 0.32, 0.39, 0.7 );</code> yönlü ışığın konumunu ayarlar.</li>
 </ul></li>
-<li><strong>İşleyici Kurulumu</strong>:
+<li>İşleyici Kurulumu:
 <ul>
 <li><code>renderer.setPixelRatio( window.devicePixelRatio );</code>: Yüksek DPI (Retina) ekranlarda net görüntüleme sağlamaya yardımcı olur.</li>
 <li><code>renderer.setSize( canvasWidth, canvasHeight );</code>: Tuvalin boyutunu tüm pencereyi dolduracak şekilde ayarlar.</li>
 </ul></li>
-<li><strong>Işın Dökümü ve Etkileşim ('R' tuşu kısmı):</strong>
+<li>Işın Dökümü ve Etkileşim ('R' tuşu kısmı):
 <ul>
 <li><code>raycaster.setFromCamera( pointer, camera );</code>: Bu, ışın dökümünün çekirdeğidir. <code>pointer</code>, fare konumunu temsil eden normalize edilmiş bir cihaz koordinatı (NDC) vektörüdür (x ve y için -1 ila 1). Bu satır, kameradan fare konumundan geçen bir ışın atar.</li>
 <li><code>const intersects = raycaster.intersectObjects( scene.children );</code>: Bu, sahnenizdeki hangi nesnelerin (özellikle sahnenin tüm çocukları) ışınla kesiştiğini kontrol eder.</li>
-<li><strong>Küre Boyutu!</strong> <code>var sphereGeometry = new THREE.SphereGeometry(10, 10, 10);</code> 10 birim yarıçaplı bir küre oluşturur. Kameranın başlangıç konumu ve yüklü STL'nin ölçeği göz önüne alındığında, bu küre modelinize göre çok büyük veya çok küçük görünebilir. Modelinizin yanında görünür ve uygun boyutta olması için yarıçapını ayarlamanız (örn. <code>0.1</code> veya <code>0.05</code>) gerekebilir.</li>
-<li><strong>Ok Yardımcısı Uzunluğu!</strong> <code>const length = 1;</code> olan <code>ArrowHelper</code> için, sahnenizin ölçeği ve küre göz önüne alındığında kolayca görülemeyecek kadar küçük olabilir. Daha belirgin hale getirmek için onu artırmayı düşünün (örn. <code>5</code> veya <code>10</code>). Ok, kesişim noktasından kameraya <em>doğru</em> olan yönü gösterir.</li>
+<li>Küre Boyutu! <code>var sphereGeometry = new THREE.SphereGeometry(10, 10, 10);</code> 10 birim yarıçaplı bir küre oluşturur. Kameranın başlangıç konumu ve yüklü STL'nin ölçeği göz önüne alındığında, bu küre modelinize göre çok büyük veya çok küçük görünebilir. Modelinizin yanında görünür ve uygun boyutta olması için yarıçapını ayarlamanız (örn. <code>0.1</code> veya <code>0.05</code>) gerekebilir.</li>
+<li>Ok Yardımcısı Uzunluğu! <code>const length = 1;</code> olan <code>ArrowHelper</code> için, sahnenizin ölçeği ve küre göz önüne alındığında kolayca görülemeyecek kadar küçük olabilir. Daha belirgin hale getirmek için onu artırmayı düşünün (örn. <code>5</code> veya <code>10</code>). Ok, kesişim noktasından kameraya <em>doğru</em> olan yönü gösterir.</li>
 <li><code>render();</code> keydown dinleyicisinin içinde: Bu önemlidir. Sahneyi değiştirirseniz (bir küre veya ok eklemek gibi), görüntülenenleri güncellemek için <code>render()</code>'ı tekrar çağırmanız gerekir.</li>
 <li><code>window.addEventListener( 'pointermove', onPointerMove );</code>: Fare her hareket ettiğinde <code>pointer</code> değişkenini güncel fare koordinatlarıyla günceller.</li>
 </ul></li>
-<li><strong><code>OrbitControls</code> Kurulumu</strong>:
+<li><code>OrbitControls</code> Kurulumu:
 <ul>
 <li><code>cameraControls = new THREE.OrbitControls( camera, renderer.domElement );</code>: Kontrolleri kameranıza ve tuvale bağlar.</li>
 <li><code>cameraControls.addEventListener( 'change', render );</code>: Bu çok önemlidir! <code>OrbitControls</code> kameranın konumunu ve yönünü değiştirir. Kontroller bir değişikliğe neden olduğunda, güncellenmiş görünümü göstermek için sahneyi yeniden işlemeniz gerekir.</li>
-<li><strong>Gotça: <code>cameraControls.update()</code>!</strong> <code>cameraControls.update();</code> genellikle kameranın <code>position</code> veya <code>target</code>'ını programlı olarak değiştirdiğinizde (daha sonra <code>createNewTorus</code>'ta görüldüğü gibi) kontrollerin yeni durumdan haberdar olmasını sağlamak için gereklidir.</li>
+<li>Gotça: <code>cameraControls.update()</code>! <code>cameraControls.update();</code> genellikle kameranın <code>position</code> veya <code>target</code>'ını programlı olarak değiştirdiğinizde (daha sonra <code>createNewObject</code>'te görüldüğü gibi) kontrollerin yeni durumdan haberdar olmasını sağlamak için gereklidir.</li>
 </ul></li>
-<li><strong>Sahne Arka Planı</strong>: <code>scene.background = new THREE.Color( 0xAAAAAA );</code> sahnenizin arka plan rengini açık griye ayarlar.</li>
-<li><strong><code>createNewTorus()</code> çağrısı</strong>: Bu fonksiyon, 3D modeli yüklemek ve sahneye eklemek için çağrılır.</li>
+<li>Sahne Arka Planı: <code>scene.background = new THREE.Color( 0xAAAAAA );</code> sahnenizin arka plan rengini açık griye ayarlar.</li>
+<li><code>createNewObject()</code> çağrısı: Bu fonksiyon, 3D modeli yüklemek ve sahneye eklemek için çağrılır.</li>
 </ul>
 
-<h4><code>render()</code> fonksiyonu:</h4>
+<p><code>render()</code> fonksiyonu:</p>
 
 <ul>
 <li>Bu, <code>renderer</code>'a <code>scene</code>'i <code>camera</code>'nın bakış açısından çizmesini söyleyen basit bir fonksiyondur. Görüntülenen kareyi güncellemek istediğinizde bunu çağırırsınız.</li>
 </ul>
 
-<h4><code>createNewTorus()</code> fonksiyonu:</h4>
+<p><code>createNewObject()</code> fonksiyonu:</p>
 
 <ul>
-<li><strong>STL Yükleme</strong>:
+<li>STL Yükleme:
 <ul>
-<li><code>loader.load( '/basic1/Prism_hexagon.stl', function ( geometry ) { ... });</code>: Bu, STL dosyasını web sunucunuzun kök dizinine göre <code>/basic1/</code> dizininden yüklemeye çalışır. <strong>Gotça: Dosya Yolu!</strong> <code>Prism_hexagon.stl</code> dosyasının HTML dosyanızın sunulduğu yere göre gerçekten <code>/basic1/Prism_hexagon.stl</code> konumunda olduğundan emin olun. HTML dosyasını doğrudan dosya sisteminizden açıyorsanız (örn. <code>file:///C:/myproject/index.html</code>), bu yol tarayıcı güvenlik kısıtlamaları nedeniyle çalışmaz. Dosyalarınızı sunmak için yerel bir web sunucusuna (VS Code'daki Live Server, Python'ın <code>http.server</code> veya Node.js'nin <code>serve</code> gibi) ihtiyacınız olacaktır.</li>
+<li><code>loader.load( '/basic1/Prism_hexagon.stl', function ( geometry ) { ... });</code>: Bu, STL dosyasını web sunucunuzun kök dizinine göre <code>/basic1/</code> dizininden yüklemeye çalışır. </li>
 </ul></li>
-<li><strong>Geometriyi Ortalama ve Ölçeklendirme</strong>: Bu bölüm, yüklü modeller için çok önemlidir:
+<li>Geometriyi Ortalama ve Ölçeklendirme: Bu bölüm, yüklü modeller için çok önemlidir:
 <ul>
 <li><code>geometry.computeBoundingBox();</code>: Geometrinin tüm köşelerini içeren en küçük kutuyu hesaplar.</li>
 <li><code>boundingBox.getCenter(center);</code>: O sınırlayıcı kutunun orta noktasını bulur.</li>
@@ -165,16 +349,49 @@ bir dökümünü bulabilirsiniz:</p>
 <li><code>maxDimension</code> ve <code>scaleFactor</code>: Bu, yüklü modeli bir <code>targetSize</code>'a (burada 2 birim) yeniden boyutlandırmak için bir ölçek faktörü hesaplar. Bu, yüklü modelinizin sahnenizde göründüğünde çok büyük veya çok küçük olmamasını sağlamak için mükemmeldir.</li>
 <li><code>mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);</code>: Hesaplanan ölçeği örgüye uygular.</li>
 </ul></li>
-<li><strong>Malzeme</strong>: <code>new THREE.MeshPhongMaterial({ color: 0xff9c7c, specular: 0x494949, shininess: 200 });</code> prizma için parlak bir malzeme oluşturur.</li>
-<li><strong>Örgüyü Konumlandırma</strong>:
+<li>Malzeme: <code>new THREE.MeshPhongMaterial({ color: 0xff9c7c, specular: 0x494949, shininess: 200 });</code> prizma için parlak bir malzeme oluşturur.</li>
+<li>Örgüyü Konumlandırma:
 <ul>
 <li><code>mesh.position.set(camera.position.x, camera.position.y, camera.position.z - distanceInFrontOfCamera);</code> Bu, yüklü modeli kameranın hemen önüne yerleştirir. Bu, kullanıcının modeli yüklendikten hemen sonra görebilmesini sağlamanın iyi bir yoludur. <code>distanceInFrontOfCamera</code> ne kadar önde görüneceğini kontrol eder.</li>
 </ul></li>
-<li><strong>Gölgeler</strong>: <code>mesh.castShadow = true;</code> ve <code>mesh.receiveShadow = true;</code> örgünün gölge atmasını ve gölge almasını sağlar. <strong>Gotça: İşleyici Gölgeleri!</strong> Gölgelerin çalışması için, işleyicide de gölgeleri etkinleştirmeniz gerekir: <code>renderer.shadowMap.enabled = true;</code> (bunu <code>init</code> fonksiyonunuza ekleyin). Ayrıca, ışıklarınızın gölge atacak şekilde yapılandırılması gerekir (örn. <code>light.castShadow = true;</code>).</li>
-<li><strong><code>cameraControls.target.copy(mesh.position);</code></strong>: Bu, <code>OrbitControls</code>'ün hedefini yeni yüklenen modelinizin merkezine ayarlar. Bu, kamerayı döndürdüğünüzde, modelin etrafında döneceği anlamına gelir ki bu genellikle istediğiniz şeydir.</li>
+<li>Gölgeler: <code>mesh.castShadow = true;</code> ve <code>mesh.receiveShadow = true;</code> örgünün gölge atmasını ve gölge almasını sağlar. Gotça: İşleyici Gölgeleri! Gölgelerin çalışması için, işleyicide de gölgeleri etkinleştirmeniz gerekir: <code>renderer.shadowMap.enabled = true;</code> (bunu <code>init</code> fonksiyonunuza ekleyin). Ayrıca, ışıklarınızın gölge atacak şekilde yapılandırılması gerekir (örn. <code>light.castShadow = true;</code>).</li>
+<li><code>cameraControls.target.copy(mesh.position);</code>: Bu, <code>OrbitControls</code>'ün hedefini yeni yüklenen modelinizin merkezine ayarlar. Bu, kamerayı döndürdüğünüzde, modelin etrafında döneceği anlamına gelir ki bu genellikle istediğiniz şeydir.</li>
 <li><code>cameraControls.update();</code>: Daha önce belirtildiği gibi, hedefi programlı olarak değiştirdikten sonra bunu çağırın.</li>
 <li><code>render();</code> tekrar: Model yüklendikten ve konumlandırıldıktan sonra sahneyi işler.</li>
 </ul>
+
+<p>Eğer kütüphaneleri kendimiz servis etmek istemiyorsak, o zaman Javascript kodunda
+alttaki gibi bir değişim yapabiliriz,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">import</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="kr">as</span><span class="w"> </span><span class="nx">THREE</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;three&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">GUI</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;three/examples/jsm/libs/lil-gui.module.min.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">OrbitControls</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;three/examples/jsm/controls/OrbitControls.js&#39;</span><span class="p">;</span>
+<span class="k">import</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">STLLoader</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;three/examples/jsm/loaders/STLLoader.js&#39;</span><span class="p">;</span>
+</code></pre>
+</div>
+
+<p>ve HTML icindeki kisim</p>
+
+<div class="codehilite">
+<pre><span></span><code>        <span class="p">&lt;</span><span class="nt">script</span> <span class="na">type</span><span class="o">=</span><span class="s">&quot;importmap&quot;</span><span class="p">&gt;</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">        </span><span class="s2">&quot;imports&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="s2">&quot;three&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unpkg.com/three@0.158.0/build/three.module.js&quot;</span><span class="p">,</span>
+<span class="w">                </span><span class="s2">&quot;three/&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;https://unpkg.com/three@0.158.0/&quot;</span>
+<span class="w">         </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="p">&lt;/</span><span class="nt">script</span><span class="p">&gt;</span>
+</code></pre>
+</div>
+
+<p>olarak değiseçektir. Böylece gereken yardımcı dosyalar İnternet'ten alınır,
+bizim tek servis etmemiz gereken bir HTML, bir STL ve bir de Javascript dosyası
+olacaktır.</p>
+
+<p>Kaynaklar</p>
+
+<p>[1] <a href="../../2020/08/shapes/Prism_hexagon.stl">STL Objesi</a></p>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

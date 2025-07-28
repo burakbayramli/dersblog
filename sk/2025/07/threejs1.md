@@ -316,10 +316,8 @@ olarak değiseçektir. Böylece gereken yardımcı dosyalar İnternet'ten alın�
 bizim tek servis etmemiz gereken bir HTML, bir STL ve bir de Javascript dosyası
 olacaktır.
 
+[Örnek](stldemo1.html)
+
 Kaynaklar
 
 [1] <a href="../../2020/08/shapes/Prism_hexagon.stl">STL Objesi</a>
-
-
-
-

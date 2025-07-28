@@ -45,10 +45,136 @@
 <pre><code>./examples/jsm/loaders/STLLoader.js
 ./examples/jsm/libs/lil-gui.module.min.js
 ./examples/jsm/controls/OrbitControls.js
-./examples/jsm/geometries/TeapotGeometry.js
 ./build/three.core.js
 ./build/three.module.js
 </code></pre>
+
+<p>Three.js kullanarak temel bir 3D sahne oluşturur, bir STL modeli
+yükler ve bazı etkileşimlere izin verir. Three.js'e yeni başlayanlar
+için önemli kavramları ve potansiyel "gotcha"ları vurgulayarak aşağıda
+bir dökümünü bulabilirsiniz:</p>
+
+<p>Temel Kavramlar</p>
+
+<ol>
+<li><p>Sahne (Scene), Kamera (Camera), İşleyici (Renderer): Bunlar, herhangi bir Three.js uygulamasının temel bileşenleridir.</p>
+
+<ul>
+<li><code>Scene</code> (Sahne): Tüm 3D nesnelerinizi, ışıklarınızı ve kameralarınızı yerleştirdiğiniz yer burasıdır. Nesnelerinizin yaşadığı dünya olarak düşünebilirsiniz.</li>
+<li><code>Camera</code> (Kamera): Sahnelerinizi bu şekilde görüntülersiniz. Kod, insan gözünün nesneleri nasıl gördüğünü (uzaktaki nesnelerin daha küçük görünmesi gibi) simüle eden <code>THREE.PerspectiveCamera</code> kullanır.</li>
+<li><code>Renderer</code> (İşleyici): Bu, <code>Scene</code> ve <code>Camera</code>'yı alır ve görüntüyü web sayfanızın <code>&lt;canvas&gt;</code> öğesine işler. <code>THREE.WebGLRenderer</code>, verimli işleme için bilgisayarınızın grafik kartını kullanır.</li>
+</ul></li>
+<li><p>Işıklar (Lights):</p>
+
+<ul>
+<li><code>AmbientLight</code> (Ortam Işığı): Bu ışık, sahnedeki tüm nesneleri tüm yönlerden eşit şekilde aydınlatır. Gölge oluşturmaz ve genellikle temel bir aydınlatma seviyesi sağlamak için kullanılır.</li>
+<li><code>DirectionalLight</code> (Yönlü Işık): Güneş gibi uzak bir kaynaktan gelen ışığı simüle eder. Tüm ışık ışınları paraleldir. Bir konumu vardır ancak ışınları her zaman aynı yöne bakar. Gölgeler oluşturmak için iyidir.</li>
+</ul></li>
+<li><p>Nesneler (<code>Mesh</code>, <code>Geometry</code>, <code>Material</code>):</p>
+
+<ul>
+<li><code>Mesh</code> (Örgü): <code>Mesh</code>, sahnenizde gördüğünüz gerçek nesnedir. Bir <code>Geometry</code> ve bir <code>Material</code> kombinasyonudur.</li>
+<li><code>Geometry</code> (Geometri): 3D nesnenizin şeklini tanımlar (örn. bir küre, bir kutu veya STL gibi yüklü bir 3D model).</li>
+<li><code>Material</code> (Malzeme): Nesnenizin görünümünü (rengi, ne kadar parlak olduğu, ışığa nasıl tepki verdiği vb.) tanımlar. Kod, ışığa tepki veren ve yansımaları gösterebilen parlak, metalik görünümlü nesneler için iyi olan <code>MeshPhongMaterial</code> kullanır.</li>
+</ul></li>
+<li><p><strong>3D Modelleri Yükleme (<code>STLLoader</code>):</strong></p>
+
+<ul>
+<li>Kod, STL formatında bir 3D model yüklemek için <code>STLLoader</code> kullanır (<code>Prism_hexagon.stl</code>). Bu, 3D baskı ve CAD yazılımı için yaygın bir formattır.</li>
+<li><code>loader.load()</code> fonksiyonu asenkrondur, yani modeli tarayıcınızı dondurmadan arka planda yükler. Yüklenen <code>geometry</code> daha sonra bir geri arama fonksiyonuna iletilir.</li>
+</ul></li>
+<li><p><strong>Işın Dökümü (<code>Raycaster</code>):</strong></p>
+
+<ul>
+<li><code>Raycaster</code>, 3D sahnenizdeki hangi nesnelerin belirli bir noktadan (fare imleciniz gibi) çıkan bir "ışın" tarafından kesiştiğini tespit etmek için kullanılan güçlü bir araçtır.</li>
+<li>Bu kodda, 'R' tuşuna basıldığında fare imlecinizin altındaki 3D sahnedeki noktayı bulmak için kullanılır.</li>
+</ul></li>
+<li><p><strong>Kullanıcı Etkileşimi (<code>OrbitControls</code>, Olay Dinleyicileri):</strong></p>
+
+<ul>
+<li><strong><code>OrbitControls</code></strong>: Bu, farenizi kullanarak kameranızı bir hedef noktanın etrafında kolayca döndürmenizi, kaydırmanızı ve yakınlaştırmanızı sağlayan Three.js için çok kullanışlı bir yardımcı programdır. 3D sahnelerde gezinmek için vazgeçilmezdir.</li>
+<li><strong>Olay Dinleyicileri (Event Listeners)</strong>: <code>window.addEventListener('keydown', ...)</code> ve <code>window.addEventListener('pointermove', ...)</code> sırasıyla klavye tuş basmalarını ve fare hareketlerini algılamak için kullanılır.</li>
+</ul></li>
+</ol>
+
+<p>Kod İncelemesi</p>
+
+<h4><code>init()</code> fonksiyonu:</h4>
+
+<ul>
+<li><strong><code>console.log(THREE.REVISION);</code></strong>: Hangi Three.js sürümünü kullandığınızı görmek için iyi bir uygulamadır.</li>
+<li><strong>Kapsayıcı (Container) Kurulumu</strong>: <code>document.createElement('div'); document.body.appendChild(container);</code> Bu, Three.js tuvalini tutmak için bir <code>div</code> öğesi oluşturur ve bunu HTML gövdesine ekler.</li>
+<li><strong>Kamera Kurulumu</strong>:
+<ul>
+<li><code>new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);</code>
+<ul>
+<li><code>75</code>: Derece cinsinden görüş alanı (FOV). Daha yüksek bir değer, sahnede daha fazlasını görmeniz anlamına gelir ancak daha fazla bozulma ile.</li>
+<li><code>window.innerWidth / window.innerHeight</code>: En boy oranı. Bozulmuş işlemeyi önlemek için kameranızın en boy oranını işleyicinizin/tuvalinizin en boy oranıyla eşleştirmek çok önemlidir.</li>
+<li><code>0.1</code> (yakın kırpma düzlemi): Bundan daha yakın nesneler işlenmez.</li>
+<li><code>1000</code> (uzak kırpma düzlemi): Bundan daha uzak nesneler işlenmez.</li>
+</ul></li>
+<li><code>camera.position.set(0, 0, 5);</code>: Kamerayı Z ekseni boyunca 5 birim (ekrandan dışarı) yerleştirir.</li>
+</ul></li>
+<li><strong>Işık Kurulumu</strong>:
+<ul>
+<li><code>0x7c7c7c</code> (ortam) ve <code>0xFFFFFF</code> (yönlü) için değerler onaltılık renk kodlarıdır. <code>2.0</code> yoğunluktur.</li>
+<li><code>light.position.set( 0.32, 0.39, 0.7 );</code> yönlü ışığın konumunu ayarlar.</li>
+</ul></li>
+<li><strong>İşleyici Kurulumu</strong>:
+<ul>
+<li><code>renderer.setPixelRatio( window.devicePixelRatio );</code>: Yüksek DPI (Retina) ekranlarda net görüntüleme sağlamaya yardımcı olur.</li>
+<li><code>renderer.setSize( canvasWidth, canvasHeight );</code>: Tuvalin boyutunu tüm pencereyi dolduracak şekilde ayarlar.</li>
+</ul></li>
+<li><strong>Işın Dökümü ve Etkileşim ('R' tuşu kısmı):</strong>
+<ul>
+<li><code>raycaster.setFromCamera( pointer, camera );</code>: Bu, ışın dökümünün çekirdeğidir. <code>pointer</code>, fare konumunu temsil eden normalize edilmiş bir cihaz koordinatı (NDC) vektörüdür (x ve y için -1 ila 1). Bu satır, kameradan fare konumundan geçen bir ışın atar.</li>
+<li><code>const intersects = raycaster.intersectObjects( scene.children );</code>: Bu, sahnenizdeki hangi nesnelerin (özellikle sahnenin tüm çocukları) ışınla kesiştiğini kontrol eder.</li>
+<li><strong>Küre Boyutu!</strong> <code>var sphereGeometry = new THREE.SphereGeometry(10, 10, 10);</code> 10 birim yarıçaplı bir küre oluşturur. Kameranın başlangıç konumu ve yüklü STL'nin ölçeği göz önüne alındığında, bu küre modelinize göre çok büyük veya çok küçük görünebilir. Modelinizin yanında görünür ve uygun boyutta olması için yarıçapını ayarlamanız (örn. <code>0.1</code> veya <code>0.05</code>) gerekebilir.</li>
+<li><strong>Ok Yardımcısı Uzunluğu!</strong> <code>const length = 1;</code> olan <code>ArrowHelper</code> için, sahnenizin ölçeği ve küre göz önüne alındığında kolayca görülemeyecek kadar küçük olabilir. Daha belirgin hale getirmek için onu artırmayı düşünün (örn. <code>5</code> veya <code>10</code>). Ok, kesişim noktasından kameraya <em>doğru</em> olan yönü gösterir.</li>
+<li><code>render();</code> keydown dinleyicisinin içinde: Bu önemlidir. Sahneyi değiştirirseniz (bir küre veya ok eklemek gibi), görüntülenenleri güncellemek için <code>render()</code>'ı tekrar çağırmanız gerekir.</li>
+<li><code>window.addEventListener( 'pointermove', onPointerMove );</code>: Fare her hareket ettiğinde <code>pointer</code> değişkenini güncel fare koordinatlarıyla günceller.</li>
+</ul></li>
+<li><strong><code>OrbitControls</code> Kurulumu</strong>:
+<ul>
+<li><code>cameraControls = new THREE.OrbitControls( camera, renderer.domElement );</code>: Kontrolleri kameranıza ve tuvale bağlar.</li>
+<li><code>cameraControls.addEventListener( 'change', render );</code>: Bu çok önemlidir! <code>OrbitControls</code> kameranın konumunu ve yönünü değiştirir. Kontroller bir değişikliğe neden olduğunda, güncellenmiş görünümü göstermek için sahneyi yeniden işlemeniz gerekir.</li>
+<li><strong>Gotça: <code>cameraControls.update()</code>!</strong> <code>cameraControls.update();</code> genellikle kameranın <code>position</code> veya <code>target</code>'ını programlı olarak değiştirdiğinizde (daha sonra <code>createNewTorus</code>'ta görüldüğü gibi) kontrollerin yeni durumdan haberdar olmasını sağlamak için gereklidir.</li>
+</ul></li>
+<li><strong>Sahne Arka Planı</strong>: <code>scene.background = new THREE.Color( 0xAAAAAA );</code> sahnenizin arka plan rengini açık griye ayarlar.</li>
+<li><strong><code>createNewTorus()</code> çağrısı</strong>: Bu fonksiyon, 3D modeli yüklemek ve sahneye eklemek için çağrılır.</li>
+</ul>
+
+<h4><code>render()</code> fonksiyonu:</h4>
+
+<ul>
+<li>Bu, <code>renderer</code>'a <code>scene</code>'i <code>camera</code>'nın bakış açısından çizmesini söyleyen basit bir fonksiyondur. Görüntülenen kareyi güncellemek istediğinizde bunu çağırırsınız.</li>
+</ul>
+
+<h4><code>createNewTorus()</code> fonksiyonu:</h4>
+
+<ul>
+<li><strong>STL Yükleme</strong>:
+<ul>
+<li><code>loader.load( '/basic1/Prism_hexagon.stl', function ( geometry ) { ... });</code>: Bu, STL dosyasını web sunucunuzun kök dizinine göre <code>/basic1/</code> dizininden yüklemeye çalışır. <strong>Gotça: Dosya Yolu!</strong> <code>Prism_hexagon.stl</code> dosyasının HTML dosyanızın sunulduğu yere göre gerçekten <code>/basic1/Prism_hexagon.stl</code> konumunda olduğundan emin olun. HTML dosyasını doğrudan dosya sisteminizden açıyorsanız (örn. <code>file:///C:/myproject/index.html</code>), bu yol tarayıcı güvenlik kısıtlamaları nedeniyle çalışmaz. Dosyalarınızı sunmak için yerel bir web sunucusuna (VS Code'daki Live Server, Python'ın <code>http.server</code> veya Node.js'nin <code>serve</code> gibi) ihtiyacınız olacaktır.</li>
+</ul></li>
+<li><strong>Geometriyi Ortalama ve Ölçeklendirme</strong>: Bu bölüm, yüklü modeller için çok önemlidir:
+<ul>
+<li><code>geometry.computeBoundingBox();</code>: Geometrinin tüm köşelerini içeren en küçük kutuyu hesaplar.</li>
+<li><code>boundingBox.getCenter(center);</code>: O sınırlayıcı kutunun orta noktasını bulur.</li>
+<li><code>geometry.translate(-center.x, -center.y, -center.z);</code>: Bu, geometriyi, yerel koordinat sisteminin orijininde (0,0,0) olacak şekilde hareket ettirir. Bu, nesneyi konumlandırmayı ve döndürmeyi çok daha kolay hale getirir.</li>
+<li><code>maxDimension</code> ve <code>scaleFactor</code>: Bu, yüklü modeli bir <code>targetSize</code>'a (burada 2 birim) yeniden boyutlandırmak için bir ölçek faktörü hesaplar. Bu, yüklü modelinizin sahnenizde göründüğünde çok büyük veya çok küçük olmamasını sağlamak için mükemmeldir.</li>
+<li><code>mesh.scale.set(scaleFactor, scaleFactor, scaleFactor);</code>: Hesaplanan ölçeği örgüye uygular.</li>
+</ul></li>
+<li><strong>Malzeme</strong>: <code>new THREE.MeshPhongMaterial({ color: 0xff9c7c, specular: 0x494949, shininess: 200 });</code> prizma için parlak bir malzeme oluşturur.</li>
+<li><strong>Örgüyü Konumlandırma</strong>:
+<ul>
+<li><code>mesh.position.set(camera.position.x, camera.position.y, camera.position.z - distanceInFrontOfCamera);</code> Bu, yüklü modeli kameranın hemen önüne yerleştirir. Bu, kullanıcının modeli yüklendikten hemen sonra görebilmesini sağlamanın iyi bir yoludur. <code>distanceInFrontOfCamera</code> ne kadar önde görüneceğini kontrol eder.</li>
+</ul></li>
+<li><strong>Gölgeler</strong>: <code>mesh.castShadow = true;</code> ve <code>mesh.receiveShadow = true;</code> örgünün gölge atmasını ve gölge almasını sağlar. <strong>Gotça: İşleyici Gölgeleri!</strong> Gölgelerin çalışması için, işleyicide de gölgeleri etkinleştirmeniz gerekir: <code>renderer.shadowMap.enabled = true;</code> (bunu <code>init</code> fonksiyonunuza ekleyin). Ayrıca, ışıklarınızın gölge atacak şekilde yapılandırılması gerekir (örn. <code>light.castShadow = true;</code>).</li>
+<li><strong><code>cameraControls.target.copy(mesh.position);</code></strong>: Bu, <code>OrbitControls</code>'ün hedefini yeni yüklenen modelinizin merkezine ayarlar. Bu, kamerayı döndürdüğünüzde, modelin etrafında döneceği anlamına gelir ki bu genellikle istediğiniz şeydir.</li>
+<li><code>cameraControls.update();</code>: Daha önce belirtildiği gibi, hedefi programlı olarak değiştirdikten sonra bunu çağırın.</li>
+<li><code>render();</code> tekrar: Model yüklendikten ve konumlandırıldıktan sonra sahneyi işler.</li>
+</ul>
 
           <div id="container-d84f574876e65b2d8f0c7bae784c22b3"></div>
 

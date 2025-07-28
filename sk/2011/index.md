@@ -46,7 +46,7 @@
 
 [Python Radyo](10/python-radyo.html)
 
-[Imaj Gosterip Tiklama Almak, ImageTk](12/imaj-gosterip-tiklama-almak-imagetk.html)
+[İmaj Gösterip Tıklama Almak, ImageTk](12/imaj-gosterip-tiklama-almak-imagetk.html)
 
 [PDF Formlari Otomatik Olarak Doldurmak](12/pdf-formlari-otomatik-olarak-doldurmak.html)
 

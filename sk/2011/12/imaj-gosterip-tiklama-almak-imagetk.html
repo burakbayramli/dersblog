@@ -36,13 +36,102 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Imaj Gosterip Tiklama Almak, ImageTk</h1>
+<h1>İmaj Gösterip Tıklama Almak, ImageTk</h1>
 
-<p>TkInter diye bir paket gerekli <code>sudo apt-get install python python-tk
-idle python-pmw python-imaging python-imaging-tk</code>. Tiklama almak icin
-ornek kod alttta. [DIZIN] baslangic dizininden secilen imaj secilir,
-ekranda gosterilir, sonra bu imaj uzerindeki tiklamalar konsola
-yazilir.</p>
+<p>Tkİnter diye bir paket gerekli <code>sudo apt-get install python3-tk</code>.</p>
+
+<p>Kordinat Toplamak</p>
+
+<p>Diyelim ki elimizde JPG üzerinde bir harita var, üzerinde bir sınır
+gösterilmiş, ve oradan sınır verilerini toplamak istiyoruz. Alttaki
+basit GUI kodu şunu yapar 1) Parametre olarak geçilen resmi gösterir,
+2) O resim üzerinde yapılacak fare tıklamalarının x,y piksel
+kordinatlarını ekrana basar. Bu sayede çıplak gözle sınıra bakarız,
+üzerine tıklarız, ve kordinatlarını "geriye mühendislik" ile toplamış
+oluruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">window</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Tk</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bla&quot;</span><span class="p">)</span>
+<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="mi">1400</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">900</span><span class="p">)),</span> <span class="n">Image</span><span class="o">.</span><span class="n">LANCZOS</span><span class="p">)</span>
+<span class="n">canvas</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
+<span class="n">image_tk</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
+
+<span class="n">canvas</span><span class="o">.</span><span class="n">create_image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image_tk</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">,</span><span class="si">%d</span><span class="s2">],&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">canvas</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Button-1&gt;&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
+<span class="n">tkinter</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Gerekli paketi kurmak için <code>sudo apt install python3-tk</code> yeterli.</p>
+
+<p>Tabii nihai kordinatlar için ek bir adım daha gerekli, piksel
+değerlerini alıp enlem, boylama çevirmek; bu hesap için enlem
+boylamını bildiğimiz iki piksel değeri yeterli. Alttaki gibi bir kodla
+bu transformasyon yapılabilir. Referans iki kordinat değeri <code>refc</code>,
+ona tekabül eden iki piksel x,y değeri <code>refp</code> içinde, ve toplanan tüm
+piksel değerleri bir liste olarak <code>clicks</code> içinde.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">click_geo</span><span class="p">(</span><span class="n">refc</span><span class="p">,</span> <span class="n">refp</span><span class="p">,</span> <span class="n">clicks</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">refc</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">refp</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`refc` and `refp` must each contain exactly two reference points.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">refc</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">any</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">refp</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;All reference points must be 2-element lists [x, y] or [lat, lon].&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">clicks</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">list</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">clicks</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;`clicks` must be a list of 2-element lists [x, y].&quot;</span><span class="p">)</span>
+
+    <span class="n">x1_pix</span><span class="p">,</span> <span class="n">y1_pix</span> <span class="o">=</span> <span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x2_pix</span><span class="p">,</span> <span class="n">y2_pix</span> <span class="o">=</span> <span class="n">refc</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">lat1_geo</span><span class="p">,</span> <span class="n">lon1_geo</span> <span class="o">=</span> <span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">lat2_geo</span><span class="p">,</span> <span class="n">lon2_geo</span> <span class="o">=</span> <span class="n">refp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">delta_x_pix</span> <span class="o">=</span> <span class="n">x2_pix</span> <span class="o">-</span> <span class="n">x1_pix</span>
+    <span class="n">delta_y_pix</span> <span class="o">=</span> <span class="n">y2_pix</span> <span class="o">-</span> <span class="n">y1_pix</span>
+
+    <span class="n">delta_lat_geo</span> <span class="o">=</span> <span class="n">lat2_geo</span> <span class="o">-</span> <span class="n">lat1_geo</span>
+    <span class="n">delta_lon_geo</span> <span class="o">=</span> <span class="n">lon2_geo</span> <span class="o">-</span> <span class="n">lon1_geo</span>
+
+    <span class="n">lat_scale_per_pixel</span> <span class="o">=</span> <span class="n">delta_lat_geo</span> <span class="o">/</span> <span class="n">delta_y_pix</span>
+    <span class="n">lat_offset</span> <span class="o">=</span> <span class="n">lat1_geo</span> <span class="o">-</span> <span class="p">(</span><span class="n">lat_scale_per_pixel</span> <span class="o">*</span> <span class="n">y1_pix</span><span class="p">)</span>
+
+    <span class="n">lon_scale_per_pixel</span> <span class="o">=</span> <span class="n">delta_lon_geo</span> <span class="o">/</span> <span class="n">delta_x_pix</span>
+    <span class="n">lon_offset</span> <span class="o">=</span> <span class="n">lon1_geo</span> <span class="o">-</span> <span class="p">(</span><span class="n">lon_scale_per_pixel</span> <span class="o">*</span> <span class="n">x1_pix</span><span class="p">)</span>
+
+    <span class="n">converted_coords</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">click_x</span><span class="p">,</span> <span class="n">click_y</span> <span class="ow">in</span> <span class="n">clicks</span><span class="p">:</span>
+        <span class="n">new_lat</span> <span class="o">=</span> <span class="p">(</span><span class="n">lat_scale_per_pixel</span> <span class="o">*</span> <span class="n">click_y</span><span class="p">)</span> <span class="o">+</span> <span class="n">lat_offset</span>
+        <span class="n">new_lon</span> <span class="o">=</span> <span class="p">(</span><span class="n">lon_scale_per_pixel</span> <span class="o">*</span> <span class="n">click_x</span><span class="p">)</span> <span class="o">+</span> <span class="n">lon_offset</span>
+        <span class="n">converted_coords</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">new_lat</span><span class="p">,</span> <span class="n">new_lon</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">converted_coords</span>
+</code></pre>
+</div>
+
+<p>Mesela alttaki degerler Yunanistan'dan baslayip Mumbai'de biten bir cizgiyi
+ceviriyor,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">refc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">217</span><span class="p">,</span><span class="mi">313</span><span class="p">],[</span><span class="mi">987</span><span class="p">,</span><span class="mi">643</span><span class="p">],</span>
+<span class="n">refp</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">37.94218358</span><span class="p">,</span> <span class="mf">23.645406289</span><span class="p">],[</span><span class="mf">19.057240727</span><span class="p">,</span> <span class="mf">73.32631926</span><span class="p">]]</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">219</span><span class="p">,</span><span class="mi">317</span><span class="p">],</span> <span class="p">[</span><span class="mi">401</span><span class="p">,</span><span class="mi">386</span><span class="p">],</span> <span class="p">[</span><span class="mi">441</span><span class="p">,</span><span class="mi">422</span><span class="p">],</span> <span class="p">[</span><span class="mi">570</span><span class="p">,</span><span class="mi">535</span><span class="p">],[</span><span class="mi">611</span><span class="p">,</span><span class="mi">556</span><span class="p">],</span> <span class="p">[</span><span class="mi">660</span><span class="p">,</span><span class="mi">566</span><span class="p">],</span> <span class="p">[</span><span class="mi">722</span><span class="p">,</span><span class="mi">530</span><span class="p">],</span> <span class="p">[</span><span class="mi">987</span><span class="p">,</span><span class="mi">643</span><span class="p">]]</span>
+<span class="n">click_geo</span><span class="p">(</span><span class="n">refc</span><span class="p">,</span><span class="n">refp</span><span class="p">,</span><span class="n">pts</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Eski Yazı</p>
+
+<p>Tıklama almak için örnek kod alttta. [DİZİN] başlangıç dizininden
+seçilen imaj seçilir, ekranda gösterilir, sonra bu imaj üzerindeki
+tıklamalar konsola yazılır.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">Tkinter</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span><span class="kn">from</span><span class="w"> </span><span class="nn">tkFile</span>

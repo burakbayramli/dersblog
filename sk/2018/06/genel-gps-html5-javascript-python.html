@@ -383,57 +383,6 @@ bir paket var,</p>
 </code></pre>
 </div>
 
-<h3>Imajdan Kordinat Toplamak</h3>
-
-<p>Diyelim ki elimizde JPG üzerinde bir harita var, üzerinde bir sınır
-gösterilmiş, ve oradan sınır verilerini toplamak istiyoruz. Alttaki
-basit GUI kodu şunu yapar 1) Parametre olarak geçilen resmi gösterir,
-2) O resim üzerinde yapılacak fare tıklamalarının x,y piksel
-kordinatlarını ekrana basar. Bu sayede çıplak gözle sınıra bakarız,
-üzerine tıklarız, ve kordinatlarını "geriye mühendislik" ile toplamış
-oluruz.</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">ImageDraw</span><span class="p">,</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageTk</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span><span class="o">,</span><span class="w"> </span><span class="nn">tkinter</span>
-
-<span class="n">window</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Tk</span><span class="p">(</span><span class="n">className</span><span class="o">=</span><span class="s2">&quot;bla&quot;</span><span class="p">)</span>
-<span class="n">image</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;size&#39;</span><span class="p">,</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-<span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="mi">1000</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">700</span><span class="p">)),</span> <span class="n">Image</span><span class="o">.</span><span class="n">ANTIALIAS</span><span class="p">)</span>
-<span class="n">canvas</span> <span class="o">=</span> <span class="n">tkinter</span><span class="o">.</span><span class="n">Canvas</span><span class="p">(</span><span class="n">window</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">height</span><span class="o">=</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-<span class="n">canvas</span><span class="o">.</span><span class="n">pack</span><span class="p">()</span>
-<span class="n">image_tk</span> <span class="o">=</span> <span class="n">ImageTk</span><span class="o">.</span><span class="n">PhotoImage</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
-
-<span class="n">canvas</span><span class="o">.</span><span class="n">create_image</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">//</span><span class="mi">2</span><span class="p">,</span> <span class="n">image</span><span class="o">=</span><span class="n">image_tk</span><span class="p">)</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">callback</span><span class="p">(</span><span class="n">event</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;[</span><span class="si">%d</span><span class="s2">,</span><span class="si">%d</span><span class="s2">],&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
-
-<span class="n">canvas</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="s2">&quot;&lt;Button-1&gt;&quot;</span><span class="p">,</span> <span class="n">callback</span><span class="p">)</span>
-<span class="n">tkinter</span><span class="o">.</span><span class="n">mainloop</span><span class="p">()</span>
-</code></pre>
-</div>
-
-<p>Gerekli paketi kurmak için <code>sudo apt install python3-tk</code> yeterli.</p>
-
-<p>Tabii nihai kordinatlar için ek bir adım daha gerekli, piksel
-değerlerini alıp enlem, boylama çevirmek; bu hesap için enlem
-boylamını bildiğimiz iki piksel değeri yeterli. Alttaki gibi bir kodla
-bu transformasyon yapılabilir. Referans iki kordinat değeri <code>refc</code>,
-ona tekabül eden iki piksel x,y değeri <code>refp</code> içinde, ve toplanan
-tüm piksel değerleri bir liste olarak <code>clicks</code> içinde.</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">platlon</span><span class="p">(</span><span class="n">refc</span><span class="p">,</span> <span class="n">refp</span><span class="p">,</span> <span class="n">clicks</span><span class="p">):</span>
-    <span class="n">mlat</span> <span class="o">=</span> <span class="p">(</span><span class="n">refc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">refp</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
-    <span class="n">mlon</span> <span class="o">=</span> <span class="p">(</span><span class="n">refc</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">refp</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">cs</span> <span class="o">=</span> <span class="p">[</span> <span class="p">[</span> <span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">y</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span><span class="o">*</span><span class="n">mlat</span><span class="p">,</span> <span class="n">refc</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">refp</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">mlon</span> <span class="p">]</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span><span class="n">y</span> <span class="ow">in</span> <span class="n">data</span> <span class="p">]</span>
-    <span class="k">return</span> <span class="n">cs</span>
-</code></pre>
-</div>
-
 <p>Kaynaklar</p>
 
 <p>[1] Kenneth Gade (2010), A Non-singular Horizontal Position Representation,

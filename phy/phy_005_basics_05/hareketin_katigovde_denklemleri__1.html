@@ -94,86 +94,11 @@ Denklemleri - 1</h1>
 cisimlerinin hareketi için diferansiyel denklemleri entegre etmemiz
 gerekiyor, bunun için Runge-Kutta yaklaşımını bir örnek üzerine
 görebiliriz.</p>
-<p>İlk Uygulanan Kuvvet</p>
-<p>İki boyutlu ortama ağırlığı <span class="math inline">\(m=1\)</span>
-kg olan bir topu 45 derece açıyla sağ yukarı doğru atıyoruz,
-uyguladığımız kuvvet 500 Newton. Bu topun gidiş yönü nasıl
-hesaplanır?</p>
-<p>Önemli bir konu uygulanan kuvveti başlangıçta sisteme nasıl dahil
-edeceğimiz. Burada dürtü / vuruş / darbe (impulse) kavramına bakmak
-gerekiyor. Kuvvetle hız değişimini ilintilendirmek için Newton’un ikinci
-kanunu ile başlayalım,</p>
-<p><span class="math display">\[
-F = \frac{\mathrm{d} P}{\mathrm{d} t}
-\]</span></p>
-<p>Uygulanan kuvvet momentum değişimine eşittir, ki <span
-class="math inline">\(P = mv\)</span> olmak üzere. Fakat sonsuz küçük
-zaman üzerinden iş yapamayız, iki tarafın entegralini alalım,</p>
-<p><span class="math display">\[
-\int_{t_1}^{t_2} F \mathrm{d} t = \int_{t_1}^{t_2} \mathrm{d} P
-\mathrm{d} t
-\]</span></p>
-<p><span class="math display">\[
-J = \int_{t_1}^{t_2} F \mathrm{d} t = P(t_2) - P(t_1)
-\]</span></p>
-<p>Sonuçtaki <span class="math inline">\(J\)</span> dürtü büyüklüğü,
-kuvvetin zaman üzerinden entegrali, yani bir zaman aralığında uygulanan
-kuvvetin toplamı. Bu büyüklük momentum üzerinde bir değişime yol açıyor,
-<span class="math inline">\(P(t_1)\)</span> momentumundan <span
-class="math inline">\(P(t_2)\)</span> değerine geliyoruz.</p>
-<p>Üstteki formül şunu söylüyor, momentum değişimi için bir kuvvetin
-uygulandığı bir zaman aralığı gerekir. O zaman problem tanımı eksik, 500
-Newton’luk kuvvet uyguladık, peki ne kadar süreli? Devam etmeden önce
-diyelim ki bir saniye, o zaman dürtü 500 Newton <span
-class="math inline">\(\cdot\)</span> saniye (Ns) olur. Dikkat <span
-class="math inline">\(m\)</span> değeri değişmediği için tek değişim hız
-değişkeninde olacaktır, <span class="math inline">\(J = m(v_2 - v_1) = m
-\Delta v\)</span>, yani dürtü sonrası hızda değişim gözleyeceğiz.</p>
-<p>Başlangıçta <span class="math inline">\(v_1=0\)</span>, dürtü için
-500 N <span class="math inline">\(\cdot\)</span> saniye</p>
-<p><span class="math display">\[
-J = m v_2 - m v_1 = m v_2 - m(0) \to J = m v_2
-\]</span></p>
-<p><span class="math display">\[
-\to 500 Ns = m v_2
-\to 500 \frac{kg \cdot m/s^2}{1 kg } \cdot s = v_2
-\to v_2 = 500 m/s
-\]</span></p>
-<p>diyebiliriz.</p>
-<p>Ilk Uygulanan Tork</p>
-<p>Gerçi alttaki örnek için lazım değil ama ilk uygulanan kuvvet gibi
-ilk uygulanan dürtü (impulse), tork kavramı da simülasyonlarda gerekli.
-Bu durumda açısal dürtü belli bir zamanda uygulanan torktur, yani torkun
-zaman üzerinden entegralidir denir, ve bu dürtü açısal momentumdaki
-değişime eşittir. İlk tanımla başlarsak,</p>
-<p><span class="math display">\[
-J = \int \tau \mathrm{d} t
-\]</span></p>
-<p>Eğer zaman aralığı ufak ve tork sabit ise</p>
-<p><span class="math display">\[
-J = \tau \Delta t
-\]</span></p>
-<p>Diğer yandan açısal momentum eşitliğini hatırlayalım,</p>
-<p><span class="math display">\[
-L = I \omega
-\]</span></p>
-<p>Açısal dürtü açısal momentum değişimine eşit ise</p>
-<p><span class="math display">\[
-\tau \Delta t = \Delta L = \Delta (I \omega)= I (\omega_2 - \omega_1)
-\]</span></p>
-<p>ki <span class="math inline">\(\omega_1\)</span> başlangıç açısal
-hızı, <span class="math inline">\(\omega_2\)</span> nihai hız. Hız
-başlangıçta sıfır olsa, <span class="math inline">\(\omega_1 =
-0\)</span>, ve nihai hız ile başlangıçta uygulanan tork arasında
-bağlantı kurmak istesek</p>
-<p><span class="math display">\[
-\tau \Delta t = I \omega_2
-\]</span></p>
-<p><span class="math display">\[
-\to \omega_2 = I^{-1} \tau \Delta t
-\]</span></p>
+<p>Not: Alttaki örnekte ilk uygulanan kuvvet bir başlangıç lineer hıza
+dönüştürüldü. Bu gösterim amaçlı yapıldı, sonraki örneklerde ilk
+uygulanan kuvveti direk momentuma çevireceğiz.</p>
 <p>Örnek</p>
-<p>Artık sistem denklemini entegre edebiliriz, sistem <span
+<p>Sistem denklemi şöyle entegre edilir, sistem <span
 class="math inline">\(\dot{x} = v_x\)</span>, <span
 class="math inline">\(\dot{y} = v_y\)</span> <span
 class="math inline">\(\dot{v} = a\)</span>. Sürekli etki eden tek ivme

@@ -16,7 +16,7 @@
 
 [Derin Öğrenme, YSA, Teori](../../2017/09/derin-ogrenme-ysa-teori.html)
 
-[Yapay Sinir Ağları Video](../../2023/03/yapay-sinir-aglari-neural-network-video.html)
+[Yapay Sinir Ağları Video](yapay-sinir-aglari-neural-network-video.html)
 
 [Derin Öğrenim ile Text Üretmek, RNN, LSTM](../../2017/01/derin-ogrenim-ile-text-uretmek-rnn-lstm.html)
 

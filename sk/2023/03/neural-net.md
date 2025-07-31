@@ -2,7 +2,7 @@
 
 [Tensorflow](../../2022/10/tensorflow.html)
 
-[Keras](../../2018/06/keras.html)3
+[Keras](../../2018/06/keras.html)
 
 [TensorFlow.js, Javascript ile TensorFlow, Keras Modelleri](../../2018/11/tensorflowjs-javascript-ile-tensorflow.html)
 

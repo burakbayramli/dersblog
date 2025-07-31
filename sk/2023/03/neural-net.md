@@ -10,7 +10,7 @@
 
 [Derin Öğrenme, YSA, Teori](../../2017/09/derin-ogrenme-ysa-teori.html)
 
-[Yapay Sinir Ağları Video](../../2023/03/yapay-sinir-aglari-neural-network-video.html)
+[Yapay Sinir Ağları Video](evrisimsel-neural-network-video.html)
 
 [Derin Öğrenim ile Text Üretmek, RNN, LSTM](../../2017/01/derin-ogrenim-ile-text-uretmek-rnn-lstm.html)
 
@@ -45,4 +45,10 @@
 [Kendini Tekrarlayan Yapay Sinir Ağları (Recurrent Neural Network -RNN-)](../../../algs/algs_140_rnn/kendini_tekrarlayan_yapay_sinir_aglari__recurrent_neural_network_rnn_.html)
 
 [Derin Takviyeli Öğrenme, İlke Gradyanları (Deep Reinforcement Learning, Policy Gradients )](../../../algs/algs_155_reinf/derin_takviyeli_ogrenme_ilke_gradyanlari__deep_reinforcement_learning_policy_gradients__.html)
+
+[Tavsiye Sistemleri, Derin Öğrenme (Deep Recommender Systems)](../../2025/07/recommend-nn.html)
+
+[Derin Öğrenme ile Go Oyununu Oynamak, DeepMind AlphaGo Zero](../../2018/10/go-game-nn.html)
+
+[Özkodlama (Autoencoding)](../../2018/02/autoencoding.html)
 

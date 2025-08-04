@@ -64,6 +64,33 @@
 </code></pre>
 </div>
 
+<p>Not: Eğer E,W içeren değerler alırsak onları</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">parse_latlon_string</span><span class="p">(</span><span class="n">lat_str</span><span class="p">,</span> <span class="n">lon_str</span><span class="p">):</span>
+    <span class="n">lat_value</span><span class="p">,</span> <span class="n">lat_hemi</span> <span class="o">=</span> <span class="n">lat_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;° &quot;</span><span class="p">)</span>
+    <span class="n">lon_value</span><span class="p">,</span> <span class="n">lon_hemi</span> <span class="o">=</span> <span class="n">lon_str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;° &quot;</span><span class="p">)</span>
+
+    <span class="n">lat_deg</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lat_value</span><span class="p">)</span>
+    <span class="n">lon_deg</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">lon_value</span><span class="p">)</span>
+
+    <span class="c1"># Adjust for hemisphere</span>
+    <span class="k">if</span> <span class="n">lat_hemi</span> <span class="o">==</span> <span class="s2">&quot;S&quot;</span><span class="p">:</span>
+        <span class="n">lat_deg</span> <span class="o">=</span> <span class="o">-</span><span class="n">lat_deg</span>
+
+    <span class="k">if</span> <span class="n">lon_hemi</span> <span class="o">==</span> <span class="s2">&quot;W&quot;</span><span class="p">:</span>
+        <span class="n">lon_deg</span> <span class="o">=</span> <span class="o">-</span><span class="n">lon_deg</span>
+
+    <span class="k">return</span> <span class="n">LatLon</span><span class="p">(</span><span class="n">lat_deg</span><span class="p">,</span> <span class="n">lon_deg</span><span class="p">)</span>
+
+<span class="n">lat_string</span> <span class="o">=</span> <span class="s2">&quot;33.18° N&quot;</span>
+<span class="n">lon_string</span> <span class="o">=</span> <span class="s2">&quot;129.72° E&quot;</span>
+<span class="n">point</span> <span class="o">=</span> <span class="n">parse_latlon_string</span><span class="p">(</span><span class="n">lat_string</span><span class="p">,</span> <span class="n">lon_string</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>ile çevirebiliriz.</p>
+
 <h3>İki nokta arasında birinciden ikinciye olan açısal yön (bearing),</h3>
 
 <div class="codehilite">

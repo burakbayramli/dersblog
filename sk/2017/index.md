@@ -10,7 +10,7 @@
 
 [Tıklamaları Örnek Veriye Çevirmek](01/tklamalar-ornek-veriye-cevirmek.html)
 
-[Algılayıcı Ölçümleri, Video, Android, GPS, Haritalama](02/algilayici-olcumleri-video-android.html)
+[Algılayıcılar, Android](02/algilayici-olcumleri-video-android.html)
 
 [Baz İstasyonu ile Yer Bulma, Android](03/baz-istasyonu-ile-yer-bulma.html)
 

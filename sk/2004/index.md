@@ -28,3 +28,5 @@
 
 [Oracle VARCHAR İndeksleri Üzerinden Erişim Yavaş mıdır?](11/oracle-varchar-indeksleri-uzerinden.html)
 
+[Bazı İngilizce Terimlerin Telafuzları](11/telafuz.html)
+

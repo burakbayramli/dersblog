@@ -30,6 +30,8 @@
 
 [Komut Satırı Seçeneklerini İşlemek (Command Line Option Processing), Python](08/komut-satr-seceneklerini-islemek.html)
 
+[Latex ile Sunumlar](08/latex-presentation-sunum.html)
+
 [Paralel Python - Dask](08/paralel-python-da.html)
 
 [Spark, PySpark](08/spark-pyspark.html)

@@ -1,5 +1,7 @@
 # 2012
 
+[Almanya'da Çalışma Vizesi](01/almanya-vize.html)
+
 [Soru & Cevap Siteleri](01/soru-cevap-siteleri.html)
 
 [Enerji Hatalari - ebugs](02/enerji-hatalari-ebugs.html)

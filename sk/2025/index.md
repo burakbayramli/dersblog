@@ -24,3 +24,5 @@
 
 [Ses Komut Tanıma, Dikkat (Attention) Modeli](07/voice-command-ses-komut.html)
 
+[Samsung Android Tablet Üzerinde Linux Ubuntu](08/android_linux_samsung.html)
+

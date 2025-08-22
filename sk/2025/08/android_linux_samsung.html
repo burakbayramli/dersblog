@@ -68,9 +68,57 @@ seçeneğini seçiyoruz.</p>
 <p>Termux kurulumu için [2] bağlantısından Termux apk'si indirilir. Bu
 indirilen apk üzerinde seçim yapıp onu kurarız, uyarıları iptal edip
 devam ederiz, işlemi tamamlarız. Artık bir Termux ikonu program
-listesinde gözüküyor olmalı. </p>
+listesinde gözüküyor olmalı. İkona tıklayıp komut satırına gireriz,
+burada <code>pkg ınstall</code> ile istenen programları kurmak artık mümkün.</p>
 
-<p>[devam edecek]</p>
+<p>Proot</p>
+
+<p>Fakat hala elimizdeki tam tekmilli bir Ünix değil. Unix'te kullanılan
+programların Android için derlenmiş hallerini kullanıyoruz. Eğer ciddi
+bir Linux, yani dosya sistemi, kullanıcı idaresi vs ile birlikte olan,
+bunun için Proot [3] kullanabiliriz.</p>
+
+<p>Proot bir emülasyon sistemidir. Mesela Ubuntu Linux kullanmak
+istiyorsak onun işler kodlarını olduğu gibi alır, işletirken sistem
+çağrıları varsa onları yakalayıp (intercept) o çağrıları gerekli
+Termux çağrısına tercüme eder, Termux kütüphaneleri Android ile
+iletişimi halleder. Mesela Ubuntu dosyaya yazmak için bir sistem
+çağrısı yapabilir, Proot bunu alıp Termux üzerinden dosyaya yazma
+komutu haline getirir.</p>
+
+<p>Kurmak için Termux üzerinde,</p>
+
+<pre><code>pkg install proot-distro
+</code></pre>
+
+<p>Ardından</p>
+
+<pre><code>proot-distro install ubuntu
+</code></pre>
+
+<p>Şimdi sisteme girmek için </p>
+
+<pre><code>proot-distro login ubuntu
+</code></pre>
+
+<p>kullanırız. Bu bizi Ubuntu sistemine sokar. Etrafa bakınınca Ünix
+demirbaşlarını görebiliyoruz, dosya sistemi, <code>/var</code>, '/etc', ya da
+süreçler için <code>/proc</code>. Ben hemen <code>useradd</code> ile bir normal kullanıcı
+yarattım, <code>root</code> için <code>passwd</code> ile bir şifre atadım, böylece gerekli
+sistem kurulumlarını <code>su - root</code> sonrası yapıyorum, diğer her iş için
+<code>root</code> üzerinden normal kullanıcıya geçiş yapıyorum, <code>su - user1</code>
+gibi.</p>
+
+<p>Girer girmez hemen bir <code>upt update</code> ve <code>apt upgrade</code> yapmak faydalı olur.</p>
+
+<p>Artık <code>apt install</code> ile istediğimiz her Ubuntu programını kurabiliriz.</p>
+
+<p>İlginç bir nokta Termux üzerinde <code>pkg ınstall</code> ile kurulmuş
+programların Proot içinden görülebilmesi. Mesela <code>pkg ınstall htop</code>
+kurmuşsam bu programı Übüntü'da işletebiliyorum. Fakat tersi olmuyor.
+Benim tercihim programları emülasyon içinde o sisteme göre kurmak,
+Termux'ta degil, böylece o programin diğerleri ile olan iletişimi daha
+rahat olabilir.</p>
 
 <p>Kaynaklar</p>
 

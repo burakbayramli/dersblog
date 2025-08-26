@@ -85,6 +85,13 @@ Benim tercihim programları emülasyon içinde o sisteme göre kurmak,
 Termux'ta degil, böylece o programin diğerleri ile olan iletişimi daha
 rahat olabilir.
 
+X11
+
+[1] bağlantısında görüldüğü gibi tablet üzerinde Linux masaüstü bile
+işletmek mümkün. APK alınan yerde bir Termux:X11 apk'si var, bu
+kurulup geri kalan ayarlar yapılınca görsel X uygulamaları da
+işletilebiliyor.
+
 Kaynaklar
 
 [1] https://youtu.be/UgRds3iP0BU

@@ -101,6 +101,19 @@ Benim tercihim programları emulasyon içinde, yani Ubuntu ise Ubuntu
 üzerinde, o sisteme göre kurmak, Termux'ta degil, böylece o programın
 diğerleri ile olan etkileşimi daha rahat olur.
 
+Tus Değişimi
+
+Eğer bir Bluetooth klavye ile bağlanıyorsak, bu klavyenin bazı
+tuşlarını diğer tuşlara eşleme imkanı artık var, bu son Android sürümü
+paketten çıktığı haliyle bunu destekliyor. Bu Ubuntu üzerinde Emacs
+gibi programları kullanırken oldukca faydalı çünkü Cmd ve ÇAPS gibi
+tuşları sırasıyla Alt ve CTRL yapabilmek klavyede yazmayı
+hızlandırabiliyor. Ayar değişimi için `Settings`'e gidiyoruz, oradan
+
+`General Management` / `Physical keyboard` / `Customize Keys`
+
+altında tüm ana tuşları görebiliriz. Eşleme değiştirme bu ekranda yapılır.
+
 X11
 
 [1] bağlantısında görüldüğü gibi tablet üzerinde Linux masaüstü bile

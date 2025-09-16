@@ -121,6 +121,19 @@ işletmek mümkün. APK alınan yerde bir Termux:X11 apk'si var, bu
 kurulup geri kalan ayarlar yapılınca görsel X uygulamaları da
 işletilebiliyor.
 
+Hotspot
+
+Samsung telefon üzerinden Wifi ile İnternet paylaşımı (hotspot)
+yapanlar, son Android versiyonlarında paylaşım kullanımsız kaldığında
+kapatıldığını görebilir... Bu durumda paylaşım yapan telefonda
+`Settings` | `Connections` | `Mobile Hotspots and Tethering` ekranına
+gidip oradan `Mobile Hotspot` üzerine tıklayabilir. Bu ekranda
+bağlanılan ağın ismine, `Network Name`, tıklanır. Bu bizi yeni bir
+ekrana götürür, orada `Advanced` ile daha fazla seçenek görürüz, bu
+seçeneklerden biri `Turnoff when no device connected for..` diye
+gider, orada `Never` seçersek habire hotspot kapatılma durumundan
+kurtuluruz.
+ 
 Kaynaklar
 
 [1] https://youtu.be/UgRds3iP0BU

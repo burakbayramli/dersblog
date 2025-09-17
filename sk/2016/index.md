@@ -36,8 +36,6 @@
 
 [Flask ile Dinamik Web Sayfalari Gelistirmek](09/fla-ile-dinamik-web-sayfalari.html)
 
-[Otomatik Tercüme, Makine Tercümesi (Machine Translation)](10/algs_170_nmt.html)
-
 [](10/census.html)
 
 [Derin Öğrenme ile Doğal Dil İşlemek (Natural Language Processing -NLP-)](10/nlp-natural-language-processing.html)

@@ -80,6 +80,9 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full"
+  type="text/javascript"></script>
 </head>
 <body>
 <div id="header">
@@ -96,18 +99,18 @@ gidecektir. Eğer kamera bir yola bakıyorsa, yoldan bazen arabalar geçer,
 bir kampüs içini gösteriyorsa insanlar yürürler. Bu sebeple her pikselin
 en çok aldigi değeri matematiksel olarak temsil edebilmemiz
 gerekiyor.</p>
-<p>Ornek olarak bir video’daki spesifik bir pikselin aldigi degerlere
-bakalim, bu degerlerin histogramini cikartalim. Bu bize o spesifik
-pikselin aldigi degerlerin frekansi, istatistiksel ozelligi hakkinda bir
-fikir verecektir. Ornek video,</p>
+<p>Örnek olarak bir video’daki spesifik bir pikselin aldığı değerlere
+bakalım, bu değerlerin histogramını çıkartalım. Bu bize o spesifik
+pikselin aldığı değerlerin frekansı, istatistiksel özelliği hakkında bir
+fikir verecektir. Örnek video [1]’den indirilebilir, ve alttaki dizinde
+olduğunu farzedelim,</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>vfile <span class="op">=</span> <span class="st">&#39;/opt/Downloads/skdata/campus_vibe_video4.mp4&#39;</span></span></code></pre></div>
-<p>Bu video bir kampüste kaydedilmiş, kamera hareket etmiyor sadece
-önünde olanları gösteriyor. Şimdi bu video karelerinin
-<code>coord</code> noktasındaki, kordinatında aldığı değerlere bakalım.
-Video renkli ama bu ilk rapor için biz gri seviyelere bakabiliriz, yani
-RGB değerlerini alıp grileştiriyoruz sonra bir noktadaki bu gri
-değerlere bakıyoruz.</p>
+<p>Video bir kampüste kaydedilmiş, kamera hareket etmiyor sadece önünde
+olanları gösteriyor. Şimdi bu video karelerinin <code>coord</code>
+noktasındaki, kordinatında aldığı değerlere bakalım. Video renkli ama bu
+ilk rapor için biz gri seviyelere bakabiliriz, yani RGB değerlerini alıp
+grileştiriyoruz sonra o noktadaki gri değerlere bakıyoruz.</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time, datetime, cv2</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>cap <span class="op">=</span> cv2.VideoCapture(vfile)</span>
@@ -124,7 +127,34 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 <span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>plt.hist(pixvals)</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;vision_20bg_04.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="vision_20bg_04.jpg" /></p>
-<p>KDE</p>
+<p>Histogram üstteki gibi çıktı. Kabaca ilk bakış bize 45 değeri
+etrafında bir gruplanma gösteriyor, 70 etrafında daha az ama yine de
+mevcut bir tepe var, bir diğeri 100 etrafında. Yani <code>coord</code>
+noktasındaki piksel çoğunlukla köyümsü bir rengi olan bir yeri
+gösteriyor, ve arada sırada önünden daha aydınlık renkleri olan şeyler
+geçiyor. Belki açık gri renkli tişört giymiş bir kaç öğrenci oradan
+geçmiş.</p>
+<p>Fakat bu rapor bize arka plan tespitinde izlenebilecek tekniğin
+ipuçlarını veriyor. Üstteki histograma bakarak eğer bir arka plan seçmek
+istesek, bunu frekanların maksimum olduğu değer için yapabilirdik, bu
+örnekte aşağı yukarı 45 değeri.</p>
+<h3 id="kde">KDE</h3>
+<p>O zaman şöyle bir yaklaşım tasarlanabilir. Bir video’nun karelerini
+işlerken her pikselin o ana kadar aldığı değerlerin dağılımını modelle,
+ve bir arka plan gerektiğinde tüm bu dağılımların maksimum değerini bul
+(yani maksimum frekansa tekabül eden piksel değeri) ve o değerleri arka
+plan resmi olarak kabul et. Bu yaklaşımı histogram ile kodlayabilirdik,
+fakat daha pürüzsüz bir dağılım saptamamıza yardım edecek bir teknik KDE
+tekniğidir [1]. Bu teknikle aynen histogramda olduğu gibi önceden
+saptanmış belli <span class="math inline">\(x\)</span> noktaları
+(histogram için kutucuk) üzerinden hesap yapıyor olsak bile KDE Gaussian
+toplamlarını temsil ettiği için daha az ayrıksal gözüken sonuçlar
+almamızı sağlar.</p>
+<p>KDE değerlerini artımsal olarak güncellemeyi de biliyoruz [1], hatta
+bu güncelleme sırasında eski değerlere daha az önem vermeyi de öğrendik,
+böylece algoritmamiz güncel olan bir arka plan varsayımını sürekli
+bilip, istediğimiz anda bize verebilir. Üstte işlediğimiz video üzerinde
+bunu görelim,</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time, datetime, cv2</span>
@@ -169,7 +199,18 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>cap.release()</span>
 <span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>cv2.destroyAllWindows()</span></code></pre></div>
 <p><img src="vision_20bg_01.jpg" /></p>
-<p>GMM</p>
+<p>Resimde sol kolondakiler video’nun belli anlarda alınmış kareleri,
+sol kolondaki ise algoritmamizin o andaki arka plan tasavvuru. Görüldüğü
+gibi video o anda insanlar gösteriyor olsa bile, KDE kümemiz hala arka
+planın ne olduğunu biliyor. Bu saptamayı her piksel için sürekli
+hesaplanan KDE’ler üzerinde <code>pdf_model.argmax</code> işleterek
+yapıyor. Çağrı <code>argmax</code> bilindiği gibi bir vektör üzerinde
+işletilince o vektördeki maksimum değerin indisini verir. Bizim
+örneğimizde indis değerleri seçilmiş gri değer seviyelerinin indisi,
+mesela bu seviyeler <code>[0., 8.2, 16.4, ..., 255]</code> olabilir eğer
+ikinci indisteki frekanslar yüksekse <code>argmax</code> sonucu 8.2
+değerini elde ederiz.</p>
+<h3 id="gmm">GMM</h3>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, time, datetime</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>

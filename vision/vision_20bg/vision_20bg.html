@@ -209,8 +209,47 @@ işletilince o vektördeki maksimum değerin indisini verir. Bizim
 örneğimizde indis değerleri seçilmiş gri değer seviyelerinin indisi,
 mesela bu seviyeler <code>[0., 8.2, 16.4, ..., 255]</code> olabilir eğer
 ikinci indisteki frekanslar yüksekse <code>argmax</code> sonucu 8.2
-değerini elde ederiz.</p>
+değerini elde ederiz. Not: Gri seviyesi 8.2 anlamsız olabilir fakat 0
+ila 255 değerini 32 eşit aralığa bölünce bazı değerler kesirli oluyor.
+Problem değil arka plan resmini grafiklerken kesirli gri değerlerini en
+yakın tam sayı gri değerine yuvarlayabiliriz.</p>
 <h3 id="gmm">GMM</h3>
+<p>Üstte parametresiz istatistik kullanarak gri seviyelerini
+halledebildik. Peki renkli resim işliyor olsaydık ne yapardık? Aynı KDE
+tekniği burada da işler mi?</p>
+<p>Renkli resimler problemli olabilir.. Bu durumda tek gri seviyesi
+yerine her piksel için üç tane R,G,B değerini takip etmemiz gerekiyor.
+Eğer aynı KDE yaklaşımını kullanmak istesek ve yine renk skalasını
+mesela 32 parçaya bolsek, bu bize 32 x 32 x 32 ~ 32K tane nokta verir,
+ve bu sadece tek piksel içindir. 640 x 480 boyutlu resim kareleri için
+640 x 480 x 32 x 32 x 32 yani 10 milyar KDE noktası takip edilmesi
+gerekecektir. Bu algoritmaya çok fazla yük yaratacaktır. Bu durumda KDE
+tekniğinden uzaklaşmak gerekiyor.</p>
+<p>Fakat temel olarak bize gereken nedir? Bize gereken birden fazla odak
+noktasi, tepe noktasi olabilen bir dagilim teknigi, ve cok boyutlu
+verileri rahat bir sekilde halledebilen bir matematiksel yapi.</p>
+<p>Gaussian Karışım Modeli [3] bu ihtiyaçları karşılayabilir. Bir
+Gaussian’ın veri boyutunu 1’den 3 seviyesine çıkartmak onun kapsadığı
+yer açısından patlama yaratmaz. Gaussian için gereken <span
+class="math inline">\(\mu\)</span>, <span
+class="math inline">\(\Sigma\)</span> parametreleri 1 x 3 ve 3 x 3
+boyutundadir, ve bu artış sadece üç katı seviyesinde bir artıştır. Çoklu
+tepe takip etmek istiyorsak her piksel için bir Gaussian yerine mesela
+üç Gaussian tasarlayabiliriz, ve onların karışımlarını yine 1 x 3
+boyutlu bir “ağırlık vektörü” ile takip edebiliriz. Demek ki her piksel
+için depolanması gereken rakamlar 1 x 3 + ( 3 x (3 x 3 + 1 x 3)), yani
+39. Bu idare edilebilir bir büyüklüktür.</p>
+<p>Tekrarlamak gerekirse her piksel seviyesinde bir GMM tasarlıyoruz, ve
+video’nun her karesindeki piksel RGB değerlerini o piksel GMM’ini
+güncellemek için kullanıyoruz. Arka plan çıktısı almak gerektiğinde bir
+GMM’in karışım seviyesi en yüksek olan Gaussian’inin tepe noktasını arka
+plan RGB değeri olarak kabul ediyoruz.</p>
+<p>Ayrıca GMM güncellemesini artımsal olarak ta yapabildiğimiz için [4]
+geriye dönük olarak sürekli toptan işlem yapılmasına da gerek yok, aynen
+KDE’lerde olduğu gibi son video karesini alıp onun değerlerini mevcut
+son GMM modeli üzerinde hızlı güncelleme yapmak için kullanabiliyoruz.
+EWMA benzeri eski veriye daha az önem verme burada da kullanılabilmekte,
+böylece en son değerlerin ima ettiği arka plan bulunabilmiş oluyor.</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> cv2, time, datetime</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -310,16 +349,29 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a hr
 <span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>cap.release()</span>
 <span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a>cv2.destroyAllWindows()</span></code></pre></div>
 <p><img src="vision_20bg_02.jpg" /></p>
+<p>Sonuçlar üstte görülüyor. Aynı fotoğraf karelerinde bu sefer renkli
+olarak arka plan çıktısı alabildik. GMM doğru bir arka plan hipotezini
+bulmayı başardı.</p>
 <p>Canlı Video’da Hareket Eden Bölge Tespiti</p>
+<p>Eğer bir video’da canlı olarak hareket eden cisimleri, kişileri takip
+etmek istesek arka plan tespiti bu ihtiyaç için faydalı, sonuçta hareket
+eden bölgeler o ana kadar bilinen arka plan resminden “farklı olan”
+pikseller diye tanımlanabilir. Alttaki kod tam da bunu yapıyor. O andaki
+video karesi ile arka plan arasında <code>absdiff</code> hesabı yapıyor,
+elde edilen piksel kordinatları üzerine bazı ek işlemler yaparak (ufak
+bölgeleri atmak, çok az farkları elemek) geri kalan bölgeler etrafında
+bir kırmızı dikdörtgen çiziyor. Sonuç altta görülebilir.</p>
 <p><img src="vision_20bg_03.jpg" /></p>
 <p><a href="gmm_online_rect.py">gmm_online_rect.py</a></p>
-<p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] <a
 href="https://www.dropbox.com/scl/fi/oczbpoicx243wd857doti/campus_vibe_video4.mp4?rlkey=0h026033fbwho59frsq3ewuu1&amp;st=7axsjn6x&amp;raw=1">Video
 1</a></p>
 <p>[2] Bayramli, <em>Istatistik, Parametresiz İstatistik (Nonparametric
 Statistics)</em></p>
+<p>[3] Bayramli, *Istatistik, Gaussian Karışım Modeli (GMM) ile
+Kümelemek</p>
+<p>[4] Bayramli, *Istatistik, Artımsal (Incremental) GMM</p>
 <p>
   <a href="..">Yukarı</a>
 </p>

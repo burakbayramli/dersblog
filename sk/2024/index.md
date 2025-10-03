@@ -20,7 +20,7 @@
 
 [Görüntü Dosyaları, PDF, Birleştirme, Kitap](10/foto_kitap.html)
 
-[Ses Tanıma, İşleme](11/ses-tanima-isleme.html)
+[Ses Tanıma, İşleme - 1](11/ses-tanima-isleme.html)
 
 [Tarayıcıda Java - Cheerpj](12/cheerpj-tarayicida-java.html)
 

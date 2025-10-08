@@ -117,6 +117,21 @@ merak konusudur. Örnek olarak 1929 ve 1987 krizlerini seçtik.</p>
 <p>Ekim 1929 krizi Amerika’da “Büyük Depresyon” adı verilen dönemin
 başlangıcıydı, ve kriz öncesi Dow Jones (DJIA) endeksinde müthiş bir
 artış ardından düşüş gerçekleşti.</p>
+<p>Bazi teknik detaylar: Kullanilan <strong>Log-Periodic Power Law
+(LPPL)</strong> modelinin bir uygulamasıdır ve bu modelin en zorlayıcı
+kısmı, yedi parametreden dördünün doğrusal, üçünün ise karmaşık bir
+şekilde doğrusal olmayan parametreler olması.</p>
+<p>SciPy ile LPPL optimizasyonunda kullanılan, <strong>iki aşamalı
+(two-step)</strong> en küçük kareler yöntemini uygulayacağız. Bu yöntem,
+doğrusal olmayan parametreleri (<span
+class="math inline">\(t_c\)</span>, <span
+class="math inline">\(\beta/m\)</span>, <span
+class="math inline">\(\omega\)</span>) ararken, doğrusal parametreleri
+(<span class="math inline">\(A, B, C_1, C_2\)</span>) her iterasyonda
+hızlıca bulmak için lineer cebir kullanır. Hesap üstteki formüldeki
+salınım terimini iki ayrı lineer bileşene ayırır (<span
+class="math inline">\(C \cos(\cdot) + D \sin(\cdot)\)</span> formuna
+dönüştürmek).</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.tsa.stattools <span class="im">as</span> st</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd, zipfile</span>

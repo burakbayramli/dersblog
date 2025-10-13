@@ -3,7 +3,7 @@
 
 ## En Son
 
-13/10 - [Arkaplan (Background) Tespiti](https://burakbayramli.github.io/dersblog/vision/vision_20ir/arkaplan__background__tespiti.html)
+13/10 - [Arkaplan (Background) Tespiti](https://burakbayramli.github.io/dersblog/vision/vision_20bg/arkaplan__background__tespiti.html)
 
 8/10 - [Balonlar Ne Zaman Patlar?](https://burakbayramli.github.io/dersblog/tser/tser_131_bubble/balonlar_ne_zaman_patlar.html)
 
@@ -50,3 +50,6 @@
 [Sene](year.html)
 
 [Ara](https://burakbayramli.github.io/sksearch)
+
+
+

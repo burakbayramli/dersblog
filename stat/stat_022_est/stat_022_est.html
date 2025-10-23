@@ -418,12 +418,82 @@ gerekli değil, bunun sebebini birazdan göreceğiz.</p>
 gösterilen sol kısım, yani sonsal fonksiyon <span
 class="math inline">\(P(\theta | x)\)</span>, karşılaştırma yaparsak
 maksimum olurluk yöntemi sadece olurluğu maksimize ediyordu. Kendimize
-bir kolaylık sağlayalım, logarıtma dışbükey (convex) bir fonksiyon, o
+bir kolaylık sağlayalım, logaritma dışbükey (convex) bir fonksiyon, o
 zaman log alarak çarpımları toplama çevirirsek hala aynı maksimizasyon
 işlemini yapmış oluruz, yani</p>
 <p><span class="math display">\[
-\log P(\theta | x) = \log l(\theta) + \log P(\theta) - \log P(x)
+L = \log P(\theta | x) = \log l(\theta) + \log P(\theta) - \log P(x)
 \]</span></p>
+<p>Log sayesinde çarpımlar toplam bölme çıkartma oldu. Maksimize etmek
+istediğimiz <span class="math inline">\(L\)</span>. Ayrıca maksimizasyon
+<span class="math inline">\(\theta\)</span> temelli olacak, bu durumda
+<span class="math inline">\(P(x)\)</span> kısmını yok sayabiliriz çünkü
+optimizasyonda hiçbir rol oynamayacak. Sadece alttaki formül
+yeterli,</p>
+<p><span class="math display">\[
+L = \log P(\theta | x) = \log l(\theta) + \log P(\theta)
+\]</span></p>
+<p>Daha önce gösterilen yazı-tura atmak probleminin çözümünü bulalım.
+Onsel dağılım <span class="math inline">\(Beta(\alpha,\beta)\)</span>
+olsun,</p>
+<p><span class="math display">\[
+P(\theta) = Beta(\alpha,\beta) =
+\frac{\theta^{\alpha-1} (1-\theta)^{\beta-1}}{B(\alpha,\beta)}
+\]</span></p>
+<p>Binom dağılımı</p>
+<p><span class="math display">\[
+P(x | \theta) = \bigg(\begin{array}{c} n \\ k \end{array} \bigg)
+\theta^k (1-\theta)^{n-k}
+\]</span></p>
+<p>O zaman</p>
+<p><span class="math display">\[
+P(\theta | x) \approx
+\bigg(\begin{array}{c} n \\ k \end{array} \bigg) \theta^k
+(1-\theta)^{n-k}
+\cdot
+\frac{\theta^{\alpha-1} (1-\theta)^{\beta-1}}{B(\alpha,\beta)}
+\]</span></p>
+<p>Log alınca ve sabit olan terimleri toparlayınca</p>
+<p><span class="math display">\[
+\log P(\theta | x) \approx \underbrace{\log \left[
+\bigg(\begin{array}{c} n \\ k \end{array} \bigg)
+\frac{1}{B(\alpha,\beta)} \right]}_{\text{Sabitler}} + \log
+\left[ \theta^{k + \alpha - 1} (1-\theta)^{n - k + \beta - 1} \right]
+\]</span></p>
+<p>Aynen <span class="math inline">\(P(x)\)</span>’i normalize edici
+sabit oldugu ve optimizasyon etkilemedigi icin disarida biraktigimiz
+gibi ustteki sabitler grubunu da atabiliriz,</p>
+<p><span class="math display">\[
+\log P(\theta | x) \approx
+\log \left[ \theta^{k + \alpha - 1} (1-\theta)^{n - k + \beta - 1}
+\right]
+\]</span></p>
+<p>Ve tabii ki log alınca üsteller çarpan haline gelirler,</p>
+<p><span class="math display">\[
+\log P(\theta | x) \approx
+(k + \alpha - 1) \log(\theta) + (n - k + \beta - 1) \log(1-\theta)
+\]</span></p>
+<p>Şimdi üstteki ifadenin <span class="math inline">\(\theta\)</span>’ya
+göre türevini alıp sıfıra eşitlersek, optimal değeri bulabiliriz [3,
+Lecture 5],</p>
+<p><span class="math display">\[
+\frac{d}{d\theta} \log P(\theta | x) =
+\frac{k + \alpha - 1}{\theta} - \frac{n - k + \beta - 1}{1 - \theta} = 0
+\]</span></p>
+<p><span class="math display">\[
+\theta_{MAP} = \frac{k + \alpha - 1}{n + \alpha + \beta - 2}
+\]</span></p>
+<p>Eger Beta(6,6) onsel dagilimi icin ayni turetimi <code>sympy</code>
+ile yapmak istersek [1, sf. 184],</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sympy <span class="im">import</span> stats <span class="im">as</span> st</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sympy.abc <span class="im">import</span> p,k,n</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>obj<span class="op">=</span>sympy.expand_log(sympy.log(p<span class="op">**</span>k<span class="op">*</span>(<span class="dv">1</span><span class="op">-</span>p)<span class="op">**</span>(n<span class="op">-</span>k)<span class="op">*</span> st.density(st.Beta(<span class="st">&#39;p&#39;</span>,<span class="dv">6</span>,<span class="dv">6</span>))(p)))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>sol<span class="op">=</span>sympy.solve(sympy.simplify(sympy.diff(obj,p)),p)[<span class="dv">0</span>]</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (sol)</span></code></pre></div>
+<pre class="text"><code>(k + 5)/(n + 10)</code></pre>
+<p>Aynı sonuca ulaştık.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Unpingco, Python for Probability, Statistics and Machine

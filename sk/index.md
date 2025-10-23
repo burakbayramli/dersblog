@@ -3,9 +3,9 @@
 
 ## En Son
 
-23/10 - [Çok Seviyeli Modeller - Ekler - PyMC)](https://burakbayramli.github.io/dersblog/stat/stat_085_multlev/cok_seviyeli_modeller__multilevel_models_.html)
+23/10 - [Çok Seviyeli Modeller - Ekler - PyMC](https://burakbayramli.github.io/dersblog/stat/stat_085_multlev/cok_seviyeli_modeller__multilevel_models_.html)
 
-23/10 - [Lucas Kanade Algoritması - Ekler](https://burakbayramli.github.io/dersblog/vision/vision_85lk/piksel_takibi_optik_akis_lucas_kanade_algoritmasi.html)
+23/10 - [Lucas Kanade Algoritması](https://burakbayramli.github.io/dersblog/vision/vision_85lk/piksel_takibi_optik_akis_lucas_kanade_algoritmasi.html)
 
 13/10 - [Arkaplan (Background) Tespiti](https://burakbayramli.github.io/dersblog/vision/vision_20bg/arkaplan__background__tespiti.html)
 

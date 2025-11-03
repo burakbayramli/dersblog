@@ -337,50 +337,6 @@ seviyesinde</p>
 
 <p><img src="ses_04.jpg" alt="" /></p>
 
-<p>Sinüssel Regresyon ile Ayırmak</p>
-
-<div class="codehilite">
-<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">wav1</span><span class="p">)</span>
-<span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;wav&#39;</span><span class="p">]</span>
-<span class="n">tt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">500</span><span class="p">):</span>
-   <span class="n">df</span><span class="p">[</span><span class="s1">&#39;sin</span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
-   <span class="n">df</span><span class="p">[</span><span class="s1">&#39;cos</span><span class="si">%f</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
-
-<span class="n">X</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;wav&#39;</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)))</span>
-<span class="n">Y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">wav</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span><span class="n">X</span><span class="p">)</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">params</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-<span class="nb">print</span> <span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">pvalues</span><span class="p">[:</span><span class="mi">5</span><span class="p">])</span>
-<span class="nb">print</span> <span class="p">(</span><span class="s1">&#39;R^2&#39;</span><span class="p">,</span> <span class="n">results</span><span class="o">.</span><span class="n">rsquared</span><span class="p">)</span>
-<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="n">results</span><span class="o">.</span><span class="n">pvalues</span> <span class="o">&lt;</span> <span class="mf">0.05</span><span class="p">]))</span>
-<span class="nb">print</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
-</code></pre>
-</div>
-
-<div class="codehilite">
-<pre><span></span><code>const   -1.746267e+00
-x1      -3.873460e+13
-x2       4.141772e+10
-x3       8.071563e+13
-x4      -9.792258e+12
-dtype: float64
-const    0.972714
-x1       0.893328
-x2       0.902068
-x3       0.343704
-x4       0.903365
-dtype: float64
-R^2 0.5121417785266622
-48
-2341
-</code></pre>
-</div>
-
 <p>Kaynaklar</p>
 
 <p>[1] <a href="https://github.com/talcs/simpledtw">SimpleDTW</a></p>
@@ -392,8 +348,6 @@ R^2 0.5121417785266622
 <p>[4] Tavenard, <a href="https://rtavenar.github.io/blog/dtw.html">An introduction to Dynamic Time Warping</a></p>
 
 <p>[5] Mishra, <a href="https://medium.com/walmartglobaltech/time-series-similarity-using-dynamic-time-warping-explained-9d09119e48ec">Time Series Similarity Using Dynamic Time Warping -Explained</a></p>
-
-<p>[6] Bayramlı, Finans ve Zaman Serileri - Sezonsallık, Periyotlar</p>
 
 <p>[7] <a href="https://www.dropbox.com/scl/fi/7bjyicydyyurizi314qp8/google_voice_small.zip?rlkey=l5ibbx480jld79exvkwih3szr&amp;st=ni9ibhbs&amp;dl=1">Ufak Ses Komut Verisi</a></p>
 

@@ -4,7 +4,7 @@
 
 [Marioflow](01/marioflow.html)
 
-[Konuşma Tanıma (Speech Recognition)](01/speech-recognition.html)
+[YSA ile Konuşma Tanıma (Speech Recognition)](01/speech-recognition.html)
 
 [Özkodlama (Autoencoding)](02/autoencoding.html)
 

@@ -52,6 +52,8 @@
 
 [Yeniden Düzenleme (Refactoring)](10/yeniden-duzenleme-refactoring.html)
 
+[CV, Reşume, İş Geçmişi Belgesi](11/cv-resume-curriculum-vitae.html)
+
 [XP İşletimi](11/xp-isletimi.html)
 
 [XP Planlaması](11/xp-planlamas.html)

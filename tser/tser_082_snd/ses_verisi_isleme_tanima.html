@@ -311,6 +311,18 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a h
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;tser_sinreg_03.png&#39;</span>)</span></code></pre></div>
 <p><img src="tser_sinreg_03.png" /></p>
 <p>Uyum daha iyi hale geldi.</p>
+<h3 id="regresyon-sesi-katsayılardan-tekrar-oluşturmak">Regresyon, Sesi
+Katsayılardan Tekrar Oluşturmak</h3>
+<p>Eğer bir sesi sinüssel bileşenlerine ayırabiliyorsak teorik olarak bu
+bileşenlerden en önemli olanlarını tutup, gerisini atabilirdik, ve bu
+azaltılmış kümeyi tekrar biraraya koyarak orijinal ses yakın bir ses
+elde etmek mümkün olurdu. Bunun faydası nerede? Çünkü eğer bu
+yapılabiliyorsa, o azaltılmış kümeyi arama algoritmalarında kullanmak
+mümkün olurdu, çünkü her sesi temsil eden bir nevi özet, “kodlama”
+bulmuş oluyoruz, ve bu özet üzerinden (ve eğer elimizde tüm mümkün
+seslerin özetinin kayıt edildiği bir veri tabanı var ise) sesin ne
+olduğunu arayıp bulmak rahatlaşabiliyor.</p>
+<p>Daha önce işlediğimiz ses parçası üzerinde görelim,</p>
 <div class="sourceCode" id="cb15"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fs, ow <span class="op">=</span> scipy.io.wavfile.read(owfile)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -335,6 +347,9 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a h
 <span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> sm.OLS(Y, X_full)</span>
 <span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> model.fit()</span></code></pre></div>
+<p>Regresyon yapıldı, şimdi bu regresyon sonucundaki istatistik önemi
+fazla olan katsayıları tutalım, gerisini atalım, ve elde tutulan
+katsayılar ile ses verisini tekrar yaratalım.</p>
 <div class="sourceCode" id="cb16"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>basis_matrix_full <span class="op">=</span> X_full </span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>all_coeffs <span class="op">=</span> results.params</span>
@@ -356,6 +371,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a h
 <span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>y_int16 <span class="op">=</span> y.astype(np.int16)</span>
 <span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>scipy.io.wavfile.write(<span class="st">&#39;/tmp/sound-out3.wav&#39;</span>, fs, y_int16)</span></code></pre></div>
+<p>Üstteki tekrar oluşturulmuş sesi dinleyince orijinal ses yakın
+olduğunu duyabiliriz.</p>
 <h3 id="mfcc">MFCC</h3>
 <p>Mel Frekansı Kepstral Katsayıları (MFCC), ses işleme alanında,
 özellikle konuşma tanıma ve müzik sınıflandırma gibi uygulamalarda

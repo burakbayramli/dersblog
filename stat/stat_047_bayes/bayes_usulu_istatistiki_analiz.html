@@ -324,11 +324,11 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;tser_023_bsts_03.jpg&#39;</span>)</span></code></pre></div>
 <pre class="text"><code>0.7246428574887125</code></pre>
 <p><img width='300' src='tser_023_bsts_03.jpg'/></p>
-<p>Görüldüğü gibi 0.7 yanlı veriyi modele verince kodlar bunun sonsal
-<span class="math inline">\(\theta\)</span> dağılımına yansımasını
-saptadı, ortalama 0.72 çıktı. Ayrıca tek bir sayı değil, bütün bir
-dağılımı sonuç olarak aldığımız için çok daha çetrefil analizleri bu
-sonuç üzerinde işletebiliriz.</p>
+<p>Görüldüğü gibi 0.7 odaklı yanlı veriyi modele verince kodlar bunun
+sonsal <span class="math inline">\(\theta\)</span> dağılımına
+yansımasını saptadı, ortalama 0.72 çıktı. Ayrıca tek bir sayı değil,
+bütün bir dağılımı sonuç olarak aldığımız için çok daha çetrefil
+analizleri bu sonuçtan alabiliriz.</p>
 <p>Katmanlar alttaki gibi,</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>graphviz <span class="op">=</span> pm.model_to_graphviz(model)</span>
@@ -337,6 +337,20 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a hr
 <pre class="text"><code>Out[1]: &#39;tser_023_bsts_02.jpg&#39;</code></pre>
 <p><img width="200px" src="tser_023_bsts_02.jpg"></p>
 <h3 id="t-testi">T-Testi</h3>
+<p>Bayeşçi yaklaşımın farkını üstteki örnekte görmeye başladık.
+Parametreler hatta veri bile bir anlamda bir rasgele değişken haline
+gelebiliyordu. Bu yaklaşım istatistiki analizin tüm yelpazesini etkiler,
+mesela hipotez testi kavramı da Bayeşçi bağlamda yenilenebilir. Standart
+müfredatta iyi bilinen t-testini örnek alalım mesela. Bu test örneklem
+ortalamasının önceden tanımlı bir değerden sapma durumunu kontrol eder.
+Bu testin Bayeşçi versiyonu Krusçke tarafından bulunmuştur, ona BEST
+(Bayesian Estimation Süpersedes the t-test) adını vermiştir [1].</p>
+<p>Mesela iki grubu birbiriyle karşılaştırıyoruz, pazarlamacıların iyi
+bildiği bir A/B testi yapmamız gerekiyor. Test edilen iki Web sayfası
+olabilir, ve kullanıcıların her sayfada ne kadar kaldığı verisi iki ayrı
+grupta. Merak ettiğimiz kullanıcıların hangi sayfada daha fazla kaldığı,
+A sayfasında mı, B sayfasında mı?</p>
+<p>Suni veri yaratalım, veri Gaussian bazlı olsun,</p>
 <div class="sourceCode" id="cb7"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="dv">250</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>mu_A, std_A <span class="op">=</span> <span class="dv">30</span>, <span class="dv">4</span></span>
@@ -347,10 +361,14 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a hr
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (durations_A[:<span class="dv">8</span>])</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (durations_B[:<span class="dv">8</span>])</span></code></pre></div>
-<pre class="text"><code>[24.16407223 26.33809627 26.02574579 33.21505722 28.50448144 26.99996422
- 30.76649221 30.59385573]
-[35.63522369 24.06562288 30.18425953 22.17136243 32.47047614 32.74779037
- 33.07401654 34.0171137 ]</code></pre>
+<pre class="text"><code>[30.09406244 36.43862561 38.55121675 22.88904474 25.18860278 25.58463466
+ 26.26095514 29.65196647]
+[24.03905003 21.69379493 29.05057681 31.08319069 32.84439179 26.36658114
+ 23.38477673 27.86670832]</code></pre>
+<p>İki farklı grubun farklı ortalaması, ve standart sapması var
+(<code>mean</code>, <code>std</code> bunu hemen gösterirdi), veriyi ona
+göre ürettik. Şimdi acaba birazdan göreceğimiz t-testi bu farkı
+yakalayabilecek mi?</p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Pool the data for priors</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pooled_mean <span class="op">=</span> np.r_[durations_A, durations_B].mean()</span>

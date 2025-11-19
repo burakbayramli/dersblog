@@ -236,7 +236,10 @@ p(a,b|y_{1},...,y_{N}) \propto p(y_{1},...,y_{N}|a,b)
 <p>Bu sonsal dağılımın fonksiyonel biçiminin neye benzediğini görmek
 için açılımı yapalım,</p>
 <p><span class="math display">\[p(a,b|y_{1},...,y_{N}) \propto
-(\prod_{i}ba^{-b}y_{i}^{b-1}e^{-(\frac{y_{i}}{a})^{b}}I_{(0,inf)}(y_{i}))\frac{1}{\lambda_{a}}e^{-\frac{a}{\lambda_{a}}}
+\left(
+   \prod_{i}ba^{-b}y_{i}^{b-1}e^{-(\frac{y_{i}}{a})^{b}}I_{(0,inf)}(y_{i})
+\right)
+\frac{1}{\lambda_{a}}e^{-\frac{a}{\lambda_{a}}}
 \frac{1}{\lambda_{b}}e^{-\frac{b}{\lambda_{b}}}
 \]</span></p>
 <p>Bu ifade analitik tekniklere uygun değildir.</p>
@@ -248,12 +251,36 @@ iptal etmezler mi?”. Farklı Bayes modellerinin farklı sabit edicileri
 var ise, iptal mümkün olmaz. Örnek olarak <span
 class="math inline">\(M1\)</span> ve <span
 class="math inline">\(M2\)</span> modelleri var ise, bir entegral <span
-class="math inline">\(\int P_{M1}(\text{veri} \mid \theta)
-P(\theta)d\theta\)</span> digeri <span class="math inline">\(\int
-P_{M2}(\text{veri} \mid \theta) P(\theta)d\theta\)</span> olur, bu
+class="math inline">\(\int P_{a}(\text{veri} \mid \theta)
+P_b(\theta)d\theta\)</span> digeri <span class="math inline">\(\int
+P_{c}(\text{veri} \mid \theta) P_d(\theta)d\theta\)</span> olabilir, bu
 hesaplar farklı sonuçlar verecektir çünkü farklı yoğunluk fonksiyonları
-ve parametreleri kullanıyor olacaklar.</p>
+ve parametreleri kullanıyor olurlar.</p>
 <h3 id="pymc">PyMC</h3>
+<p>Programcıları üstte tarif edilen hesapsal yükten kurtarmaya uğraşan
+ve yapılan hesapların daha rahat programlanmasını sağlayan paketler var.
+Bu paketler önsel / sonsal rasgele değişkenlerin tanımlanmasını
+neredeyse tanımsal (declarative) konuma getirerek alt seviye kodlama
+detaylarını perde arkasına itebiliyorlar, ve bu şekilde Bayeşçi
+hesapların çabuk gerçekleştirilmesini sağlıyorlar. Bu paketler sayesinde
+istenildiği kadar rasgele değişken bağlantısı yaratlım, çözücü kodlar
+sonsal dağılımdan örneklem alabiliyor. Bu tür paketler getirdikleri
+rahatlık sayesinde neredeyse bir dil yaratmış oldular, ve böylece
+terminolojiye yeni bir terim katıldı: olasılıksal programlama
+(proabilistic programming).</p>
+<p>Bir örnek üzerinde görelim [7, sf. 8]. Standart istatistik
+örneklerinden bilindiği gibi arda atılan madeni paranın yazı mı tura mı
+geleceği Binom dağılımı ile temsil edilebilir. Eğer madeni paranın
+yanlılığı yok ise (her iki seçenek eşit ihtimalde) bunu <span
+class="math inline">\(X \sim Bin(N,p)\)</span> ile gösterebiliriz, ki
+<span class="math inline">\(X\)</span> rasgele değişken yoğunluğu</p>
+<p><span class="math display">\[
+P(X = k) = {N \choose k} p^k (1-p)^{N-k}
+\]</span></p>
+<p>Burada <span class="math inline">\(N\)</span> tane deney içinde <span
+class="math inline">\(k\)</span> tane başarı elde etmeninin olasılık
+yoğunluk fonksiyonunu görüyoruz. Eğer yanlılık yok ise <span
+class="math inline">\(p=0.5\)</span>.</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pymc <span class="im">as</span> pm, scipy.stats <span class="im">as</span> stats</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div>
@@ -372,6 +399,7 @@ Bayesian analysis of capture-recapture data with hidden Markov models
 <p>[5] Bayramli, Istatistik, <em>Değişim Noktası Analizi (Changepoint
 Analysis)</em></p>
 <p>[6] Stevyers, <em>Computational Statistics with Matlab</em></p>
+<p>[7] Kumar, Bayesian Modeling and Computation in Python</p>
 <p>
   <a href="..">Yukarı</a>
 </p>

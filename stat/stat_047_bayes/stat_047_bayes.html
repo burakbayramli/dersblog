@@ -118,7 +118,7 @@ açıkça aradığınız şeydir; eğer birden fazla parametreniz varsa,
 muhtemelen çok değişkenli bir dağılım. Sağ tarafta, olurluk olan <span
 class="math inline">\(P(\text{veri} \mid \theta)\)</span> bulunur. Bu
 miktar, En Yüksek Olurluk Tahmini (MLE) yaklaşımındaki ile aynıdır.
-Evet, Bayeşçi ve frekansçı yaklaşımların çekirdeğinde aynı olurluk
+Evet, Bayesçi ve frekansçı yaklaşımların çekirdeğinde aynı olurluk
 bulunur, bu da sonuçların genellikle neden çok farklı olmadığını büyük
 ölçüde açıklar. Olurluk, <span class="math inline">\(\theta\)</span> ile
 parametrelendirilmiş bir model verildiğinde, verinizdeki bilginin
@@ -259,9 +259,9 @@ ve parametreleri kullanıyor olurlar.</p>
 <h3 id="pymc">PyMC</h3>
 <p>Programcıları üstte tarif edilen hesapsal yükten kurtarmaya uğraşan
 ve hesapların daha rahat programlanmasını sağlayan paketler var. Bu
-paketler önsel / sonsal rasgele değişkenlerin tanımlanmasını neredeyse
+paketler önsel / sonsal rasgele değişkenlerin kodlanmasını neredeyse
 tanımsal (declarative) hale getirerek alt seviye kodlama detaylarını
-perde arkasına itebiliyorlar, ve bu şekilde Bayeşçi hesapların çabuk
+perde arkasına itebiliyorlar, ve bu şekilde Bayesçi hesapların çabuk
 gerçekleştirilmesini sağlıyorlar. Bu paketler sayesinde istenildiği
 kadar rasgele değişken bağlantısı yaratalım, çözücü kodlar sonsal
 dağılımdan örneklem alabiliyor. Bu tür paketler getirdikleri rahatlık
@@ -269,31 +269,29 @@ sayesinde neredeyse bir dil yaratmış oluyorlar, ve bazıları
 terminolojiye yeni bir terim ekliyor: olasılıksal programlama
 (probabilistic programming).</p>
 <p>Bir örnek üzerinde görelim [7, sf. 8]. Standart istatistik
-örneklerinden bilindiği gibi arda atılan madeni paranın yazı mı tura mı
-geleceği Binom dağılımı ile temsil edilebilir. Eğer madeni paranın
-yanlılığı yok ise (her iki seçenek eşit ihtimalde) bunu <span
-class="math inline">\(X \sim Bin(N,p)\)</span> ile gösterebiliriz, ki
-<span class="math inline">\(X\)</span> rasgele değişken yoğunluğu</p>
+örneklerinden bilindiği gibi art arda atılan madeni paranın yazı mı tura
+mı geleceği (daha doğrusu <span class="math inline">\(N\)</span> deney
+içinde <span class="math inline">\(k\)</span> başarı olasılığı) Binom
+dağılımı ile temsil edilebilir. Dağılım <span class="math inline">\(X
+\sim Bin(N,p)\)</span> ile gösterilebilir, ki <span
+class="math inline">\(X\)</span> rasgele değişken yoğunluğu</p>
 <p><span class="math display">\[
 P(X = k) = {N \choose k} p^k (1-p)^{N-k}
 \]</span></p>
-<p>Burada <span class="math inline">\(N\)</span> tane deney içinde <span
-class="math inline">\(k\)</span> tane başarı elde etmeninin olasılık
-yoğunluk fonksiyonunu görüyoruz. Eğer yanlılık yok ise <span
-class="math inline">\(p=0.5\)</span>, var ise mesela <span
-class="math inline">\(p = 0.7\)</span>. Eğer yoğunluğu verilen ve
-bilinen <span class="math inline">\(p\)</span> yoğunluğundan rasgele
-örneklem toplamak istesek bunu yapabilirdik, yaygın kullanılan
-kütüphanelerde bile böyle kodlar mevcuttur.</p>
-<p>Eğer <span class="math inline">\(p\)</span> bilinmiyor olsaydı ve
-elde deney verisi olsaydı, bilinmeyen <span
-class="math inline">\(p\)</span>’yi bu veriden kestirmenin de yöntemleri
-mevcuttur.</p>
+<p>Eğer yanlılık yok ise <span class="math inline">\(p=0.5\)</span>, var
+ise mesela <span class="math inline">\(p = 0.7\)</span>. Eğer yoğunluğu
+verilen ve bilinen <span class="math inline">\(p\)</span> yoğunluğundan
+rasgele örneklem toplamak istesek bunu yapabilirdik, yaygın kullanılan
+kütüphanelerde bile böyle kodlar mevcuttur. Eğer <span
+class="math inline">\(p\)</span> bilinmiyor olsaydı ve elde deney verisi
+olsaydı, bilinmeyen <span class="math inline">\(p\)</span>’yi bu veriden
+kestirmenin de yöntemleri mevcuttur.</p>
 <p>Modeli daha çetrefilleştirebilirdik. <span
 class="math inline">\(p\)</span>’nin bilinip bilinmedigi bir yana, onu
 tek bir sayı ile değil, <em>bir rasgele değişken</em>, mesela <span
 class="math inline">\(\theta\)</span> üzerinden tanımlıyor olabilirdik.
-Bu durumda,</p>
+O zaman <span class="math inline">\(\theta\)</span>’nın da ayrı bir
+dağılımı olurdu.</p>
 <p><span class="math display">\[
 \theta \sim Beta(\alpha, \beta)
 \]</span></p>

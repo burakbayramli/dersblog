@@ -249,8 +249,9 @@ düzenlersek,</p>
 \lambda_{A,t} - \lambda_{B,t} = \alpha + \beta + u_t - (\alpha + u_t)
 \]</span></p>
 <p><span class="math display">\[
-= \alpha + \beta + u_t - \alpha  u_t)
+= \alpha + \beta + u_t - \alpha - u_t = \beta
 \]</span></p>
+<p>Yani,</p>
 <p><span class="math display">\[
 \lambda_{A,t} - \lambda_{B,t} = \beta
 \]</span></p>
@@ -261,7 +262,30 @@ düzenlersek,</p>
 <p>Yani <span class="math inline">\(\beta\)</span> parametresi otomatik
 olarak A ve B farklı iki Poisson <span
 class="math inline">\(\lambda\)</span> parametrelerinin oranını
-hesaplıyor! Bu hesabin yapilabilmesi icin</p>
+hesaplıyor! Dikkat bu hesabın yapılabilmesi için GLM hesabının spesifik
+bir oran hesabı yapması gerekli değil. Tek gereken GLM Poisson için
+gereken temel veri GLM regresyonuna, ya da Bayes MCMC hesabına
+verilirken, tüm verinin, yani A ve B birleşmiş olarak şu şekilde
+hesaplanarak sunulması,</p>
+<p><span class="math display">\[
+\log(\lambda_{A,t}) = \alpha + \beta \cdot g_t + u_t
+\]</span></p>
+<p>Tabii usttekinin hemen ardindan <span
+class="math inline">\(\lambda\)</span> kullanilarak bir Poisson uretimi
+yapildigini dusunuyoruz, geri yonde ise eldeki veri uzerinden MCMC ile
+sonsal -posterior- elde edip o dagilimdan orneklem aliyoruz, bunlar
+standart yaklasimlar.</p>
+<p>Konuya dönersek <span class="math inline">\(\beta \cdot g_t\)</span>
+ifadesindeki <span class="math inline">\(g_t\)</span>’ye dikkat, bu
+parametre A grup verisi için 1 B grup verisi için 0 diyecek. Yani bu
+formülasyonun doğal sonucu olarak elde ettiğimiz <span
+class="math inline">\(\beta\)</span> iki <span
+class="math inline">\(\lambda\)</span> parametresinin oranı haline
+gelecek. Her veri noktası <span class="math inline">\(\beta\)</span>’yi
+kendi tarafına doğru çekmeye uğraşacak, bu al-ver itme-çekme arasında
+<span class="math inline">\(\beta\)</span>’nin varacağı yer onun tüm
+zaman dilimleri için geçerli bir oran değerine ulaşmasıdır.</p>
+<p>Verinin nasıl oluşturulduğunu görelim,</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_stacked_arrays(simdict):</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    years <span class="op">=</span> np.array(simdict[<span class="st">&quot;years&quot;</span>])</span>
@@ -292,6 +316,8 @@ A mi B mi?
  1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0
  0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
  0 0 0 0 0 0 0 0 0 0 0]</code></pre>
+<p>Şimdi oranın sonsal dağılımını PyMC ile ortaya çıkartalım ve ondan
+örneklem alalım.</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_poisson_ratio(years, A_arr, B_arr, fout):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    n_years <span class="op">=</span> <span class="bu">len</span>(years)</span>
@@ -354,6 +380,10 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a hr
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;stat_082_rapoi_02.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="stat_082_rapoi_02.jpg" /></p>
+<p>Görüyoruz ki oranın dağılımı 1 etrafında kümelenmiş, o zaman iki
+sayım zaman serisinin birbirine yakın olduğuna karar verebiliriz çünkü
+oranları 1’e yakın.</p>
+<p>Şimdi yakın olmayan iki zaman serisi yaratalım,</p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>years <span class="op">=</span> np.arange(<span class="dv">1980</span>, <span class="dv">2020</span>)</span>
@@ -400,7 +430,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a h
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;stat_082_rapoi_04.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="stat_082_rapoi_04.jpg" /></p>
-<p>[devam edecek]</p>
+<p>Bu zaman serileri birbirine yakın değiller. Sonsal dağılımın
+kümelendiği yer 1’den çok uzakta.</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramli, Istatistik, <em>Sayım, Poisson ve Negatif Binom Bazlı
 Genel Lineer Modelleri (GLM)</em></p>

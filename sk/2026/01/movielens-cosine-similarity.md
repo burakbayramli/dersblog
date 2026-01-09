@@ -1,4 +1,4 @@
-# Movielens Film Kosinus Benzerligi, Tavsiyeler
+# Movielens Filmleri, Kosinus Benzerligi, Tavsiyeler
 
 Kosinüs benzerliği konusu [1]'de işlendi. Bu benzerlik ölçütü iki
 vektörün birbirine çok boyutlu açısal yakınlığını hesaplar. Bunun için
@@ -10,9 +10,9 @@ kavramından bahsedildi. Fakat aslında biz python kütüphanelerinden
 gelen seyrek matris formatları yerine kendi seyrek matris (vektör)
 yapımızı oluşturabiliriz.
 
-Ilerlemeden once noktasal carpimin ne oldugunu hatirlayalim, ayni
-boyuttaki iki vektorun birbirine tekabul eden her degeri carpilir ve
-bu carpimlar birbirine toplanir.
+İlerlemeden önce noktasal çarpımın ne olduğunu hatırlayalım, aynı
+boyuttaki iki vektörün birbirine tekabül eden her değeri çarpılır ve
+bu çarpımlar birbirine toplanır.
 
 ```python
 a = np.array([2,4,6,7,4,9,4,3,2,5,6,3,1,2])
@@ -32,28 +32,53 @@ Fakat şimdi Movielens film not verisini düşünelim. Bu kayıtlarda
 binlerce film var, ve herhangi bir kullanıcının tüm filmleri seyredip
 not vermiş olması imkansız. Seyretmiş olsa bile not vermemiş olabilir.
 Çoğunlukla bir kullanıcı 10-15 filme not vermiştir, belki
-yüzlerde. Her durumda da not sayısı az. Yani üstteki örnek veri
+yüzlerce. Her durumda da not sayısı az. Yani üstteki örnek veri
 aslında suna benzeyebilir,
 
 ```python
-a = np.array([2,4,6,0,0,0,0,0,0,0,0,0,0,0,3,1,2])
-b = np.array([0,0,0,0,0,0,0,0,0,0,3,3,4,1,1,2,0])
+a = np.array([2,0,6,0,0,0,0,0,0,0,0,0,0,0,3,1,2])
+b = np.array([0,3,1,0,0,0,0,0,0,0,3,3,4,1,1,2,0])
 
 float (np.sum([x*y for x,y in zip(a,b)]))
 ```
 
 ```text
-Out[1]: 5.0
+Out[1]: 11.0
 ```
 
 Görüldüğü her iki vektörde de gibi bir sürü sıfır var. Noktasal
 çarpımda sıfır çarpı herhangi bir diğer sıfır olduğu için, herhangi
 bir hücrede sıfır varsa o noktadaki hesap sıfır olur, toplama etkisi
-olmaz. Keşke sıfır olan hücreleri direk atlayabilseydik, değil mi?
+olmaz. Ve dikkat üstteki örnekte sıfır olmayan çoğu değer çakışmıyor
+(ancak o zaman toplama katkı olabilir), mesela `a` 1'inci öğe 2 ama
+`b` aynı öğe sıfır, 'b' 2'inci öğe 3 ama onun eşi `a` uzerinde sıfır,
+demek ki ilk iki öğenin toplama hiçbir katkısı olmayacak. Keşke sıfır
+olan hücreleri direk atlayabilseydik, değil mi?
 
 Seyrek matris formatları bunu yapmamızı sağlar. Kütüphane
 `scipy.sparse` içinde bu amaç için pek çok kodlar vardır. Fakat biz
 kendi pişirdiğimiz kodlar ile de aynı sonucu elde edebiliriz.
+
+Bir vektör yerine bir sözlük (dictionary) yapısı kullanarak bunu
+yapabilirdik. Sözlük anahtarı üstteki vektörde sıfır olmayan değerin
+indisi olabilir. Yeni "vektörlerimiz" alttaki gibi olur,
+
+```python
+da = dict({0: 2, 2:6, 14:3, 15:1, 16:2})
+db = dict({1: 3, 2:1, 10:3, 11:3, 12:4, 13:1, 14:1, 15:2})
+```
+
+```python
+res = sum(db[key]*da.get(key, 0) for key in db)
+print (res)
+```
+
+```text
+11
+```
+
+
+
 
 
 ```python

@@ -68,8 +68,14 @@ da = dict({0: 2, 2:6, 14:3, 15:1, 16:2})
 db = dict({1: 3, 2:1, 10:3, 11:3, 12:4, 13:1, 14:1, 15:2})
 ```
 
+Şimdi noktasal çarpım mantığı şöyle kodlanabilir: sözlüklerden birini
+al, tüm öğelerini gez, gezerken bu anahtar değeri diğer sözlükte var
+mı diye kontrol et, varsa çarpımı yap, toplama ekle, yoksa sıfır
+değerini ekle.
+
+
 ```python
-res = sum(db[key]*da.get(key, 0) for key in db)
+res = sum(da[key]*db.get(key, 0) for key in da)
 print (res)
 ```
 
@@ -77,8 +83,53 @@ print (res)
 11
 ```
 
+Ayni sonucu aldik. Dikkat diger sozlukte varlik kontrolunu `.get` ile
+yaptik, ve yine bir puf nokta bu `get` cagrisi bir sey bulamadiysa
+sifir dondursun diye bir yokluk olagan degeri tanimladik, cunku
 
 
+```python
+print (da.get(5))
+```
+
+```text
+None
+```
+
+olurdu, ama alttaki kullanimla,
+
+```python
+print (da.get(5, 0))
+```
+
+```text
+0
+```
+
+elde edilir.
+
+Kodun optimal olduğunu görebiliriz. Gezilen ana sözlükte olmayan
+değerler (verilmemiş notlar) hiç gezilmiyor, çünkü onlar sözlük içinde
+bile değiller. Eğer çakışma yoksa `get` sıfır donduruyor, toplama
+etkisi olmuyor. Peki diğer sözlükte olan ama gezilen ana sözlükte
+olmayanlar? Bu durumda çakışma olmaması anlamına geldiği için toplama
+sıfır etkisi vardır, ve bu işlemin yapılmıyor olması genel mantık için
+doğrudur.
+
+Hesapsal yük açısından `get` çağrısı çok hızlıdır, sabit zamanda
+işler. Gezilen değerlerin okunması aynı şekilde.
+
+Üstteki algoritmaya farklı şekilerde de yardım edebiliriz. Mesela biz
+örnek veride `da` sözlüğünü gezdik (onun tüm öğelerini okuduk), bunu
+yapmamızın sebebi `da` sözlüğünün `db`'den daha küçük olmasıdır. Eğer
+verimizde bir tarafın her zaman diğer taraftan daha ufak vektörler
+vereceğini biliyorsak, bu bilgiyi koda gömebiliriz. Film tavsiyesi
+bağlamında benim kayıtlarımda not verdiğim 1000 üzerinde film var.  Bu
+demektir ki benim beğeni vektörüm çoğu zaman karşılaştırma yaptığım
+Movielens tabanındaki diğer kullanıcıların beğeni vektörlerinden büyük
+olacaktır. Bu durumda kendim için bir noktasal çarpım kodluyorsam,
+algoritmayi her zaman diğer kullanıcının vektörünü gezecek şekilde
+kodlamalıyım.
 
 
 ```python
@@ -92,8 +143,7 @@ print(content.replace('\n', '\r\n'))
 #
 # https://grouplens.org/datasets/movielens/latest/
 #
-# Download the full file, and unzip in a known
-# location update the d variable below
+# Download the full file, and unzip in a known location set in d
 #
 from scipy.sparse import csr_matrix
 import scipy.sparse.linalg, json
@@ -104,8 +154,7 @@ csv.field_size_limit(sys.maxsize)
 
 d = "/opt/Downloads/ml-32m"
 
-
-def sim():
+def sim_recommend():
     fin = d + "/user_movie.txt"
     picks = pd.read_csv(os.environ['HOME'] + '/Documents/kod/movpicks.csv',index_col=0).to_dict('index')
     skips = pd.read_csv(os.environ['HOME'] + '/Documents/kod/movskips.csv',index_col=0).to_dict('index')
@@ -128,14 +177,16 @@ def sim():
 
     df = pd.DataFrame(res).set_index(0)
     df = df.sort_values(by=1,ascending=False).head(400)
-    df = df.to_dict()[1]
+    df = df.to_dict()[1] # the final list of close users
 
     recoms = []
     with open(fin) as csvfile:   
         rd = csv.reader(csvfile,delimiter='|')
         for i,row in enumerate(rd):
             jrow = json.loads(row[1])
+            # if the user exists in the closest users list
             if str(row[0]) in df:
+                # get this person's movie ratings
                 for movid,rating in jrow.items():
                     if int(movid) not in mov_id_title: continue 
                     fres = re.findall('\((\d\d\d\d)\)', mov_id_title[int(movid)])
@@ -145,6 +196,7 @@ def sim():
                        'Animation' not in genre[int(movid)] and \
                        'Documentary' not in genre[int(movid)] and \
                        len(fres)>0 and int(fres[0]) > 2010: \
+                       # add the picks of this user multiplied by his closeness
                        recoms.append([mov_id_title[int(movid)],rating*df[row[0]]])
 
     df = pd.DataFrame(recoms)
@@ -152,14 +204,8 @@ def sim():
     df = df.drop_duplicates(0)
     df.to_csv("/opt/Downloads/movierecom3.csv",index=None,header=False)
         
-if __name__ == "__main__":  
-    
-    if len(sys.argv) < 2:
-        print ("Usage movrecom.py [sim]")
-        exit()
-
-    if sys.argv[1] == "sim":
-        sim()
+if __name__ == "__main__":      
+    sim_recommend()
                 
 
 ```

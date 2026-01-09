@@ -25,8 +25,6 @@ print(content.replace('\n', '\r\n'))
 # Download the full file, and unzip in a known
 # location update the d variable below
 #
-
-from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
 import scipy.sparse.linalg, json
 import pandas as pd, numpy as np
@@ -36,11 +34,11 @@ csv.field_size_limit(sys.maxsize)
 
 d = "/opt/Downloads/ml-32m"
 
-    
+
 def sim():
     fin = d + "/user_movie.txt"
-    picks = pd.read_csv('movpicks.csv',index_col=0).to_dict('index')
-    skips = pd.read_csv('movskips.csv',index_col=0).to_dict('index')
+    picks = pd.read_csv(os.environ['HOME'] + '/Documents/kod/movpicks.csv',index_col=0).to_dict('index')
+    skips = pd.read_csv(os.environ['HOME'] + '/Documents/kod/movskips.csv',index_col=0).to_dict('index')
     mov = pd.read_csv(d + "/movies.csv",index_col="title")['movieId'].to_dict()
     genre = pd.read_csv(d + "/movies.csv",index_col="movieId")['genres'].to_dict()
     mov_id_title = pd.read_csv(d + "/movies.csv",index_col="movieId")['title'].to_dict()

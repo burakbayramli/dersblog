@@ -62,8 +62,6 @@ yapımızı oluşturabiliriz.</p>
 # Download the full file, and unzip in a known
 # location update the d variable below
 #
-
-from sklearn.metrics.pairwise import cosine_similarity
 from scipy.sparse import csr_matrix
 import scipy.sparse.linalg, json
 import pandas as pd, numpy as np
@@ -76,8 +74,8 @@ d = &quot;/opt/Downloads/ml-32m&quot;
 
 def sim():
     fin = d + &quot;/user_movie.txt&quot;
-    picks = pd.read_csv(&#39;movpicks.csv&#39;,index_col=0).to_dict(&#39;index&#39;)
-    skips = pd.read_csv(&#39;movskips.csv&#39;,index_col=0).to_dict(&#39;index&#39;)
+    picks = pd.read_csv(os.environ[&#39;HOME&#39;] + &#39;/Documents/kod/movpicks.csv&#39;,index_col=0).to_dict(&#39;index&#39;)
+    skips = pd.read_csv(os.environ[&#39;HOME&#39;] + &#39;/Documents/kod/movskips.csv&#39;,index_col=0).to_dict(&#39;index&#39;)
     mov = pd.read_csv(d + &quot;/movies.csv&quot;,index_col=&quot;title&quot;)[&#39;movieId&#39;].to_dict()
     genre = pd.read_csv(d + &quot;/movies.csv&quot;,index_col=&quot;movieId&quot;)[&#39;genres&#39;].to_dict()
     mov_id_title = pd.read_csv(d + &quot;/movies.csv&quot;,index_col=&quot;movieId&quot;)[&#39;title&#39;].to_dict()

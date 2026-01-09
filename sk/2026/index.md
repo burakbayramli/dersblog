@@ -1,4 +1,4 @@
 # 2026
 
-[Movielens Kosinus Benzerligi, Film Tavsiyesi](01/movielens-cosine-similarity.html)
+[Movielens Film Kosinus Benzerligi, Tavsiyeler](01/movielens-cosine-similarity.html)
 

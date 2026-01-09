@@ -1,5 +1,14 @@
-# Movielens Kosinus Benzerligi, Film Tavsiyesi
+# Movielens Film Kosinus Benzerligi, Tavsiyeler
 
+Kosinüs benzerliği konusu [1]'de işlendi. Bu benzerlik ölçütü iki
+vektörün birbirine çok boyutlu açısal yakınlığını hesaplar. Bunun için
+tek gereken bu iki vektörün arasındaki noktasal çarpım, ve her iki
+vektörün büyülüklerinin (norm) çarpımı.
+
+[1] belgesinde bu hesabın hızlı yapılabilmesi için seyrek matris
+kavramından bahsedildi. Fakat aslında biz python kütüphanelerinden
+gelen seyrek matris formatları yerine kendi seyrek matris (vektör)
+yapımızı oluşturabiliriz.
 
 
 ```python
@@ -91,7 +100,7 @@ if __name__ == "__main__":
 
 
 
-
+[devam edecek]
 
 Kodlar
 
@@ -100,4 +109,5 @@ Kodlar
 
 Kaynaklar
 
-[1] file:///home/burak/Documents/classnotes/stat/stat_137_collab/stat_137_collab.html
+[1] Bayramli, <a href="../../../stat/stat_137_collab/stat_137_collab.html">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a>
+

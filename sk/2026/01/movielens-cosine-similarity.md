@@ -10,6 +10,51 @@ kavramından bahsedildi. Fakat aslında biz python kütüphanelerinden
 gelen seyrek matris formatları yerine kendi seyrek matris (vektör)
 yapımızı oluşturabiliriz.
 
+Ilerlemeden once noktasal carpimin ne oldugunu hatirlayalim, ayni
+boyuttaki iki vektorun birbirine tekabul eden her degeri carpilir ve
+bu carpimlar birbirine toplanir.
+
+```python
+a = np.array([2,4,6,7,4,9,4,3,2,5,6,3,1,2])
+b = np.array([1,3,6,8,1,1,4,3,3,4,1,5,4,9])
+
+float (np.sum([x*y for x,y in zip(a,b)]))
+```
+
+```text
+Out[1]: 213.0
+```
+
+Üstteki kodda `zip` ile her iki vektörün öğeleri gezildi, ve tarif
+edilen işlemler yapıldı.
+
+Fakat şimdi Movielens film not verisini düşünelim. Bu kayıtlarda
+binlerce film var, ve herhangi bir kullanıcının tüm filmleri seyredip
+not vermiş olması imkansız. Seyretmiş olsa bile not vermemiş olabilir.
+Çoğunlukla bir kullanıcı 10-15 filme not vermiştir, belki
+yüzlerde. Her durumda da not sayısı az. Yani üstteki örnek veri
+aslında suna benzeyebilir,
+
+```python
+a = np.array([2,4,6,0,0,0,0,0,0,0,0,0,0,0,3,1,2])
+b = np.array([0,0,0,0,0,0,0,0,0,0,3,3,4,1,1,2,0])
+
+float (np.sum([x*y for x,y in zip(a,b)]))
+```
+
+```text
+Out[1]: 5.0
+```
+
+Görüldüğü her iki vektörde de gibi bir sürü sıfır var. Noktasal
+çarpımda sıfır çarpı herhangi bir diğer sıfır olduğu için, herhangi
+bir hücrede sıfır varsa o noktadaki hesap sıfır olur, toplama etkisi
+olmaz. Keşke sıfır olan hücreleri direk atlayabilseydik, değil mi?
+
+Seyrek matris formatları bunu yapmamızı sağlar. Kütüphane
+`scipy.sparse` içinde bu amaç için pek çok kodlar vardır. Fakat biz
+kendi pişirdiğimiz kodlar ile de aynı sonucu elde edebiliriz.
+
 
 ```python
 content = open("movrecom.py").read()

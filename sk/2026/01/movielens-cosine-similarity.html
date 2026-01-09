@@ -37,6 +37,91 @@
         <h1></h1>
 <h1>Movielens Kosinus Benzerligi, Film Tavsiyesi</h1>
 
+<div class="codehilite">
+<pre><span></span><code><span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;movrecom.py&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>#
+# Recommend movies based on Grouplens ratings filee
+#
+# https://grouplens.org/datasets/movielens/latest/
+#
+# Download the full file, and unzip in a known
+# location update the d variable below
+#
+
+from sklearn.metrics.pairwise import cosine_similarity
+from scipy.sparse import csr_matrix
+import scipy.sparse.linalg, json
+import pandas as pd, numpy as np
+import os, sys, re, csv
+
+csv.field_size_limit(sys.maxsize)
+
+d = &quot;/opt/Downloads/ml-32m&quot;
+
+
+def sim():
+    fin = d + &quot;/user_movie.txt&quot;
+    picks = pd.read_csv(&#39;movpicks.csv&#39;,index_col=0).to_dict(&#39;index&#39;)
+    skips = pd.read_csv(&#39;movskips.csv&#39;,index_col=0).to_dict(&#39;index&#39;)
+    mov = pd.read_csv(d + &quot;/movies.csv&quot;,index_col=&quot;title&quot;)[&#39;movieId&#39;].to_dict()
+    genre = pd.read_csv(d + &quot;/movies.csv&quot;,index_col=&quot;movieId&quot;)[&#39;genres&#39;].to_dict()
+    mov_id_title = pd.read_csv(d + &quot;/movies.csv&quot;,index_col=&quot;movieId&quot;)[&#39;title&#39;].to_dict()
+    picks_json = dict((mov[p],float(picks[p][&#39;rating&#39;])) for p in picks if p in mov)
+    picks_norm = np.sqrt(sum(v**2 for v in picks_json.values()))
+    res = []
+    with open(fin) as csvfile:   
+        rd = csv.reader(csvfile,delimiter=&#39;|&#39;)
+        for i,row in enumerate(rd):
+            jrow = json.loads(row[1])
+            jrow_norm = np.sqrt(sum(v**2 for v in jrow.values()))
+            dp = sum(jrow[key]*picks_json.get(int(key), 0) for key in jrow)
+            dp = dp / ((picks_norm*jrow_norm)+1e-10)
+            res.append([row[0],dp])
+            if i % 1e4 == 0: print (i,dp)
+
+
+    df = pd.DataFrame(res).set_index(0)
+    df = df.sort_values(by=1,ascending=False).head(400)
+    df = df.to_dict()[1]
+
+    recoms = []
+    with open(fin) as csvfile:   
+        rd = csv.reader(csvfile,delimiter=&#39;|&#39;)
+        for i,row in enumerate(rd):
+            jrow = json.loads(row[1])
+            if str(row[0]) in df:
+                for movid,rating in jrow.items():
+                    if int(movid) not in mov_id_title: continue 
+                    fres = re.findall(&#39;\((\d\d\d\d)\)&#39;, mov_id_title[int(movid)])
+                    if rating &gt;= 4 and \
+                       mov_id_title[int(movid)] not in picks and \
+                       mov_id_title[int(movid)] not in skips and \
+                       &#39;Animation&#39; not in genre[int(movid)] and \
+                       &#39;Documentary&#39; not in genre[int(movid)] and \
+                       len(fres)&gt;0 and int(fres[0]) &gt; 2010: \
+                       recoms.append([mov_id_title[int(movid)],rating*df[row[0]]])
+
+    df = pd.DataFrame(recoms)
+    df = df.sort_values(1,ascending=False)
+    df = df.drop_duplicates(0)
+    df.to_csv(&quot;/opt/Downloads/movierecom3.csv&quot;,index=None,header=False)
+
+if __name__ == &quot;__main__&quot;:  
+
+    if len(sys.argv) &lt; 2:
+        print (&quot;Usage movrecom.py [sim]&quot;)
+        exit()
+
+    if sys.argv[1] == &quot;sim&quot;:
+        sim()
+</code></pre>
+</div>
+
 <p>Kaynaklar</p>
 
 <p>[1] file:///home/burak/Documents/classnotes/stat/stat<em>137</em>collab/stat<em>137</em>collab.html</p>

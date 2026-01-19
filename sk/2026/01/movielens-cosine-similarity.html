@@ -35,21 +35,20 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Movielens Filmleri, Kosinus Benzerligi, Tavsiyeler</h1>
+<h1>Movielens Filmleri, Kosinüs Benzerliği, Tavsiyeler</h1>
 
-<p>Kosinüs benzerliği konusu [1]'de işlendi. Bu benzerlik ölçütü iki
-vektörün birbirine çok boyutlu açısal yakınlığını hesaplar. Bunun için
-tek gereken bu iki vektörün arasındaki noktasal çarpım, ve her iki
-vektörün büyülüklerinin (norm) çarpımı.</p>
-
-<p>[1] belgesinde bu hesabın hızlı yapılabilmesi için seyrek matris
-kavramından bahsedildi. Fakat aslında biz python kütüphanelerinden
-gelen seyrek matris formatları yerine kendi seyrek matris (vektör)
-yapımızı oluşturabiliriz.</p>
+<p>Kosinüs benzerliği konusunu [1]'de işledik, ölçüt iki vektörün
+birbirine çok boyutlu açısal yakınlığını hesaplar. Bunun için tek
+gereken bu iki vektörün arasındaki noktasal çarpım, ve her iki
+vektörün büyülüklerinin (norm) çarpımı. Aynı belgede bu hesabın hızlı
+yapılabilmesi için seyrek matris kavramından bahsedildi. Fakat aslında
+biz python kütüphanelerinden gelen seyrek matris formatları yerine
+kendi seyrek matris / vektör yapımızı da oluşturabiliriz.</p>
 
 <p>İlerlemeden önce noktasal çarpımın ne olduğunu hatırlayalım, aynı
 boyuttaki iki vektörün birbirine tekabül eden her değeri çarpılır ve
-bu çarpımlar birbirine toplanır.</p>
+bu çarpımlar birbirine toplanır, lineer cebirde $a \cdot b$ ile
+gösterilen islem, ve hesapsal olarak şöyle yapılabilir,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">9</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
@@ -67,12 +66,19 @@ bu çarpımlar birbirine toplanır.</p>
 <p>Üstteki kodda <code>zip</code> ile her iki vektörün öğeleri gezildi, ve tarif
 edilen işlemler yapıldı.</p>
 
-<p>Fakat şimdi Movielens film not verisini düşünelim. Bu kayıtlarda
-binlerce film var, ve herhangi bir kullanıcının tüm filmleri seyredip
-not vermiş olması imkansız. Seyretmiş olsa bile not vermemiş olabilir.
-Çoğunlukla bir kullanıcı 10-15 filme not vermiştir, belki
-yüzlerce. Her durumda da not sayısı az. Yani üstteki örnek veri
-aslında suna benzeyebilir,</p>
+<p>Şimdi Movielens film not veri tabanını düşünelim. Kullanıcılar
+filmlere not verirler, eğer bir matriste kullanıcılar satırda filmler
+kolonda ise bir kullanıcının tüm notlarını bir vektör, diğer bir
+kullanıcının notlarını diğer bir vektör olarak elde edebilirdik, ve
+yakınlık için noktasal çarpımı bu iki vektör üzerinde
+gerçekleştirirdik. Eğer 2000 kullanıcı 1000 tane film var ise bir
+kullanıcını vektörü 1 x 1000 boyutunda olurdu.</p>
+
+<p>Tabii kayıtlarda binlerce film olacaktır, ve herhangi bir kullanıcının
+tüm filmleri seyredip not vermiş olması imkansız, hatta seyretmiş olsa
+bile not vermemiş olabilir. Çoğunlukla bir kullanıcı 10-15 filme not
+vermiştir, belki yüzlerce. Her durumda da not sayısı azdır. Yani
+üstteki örnek veri aslında şuna benzeyebilir,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])</span>
@@ -88,17 +94,16 @@ aslında suna benzeyebilir,</p>
 </div>
 
 <p>Görüldüğü her iki vektörde de gibi bir sürü sıfır var. Noktasal
-çarpımda sıfır çarpı herhangi bir diğer sıfır olduğu için, herhangi
+çarpımda sıfır çarpı herhangi bir değer sıfır olduğu için, herhangi
 bir hücrede sıfır varsa o noktadaki hesap sıfır olur, toplama etkisi
 olmaz. Ve dikkat üstteki örnekte sıfır olmayan çoğu değer çakışmıyor
 (ancak o zaman toplama katkı olabilir), mesela <code>a</code> 1'inci öğe 2 ama
 <code>b</code> aynı öğe sıfır, 'b' 2'inci öğe 3 ama onun eşi <code>a</code> uzerinde sıfır,
 demek ki ilk iki öğenin toplama hiçbir katkısı olmayacak. Keşke sıfır
-olan hücreleri direk atlayabilseydik, değil mi?</p>
-
-<p>Seyrek matris formatları bunu yapmamızı sağlar. Kütüphane
-<code>scipy.sparse</code> içinde bu amaç için pek çok kodlar vardır. Fakat biz
-kendi pişirdiğimiz kodlar ile de aynı sonucu elde edebiliriz.</p>
+olan hücreleri direk atlayabilseydik, değil mi? Seyrek matris
+formatları aslında bunu yapmamızı sağlar. Kütüphane <code>scipy.sparse</code>
+içinde bu amaç için pek çok kodlar vardır. Fakat biz kendi
+pişirdiğimiz kodlar ile de aynı sonucu elde edebiliriz.</p>
 
 <p>Bir vektör yerine bir sözlük (dictionary) yapısı kullanarak bunu
 yapabilirdik. Sözlük anahtarı üstteki vektörde sıfır olmayan değerin
@@ -110,10 +115,13 @@ indisi olabilir. Yeni "vektörlerimiz" alttaki gibi olur,</p>
 </code></pre>
 </div>
 
-<p>Şimdi noktasal çarpım mantığı şöyle kodlanabilir: sözlüklerden birini
-al, tüm öğelerini gez, gezerken bu anahtar değeri diğer sözlükte var
-mı diye kontrol et, varsa çarpımı yap, toplama ekle, yoksa sıfır
-değerini ekle.</p>
+<p>Görüldüğü gibi, mesela <code>da</code> içinde <code>1</code>, <code>3</code>, .. gibi anahtar değerleri
+yok, bu anahtarlar atlandı çünkü değerleri sıfır. Şimdi noktasal
+çarpım mantığı şöyle kodlanabilir: sözlüklerden birini al, tüm
+öğelerini gez, gezerken bu anahtar değeri diğer sözlükte var mı diye
+kontrol et, varsa çarpımı yap, toplama ekle, yoksa sıfır değerini
+ekle. Dikkat edilirse <em>gezilen</em> sözlük zaten sıfır olan değerleri
+bastan içermediği için onları dolaylı olarak zaten atlamış oluyoruz.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">res</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">da</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">*</span><span class="n">db</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">da</span><span class="p">)</span>
@@ -126,9 +134,10 @@ değerini ekle.</p>
 </code></pre>
 </div>
 
-<p>Ayni sonucu aldik. Dikkat diger sozlukte varlik kontrolunu <code>.get</code> ile
-yaptik, ve yine bir puf nokta bu <code>get</code> cagrisi bir sey bulamadiysa
-sifir dondursun diye bir yokluk olagan degeri tanimladik, cunku</p>
+<p>Aynı sonucu aldık. Bir kodlama püf noktası, diğer sözlükte anahtar
+erişimi <code>.get</code> ile yaptık, ve bu <code>get</code> bir şey bulamadıysa sıfır
+döndürsün diye bir "yoklük olağan değerini" bu çağrıya bildirdik,
+çünkü</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
@@ -140,7 +149,7 @@ sifir dondursun diye bir yokluk olagan degeri tanimladik, cunku</p>
 </code></pre>
 </div>
 
-<p>olurdu, ama alttaki kullanimla,</p>
+<p>olurdu, ama alttaki kullanımla,</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="nb">print</span> <span class="p">(</span><span class="n">da</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
@@ -152,18 +161,14 @@ sifir dondursun diye bir yokluk olagan degeri tanimladik, cunku</p>
 </code></pre>
 </div>
 
-<p>elde edilir.</p>
+<p>elde edilir, böylece olmama durumunu sıfır değerine çevirip nihai
+çarpımı sıfırlamış oluyoruz.</p>
 
 <p>Kodun optimal olduğunu görebiliriz. Gezilen ana sözlükte olmayan
 değerler (verilmemiş notlar) hiç gezilmiyor, çünkü onlar sözlük içinde
 bile değiller. Eğer çakışma yoksa <code>get</code> sıfır donduruyor, toplama
-etkisi olmuyor. Peki diğer sözlükte olan ama gezilen ana sözlükte
-olmayanlar? Bu durumda çakışma olmaması anlamına geldiği için toplama
-sıfır etkisi vardır, ve bu işlemin yapılmıyor olması genel mantık için
-doğrudur.</p>
-
-<p>Hesapsal yük açısından <code>get</code> çağrısı çok hızlıdır, sabit zamanda
-işler. Gezilen değerlerin okunması aynı şekilde.</p>
+etkisi olmuyor.  Hesapsal yük açısından <code>get</code> çağrısı çok hızlıdır,
+sabit zamanda işler. Gezilen değerlerin okunması aynı şekilde.</p>
 
 <p>Üstteki algoritmaya farklı şekilerde de yardım edebiliriz. Mesela biz
 örnek veride <code>da</code> sözlüğünü gezdik (onun tüm öğelerini okuduk), bunu
@@ -176,6 +181,13 @@ Movielens tabanındaki diğer kullanıcıların beğeni vektörlerinden büyük
 olacaktır. Bu durumda kendim için bir noktasal çarpım kodluyorsam,
 algoritmayi her zaman diğer kullanıcının vektörünü gezecek şekilde
 kodlamalıyım.</p>
+
+<p>Altta tarif edilen algoritmanin kodlaması var, bu algoritma büyük
+Movielens tabanı [2] üzerinden film tavsiyeleri üretiyor. Benim şahsi
+seçimlerimin <code>movpicks.csv</code> içinde olduğu farz ediliyor. Kod benim
+seçimlerimi kullanarak bana en yakın kullanıcıları bulur ve o en yakın
+kullanıcıların 4 ve daha üzeri not verdiği notları toparlayarak benim
+için bir tavsiye listesi oluşturur. </p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;movrecom.py&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -264,6 +276,8 @@ if __name__ == &quot;__main__&quot;:
 <p>Kaynaklar</p>
 
 <p>[1] Bayramli, <a href="../../../stat/stat_137_collab/stat_137_collab.html">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a></p>
+
+<p>[2] Netflix, <a href="https://grouplens.org/datasets/movielens/32m/">MovieLens 32M, (ml-32m)</a></p>
 
 
           <br/><a href="../index.html">Yukarı</a>

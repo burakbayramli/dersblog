@@ -1,18 +1,17 @@
-# Movielens Filmleri, Kosinus Benzerligi, Tavsiyeler
+# Movielens Filmleri, Kosinüs Benzerliği, Tavsiyeler
 
-Kosinüs benzerliği konusu [1]'de işlendi. Bu benzerlik ölçütü iki
-vektörün birbirine çok boyutlu açısal yakınlığını hesaplar. Bunun için
-tek gereken bu iki vektörün arasındaki noktasal çarpım, ve her iki
-vektörün büyülüklerinin (norm) çarpımı.
-
-[1] belgesinde bu hesabın hızlı yapılabilmesi için seyrek matris
-kavramından bahsedildi. Fakat aslında biz python kütüphanelerinden
-gelen seyrek matris formatları yerine kendi seyrek matris (vektör)
-yapımızı oluşturabiliriz.
+Kosinüs benzerliği konusunu [1]'de işledik, ölçüt iki vektörün
+birbirine çok boyutlu açısal yakınlığını hesaplar. Bunun için tek
+gereken bu iki vektörün arasındaki noktasal çarpım, ve her iki
+vektörün büyülüklerinin (norm) çarpımı. Aynı belgede bu hesabın hızlı
+yapılabilmesi için seyrek matris kavramından bahsedildi. Fakat aslında
+biz python kütüphanelerinden gelen seyrek matris formatları yerine
+kendi seyrek matris / vektör yapımızı da oluşturabiliriz.
 
 İlerlemeden önce noktasal çarpımın ne olduğunu hatırlayalım, aynı
 boyuttaki iki vektörün birbirine tekabül eden her değeri çarpılır ve
-bu çarpımlar birbirine toplanır.
+bu çarpımlar birbirine toplanır, lineer cebirde $a \cdot b$ ile
+gösterilen islem, ve hesapsal olarak şöyle yapılabilir,
 
 ```python
 a = np.array([2,4,6,7,4,9,4,3,2,5,6,3,1,2])
@@ -28,12 +27,19 @@ Out[1]: 213.0
 Üstteki kodda `zip` ile her iki vektörün öğeleri gezildi, ve tarif
 edilen işlemler yapıldı.
 
-Fakat şimdi Movielens film not verisini düşünelim. Bu kayıtlarda
-binlerce film var, ve herhangi bir kullanıcının tüm filmleri seyredip
-not vermiş olması imkansız. Seyretmiş olsa bile not vermemiş olabilir.
-Çoğunlukla bir kullanıcı 10-15 filme not vermiştir, belki
-yüzlerce. Her durumda da not sayısı az. Yani üstteki örnek veri
-aslında suna benzeyebilir,
+Şimdi Movielens film not veri tabanını düşünelim. Kullanıcılar
+filmlere not verirler, eğer bir matriste kullanıcılar satırda filmler
+kolonda ise bir kullanıcının tüm notlarını bir vektör, diğer bir
+kullanıcının notlarını diğer bir vektör olarak elde edebilirdik, ve
+yakınlık için noktasal çarpımı bu iki vektör üzerinde
+gerçekleştirirdik. Eğer 2000 kullanıcı 1000 tane film var ise bir
+kullanıcını vektörü 1 x 1000 boyutunda olurdu.
+
+Tabii kayıtlarda binlerce film olacaktır, ve herhangi bir kullanıcının
+tüm filmleri seyredip not vermiş olması imkansız, hatta seyretmiş olsa
+bile not vermemiş olabilir. Çoğunlukla bir kullanıcı 10-15 filme not
+vermiştir, belki yüzlerce. Her durumda da not sayısı azdır. Yani
+üstteki örnek veri aslında şuna benzeyebilir,
 
 ```python
 a = np.array([2,0,6,0,0,0,0,0,0,0,0,0,0,0,3,1,2])
@@ -47,17 +53,16 @@ Out[1]: 11.0
 ```
 
 Görüldüğü her iki vektörde de gibi bir sürü sıfır var. Noktasal
-çarpımda sıfır çarpı herhangi bir diğer sıfır olduğu için, herhangi
+çarpımda sıfır çarpı herhangi bir değer sıfır olduğu için, herhangi
 bir hücrede sıfır varsa o noktadaki hesap sıfır olur, toplama etkisi
 olmaz. Ve dikkat üstteki örnekte sıfır olmayan çoğu değer çakışmıyor
 (ancak o zaman toplama katkı olabilir), mesela `a` 1'inci öğe 2 ama
 `b` aynı öğe sıfır, 'b' 2'inci öğe 3 ama onun eşi `a` uzerinde sıfır,
 demek ki ilk iki öğenin toplama hiçbir katkısı olmayacak. Keşke sıfır
-olan hücreleri direk atlayabilseydik, değil mi?
-
-Seyrek matris formatları bunu yapmamızı sağlar. Kütüphane
-`scipy.sparse` içinde bu amaç için pek çok kodlar vardır. Fakat biz
-kendi pişirdiğimiz kodlar ile de aynı sonucu elde edebiliriz.
+olan hücreleri direk atlayabilseydik, değil mi? Seyrek matris
+formatları aslında bunu yapmamızı sağlar. Kütüphane `scipy.sparse`
+içinde bu amaç için pek çok kodlar vardır. Fakat biz kendi
+pişirdiğimiz kodlar ile de aynı sonucu elde edebiliriz.
 
 Bir vektör yerine bir sözlük (dictionary) yapısı kullanarak bunu
 yapabilirdik. Sözlük anahtarı üstteki vektörde sıfır olmayan değerin
@@ -68,10 +73,13 @@ da = dict({0: 2, 2:6, 14:3, 15:1, 16:2})
 db = dict({1: 3, 2:1, 10:3, 11:3, 12:4, 13:1, 14:1, 15:2})
 ```
 
-Şimdi noktasal çarpım mantığı şöyle kodlanabilir: sözlüklerden birini
-al, tüm öğelerini gez, gezerken bu anahtar değeri diğer sözlükte var
-mı diye kontrol et, varsa çarpımı yap, toplama ekle, yoksa sıfır
-değerini ekle.
+Görüldüğü gibi, mesela `da` içinde `1`, `3`, .. gibi anahtar değerleri
+yok, bu anahtarlar atlandı çünkü değerleri sıfır. Şimdi noktasal
+çarpım mantığı şöyle kodlanabilir: sözlüklerden birini al, tüm
+öğelerini gez, gezerken bu anahtar değeri diğer sözlükte var mı diye
+kontrol et, varsa çarpımı yap, toplama ekle, yoksa sıfır değerini
+ekle. Dikkat edilirse *gezilen* sözlük zaten sıfır olan değerleri
+bastan içermediği için onları dolaylı olarak zaten atlamış oluyoruz.
 
 
 ```python
@@ -83,9 +91,10 @@ print (res)
 11
 ```
 
-Ayni sonucu aldik. Dikkat diger sozlukte varlik kontrolunu `.get` ile
-yaptik, ve yine bir puf nokta bu `get` cagrisi bir sey bulamadiysa
-sifir dondursun diye bir yokluk olagan degeri tanimladik, cunku
+Aynı sonucu aldık. Bir kodlama püf noktası, diğer sözlükte anahtar
+erişimi `.get` ile yaptık, ve bu `get` bir şey bulamadıysa sıfır
+döndürsün diye bir "yoklük olağan değerini" bu çağrıya bildirdik,
+çünkü
 
 
 ```python
@@ -96,7 +105,7 @@ print (da.get(5))
 None
 ```
 
-olurdu, ama alttaki kullanimla,
+olurdu, ama alttaki kullanımla,
 
 ```python
 print (da.get(5, 0))
@@ -106,18 +115,14 @@ print (da.get(5, 0))
 0
 ```
 
-elde edilir.
+elde edilir, böylece olmama durumunu sıfır değerine çevirip nihai
+çarpımı sıfırlamış oluyoruz.
 
 Kodun optimal olduğunu görebiliriz. Gezilen ana sözlükte olmayan
 değerler (verilmemiş notlar) hiç gezilmiyor, çünkü onlar sözlük içinde
 bile değiller. Eğer çakışma yoksa `get` sıfır donduruyor, toplama
-etkisi olmuyor. Peki diğer sözlükte olan ama gezilen ana sözlükte
-olmayanlar? Bu durumda çakışma olmaması anlamına geldiği için toplama
-sıfır etkisi vardır, ve bu işlemin yapılmıyor olması genel mantık için
-doğrudur.
-
-Hesapsal yük açısından `get` çağrısı çok hızlıdır, sabit zamanda
-işler. Gezilen değerlerin okunması aynı şekilde.
+etkisi olmuyor.  Hesapsal yük açısından `get` çağrısı çok hızlıdır,
+sabit zamanda işler. Gezilen değerlerin okunması aynı şekilde.
 
 Üstteki algoritmaya farklı şekilerde de yardım edebiliriz. Mesela biz
 örnek veride `da` sözlüğünü gezdik (onun tüm öğelerini okuduk), bunu
@@ -131,6 +136,12 @@ olacaktır. Bu durumda kendim için bir noktasal çarpım kodluyorsam,
 algoritmayi her zaman diğer kullanıcının vektörünü gezecek şekilde
 kodlamalıyım.
 
+Altta tarif edilen algoritmanin kodlaması var, bu algoritma büyük
+Movielens tabanı [2] üzerinden film tavsiyeleri üretiyor. Benim şahsi
+seçimlerimin `movpicks.csv` içinde olduğu farz ediliyor. Kod benim
+seçimlerimi kullanarak bana en yakın kullanıcıları bulur ve o en yakın
+kullanıcıların 4 ve daha üzeri not verdiği notları toparlayarak benim
+için bir tavsiye listesi oluşturur. 
 
 ```python
 content = open("movrecom.py").read()
@@ -213,7 +224,6 @@ if __name__ == "__main__":
 
 
 
-
 [devam edecek]
 
 Kodlar
@@ -225,3 +235,4 @@ Kaynaklar
 
 [1] Bayramli, <a href="../../../stat/stat_137_collab/stat_137_collab.html">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a>
 
+[2] Netflix, <a href="https://grouplens.org/datasets/movielens/32m/">MovieLens 32M, (ml-32m)</a>

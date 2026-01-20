@@ -98,7 +98,7 @@ vermiştir, belki yüzlerce. Her durumda da not sayısı azdır. Yani
 bir hücrede sıfır varsa o noktadaki hesap sıfır olur, toplama etkisi
 olmaz. Ve dikkat üstteki örnekte sıfır olmayan çoğu değer çakışmıyor
 (ancak o zaman toplama katkı olabilir), mesela <code>a</code> 1'inci öğe 2 ama
-<code>b</code> aynı öğe sıfır, 'b' 2'inci öğe 3 ama onun eşi <code>a</code> uzerinde sıfır,
+<code>b</code> aynı öğe sıfır, <code>b</code> 2'inci öğe 3 ama onun eşi <code>a</code> uzerinde sıfır,
 demek ki ilk iki öğenin toplama hiçbir katkısı olmayacak. Keşke sıfır
 olan hücreleri direk atlayabilseydik, değil mi? Seyrek matris
 formatları aslında bunu yapmamızı sağlar. Kütüphane <code>scipy.sparse</code>
@@ -136,7 +136,7 @@ bastan içermediği için onları dolaylı olarak zaten atlamış oluyoruz.</p>
 
 <p>Aynı sonucu aldık. Bir kodlama püf noktası, diğer sözlükte anahtar
 erişimi <code>.get</code> ile yaptık, ve bu <code>get</code> bir şey bulamadıysa sıfır
-döndürsün diye bir "yoklük olağan değerini" bu çağrıya bildirdik,
+döndürsün diye bir "yokluk olağan değerini" bu çağrıya bildirdik,
 çünkü</p>
 
 <div class="codehilite">
@@ -166,7 +166,7 @@ döndürsün diye bir "yoklük olağan değerini" bu çağrıya bildirdik,
 
 <p>Kodun optimal olduğunu görebiliriz. Gezilen ana sözlükte olmayan
 değerler (verilmemiş notlar) hiç gezilmiyor, çünkü onlar sözlük içinde
-bile değiller. Eğer çakışma yoksa <code>get</code> sıfır donduruyor, toplama
+bile değiller. Eğer çakışma yoksa <code>get</code> sıfır döndürüyor, toplama
 etkisi olmuyor.  Hesapsal yük açısından <code>get</code> çağrısı çok hızlıdır,
 sabit zamanda işler. Gezilen değerlerin okunması aynı şekilde.</p>
 
@@ -182,12 +182,12 @@ olacaktır. Bu durumda kendim için bir noktasal çarpım kodluyorsam,
 algoritmayi her zaman diğer kullanıcının vektörünü gezecek şekilde
 kodlamalıyım.</p>
 
-<p>Altta tarif edilen algoritmanin kodlaması var, bu algoritma büyük
+<p>Altta tarif edilen algoritmanın kodlaması var, bu algoritma büyük
 Movielens tabanı [2] üzerinden film tavsiyeleri üretiyor. Benim şahsi
-seçimlerimin <code>movpicks.csv</code> içinde olduğu farz ediliyor. Kod benim
-seçimlerimi kullanarak bana en yakın kullanıcıları bulur ve o en yakın
-kullanıcıların 4 ve daha üzeri not verdiği notları toparlayarak benim
-için bir tavsiye listesi oluşturur. </p>
+seçimlerim <code>movpicks.csv</code> içinde. Kod benim seçimlerimi kullanarak
+bana en yakın kullanıcıları bulur ve o en yakın kullanıcıların 4 ve
+daha üzeri not verdiği filmleri toparlayarak benim için bir tavsiye
+listesi oluşturur.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;movrecom.py&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
@@ -270,9 +270,9 @@ if __name__ == &quot;__main__&quot;:
 <p>Üstteki kod Movielens 32M verisinin <code>rating.csv</code> dosyasından bir
 <code>user_movie.txt</code> dosyası üretilmiş olduğunu farz ediyor. Bu yeni dosya
 içeriği daha önce tarif ettiğimiz sözlük yapısının dosyalaşmış
-halidir, her satırda bir kullanıcı varır ve her kullanıcının verdiği
-notlar o satırda bir JSON formatında paylaşılır, {'film1': not,
-"film10': not}` şeklinde. Bildiğimiz gibi JSON formatı bir sözlüğün
+halidir, her satırda bir kullanıcı vardır ve her kullanıcının verdiği
+notlar o satırda bir JSON formatında paylaşılır, <code>{'film1': not,
+"film10': not}</code> şeklinde. Bildiğimiz gibi JSON formatı bir sözlüğün
 diske yazılması için kullanılabilmektedir. Değişim kodu alttaki
 bağlantıda paylaşılıyor.</p>
 

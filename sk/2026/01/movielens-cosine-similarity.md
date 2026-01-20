@@ -52,7 +52,7 @@ float (np.sum([x*y for x,y in zip(a,b)]))
 Out[1]: 11.0
 ```
 
-Görüldüğü her iki vektörde de gibi bir sürü sıfır var. Noktasal
+Görüldüğü gibi her iki vektörde de bir sürü sıfır var. Noktasal
 çarpımda sıfır çarpı herhangi bir değer sıfır olduğu için, herhangi
 bir hücrede sıfır varsa o noktadaki hesap sıfır olur, toplama etkisi
 olmaz. Ve dikkat üstteki örnekte sıfır olmayan çoğu değer çakışmıyor
@@ -240,3 +240,4 @@ Kaynaklar
 [1] Bayramli, <a href="../../../stat/stat_137_collab/stat_137_collab.html">Toplu Tavsiye (Collaborative Filtering), Filmler, SVD ile Boyut İndirgeme</a>
 
 [2] Netflix, <a href="https://grouplens.org/datasets/movielens/32m/">MovieLens 32M, (ml-32m)</a>
+    

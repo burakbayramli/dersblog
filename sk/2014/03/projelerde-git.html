@@ -225,30 +225,47 @@ hala aynı kalır; alınan yıldızlar, takipçiler, vs. değişmez.</p>
 
 <h3>Başka Kullanıcı İsmi ile Github'da Çalışmak</h3>
 
-<p>Bazen çoğunlukla kullandığımızdan farklı bir kullanıcı üzerinden iş
-yapmamız gerekebilir. Belki ve ve iş kullanıcıları farklıdır
-mesela. Bu durumda, eğer ikinci kullanıcı için şifre girmek rahatsız
-etmiyorsa, en basit yol <code>git clone</code> komutunu <code>https</code> üzerinden
-yapmak. Alınan repo'ya bakın, <code>.git</code> içinde bir <code>config</code> dosyası olacak. O dosya</p>
+<p>Diyelim ki user1 Github kullanıcısı ile çalışıyoruz, <code>.ssh/id_rsa</code> ona
+göre ayarlanmış, <code>.ssh/id_rsa.pub</code> Github'a kopyalanmış ve şifresiz
+şekilde güzelce çalışabiliyoruz. Peki farklı bir Github kullanıcısı
+üzerinden çalışmamız gerekse ne yapardık?</p>
 
-<pre><code>[core]
-    repositoryformatversion = 0
-    filemode = true
-    bare = false
-    logallrefupdates = true
-[remote "origin"]
-    url = https://github.com/[ikincikullanici]/[repo].git
-    fetch = +refs/heads/*:refs/remotes/origin/*
-[branch "master"]
-    remote = origin
-    merge = refs/heads/master
+<p>Önce bu ikinci kullanıcı için yeni anahtarlar yaratalım,</p>
+
+<pre><code>ssh-keygen -t rsa -f ~/.ssh/id_user2
 </code></pre>
 
-<p>gibi durmalı. Artık <code>git commit</code> yapınca ve <code>git push origin master</code>
-ile kodu yollamak istediğinizde ikinci kullanıcı ve şifre
-sorulmayacak. Dikkat url isminde <code>https</code> olmaması önemli, o yüzden
-kullanıcı / şifre soruluyor zaten. SSH üzerinden şifresiz commit için
-ayarlanan repo'larda bu url <code>git@github.com:...</code> diye gider.</p>
+<p>Şimdi <code>~/.ssh/id_user2</code> ve <code>~/.ssh/id_user2.pub</code> olarak iki yeni dosya
+göreceğiz. Bu dosyalardan <code>~/.ssh/id_user2.pub</code> dosyasını alıp
+Github'a anahtar olarak kayıtlarız.</p>
+
+<p>Şimdi bir <code>~/.ssh/config</code> dosyası yaratalım,</p>
+
+<pre><code>Host github.com
+    HostName github.com
+    User git
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_rsa
+
+Host github2
+    HostName github.com
+    User git
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_user2
+</code></pre>
+
+<p>Dikkat, <code>Host</code> diyen yerde farklı bir isim olması çok önemli.</p>
+
+<p>Şimdi o farklı ismi kullanan repo'ya gideriz, ve <code>.git/config</code> dosyasına
+bakarız, burada <code>remote</code> diyen kısımda</p>
+
+<pre><code>[remote "origin"]
+    url = git@github2:user2/repo2.git
+</code></pre>
+
+<p>ifadesinin olması gerekli. Bu kadar. Artık ikinci repo dizini altında
+iki <code>git push</code> ve alakalı komutlar bir kullanıcıya, diğerleri öteki
+kullanıcıya gider.</p>
 
 <h3>Belli Bir Tarihe Dönüş</h3>
 

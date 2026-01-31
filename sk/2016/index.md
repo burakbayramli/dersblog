@@ -12,11 +12,13 @@
 
 [Shalizi Kitabı](01/shalizi-kitabi.html)
 
+[DanD](02/dand.html)
+
 [Düzenli İfadeler, Python, Regex (Regular Expressions)](02/duzenli-ifadeler-python-regex-regular.html)
 
 [Hava Verisi Islemek](02/hava-verisi-islemek.html)
 
-[Piyasa Verileri, Programlar, dand](02/piyasa-verileri-programlar.html)
+[Piyasa Verileri, Programlar](02/piyasa-verileri-programlar.html)
 
 [Ne Zaman Thread Ne Zaman Süreç?](02/thread-process-surec.html)
 

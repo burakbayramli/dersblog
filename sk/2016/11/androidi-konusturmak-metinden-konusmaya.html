@@ -65,6 +65,20 @@
 
 <p>Not: Python 3 ile pyttsx3 gerekli.</p>
 
+<p>Mesela bir PDF dosyasindaki metni okutmak icin soyle bir script yazilabilir</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">gtts</span><span class="o">,</span><span class="w"> </span><span class="nn">os</span><span class="o">,</span><span class="w"> </span><span class="nn">sys</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="s2">&quot;pdftotext -f </span><span class="si">%d</span><span class="s2"> -l </span><span class="si">%d</span><span class="s2"> </span><span class="si">%s</span><span class="s2"> /tmp/out.txt&quot;</span>
+<span class="n">cmd</span> <span class="o">=</span> <span class="n">cmd</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="n">cmd</span><span class="p">)</span>
+<span class="n">content</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;/tmp/out.txt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+<span class="n">tts</span> <span class="o">=</span> <span class="n">gtts</span><span class="o">.</span><span class="n">gTTS</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">content</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+<span class="n">filename</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;HOME&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/Downloads/out-</span><span class="si">%d</span><span class="s2">-</span><span class="si">%d</span><span class="s2">.mp3&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">3</span><span class="p">]))</span>
+<span class="n">tts</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>Ustteki iki yaklasimdan gtts daha iyi fakat bu paket Internet
 uzerinden Google'a eriserek ses degisimini yapiyor.</p>
 

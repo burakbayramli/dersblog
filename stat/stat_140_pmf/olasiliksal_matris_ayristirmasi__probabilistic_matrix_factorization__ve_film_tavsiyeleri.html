@@ -31,10 +31,10 @@ Tavsiyeleri</h1>
 class="math inline">\(i\)</span> kullanıcısının <span
 class="math inline">\(j\)</span> filmine verdiği not <span
 class="math inline">\(R_{ij}\)</span> üzerinde. Eğer kullanıcı ve film
-özelliklerini sıkıştırılmış, “gizil” bir uzay üzerinden temsil etmek
-istersek, ki bu <span class="math inline">\(N,M\)</span>’ye kıyasla
-boyutu daha küçük bir uzay olacaktır, şu şekilde olasılıksal bir tanım
-yapabilirdik [1],</p>
+özelliklerini azaltılmış, sıkıştırılmış, “gizil” bir uzay üzerinden
+temsil etmek istersek, ki bu <span class="math inline">\(N,M\)</span>’ye
+kıyasla boyutu daha küçük bir uzay olacaktır, şu şekilde olasılıksal bir
+tanım yapabilirdik [1],</p>
 <ul>
 <li><span class="math inline">\(N\)</span>: kullanıcı sayısı</li>
 <li><span class="math inline">\(M\)</span>: film sayısı</li>
@@ -64,6 +64,7 @@ class="math inline">\(U,V\)</span> matrislerinin optimal değerlerini
 bulmak demektir. Bu değerleri bulunca bir tür özet temsil elde etmiş
 olacağız, bu temsil bize kullanıcının seyretmediği filmlere verebileceği
 notu tahmin etmemizi sağlayacak.</p>
+<h3 id="hesap-yöntemi">Hesap Yöntemi</h3>
 <p>Hesapsal baglamda amacımız alttaki dağılıma erişmek, yani bu “sonsal”
 dağılımdan örneklem alabilmek istiyoruz:</p>
 <p><span class="math display">\[
@@ -74,16 +75,16 @@ koşullu dağılımlardan tekrarlı örnekleme yaparak oraya erisebiliriz.
 Mesela bir adımda <span class="math inline">\(p(U_i \mid V, R)\)</span>
 örneklemesi alırız, o değerleri kullanarak sonrakinde <span
 class="math inline">\(p(V_i \mid U, R)\)</span> alırız, bunu ardı ardına
-yapınca üstteki nihai dağılıma erisebileceğimizi biliyoruz.</p>
-<p>Tabii <span class="math inline">\(R\)</span> verisine uyan <span
+yapınca üstteki nihai dağılıma erisebileceğimizi biliyoruz. Tabii <span
+class="math inline">\(R\)</span> verisine uyan <span
 class="math inline">\(U,V\)</span> değerlerine erişmek demek, kavramsal
-olarak bir dağılım elde etmektir, fakat uygulama bağlamında mesela bir
+olarak bir dağılım elde etmektir, uygulama bağlamında mesela bir
 kullanıcının daha not vermediği filme not vermek için (1) formülünü
 direk kullanmak mümkündür, <span class="math inline">\(U,V\)</span> ile
 düz matris çarpımı yaparak bir tahmin hesaplayabiliriz.</p>
-<p>Bu sebeple bize mesela <span class="math inline">\(p(U_i \mid V,
-R)\)</span> formülasyonu lazım, bunu doğru yapmak için, tam
-genişletilmiş birleşik dağılımdan başlamalıyız.</p>
+<p>Yani bize, kullanıcılar için, <span class="math inline">\(p(U_i \mid
+V, R)\)</span> formülasyonu lazım, bunu cebirsel olarak elde etmek için
+tam genişletilmiş birleşik dağılımdan başlamalıyız.</p>
 <p><span class="math display">\[
 p(U)
 =
@@ -619,8 +620,9 @@ class="math inline">\(\epsilon_{ij}\)</span> nedeniyle hem de <span
 class="math inline">\(U_i, V_j\)</span>’nin kendilerinin önsel
 dağılımlara sahip rastgele değişkenler olması nedeniyle bir rastgele
 değişkendir.</p>
+<h3 id="genel-sorular">Genel Sorular</h3>
 <p>Burada aslında iki seviye rastgelelik var:</p>
-<p>1 - Gözlem seviyesi rastgelelik (<span
+<p>1] Gözlem seviyesi rastgelelik (<span
 class="math inline">\(\epsilon_{ij}\)</span>’den)</p>
 <p><span class="math inline">\(U_i, V_j\)</span>’nin sabit değerleri
 verildiğinde, derecelendirme <span class="math inline">\(R_{ij}\)</span>
@@ -631,7 +633,7 @@ R_{ij} \mid U_i, V_j \sim \mathcal{N}(\mu + U_i^\top V_j, \sigma^2)
 <p>Bu, ölçüm gürültüsünü veya derecelendirme sürecindeki doğal
 stokastikliği temsil eder. Gerçek gizil özellikleri bilsek bile, bir
 kullanıcı aynı filmi farklı günlerde farklı derecelendirebilir.</p>
-<p>2 - Parametre seviyesi rastgelelik (<span class="math inline">\(U,
+<p>2] Parametre seviyesi rastgelelik (<span class="math inline">\(U,
 V\)</span> üzerindeki önsellerden)</p>
 <p>Bayesçi çerçevede, <span class="math inline">\(U_i, V_j\)</span>
 sabit parametreler değil, önsel dağılımlara sahip rastgele
@@ -679,7 +681,7 @@ tahmin etmek için posterior örneklerini kullanırız, bu hem parametre
 belirsizliğini hem de <span class="math inline">\(\epsilon\)</span>
 gürültüsünü içerir</li>
 </ul>
-<p>Yeni Bir Kullanıcının Seyretmediği Filmler</p>
+<h3 id="yeni-kullanıcı">Yeni Kullanıcı</h3>
 <p>Sistemi eğitip <span class="math inline">\(U,V\)</span> elde ettikten
 sonra mesela mevcut 100’uncu kullanıcı için tavsiye üretmek basit
 olurdu. <span class="math inline">\(U\)</span> matrisinin 100’uncu
@@ -693,28 +695,28 @@ class="math inline">\(1 \times M\)</span> boyutunda bir vektör veriyor,
 verilmiş tahmini notlar böylece hesaplanmış olur.</p>
 <p>Fakat ya eğer tavsiye üretmek istediğimiz kullanıcı yeni bir
 kullanıcı ise, yani verisi eğitim fazına dahil edilmemiş bir kişi ise?
-Bu durumda bu kisinin <span class="math inline">\(U\)</span> matrisinde
-satiri yoktur. O zaman bu kisi <span class="math inline">\(U\)</span>
-matrisinde olsaydi nasil bir satir verisi <span
-class="math inline">\(u_{ben}\)</span>’e sahip olurdu sorusunu
-cevaplamak gerekir, yani bu amac icin bir hesap yontemi bulmak
+Bu durumda bu kişinin <span class="math inline">\(U\)</span> matrisinde
+satırı yoktur. O zaman bu kişi <span class="math inline">\(U\)</span>
+matrisinde olsaydı nasıl bir satır verisi, diyelim <span
+class="math inline">\(u_{ben}\)</span>’e, sahip olurdu sorusunu
+cevaplamak gerekir, yani bu amaç için bir hesap yöntemi bulmak
 gerekir.</p>
 <p>Şöyle bir yaklaşım olabilir, öyle bir <span
 class="math inline">\(u_{\textrm{ben}}\)</span> bul ki onun <span
 class="math inline">\(V\)</span> ile çarpımı artı global ortalama
 kullanıcının oylamış olduğu filmler için verilen nota yakın bir değer
-versin. Bir tür regresyon hesabı olabilir bu aslında. Herhangi bir <span
+versin. Bu bir tür regresyon hesabı olabilir aslında. Herhangi bir <span
 class="math inline">\(j\)</span> filmi için</p>
 <p><span class="math display">\[
 \hat{r}_j = \mu + u_{ben}^T v_j
 \]</span></p>
-<p>diyebiliriz.</p>
-<p>En iyi <span class="math inline">\(u_{ben}\)</span> vektörünü bulmak
-için karesi alınmış hataların toplamını minimize edebiliriz, bu hatalar
-benim gerçekten verdiğim notlar <span class="math inline">\(r_j\)</span>
-ile tahmin edilen notlar <span class="math inline">\(\hat{r}_j\)</span>
-arasında olur, bir de regülarize edici terim ekleriz ki aşırı öğrenme
-(överfitting) engellenmiş olsun. Yani amac <span
+<p>diyebiliriz. En iyi <span class="math inline">\(u_{ben}\)</span>
+vektörünü bulmak için karesi alınmış hataların toplamını minimize
+edebiliriz, bu hatalar benim gerçekten verdiğim notlar <span
+class="math inline">\(r_j\)</span> ile tahmin edilen notlar <span
+class="math inline">\(\hat{r}_j\)</span> arasında olur, bir de
+regülarize edici terim ekleriz ki aşırı öğrenme (overfitting)
+engellenmiş olsun. Yani amac <span
 class="math inline">\(J(u_{ben})\)</span>’nin minizasyonu.</p>
 <p><span class="math display">\[
 J(u_{self}) = \sum_{j \in \Omega_j} (r_j - (\mu + u_{self}^T
@@ -759,9 +761,9 @@ yüzden ortadaki terimleri birleştirebiliriz,</p>
 J(u_{self}) = y^T y - 2u_{self}^T V_{rated}^T y + u_{self}^T
 V_{rated}^T V_{rated} u_{self} + \lambda_U u_{self}^T u_{self}
 \]</span></p>
-<p>Simdi <span class="math inline">\(J(u_{ben})\)</span>’in <span
-class="math inline">\(u_{self}\)</span>’a gore turevini alalim, ve
-minizasyon icin sifira esitleyelim. Matris Calculus kurallarindan
+<p>Şimdi <span class="math inline">\(J(u_{ben})\)</span>’in <span
+class="math inline">\(u_{self}\)</span>’a göre türevini alalım, ve
+minizasyon için sıfıra eşitleyelim. Matris Calculus kurallarından
 biliyoruz ki</p>
 <p><span class="math inline">\(\frac{\partial}{\partial u} (u^T A u) =
 2Au\)</span> (eger <span class="math inline">\(A\)</span> simetrik
@@ -792,7 +794,67 @@ I)u_{self} = V_{rated}^T y\]</span></p>
 <p><span class="math display">\[
 u_{ben} = (V_{rated}^T V_{rated} + \lambda_U I)^{-1} V_{rated}^T y
 \]</span></p>
-<p>[devam edecek]</p>
+<p>Üstteki bir Sırt (Ridge) Regresyon tanımıdır [5].</p>
+<h3 id="kodlama">Kodlama</h3>
+<p>Ekteki kodlar arasında <code>sng_bpmf.py</code> dosyası tek islemci
+ile Gibbs örneklemesi yapar, <code>par_bpmf.py</code> ise aynı işlemi
+paralel şekilde yapar. Detaylar için kodlara bakılabilir. Veri olarak
+[2],[3] kullanmak mümkün, bu verilerin dizin olarak
+<code>/opt/Downloads</code> altında olduğunu farz ediyoruz. Verinin
+hazırlanması için <code>pmf/prep1.py</code>, <code>pmf/prep2.py</code>,
+<code>pmf/prep3.py</code>, <code>pmf/prep4.py</code> script’leri o
+sırada işletilmeli. Bu scriptler ile kullanıcı ve film kimlikleri tekrar
+üretiliyor, tüm film ve kullanıcılar sıfırdan başlayıp birer birer
+artacak şekilde tekrar kimlikleniyor. Bunun yapılmasının sebebi bu
+kimlik değerlerinin <span class="math inline">\(U,V\)</span> üzerinde
+direk satır erişimi için kullanılabilmesi.. Daha sonra
+<code>user_movie.txt</code> ve <code>movie_user.txt</code> dosyaları
+yaratılıyor, bu dosyalarda her satır, mesela <code>user_movie.txt</code>
+için diyelim, satır başında kullanıcı kimliği ardından aynı satırda o
+kullanıcının verdiği film notlarını içerir. Bu şekilde tek bir satır
+okuması ile o kullanıcı hakkında tüm bilgileri alabilmiş oluyoruz
+(filmler için benzer şekilde). Movielens verisine bakanlar farketmiş
+olabilir, oradaki <code>ratings.csv</code> içinde bu tür bir satırsal
+temsil yoktur.</p>
+<p>Gibbs işlemi bitince sonuçlar, sonsal dağılımlar, bir
+<code>.npz</code> dosyasına yazılır, ve <code>recom.py</code> koduyla bu
+çıktılar kullanılarak taviyeler üretilebilir. Tavsiye kodu kullanıcının
+beğendiği filmleri, notlar okumak için su anda
+<code>~/Documents/kod/movpicks.csv</code> dosyasını kullanıyor, burada
+benim kendi seçimlerim var, mesela</p>
+<pre><code>movie,rating
+..
+Swordfish (2001),5
+Dunkirk (2017),2
+Tombstone (1993),5
+..</code></pre>
+<p>diye notlar vermişim. Bu notlar kullanılarak ve üstteki matematik
+kullanılarak tavsiyeler üretiliyor.</p>
+<p>Paralellik</p>
+<p>Üstte görülen Gibbs örnekleme algoritmasında dikkat edersek
+kullanıcılar için bir döngü var, onun içinde kullanıcı 1,2,3.. diye
+giden ve o kullanıcıların <span class="math inline">\(U\)</span>
+satırlarını örnekleyen (yani mevcut satırın üzerine yazan) bir yaklaşım
+var. Bu yaklaşıma göre kullanıcıların satırlarının örneklenmesi
+birbirinden bağımsız, yani kullanıcı 100 örneklenmesi için kullanıcı
+99’un işinin bitmiş olmasını beklemiyoruz. Bu demektir ki örneklem
+işlemi kullanıcı ve film bazında paralel şekilde işletilebilir.</p>
+<p>Kullanıcılar için 10 tane paralel süreç başlatırız, bu süreçler
+kullanıcıları ve onun verdiği notları 10 parçaya böler, her biri kendi
+içinde örneklem işini yapar, kendi <span
+class="math inline">\(U\)</span> parçasını üretir, tümü bitince <span
+class="math inline">\(U\)</span> parçaları birleştirilip yeni <span
+class="math inline">\(U\)</span> oluşturulur ve filmler için aynı işlem
+yapılır, 10 parçaya bölünür, orneklenip birlestirilir vs. Bu bir dongu
+(iteration) olur.</p>
+<p>Bölme işlemini <code>user_movie.txt</code> ve
+<code>movie_user.txt</code> üzerinden basit bir şekilde yapabiliriz,
+kullanıcı ve film kimlik değerleri artık direk <span
+class="math inline">\(U,V\)</span> satırlarına tekabül ettiği için
+erişimde zorluk çıkmaz. Her süreç kendi verisine odaklanır, ama <span
+class="math inline">\(U,V\)</span> verisinin her süreç içinde
+kopyalanması problem değil, çünkü bunlar nispeten ufak matrislerdir,
+bellek için yük oluşturmazlar.</p>
 <p>Kodlar</p>
 <p><a href="sng_bpmf.py">sng_bpmf.py</a>, <a
 href="par_bpmf.py">par_bpmf.py</a>, <a href="prep1.py">prep1.py</a>, <a
@@ -813,6 +875,9 @@ Small (ml-latest-small)</a></p>
 <p>[4] Anton Gerber Sort,
 <a href="https://research-api.cbs.dk/ws/portalfiles/portal/98731723/1641765_Thesis_Anton_Sort.pdf">Probabilistic
 Matrix Factorisation in Collaborative Filtering, Thesis</a></p>
+<p>[5] Bayramli,
+<a href="../stat_120_regular/stat_120_regular.html">Regresyon, Ridge,
+Lasso, Çapraz Sağlama, Regülarize Etmek</a></p>
 <p>
   <a href="..">Yukarı</a>
 </p>

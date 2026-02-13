@@ -2,19 +2,12 @@ import os, numpy as np, json, util
 from multiprocessing import Process
 import glob, shutil
 
-# Configuration
-# Set this to your dataset
-DATASET = "large"  # "small" or "large"
-
-if DATASET == "small":
-    n_users, n_movies, global_mu = 610, 9742, 3.5019
-    d = "/opt/Downloads/ml-latest-small"
-else:
-    #n_users, n_movies, global_mu = 200948, 87584, 3.5
-    n_users, n_movies, global_mu = 200948, 40404, 3.5
-    d = "/opt/Downloads/ml-32m"
-
-o = "/dev/shm"
+#n_users, n_movies, global_mu = 610, 9742, 3.5019
+#d = "/opt/Downloads/ml-latest-small"
+#n_users, n_movies, global_mu = 200948, 87584, 3.5
+n_users, n_movies, global_mu = 200948, 40404, 3.5
+d = "/opt/Downloads/ml-32m"
+o = "/dev/shm" # Ubuntu uzerinde bu dizin ram diskidir, /tmp kullanilabilir
 USER_MOVIE_FILE = d + "/user_movie.txt"
 MOVIE_USER_FILE = d + "/movie_user.txt"
 
@@ -49,12 +42,10 @@ def combine_matrices(prefix):
     
 class GibbsUserJob:
     def __init__(self, ci):
-        self.rng = np.random.default_rng()
-        # Load current global state
+        self.rng = np.random.default_rng() # tohumsuz, cunku her surec farkli olmali
         self.U = np.loadtxt(o + "/U.csv", delimiter=';')
         self.V = np.loadtxt(o + "/V.csv", delimiter=';')
         self.ci = ci
-        # Tracking bounds
         self.min_i = float('inf')
         self.max_i = -1
 
@@ -63,7 +54,6 @@ class GibbsUserJob:
         row = line.split('|')
         i = int(row[0])
         
-        # Track range
         if i < self.min_i: self.min_i = i
         if i > self.max_i: self.max_i = i
 
@@ -80,9 +70,7 @@ class GibbsUserJob:
 
         
     def post(self):
-        if self.max_i == -1: return # No data processed
-        
-        # Save specific slices
+        if self.max_i == -1: return # No data processed        
         np.savetxt(f"{o}/U-{self.ci}.csv", self.U[self.min_i : self.max_i + 1], delimiter=';', fmt='%1.6f')
 
 class GibbsMovieJob:
@@ -168,7 +156,7 @@ for iteration in range(N_ITER):
     print()  # Just newline
     
 np.savez(
-    o + "/bpmf_posterior.npz",
+    d + "/bpmf_posterior.npz",
     U=U_mean,
     V=V_mean,
     mu=global_mu,

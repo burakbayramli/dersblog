@@ -41,6 +41,6 @@ def preprocess_movielens(rating_file, movie_file, threshold=100):
 # Replace these paths with your actual file locations
 RATING_CSV = d + '/ratings.csv'
 MOVIE_CSV = d + '/movies.csv'
-THRESHOLD = 5
+THRESHOLD = 10
 
 preprocess_movielens(RATING_CSV, MOVIE_CSV, THRESHOLD)

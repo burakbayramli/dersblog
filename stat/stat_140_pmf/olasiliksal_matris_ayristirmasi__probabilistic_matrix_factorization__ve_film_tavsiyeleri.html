@@ -101,7 +101,14 @@ p(V)
 \prod_{j=1}^{M}
 \mathcal{N}(V_j \mid 0, \lambda_V^{-1} I)
 \]</span></p>
-<p>Olurluk</p>
+<p>Dikkat: Bu yazıdaki yaklaşımda, [1]’den farklı olarak, <span
+class="math inline">\(\lambda_U\)</span> ve <span
+class="math inline">\(\lambda_V\)</span> bir hiperparametre, rasgele
+değişken değiller, sabit tek sayı değerleri var. Ve bu durumda aynen
+diğer yapay öğrenim yaklaşımlarında olduğu gibi optimal değerlerinin
+bulunması gerekli, bu deneme / yanılma ya da diğer otomize teknikler ile
+olabilir.</p>
+<p>Olurluk (Likelihood)</p>
 <p>Gösterge <span class="math inline">\(I_{ij} = 1\)</span> eğer <span
 class="math inline">\(R_{ij}\)</span> gözlemlenmis ise, yani not mevcut
 ise, aksi halde 0 olarak tanımlanır.</p>
@@ -199,9 +206,9 @@ p(R \mid U_i, U_{-i}, V)
 <p>Adım 2: Şimdi (1) içindeki <span class="math inline">\(p(R \mid U_i,
 U_{-i}, V)\)</span> terimine dikkat et. Bunu nasıl genişletebiliriz?
 İşte nasıl.</p>
-<p><span class="math inline">\(U_i\)</span> içeren olabilirlik
-terimlerini izole et</p>
-<p>Olabilirlik tüm gözlemlenen derecelendirmeler üzerinden çarpanlara
+<p><span class="math inline">\(U_i\)</span> içeren olurluk terimlerini
+izole et</p>
+<p>Olurluk tüm gözlemlenen derecelendirmeler üzerinden çarpanlara
 ayrılır:</p>
 <p><span class="math display">\[
 p(R \mid U_i, U_{-i}, V)
@@ -326,13 +333,13 @@ derecelendirmeler <span class="math inline">\(U_i\)</span>’ye bağlı</li>
 </ul>
 <p><span class="math inline">\(U_i\)</span>’ye bağlı olan terimler</p>
 <ul>
-<li><span class="math inline">\(\mathcal{N}(U_i \mid 0, \lambda_U^{-1}
-I)\)</span> — <span class="math inline">\(U_i\)</span> üzerindeki
-önsel</li>
-<li><span class="math inline">\(\prod_{j \in \Omega_i}
+<li><p><span class="math inline">\(\mathcal{N}(U_i \mid 0,
+\lambda_U^{-1} I)\)</span> — <span class="math inline">\(U_i\)</span>
+üzerindeki önsel</p></li>
+<li><p><span class="math inline">\(\prod_{j \in \Omega_i}
 \mathcal{N}(R_{ij} \mid \mu + U_i^\top V_j, \sigma^2)\)</span> —
 kullanıcı <span class="math inline">\(i\)</span>’nin
-derecelendirmelerinin olabilirliği</li>
+derecelendirmelerinin olurlugu</p></li>
 </ul>
 <p><span class="math inline">\(p(V)\)</span> gibi terimler <span
 class="math inline">\(U_i\)</span>’ye bağlı değildir, <span
@@ -657,11 +664,11 @@ gözlemlemeden önce):</p>
 p(R_{ij}) = \int p(R_{ij} \mid U_i, V_j) \cdot p(U_i, V_j) \, dU_i \,
 dV_j
 \]</span></p>
-<p>Bu, her iki rastgelelik kaynağı üzerinden integral alır: -
-Olabilirlik <span class="math inline">\(p(R_{ij} \mid U_i,
-V_j)\)</span>, <span class="math inline">\(\epsilon_{ij}\)</span>
-gürültüsünü yakalar - Önsel <span class="math inline">\(p(U_i,
-V_j)\)</span>, parametreler hakkındaki belirsizliğimizi yakalar</p>
+<p>Bu, her iki rastgelelik kaynağı üzerinden integral alır: - Olurluk
+<span class="math inline">\(p(R_{ij} \mid U_i, V_j)\)</span>, <span
+class="math inline">\(\epsilon_{ij}\)</span> gürültüsünü yakalar - Önsel
+<span class="math inline">\(p(U_i, V_j)\)</span>, parametreler
+hakkındaki belirsizliğimizi yakalar</p>
 <p>Pratikte:</p>
 <p>Gibbs örneklemesi yaptığımızda:</p>
 <ul>
@@ -669,8 +676,8 @@ V_j)\)</span>, parametreler hakkındaki belirsizliğimizi yakalar</p>
 gözlemliyoruz (onları sabit veri olarak ele alıyoruz)</li>
 <li>Bu gözlemler verildiğinde <span class="math inline">\(U,
 V\)</span>’nin sonsal dağılımını çıkarıyoruz</li>
-<li><span class="math inline">\(\epsilon_{ij}\)</span> terimleri
-olabilirlik yoluyla örtük olarak “integral alınarak çıkarılır”</li>
+<li><span class="math inline">\(\epsilon_{ij}\)</span> terimleri olurluk
+yoluyla örtük olarak “integral alınarak çıkarılır”</li>
 </ul>
 <p>Yani model şunu söyler:</p>
 <ul>

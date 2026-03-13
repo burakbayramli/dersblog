@@ -319,29 +319,30 @@ ve her aday değer <span class="math inline">\(k \in \{0, \ldots,
 255\}\)</span> için <span class="math inline">\(|z - k|\)</span>’yı
 hesaplıyor. “Bu pikselin alabileceği 256 olası değerin her biri için,
 komşular bu değerden ne kadar uzakta?” sorusunu soran vektörleştirilmiş
-bir yoldur. Şekiller daha açık hale getirir:</p>
+bir yoldur. Boyutlar daha açık hale getirir:</p>
 <ul>
-<li><code>target_neighbors</code> şekli <span class="math inline">\((K,
+<li><code>target_neighbors</code> boyutu <span class="math inline">\((K,
 8)\)</span>’dir — geçerli maskede <span class="math inline">\(K\)</span>
 piksel, her birinin 8 komşusu</li>
 <li><code>[:, :, np.newaxis]</code> sonrasında <span
 class="math inline">\((K, 8, 1)\)</span> olur</li>
-<li><code>possible_vals</code> şekli <span
-class="math inline">\((256,)\)</span>’dır, <span
-class="math inline">\((1, 1, 256)\)</span>’ya yayınlanır</li>
-<li>sonuç <span class="math inline">\((K, 8, 256)\)</span>’dır — <span
+<li><code>possible_vals</code> boyutu <span
+class="math inline">\((256,)\)</span>’dir, <span
+class="math inline">\((1, 1, 256)\)</span>’ya “vektöre yayınlanır
+(broadcast)”</li>
+<li>sonuç <span class="math inline">\((K, 8, 256)\)</span>’dir — <span
 class="math inline">\(K\)</span> pikselin her biri için, 8 komşunun her
 biri için, 256 aday değerden mutlak fark</li>
 <li><code>np.sum(..., axis=1)</code> ise 8 komşu üzerinde toplar ve
-<span class="math inline">\((K, 256)\)</span> şeklini verir</li>
+<span class="math inline">\((K, 256)\)</span> boyutunu verir</li>
 </ul>
 <p>Dolayısıyla nihai <code>prior</code> dizisi, tüm <span
 class="math inline">\(K\)</span> piksel ve <span
-class="math inline">\(k\)</span>’nın tüm 256 değeri için eşzamanlı
+class="math inline">\(k\)</span>’nin tüm 256 değeri için eşzamanlı
 olarak değerlendirilen <span class="math inline">\(\sum_{z \in
-\mathcal{N}(y_{i,j})} |k - z|\)</span>’dir. Yayınlama, matematikte her
-aday <span class="math inline">\(k\)</span> için komşular üzerindeki
-toplam olarak yazacağınız işi yapıyor.</p>
+\mathcal{N}(y_{i,j})} |k - z|\)</span>’dir. Vektörsel yayinlama,
+matematikte her aday <span class="math inline">\(k\)</span> için
+komşular üzerindeki toplam olarak yazacağınız işi yapıyor.</p>
 <p>Kümülatif Dağılım Fonksiyonu (CDF)</p>
 <p><code>probs</code>’daki olasılıklara göre bir <span
 class="math inline">\(k\)</span> değeri seçmek için Kümülatif Dağılım
@@ -434,7 +435,7 @@ class="math inline">\(x_{i,j}\)</span> kanıtının sabit kaldığını garanti
 ederiz.</p>
 <p>Kod: İşte bu yüzden <code>for mask in masks:</code> vardır ve
 ardından binlerce piksel için aynı anda 256 olası gri düzeyin tümü için
-enerjiyi hesaplayan devasa bir NumPy yayını gelir.</p>
+enerjiyi hesaplayan devasa bir NumPy vektörsel yayını gelir.</p>
 <p>MAP ile Tam Sonsal Çıkarım Karşılaştırması</p>
 <p>Kesin olarak söylemek gerekirse, MAP (Maksimum A Posteriori) ve Gibbs
 Örneklemesi iki farklı çıkarım felsefesini temsil eder; ancak bu makale

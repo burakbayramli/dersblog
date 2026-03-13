@@ -155,27 +155,27 @@ konum bağlamındaki komşulardır.</p>
 P(Y | X) \propto \prod_{i,j} P(x_{i,j} | y_{i,j}) \cdot \prod_{i,j}
 P(y_{i,j} | \mathcal{N}(y_{i,j}))
 \]</span></p>
-<p>Gibbs sayesinde, tüm pikseller üzerindeki bu devasa birleşik
-dağılımdan tek seferde örnekleme yapmak yerine, her pikseli kendi yerel
-koşullu dağılımından örnekliyoruz. Yukarıdaki denklem bize tüm pikseller
-üzerindeki birleşik sonsalı aynı anda verir. Tek bir piksel <span
-class="math inline">\(y_{i,j}\)</span> için koşullu dağılımı elde etmek
-için <span class="math inline">\(P(y_{i,j} \mid Y_{-(i,j)},
+<p>Gibbs örneklemesi sayesinde tüm pikseller üzerindeki bu devasa
+birleşik dağılımdan tek seferde örnekleme yapmak yerine, her pikseli
+kendi yerel koşullu dağılımından örnekliyoruz. Yukarıdaki denklem bize
+tüm pikseller üzerindeki birleşik sonsalı aynı anda verir.</p>
+<p>Tek bir piksel <span class="math inline">\(y_{i,j}\)</span> için
+koşullu dağılım <span class="math inline">\(P(y_{i,j} \mid Y_{-(i,j)},
 X)\)</span>’i, yani diğer her şey sabit tutulduğunda tek bir pikselin
 dağılımını hesaplamamız gerekir. Bunu, <span
 class="math inline">\(y_{i,j}\)</span>’yi içermeyen tüm terimleri sabit
-olarak ele alarak yaparız.</p>
-<p>Çarpımları gözden geçirip “<span
+olarak ele alarak yaparız. Çarpımları gözden geçirip “<span
 class="math inline">\(y_{i,j}\)</span>’ye gerçekten bağlı olan terimler
 hangileri?” diye sorduğumuzda yalnızca ikisi hayatta kalır: olabilirlik
 çarpımından <span class="math inline">\(P(x_{i,j} \mid y_{i,j})\)</span>
-ve ön dağılım çarpımından <span class="math inline">\(P(y_{i,j} \mid
+ve on dağılım çarpımından <span class="math inline">\(P(y_{i,j} \mid
 \mathcal{N}(y_{i,j}))\)</span>, tabii <span
 class="math inline">\(y_{i,j}\)</span>’nin komşularına ait MRF terimleri
 de <span class="math inline">\(y_{i,j}\)</span>’yi içerir, ancak
-Hammersley-Clifford teoremi kapsamında bunlar önsel dağılım teriminin
-kodladığı yerele indirgenir. Dolayısıyla <span
-class="math inline">\((k,l) \neq (i,j)\)</span> olan tüm <span
+Hammersley-Clifford teoremi kapsamında (ki yakın komşulara bağlılık uzak
+olanlarla eşdeğerdir der) bunlar onsel dağılım teriminin kodladığı
+yerele indirgenir. Dolayısıyla <span class="math inline">\((k,l) \neq
+(i,j)\)</span> olan tüm <span
 class="math inline">\(y_{k,l}\)</span>’leri sabitler, sabit olan her
 şeyi atarız ve geriye kalan <span class="math inline">\(P(x_{i,j} \mid
 y_{i,j})\, P(y_{i,j} \mid \mathcal{N}(y_{i,j}))\)</span> ile

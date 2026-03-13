@@ -210,11 +210,8 @@ E(y_{i,j}) = \sum_{z \in \mathcal{N}(y_{i,j})} |y_{i,j} - z| +
 normalleştiricinin atıldığı anlamına gelir. Tam ifade şöyledir:</p>
 <p><span class="math display">\[P(y_{i,j} | \mathcal{N}(y_{i,j}),
 x_{i,j}) = \frac{1}{Z} \exp(-E(y_{i,j}))\]</span></p>
-<p><span class="math inline">\(Z = \sum_{k=0}^{255}
-\exp(-E(k))\)</span>, bölme fonksiyonudur — olasılıkların toplamının 1
-olmasını sağlamak üzere seçilmiştir, tüm 256 olası piksel değeri
-üzerinden <span class="math inline">\(\exp(-E)\)</span>’nin
-toplamıdır.</p>
+<p><span class="math inline">\(Z\)</span> hakkında daha detaylı açıklama
+için belge sonuna danışılabilir.</p>
 <p>Enerji, birbiriyle rekabet eden iki terimden oluşur:</p>
 <ul>
 <li><p>Önsel Dağılım Terimi (R): Düzgünlüğü teşvik etmek için bir piksel
@@ -471,6 +468,46 @@ son karesi gürültü giderilmiş çıktı olarak kullanılır. Yani Gibbs
 kullanarak MAP sonucuna erişmiş oluyoruz, örnekleme sonsal dağılımı
 geziyor, fakat o zincirin ortalamasını almak yerine son varılan noktayı
 raporlayarak bir optimal tek nokta hesabı yapmış oluyoruz.</p>
+<p>Normalize Edici Sabit <span class="math inline">\(Z\)</span></p>
+<p><span class="math inline">\(Z = \sum_{k=0}^{255}
+\exp(-E(k))\)</span>, bölme fonksiyonudur — olasılıkların toplamının 1
+olmasını sağlamak üzere seçilmiştir, tüm 256 olası piksel değeri
+üzerinden <span class="math inline">\(\exp(-E)\)</span>’nin
+toplamıdır.</p>
+<p>Örnekleme kodu <span class="math inline">\(Z\)</span>’yi hiçbir zaman
+açıkça hesaplamaz;
+<code>probs /= np.sum(probs, axis=1, keepdims=True)</code> satırı
+normalizasyonu analitik olarak değil, 256 aday değer üzerinden örtük
+biçimde gerçekleştirir. Başka bir deyişle, kod normalizasyonu yapar,
+yalnızca <span class="math inline">\(Z = \sum_{k=0}^{255}
+\exp(-E(k))\)</span>’yı softmax benzeri adımın bir parçası olarak örtük
+biçimde hesaplar.</p>
+<p>Dolayısıyla <span class="math inline">\(\propto\)</span> ifadesi
+dağılımın formunu türetmek için yeterlidir, ancak <span
+class="math inline">\(Z\)</span> kodda olasılık normalizasyon adımının
+paydası kılığında belirir. Bu, özet tabloda doğrudan karşılık bulur:</p>
+<p><span class="math display">\[P(y_{i,j} \mid \mathcal{N}(y_{i,j}),
+x_{i,j}) =
+\frac{\exp(-E(k))}{\sum_{m=0}^{255} \exp(-E(m))}\]</span></p>
+<p>Bu payda <span class="math inline">\(Z\)</span>’nin ta kendisidir;
+<code>probs /= np.sum(...)</code> bölme işlemi <span
+class="math inline">\(Z\)</span>’yi yerel olarak hesaplar.
+<code>probs.shape</code>’e bakıldığında bizim örnek için
+<code>(12769, 256)</code> sonucu görüyoruz; buradaki 256, toplama
+işleminin gerçekleştirildiği 256 aday değere karşılık gelir.</p>
+<p><code>(12769, 256)</code> dizisinin her satırı, bir pikselin 256 aday
+değer üzerindeki tam dağılımını temsil eder.
+<code>probs /= np.sum(probs, axis=1, keepdims=True)</code> işleminde
+<code>axis=1</code> boyunca, yani o 256 sütun üzerinden toplama yapılır;
+bu da maskedeki 12769 pikselin her biri için <span
+class="math inline">\(Z = \sum_{k=0}^{255} \exp(-E(k))\)</span>’yı
+bağımsız olarak hesaplamak anlamına gelir. Böylece, piksel başına bir
+tane olmak üzere, 12769 ayrı bölümleme fonksiyonu tek bir
+vektörleştirilmiş adımda elde edilir.</p>
+<p>12769 sayısı bir doğruluk kontrolü işlevi görüyor aslında: görüntü
+<span class="math inline">\(113 \times 113 = 12769\)</span> piksel
+boyutundaysa, her seferinde piksellerin yaklaşık dörtte biri dama
+tahtası maskelerinden birine düşer.</p>
 <p>Kod</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, skimage</span>

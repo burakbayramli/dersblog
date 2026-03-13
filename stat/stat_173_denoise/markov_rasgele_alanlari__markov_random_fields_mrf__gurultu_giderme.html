@@ -340,7 +340,7 @@ biri için, 256 aday değerden mutlak fark</li>
 class="math inline">\(K\)</span> piksel ve <span
 class="math inline">\(k\)</span>’nin tüm 256 değeri için eşzamanlı
 olarak değerlendirilen <span class="math inline">\(\sum_{z \in
-\mathcal{N}(y_{i,j})} |k - z|\)</span>’dir. Vektörsel yayinlama,
+\mathcal{N}(y_{i,j})} |k - z|\)</span>’dir. Vektörsel yayınlama,
 matematikte her aday <span class="math inline">\(k\)</span> için
 komşular üzerindeki toplam olarak yazacağınız işi yapıyor.</p>
 <p>Kümülatif Dağılım Fonksiyonu (CDF)</p>
@@ -473,57 +473,54 @@ geziyor, fakat o zincirin ortalamasını almak yerine son varılan noktayı
 raporlayarak bir optimal tek nokta hesabı yapmış oluyoruz.</p>
 <p>Kod</p>
 <div class="sourceCode" id="cb4"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> skimage <span class="im">import</span> io</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> vectorized_gibbs_l1(noisy_img, iterations<span class="op">=</span><span class="dv">12</span>, lam<span class="op">=</span><span class="fl">1.0</span>):</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    M, N <span class="op">=</span> noisy_img.shape</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> noisy_img.copy().astype(np.float32)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    possible_vals <span class="op">=</span> np.arange(<span class="dv">256</span>, dtype<span class="op">=</span>np.float32)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    masks <span class="op">=</span> [</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>),</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    ]</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> it <span class="kw">in</span> <span class="bu">range</span>(iterations):</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> mask <span class="kw">in</span> masks:</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>            padded <span class="op">=</span> np.pad(Y, <span class="dv">1</span>, mode<span class="op">=</span><span class="st">&#39;edge&#39;</span>)</span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>            neighbors <span class="op">=</span> np.stack([</span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                padded[<span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>, <span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>], padded[<span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>], padded[<span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>:],</span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                padded[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>], padded[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>:],</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>                padded[<span class="dv">2</span>:, <span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>], padded[<span class="dv">2</span>:, <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>], padded[<span class="dv">2</span>:, <span class="dv">2</span>:]</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            ], axis<span class="op">=-</span><span class="dv">1</span>)</span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            target_neighbors <span class="op">=</span> neighbors[mask]</span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            target_noisy <span class="op">=</span> noisy_img[mask]</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            prior <span class="op">=</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(target_neighbors[:, :, np.newaxis] <span class="op">-</span> possible_vals), axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> lam <span class="op">*</span> np.<span class="bu">abs</span>(target_noisy[:, np.newaxis] <span class="op">-</span> possible_vals)</span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            energy <span class="op">=</span> prior <span class="op">+</span> loss</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>            probs <span class="op">=</span> np.exp(np.<span class="bu">min</span>(energy, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="op">-</span> energy)</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            probs <span class="op">/=</span> np.<span class="bu">sum</span>(probs, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>            cum_probs <span class="op">=</span> np.cumsum(probs, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>            random_vals <span class="op">=</span> np.random.rand(<span class="bu">len</span>(target_noisy), <span class="dv">1</span>)</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>            Y[mask] <span class="op">=</span> np.argmax(cum_probs <span class="op">&gt;</span> random_vals, axis<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Y</span>
-<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>img_noisy <span class="op">=</span> io.imread(<span class="st">&#39;../../func_analysis/func_70_tvd/lena-noise.jpg&#39;</span>, as_gray<span class="op">=</span><span class="va">True</span>)</span>
-<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> img_noisy.<span class="bu">max</span>() <span class="op">&lt;=</span> <span class="fl">1.0</span>:</span>
-<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    img_noisy <span class="op">=</span> (img_noisy <span class="op">*</span> <span class="dv">255</span>).astype(np.uint8)</span>
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np, skimage</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> denoise_mrf_gibbs(noisy_img, iterations<span class="op">=</span><span class="dv">12</span>, lam<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    M, N <span class="op">=</span> noisy_img.shape</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    Y <span class="op">=</span> noisy_img.copy().astype(np.float32)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    possible_vals <span class="op">=</span> np.arange(<span class="dv">256</span>, dtype<span class="op">=</span>np.float32)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    masks <span class="op">=</span> [</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        (np.arange(M)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)[:, <span class="va">None</span>] <span class="op">&amp;</span> (np.arange(N)<span class="op">%</span><span class="dv">2</span> <span class="op">==</span> <span class="dv">1</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> it <span class="kw">in</span> <span class="bu">range</span>(iterations):</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> mask <span class="kw">in</span> masks:</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            padded <span class="op">=</span> np.pad(Y, <span class="dv">1</span>, mode<span class="op">=</span><span class="st">&#39;edge&#39;</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>            neighbors <span class="op">=</span> np.stack([</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>                padded[<span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>, <span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>], padded[<span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>, <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>], padded[<span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>, <span class="dv">2</span>:],</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>                padded[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>, <span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>], padded[<span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>, <span class="dv">2</span>:],</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>                padded[<span class="dv">2</span>:, <span class="dv">0</span>:<span class="op">-</span><span class="dv">2</span>], padded[<span class="dv">2</span>:, <span class="dv">1</span>:<span class="op">-</span><span class="dv">1</span>], padded[<span class="dv">2</span>:, <span class="dv">2</span>:]</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>            ], axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>            target_neighbors <span class="op">=</span> neighbors[mask]</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>            target_noisy <span class="op">=</span> noisy_img[mask]</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            prior <span class="op">=</span> np.<span class="bu">sum</span>(np.<span class="bu">abs</span>(target_neighbors[:, :, np.newaxis] <span class="op">-</span> possible_vals), axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> lam <span class="op">*</span> np.<span class="bu">abs</span>(target_noisy[:, np.newaxis] <span class="op">-</span> possible_vals)</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            energy <span class="op">=</span> prior <span class="op">+</span> loss</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>            probs <span class="op">=</span> np.exp(np.<span class="bu">min</span>(energy, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>) <span class="op">-</span> energy)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>            probs <span class="op">/=</span> np.<span class="bu">sum</span>(probs, axis<span class="op">=</span><span class="dv">1</span>, keepdims<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>            cum_probs <span class="op">=</span> np.cumsum(probs, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            random_vals <span class="op">=</span> np.random.rand(<span class="bu">len</span>(target_noisy), <span class="dv">1</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>            Y[mask] <span class="op">=</span> np.argmax(cum_probs <span class="op">&gt;</span> random_vals, axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Y</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>img_noisy <span class="op">=</span> skimage.io.imread(<span class="st">&#39;../../func_analysis/func_70_tvd/lena-noise.jpg&#39;</span>, as_gray<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> img_noisy.<span class="bu">max</span>() <span class="op">&lt;=</span> <span class="fl">1.0</span>:</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    img_noisy <span class="op">=</span> (img_noisy <span class="op">*</span> <span class="dv">255</span>).astype(np.uint8)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>denoised_img <span class="op">=</span> denoise_mrf_gibbs(img_noisy, iterations<span class="op">=</span><span class="dv">10</span>, lam<span class="op">=</span><span class="fl">2.5</span>)</span>
 <span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>denoised_img <span class="op">=</span> vectorized_gibbs_l1(img_noisy, iterations<span class="op">=</span><span class="dv">10</span>, lam<span class="op">=</span><span class="fl">2.5</span>)</span>
-<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(img_noisy, cmap<span class="op">=</span><span class="st">&#39;gray&#39;</span>)</span>
-<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">&#39;Gürültülü&#39;</span>)</span>
-<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axis(<span class="st">&#39;off&#39;</span>)</span>
-<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].imshow(denoised_img, cmap<span class="op">=</span><span class="st">&#39;gray&#39;</span>)</span>
-<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">&#39;Gürültü Giderilmiş&#39;</span>)</span>
-<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axis(<span class="st">&#39;off&#39;</span>)</span>
-<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
-<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;lena1.jpg&#39;</span>)</span></code></pre></div>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(<span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].imshow(img_noisy, cmap<span class="op">=</span><span class="st">&#39;gray&#39;</span>)</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].set_title(<span class="st">&#39;Gürültülü&#39;</span>)</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">0</span>].axis(<span class="st">&#39;off&#39;</span>)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].imshow(denoised_img, cmap<span class="op">=</span><span class="st">&#39;gray&#39;</span>)</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].set_title(<span class="st">&#39;Gürültü Giderilmiş&#39;</span>)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>axes[<span class="dv">1</span>].axis(<span class="st">&#39;off&#39;</span>)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;lena1.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="lena1.jpg" /></p>
-<p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Yue,
 <a href="https://stanford.edu/class/ee367/Winter2018/yue_ee367_win18_report.pdf">

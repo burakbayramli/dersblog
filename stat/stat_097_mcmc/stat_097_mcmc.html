@@ -219,9 +219,9 @@ class="math inline">\(p(x,y)\)</span> inşa edebilirsek işimiz biter.</p>
 <p>Bir öneri dağılımı <span class="math inline">\(q(y \mid x)\)</span>
 tanıtıyoruz — mevcut durum <span class="math inline">\(x\)</span>’e
 koşullu olarak örnekleyebileceğimiz basit bir dağılım. Bunu şöyle
-düşünün: “<span class="math inline">\(x\)</span>’teyken bir sonraki
-sıçramayı nereye düşünmeliyim?” Yaygın bir seçim, mevcut konuma Gaussian
-gürültüsü eklemektir:</p>
+düşünebiliriz: “<span class="math inline">\(x\)</span>’teyken bir
+sonraki sıçramayı nereye düşünmeliyim?” Yaygın bir seçim, mevcut konuma
+Gaussian gürültüsü eklemektir:</p>
 <p><span class="math display">\[y = x + \mathcal{N}(0,
 \sigma^2)\]</span></p>
 <p>Öneriyi her zaman kabul etseydik, zincir <span
@@ -461,12 +461,22 @@ X)\)</span></li>
 <li><span class="math inline">\(x_D^{(t+1)} := y_D \sim \pi(x_D \mid
 x_1^{(t+1)}, x_2^{(t+1)}, \ldots, x_{D-1}^{(t+1)}, X)\)</span></li>
 </ul>
-<p>Neden Çalışır?</p>
+<p>Üsttekinin neden çalıştığını görmek için</p>
 <p><span class="math display">\[\pi(x \mid X) = \pi(x_d, x_{-d} \mid X)
 = \pi(x_d \mid x_{-d}, X)\,\pi(x_{-d} \mid X)\]</span></p>
-<p>Gibbs örneklemesinde öneri dağılımı koşulun kendisi seçilir:</p>
+<p>olduğuna dikkat edelim. Geçiş olasılığı şu şekilde yazılabilir,</p>
+<p><span class="math display">\[\alpha(x, y) = \min\left\{1,
+\frac{\pi(y) \pi(x_d | x_{-d}, X)}{\pi(x) \pi(y_d | y_{-d},
+X)}\right\}\]</span></p>
+<p>Dikkat edersek <span class="math inline">\(q\)</span> simdi <span
+class="math inline">\(\pi\)</span>, Gibbs örneklemesinde öneri dağılımı
+koşulun kendisi seçilir:</p>
 <p><span class="math display">\[q(y \mid x) = \pi(y_d \mid x_{-d},
 X)\]</span></p>
+<p>“yani <span class="math inline">\(d\)</span> koordinatı için yeni bir
+değer önerirken, diğer tüm koordinatları sabit tutarak (yani <span
+class="math inline">\(y_{-d} = x_{-d}\)</span>) doğrudan koşullu
+dağılımından örnekleme yaparsınız.”</p>
 <p>Bunu genel MH kabul oranına koyarsak:</p>
 <p><span class="math display">\[
 \alpha(y \mid x) = \min\!\left(1,\, \frac{\pi(y)\, q(x \mid y)}{\pi(x)\,

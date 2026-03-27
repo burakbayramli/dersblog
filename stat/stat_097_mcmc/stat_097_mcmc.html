@@ -114,8 +114,8 @@ fonksiyonudur — anında değerlendirilebilir. Ancak örnekleme zordur;
 bölgelerle ayrılmış olabilir. Naif / basit bir örnekleyici bir modda
 sıkışır ve diğerlerini hiç keşfedemez. Bu genel soruna çok modluluk
 denir. Asıl sorun ise “boyutluluğun laneti”dir. Daha temelde, bilinen
-bir YOF’tan örneklemenin standart numaraları yüksek boyutlarda işe
-yaramaz:</p>
+bir olasılıksal yoğunluk fonksiyonundan örneklemenin standart numaraları
+yüksek boyutlarda ise yaramaz:</p>
 <ul>
 <li>Ters CDF: <span class="math inline">\(F^{-1}(u)\)</span>’yu
 hesaplamayı gerektirir; bu da <span
@@ -142,10 +142,13 @@ keşfeden bir Markov zinciri inşa eder.</p>
 <p>Bu görev için durağanlık, indirgenemezlik ve aperiyodikliğin
 kanıtlanması gerekir.</p>
 <p>Durağanlık için geçişlerin Markov özelliğine sahip olması gerekir;
-gelecek yalnızca bugüne bağlıdır. Ayrıntılı denge ile birlikte
-durağanlığı elde ederiz. Ancak durağanlık tek başına, zincirin rastgele
-bir başlangıç noktasından <span class="math inline">\(\pi\)</span>’ye
-yakınsadığını garanti etmez. Bunlara ek olarak şunlar gerekir:</p>
+gelecek yalnızca bugüne bağlıdır. Bu kalem oldukca basit, eğer bir
+sonraki adım için sadece o andaki konum bilgisini kullanırsak bunu
+otomatik olarak elde etmiş oluruz.</p>
+<p>Ayrıntılı denge üzerinden durağanlığı elde ederiz. Ancak durağanlık
+tek başına, zincirin rastgele bir başlangıç noktasından <span
+class="math inline">\(\pi\)</span>’ye yakınsadığını garanti etmez.
+Bunlara ek olarak şunlar gerekir:</p>
 <p>İndirgenemezlik: Zincir, pozitif olasılıklı herhangi bir bölgeye her
 yerden ulaşabilmelidir. Bu olmadan birden fazla durağan dağılım olabilir
 (her bağlantısız bileşen için bir tane) ve hangisinde sonuçlanacağınız
@@ -157,15 +160,15 @@ giden bir zincirin <span class="math inline">\(\pi\)</span> durağan
 dağılımı olabilir, ama ergodik anlamda asla ona yakınsamaz. MH bunu
 “yerinde kal” adımıyla otomatik olarak çözer: bir öneri reddedildiğinde
 mevcut durum tekrar sayılır. Bu öz-döngü her türlü periyodu kırar.</p>
-<p>Birlikte, indirgenemezlik + aperiyodiklik + durağanlık size
-ergodikliği verir:</p>
+<p>İndirgenemezlik + aperiyodiklik + durağanlık size ergodikliği
+verir,</p>
 <p><span class="math display">\[\frac{1}{T} \sum_{t=1}^{T} f(x_t)
 \xrightarrow{T \to \infty} \mathbb{E}_\pi[f]\]</span></p>
 <p>başlangıç noktası <span class="math inline">\(x_0\)</span>’dan
 bağımsız olarak. Gerçek kazanım budur — yalnızca <span
 class="math inline">\(\pi\)</span>’nin durağan olması değil, zinciri
 çalıştırmanın gerçekten <span class="math inline">\(\pi\)</span>’den
-örnekler vermesi.</p>
+örneklem vermesi.</p>
 <ul>
 <li>Ayrıntılı denge → <span class="math inline">\(\pi\)</span> bir
 durağan dağılımdır</li>
@@ -201,7 +204,7 @@ class="math inline">\(y\)</span>’de olup <span
 class="math inline">\(x\)</span>’e atlama olasılığına eşittir. İki durum
 arasındaki akış her iki yönde dengelenmiştir. Bunun durağanlığı ima
 ettiğini, her iki tarafı da <span class="math inline">\(x\)</span>
-üzerinden integre ederek doğrulayabilirsiniz:</p>
+üzerinden entegre ederek doğrulayabilirsiniz:</p>
 <p><span class="math display">\[\int \pi(x)\, p(x, y)\, dx = \int
 \pi(y)\, p(y, x)\, dx = \pi(y) \int p(y, x)\, dx = \pi(y)\]</span></p>
 <p>Bu tam olarak durağanlık koşuludur. Not: <span

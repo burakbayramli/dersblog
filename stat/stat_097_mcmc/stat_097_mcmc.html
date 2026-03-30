@@ -401,8 +401,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 <span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;stat_097_mcmc_02.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="stat_097_mcmc_02.jpg" /></p>
 <p>Gibbs Örneklemesi</p>
-<p>Gibbs örneklemesi, Metropolis-Hastings’in özel bir durumudur; yeni
-önerilen durum her zaman bire eşit olasılıkla kabul edilir. <span
+<p>Gibbs örneklemesi, Metropolis-Hastings’in özel bir durumudur [2];
+yeni önerilen durum her zaman bire eşit olasılıkla kabul edilir. <span
 class="math inline">\(D\)</span> boyutlu bir sonsal dağılımı <span
 class="math inline">\(x = (x_1, \ldots, x_D)\)</span> parametreleriyle
 ele alalım. Gibbs örneklemesinin temel fikri, <span
@@ -456,23 +456,34 @@ olduğundan her şey sadeleşir:</p>
 y_{-d}, X)\,\pi(y_{-d} \mid X)\,\pi(x_d \mid x_{-d}, X)}{\pi(x_d \mid
 x_{-d}, X)\,\pi(x_{-d} \mid X)\,\pi(y_d \mid y_{-d}, X)}\right) =
 1\]</span></p>
-<p>Başka bir deyişle, Gibbs örneklemesinin her adımında, önerilen
-sonraki durum her zaman geri dönüşlülük kısıtını sağlayan bir
-Metropolis-Hastings benzeri rastgele yürüyüş gerçekleştiriyoruz.</p>
+<p>Demek ki öneriler her zaman kabul edilecek.</p>
+<p>Gibbs örneklemesinin her adımında, önerilen sonraki durum her zaman
+geri dönüşlülük kısıtını sağlayan bir Metropolis-Hastings benzeri
+rastgele yürüyüş gerçekleştiriyoruz.</p>
 <p>Gibbs örneklemesinin temel avantajı basittir: öneriler her zaman
 kabul edilir. Temel dezavantajı ise yukarıdaki koşullu olasılık
 dağılımlarını türetebilmemiz gerektiğidir. Bu, öncelin sonsal ile
-eşlenik olduğu durumlarda çözülebilirdir.</p>
+eşlenik olduğu durumlarda kolay idare edilebilir.</p>
 <p>Gibbs örneklemesini yalnızca Metropolis-Hastings algoritmasının özel
 bir durumu olarak görebiliriz. Her iki algoritmanın da kavramsal açıdan
 zor kısmı, geri dönüşlülük kısıtının doğruluğunu ve örtük bir Markov
 zincirinin durağan dağılımı olması garantili bir dağılımı nasıl
-belirleyebileceğimizi anlamaktır. Bu bilgiyle Gibbs örneklemesinin
-doğruluğunu yalnızca biraz cebirle görebiliriz.</p>
+belirleyebileceğimizi anlamaktır.</p>
+<p>Not: Yukarıdaki ispat bize önerinin her zaman kabul edileceğini
+söyledi, ama MH bağlamında önerinin her zaman kabul edilmemesinin
+aperiyodikliği garanti ettiğini söylemiştik? Aperiyodikliği hala elde
+ediyoruz, çünkü MH cebirinin söylediği bir diğer şey “herhangi bir öneri
+kullanabileceğimiz”. Gibbs için bir tür öneri seçtik, bu seçim her zaman
+kabulü sağladı, fakat demek ki bu seçim matematiksel mekanizmayı diğer
+şekillerde aperiyotluk için tatmin etti ki kabul / ret mekanizması için
+yapacak bir şey kalmadı.</p>
 <p>Kaynaklar</p>
 <p>[1] Gundersen,
 <a href="https://gregorygundersen.com/blog/2019/11/02/metropolis-hastings/">Why
 Metropolis–Hastings Works</a></p>
+<p>[2] Gundersen,
+<a href="https://gregorygundersen.com/blog/2020/02/23/gibbs-sampling/">Gibbs
+Sampling Is a Special Case of Metropolis–Hastings</a></p>
 <p>
   <a href="..">Yukarı</a>
 </p>

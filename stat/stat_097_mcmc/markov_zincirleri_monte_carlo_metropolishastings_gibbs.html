@@ -90,7 +90,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h1 id="markov-zincirleri-monte-carlo-metropolis-hastings-gibbs">Markov
 Zincirleri Monte Carlo, Metropolis-Hastings, Gibbs</h1>
 <p>Bir hedef dağılım <span class="math inline">\(\pi(x)\)</span>’ten
-örneklem almak istiyoruz — diyelim ki değerlendirebildiğimiz (evaluate)
+örneklem almak istiyoruz, diyelim ki değerlendirebildiğimiz (evaluate)
 ama doğrudan örnekleyemediğimiz karmaşık bir olasılık dağılımı elimizde
 var. MH’nin büyük fikri şu: doğrudan örneklemek yerine, uzun vadeli
 davranışı <span class="math inline">\(\pi(x)\)</span>’i taklit eden bir
@@ -119,7 +119,7 @@ yüksek boyutlarda ise yaramaz:</p>
 <ul>
 <li><p>Ters CDF: <span class="math inline">\(F^{-1}(u)\)</span>’yu
 hesaplamayı gerektirir; bu da <span
-class="math inline">\(\pi^*\)</span>’yi entegre etmek demektir — yüksek
+class="math inline">\(\pi^*\)</span>’yi entegre etmek demektir, yüksek
 boyutta çözümsüzdür.</p></li>
 <li><p>Reddetme örneklemesi: Her yerde <span class="math inline">\(q(x)
 \geq c \cdot \pi^*(x)\)</span> koşulunu sağlayan bir öneri <span
@@ -129,7 +129,7 @@ astronomik biçimde küçülür; kabul oranı <span
 class="math inline">\(d\)</span>’de üstel olarak sıfıra gider.</p></li>
 <li><p>Izgara tabanlı yöntemler: <span class="math inline">\(d\)</span>
 boyutlu uzayı boyut başına <span class="math inline">\(n\)</span> kutuya
-bölmek <span class="math inline">\(n^d\)</span> nokta gerektirir — orta
+bölmek <span class="math inline">\(n^d\)</span> nokta gerektirir, orta
 büyüklükteki <span class="math inline">\(d\)</span> değerleri için bile
 tamamen olanaksızdır.</p></li>
 </ul>
@@ -218,7 +218,7 @@ ayrıntılı dengeyi sağlayan bir geçiş kuralı <span
 class="math inline">\(p(x,y)\)</span> inşa edebilirsek işimiz biter.</p>
 <p>Öneri Dağılımı</p>
 <p>Bir öneri dağılımı <span class="math inline">\(q(y \mid x)\)</span>
-tanıtıyoruz — mevcut durum <span class="math inline">\(x\)</span>’e
+tanıtıyoruz, mevcut durum <span class="math inline">\(x\)</span>’e
 koşullu olarak örnekleyebileceğimiz basit bir dağılım. Bunu şöyle
 düşünebiliriz: “<span class="math inline">\(x\)</span>’teyken bir
 sonraki sıçramayı nereye düşünmeliyim?” Yaygın bir seçim, mevcut konuma
@@ -244,18 +244,19 @@ bu olasılığı dengeyi yeniden sağlayacak şekilde seçiyoruz:</p>
 <p>En zekice çözüm:</p>
 <p><span class="math display">\[\alpha(x, y) = \min\!\left(1,\,
 \frac{\pi(y)\, q(x \mid y)}{\pi(x)\, q(y \mid x)}\right)\]</span></p>
-<p>Sezgisi basittir: önerilen <span class="math inline">\(y\)</span>
-durumu <span class="math inline">\(\pi\)</span> altında mevcut <span
+<p>Kabaca olanları anlamak basit: önerilen <span
+class="math inline">\(y\)</span> durumu <span
+class="math inline">\(\pi\)</span> altında mevcut <span
 class="math inline">\(x\)</span> durumundan daha yüksek olasılığa
-sahipse her zaman kabul et. Daha düşükse yalnızca bazen kabul et — ne
+sahipse her zaman kabul et. Daha düşükse yalnızca bazen kabul et, ne
 kadar düşük olduğuyla orantılı olarak. Bu, “yanlış” yöndeki hareketleri
 dengeyi yeniden sağlayacak kadar düşürür.</p>
 <p>Özetle, geçiş yoğunluğu şöyle yazılır:</p>
 <p><span class="math display">\[p_{\text{MH}}(x, y) = \alpha(x, y)\, q(y
 \mid x), \quad x \neq y\]</span></p>
 <p>Metropolis Özel Durumu</p>
-<p>Öneri simetrikse — yani <span class="math inline">\(q(y \mid x) = q(x
-\mid y)\)</span>, Gaussian gürültüde olduğu gibi — <span
+<p>Öneri simetrikse, yani <span class="math inline">\(q(y \mid x) = q(x
+\mid y)\)</span>, Gaussian gürültüde olduğu gibi, <span
 class="math inline">\(q\)</span> terimleri sadeleşir ve kabul şu hale
 gelir:</p>
 <p><span class="math display">\[\alpha(x, y) = \min\!\left(1,\,
@@ -276,27 +277,26 @@ class="math inline">\(x\)</span>’te kal</li>
 </ol>
 <p>Yeterince uzun süre çalıştıktan sonra ziyaret edilen durumlar <span
 class="math inline">\(\pi\)</span>’ye göre dağılmış olur. Isınma süresi,
-zincirin nereden başladığını “unutmadan” önceki başlangıç sürecidir — bu
+zincirin nereden başladığını “unutmadan” önceki başlangıç sürecidir, bu
 örnekler henüz <span class="math inline">\(\pi\)</span>’yi temsil
 etmediğinden atılır.</p>
 <p>Rosenbrock</p>
-<p>Geçerli bir yoğunluk için iki koşul gereklidir:</p>
-<ol type="1">
-<li><p>Negatif olmama: <span class="math inline">\(\pi^*(x) \geq
-0\)</span> — evet, üstel bunu garanti eder çünkü <span
-class="math inline">\(\exp(\cdot) &gt; 0\)</span> her zaman.</p></li>
-<li><p>1’e entegre olma: <span class="math inline">\(\int \pi^*(x)\, dx
-= 1\)</span> — burada <span class="math inline">\(\propto\)</span>
-sembolü önemli iş yapıyor. Ham <span
-class="math inline">\(\exp(-f/20)\)</span> zorunlu olarak 1’e entegre
-olmaz, dolayısıyla örtük bir normalleştirme sabiti <span
-class="math inline">\(Z\)</span> vardır:</p></li>
-</ol>
+<p>Bir yoğunluk fonksiyonu yaratalım, onun üzerinden alttaki örneği
+kodlayacağız.</p>
 <p><span class="math display">\[
 \pi^*(x_1, x_2) = \frac{1}{Z} \exp\!\left(-\frac{f(x_1,
 x_2)}{20}\right), \quad Z =
 \int \exp\!\left(-\frac{f(x_1, x_2)}{20}\right) dx
 \]</span></p>
+<p>Geçerli bir yoğunluk için iki koşul gerekli: 1) Negatif olmama: <span
+class="math inline">\(\pi^*(x) \geq 0\)</span>, evet, üstel bunu garanti
+eder çünkü <span class="math inline">\(\exp(\cdot) &gt; 0\)</span> her
+zaman. 2) 1’e entegre olma: <span class="math inline">\(\int \pi^*(x)\,
+dx = 1\)</span>, burada <span class="math inline">\(\propto\)</span>
+sembolü önemli iş yapıyor. Ham <span
+class="math inline">\(\exp(-f/20)\)</span> zorunlu olarak 1’e entegre
+olmaz, dolayısıyla örtük bir normalleştirme sabiti <span
+class="math inline">\(Z\)</span> vardır:</p>
 <p>MH’nin güzelliği burada: <span class="math inline">\(Z\)</span>’yi
 hiç hesaplamak zorunda değilsiniz. Kabul oranı şöyledir:</p>
 <p><span class="math display">\[\alpha(x, y) = \min\!\left(1,\,
@@ -317,15 +317,11 @@ x_2)}{20}\right) \in (0, 1]\]</span></p>
 yaklaşır; bu da entegrali sonlu kılar. <span
 class="math inline">\(f\)</span>’yi doğrudan yoğunluk olarak
 kullansaydınız, <span class="math inline">\(f \geq 0\)</span> sınırsız
-büyüdüğünden anında başarısız olurdu.</p>
-<p>Özetle <code>exp</code> üç şey yapar:</p>
-<ol type="1">
-<li><p>Pozitifliği garanti eder</p></li>
-<li><p>Manzarayı çevirir (küçük <span class="math inline">\(f\)</span> →
-yüksek yoğunluk)</p></li>
-<li><p>Aralığı <span class="math inline">\((0,1]\)</span>’e sıkıştırır;
-entegrali sonlu kılar</p></li>
-</ol>
+büyüdüğünden anında başarısız olurdu. Özetle <code>exp</code> üç şey
+yapar: 1) Pozitifliği garanti eder 2) Manzarayı çevirir (küçük <span
+class="math inline">\(f\)</span> → yüksek yoğunluk) 3) Aralığı <span
+class="math inline">\((0,1]\)</span>’e sıkıştırır; entegrali sonlu
+kılar</p>
 <p>1’e gerçek normalleştirme ise <span
 class="math inline">\(Z\)</span>’ye bölmektir; MH’nin bunu hesaplaması
 gerekmez.</p>
@@ -348,7 +344,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&#39;$x_1$&#39;</span>)</span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">&#39;$x_2$&#39;</span>)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>ax.set_zlabel(<span class="st">&#39;$</span><span class="ch">\\</span><span class="st">pi^*(x_1, x_2)$&#39;</span>)</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Rosenbrock Density (3D)&#39;</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>ax.set_title(<span class="st">&#39;Rosenbrock Yogunlugu&#39;</span>)</span>
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>ax.view_init(azim<span class="op">=</span><span class="dv">340</span>, elev<span class="op">=</span><span class="dv">30</span>)</span>
 <span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>ax.legend()</span>
 <span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>

@@ -100,23 +100,33 @@ F(t)}\]</span></p>
 F(t)\)</span>, yani:</p>
 <p><span class="math display">\[\lambda(t) =
 \frac{f(t)}{S(t)}\]</span></p>
-<p>Tehlike oranı özünde herhangi bir dağılım için türetilmiş bir
-ifadedir. Belirli bir noktada olduğumuz varsayımıyla, bir pdf’nin kuyruk
+<p><span class="math inline">\(F\)</span> ve <span
+class="math inline">\(S\)</span> tabii ki bir yoğunluk <span
+class="math inline">\(f(t)\)</span>’ye göre hesaplanan alanlara tekabül
+ederler, alttaki grafikte görüyoruz, kümülatif dağılım <span
+class="math inline">\(F\)</span>’dir, ve <span
+class="math inline">\(t_0\)</span> için onun soluna düşen alandır, o
+zaman <span class="math inline">\(S(t_0)\)</span> sağ eteğe doğru giden
+geri kalan alandır.</p>
+<p><img src="stat_200_surv_01.jpg" /></p>
+<p>Tehlike oranı özünde herhangi bir dağılım için türetilebilen bir
+ifadedir. Belirli bir noktada olduğumuz varsayımıyla, bir olasılık
+yoğunluk fonksiyonunun (probability density function -pdf-) kuyruk
 kısmına ek bir hesaplama uyguluyoruz: <span
-class="math inline">\(f(t)/(1 - F(t))\)</span>. Bu, t’de bulunduğumuz
-koşuluyla “kalanın” gerçekleşmesi olarak yorumlanabilir (tabii x ekseni
-t olmak zorunda, ve pdf’nin bir ömür pdf’si olduğunu söylüyoruz).</p>
-<p><span class="math inline">\(f(t)\)</span>, t zamanında popülasyonun
-arıza yapma hızıdır; ancak <span class="math inline">\(f(t)\)</span>,
-tüm orijinal popülasyona göre ölçülür. Eğer popülasyonun büyük çoğunluğu
-t zamanında zaten ölmüşse, küçük bir <span
+class="math inline">\(f(t)/(1 - F(t))\)</span>. Bu, t’de bulunduğumuzdan
+hareketle “kalanın” gerçekleşmesi olarak yorumlanabilir (tabii x ekseni
+t olmak zorunda, ve pdf’nin bir ömür pdf’i olduğunu söylüyoruz).</p>
+<p><span class="math inline">\(f(t)\)</span>, t zamanında nüfusun
+(population) arıza yapma hızıdır; ancak <span
+class="math inline">\(f(t)\)</span>, tüm orijinal nüfusa göre ölçülür.
+Eğer nüfus büyük çoğunluğu t zamanında zaten ölmüşse, küçük bir <span
 class="math inline">\(f(t)\)</span> değeri hayatta kalan az sayıdaki
 birey için muazzam bir riski temsil ediyor olabilir. <span
-class="math inline">\(S(t)\)</span>’ye — yani hâlâ hayatta olan orana —
-bölmek, <span class="math inline">\(f(t)\)</span>’yi orijinal popülasyon
-başına değil, hayatta kalan başına olacak şekilde yeniden ölçekler. Bir
+class="math inline">\(S(t)\)</span>’ye — yani hala hayatta olan orana —
+bölmek, <span class="math inline">\(f(t)\)</span>’yi orijinal nüfus
+başına değil, hayatta kalan basına olacak şekilde yeniden ölçekler. Bir
 oran hesaplamak başka bir birim başına ölçüm verdiğinden, “kalan ömür
-birimi başına yoğunluk / zaman noktası” değerini soruyorum aslında; yani
+birimi basına yoğunluk / zaman noktası” değerini soruyorum aslında; yani
 bu yoğunluk/zaman noktasının birim potansiyel ölüm zamanı açısından ne
 kadar değerli olduğunu sorguluyorum. Aynı yoğunluk değeri, az zaman
 kaldığında daha yüksek bir değer verir.</p>
@@ -124,10 +134,11 @@ kaldığında daha yüksek bir değer verir.</p>
 olduğundan, bir anlık hızdır (birim zaman başına), bir olasılık
 değildir. Bu yüzden buna yoğunluk oranı ya da ölüm kuvveti de denir; bu
 terimler, onun bir olasılık ya da yoğunluk yerine bir hız olduğunu daha
-iyi yansıtan aktüerya bilimi gibi alanlardan ödünç alınmıştır. Bir pdf
-<span class="math inline">\(f(t)\)</span> şunu sağlamalıdır: <span
-class="math inline">\(\int_0^\infty f(t)\,dt = 1\)</span>. Ancak <span
-class="math inline">\(h(t)\)</span> için böyle bir kısıt yoktur.</p>
+iyi yansıtan aktüerya bilimi gibi alanlardan ödünç alınmıştır. Bir
+pdf’in <span class="math inline">\(f(t)\)</span> şunu sağlaması
+gerektiğini biliyoruz: <span class="math inline">\(\int_0^\infty
+f(t)\,dt = 1\)</span>. <span class="math inline">\(h(t)\)</span> için
+böyle bir beklenti yoktur.</p>
 <p><span class="math inline">\(S(t) = 1 - F(t)\)</span> ile başlıyoruz;
 dolayısıyla <span class="math inline">\(f(t) = F&#39;(t) =
 -S&#39;(t)\)</span>. Tanıma yerleştirirsek:</p>
@@ -136,7 +147,7 @@ dolayısıyla <span class="math inline">\(f(t) = F&#39;(t) =
 <p>Logaritmanın türevi için zincir kuralını hatırlayalım:</p>
 <p><span class="math display">\[\frac{d}{dt}\log S(t) =
 \frac{S&#39;(t)}{S(t)}\]</span></p>
-<p>O hâlde şunu hemen görebiliriz:</p>
+<p>O halde şunu hemen görebiliriz:</p>
 <p><span class="math display">\[\frac{-S&#39;(t)}{S(t)} =
 -\frac{d}{dt}\log S(t)\]</span></p>
 <p>Dolayısıyla:</p>
@@ -183,73 +194,37 @@ e^{-(t/\lambda)^k}}{e^{-(t/\lambda)^k}}\]</span></p>
 \frac{k}{\lambda}\left(\frac{t}{\lambda}\right)^{k-1}\]</span></p>
 <p>Bu, tanıdık Weibull tehlike biçimidir.</p>
 <p>Olurluk fonksiyonunu kurmak</p>
-<p>n özneyi gözlemlediğimizi varsayalım; her birinin gözlemlenen zamanı
-<span class="math inline">\(t_i\)</span> ve bir sansürleme göstergesi
-<span class="math inline">\(\delta_i\)</span> var; burada <span
-class="math inline">\(\delta_i = 1\)</span> olayın gözlemlendiği, <span
-class="math inline">\(\delta_i = 0\)</span> ise sağdan sansürlendiği
-anlamına gelir.</p>
-<p>Her özne için şunu sormalıyız: Gerçekte gözlemlediğim şeyin olasılığı
-nedir?</p>
+<p>Diyelim ki <span class="math inline">\(n\)</span> tane özneyi
+gözlemliyoruz, bu öznelerin sağkalımsal bir dağılımı var. Sağkalım
+Analizi problemlerinde çok ortaya çıkan durum şudur; mesela bir grup
+hastaya bir deneysel ilaç veriliyor, ve ne kadar yaşadıklarına bakılıyor
+(kelimenin tam anlamıyla sağkalım analizi!). Vefat eden varsa bu zaman
+not ediliyor. Fakat deney bittikten sonra hala yaşamaya devam edenler
+olabilir (inşallah). Bu durumda eksik bir sinyal vardır, yani ölüm not
+ediliyor fakat sağkalım not edilmiyor, deney bittikten bir gün önce de
+olabilir, iki sene sonra da olabilir. Burada, bitiş noktası bilinmediği
+için bu tür veriye sağdan sansürlü (right censored) adı verilir. Sansür
+değişkeni literatürde <span class="math inline">\(\delta_i\)</span> ile
+gösterilir, 0 ya da 1 değerine sahiptir.</p>
+<p>İleride sansürlü veri noktalarının olurluğa nasıl etki ettiğini
+göreceğiz.</p>
+<p>Tekrar üzerinden geçmek gerekirse. N hasta gözlemlediğimizi
+varsayalım.</p>
 <ul>
-<li>Eğer <span class="math inline">\(\delta_i = 1\)</span>: <span
-class="math inline">\(t_i\)</span>’de gerçek bir olay gözlemledik, katkı
-pdf <span class="math inline">\(f(t_i)\)</span>’dir.</li>
-<li>Eğer <span class="math inline">\(\delta_i = 0\)</span>: Yalnızca
-olayın <span class="math inline">\(t_i\)</span>’ye kadar
-gerçekleşmediğini biliyoruz, katkı <span
-class="math inline">\(S(t_i)\)</span>’dir.</li>
+<li><p>Tüm hastalar 1. günde deneye alınır.</p></li>
+<li><p>Çalışma 60 gün sürer.</p></li>
+<li><p>Her hasta size tam olarak bir veri noktası verir: <span
+class="math inline">\((t_i, \delta_i)\)</span>.</p></li>
 </ul>
-<p>Tam olurluk şöyledir:</p>
-<p><span class="math display">\[L = \prod_{i=1}^n f(t_i)^{\delta_i}
-S(t_i)^{1-\delta_i}\]</span></p>
-<p>Tehlikeyle bağlantı</p>
-<p><span class="math inline">\(h(t) = f(t)/S(t)\)</span> olduğundan
-<span class="math inline">\(f(t) = h(t)S(t)\)</span>, dolayısıyla:</p>
-<p><span class="math display">\[f(t_i)^{\delta_i} S(t_i)^{1-\delta_i} =
-h(t_i)^{\delta_i} S(t_i)^{\delta_i} S(t_i)^{1-\delta_i} =
-h(t_i)^{\delta_i} S(t_i)\]</span></p>
-<p>Böylece olurluk şöyle olur:</p>
-<p><span class="math display">\[L = \prod_{i=1}^n h(t_i)^{\delta_i}
-S(t_i)\]</span></p>
-<p><span class="math inline">\(S(t) = e^{-H(t)}\)</span> yerine
-koyarsak:</p>
-<p><span class="math display">\[L = \prod_{i=1}^n h(t_i)^{\delta_i}
-e^{-H(t_i)}\]</span></p>
-<p>Bu, yaşam olurluğunun kanonik biçimidir; <span
-class="math inline">\(h\)</span>, <span
-class="math inline">\(S\)</span>, <span
-class="math inline">\(H\)</span>’nin hepsi varsaydığınız dağılımdan
-gelir.</p>
-<p>Weibull’u yerine koymak</p>
-<p>Ölçek <span class="math inline">\(\lambda\)</span> ve şekil <span
-class="math inline">\(k\)</span> parametreli Weibull tehlike fonksiyonu
-(Weibull dağılımı değil) için:</p>
-<p><span class="math display">\[h(t) =
-\frac{k}{\lambda}\left(\frac{t}{\lambda}\right)^{k-1}, \quad H(t) =
-\left(\frac{t}{\lambda}\right)^k\]</span></p>
-<p>Bunları <span class="math inline">\(L\)</span>’ye koyup log-olurluk
-<span class="math inline">\(\ell = \log L\)</span>’yi alıp <span
-class="math inline">\(\lambda\)</span> (ve bilinmiyorsa <span
-class="math inline">\(k\)</span>) üzerinden maksimize ediyorsunuz.
-Sansürlü gözlemler yalnızca <span
-class="math inline">\(e^{-H(t_i)}\)</span> üzerinden katkı yapar — bir
-olay gerçekleşmiş gibi davranmadan parametre tahminlerini doğru yönde
-çekerler.</p>
-<p>Sansürlemeyi görmezden gelip gözlemlenen zamanlar üzerinde naif bir
-regresyon yapmak tahminleri neden çarpıtır? Çünkü sansürlü özneler için
-yaşam sürelerini sistematik olarak olduğundan kısa tahmin etmiş
-olursunuz.</p>
-<p>Rossi Verisi</p>
-<p>N hasta gözlemlediğimizi varsayalım. - Tüm hastalar 1. günde
-çalışmaya alınır. - Çalışma 60 gün sürer. - Her hasta size tam olarak
-bir veri noktası verir: <span class="math inline">\((t_i,
-\delta_i)\)</span>.</p>
 <p>Çalışmanın sonunda, her hasta için tam olarak iki şeyden biri
-gerçekleşmiştir: - Olay gerçekleşti: tam günü kaydettiniz → <span
-class="math inline">\(\delta_i = 1\)</span> - Çalışma sona erdi (ya da
-hasta ayrıldı) olay gerçekleşmeden: bilinen son sağ günü kaydettiniz →
-<span class="math inline">\(\delta_i = 0\)</span></p>
+gerçekleşmiştir:</p>
+<ul>
+<li><p>Olay gerçekleşti: tam günü kaydettiniz → <span
+class="math inline">\(\delta_i = 1\)</span></p></li>
+<li><p>Çalışma sona erdi (ya da hasta ayrıldı) olay gerçekleşmeden:
+bilinen son sağ günü kaydettiniz → <span class="math inline">\(\delta_i
+= 0\)</span></p></li>
+</ul>
 <p>Dolayısıyla veri setiniz şöyle görünebilir:</p>
 <table>
 <thead>
@@ -283,35 +258,105 @@ hasta ayrıldı) olay gerçekleşmeden: bilinen son sağ günü kaydettiniz →
 </tbody>
 </table>
 <p>Hasta 2 ve 4 sağdan sansürlüdür — sırasıyla 30. ve 60. günlerde
-takipten çıktıklarında yalnızca hâlâ hayattaydılar. Önemli olan şu: Olay
+takipten çıktıklarında yalnızca hala hayattaydılar. Önemli olan şu: Olay
 gerçekleşsin ya da gerçekleşmesin, zaman 1. günden itibaren sürekli
 aktığı için her hastanın bir <span class="math inline">\(t_i\)</span>
 değeri vardır.</p>
-<p><span class="math inline">\(L = \prod_i h(t_i)^{\delta_i}
-S(t_i)\)</span> olurluğunun bunu temiz biçimde ele almasının nedeni de
-budur — <span class="math inline">\(\delta_i\)</span> göstergesi
-yalnızca bir hastanın son kaydedilen gününün bir olay mı yoksa yalnızca
-bir yaşam olasılığı mı katkısında bulunacağına karar veren bir anahtar
-işlevi görür.</p>
-<p>Şimdi Rossi veri setini anlayalım ve kovaryant modelini nasıl
-parametrize edeceğimize karar verelim. 1970’lerde Maryland eyalet
+<p>Birazdan göreceğimiz <span class="math inline">\(L = \prod_i
+h(t_i)^{\delta_i} S(t_i)\)</span> olurluğunun bunu temiz biçimde ele
+almasının nedeni de budur — <span
+class="math inline">\(\delta_i\)</span> göstergesi yalnızca bir hastanın
+son kaydedilen gününün bir olay mı yoksa yalnızca bir yaşam olasılığı mı
+katkısında bulunacağına karar veren bir anahtar işlevi görür.</p>
+<p>Öznelere dönersek, her birinin gözlemlenen zamanı <span
+class="math inline">\(t_i\)</span> ve bir sansürleme göstergesi <span
+class="math inline">\(\delta_i\)</span> var; burada <span
+class="math inline">\(\delta_i = 1\)</span> olayın gözlemlendiği, <span
+class="math inline">\(\delta_i = 0\)</span> ise sağdan sansürlendiği
+anlamında.</p>
+<p>Her özne için şunu sormalıyız: Gerçekte gözlemlediğim şeyin olasılığı
+nedir?</p>
+<ul>
+<li><p>Eğer <span class="math inline">\(\delta_i = 1\)</span>: <span
+class="math inline">\(t_i\)</span>’de gerçek bir olay gözlemledik, katkı
+pdf <span class="math inline">\(f(t_i)\)</span>’dir.</p></li>
+<li><p>Eğer <span class="math inline">\(\delta_i = 0\)</span>: Yalnızca
+olayın <span class="math inline">\(t_i\)</span>’ye kadar
+gerçekleşmediğini biliyoruz, katkı <span
+class="math inline">\(S(t_i)\)</span>’dir.</p></li>
+</ul>
+<p>Dikkat: katkı <span class="math inline">\(S(t_i)\)</span>, yani pdf
+grafiğini hatırlarsak “sağ kuyruktaki alan”. Sağkalım Analizi’nin
+sihirli numarası burada.</p>
+<p>Tam olurluk şöyledir:</p>
+<p><span class="math display">\[L = \prod_{i=1}^n f(t_i)^{\delta_i}
+S(t_i)^{1-\delta_i}\]</span></p>
+<p>Tehlikeyle bağlantı</p>
+<p><span class="math inline">\(h(t) = f(t)/S(t)\)</span> olduğundan
+<span class="math inline">\(f(t) = h(t)S(t)\)</span>, dolayısıyla:</p>
+<p><span class="math display">\[
+f(t_i)^{\delta_i} S(t_i)^{1-\delta_i} = h(t_i)^{\delta_i}
+S(t_i)^{\delta_i} S(t_i)^{1-\delta_i} = h(t_i)^{\delta_i} S(t_i)
+\]</span></p>
+<p>Böylece olurluk şöyle olur:</p>
+<p><span class="math display">\[L = \prod_{i=1}^n h(t_i)^{\delta_i}
+S(t_i)\]</span></p>
+<p><span class="math inline">\(S(t) = e^{-H(t)}\)</span> yerine
+koyarsak:</p>
+<p><span class="math display">\[L = \prod_{i=1}^n h(t_i)^{\delta_i}
+e^{-H(t_i)}\]</span></p>
+<p>Bu, yaşam olurluğunun literaturdeki halidir; <span
+class="math inline">\(h\)</span>, <span
+class="math inline">\(S\)</span>, <span
+class="math inline">\(H\)</span>’nin hepsi varsaydığınız dağılımdan
+gelir.</p>
+<p>Weibull’u yerine koymak</p>
+<p>Ölçek <span class="math inline">\(\lambda\)</span> ve şekil <span
+class="math inline">\(k\)</span> parametreli Weibull tehlike fonksiyonu
+(Weibull dağılımı değil) için:</p>
+<p><span class="math display">\[h(t) =
+\frac{k}{\lambda}\left(\frac{t}{\lambda}\right)^{k-1}, \quad
+H(t) = \left(\frac{t}{\lambda}\right)^k\]</span></p>
+<p>Bunları <span class="math inline">\(L\)</span>’ye koyup log-olurluk
+<span class="math inline">\(\ell = \log L\)</span>’yi alıp <span
+class="math inline">\(\lambda\)</span> (ve bilinmiyorsa <span
+class="math inline">\(k\)</span>) üzerinden maksimize ediyorsunuz.
+Sansürlü gözlemler yalnızca <span
+class="math inline">\(e^{-H(t_i)}\)</span> üzerinden katkı yapar — bir
+olay gerçekleşmiş gibi davranmadan parametre tahminlerini doğru yönde
+çekerler.</p>
+<p>Sansürlemeyi görmezden gelip gözlemlenen zamanlar üzerinde naif bir
+regresyon yapmak tahminleri neden çarpıtır? Çünkü sansürlü özneler için
+yaşam sürelerini sistematik olarak olduğundan kısa tahmin etmiş
+olursunuz.</p>
+<p>Rossi Verisi</p>
+<p>Şimdi Rossi veri setini anlayalım ve katsayılar / ağırlıklar modelini
+nasıl parametrize edeceğimize karar verelim. 1970’lerde Maryland eyalet
 hapishanelerinden tahliye edilen 432 mahkum bir yıl boyunca takip
 edilmiştir. Yarısına rastgele mali yardım atanmış, diğer yarısına
 atanmamıştır. Sonuç değişkeni, yeniden tutuklanmayanlar için 52. haftada
 sansürlenerek ilk tutuklanmanın gerçekleştiği haftadır.</p>
-<p>İlgilendiğimiz temel değişkenler şunlardır: - week — gözlemlenen
-zaman (<span class="math inline">\(t_i\)</span>) - arrest — olay
-göstergesi (<span class="math inline">\(\delta_i\)</span>, 1=tutuklandı,
-0=sansürlü) - fin — mali yardım (0/1) — ana deneysel değişken - age —
-tahliye sırasındaki yaş - prio — önceki tutuklama sayısı - wexp — önceki
-iş deneyimi (0/1) - mar — evli (0/1) - paro — koşullu tahliye (0/1)</p>
+<p>İlgilendiğimiz temel değişkenler şunlardır:</p>
+<ul>
+<li><code>week</code> — gözlemlenen zaman (<span
+class="math inline">\(t_i\)</span>)</li>
+<li><code>arrest</code> — olay göstergesi (<span
+class="math inline">\(\delta_i\)</span>, 1=tutuklandı, 0=sansürlü)</li>
+<li><code>fin</code> — mali yardım (0/1) — ana deneysel değişken</li>
+<li><code>age</code> — tahliye sırasındaki yaş</li>
+<li><code>prio</code> — önceki tutuklama sayısı</li>
+<li><code>wexp</code> — önceki iş deneyimi (0/1)</li>
+<li><code>mar</code> — evli (0/1)</li>
+<li><code>paro</code> — koşullu tahliye (0/1)</li>
+</ul>
 <p>AFT Weibull Modeli</p>
 <p><span class="math inline">\(\lambda\)</span>’nın kovaryantlara göre
 birey başına değişmesine izin vermemiz gerekiyor. Standart yol, Poisson
 regresyonuyla aynı fikir olan log-doğrusal bağlantıdır:</p>
-<p><span class="math display">\[\log \lambda_i = \beta_0 + \beta_1 \cdot
-\text{fin}_i + \beta_2 \cdot \text{age}_i + \beta_3 \cdot \text{prio}_i
-+ \cdots\]</span></p>
+<p><span class="math display">\[
+\log \lambda_i = \beta_0 + \beta_1 \cdot \text{fin}_i + \beta_2 \cdot
+\text{age}_i + \beta_3 \cdot \text{prio}_i + \cdots
+\]</span></p>
 <p><span class="math display">\[\lambda_i = e^{X_i\beta}\]</span></p>
 <p>Bu, <span class="math inline">\(\lambda_i &gt; 0\)</span>’ı her zaman
 garanti eder. Şimdilik <span class="math inline">\(k\)</span>’yı sabit
@@ -331,8 +376,8 @@ alır:</p>
 <span class="math inline">\(\beta\)</span> kovaryant katsayılarıdır ve
 <span class="math inline">\(x_i = [\text{fin}_i, \text{age}_i,
 \text{prio}_i, \ldots]\)</span>’dir. Şekil <span
-class="math inline">\(k\)</span> tüm bireyler için ortaktır — tüm
-popülasyon için tehlike şeklini yönetir.</p>
+class="math inline">\(k\)</span> tüm bireyler için ortaktır — tüm nüfus
+için tehlike şeklini yönetir.</p>
 <p>Dolayısıyla mahkum <span class="math inline">\(i\)</span> için
 Weibull tehlikesi ve kümülatif tehlike şöyle olur:</p>
 <p><span class="math display">\[h_i(t) =
@@ -358,7 +403,7 @@ class="math inline">\(k\)</span> için log uzayında çalışıyoruz.</p>
 \quad \log k \sim \mathcal{N}(0, 10)\]</span></p>
 <p><span class="math display">\[\beta_j \sim \mathcal{N}(0, 10) \quad
 \forall j\]</span></p>
-<p>Zayıf bilgilendirici Gaussianlar — olurluğa hâkim olmayacak kadar
+<p>Zayıf bilgilendirici Gaussianlar — olurluğa hakim olmayacak kadar
 geniş.</p>
 <p>Metropolis Adımı</p>
 <p>Her iterasyonda şunu öneriyorsunuz:</p>
@@ -506,7 +551,7 @@ ayrıntılandıran [2]’den fikirler paylaşacağım.</p>
 problemlerinden biridir. Görev, müşterilerin ayrılmak üzere olup
 olmadığını, yani kayıp mı vereceklerini tahmin etmektir. Ne kadar
 karmaşık ve yamuk yollarla bu işin yapıldığını hayal edemezsiniz…</p>
-<p>Asıl numara, problemi çözümü aşikâr kılacak şekilde tanımlamaktır.
+<p>Asıl numara, problemi çözümü aşikar kılacak şekilde tanımlamaktır.
 Bunu yapınca, hastaların ne zaman öleceğini, makinelerin ne zaman arıza
 yapacağını ya da bir depremin ne zaman geleceğini tahmin etmekle özdeş
 hale gelir. Şunu söyleyebilirim ki, anlatacağım model bu problemler için
@@ -528,10 +573,11 @@ mi?..</li>
 satın alma yok’ gibi keyfi bir çizgi çizerek tanım yapmak zorunda
 kalıyor.</p>
 <p>Kaynaklar</p>
-<p>[1] Ross, Mühendisler ve Bilim İnsanları için Olasılık ve İstatistiğe
-Giriş</p>
-<p>[2] Egil Martinsson, WTTE-RNN - Daha az yamuk kayıp tahmini</p>
-<hr />
+<p>[1] Ross, Introduction to Probability and Statistics for Engineers
+and Scientists</p>
+<p>[2] Egil Martinsson,
+<a href="https://ragulpr.github.io/2016/12/22/WTTE-RNN-Hackless-churn-modeling/">WTTE-RNN
+- Less hacky churn prediction</a></p>
 <p>[devam edecek]</p>
 <p>
   <a href="..">Yukarı</a>

@@ -485,10 +485,37 @@ için o ağırlıkları zaten kullanmışızdır. Değerlendirdiğimiz her parç
 zaman adımına “temiz bir sayfa” ile başlar ve onu yalnızca yeni olurluk
 <span class="math inline">\(p(y_t | x_t^{(i)})\)</span> ile
 güncellememiz gerekir.</p>
+<p>Basit bir örnek üzerinde ile düşünmek gerekirse mesela elimizde dört
+parçacık olsun, sırasıyla 5, 10, 12, 13 değerleri hipotezini taşıyorlar,
+ve ağırlıkları 5:3, 10:1, 12:0.5, 13:0.1. Tekrar örneklem işleminden
+sonra 5:0.25, 5:0.25, 5:0.25, 12:0.25 parçacıklarına sahip olabiliriz,
+dikkat edilirse 13 değeri tamamen atılmıştır, 5 değerini taşıyan
+parçacık çoğaltılmıştır, ve ağırlık değerleri tamamen birbirine
+eşittir.</p>
 <p>Örnek</p>
 <p>Bir grafikte “yüz takibi” problemini <code>face.py</code> içinde
 bulabilirsiniz, örnek [4, sf. 613] Matlab kodundan tercüme
 edilmiştir.</p>
+<p>Bir goruntu uzerinde hareket eden bir yuz sekli var. Bu yuz seklinin
+sablon olarak seklini biliyoruz. Peki filtreleme icin gereken “sinyal”
+nedir? Yuz seklini arayip buluyor muyuz? Bize gereken tum pikselleri
+ağırlıklara Dönüştürmek. Kod, parçacığın tahmin ettiği yüz görüntüsünü
+gerçek gürültülü görüntüden çıkarır (<code>np.abs(v_t - v_pred)</code>)
+ve ustel puanlama yapar, <code>np.exp(-0.5 * diff)</code>.</p>
+<ul>
+<li><p>Fark düşükse (parçacık yüzün üzerindeyse), ağırlık
+yüksektir.</p></li>
+<li><p>Fark yüksekse (parçacık boş alandaysa), ağırlık
+düşüktür.</p></li>
+</ul>
+<p>Sonuç: Bir Olasılık Haritası. Filtre, yüzü başlangıçta tek bir nokta
+olarak “bulmaz”; bir dağılım oluşturur. “Sinyal”, parçacık
+ağırlıklarının bütünsel kümesidir. Özetle, yüz “bulunur”; çünkü yüz
+şablonunun siyah pikselleriyle örtüşen parçacıklar <span
+class="math inline">\(p(y_t | x_t)\)</span> skorlarında büyük bir artış
+alırken, “arka plan” gürültüsündeki parçacıklara sıfıra yakın ağırlıklar
+atanır ve bu parçacıklar Yeniden Örnekleme sırasında sonunda
+elenirler.</p>
 <p>Örnek</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hedef dağılımınız</span></span>

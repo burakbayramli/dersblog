@@ -516,13 +516,13 @@ düşüktür.</p></li>
 <p>Sonuç: Bir Olasılık Haritası. Filtre, yüzü başlangıçta tek bir nokta
 olarak “bulmaz”; bir dağılım oluşturur. “Sinyal”, parçacık
 ağırlıklarının bütünsel kümesidir.</p>
-<p>Özetle, yüz “bulunur”; çünkü yüz şablonunun siyah pikselleriyle
-örtüşen parçacıklar <span class="math inline">\(p(y_t | x_t)\)</span>
-skorlarında büyük bir artış alırken, “arka plan” gürültüsündeki
+<p>Özetle, yüz bulunur çünkü yüz şablonunun siyah pikselleriyle örtüşen
+parçacıklar <span class="math inline">\(p(y_t | x_t)\)</span>
+skorlarında büyük bir artış alırken, arka plan gürültüsündeki
 parçacıklara sıfıra yakın ağırlıklar atanır ve bu parçacıklar Yeniden
 Örnekleme sırasında sonunda elenirler.</p>
 <p>Ölçüm olurluğunu hatırlayalım, <span class="math inline">\(p(y_t |
-x_t^{(i)})\)</span>. İşte “bulma” işlemi <code>compat</code> ile oluyor,
+x_t^{(i)})\)</span>. İşte bulma işlemi <code>compat</code> ile oluyor,
 daha doğrusu algoritmik şekilde arayıp bulmak yerine her parçacığa
 olasılıksal bir soru soruyoruz: “eğer bir yüz tam bu parçacığın dediği
 yerde (<span class="math inline">\(x_t^{(i)}\)</span>) olsaydı, sonuç
@@ -535,6 +535,56 @@ class="math inline">\(\mu\)</span> parametresinden çıkartmak gerekmez
 miydi, çünkü yoğunluğu hatırlarsak <span class="math inline">\(f(x) =
 1/Z \exp (- (x-\mu)^2 / 2\sigma^2)\)</span>, orada bir <span
 class="math inline">\(x-\mu\)</span>, çıkartma işlemi var.</p>
+<h3 id="evrensel-örnekleyici-olarak-pf">Evrensel Örnekleyici Olarak
+PF</h3>
+<p>Şimdi sıkı durun, bir parçacık filtresi herhangi bir dağılımdan
+örneklem almak için de kullanılabilir, yani [5]’te görülen MCMC,
+Metropolis yaklaşımı gibi. Evet, parçacık filtrelerini pek çok yerde
+hareketli bir nesneyi takip etmek için, görüntüsü ya da diğer sinyalleri
+ile, kullanılırken görüyoruz (burada “zaman” gerçek zamandır); ancak
+istatistik ve Bayes dünyasında bunlar herhangi bir statik, karmaşık
+dağılımdan örneklemek için Sıralı Monte Carlo (SMC, PF diğer adı) olarak
+genelleştirilmiştir.</p>
+<ul>
+<li><p>Yapay Görüş: Dağılım, nesne hareket ettiği için değişir.</p></li>
+<li><p>Örnekleme için SMC: Dağılım, onu <em>yapay olarak</em> daha zorlu
+hale getirdiğimiz için “değişir.”</p></li>
+</ul>
+<p>PF’lerin Evrensel Örnekleyici Olarak Davranışı</p>
+<p>Zor, statik bir dağılım <span
+class="math inline">\(\pi(x)\)</span>’ten örneklemek için SMC, kolay bir
+şeyden (düzgün bir Gaussian gibi) başlayıp yavaş yavaş karmaşık
+hedefinize “soğuyan” bir ara dağılımlar “köprüsü” oluşturur.</p>
+<p>Dizi: <span class="math inline">\(\pi_0, \pi_1, \dots, \pi_T\)</span>
+şeklinde bir dizi tanımlarız; burada <span
+class="math inline">\(\pi_0\)</span>’dan örneklemek kolaydır ve <span
+class="math inline">\(\pi_T\)</span> gerçek hedefinizdir.</p>
+<p>Parçacıklar: <span class="math inline">\(\pi_0\)</span>’dan
+örneklenen bir parçacık popülasyonuyla başlarsınız (tıpkı görüntü işleme
+örneklerinde olduğu gibi).</p>
+<p>Evrim:</p>
+<ul>
+<li><p>Yeniden Ağırlıklama: Parçacıklar, dizideki bir sonraki dağılıma
+ne kadar iyi uyduklarına göre ağırlıklandırılır.</p></li>
+<li><p>Yeniden Örnekleme: Yüksek ağırlıklı parçacıklar klonlanır; düşük
+ağırlıklılar elenir.</p></li>
+<li><p>Mutasyon: Tüm parçacıkların tek bir noktaya çökmesini önlemek
+için standart bir MCMC adımı (Metropolis gibi) kullanarak onları
+“sarsarız.”</p></li>
+</ul>
+<p>Bu Neden Umut Vadeden Gelecek: SMC’nin 2026’da standart HMC veya
+Metropolis karşısında bu kadar zemin kazanmasının nedeni, donanımla olan
+ilişkisidir:</p>
+<ul>
+<li><p>Devasa Paralellik: Standart bir MCMC zincirinde algoritma bir
+yolu yürüyen tek kişidir. SMC’de ise bir sürü halinde gezinme
+yapılabilir. Her parçacık, “ağırlık” ve “mutasyon” aşamalarında aynı
+anda farklı bir GPU çekirdeğinde işletebilir.</p></li>
+<li><p>Paralel olmayan tek kısım, yeniden ornekleme idi (parçacıkların
+kimin hayatta kaldığını görmek için iletişim kurduğu yer). 2026’da, bu
+adımı bile modern donanımda son derece hızlı hale getiren paralel
+yeniden örnekleme algoritmaları mevcuttur.</p></li>
+</ul>
 <p>Örnek</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Hedef dağılımınız</span></span>
@@ -605,6 +655,7 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a hr
 <p><img src="stat_095_mcint_01.jpg" /></p>
 <p>Kodlar</p>
 <p><a href="face.py">face.py</a></p>
+<p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Zhao, <em>Monte Carlo integration in Python over univariate and
 multivariate functions</em>, <a
@@ -612,6 +663,8 @@ href="https://boyangzhao.github.io/posts/monte-carlo-integration">https://boyang
 <p>[2] Gezerlis, <em>Numerical Methods in Physics with Python</em></p>
 <p>[3] Pharr, <em>Physically Based Rendering 3rd Ed</em></p>
 <p>[4] Barber, <em>Bayesian Reasoning and Machine Learning</em></p>
+<p>[5] Bayramli, <em>Istatistik - Markov Zincirleri Monte Carlo,
+Metropolis-Hastings, Gibbs</em></p>
 <p>
   <a href="..">Yukarı</a>
 </p>

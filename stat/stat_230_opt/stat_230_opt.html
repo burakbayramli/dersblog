@@ -288,6 +288,23 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
 <span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;stat_230_opt_01.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="stat_230_opt_01.jpg" /></p>
+<p>Dikey kırmızı çizgi Rosenbrock’un bilinen minimum noktasını
+gösteriyor, (-1,1). <span class="math inline">\(P(x)\)</span>’e
+gelirsek, matematiksel tanıma göre <span
+class="math inline">\(T\)</span> yüksekken Boltzmann yoğunluğu <span
+class="math inline">\(P(x)\)</span> <em>kabaca</em> <span
+class="math inline">\(f(x)\)</span> gibidir, <span
+class="math inline">\(T \to 0\)</span> iken (optimum noktası bağlamında)
+<span class="math inline">\(f(x)\)</span>’e daha yaklaşır. Üstteki
+resimlerde <span class="math inline">\(T=100\)</span> değerinde minimum
+nokta <span class="math inline">\(P(x)\)</span>’in genel olarak
+maksimuma yakın olan bölgelerine işaret ediyor (eksi çarpımı ile
+fonksiyon ters döndüğü için minimum maksimum haline geldi).</p>
+<p>Aynı mantığı takip edersek <span class="math inline">\(T=1\)</span>
+grafiğinde net maksimal bir tepe görmeliyiz, fakat bunu göremiyoruz,
+sebebi grafiklemenin çözünürlüğü, yani maksimum orada ama çok detaylı
+bir çözünürlük ile gözüküyor. Alttaki kodda -1,1 etrafına
+odaklanırsak,</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -313,14 +330,16 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a hr
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">&#39;stat_230_opt_02.jpg&#39;</span>)</span></code></pre></div>
 <p><img src="stat_230_opt_02.jpg" /></p>
+<p>Orada bir tepe olduğunu görüyoruz.</p>
 <h3 id="metropolis-mcmc">Metropolis, MCMC</h3>
-<p>Şimdi Rosenbrock’u dağılım haline çevirip onu Metropolis (MCMC)
-yaklaşımı ile gezelim. Elde bir yoğunluk olduğuna göre onu her dağılımı
-gezebilen herhangi bir yaklaşım ile gezebilmeliyiz.</p>
-<p>İşin optimizasyon kısmını halledebilmek için de bu gezimi yaparken
-sürekli o ana kadar gördüğümüz en minimum değeri (ve ona tekabül eden
-kordinatları) akılda tutarız. Gezim bitince bu değerleri rapor
-ederiz.</p>
+<p>Şimdi Rosenbrock’u dağılım haline çevirilmiş halini Metropolis (MCMC)
+yaklaşımı ile gezelim. O bir yoğunluk olduğuna göre onu her dağılımı
+gezebilen herhangi bir yaklaşım ile gezebilmeliyiz. İşin optimizasyon
+kısmını halledebilmek için de bu gezimi yaparken sürekli o ana kadar
+gördüğümüz en minimum değeri (ve ona tekabül eden kordinatları) akılda
+tutarız. Gezim bitince bu değerleri rapor ederiz.</p>
+<p>Dikkat: <em>minimumu</em> akılda tutuyoruz, çünkü değerleri
+Rosenbrock fonksiyonunun kendisini çağırarak hesaplıyoruz.</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> numpy.random <span class="im">import</span> multivariate_normal <span class="im">as</span> mvn</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -359,12 +378,11 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 minimum deger 0.00042834457379303055
 Kabul Orani: 20.52%</code></pre>
 <p>Üstteki değerler hakikaten Rosenbrock’un bilinen minimum noktasına
-oldukca yakındır.</p>
-<p>Kod içindeki bir kısmı aydınlatalım, niye
+oldukca yakındır. Kod içindeki bir kısmı aydınlatalım, niye
 <code>min(1, np.exp((energy_curr - energy_prop) / T))</code> kullandık?
-Bir Metropolis örnekleyici iki olasılık hesabının oranına göre hareketi
-kabul eder, diyelim <code>prop</code> teklif, <code>curr</code> o andaki
-durumu temsil ediyorsa,</p>
+Çünkü bir Metropolis örnekleyici iki olasılık hesabının oranına göre
+hareketi kabul eder, diyelim <code>prop</code> teklif, <code>curr</code>
+o andaki durumu temsil ediyorsa,</p>
 <p><span class="math display">\[
 \alpha = \min\left(1, \frac{P(prop)}{P(curr)}\right)
 \]</span></p>
@@ -377,7 +395,11 @@ zaman oran (bir bölüm işlemi) şu hale dönüşür,</p>
 \exp\left(\frac{V(curr) - V(prop)}{T}\right)
 \]</span></p>
 <p>Bu formül kodda görülen hesaptır.</p>
-<h3 id="parçaık-filtreleri">Parçaık Filtreleri</h3>
+<h3 id="parçacık-filtreleri">Parçacık Filtreleri</h3>
+<p>Şimdi dağılımı bir parçacık filtresi ile gezelim. Aynı şekilde gezim
+sırasın minimum değerleri kayda geçiyoruz. Döngü içindeki ufak sarsma
+adımına dikkat, parçacık çeşitliliğini arttırmak için eklenmesi
+gerekiyor.</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>n_particles <span class="op">=</span> <span class="dv">1000</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>n_steps <span class="op">=</span> <span class="dv">100</span></span>
@@ -411,19 +433,20 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a hr
 <span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    particles <span class="op">=</span> particles[indices]</span>
 <span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    curr_energies <span class="op">=</span> Rosenbrock(particles[:, <span class="dv">0</span>], particles[:, <span class="dv">1</span>])</span>
-<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n_mcmc_steps):</span>
-<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>        noise <span class="op">=</span> np.random.normal(<span class="dv">0</span>, np.sqrt(proposal_var), size<span class="op">=</span>(n_particles, <span class="dv">2</span>))</span>
-<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        prop <span class="op">=</span> particles <span class="op">+</span> noise        </span>
-<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        prop_energies <span class="op">=</span> Rosenbrock(prop[:, <span class="dv">0</span>], prop[:, <span class="dv">1</span>])        </span>
-<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        diff <span class="op">=</span> (curr_energies <span class="op">-</span> prop_energies) <span class="op">/</span> T_curr</span>
-<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> np.exp(np.clip(diff, <span class="op">-</span><span class="dv">100</span>, <span class="dv">0</span>))</span>
-<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        accept <span class="op">=</span> np.random.uniform(size<span class="op">=</span>n_particles) <span class="op">&lt;</span> alpha</span>
-<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        particles[accept] <span class="op">=</span> prop[accept]</span>
-<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        curr_energies[accept] <span class="op">=</span> prop_energies[accept]</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Final Best Coord: </span><span class="sc">{</span>min_coord<span class="sc">}</span><span class="ss">&quot;</span>)</span>
-<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Final Best Value: </span><span class="sc">{</span>min_val<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Ufak MCMC adimi, &quot;sarsma&quot;</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n_mcmc_steps):</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>        noise <span class="op">=</span> np.random.normal(<span class="dv">0</span>, np.sqrt(proposal_var), size<span class="op">=</span>(n_particles, <span class="dv">2</span>))</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>        prop <span class="op">=</span> particles <span class="op">+</span> noise        </span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>        prop_energies <span class="op">=</span> Rosenbrock(prop[:, <span class="dv">0</span>], prop[:, <span class="dv">1</span>])        </span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>        diff <span class="op">=</span> (curr_energies <span class="op">-</span> prop_energies) <span class="op">/</span> T_curr</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>        alpha <span class="op">=</span> np.exp(np.clip(diff, <span class="op">-</span><span class="dv">100</span>, <span class="dv">0</span>))</span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>        accept <span class="op">=</span> np.random.uniform(size<span class="op">=</span>n_particles) <span class="op">&lt;</span> alpha</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>        particles[accept] <span class="op">=</span> prop[accept]</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>        curr_energies[accept] <span class="op">=</span> prop_energies[accept]</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Final Best Coord: </span><span class="sc">{</span>min_coord<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Final Best Value: </span><span class="sc">{</span>min_val<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
 <pre class="text"><code>Final Best Coord: [-1.00018448  1.00031523]
 Final Best Value: 3.2312280609237785e-07</code></pre>
 <p>Kodlar</p>

@@ -583,9 +583,9 @@ yanındaki B’ye kopyalar, sonra B geri A’ya kopyalar. Değişim nerede
 ortaya çıkıyor? Bu yerine bir gözlem: eğer hiçbir çarpışma olmasaydı (ki
 çarpışma miktarı denge dağılımına olan uzaklıkla doğru orantılı) o zaman
 hakikaten giden moleküller gelenler ile aynı olacaktı, yani hiçbir şey
-değişmeyecekti. Tarif edilen işlemler tabii ki hiçbir şey yapmamak için
-gereğinden fazla simülasyon. Fakat birazdan göreceğiz ki çarpışma ortaya
-çıktığında LBM’in gerçek avantajları ortaya çıkıyor.</p>
+değişmeyecekti. O zaman hiçbir şey yapmamak için gereğinden fazla kod
+işletmiş olurduk. Fakat birazdan göreceğiz ki çarpışma olduğu zaman
+LBM’in gerçek avantajları ortaya çıkıyor.</p>
 <p>Kod altta görülebilir, [2]’nin Matlab kodları baz alınmıştır.</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>nx, ny <span class="op">=</span> <span class="dv">101</span>, <span class="dv">101</span></span>
@@ -709,6 +709,26 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">&quot;X&quot;</span>)<span class="op">;</span> ax.set_ylabel(<span class="st">&quot;Y&quot;</span>)</span>
 <span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a>fig.savefig(<span class="st">&quot;compscieng_bpp43lbm_02.jpg&quot;</span>, dpi<span class="op">=</span><span class="dv">150</span>)</span></code></pre></div>
 <p><img src="compscieng_bpp43lbm_02.jpg" /></p>
+<p>Çarpışma</p>
+<p>Yayılım mekanik bir kopyalama işlemidir, mevcut dağılımı önceden
+belirlenmiş yönde kopyalar. Çarpışma her yönde ne kadar kütlenin
+olacağını ayarlar, bunu mevcut (yönsel) dağılımı denge dağılımı <span
+class="math inline">\(f^{eq}\)</span>’ya doğru çekerek yapar.</p>
+<p>Diyelim ki fiziksel akışta sağa doğru bir ivme var, çarpışma mantığı
+bu noktada sol yöne doğru bakan kanallardan kütle alır (<span
+class="math inline">\(k=2,5,6\)</span>), ve bu kütleyi sağ yöne doğru
+bakan kanallara verir (<span class="math inline">\(k=0,4,7\)</span>).
+Böylece bir sonraki yayılım adımında daha fazla kütle sağa doğru gitmiş
+olur.</p>
+<p>Bu değişim tabii ki momentum hesabı <code>ruv(f)</code> üzerinden
+global hız <span class="math inline">\(u\)</span>’yu da etkiler. Orada
+yapılan hesap şöyleydi,</p>
+<p><span class="math display">\[
+u = \frac{1}{\rho} \sum_{k} f_k c_k
+\]</span></p>
+<p>Görüldüğü gibi <span class="math inline">\(c_k\)</span>’lerin önceden
+tanımlı olmasına rağmen değisen <span
+class="math inline">\(f\)</span>’ler toptan hızda etki yaratıyor.</p>
 <p>Kodlar</p>
 <p><a href="mohamad/boundary.m">boundary.m</a>, <a
 href="mohamad/collision.m">collision.m</a>, <a

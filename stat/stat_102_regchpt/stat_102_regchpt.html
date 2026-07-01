@@ -81,6 +81,9 @@ code span.va { color: #19177c; } /* Variable */
 code span.vs { color: #4070a0; } /* VerbatimString */
 code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
+  <script
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full"
+  type="text/javascript"></script>
 </head>
 <body>
 <div id="header">
@@ -100,8 +103,8 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> statsmodels.formula.api <span class="im">as</span> smf</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> smf.ols(<span class="st">&#39;C ~ Temp&#39;</span>, data<span class="op">=</span>df).fit()</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">&quot;</span><span class="sc">%0.2f</span><span class="st">&quot;</span> <span class="op">%</span> results.rsquared)</span></code></pre></div>
-<pre class="text"><code>0.62</code></pre>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">&quot;R^2 = </span><span class="sc">%0.2f</span><span class="st"> (</span><span class="sc">%0.2f</span><span class="st">, </span><span class="sc">%0.2f</span><span class="st">)&quot;</span> <span class="op">%</span> (results.rsquared, results.params[<span class="dv">0</span>],results.params[<span class="dv">1</span>],))</span></code></pre></div>
+<pre class="text"><code>R^2 = 0.62 (44.26, -0.30)</code></pre>
 <p>Uyum (fit) başarısı üstteki gibi rapor edildi. Sonuç fena değil ama
 daha iyi olabilirdi. Şunu soralım, üstteki veriye tek bir çizgi uydurmak
 uygun mudur? Aslında iki (ya da daha fazla) çizgi daha uygun olmaz
@@ -110,14 +113,487 @@ veriyi iki parça olarak alalım, ve her parça üzerinde ayrı bir regresyon
 işletelim.</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> smf.ols(<span class="st">&#39;C ~ Temp&#39;</span>, data<span class="op">=</span>df[<span class="dv">0</span>:<span class="dv">15</span>]).fit()</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">&quot;</span><span class="sc">%0.2f</span><span class="st">&quot;</span> <span class="op">%</span> results.rsquared)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">&quot;R^2 = </span><span class="sc">%0.2f</span><span class="st">&quot;</span> <span class="op">%</span> results.rsquared)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> smf.ols(<span class="st">&#39;C ~ Temp&#39;</span>, data<span class="op">=</span>df[<span class="dv">15</span>:<span class="op">-</span><span class="dv">1</span>]).fit()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">&quot;</span><span class="sc">%0.2f</span><span class="st">&quot;</span> <span class="op">%</span> results.rsquared)</span></code></pre></div>
-<pre class="text"><code>0.77
-0.80</code></pre>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span> (<span class="st">&quot;R^2 = </span><span class="sc">%0.2f</span><span class="st">&quot;</span> <span class="op">%</span> results.rsquared)</span></code></pre></div>
+<pre class="text"><code>R^2 = 0.77
+R^2 = 0.80</code></pre>
 <p>Parçalı uyum sonucu daha iyi olarak rapor edildi. Demek ki üstteki
-veride tek değil en az iki ve birbirinden farklı doğrusal ilişki
+veride tek değil (en az) iki ve birbirinden farklı doğrusal ilişki
 var.</p>
+<p>Bayes Yaklaşımı</p>
+<p>Nerede olduklarını bilmediğimiz parçalı regresyonu çözmenin iyi bir
+yöntemi bunu olasılıksal olarak yapmak, ve Bayes yöntemine başvurmak.
+İlk önce normal regresyonu Bayes usulü nasıl yaparız onu görelim.</p>
+<p>Herhangi bir değişim noktası içermeyen basit bir doğrusal regresyon
+için, her bir <span class="math inline">\(y_t\)</span> gözleminin, sabit
+bir artık varyansı <span class="math inline">\(\sigma^2\)</span> ile
+birlikte, tahmin edilen bir ortalama <span
+class="math inline">\(\mu_t\)</span> etrafında normal dağıldığını
+varsayıyoruz:</p>
+<p><span class="math display">\[y_t \sim N(\mu_t, \sigma^2)\]</span></p>
+<p>Serinin hem taban yüksekliği hem de zaman içindeki gidişatı, doğrudan
+bu tahmin edilen ortalamanın, yani <span
+class="math inline">\(\mu_t\)</span>’nin içine gömülüdür. Verinin ham
+biçimde tutulduğu klasik bir basit doğrusal regresyon modelinde,
+herhangi bir <span class="math inline">\(t\)</span> zaman adımındaki
+beklenen ortalama için hem bir taban kesme noktası (<span
+class="math inline">\(\alpha\)</span>) hem de bir eğim katsayısı (<span
+class="math inline">\(\beta\)</span>) gereklidir:</p>
+<p><span class="math display">\[\mu_t = \alpha + \beta x_t\]</span></p>
+<ul>
+<li><p><span class="math inline">\(x_t\)</span>, <span
+class="math inline">\(t\)</span> zamanındaki bağımsız değişkeninizdir
+(örneğin, Sıcaklık (<code>Temp</code>)).</p></li>
+<li><p><span class="math inline">\(\alpha\)</span>, kesme noktası
+(intercept) katsayısıdır ve <span class="math inline">\(X = 0\)</span>
+olduğunda <span class="math inline">\(Y\)</span>’nin taban değerini
+temsil eder.</p></li>
+<li><p><span class="math inline">\(\beta\)</span>, eğim katsayısıdır ve
+<span class="math inline">\(X\)</span>’teki birim değişim başına <span
+class="math inline">\(Y\)</span>’deki değişim oranını belirler.</p></li>
+<li><p><span class="math inline">\(\mu_t\)</span>, o belirli veri
+noktası için elde edilen ders kitabı tahminidir.</p></li>
+</ul>
+<p>Yani, <span class="math inline">\(y_t \sim N(\mu_t,
+\sigma^2)\)</span> yazdığımızda, çan eğrisinin merkezine kodlanmış her
+iki parametreyi de açıkça görmek için bunu tamamen açabilirsiniz:</p>
+<p><span class="math display">\[y_t \sim N(\alpha + \beta x_t,
+\sigma^2)\]</span></p>
+<p>Bu, modelin, veri noktalarınız <span
+class="math inline">\(y_t\)</span>’nin, taban yüksekliği <span
+class="math inline">\(\alpha\)</span> tarafından kontrol edilen ve
+dikliği tamamen eğim parametresi <span
+class="math inline">\(\beta\)</span> tarafından belirlenen düz bir çizgi
+etrafında rastgele sıçradığını varsaydığı anlamına gelir.</p>
+<p>Tek bir bağımsız gözlem <span class="math inline">\(y_t\)</span> için
+Olasılık Yoğunluk Fonksiyonu (PDF) şudur:</p>
+<p><span class="math display">\[P(y_t|x_t, \alpha, \beta, \sigma) =
+\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-\frac{(y_t - \mu_t)^2}{2\sigma^2}\right)\]</span></p>
+<p>Tüm gözlemlerin, parametreler verildiğinde bağımsız olduğunu
+varsayarsak, <span class="math inline">\(D\)</span> veri kümesinin
+tamamının ortak olurluğu, bireysel olasılıklarının çarpımıdır:</p>
+<p><span class="math display">\[P(D|\alpha, \beta, \sigma) =
+\prod_{t=1}^{N}
+\frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(y_t -
+\mu_t)^2}{2\sigma^2}\right)\]</span></p>
+<p>Doğal Logaritmanın Alınması</p>
+<p>Log-olurluğu bulmak için, parametrelerimizi Gauss PDF’sinin içine
+yerleştirir ve doğal logaritmasını (ln) alırız. Logaritmayı almak,
+çarpımımızı (<span class="math inline">\(\prod\)</span>) bir toplama
+dönüştürür; bu da sayısal olarak kararlıdır ve hesaplaması daha
+kolaydır.</p>
+<p>Önce tek bir veri noktasının log-olurluğuna bakalım:</p>
+<p><span class="math display">\[\ln P(y_t|\mu_t, \sigma) =
+\ln\left[\frac{1}{\sqrt{2\pi\sigma^2}}
+\exp\left(-\frac{(y_t - \mu_t)^2}{2\sigma^2}\right)\right]\]</span></p>
+<p>Standart logaritma kurallarını kullanarak — <span
+class="math inline">\(\ln(A \cdot B) = \ln A + \ln B\)</span> ve <span
+class="math inline">\(\ln(A^B) = B \ln A\)</span> — bunu
+genişletiriz:</p>
+<p><span class="math display">\[\ln P(y_t|\mu_t, \sigma) =
+\ln\left[(2\pi\sigma^2)^{-1/2}\right] +
+\ln\left[\exp\left(-\frac{(y_t -
+\mu_t)^2}{2\sigma^2}\right)\right]\]</span></p>
+<p><span class="math display">\[\ln P(y_t|\mu_t, \sigma) =
+-\frac{1}{2}\ln(2\pi) - \ln(\sigma) -
+\frac{(y_t - \mu_t)^2}{2\sigma^2}\]</span></p>
+<p>Daha fazla sadeleştirme bize standart, yerelleştirilmiş log-olurluk
+denklemini verir:</p>
+<p><span class="math display">\[\ln P(y_t|\mu_t, \sigma) =
+-\frac{1}{2}\ln(2\pi) - \ln(\sigma) -
+\frac{1}{2\sigma^2}(y_t - (\alpha + \beta x_t))^2\]</span></p>
+<p>Önsellerin Tanımlanması</p>
+<p>Normal regresyonda, <span class="math inline">\(\alpha\)</span>,
+<span class="math inline">\(\beta\)</span> ve <span
+class="math inline">\(\sigma\)</span>, sabit, bilinmeyen sabitler olarak
+ele alınır. Bayes regresyonunda bunları rastgele değişkenler olarak ele
+alır ve onlara önsel dağılımlar <span class="math inline">\(P(\alpha,
+\beta, \sigma)\)</span> atarız. Önseller, veriyi gözlemlemeden önce
+parametre değerleri hakkındaki inançlarımızı (ya da bunların yokluğunu)
+ölçer.</p>
+<p>Parametrelerimizin başlangıçta birbirinden bağımsız olduğunu
+varsayarsak, ortak önsel olasılık şu şekilde çarpanlarına ayrılır:</p>
+<p><span class="math display">\[P(\alpha, \beta, \sigma) = P(\alpha)
+\cdot P(\beta) \cdot P(\sigma)\]</span></p>
+<p>Bu önseller için yaygın standart seçimler şunları içerir:</p>
+<ul>
+<li><p>Kesme Noktası (<span class="math inline">\(\alpha\)</span>):
+Bilinen bir taban yönelimi yoksa genellikle sıfırda merkezlenmiş geniş
+bir Gauss önseli atanır: <span class="math inline">\(\alpha \sim N(0,
+\sigma_\alpha^2)\)</span>.</p></li>
+<li><p>Eğim (<span class="math inline">\(\beta\)</span>): Benzer şekilde
+bir Gauss önseli atanır: <span class="math inline">\(\beta \sim N(0,
+\sigma_\beta^2)\)</span>.</p></li>
+<li><p>Artık Varyans (<span class="math inline">\(\sigma\)</span>):
+Standart sapma kesinlikle pozitif olması gerektiğinden, tipik olarak bir
+Yarı-Normal, Üstel veya Ters-Gamma dağılımı kullanılarak modellenir:
+<span class="math inline">\(\sigma \sim
+\text{Yarı-Normal}(\sigma_0)\)</span>.</p></li>
+</ul>
+<p>Sonsal (Posterior) Dağılımın Türetilmesi</p>
+<p>Bayes Teoremi, önsel inançlarımızı verinin olurluğunu kullanarak
+güncellemek ve sonsal dağılımı <span class="math inline">\(P(\alpha,
+\beta, \sigma|D)\)</span> elde etmek için matematiksel köprüyü
+sağlar.</p>
+<p>Bayes Teoremi şu şekilde yazılır:</p>
+<p><span class="math display">\[P(\alpha, \beta, \sigma|D) =
+\frac{P(D|\alpha, \beta, \sigma) \cdot P(\alpha, \beta,
+\sigma)}{P(D)}\]</span></p>
+<p>Burada:</p>
+<ul>
+<li><p><span class="math inline">\(P(\alpha, \beta, \sigma|D)\)</span>,
+Sonsal’dır (veriyi gördükten sonraki güncellenmiş
+inançlarımız).</p></li>
+<li><p><span class="math inline">\(P(D|\alpha, \beta, \sigma)\)</span>,
+Ortak Olurluk’tur (parametreler verildiğinde verinin
+olasılığı).</p></li>
+<li><p><span class="math inline">\(P(\alpha, \beta, \sigma)\)</span>,
+Ortak Önsel’dir (başlangıçtaki inançlarımız).</p></li>
+<li><p><span class="math inline">\(P(D)\)</span>, Marjinal Olurluk’tur
+(ya da kanıt), pay kısmının tüm olası parametre uzayları üzerinden
+integrali alınarak hesaplanır:</p></li>
+</ul>
+<p><span class="math display">\[P(D) = \int\int\int P(D|\alpha, \beta,
+\sigma) P(\alpha, \beta, \sigma)\, d\alpha\, d\beta\,
+d\sigma\]</span></p>
+<p>Orantısal Form</p>
+<p>Payda <span class="math inline">\(P(D)\)</span>, <span
+class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(\beta\)</span> veya <span
+class="math inline">\(\sigma\)</span> parametrelerine bağlı
+olmadığından, yalnızca sonsalin 1’e integre olmasını sağlayan bir
+normalleştirme sabiti işlevi görür. Bu nedenle, analitik türetmeler
+sırasında bunu atlarız ve orantısal formülasyonla çalışırız:</p>
+<p>Sonsal <span class="math inline">\(\propto\)</span> Olurluk ×
+Önsel</p>
+<p><span class="math display">\[P(\alpha, \beta, \sigma|D) \propto
+P(D|\alpha, \beta, \sigma) \cdot P(\alpha) \cdot P(\beta) \cdot
+P(\sigma)\]</span></p>
+<p>Log-Sonsal Formülasyonu</p>
+<p>Hesaplamalı uygulama için (Markov Zinciri Monte Carlo örneklemesi
+gibi), sonsalın doğal logaritmasını alırız. Bu, kalan tüm çarpımları
+toplamlara dönüştürerek kararlılığı en üst düzeye çıkarır:</p>
+<p><span class="math display">\[\ln P(\alpha, \beta, \sigma|D) \propto
+\ln P(D|\alpha, \beta, \sigma) + \ln P(\alpha) + \ln P(\beta) + \ln
+P(\sigma)\]</span></p>
+<p>Bölüm 2’deki ortak log-olurluk türetmemizi yerine koyarak,
+genişletilmiş amaç fonksiyonu şu hale gelir:</p>
+<p><span class="math display">\[\ln P(\alpha, \beta, \sigma|D) \propto
+\sum_{t=1}^{N}\left[-\frac{1}{2}\ln(2\pi) - \ln(\sigma) -
+\frac{1}{2\sigma^2}(y_t - (\alpha + \beta x_t))^2\right] + \ln P(\alpha)
++ \ln P(\beta) + \ln P(\sigma)\]</span></p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>x_data <span class="op">=</span> df[<span class="st">&#39;Temp&#39;</span>].values</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>y_data <span class="op">=</span> df[<span class="st">&#39;C&#39;</span>].values</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> <span class="bu">len</span>(x_data)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_likelihood(alpha, beta, sigma, x, y):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> sigma <span class="op">&lt;=</span> <span class="dv">0</span>:</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    mu <span class="op">=</span> alpha <span class="op">+</span> beta <span class="op">*</span> x</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    term1 <span class="op">=</span> <span class="op">-</span><span class="fl">0.5</span> <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    term2 <span class="op">=</span> <span class="op">-</span>np.log(sigma)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    term3 <span class="op">=</span> <span class="op">-</span>((y <span class="op">-</span> mu) <span class="op">**</span> <span class="dv">2</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> (sigma <span class="op">**</span> <span class="dv">2</span>))</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.<span class="bu">sum</span>(term1 <span class="op">+</span> term2 <span class="op">+</span> term3)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_prior(alpha, beta, sigma):</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> sigma <span class="op">&lt;=</span> <span class="dv">0</span> <span class="kw">or</span> sigma <span class="op">&gt;</span> <span class="dv">50</span>: </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> (<span class="op">-</span><span class="dv">100</span> <span class="op">&lt;</span> alpha <span class="op">&lt;</span> <span class="dv">100</span>): </span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> (<span class="op">-</span><span class="dv">10</span> <span class="op">&lt;</span> beta <span class="op">&lt;</span> <span class="dv">10</span>):    </span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_posterior(alpha, beta, sigma, x, y):</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> log_prior(alpha, beta, sigma) <span class="op">+</span> log_likelihood(alpha, beta, sigma, x, y)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> metropolis_sampler(x, y, iterations<span class="op">=</span><span class="dv">25000</span>, proposal_width_alpha<span class="op">=</span><span class="fl">1.0</span>, proposal_width_beta<span class="op">=</span><span class="fl">0.05</span>, proposal_width_sigma<span class="op">=</span><span class="fl">0.5</span>):</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    current_alpha <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    current_beta <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    current_sigma <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    alpha_trace <span class="op">=</span> np.zeros(iterations)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    beta_trace <span class="op">=</span> np.zeros(iterations)</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    sigma_trace <span class="op">=</span> np.zeros(iterations)</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>    accepted_count <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(iterations):</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>        proposed_alpha <span class="op">=</span> np.random.normal(current_alpha, proposal_width_alpha)</span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>        proposed_beta <span class="op">=</span> np.random.normal(current_beta, proposal_width_beta)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        proposed_sigma <span class="op">=</span> np.random.normal(current_sigma, proposal_width_sigma)</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>        log_post_current <span class="op">=</span> log_posterior(current_alpha, current_beta, current_sigma, x, y)</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>        log_post_proposed <span class="op">=</span> log_posterior(proposed_alpha, proposed_beta, proposed_sigma, x, y)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        log_acceptance_ratio <span class="op">=</span> log_post_proposed <span class="op">-</span> log_post_current</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> np.log(np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">&lt;</span> log_acceptance_ratio:</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>            current_alpha <span class="op">=</span> proposed_alpha</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>            current_beta <span class="op">=</span> proposed_beta</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>            current_sigma <span class="op">=</span> proposed_sigma</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>            accepted_count <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        alpha_trace[i] <span class="op">=</span> current_alpha</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        beta_trace[i] <span class="op">=</span> current_beta</span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>        sigma_trace[i] <span class="op">=</span> current_sigma</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;Acceptance Rate: </span><span class="sc">{</span>accepted_count <span class="op">/</span> iterations <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">%&quot;</span>)</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> alpha_trace, beta_trace, sigma_trace</span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>iterations <span class="op">=</span> <span class="dv">25000</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a>burn_in <span class="op">=</span> <span class="dv">5000</span></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>alpha_chain, beta_chain, sigma_chain <span class="op">=</span> metropolis_sampler(x_data, y_data, iterations<span class="op">=</span>iterations)</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>final_beta <span class="op">=</span> beta_chain[burn_in:]</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>final_sigma <span class="op">=</span> sigma_chain[burn_in:]</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="ch">\n</span><span class="ss">--- Posterior Estimates (Standardized Scale) ---&quot;</span>)</span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Beta: </span><span class="sc">{</span>np<span class="sc">.</span>mean(final_beta)<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>np<span class="sc">.</span>std(final_beta)<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;Sigma (Residual Noise):      </span><span class="sc">{</span>np<span class="sc">.</span>mean(final_sigma)<span class="sc">:.4f}</span><span class="ss"> ± </span><span class="sc">{</span>np<span class="sc">.</span>std(final_sigma)<span class="sc">:.4f}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<pre class="text"><code>Acceptance Rate: 19.79%
+
+--- Posterior Estimates (Standardized Scale) ---
+Beta: -0.2970 ± 0.0247
+Sigma (Residual Noise):      6.1444 ± 0.4725</code></pre>
+<p>Türetmenin sonunda, tek bir veri noktasının log-olurluğu için kapalı
+biçimli bir ifadeye ulaşmıştık: Bu ifadenin tam olarak üç toplamsal
+parçaya sahip olduğuna dikkat edelim. Bu, yazılış şeklinin bir tesadüfü
+değildir — bu, bir üstel ile bir normalleştirme sabitinin çarpımının
+logaritmasının alınmasının doğrudan cebirsel bir sonucudur; bu da bir
+çarpımı toplamaya böler (hatırlayın: <span class="math inline">\(\ln(A
+\cdot B) = \ln A + \ln B\)</span>). Bu üç parça şunlardır:</p>
+<p><span class="math inline">\(-\frac{1}{2}\ln(2\pi)\)</span> — bir
+sabit. <span class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(\beta\)</span>, <span
+class="math inline">\(\sigma\)</span>’ya ya da veriye hiç bağlı
+değildir. Bu sadece Gauss’un normalleştirme sabitinden gelen bir
+yük.</p>
+<p><span class="math inline">\(-\ln(\sigma)\)</span> — yalnızca <span
+class="math inline">\(\sigma\)</span>’ya, yani varsaydığınız gürültü
+düzeyine bağlıdır.</p>
+<p><span class="math inline">\(-\frac{1}{2\sigma^2}(y_t -
+\mu_t)^2\)</span> — gerçek “uyum” terimi. Bu, modelin tahmini <span
+class="math inline">\(\mu_t = \alpha + \beta x_t\)</span>, gözlemlenen
+<span class="math inline">\(y_t\)</span>’den uzak olduğunda modeli
+cezalandıran parçadır.</p>
+<p>log_likelihood içinde bunun nerede göründüğü</p>
+<p>İşte fonksiyon tekrar:</p>
+<pre><code>def log_likelihood(alpha, beta, sigma, x, y):
+    if sigma &lt;= 0:
+        return -np.inf
+    mu = alpha + beta * x
+    term1 = -0.5 * np.log(2 * np.pi)
+    term2 = -np.log(sigma)
+    term3 = -((y - mu)2) / (2 * (sigma2))
+    return np.sum(term1 + term2 + term3)</code></pre>
+<p><code>mu = alpha + beta * x</code>, tüm gözlemler için aynı anda
+hesaplanan <span class="math inline">\(\mu_t = \alpha + \beta
+x_t\)</span>’den başka bir şey değildir (NumPy, <span
+class="math inline">\(t\)</span> üzerinden açık bir döngü yazmadan bunu
+yapmanıza izin verir; <code>x</code>, tek bir skaler değil,
+<code>x_data</code> dizisinin tamamıdır).</p>
+<p><code>term1 = -0.5 * np.log(2 * np.pi)</code>, sözcük anlamıyla <span
+class="math inline">\(-\frac{1}{2}\ln(2\pi)\)</span>’dir; sembollerin
+yerine kod ile yazılmıştır. Burada gizli hiçbir şey yoktur — bu, birebir
+bir transkripsiyondur.</p>
+<p><code>term2 = -np.log(sigma)</code>, yine doğrudan bir transkripsiyon
+olan <span class="math inline">\(-\ln(\sigma)\)</span>’dır.</p>
+<p><code>term3 = -((y - mu)2) / (2 * (sigma2))</code>, <span
+class="math inline">\(-\frac{1}{2\sigma^2}(y_t - \mu_t)^2\)</span>’dir.
+<code>y</code> ve <code>mu</code> her ikisi de <span
+class="math inline">\(N\)</span> uzunluğunda diziler olduğundan (her
+veri noktası için bir giriş), bu tek satır üçüncü terimi her gözlem için
+aynı anda, elemanlar bazında hesaplar.</p>
+<p><code>if sigma &lt;= 0: return -np.inf</code> satırı, matematikte
+açıkça görünmeyen ama onunla örtük olarak ima edilen küçük ama önemli
+bir muhasebe parçasıdır: <span
+class="math inline">\(\ln(\sigma)\)</span>, <span
+class="math inline">\(\sigma \leq 0\)</span> için tanımsızdır ve bir
+standart sapma zaten negatif ya da sıfır olamaz, bu yüzden kod kısa
+devre yaparak, programın anlamsız bir logaritma üzerinde çökmesine izin
+vermek yerine log-olurluğa negatif sonsuz değeri (yani “bu imkânsız”)
+atar.</p>
+<p>Tek bir noktadan tüm veri kümesine: toplam nereden geliyor?</p>
+<p>Bu, kodda gözden kaçırılması kolay ama aslında gerçek kavramsal iş
+yapan bir adımdır. Daha önceki türetmeden hatırlayın, bağımsızlık
+varsayımı altında tüm veri kümesinin ortak olurluğu, veri noktaları
+üzerinden bir çarpımdır:</p>
+<p><span class="math display">\[P(D|\alpha, \beta, \sigma) =
+\prod_{t=1}^{N} P(y_t|x_t, \alpha,
+\beta, \sigma)\]</span></p>
+<p>Her iki tarafın logaritmasını almak, o çarpımı bir toplama
+dönüştürür; bu, daha önce kullanılan aynı logaritma kuralıyla olur
+(<span class="math inline">\(\ln(A \cdot B) = \ln A + \ln B\)</span>,
+birçok çarpana genişletilmiş hâliyle):</p>
+<p><span class="math display">\[\ln P(D|\alpha, \beta, \sigma) =
+\sum_{t=1}^{N} \ln P(y_t|x_t,
+\alpha, \beta, \sigma)\]</span></p>
+<p><code>np.sum(term1 + term2 + term3)</code> ifadesinin yaptığı tam
+olarak budur. <code>term1</code>, <code>term2</code>,
+<code>term3</code>’ün her biri <span class="math inline">\(N\)</span>
+uzunluğunda bir dizidir (<code>term1</code> teknik olarak yayınlanan bir
+skalerdir, ama kavramsal olarak “<span class="math inline">\(N\)</span>
+konumdan her birine eklenen aynı sabit” olarak düşünebilirsiniz). Üç
+diziyi elemanlar bazında toplamak, size <span
+class="math inline">\(t\)</span> konumunda tam olarak <span
+class="math inline">\(\ln P(y_t|x_t, \alpha, \beta, \sigma)\)</span>’yı
+verir — nokta başına log-olurluk.</p>
+<p>Ardından <code>np.sum(...)</code>, <span
+class="math inline">\(N\)</span> uzunluğundaki nokta-başına log-olurluk
+dizisini, <span class="math inline">\(\sum_{t=1}^{N} \ln
+P(y_t|\ldots)\)</span> olan tek bir sayıya indirger; bu da belirli bir
+aday <span class="math inline">\((\alpha, \beta, \sigma)\)</span>
+verildiğinde tüm veri kümesinin toplam log-olurluğudur.</p>
+<p>Yani <code>log_likelihood(alpha, beta, sigma, x, y)</code>
+fonksiyonu, belirsiz bir anlamda “olurluk” adı verilen soyut bir
+niceliği hesaplamıyor — çok gerçek anlamda, <code>alpha</code>,
+<code>beta</code> ve <code>sigma</code> olarak beslediğiniz belirli
+sayılar için, toplanmış log-olurluk formülünün sağ tarafını
+hesaplıyor.</p>
+<p>Salt matematiksel türetmenin kapsamadığı parça: önsel</p>
+<p>Orijinal türetme yalnızca olurlukla, <span
+class="math inline">\(P(D|\alpha, \beta, \sigma)\)</span> ile — yani
+“parametreler verildiğinde, veri ne kadar olasıdır?” sorusuyla
+ilgileniyordu. Ancak kod ayrıca şunu da tanımlıyor:</p>
+<pre><code>def log_prior(alpha, beta, sigma):
+    if sigma &lt;= 0 or sigma &gt; 50:
+        return -np.inf
+    if not (-100 &lt; alpha &lt; 100):
+        return -np.inf
+    if not (-10 &lt; beta &lt; 10):
+        return -np.inf
+    return 0.0</code></pre>
+<p>Bu, daha önceki <code>smf.ols(...)</code> çağrılarındaki gibi sıradan
+bir (Bayesçi olmayan, “frekansçı”) regresyonda karşılığı olmayan Bayesçi
+bileşendir. Bayesçi çıkarımda, herhangi bir veriye bakmadan önce,
+parametrelerin makul olarak hangi değerleri alabileceğine dair bir onsel
+inanç ifade edersiniz. Burada seçilen onsel, sınırlı bir kutu üzerinde
+“düz” ya da “tekdüze” onsel olarak adlandırılan şeydir: <span
+class="math inline">\(-100\)</span> ile <span
+class="math inline">\(100\)</span> arasındaki herhangi bir <span
+class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(-10\)</span> ile <span
+class="math inline">\(10\)</span> arasındaki herhangi bir <span
+class="math inline">\(\beta\)</span> ve <span
+class="math inline">\(0\)</span> ile <span
+class="math inline">\(50\)</span> arasındaki herhangi bir <span
+class="math inline">\(\sigma\)</span> eşit derecede olası kabul edilir
+(fonksiyonun sabit <span class="math inline">\(0.0\)</span>
+döndürmesinin nedeni budur — ve unutmayın, bu bir log-onseldir,
+dolayısıyla <span class="math inline">\(0\)</span>’lık bir log-olasılık,
+orantılı olarak <span class="math inline">\(1\)</span>’lik bir olasılığa
+karşılık gelir, yani “tekdüze olası”). Bu kutuların dışındaki her şey
+imkânsız ilan edilir, dolayısıyla log-uzayında <span
+class="math inline">\(-\infty\)</span> (bu da tam olarak <span
+class="math inline">\(0\)</span>’lık bir olasılığa karşılık gelir).</p>
+<p>Bu, pedagojik olarak önemlidir çünkü “Bayessel” sözcüğünün belgenin
+başlığında neden yer aldığını gösterir: çıkarım yalnızca olurluğa
+dayanmaz, bu olurluğu bu önselle Bayes kuralı aracılığıyla birleştirmeye
+dayanır. Log-uzayında, (normalleştirilmemiş) sonsal için Bayes kuralı
+yalnızca bir toplamadır:</p>
+<p><span class="math display">\[\ln P(\alpha, \beta, \sigma|D) \propto
+\ln P(D|\alpha, \beta,
+\sigma) + \ln P(\alpha, \beta, \sigma)\]</span></p>
+<p>ve bu orantılılık (sağ taraftaki eksik normalleştirme sabiti, bazen
+“kanıt” olarak adlandırılır, <span
+class="math inline">\(\alpha\)</span>, <span
+class="math inline">\(\beta\)</span>, <span
+class="math inline">\(\sigma\)</span>’ya bağlı olmadığı ve burada
+kullanılan örnekleme şeması için gerekli olmadığı için atlanır) tam
+olarak şurada uygulanandır:</p>
+<pre><code>def log_posterior(alpha, beta, sigma, x, y):
+    return log_prior(alpha, beta, sigma) + log_likelihood(alpha, beta, sigma, x, y)</code></pre>
+<p>Tek bir toplama satırı, ama belgenin tamamının doğru yönde inşa
+ettiği toplama budur: log-olurluk (Gauss PDF’sinden uzun uzadıya
+türetilmiş) artı log-önsel (basit bir sınır-kutusu varsayımı),
+log-sonsale eşittir.</p>
+<p>Neden örnekleme ve metropolis_sampler’ın gerçekte ne yaptığı</p>
+<p>İşte üzerinde durmaya değer bir incelik, çünkü bu “bir formülümüz
+var”dan “25.000 kez bir döngü çalıştırıyoruz”a kavramsal sıçramadır.
+Klasik bir regresyonda (daha önceki <code>smf.ols</code> çağrısı), her
+parametre için tek bir en-iyi-uyum sayısı elde edersiniz; bu, tek
+seferde analitik olarak hesaplanır. Bayesçi ortamda ise tek bir sayı
+istemezsiniz — <span class="math inline">\((\alpha, \beta,
+\sigma)\)</span> üzerindeki sonsal dağılımın tamamını istersiniz; bu da,
+veriyle ne kadar tutarlı olduklarına göre ağırlıklandırılmış, veriyle
+tutarlı olan parametre değerlerinin tüm aralığını bilmek istediğiniz
+anlamına gelir. En basit modellerin ötesindeki her şey için, bu
+dağılımın yazıp doğrudan değerlendirebileceğiniz temiz bir kapalı-form
+formülü yoktur; yalnızca (normalleştirilmemiş) sonsal yoğunluğu belirli
+bir <span class="math inline">\((\alpha, \beta, \sigma)\)</span>
+noktasında, <code>log_posterior</code> aracılığıyla
+değerlendirebilirsiniz. Bunun etrafından dolaşmanın yolu, dağılımı
+doğrudan çözmek yerine ondan örneklem almaktır ve Metropolis algoritması
+bunu yapmanın en basit yollarından biridir.</p>
+<p>Döngünün içindeki mantık esasen <span class="math inline">\((\alpha,
+\beta, \sigma)\)</span> değerlerinin üç boyutlu uzayında yönlendirilmiş,
+rastgele bir yürüyüştür:</p>
+<p>Her yinelemede, geçerli konumunuzdan küçük rastgele bir sıçrama
+önerirsiniz —
+<code>proposed_alpha = np.random.normal(current_alpha, proposal_width_alpha)</code>
+ve <code>beta</code> ile <code>sigma</code> için de benzer şekilde —
+yani bir sonraki aday nokta, şu anda bulunduğunuz yerde merkezlenmiş bir
+Gauss’tan çekilir.</p>
+<p>Ardından <code>log_posterior</code>’ı hem geçerli noktada hem de
+önerilen noktada değerlendirir ve aralarındaki farkı hesaplarsınız:
+<code>log_acceptance_ratio = log_post_proposed - log_post_current</code>.
+Bunlar log-sonsallar olduğundan, onları çıkarmak, (normalleştirilmemiş)
+sonsal yoğunlukların oranının logaritmasını almaya eşdeğerdir — bu,
+öncekiyle aynı logaritma kuralının tersinden çalıştırılmış hâlidir:
+<span class="math inline">\(\ln A - \ln B = \ln(A/B)\)</span>.</p>
+<p><code>if np.log(np.random.uniform(0, 1)) &lt; log_acceptance_ratio:</code>
+satırı, kabul/ret adımıdır. Önerilen noktanın geçerli noktadan daha
+yüksek sonsal yoğunluğu varsa (oran 1’den büyük, yani log-oran 0’dan
+büyükse), hareket her zaman kabul edilir. Önerilen noktanın yoğunluğu
+daha düşükse, yalnızca o orana eşit bir olasılıkla belirli zamanlarda
+kabul edilir — bu, tam olarak neden <code>log_acceptance_ratio</code>
+ile birimleri eşleştirmek için log-biçiminde alınmış, <span
+class="math inline">\((0, 1)\)</span> üzerinde tekdüze bir dağılımdan
+rastgele bir çekilişle karşılaştırdığınızın nedenidir. “Daha kötü”
+hareketlerin bu olasılıksal kabulü, tam olarak zincirin, bir optimize
+edicinin yapacağı gibi doğrudan tek bir zirveye yürüyüp orada durmak
+yerine, sonselin tüm şeklini keşfetmesine izin veren şeydir.</p>
+<p>Öneri kabul edilsin ya da reddedilsin, <code>alpha_trace[i]</code>,
+<code>beta_trace[i]</code>, <code>sigma_trace[i]</code>’nin geçerli
+değerleri kaydedilir. 25.000 yinelemenin ardından, fonksiyon “zincirler”
+ya da “izler” olarak adlandırılan üç uzun sayı dizisini geri döndürür —
+ve zincirin <span class="math inline">\((\alpha, \beta,
+\sigma)\)</span>-uzayının farklı bölgelerini ziyaret ettiği göreceli
+sıklık, yeterli sayıda yinelemenin ardından, gerçek sonsal dağılımın bir
+yaklaşımıdır.</p>
+<p>Neden burn_in ve son yazdırılan tahminler</p>
+<p>Son parça, <code>burn_in = 5000</code>’i takiben
+<code>final_beta = beta_chain[burn_in:]</code>, zincirle herhangi bir
+şey yapmadan önce ilk 5.000 örneği atmaktır. Bu, Metropolis
+algoritmasının bilinen bir tuhaflığını ele alır: algoritma, keyfi bir
+noktadan başlar (fonksiyonun içinde <code>current_alpha = 0.0</code>,
+<code>current_beta = 0.0</code>, <code>current_sigma = 1.0</code> olarak
+ayarlanmıştır); bu nokta, sonselin gerçekte kütlesinin çoğuna sahip
+olduğu yerden uzak olabilir, dolayısıyla zincirin erken kısmı, ondan
+anlamlı bir şekilde örneklem almak yerine yüksek-yoğunluklu bölgeye
+“yürüyerek yaklaşmakla” geçer. Bu ilk geçici kısmı atıp yalnızca 5.001.
+yinelemeden itibaren gelen örnekleri tutmak, gerçek sonselin daha temiz
+bir yaklaşımını verir.</p>
+<p>Son yazdırılan satırlar, <code>np.mean(final_beta)</code> ve
+<code>np.std(final_beta)</code>, bu yaklaşık sonsal dağılımı, herhangi
+bir dağılımı özetlediğiniz gibi <span
+class="math inline">\(\beta\)</span> için özetler: bir merkez (sonsal
+ortalama, klasik nokta tahmininin Bayesçi karşılığı) ve bir yayılım
+(sonsal standart sapma, standart hatanın Bayesçi karşılığı). Gördüğünüz
+<span class="math inline">\(-0.2970 \pm 0.0247\)</span> sayısı budur —
+ve bunu, belgenin çok daha önceki bir kısmında sıradan
+<code>smf.ols</code> uyumundan çıkan <span class="math inline">\(\beta =
+-0.30\)</span> ile kavramsal olarak karşılaştırmaya değer: tamamen o
+log-olurluk türetmesinden inşa edilen Bayesçi makine, esasen aynı eğime
+yakınsıyor, ama artık tek çıplak bir sayı yerine, etrafındaki
+belirsizliği tanımlayan tam bir dağılımla birlikte geliyor.</p>
 <p>Kaynaklar</p>
 <p>[1] Bayramlı, İstatistik, <em>Lineer Regresyon</em></p>
 <p>[2] Bayramlı, Hesapsal Bilim, Eğri Uydurma, Aradeğerleme

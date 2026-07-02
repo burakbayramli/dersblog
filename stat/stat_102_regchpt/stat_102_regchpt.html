@@ -281,10 +281,12 @@ toplamlara dönüştürerek kararlılığı en üst düzeye çıkarır:</p>
 P(\sigma)\]</span></p>
 <p>Bölüm 2’deki ortak log-olurluk türetmemizi yerine koyarak,
 genişletilmiş amaç fonksiyonu şu hale gelir:</p>
-<p><span class="math display">\[\ln P(\alpha, \beta, \sigma|D) \propto
+<p><span class="math display">\[
+\ln P(\alpha, \beta, \sigma|D) \propto
 \sum_{t=1}^{N}\left[-\frac{1}{2}\ln(2\pi) - \ln(\sigma) -
-\frac{1}{2\sigma^2}(y_t - (\alpha + \beta x_t))^2\right] + \ln P(\alpha)
-+ \ln P(\beta) + \ln P(\sigma)\]</span></p>
+\frac{1}{2\sigma^2}(y_t - (\alpha + \beta x_t))^2\right] + \ln
+P(\alpha) + \ln P(\beta) + \ln P(\sigma)
+\]</span></p>
 <p>Üstteki yaklaşımın kodları <code>bayes_ols.py</code> içinde
 bulunabilir.</p>
 <div class="sourceCode" id="cb6"><pre
@@ -564,9 +566,11 @@ class="math inline">\(\beta=\{\beta_{1},\beta_{2},\beta_{3}\}\)</span></p></li>
 class="math inline">\(\sigma^{2}=\{\sigma_{1}^{2},\sigma_{2}^{2},\sigma_{3}^{2}\}\)</span></p></li>
 </ul>
 <p>Bayes formülasyonu artık şöyle,</p>
-<p><span class="math display">\[P(\tau, \alpha, \beta, \sigma^2 | D)
-\propto P(D | \tau, \alpha, \beta, \sigma^2) P(\tau) P(\alpha) P(\beta)
-P(\sigma^2) \quad \text{}\]</span></p>
+<p><span class="math display">\[
+P(\tau, \alpha, \beta, \sigma^2 | D) \propto P(D | \tau, \alpha,
+\beta, \sigma^2) P(\tau) P(\alpha) P(\beta) P(\sigma^2)
+\tag{1}
+\]</span></p>
 <p>Eğer elimizde üç blok olsaydı, o zaman iki değişim noktası <span
 class="math inline">\(\tau_1\)</span>, <span
 class="math inline">\(\tau_2\)</span> üzerinden <span
@@ -586,7 +590,11 @@ w_{3}(t)\cdot\sigma_{3}^{2}
 <p><span class="math display">\[
 y_{t}\sim\mathcal{N}(\hat{\mu}_{t},\hat{\sigma}_{t}^{2})
 \]</span></p>
-<p>Formülde görülen ağırlıklar <span
+<p>ki <span class="math inline">\(y_t\)</span> formülü ile (1) içindeki
+<span class="math inline">\(P(D | \tau, \alpha, \beta,
+\sigma^2)\)</span> degerini hesaplamis oluyoruz, cunku <span
+class="math inline">\(y_t\)</span> verinin olurluğunu temsil ediyor.</p>
+<p>Devam edelim üstte görülen ağırlıklar <span
 class="math inline">\(w_1,w_2,w_3\)</span> birleşik formülün belli
 bölgelerinin açılıp / kapatılmasını sağlayan bir numara içeriyor, çünkü
 o ağırlıkları şöyle tanımlıyoruz,</p>

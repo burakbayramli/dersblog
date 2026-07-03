@@ -3,7 +3,9 @@
 
 ## En Son
 
-3/7 - [Lineer Regresyon - Ekler - Korelasyon]()
+3/7 - [Bayes Usulü Parçalı Regresyon](https://burakbayramli.github.io/dersblog/stat/stat_102_regchpt/bayes_usulu_parcali_regresyon.html)
+
+3/7 - [Lineer Regresyon - Ekler - Korelasyon](https://burakbayramli.github.io/dersblog/stat/stat_055_linreg/lineer_regresyon.html)
 
 26/6 - [Örgü (Lattice) Boltzmann Metodu](https://burakbayramli.github.io/dersblog/compscieng/compscieng_bpp43lbm/orgu__lattice__boltzmann_metodu.html)
 

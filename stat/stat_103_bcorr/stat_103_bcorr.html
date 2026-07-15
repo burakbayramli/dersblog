@@ -197,7 +197,53 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a hr
 <pre><code>0.779239322172 3.75045772216e-10</code></pre>
 <p>p-değeri çok küçük, demek ki korelason olmadığı tezi reddedildi.
 Korelasyon var.</p>
-<h3 id="bayes">Bayes</h3>
+<h3 id="bayes-usulü-korelasyon-hesabı">Bayes Usulü Korelasyon
+Hesabı</h3>
+<p>Frekansçı yaklaşımla korelasyon hesabı yaptığımızda verinin dağılımı
+hakkında bir faraziye yapmığımızı söylemiştik, bu faraziye dağılımın iki
+değişkenli (bivariate) Gaussian olduğu idi. O zaman Bayes yaklaşımı ile
+korelasyon tahmini yapmak için bu başlangıç noktasını
+kullanabiliriz.</p>
+<p>Önce Gaussian dağılımının formülünü hatırlayalım, genel <span
+class="math inline">\(d\)</span> boyutlu Gaussian dağılımı şöyledir,</p>
+<p><span class="math display">\[ f(x | \mu,\Sigma) = \frac{
+1}{(2\pi)^{k/2} \det(\Sigma)^{1/2}} \exp
+\bigg\{ -\frac{ 1}{2}(x-\mu)^T\Sigma^{-1}(x-\mu) \bigg\} \]</span></p>
+<p>Bizim için iki değişkenli Gaussian lazım, yani <span
+class="math inline">\(k=2\)</span> olacak, o zaman bir veri noktası
+<span class="math inline">\(x_i\)</span>’nin olasılığı,</p>
+<p><span class="math display">\[
+f(x_i \mid \theta) = \frac{1}{2\pi
+\sqrt{\det(\Sigma)}} \exp \left(
+-\frac{1}{2} (x_i - \mu)^T \Sigma^{-1} (x_i - \mu) \right)
+\]</span></p>
+<p>ki</p>
+<p><span class="math display">\[ \mu = \begin{pmatrix} \mu_1 \\ \mu_2
+\end{pmatrix}, \quad \Sigma =
+\begin{pmatrix} \sigma_1^2 &amp; \sigma_{12} \\ \sigma_{21} &amp;
+\sigma_2^2 \end{pmatrix} \]</span></p>
+<p><span class="math inline">\(\theta = (\mu_1, \mu_2, \sigma_1,
+\sigma_2, \sigma_{12}, \sigma_{21})^T\)</span> şeklinde de
+tanımlanabilirdi. Bu dağılımı bir korelasyon hesabı <span
+class="math inline">\(\rho\)</span> için nasıl kullanabiliriz?
+Düşünelim, korelasyon katsayısı nedir? Bu katsayı eğer pür dağılım
+üzerinden düşünürsek <span class="math inline">\(\rho =
+\frac{\sigma_{12}}{\sigma_1 \sigma_2}\)</span> değil midir? Evet, o
+zaman üstteki dağılımdaki varyans ile ilgili değişkenleri
+saptayabilirsek bize gereken sonucu elde etmiş olacağız.</p>
+<p>Bu değişkenleri nasıl buluruz? Bayes yaklaşımında <span
+class="math inline">\(\theta\)</span> içeriği rasgele değişken olarak
+kabul edilir, onların bir dağılımı vardır. Bayes terminolojisinde (yine
+rasgele değişken kabul edilen) veri ile koşullandırılmış (conditioned)
+<span class="math inline">\(\theta\)</span> olasılık (sonsal) yoğunluğu
+fonksiyonunu bulmamız gerekiyor.</p>
+<p>Bazen bu sonsal (posterior) dağılımın ne olduğunu analitik olarak
+bulunabilir, eğer bu mümkün değil ise sayısal yöntemlerle sonsaldan
+örneklem toplamak mümkündür. Demek ki <span
+class="math inline">\(\sigma_1, \sigma_2, \sigma_{12},
+\sigma_{21}\)</span> rasgele değişkenlerinin dağılımından örneklem
+toplayabilirsek bu simülasyon sonuçlarından <span
+class="math inline">\(\rho\)</span> hesaplanabilir.</p>
 <p>[devam edecek]</p>
 <p>Kaynaklar</p>
 <p>[1] Wackerly, <em>Mathematical Statistics, 7th Edition</em></p>

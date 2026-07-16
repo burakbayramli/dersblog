@@ -565,6 +565,34 @@ birbirine oldukca yakın, demek ki aralık dar, ve demek ki sıfırın bu
 aralıkta olması çok çok muhtemel, böylece korelasyon olmadığı tezi daha
 da kuvvetlenmiş oluyor.</p>
 <p>Student-t Bazlı Getiriler</p>
+<p>Finansal getiriler Gaussian dağılımı faraziyesine uymayabilirler,
+araştırmalara göre bu tür verileri modellemek için Student-t dağılımı
+daha uygundur, çünkü finansal şok olayları, yani ekstrem değerler bir
+Gaussian dağılımının izin vereceğinden daha yaygındır. Bayes yaklaşımı
+sayesinde bu yeni dağılımı kullanmak pek zor olmayacak.</p>
+<p>Alternatif bir MCMC kodlaması şöyle olabilir, zaman serisi <span
+class="math inline">\(x_t\)</span> ve <span
+class="math inline">\(y_t\)</span>’yi iki boyutlu Student-t dağılımı
+üzerinden analiz ederiz, ki bu dağılımın <span
+class="math inline">\(\nu\)</span> serbestlik derecesi, ortalama vektörü
+<span class="math inline">\(\mu = [\mu_x, \mu_y]^T\)</span>, ve
+ölçeklemesi <span class="math inline">\(\Sigma\)</span> olacaktır
+(üstteki Gaussian örneğinde olduğu gibi). N bağımsız örneklem <span
+class="math inline">\(D = \{(x_1, y_1), \dots, (x_N, y_N)\}\)</span>
+için birleşik olasılık yoğunluğu:</p>
+<p><span class="math display">\[
+p(D \mid \mu, \Sigma, \nu) = \prod_{i=1}^N
+\frac{\Gamma(\frac{\nu+2}{2})}{\Gamma(\frac{\nu}{2})\pi\nu
+|\Sigma|^{1/2}} \left(1 + \frac{1}{\nu} (d_i - \mu)^T \Sigma^{-1} (d_i
+- \mu)\right)^{-\frac{\nu+2}{2}}
+\]</span></p>
+<p>ki <span class="math inline">\(d_i = [x_i, y_i]^T\)</span> olacak
+şekilde. Yine <span class="math inline">\(\rho\)</span> hesaplanacaktır,
+<span class="math inline">\(\nu=3\)</span>’yu sabitleyebiliriz (“kalın
+etekleri” garantilemek için), ve Metropolis yöntemi ile <span
+class="math inline">\(\theta = (\mu_x, \mu_y, \sigma_x, \sigma_y,
+\rho)\)</span> değişkenlerinden örneklem toplarız. Bu kodlar
+<code>corr_studentt.py</code> içinde bulunabilir.</p>
 <p>Kodlar</p>
 <p><a href="corr_studentt.py">corr_studentt.py</a></p>
 <p>Kaynaklar</p>

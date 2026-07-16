@@ -360,6 +360,25 @@ z_{i,2}^2 \right)
 - 2\rho z_{i,1} z_{i,2} + z_{i,2}^2 \right)
 \tag{5}
 \]</span></p>
+<p>Kodlar</p>
+<p>Alttaki kod parçasında gördüğümüz formülleri kodlayacağız. İşlenecek
+veri ABD altın ve reel faiz seviyeleri. Finans verileri çoğunlukla
+Gaussian faraziyesine uymaz, durağan değildirler, ortalamaları ve
+standart sapmaları zaman geçtikçe değişim gösterir. Durağanlığı geri
+getirmek için veri üzerinde fark alma işlemi yapabiliriz, yani serinin
+kendisi yerine iki öğe arasındaki farkından yaratılmış yeni bir seri ile
+işlem yaparız. Bu niye işliyor? Çoğu finans fiyat seviyeleri rasgele
+yürüyüş (random walk) olarak davranır, bugünün fiyat seviyesi dünün
+seviyesi artı gürültüdür,</p>
+<p><span class="math display">\[
+Y_t = Y_{t-1} + \epsilon_t
+\]</span></p>
+<p>Fark alma işlemi yapınca</p>
+<p><span class="math display">\[
+\Delta Y_t = Y_t - Y_{t-1} = \epsilon_t
+\]</span></p>
+<p><span class="math inline">\(\Delta Y_t\)</span> serisi durağan hale
+geldi, sadece gürültüye bağlı.</p>
 <div class="sourceCode" id="cb3"><pre
 class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy.stats <span class="im">as</span> st</span>
@@ -396,112 +415,109 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standart sapmalar pozitif olmalı, korelasyon [-1, 1] aralığında olmalı</span></span>
 <span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> sigma1 <span class="op">&lt;=</span> <span class="dv">0</span> <span class="kw">or</span> sigma2 <span class="op">&lt;=</span> <span class="dv">0</span> <span class="kw">or</span> <span class="kw">not</span> (<span class="op">-</span><span class="dv">1</span> <span class="op">&lt;</span> rho <span class="op">&lt;</span> <span class="dv">1</span>):</span>
 <span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># (İsteğe bağlı) bayes_ols&#39;ta yaptığınız gibi ortalamalar için gevşek düz sınırlar ekleyebilirsiniz:</span></span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="co"># if not (-100 &lt; mu1 &lt; 100) or not (-100 &lt; mu2 &lt; 100):</span></span>
-<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="co">#     return -np.inf</span></span>
-<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.0</span></span>
-<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_likelihood(params, data):</span>
-<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="co">    İki değişkenli Normal Olurluk&#39;u hesaplar. Önsel kontrolü zaten</span></span>
-<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="co">    çalıştığı için parametrelerin geçerli olduğunu varsayar.</span></span>
-<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    mu1, mu2, sigma1, sigma2, rho <span class="op">=</span> params</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_likelihood(params, data):</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co">    İki değişkenli Normal Olurluk&#39;u hesaplar. Önsel kontrolü zaten</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="co">    çalıştığı için parametrelerin geçerli olduğunu varsayar.</span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    mu1, mu2, sigma1, sigma2, rho <span class="op">=</span> params</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standart skorları hesapla</span></span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>    z1 <span class="op">=</span> (data[:, <span class="dv">0</span>] <span class="op">-</span> mu1) <span class="op">/</span> sigma1</span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>    z2 <span class="op">=</span> (data[:, <span class="dv">1</span>] <span class="op">-</span> mu2) <span class="op">/</span> sigma2</span>
 <span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Standart skorları hesapla</span></span>
-<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    z1 <span class="op">=</span> (data[:, <span class="dv">0</span>] <span class="op">-</span> mu1) <span class="op">/</span> sigma1</span>
-<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    z2 <span class="op">=</span> (data[:, <span class="dv">1</span>] <span class="op">-</span> mu2) <span class="op">/</span> sigma2</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    <span class="co"># İki değişkenli normal log-yoğunluk fonksiyonu toplamı</span></span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    term1 <span class="op">=</span> <span class="op">-</span>N <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> sigma1 <span class="op">*</span> sigma2 <span class="op">*</span> np.sqrt(<span class="dv">1</span> <span class="op">-</span> rho<span class="op">**</span><span class="dv">2</span>))</span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    term2 <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> rho<span class="op">**</span><span class="dv">2</span>)) <span class="op">*</span> np.<span class="bu">sum</span>(z1<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> rho <span class="op">*</span> z1 <span class="op">*</span> z2 <span class="op">+</span> z2<span class="op">**</span><span class="dv">2</span>)</span>
 <span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># İki değişkenli normal log-yoğunluk fonksiyonu toplamı</span></span>
-<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a>    term1 <span class="op">=</span> <span class="op">-</span>N <span class="op">*</span> np.log(<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> sigma1 <span class="op">*</span> sigma2 <span class="op">*</span> np.sqrt(<span class="dv">1</span> <span class="op">-</span> rho<span class="op">**</span><span class="dv">2</span>))</span>
-<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a>    term2 <span class="op">=</span> <span class="op">-</span><span class="dv">1</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> rho<span class="op">**</span><span class="dv">2</span>)) <span class="op">*</span> np.<span class="bu">sum</span>(z1<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> <span class="dv">2</span> <span class="op">*</span> rho <span class="op">*</span> z1 <span class="op">*</span> z2 <span class="op">+</span> z2<span class="op">**</span><span class="dv">2</span>)</span>
-<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> term1 <span class="op">+</span> term2</span>
-<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_posterior(params, data):</span>
-<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a><span class="co">    Geçersiz matematiksel durumlara karşı korumak amacıyla kısa devre</span></span>
-<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a><span class="co">    değerlendirmesi kullanarak Önsel ve Olurluk&#39;u birleştirir.</span></span>
-<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    lp <span class="op">=</span> log_prior(params)</span>
-<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Eğer önsel &quot;hayır&quot; diyorsa, sıfıra bölme veya NaN durumlarını önlemek için hemen dur</span></span>
-<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.isneginf(lp):</span>
-<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
-<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lp <span class="op">+</span> log_likelihood(params, data)</span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> term1 <span class="op">+</span> term2</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_posterior(params, data):</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb3-60"><a href="#cb3-60" aria-hidden="true" tabindex="-1"></a><span class="co">    Geçersiz matematiksel durumlara karşı korumak amacıyla kısa devre</span></span>
+<span id="cb3-61"><a href="#cb3-61" aria-hidden="true" tabindex="-1"></a><span class="co">    değerlendirmesi kullanarak Önsel ve Olurluk&#39;u birleştirir.</span></span>
+<span id="cb3-62"><a href="#cb3-62" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb3-63"><a href="#cb3-63" aria-hidden="true" tabindex="-1"></a>    lp <span class="op">=</span> log_prior(params)</span>
+<span id="cb3-64"><a href="#cb3-64" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-65"><a href="#cb3-65" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Eğer önsel &quot;hayır&quot; diyorsa, sıfıra bölme veya NaN durumlarını</span></span>
+<span id="cb3-66"><a href="#cb3-66" aria-hidden="true" tabindex="-1"></a>      önlemek için hemen dur    </span>
+<span id="cb3-67"><a href="#cb3-67" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.isneginf(lp):</span>
+<span id="cb3-68"><a href="#cb3-68" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="op">-</span>np.inf</span>
+<span id="cb3-69"><a href="#cb3-69" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb3-70"><a href="#cb3-70" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lp <span class="op">+</span> log_likelihood(params, data)</span>
+<span id="cb3-71"><a href="#cb3-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-72"><a href="#cb3-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-73"><a href="#cb3-73" aria-hidden="true" tabindex="-1"></a><span class="co"># --- MCMC METROPOLIS ÖRNEKLEYİCİ ---</span></span>
 <span id="cb3-74"><a href="#cb3-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a><span class="co"># --- MCMC METROPOLIS ÖRNEKLEYİCİ ---</span></span>
+<span id="cb3-75"><a href="#cb3-75" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">50000</span></span>
+<span id="cb3-76"><a href="#cb3-76" aria-hidden="true" tabindex="-1"></a>burn_in <span class="op">=</span> <span class="dv">10000</span></span>
 <span id="cb3-77"><a href="#cb3-77" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a>n_samples <span class="op">=</span> <span class="dv">50000</span></span>
-<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>burn_in <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb3-78"><a href="#cb3-78" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametre vektörü formatı: [mu1, mu2, sigma1, sigma2, rho]</span></span>
+<span id="cb3-79"><a href="#cb3-79" aria-hidden="true" tabindex="-1"></a>initial_params <span class="op">=</span> [np.mean(diff_gold), np.mean(diff_rate), np.std(diff_gold), np.std(diff_rate), <span class="fl">0.0</span>]</span>
 <span id="cb3-80"><a href="#cb3-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a><span class="co"># Parametre vektörü formatı: [mu1, mu2, sigma1, sigma2, rho]</span></span>
-<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a>initial_params <span class="op">=</span> [np.mean(diff_gold), np.mean(diff_rate), np.std(diff_gold), np.std(diff_rate), <span class="fl">0.0</span>]</span>
-<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>proposal_sigmas <span class="op">=</span> np.array([<span class="fl">0.001</span>, <span class="fl">0.001</span>, <span class="fl">0.001</span>, <span class="fl">0.001</span>, <span class="fl">0.005</span>])</span>
-<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a><span class="co"># İz (trace) depolama</span></span>
-<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> np.zeros((n_samples, <span class="dv">5</span>))</span>
-<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>trace[<span class="dv">0</span>] <span class="op">=</span> initial_params</span>
-<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a>current_log_post <span class="op">=</span> log_posterior(trace[<span class="dv">0</span>], data)</span>
-<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>accepted <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_samples):</span>
-<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gauss rastgele yürüyüşü kullanarak yeni parametreler öner</span></span>
-<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    proposal <span class="op">=</span> trace[i<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> np.random.normal(<span class="dv">0</span>, proposal_sigmas)</span>
+<span id="cb3-81"><a href="#cb3-81" aria-hidden="true" tabindex="-1"></a>proposal_sigmas <span class="op">=</span> np.array([<span class="fl">0.001</span>, <span class="fl">0.001</span>, <span class="fl">0.001</span>, <span class="fl">0.001</span>, <span class="fl">0.005</span>])</span>
+<span id="cb3-82"><a href="#cb3-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-83"><a href="#cb3-83" aria-hidden="true" tabindex="-1"></a><span class="co"># İz (trace) depolama</span></span>
+<span id="cb3-84"><a href="#cb3-84" aria-hidden="true" tabindex="-1"></a>trace <span class="op">=</span> np.zeros((n_samples, <span class="dv">5</span>))</span>
+<span id="cb3-85"><a href="#cb3-85" aria-hidden="true" tabindex="-1"></a>trace[<span class="dv">0</span>] <span class="op">=</span> initial_params</span>
+<span id="cb3-86"><a href="#cb3-86" aria-hidden="true" tabindex="-1"></a>current_log_post <span class="op">=</span> log_posterior(trace[<span class="dv">0</span>], data)</span>
+<span id="cb3-87"><a href="#cb3-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-88"><a href="#cb3-88" aria-hidden="true" tabindex="-1"></a>accepted <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-89"><a href="#cb3-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-90"><a href="#cb3-90" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, n_samples):</span>
+<span id="cb3-91"><a href="#cb3-91" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gauss rastgele yürüyüşü kullanarak yeni parametreler öner</span></span>
+<span id="cb3-92"><a href="#cb3-92" aria-hidden="true" tabindex="-1"></a>    proposal <span class="op">=</span> trace[i<span class="op">-</span><span class="dv">1</span>] <span class="op">+</span> np.random.normal(<span class="dv">0</span>, proposal_sigmas)</span>
+<span id="cb3-93"><a href="#cb3-93" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-94"><a href="#cb3-94" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Önerilen log-sonsal değerini hesapla</span></span>
+<span id="cb3-95"><a href="#cb3-95" aria-hidden="true" tabindex="-1"></a>    proposal_log_post <span class="op">=</span> log_posterior(proposal, data)</span>
 <span id="cb3-96"><a href="#cb3-96" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Önerilen log-sonsal değerini hesapla</span></span>
-<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>    proposal_log_post <span class="op">=</span> log_posterior(proposal, data)</span>
+<span id="cb3-97"><a href="#cb3-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Metropolis kabul kriteri</span></span>
+<span id="cb3-98"><a href="#cb3-98" aria-hidden="true" tabindex="-1"></a>    log_acceptance_ratio <span class="op">=</span> proposal_log_post <span class="op">-</span> current_log_post</span>
 <span id="cb3-99"><a href="#cb3-99" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Metropolis kabul kriteri</span></span>
-<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>    log_acceptance_ratio <span class="op">=</span> proposal_log_post <span class="op">-</span> current_log_post</span>
-<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.log(np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">&lt;</span> log_acceptance_ratio:</span>
-<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>        trace[i] <span class="op">=</span> proposal</span>
-<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>        current_log_post <span class="op">=</span> proposal_log_post</span>
-<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a>        accepted <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>        trace[i] <span class="op">=</span> trace[i<span class="op">-</span><span class="dv">1</span>]</span>
-<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a><span class="co"># Yanma süresi (burn-in) sonrası korelasyon katsayısı için örneklemler (rho 4. indekste)</span></span>
-<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a>rho_samples <span class="op">=</span> trace[burn_in:, <span class="dv">4</span>]</span>
-<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>acceptance_rate <span class="op">=</span> accepted <span class="op">/</span> n_samples</span>
-<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a><span class="co"># Bayesçi &quot;p-değeri&quot; karşılığı (Ters işaret olasılığı)</span></span>
-<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a>mean_rho <span class="op">=</span> np.mean(rho_samples)</span>
-<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> mean_rho <span class="op">&gt;</span> <span class="dv">0</span>:</span>
-<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a>    p_bayes <span class="op">=</span> np.mean(rho_samples <span class="op">&lt;=</span> <span class="dv">0</span>)</span>
-<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
-<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>    p_bayes <span class="op">=</span> np.mean(rho_samples <span class="op">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb3-100"><a href="#cb3-100" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.log(np.random.uniform(<span class="dv">0</span>, <span class="dv">1</span>)) <span class="op">&lt;</span> log_acceptance_ratio:</span>
+<span id="cb3-101"><a href="#cb3-101" aria-hidden="true" tabindex="-1"></a>        trace[i] <span class="op">=</span> proposal</span>
+<span id="cb3-102"><a href="#cb3-102" aria-hidden="true" tabindex="-1"></a>        current_log_post <span class="op">=</span> proposal_log_post</span>
+<span id="cb3-103"><a href="#cb3-103" aria-hidden="true" tabindex="-1"></a>        accepted <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb3-104"><a href="#cb3-104" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-105"><a href="#cb3-105" aria-hidden="true" tabindex="-1"></a>        trace[i] <span class="op">=</span> trace[i<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb3-106"><a href="#cb3-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-107"><a href="#cb3-107" aria-hidden="true" tabindex="-1"></a><span class="co"># Yanma süresi (burn-in) sonrası korelasyon katsayısı için örneklemler (rho 4. indekste)</span></span>
+<span id="cb3-108"><a href="#cb3-108" aria-hidden="true" tabindex="-1"></a>rho_samples <span class="op">=</span> trace[burn_in:, <span class="dv">4</span>]</span>
+<span id="cb3-109"><a href="#cb3-109" aria-hidden="true" tabindex="-1"></a>acceptance_rate <span class="op">=</span> accepted <span class="op">/</span> n_samples</span>
+<span id="cb3-110"><a href="#cb3-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-111"><a href="#cb3-111" aria-hidden="true" tabindex="-1"></a><span class="co"># Bayesçi &quot;p-değeri&quot; karşılığı (Ters işaret olasılığı)</span></span>
+<span id="cb3-112"><a href="#cb3-112" aria-hidden="true" tabindex="-1"></a>mean_rho <span class="op">=</span> np.mean(rho_samples)</span>
+<span id="cb3-113"><a href="#cb3-113" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> mean_rho <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb3-114"><a href="#cb3-114" aria-hidden="true" tabindex="-1"></a>    p_bayes <span class="op">=</span> np.mean(rho_samples <span class="op">&lt;=</span> <span class="dv">0</span>)</span>
+<span id="cb3-115"><a href="#cb3-115" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb3-116"><a href="#cb3-116" aria-hidden="true" tabindex="-1"></a>    p_bayes <span class="op">=</span> np.mean(rho_samples <span class="op">&gt;=</span> <span class="dv">0</span>)</span>
+<span id="cb3-117"><a href="#cb3-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-118"><a href="#cb3-118" aria-hidden="true" tabindex="-1"></a><span class="co"># %95 Güvenilir Aralığı (Trace&#39;ten yüzdelik yöntemiyle) hesapla</span></span>
+<span id="cb3-119"><a href="#cb3-119" aria-hidden="true" tabindex="-1"></a>hdi <span class="op">=</span> np.percentile(rho_samples, [<span class="fl">2.5</span>, <span class="fl">97.5</span>])</span>
 <span id="cb3-120"><a href="#cb3-120" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a><span class="co"># %95 Güvenilir Aralığı (Trace&#39;ten yüzdelik yöntemiyle) hesapla</span></span>
-<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>hdi <span class="op">=</span> np.percentile(rho_samples, [<span class="fl">2.5</span>, <span class="fl">97.5</span>])</span>
-<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a><span class="co"># Frekansçı için Güven Aralığı (Fisher Dönüşümü ile)</span></span>
-<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>r_z <span class="op">=</span> np.arctanh(r_freq)</span>
-<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> np.sqrt(N <span class="op">-</span> <span class="dv">3</span>)</span>
-<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a>z_crit <span class="op">=</span> st.norm.ppf(<span class="fl">0.975</span>)</span>
-<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a>ci_freq <span class="op">=</span> np.tanh([r_z <span class="op">-</span> z_crit <span class="op">*</span> se, r_z <span class="op">+</span> z_crit <span class="op">*</span> se])</span>
-<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a><span class="co"># --- SONUÇLARI YAN YANA GÖSTER ---</span></span>
-<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
-<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;MCMC Raporu: Kabul Oranı = </span><span class="sc">{</span>acceptance_rate<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span>
-<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
-<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;Metrik&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span><span class="st">&#39;Frekansçı (Pearson)&#39;</span><span class="sc">:&lt;20}</span><span class="ss"> | </span><span class="sc">{</span><span class="st">&#39;Bayesçi MCMC (El Yapımı)&#39;</span><span class="sc">:&lt;20}</span><span class="ss">&quot;</span>)</span>
-<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;-&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
-<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;Korelasyon (r / rho)&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>r_freq<span class="sc">:&gt;20.4f}</span><span class="ss"> | </span><span class="sc">{</span>mean_rho<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;p-değeri (işaret olasılık)&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>p_freq<span class="sc">:&gt;20.4e}</span><span class="ss"> | </span><span class="sc">{</span>p_bayes<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb3-139"><a href="#cb3-139" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;%95 Aralık Alt Sınır&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>ci_freq[<span class="dv">0</span>]<span class="sc">:&gt;20.4f}</span><span class="ss"> | </span><span class="sc">{</span>hdi[<span class="dv">0</span>]<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb3-140"><a href="#cb3-140" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;%95 Aralık Üst Sınır&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>ci_freq[<span class="dv">1</span>]<span class="sc">:&gt;20.4f}</span><span class="ss"> | </span><span class="sc">{</span>hdi[<span class="dv">1</span>]<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
-<span id="cb3-141"><a href="#cb3-141" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span></code></pre></div>
+<span id="cb3-121"><a href="#cb3-121" aria-hidden="true" tabindex="-1"></a><span class="co"># Frekansçı için Güven Aralığı (Fisher Dönüşümü ile)</span></span>
+<span id="cb3-122"><a href="#cb3-122" aria-hidden="true" tabindex="-1"></a>r_z <span class="op">=</span> np.arctanh(r_freq)</span>
+<span id="cb3-123"><a href="#cb3-123" aria-hidden="true" tabindex="-1"></a>se <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> np.sqrt(N <span class="op">-</span> <span class="dv">3</span>)</span>
+<span id="cb3-124"><a href="#cb3-124" aria-hidden="true" tabindex="-1"></a>z_crit <span class="op">=</span> st.norm.ppf(<span class="fl">0.975</span>)</span>
+<span id="cb3-125"><a href="#cb3-125" aria-hidden="true" tabindex="-1"></a>ci_freq <span class="op">=</span> np.tanh([r_z <span class="op">-</span> z_crit <span class="op">*</span> se, r_z <span class="op">+</span> z_crit <span class="op">*</span> se])</span>
+<span id="cb3-126"><a href="#cb3-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-127"><a href="#cb3-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-128"><a href="#cb3-128" aria-hidden="true" tabindex="-1"></a><span class="co"># --- SONUÇLARI YAN YANA GÖSTER ---</span></span>
+<span id="cb3-129"><a href="#cb3-129" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb3-130"><a href="#cb3-130" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;MCMC Raporu: Kabul Oranı = </span><span class="sc">{</span>acceptance_rate<span class="sc">:.2%}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-131"><a href="#cb3-131" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb3-132"><a href="#cb3-132" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;Metrik&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span><span class="st">&#39;Frekansçı (Pearson)&#39;</span><span class="sc">:&lt;20}</span><span class="ss"> | </span><span class="sc">{</span><span class="st">&#39;Bayesçi MCMC (El Yapımı)&#39;</span><span class="sc">:&lt;20}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-133"><a href="#cb3-133" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;-&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span>
+<span id="cb3-134"><a href="#cb3-134" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;Korelasyon (r / rho)&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>r_freq<span class="sc">:&gt;20.4f}</span><span class="ss"> | </span><span class="sc">{</span>mean_rho<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-135"><a href="#cb3-135" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;p-değeri (işaret olasılık)&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>p_freq<span class="sc">:&gt;20.4e}</span><span class="ss"> | </span><span class="sc">{</span>p_bayes<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-136"><a href="#cb3-136" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;%95 Aralık Alt Sınır&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>ci_freq[<span class="dv">0</span>]<span class="sc">:&gt;20.4f}</span><span class="ss"> | </span><span class="sc">{</span>hdi[<span class="dv">0</span>]<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-137"><a href="#cb3-137" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;</span><span class="sc">{</span><span class="st">&#39;%95 Aralık Üst Sınır&#39;</span><span class="sc">:&lt;25}</span><span class="ss"> | </span><span class="sc">{</span>ci_freq[<span class="dv">1</span>]<span class="sc">:&gt;20.4f}</span><span class="ss"> | </span><span class="sc">{</span>hdi[<span class="dv">1</span>]<span class="sc">:&gt;20.4f}</span><span class="ss">&quot;</span>)</span>
+<span id="cb3-138"><a href="#cb3-138" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;=&quot;</span> <span class="op">*</span> <span class="dv">60</span>)</span></code></pre></div>
 <pre class="text"><code>============================================================
 MCMC Raporu: Kabul Oranı = 57.14%
 ============================================================
@@ -514,12 +530,18 @@ p-değeri (işaret olasılık) |          7.9035e-01 |    0.3901
 ============================================================</code></pre>
 <p>Kodda görülen <code>term1</code> ve <code>term2</code> hesapları (5)
 formülündeki birinci ve ikinci terime tekabül ediyor.</p>
-<p>Korelasyon katsayısının efrekansçı ve Bayes ile birbirine yakın
-olduğunu olduğunu görüyoruz.</p>
-<p>P-değeri hesabı birinde 0.79 diğerinde 0.39 çıktı, 0.05 altında
-olmadıkları için, bulunan <span class="math inline">\(\rho\)</span>’nun
-istatistiki olarak önemli (significant) olmadığı sonucuna
-varabiliriz.</p>
+<p>Fonksiyon <code>log_prior</code> içinde simülasyonun istenen sınırlar
+içinde kalmasının nasıl kontrol edildiğini görüyoruz. Önsel tanımımız
+içinde birörnek dağılımlar vardı hatırlarsak, ve bu dağılımlar belli
+aralıklar içinde kalmalıdır. <code>sigma1</code>, <code>sigma2</code>,
+<code>rho</code> eğer istenmeyen değerlere gelirlerse fonksiyon
+<code>np.inf</code> yani sonsuz değer döndürüyoruz (oradaki olasılığı
+sıfırlamış oluyoruz, log olasılıkta sıfırın log değeri sonsuz).</p>
+<p>Sonuçlara bakalım: Korelasyon katsayısının frekansçı ve Bayes ile
+birbirine yakın olduğunu olduğunu görüyoruz. P-değeri hesabı birinde
+0.79 diğerinde 0.39 çıktı, 0.05 altında olmadıkları için, bulunan <span
+class="math inline">\(\rho\)</span>’nun istatistiki olarak önemli
+(significant) olmadığı sonucuna varabiliriz.</p>
 <p>Bayes yaklaşımında elde edilen sonuç sonsal dağılımdır demiştik, daha
 detaylandırmak gerekirse sonsal dağılımdan toplanmış örneklemlerdir. Bu
 örneklem vektörü üzerinde sayısal güven aralıkları hesaplanabilir, ve
@@ -542,6 +564,9 @@ sonucu daha kuvvetlenmiş demektir, ayrıca güven aralığının ne kadar sık�
 birbirine oldukca yakın, demek ki aralık dar, ve demek ki sıfırın bu
 aralıkta olması çok çok muhtemel, böylece korelasyon olmadığı tezi daha
 da kuvvetlenmiş oluyor.</p>
+<p>Student-t Bazlı Getiriler</p>
+<p>Kodlar</p>
+<p><a href="corr_studentt.py">corr_studentt.py</a></p>
 <p>Kaynaklar</p>
 <p>[1] Wackerly, <em>Mathematical Statistics, 7th Edition</em></p>
 <p>

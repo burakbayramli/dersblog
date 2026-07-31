@@ -49,7 +49,7 @@ with pm.Model() as model:
 ```
 
 Problem formülize edildikten sonra PyMC sonsaldan örneklem toplamaya
-başlayabilir. Paket hangi değişkenin örneklemleneceği nasıl bilir?
+başlayabilir. Paket hangi değişkenin örnekleneceği nasıl bilir?
 Basit, mesela `pm.Normal( .. observed=y_data)` şeklinde tanımlı her
 olasılıksal değişken bir olurluk hesabı demektir, paket `observed`
 kelimesini görünce takip eden veriyi alıp o dağılıma ne kadar muhtemel
@@ -58,10 +58,10 @@ kalan her şey örneklenir, üstte görülen `alpha`, `beta` bu kategoriye
 girer, bir önsel tanımları vardır, ama `observed` geçilmemiştir, bu
 değişkenler her döngü adımında örneklenir.
 
-Altta daha geniş, nihai bir örnek görüyoruz. Diyelim ki bir lineer
+Altta daha geniş, nihai bir örnek gösterelim. Diyelim ki bir lineer
 regresyon yapmak istiyoruz, $y = \alpha + \beta x$ formülünü veriye
 uyduracağız. Bayes yaklaşımında $\alpha,\beta$ değişkenleri
-olasılıksaldır, ve önsel dağılımları vardır, alttaki örnek için
+olasılıksaldır, ve önsel dağılımları vardır, örnek için diyelim ki
 
 $$
 \alpha \sim Normal(0, 10), \quad
@@ -71,15 +71,15 @@ $$
 
 Örneklem
 
-Şimdiye kadar gösterdiklerimiz değişkenkler, onların arasındaki
+Şimdiye kadar gösterdiklerimiz değişkenler, onların arasındaki
 bağlantıların tanımıydı, hala döngü, örneklem işlemleri yok. Bu son
-adım PyMC ile oldukca basit, sadece `pm.sample` çağrısı yeterli. Bu
-çağrıya değişkenler bile geçilmiyor, tanımlar yapılırken `with
-pm.Model() as model` yazdığımızda seçilen `model` değişkeni üzerinden
-`with model` ardından `sample` işletilince PyMC o model altında olan
-tüm değişkenlere erişebiliyor, dinamik olarak hangisinin olurluk,
-hangisinin önsel olduğunu biliyor ve buna göre Markov Zinciri gezimi
-yapılıyor.
+adım PyMC ile aslında oldukca basit, sadece `pm.sample` çağrısı
+yeterli. Bu çağrıya değişkenler bile geçilmiyor, tanımlar yapılırken
+`with pm.Model() as model` yazdığımızda seçilen `model` değişkeni
+üzerinden `with model` ardından `sample` işletilince PyMC o model
+altında olan tüm değişkenlere erişebiliyor, dinamik olarak hangisinin
+olurluk, hangisinin önsel olduğunu biliyor ve buna göre Markov Zinciri
+gezimi yapılıyor.
 
 
 ```python
@@ -158,7 +158,6 @@ plt.savefig("pymc_01.jpg")
 ```
 
 ```text
-Data successfully generated.
         mean     sd  hdi_3%  hdi_97%  ...  mcse_sd  ess_bulk  ess_tail  r_hat
 alpha  1.984  0.112   1.771    2.185  ...    0.003    2730.0    1388.0    1.0
 beta   3.363  0.091   3.178    3.526  ...    0.002    3119.0    1368.0    1.0

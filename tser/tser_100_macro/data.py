@@ -3,10 +3,7 @@ import numpy as np
 import pandas as pd
 import pandas_datareader.data as web
 
-# -----------------------------------------------------------------------------
-# 1. Fetch FRED Macro Series
-# -----------------------------------------------------------------------------
-def fetch_fred_data(start_year=1990):
+def fetch_and_prepare_macro_data(start_year=1990):
     today = datetime.datetime.now()
     start = datetime.datetime(start_year, 1, 1)
     end = datetime.datetime(today.year, today.month, today.day)
@@ -22,73 +19,51 @@ def fetch_fred_data(start_year=1990):
         "SLUEM1524ZSARG"      # Unemployment Rate
     ]
     
+    print("Fetching FRED macroeconomic data...")
     df = web.DataReader(cols, 'fred', start, end)
     df.columns = ["bop", "cpi", "domcred", "gdp", "xch", "govdebt", "m2", "unemploy"]
-    return df
+    df = df[df.index <= '2025-12-31'].copy()
 
-print("Fetching FRED macroeconomic data...")
-df = fetch_fred_data(1990)
+    # Load External Annual Interest Rates & Anchor
+    print("Loading external interest rate dataset (arg_real_ir.csv)...")
+    df_ir = pd.read_csv('arg_real_ir.csv')
+    
+    df['real_ir_anchor'] = np.nan
+    for _, row in df_ir.iterrows():
+        yr = int(row['year'])
+        anchor_date = f"{yr}-07-01"
+        if anchor_date in df.index:
+            df.loc[anchor_date, 'real_ir_anchor'] = row['real_ir']
 
-# Filter out future projection ramps (cap at end of 2025)
-df = df[df.index <= '2025-12-31'].copy()
+    # Use Forward-Fill (.ffill()) to prevent look-ahead bias from linear interpolation
+    df['real_ir'] = df['real_ir_anchor'].ffill().bfill()
 
-# -----------------------------------------------------------------------------
-# 2. Load External Interest Rates & Anchor Annual Series
-# -----------------------------------------------------------------------------
-print("Loading external interest rate dataset (arg_real_ir.csv)...")
+    # Interpolate FRED series
+    df = df.interpolate(method='linear')
 
-# Load Annual Interest Rates (arg_real_ir.csv containing 'year' and 'real_ir')
-df_ir = pd.read_csv('arg_real_ir.csv')
+    # Compute Macro Transformations
+    print("Calculating macro transformations...")
+    # 1. Money Supply Growth (% log change)
+    df['m2_diff'] = np.log(df['m2'] / df['m2'].shift(1)) * 100.0
+    
+    # 2. Monthly CPI Inflation Rate (% log change) -> USED AS LEVEL (NOT DOUBLE DIFFERENCED)
+    df['inf_diff'] = np.log(df['cpi'] / df['cpi'].shift(1)) * 100.0
+    
+    # 3. Monthly Exchange Rate Depreciation Rate -> USED AS LEVEL (NOT DOUBLE DIFFERENCED)
+    # Negative log change of REER (Positive value = Peso depreciation)
+    df['xch_diff'] = -np.log(df['xch'] / df['xch'].shift(1)) * 100.0
 
-# Initialize empty NaN column in the monthly dataframe for interest rate anchor
-df['real_ir_anchor'] = np.nan
+    # 4. First differences for Balance of Payments and Interest Rates
+    df['bop_diff'] = df['bop'].diff()
+    df['ir_diff']  = df['real_ir'].diff()
 
-# Place anchor points on July 1st (mid-year point) for annual observations
-for _, row in df_ir.iterrows():
-    yr = int(row['year'])
-    anchor_date = f"{yr}-07-01"
-    if anchor_date in df.index:
-        df.loc[anchor_date, 'real_ir_anchor'] = row['real_ir']
+    # Drop NaNs created by lag/shift operations
+    df_clean = df.dropna(subset=['m2_diff', 'inf_diff', 'xch_diff', 'bop_diff', 'ir_diff']).copy()
+    
+    export_cols = ['bop_diff', 'xch_diff', 'ir_diff', 'inf_diff', 'm2_diff']
+    return df_clean[export_cols]
 
-# Smooth linear interpolation for interest rates
-df['real_ir'] = df['real_ir_anchor'].interpolate(method='linear')
-
-# Interpolate missing values in monthly/quarterly FRED series (e.g. bop, xch, govdebt)
-df_interp = df.interpolate(method='linear')
-
-# -----------------------------------------------------------------------------
-# 3. Dynamic High-Frequency Derived Metrics
-# -----------------------------------------------------------------------------
-print("Calculating monthly CPI growth and exchange rate depreciation...")
-
-# True Monthly Inflation Rate (Percentage Log-Change of CPI Index)
-df_interp['inflation'] = np.log(df_interp['cpi'] / df_interp['cpi'].shift(1)) * 100.0
-
-# Exchange Rate Depreciation (Log-Change of REER): Positive value = Peso weakening
-df_interp['xch_deprec'] = -np.log(df_interp['xch'] / df_interp['xch'].shift(1)) * 100.0
-
-# Fiscal Deficit definition (negative net lending/borrowing balance)
-df_interp['deficit'] = -df_interp['govdebt']
-
-# GDP Growth (% YoY)
-df_interp['growth'] = (df_interp['gdp'] - df_interp['gdp'].shift(12)) / df_interp['gdp'].shift(12) * 100.0
-
-# -----------------------------------------------------------------------------
-# 4. Clean & Export Final Dataset
-# -----------------------------------------------------------------------------
-# Drop initial NaN rows created by lag/shift operations and CPI coverage limits
-df_clean = df_interp.dropna(subset=['bop', 'xch_deprec', 'real_ir', 'inflation']).copy()
-
-# Keep relevant columns for exporting
-export_cols = ['bop', 'xch', 'xch_deprec', 'real_ir', 'inflation', 'deficit', 'm2', 'growth', 'unemploy']
-df_clean = df_clean[export_cols]
-
-print("\n--- Pipeline Summary ---")
-print(f"Dataset start date : {df_clean.index.min().strftime('%Y-%m-%d')}")
-print(f"Dataset end date   : {df_clean.index.max().strftime('%Y-%m-%d')}")
-print(f"Total observations : {len(df_clean)} months")
-print("\nFirst 5 rows preview:")
-print(df_clean[['bop', 'xch_deprec', 'real_ir', 'inflation']].head())
-
-# Save clean dataset for PyMC MCMC sampling
-df_clean.to_csv('arg_final.csv')
+if __name__ == "__main__":
+    df_clean = fetch_and_prepare_macro_data()
+    df_clean.to_csv('arg_final.csv')
+    print("Preprocessing completed successfully. Data exported to 'arg_final.csv'.")

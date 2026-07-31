@@ -4,3 +4,5 @@
 
 [Yabancı Dil Cümleleri ve Tercümeleri Kaydetmek](07/foreign-language-learning.html)
 
+[PyMC](07/pymc.html)
+

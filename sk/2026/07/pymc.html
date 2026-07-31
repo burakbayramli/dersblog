@@ -60,10 +60,13 @@ Bir olasılıksal değişken, şöyle olabilir,</p>
 
 <p>Deterministik değişkenler düz hesaptırlar, olasılıksal ya da diğer
 değişkenleri kullanarak bir hesap yaparlar, tabii ki temelleri
-olasılıksal olduğu için onlar da olasılıksaldır. Bu temel olasılık
-alanında rasgele değişkenlerin düz formüller ile birleştirilmesine
-benzer. İki Gaussian dağılımı toplayabiliriz, log'unu alıp
-çarpabiliriz, vs.</p>
+olasılıksal olduğu için onlar da dolaylı yoldan olasılıksal hale
+gelirler. Bu temel olasılık alanında rasgele değişkenlerin düz
+formüller ile birleştirilmesine benzer. İki Gaussian dağılımı
+toplayabiliriz, log'unu alıp çarpabiliriz, vs. Yani deterministik
+değişkenler kendi başlarına ekstra bir rastgelelik içermezler. Ancak
+girdileri olasılıksal olduğu için, hesaplanan değer de sonsal aşamada
+bir dağılım sergiler.</p>
 
 <p>Bir model içinde kodlama şuna benzer,</p>
 
@@ -90,19 +93,31 @@ olasılıksal değişken bir olurluk hesabı demektir, paket <code>observed</cod
 kelimesini görünce takip eden veriyi alıp o dağılıma ne kadar muhtemel
 / olur olduğunu "sorar". Sonuç olurluk (likelihood) hesabıdır. Geri
 kalan her şey örneklenir, üstte görülen <code>alpha</code>, <code>beta</code> bu kategoriye
-girer, bir onsel tanımları vardır, ama <code>observed</code> geçilmemiştir, bu
+girer, bir önsel tanımları vardır, ama <code>observed</code> geçilmemiştir, bu
 değişkenler her döngü adımında örneklenir.</p>
 
 <p>Altta daha geniş, nihai bir örnek görüyoruz. Diyelim ki bir lineer
 regresyon yapmak istiyoruz, $y = \alpha + \beta x$ formülünü veriye
 uyduracağız. Bayes yaklaşımında $\alpha,\beta$ değişkenleri
-olasılıksaldır, ve onsel dağılımları vardır, alttaki örnek için</p>
+olasılıksaldır, ve önsel dağılımları vardır, alttaki örnek için</p>
 
 <p>$$
 \alpha \sim Normal(0, 10), \quad
 \beta \sim Normal(0,5), \quad
 \sigma \sim HalfNormal(5)
 $$</p>
+
+<p>Örneklem</p>
+
+<p>Şimdiye kadar gösterdiklerimiz değişkenkler, onların arasındaki
+bağlantıların tanımıydı, hala döngü, örneklem işlemleri yok. Bu son
+adım PyMC ile oldukca basit, sadece <code>pm.sample</code> çağrısı yeterli. Bu
+çağrıya değişkenler bile geçilmiyor, tanımlar yapılırken <code>with
+pm.Model() as model</code> yazdığımızda seçilen <code>model</code> değişkeni üzerinden
+<code>with model</code> ardından <code>sample</code> işletilince PyMC o model altında olan
+tüm değişkenlere erişebiliyor, dinamik olarak hangisinin olurluk,
+hangisinin önsel olduğunu biliyor ve buna göre Markov Zinciri gezimi
+yapılıyor.</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -124,7 +139,7 @@ $$</p>
 <span class="n">y_data</span> <span class="o">=</span> <span class="n">true_intercept</span> <span class="o">+</span> <span class="n">true_slope</span> <span class="o">*</span> <span class="n">x_data</span> <span class="o">+</span> <span class="n">noise</span>
 
 <span class="c1"># Model tanimla</span>
-<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">tutorial_model</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
 
     <span class="c1"># Onseller, baz degerleri sabit hiperparametreler (dagilimlar)</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>       <span class="c1"># Intercept prior</span>
@@ -138,14 +153,14 @@ $$</p>
     <span class="c1"># Olurluk, gozlemlenen veri burada dahil edilir, modele gore verinin olurlugu nedir</span>
     <span class="n">y_obs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;y_obs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y_data</span><span class="p">)</span>
 
-<span class="k">with</span> <span class="n">tutorial_model</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">model</span><span class="p">:</span>
     <span class="n">idata</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
         <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
         <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
         <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
         <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
-        <span class="n">progressbar</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">progressbar</span><span class="o">=</span><span class="kc">False</span>
     <span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">]))</span>
@@ -196,10 +211,10 @@ sigma  1.101  0.079   0.952    1.253  ...    0.002    2778.0    1354.0    1.0
 <p>MCMC Örneklem Değerlerine Erişim ve Sonsal Dağılımın Yorumlanması</p>
 
 <p>PyMC ile model örneklemesi (<code>pm.sample</code>) tamamlandığında, algoritma
-(varsayılan olarak NUTS/HMC) önsel dağılımlardan başlayarak verinin
-olurluğu doğrultusunda parametre uzayında adımlar atar. Bu adımların
-her biri <code>InferenceData</code> (<code>idata</code>) nesnesinin içindeki <code>posterior</code>
-veri yapısında saklanır.</p>
+(mesela NUTS/HMC) önsel dağılımlardan başlayarak verinin olurluğu
+doğrultusunda parametre uzayında adımlar atar. Bu adımların her biri
+<code>InferenceData</code> (<code>idata</code>) nesnesinin içindeki <code>posterior</code> veri
+yapısında saklanır.</p>
 
 <p>Örneklem zinciri tamamlandıktan sonra parametrelerin adımlarını tek
 tek incelemek veya her döngüdeki değerlerine erişmek
@@ -226,7 +241,10 @@ Adim 4: alpha = 1.9791, beta = 3.3675
 </code></pre>
 </div>
 
-<p>Grafik ve özet tablosu incelendiğinde ise:</p>
+<p>Nihai tahmin için zincirde kaydedilmiş tüm sonsal örneklemlere bakılıp
+hesaplar yapılabilir, mesela en olasılı $\beta$ tahmini için
+zincirdeki tüm $\beta$ değerlerinin ortalaması alınır. Diğer
+değişkenler için aynı şekilde. Grafik ve özet tablosu incelendiğinde,</p>
 
 <ul>
 <li><p>Sentetik Veri Üretim Parametreleri: $\alpha = 2.0$, $\beta = 3.5$,
@@ -235,11 +253,12 @@ $\sigma = 1.2$</p></li>
 $\sigma \approx 1.10$</p></li>
 </ul>
 
-<p>Bayessel yaklaşım sadece nokta tahmini vermekle kalmıyor, $\%94$
-Yüksek Yoğunluk Aralığı (HDİ - High Density İnterval) ile gerçek
-parametrelerin hangi aralıkta bulunduğuna dair belirsizliği de
-başarıyla modellemiştir. Metriklerdeki $R_{hat} = 1.0$ değeri ise
-Markov zincirlerinin yakınsadığını (converge) teyit eder.</p>
+<p>Bayessel yaklaşım sadece nokta tahmini vermekle kalmıyor, elimizde bir
+örneklem zinciri olduğu için bu veri üzerinden $\%94$ Yüksek Yoğunluk
+Aralığı (HDI - High Density İnterval) ile gerçek parametrelerin hangi
+aralıkta bulunduğuna dair belirsizliği de başarıyla ortaya
+çıkartıyor. $R_{hat} = 1.0$ değeri ise Markov zincirlerinin
+yakınsadığını (converge) teyit eder.</p>
 
 
           <br/><a href="../index.html">Yukarı</a>

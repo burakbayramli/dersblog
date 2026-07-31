@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {inlineMath: [["$","$"]]}
+      });
+    MathJax.Hub.Register.StartupHook("TeX Jax Ready",function () {
+      MathJax.Hub.Insert(MathJax.InputJax.TeX.Definitions.macros,{
+        cancel: ["Extension","cancel"],
+        bcancel: ["Extension","cancel"],
+        xcancel: ["Extension","cancel"],
+        cancelto: ["Extension","cancel"]
+      });
+    });
+    </script>
+   <script type="text/javascript"
+       src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS_HTML-full">
+   </script>
+
+   <link rel="stylesheet" type="text/css" media="screen" href="https://burakbayramli.github.io/css/style.css">
+  </head>
+    <body>
+      <div id="header_wrap" class="outer">
+        <header class="inner">
+          <h1 id="project_title">
+            <a href="https://burakbayramli.github.io" style="text-decoration:none; color:inherit;">dersblog</a>
+          </h1>
+          <h2 id="project_tagline"></h2>          
+        </header>
+      </div>
+      <div id="main_content_wrap" class="outer">        
+        <section id="main_content" class="inner">
+        <h1></h1>
+<h1>PyMC</h1>
+
+<p>Olasılıksal Programlama adı verilen yaklaşımın en iyi örneği PyMC
+paketidir herhalde. Bir Bayessel modelden örneklem toplamak, yani
+sonsal (posterior) dağılımını bulmak için paket kullanmak istemezsek
+bunu Metropolis yöntemi, ya da Gibbs örneklemesi gibi yöntemlerle
+yapabilirdik, her şeyi sıfırdan kendimiz kodlardık. Fakat eğer
+elimizde çetrefil bir model ise, ve/ya da pek çok farklı değişkeni,
+onların ilişkilerini ardı ardına denemek istersek, PyMC gibi
+"Olasılıksal Programcılık" yapmamızı sağlayan kütüphaneleri de
+kullanmak mümkündür.</p>
+
+<p>Temel olarak PyMC ile yapılan değişkenleri, varsa onların dağılımını
+tanımlamak, veriyi sağlayıp gerisini pakete bırakmaktır.</p>
+
+<p>PyMC değişkenleri deterministik olabilir, ya da olasılıksal olabilir.
+Bir olasılıksal değişken, şöyle olabilir,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>Deterministik değişkenler düz hesaptırlar, olasılıksal ya da diğer
+değişkenleri kullanarak bir hesap yaparlar, tabii ki temelleri
+olasılıksal olduğu için onlar da olasılıksaldır. Bu temel olasılık
+alanında rasgele değişkenlerin düz formüller ile birleştirilmesine
+benzer. İki Gaussian dağılımı toplayabiliriz, log'unu alıp
+çarpabiliriz, vs.</p>
+
+<p>Bir model icinde kodlama suna benzer,</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pymc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">model</span><span class="p">:</span>
+    <span class="c1"># 1. Onseller -&gt; Gozlemlenmiyor, sabit degerleri var</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># 2. Deterministik (Direk Hesap) -&gt; Onsellerin fonksiyonu, her adimda guncellenir</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">x_data</span>
+
+    <span class="c1"># 3. Olurluk (Anchored) -&gt; Gozlemlenen verinin, modeli baz alarak, olurlugunu hesapla</span>
+    <span class="n">y_obs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;y_obs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y_data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pymc</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">arviz</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">az</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Ornek veri yarat</span>
+<span class="n">true_intercept</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">true_slope</span> <span class="o">=</span> <span class="mf">3.5</span>
+<span class="n">true_sigma</span> <span class="o">=</span> <span class="mf">1.2</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">x_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">true_sigma</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">N</span><span class="p">)</span>
+<span class="n">y_data</span> <span class="o">=</span> <span class="n">true_intercept</span> <span class="o">+</span> <span class="n">true_slope</span> <span class="o">*</span> <span class="n">x_data</span> <span class="o">+</span> <span class="n">noise</span>
+
+<span class="c1"># Model tanimla</span>
+<span class="k">with</span> <span class="n">pm</span><span class="o">.</span><span class="n">Model</span><span class="p">()</span> <span class="k">as</span> <span class="n">tutorial_model</span><span class="p">:</span>
+
+    <span class="c1"># Onseller, baz degerleri sabit hiperparametreler (dagilimlar)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>       <span class="c1"># Intercept prior</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>         <span class="c1"># Slope prior</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">HalfNormal</span><span class="p">(</span><span class="s2">&quot;sigma&quot;</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>          <span class="c1"># Noise scale prior</span>
+
+    <span class="c1"># Deterministik hesap (her MCMC adiminda hesaplanir)</span>
+    <span class="c1"># Onselleri tahmin edici parametreler ile birlestirip bir lineer tahmin yaratir</span>
+    <span class="n">mu</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Deterministic</span><span class="p">(</span><span class="s2">&quot;mu&quot;</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">x_data</span><span class="p">)</span>
+
+    <span class="c1"># Olurluk, gozlemlenen veri burada dahil edilir, modele gore verinin olurlugu nedir</span>
+    <span class="n">y_obs</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">Normal</span><span class="p">(</span><span class="s2">&quot;y_obs&quot;</span><span class="p">,</span> <span class="n">mu</span><span class="o">=</span><span class="n">mu</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">observed</span><span class="o">=</span><span class="n">y_data</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">tutorial_model</span><span class="p">:</span>
+    <span class="n">idata</span> <span class="o">=</span> <span class="n">pm</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span>
+        <span class="n">draws</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">tune</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span>
+        <span class="n">chains</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+        <span class="n">return_inferencedata</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">progressbar</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">az</span><span class="o">.</span><span class="n">summary</span><span class="p">(</span><span class="n">idata</span><span class="p">,</span> <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">]))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+
+<span class="n">az</span><span class="o">.</span><span class="n">plot_posterior</span><span class="p">(</span>
+    <span class="n">idata</span><span class="p">,</span>
+    <span class="n">var_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;beta&quot;</span><span class="p">,</span> <span class="s2">&quot;sigma&quot;</span><span class="p">],</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Sonsallar (94% HDI)&quot;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_data</span><span class="p">,</span> <span class="n">y_data</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Gozlemlenen Veri&quot;</span><span class="p">)</span>
+
+<span class="n">post_alpha</span> <span class="o">=</span> <span class="n">idata</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+<span class="n">post_beta</span> <span class="o">=</span> <span class="n">idata</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;beta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+<span class="n">x_plot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_data</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">x_data</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">mean_alpha</span> <span class="o">=</span> <span class="n">post_alpha</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">mean_beta</span> <span class="o">=</span> <span class="n">post_beta</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_plot</span><span class="p">,</span> <span class="n">mean_alpha</span> <span class="o">+</span> <span class="n">mean_beta</span> <span class="o">*</span> <span class="n">x_plot</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;firebrick&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Sonsal Ortalama Uyumu&quot;</span><span class="p">)</span>
+
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;X (Tahminci)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">&quot;Y (Sonuc)&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">&quot;Veriye Uydurulan Model&quot;</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;pymc_01.jpg&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Data successfully generated.
+        mean     sd  hdi_3%  hdi_97%  ...  mcse_sd  ess_bulk  ess_tail  r_hat
+alpha  1.984  0.112   1.771    2.185  ...    0.003    2730.0    1388.0    1.0
+beta   3.363  0.091   3.178    3.526  ...    0.002    3119.0    1368.0    1.0
+sigma  1.101  0.079   0.952    1.253  ...    0.002    2778.0    1354.0    1.0
+
+[3 rows x 9 columns]
+</code></pre>
+</div>
+
+<p><img src="pymc_01.jpg" alt="" /></p>
+
+<p>MCMC Örneklem Değerlerine Erişim ve Sonsal Dağılımın Yorumlanması</p>
+
+<p>PyMC ile model örneklemesi (<code>pm.sample</code>) tamamlandığında, algoritma
+(varsayılan olarak NUTS/HMC) önsel dağılımlardan başlayarak verinin
+olurluğu doğrultusunda parametre uzayında adımlar atar. Bu adımların
+her biri <code>InferenceData</code> (<code>idata</code>) nesnesinin içindeki <code>posterior</code>
+veri yapısında saklanır.</p>
+
+<p>Örneklem zinciri tamamlandıktan sonra, parametrelerin adımlarını tek
+tek incelemek veya her döngüdeki değerlerine erişmek
+mümkündür. Örneğin ilk zincirdeki (Chain 0) ilk 5 örneklem adımına
+erişmek için:</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="c1"># Her parametreye ait örneklem adımlarını ornekleyelim</span>
+<span class="n">alphas</span> <span class="o">=</span> <span class="n">idata</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">betas</span> <span class="o">=</span> <span class="n">idata</span><span class="o">.</span><span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;beta&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+
+<span class="c1"># İlk 5 adımı basalım</span>
+<span class="k">for</span> <span class="n">draw</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adim </span><span class="si">{</span><span class="n">draw</span><span class="si">}</span><span class="s2">: alpha = </span><span class="si">{</span><span class="n">alphas</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">draw</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">, beta = </span><span class="si">{</span><span class="n">betas</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">draw</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code>Adim 0: alpha = 1.8337, beta = 3.2055
+Adim 1: alpha = 1.8564, beta = 3.4190
+Adim 2: alpha = 1.9959, beta = 3.2733
+Adim 3: alpha = 1.9791, beta = 3.3675
+Adim 4: alpha = 1.9791, beta = 3.3675
+</code></pre>
+</div>
+
+<p>Grafik ve özet tablosu incelendiğinde ise:</p>
+
+<ul>
+<li><p>Sentetik Veri Üretim Parametreleri: $\alpha = 2.0$, $\beta = 3.5$,
+$\sigma = 1.2$</p></li>
+<li><p>Modelin Bulduğu Sonsal Ortalamalar: $\alpha \approx 1.98$, $\beta
+\approx 3.36$, $\sigma \approx 1.10$</p></li>
+</ul>
+
+<p>Bayessel yaklaşım sadece nokta tahmini vermekle kalmamış, $\%94$
+Yüksek Yoğunluk Aralığı (<strong>HDI - High Density Interval</strong>) ile gerçek
+parametrelerin hangi aralıkta bulunduğuna dair belirsizliği de
+başarıyla modellemiştir. Metriklerdeki $R_{hat} = 1.0$ değeri ise
+Markov zincirlerinin kusursuz şekilde yakınsadığını (converge
+olduğunu) teyit eder.</p>
+
+
+          <br/><a href="../index.html">Yukarı</a>
+        </section>          
+      </div>
+    </body>
+</html>

@@ -129,7 +129,7 @@ Harita
 
 Benim en çok işime yarayan Maps.Me uygulaması oldu. Bu programın
 Internet bağlantısına ihtiyacı yoktur, çevrimdışı (offline)
-çalışabilir. Gitmeden öne TR'de iken gidilecek yerin tüm kısımlarına
+çalışabilir. Gitmeden önce TR'de iken gidilecek yerin tüm kısımlarına
 tıklayıp o bölge bilgilerinin indirilmesi iyi olur. Böylece GPS ile
 yer bulunamasa bile önemli nokta, park, müze, cafe isimleri girerek
 arama ile konum yaklaşık olarak bulunabilir.

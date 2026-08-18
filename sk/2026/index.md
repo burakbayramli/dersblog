@@ -6,3 +6,5 @@
 
 [PyMC](07/pymc.html)
 
+[Rusya'ya Gidiş, Vize, Turistik Bilgiler](08/rusya-vize-turistik-bilgi.html)
+

@@ -140,4 +140,11 @@ Güvenlik durumu nedir? Büyük şehirlerde bir tehlike yok. Her diğer gün
 bir yerde duman, patlama duyulması gibi bir durum değil, ama muhakkak
 savaş durumu, ciddi iş, belli olmaz.
 
+Moskova metrosunun kullanımı rahat, hatlar arası transfer için dışarı
+çıkılması gerekmez. Yoldan taksi çevirmek zor, durak noktalarına
+gitmek lazım, bu noktalar Maps.Me uygulamasında gösteriliyor.
+
+Kaynaklar
+
+[1] [Moskova Restoran Gezisi](https://www.wikiloc.com/hiking-trails/moscow-restaurant-trail-280431532)
 

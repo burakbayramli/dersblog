@@ -134,3 +134,10 @@ hatlar, bağlantılar orada gösteriliyor. Kampçilıktan alışkanlık
 yanımızda hep taşıdığımız pusula bile ise yaradı, GPS olmayınca güney,
 kuzey neresidir diye bilmek gerekli olabiliyor.
 
+### Ozet
+
+Güvenlik durumu nedir? Büyük şehirlerde bir tehlike yok. Her diğer gün
+bir yerde duman, patlama duyulması gibi bir durum değil, ama muhakkak
+savaş durumu, ciddi iş, belli olmaz.
+
+

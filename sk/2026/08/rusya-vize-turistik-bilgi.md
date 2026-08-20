@@ -118,12 +118,12 @@ seyahat için bunlarla uğraşmak istemedik. Blok edilmiş siteler,
 uygulamaların bazıları YouTube, Whatsapp, Telegram, Instagram, Google
 Gemini (ama Google Arama, GMail işliyor).
 
-On ödemeli (prepaid) SIM kartı alınması uzun iş, geldiğimde
-havaalanından çıkarken turistler için "geçici" kartlar satan birisini
-vardı, ama yabancıların SIM alması resmi prosedür gerektiriyor, kart
-hemen açılıyor(muş) ama otelinizin gerekli bakanlığa kaydınızı
-bildirmesi gerekiyor. Bu bildirim oteller için kolay bir iş dediler,
-fakat kart geçici, bunu belirtelim.
+On ödemeli (prepaid) SIM kartı alınması uzun iş, fakat geldiğimde
+havaalanından çıkarken turistler için "geçici" kartlar satan birisi
+vard. Normalde yabancıların SIM alması resmi prosedür gerektiriyor, bu
+turistik olan kartlar hemen açılıyor(muş) ama otelinizin gerekli
+bakanlığa kaydınızı bildirmesi gerekiyor. Bu bildirim oteller için
+kolay bir iş dediler, fakat kart geçici, bunu belirtelim.
 
 Harita
 
@@ -153,7 +153,9 @@ Moskova metrosunun kullanımı rahat, hatlar arası transfer için dışarı
 çıkılması gerekmez.
 
 Yoldan taksi çevirmek zor, durak noktalarına gitmek lazım, bu noktalar
-Maps.Me uygulamasında gösteriliyor.
+Maps.Me uygulamasında gösteriliyor. İnternet'ten taksi almak için
+Yandex Gö tavsiye edildi (Uber işlemiyor), bu uygulaması olan birisi
+sizin için taksi çağırabilir.
 
 Kaynaklar
 

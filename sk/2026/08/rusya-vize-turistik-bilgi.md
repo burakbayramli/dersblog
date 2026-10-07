@@ -134,7 +134,7 @@ gezici (roaming) ayarını yapın, Internet kullanabilirsiniz" gibi
 yorumlar vardı. Bunlara güvenmeyin. Roaming işlemiyor. Çoğu popüler
 İnternet sitesi blok halinde, onlara da erişilemiyor. "VPN ile bloku
 aşarsınız" diyenler var, otelimizin Wifi'i üzerinden birkaç bedava VPN
-denedik, VPN olmadı.
+denedik, işlemedi.
 
 Eğer RU telefon / mobil / Internet hattı olsa, onun üzerinden cüzi
 para ödeyip VPN kurulması mümkün imiş (Red Shield?, Incy?), ama
@@ -142,7 +142,7 @@ turistik seyahat için bunlarla uğraşmak istemedik. Blok edilmiş
 siteler, uygulamaların bazıları YouTube, Whatsapp, Telegram,
 Instagram, Google Gemini (ama Google Arama, GMail işliyor).
 
-On ödemeli (prepaid) SIM kartı alınması uzun iş, fakat geldiğimde
+Ön ödemeli (prepaid) SIM kartı alınması uzun iş, fakat geldiğimde
 havaalanından çıkarken turistler için "geçici" kartlar satan birisi
 vard. Normalde yabancıların SIM alması resmi prosedür gerektiriyor, bu
 turistik olan kartlar hemen açılıyor(muş) ama otelinizin gerekli
@@ -192,6 +192,3 @@ birisi sizin için taksi çağırabilir.
 Kaynaklar
 
 [1] [Moskova Restoran Gezisi](https://www.wikiloc.com/hiking-trails/moscow-restaurant-trail-280431532)
-
-
-

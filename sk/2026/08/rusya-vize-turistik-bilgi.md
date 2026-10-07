@@ -73,8 +73,8 @@ TR Havalanı Çıkış
 
 Çıkarken harç ödemesi lazım, bu mobil bankacılık ile yapılabilir
 (Sabiha Gökçen'deki "harç kioskları" güvenilir degil, ben baktığımda
-bu aletler çalışmıyordu). Programda "Ödemeler | Pasaport Yurt Disi
-Cikis Harci" seçilir, sonra "Yurt Disi Cikis Harci", vergi dairesi
+bu aletler çalışmıyordu). Programda "Ödemeler | Pasaport Yurt Dışı
+Cıkış Harcı" seçilir, sonra "Yurt Dışı Çıkış Harcı", vergi dairesi
 sehri "İstanbul" seçilir, ilçe herhangi bir ilçe olabilir. Mevcut
 tarih itibarı ile 1500 TL.  Eski günlerde "pul" satan birisi olurdu, o
 pul pasaport içine konurdu, artık o günler geride kalmış ama hala bir
@@ -111,11 +111,11 @@ böyle.
 Sol üst köşedeki ilk iki seçenek 1 seyahat, 2 seyahat için, yani kart
 / bilet tek kullanımlık, ya da iki kullanımlık. Turistler için en
 rahat olanlar bunlar... Birine basıyorsunuz, ardından para veriliyor
-(ekranda ne yazdığına bakmayın bu noktada, basım ardından hemen para),
-mesela 1 seyahat seçim sonrası 100 ruble alt sağ köşeden verince,
-alttan (kağıt) kart ve para üstü alt kısımdaki bölmeye düşüyor. Diğer
-seçenekler mesela 30 gün, 90 gün, vs. daha uzun süreli ziyaretçiler
-bunlara bakabilir.
+(ekranda ne yazdığına bakmayın bu noktada, basım ardından hemen para
+verin), mesela 1 seyahat seçim sonrası 100 ruble alt sağ köşeden
+verince, alttan (kağıt) kart ve para üstü alt kısımdaki bölmeye
+düşüyor. Diğer seçenekler mesela 30 gün, 90 gün, vs. daha uzun süreli
+ziyaretçiler bunlara bakabilir.
 
 Telefon / Internet
 
@@ -170,7 +170,7 @@ içinde açılır. Bu tür önceden gezilmiş hat bilgileri faydalı olabilir.
 Sabiha Gökçen'den Dönüş
 
 Yine Havaist kullanmak isteyenler için, SBH otobüs binis noktası
-"metro girişi" olarak söyleniyor, dikkat, bu giriş İŞG Oteli önündeki
+"metro girişi" olarak söyleniyor, dikkat, bu giriş İSG Oteli önündeki
 havalanı kapılarına yakın giriş değil, metronun *diğer ucundaki*
 giriş.
 
@@ -186,10 +186,12 @@ Moskova metrosunun kullanımı rahat, hatlar arası transfer için dışarı
 
 Yoldan taksi çevirmek zor, durak noktalarına gitmek lazım, bu noktalar
 Maps.Me uygulamasında gösteriliyor. İnternet'ten taksi almak için
-Yandex Gö tavsiye edildi (Uber işlemiyor), bu uygulaması olan birisi
-sizin için taksi çağırabilir.
+Yandex Go tavsiye edildi (Uber işlemiyor), ya da bu uygulaması olan
+birisi sizin için taksi çağırabilir.
 
 Kaynaklar
 
 [1] [Moskova Restoran Gezisi](https://www.wikiloc.com/hiking-trails/moscow-restaurant-trail-280431532)
+
+
 

@@ -8,5 +8,5 @@
 
 [Rusya'ya Gidiş, Vize, Turistik Bilgiler](08/rusya-vize-turistik-bilgi.html)
 
-[Sirbistan](09/sirbistan-gezi-vize.html)
+[Sırbistan](09/sirbistan-gezi-vize.html)
 

@@ -41,7 +41,8 @@ katsayıları ile birlikte lojistik formülüne sorulacak. Bu formül tüm
 katsayıları ile birlikte şu şekilde,
 
 $$
-\Pr\left(\text{Crisis}_{t+1}=1\right)=
+\left(
+\text{Crisis}_{t+1}=1\right)=
 \sigma\left(
     \beta_0+
     \beta_{1}\,z^{\text{ca}}+

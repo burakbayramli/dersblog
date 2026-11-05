@@ -25,7 +25,7 @@ df.to_csv('/opt/Downloads/gmd/gmd.csv')
 Bu yöntem eğer güncel yeni veri varsa en son versiyonu indirir, yoksa
 eski versiyonu tutar, veri indirmesi olmaz.
 
-### Tasarım
+Tasarım
 
 Yaklaşmakta olan krizlerin farklı önden gelen göstergeleri (leading
 indicator) olabilir. Altta tahmin amaçlı bizim kullandıklarımızı altta
@@ -58,7 +58,7 @@ $$\sigma(u)=\frac{1}{1+e^{-u}}$$
 
 Değişkenler
 
-`ca`, Cari İşlemler Hesabı (Current Account)
+Değişken: `ca`, Cari İşlemler Hesabı (Current Account)
 
 GMD'deki `CA_GDP` kolonunu baz alır, bu kolon cari işlemler hesabının
 gayrisafi yurtiçi hasılasına (GDP) göre oranıdır. Risk artışını
@@ -72,8 +72,8 @@ kullanmaktadır. Negatif alarak cari açığı (negatif değer) pozitif bir
 risk seviyesine çeviriyoruz, çünkü dış sermayenin birden bire durması
 mümkündür bu da ülkenin kuru üzerinde bir risk yaratır.
 
-`rer_dev`, gerçek döviz kuru trendinden sapma (Real Exchange Rate
-Deviation)
+Değişken: `rer_dev`, gerçek döviz kuru trendinden sapma (Real Exchange
+Rate Deviation)
 
 Bu hesabı yapmadan önce onun baz aldığı `rer` nasıl hesaplanır onu
 görelim. Kriz tahmini için yayınlanan döviz kuru rakamı tabii ki
@@ -91,13 +91,39 @@ fiyat seviyesi `CPI` ise onu ABD ile `US_CPI` / `CPI` formülüyle
 karşılaştırabiliriz. `CPI` ekonomi çalışanların bilebileceği üzere
 hayali bir alışveriş sepetini doldurmanın kaça mal olacağını
 hesaplar. Gündelik ihtiyaçlar, yiyecek, içecek, ev kirası, giyim,
-vs. gibi pek çok alım kalemi onun içinde mevcuttur.
+vs. gibi pek çok alım kalemi onun içinde mevcuttur. Dikkat, CPI
+enflasyon hesabı degildir, enflasyon bu sepetin yıldan yıla değişimi
+üzerinden hesaplanır.
 
-Dikkat, CPI enflasyon hesabı degildir, enflasyon bu sepetin yıldan
-yıla değişimi üzerinden hesaplanır.
+Şimdi `rer` hesabına gelelim, her $t$ senesi için
 
+$$
+\text{RER}_t = \frac{\text{USDfx}_t\times \text{US_CPI}_t}{\text{CPI}_t}
+$$
 
+$\text{USDfx}_t$: Aktif (nominal) doviz kuru
 
+$\text{US_CPI}_t$: ABD fiyat seviyesi
+
+$\text{CPI}_t$: Yerel fiyat seviyesi
+
+Burada yerel denilen ülke hangi ülkeyi analiz ediyorsak odur, eğer
+Arjantin'e inceleniyorsa onun fiyat seviyesinin ABD fiyat seviyesine
+(aktif kur üzerinden ABD yerele çevirildikten sonra) oranına bakılır.
+
+Burada yakalanmaya uğraşılan sinyaller var; eğer yerel enflasyon ABD
+enflasyonundan daha fazla artmışsa (oran büyümüşse) yerel ürünler
+yabancı ürünlere göre daha pahalı hale gelmiştir. Fakat diyelim ki
+aktif döviz kuru bu enflasyon göz önüne alarak değiştirilmiş, bu
+durumda reel alım gücü oranı sabit kalabilir.
+
+Ya da yerel enflasyon çok artmıştır, ama hükümet ya da yerel merkez
+bankası suni olarak aktif döviz kurunu yanlış yerde sabitlemiş
+olabilir, bu durumda yerel ürünler dolar bazında çok pahalı hale
+gelir, ve ülkenin uluslararası rekabetçiliği zarar görür, ticari
+dengesi bozulur, gerçek döviz kuru (yani `rer`) çok yükselir. Bu
+sinyal analiz için faydalı olacaktır. Ülke ekonomisine zarar veren
+eylemler krize yol açma potansiyeli olan anlara işaret edebilir.
 
 
 

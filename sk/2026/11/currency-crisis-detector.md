@@ -43,13 +43,13 @@ katsayıları ile birlikte şu şekilde,
 $$\left(
 \text{Crisis}_{t+1}=1\right)=
 \sigma\left(
-    \beta_0+
-    \beta_{1}z^{\text{ca}}+
-    \beta_{2}z^{\text{rer_dev}}+
-    \beta_{3}z^{\text{exports}}+
-    \beta_{4}z^{\text{output}}+
-    \beta_{5}z^{\text{infl}}+
-    \beta_{6}z^{\text{credit}}
+    \beta_0 +
+    \beta_{1} z^{\text{ca}} +
+    \beta_{2} z^{\text{rer_dev}} +
+    \beta_{3} z^{\text{exports}} +
+    \beta_{4} z^{\text{output}} +
+    \beta_{5} z^{\text{infl}} +
+    \beta_{6} z^{\text{credit}}
 \right)$$
 
 $$\sigma(u)=\frac{1}{1+e^{-u}}$$

@@ -96,12 +96,12 @@ enflasyon hesabı degildir, enflasyon bu sepetin yıldan yıla değişimi
 Şimdi `rer` hesabına gelelim, her $t$ senesi için
 
 $$
-\text{RER}_t = \frac{\text{USDfx}_t\times \text{US_CPI}_t}{\text{CPI}_t}
+\text{RER}_t = \frac{\text{USDfx}_t\times \text{USCPI}_t}{\text{CPI}_t}
 $$
 
-$\text{USDfx}_t$: Aktif (nominal) doviz kuru
+$USDfx_t$: Aktif (nominal) doviz kuru
 
-$\text{US_CPI}_t$: ABD fiyat seviyesi
+$\text{USCPI}_t$: ABD fiyat seviyesi
 
 $\text{CPI}_t$: Yerel fiyat seviyesi
 

@@ -35,7 +35,7 @@
       <div id="main_content_wrap" class="outer">        
         <section id="main_content" class="inner">
         <h1></h1>
-<h1>Kur Krizi Alarm Yazılımı</h1>
+<h1>Kur Krizi Alarmı</h1>
 
 <p>Sabitlenmiş bir kur devaluasyon yasamaya yakın mıdır? Bir ülkenin kur
 krizi yaşama ihtimali nedir? The Global Macro Database [1] adı verilen
@@ -65,13 +65,13 @@ eski versiyonu tutar, veri indirmesi olmaz.</p>
 <p>Tasarım</p>
 
 <p>Yaklaşmakta olan krizlerin farklı önden gelen göstergeleri (leading
-indicator) olabilir. Altta tahmin amaçlı bizim kullandıklarımızı altta
-görebiliriz, onları saptarken [3,4] yazılarını temel aldık.</p>
+indicator) olabilir. Altta tahmin amaçlı bizim kullandıklarımızı
+altta, onları saptarken [3,4] yazılarını temel aldık.</p>
 
-<p>Tahmin amacıyla lojistik regresyon istatistik yöntemini temel
-aldık. Bir senedeki (birazdan listeleyeceğimiz) değişkenler bir
-<em>sonraki</em> senedeki kriz varlığı (1/0) ile regresyona verilecek. Kriz
-kolonu GMD'de <code>CurrencyCrisis</code>. Ardından tanımladığımız değişkenlerin
+<p>Tahmin amacıyla lojistik regresyon istatistik yöntemini baz aldık. Bir
+senedeki (birazdan listeleyeceğimiz) değişkenler bir <em>sonraki</em>
+senedeki kriz varlığı (1/0) ile regresyona verilecek. Kriz kolonu
+GMD'de <code>CurrencyCrisis</code>. Ardından tanımladığımız değişkenlerin
 katsayıları bir sonraki adımda tahmin amaçlı kullanılabilecek, tahmini
 istenen T senesi ise T-1 senesindeki değişkenlerin değerleri
 katsayıları ile birlikte lojistik formülüne sorulacak. Bu formül tüm
@@ -102,9 +102,9 @@ hesaplamaya uğraştığımız için kod içinde kolonun negatifi alındı
 gösterir, ve net olarak dışarıdan ne kadar getiri elde edildiğini
 kayıtlar. Eğer cari işlemler hesabında kayıp var ise bu bir ülkenin
 dışarıdan kazandığından daha fazlasını dışarı ödediği anlamına gelir,
-ve farkı kapatmak için dış sermaye akışına ihtiyaç duymaktadır / onu
-kullanmaktadır. Negatif alarak cari açığı (negatif değer) pozitif bir
-risk seviyesine çeviriyoruz, çünkü dış sermayenin birden bire durması
+ve farkı kapatmak için dış sermaye akışına ihtiyaç duyar / onu
+kullanır. Negatif alarak cari açığı (negatif değer) pozitif bir risk
+seviyesine çeviriyoruz, çünkü dış sermayenin birden bire durması
 mümkündür bu da ülkenin kuru üzerinde bir risk yaratır.</p>
 
 <p>Değişken: <code>rer_dev</code>, gerçek döviz kuru trendinden sapma (Real Exchange
@@ -115,10 +115,10 @@ görelim. Kriz tahmini için yayınlanan döviz kuru rakamı tabii ki
 yeterli değil, zaten yeterli olsaydı bu belgede anlatılan tüm
 taklalara gerek kalmazdı. Saptanmaya uğraşılan bir ülke kurunun
 özellikle sabitlenmiş rejimlerde suni olarak belli seviyelerde
-olmaları fakat makro ekonomik olaylar sebebiyle savunulacak hale
+olmaları fakat makro ekonomik olaylar sebebiyle savunulamayacak hale
 gelmesi ve devalüasyon durumu... Bu durumda, listelenen kur tabii ki
-tahmin için yeterli değil çünkü kur doğal makroekonomik anlamda doğru
-değil.</p>
+tahmin için yeterli değil çünkü kontrol edilen kur doğal makroekonomik
+anlamda doğru değil.</p>
 
 <p>O zaman "gerçek" kuru nasıl hesaplarız? Bir ülkenin fiyat seviyesini
 mesela ABD fiyat seviyesi ile karşılaştırabiliriz. Eğer bir ülkenin
@@ -142,11 +142,10 @@ $$</p>
 
 <p>$\text{CPI}_t$: Yerel fiyat seviyesi</p>
 
-<p>Burada yerel denilen ülke hangi ülkeyi analiz ediyorsak odur, eğer
-Arjantin'e inceleniyorsa onun fiyat seviyesinin ABD fiyat seviyesine
-(aktif kur üzerinden ABD yerele çevirildikten sonra) oranına bakılır.</p>
-
-<p>Burada yakalanmaya uğraşılan sinyaller var; eğer yerel enflasyon ABD
+<p>Yerel denilen ülke hangi ülkeyi analiz ediyorsak odur, eğer Arjantin'e
+inceleniyorsa onun fiyat seviyesinin ABD fiyat seviyesine (aktif kur
+üzerinden ABD yerele çevirildikten sonra) oranına bakılır. Burada
+yakalanmaya uğraşılan sinyaller var; eğer yerel enflasyon ABD
 enflasyonundan daha fazla artmışsa (oran büyümüşse) yerel ürünler
 yabancı ürünlere göre daha pahalı hale gelmiştir. Fakat diyelim ki
 aktif döviz kuru bu enflasyon göz önüne alarak değiştirilmiş, bu
@@ -159,6 +158,42 @@ gelir, ve ülkenin uluslararası rekabetçiliği zarar görür, ticari
 dengesi bozulur, gerçek döviz kuru (yani <code>rer</code>) çok yükselir. Bu
 sinyal analiz için faydalı olacaktır. Ülke ekonomisine zarar veren
 eylemler krize yol açma potansiyeli olan anlara işaret edebilir.</p>
+
+<p>Fakat salt <code>rer</code> tek başına yeterli değil. Ülkelerin ABD'ye göre kur
+seviyeleri, oran olarak hesaplamış olsak bile, birbirinden değişik
+olabilir, herkesin fiyat seviyesi farklıdır. O zaman tüm ülkeleri
+kapsayacak <code>rer</code> bazlı bir regresyon iyi sonuç vermez.  Fakat her ülke
+için farklı olsa da <code>rer</code>'den sapma kalıplarına odaklanırsak, daha
+faydalı bir sinyal çıkartabiliriz. İşte <code>rer_dev</code> burada devreye
+girer. Bir trend hesaplarız, o trend'den sapmayı sinyal haline
+getiririz.</p>
+
+<p>Trend hesabını kaydırılan pencereler üzerinde lineer regresyon ile
+hesaplayabiliriz. Altta bu hesabı örnek bir zaman serisi üzerinde
+görüyoruz (Amazon şirketinin senet fiyatı),</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rolling_trend</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">mask</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span> <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">Y</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<div class="codehilite">
+<pre><span></span><code><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;../../../tser/tser_008_data/AMZN.csv&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;trend&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">Close</span><span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">rolling_trend</span><span class="p">,</span> <span class="n">raw</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;curr_01.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="curr_01.jpg" alt="" /></p>
 
 <p>[devam edecek]</p>
 

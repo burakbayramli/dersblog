@@ -10,5 +10,5 @@
 
 [Sırbistan](09/sirbistan-gezi-vize.html)
 
-[Kur Krizi Alarm Yazılımı](11/currency-crisis-detector.html)
+[Kur Krizi Alarmı](11/currency-crisis-detector.html)
 

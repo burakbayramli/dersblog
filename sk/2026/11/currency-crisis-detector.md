@@ -78,6 +78,32 @@ kullanır. Negatif alarak cari açığı (negatif değer) pozitif bir risk
 seviyesine çeviriyoruz, çünkü dış sermayenin birden bire durması
 mümkündür bu da ülkenin kuru üzerinde bir risk yaratır.
 
+Değişken: `exports`, ihracat büyümesi, baz alınan GMD verisi
+`exports_USD`
+
+Bu değişken için `exports_USD` yani dolar bazında ihracatın log
+değerlerinin farkları alınır ki bu dolaylı olarak bir artış oranı
+hesaplar (matematiksel olarak $log(y_{t}/y_{t-1}) = \log(y_t) -
+\log(y_{t-1})$ olduğunu biliyoruz). Eğer zayıf ya da negatif ihracat
+artışı var ise bu bir ülkenin kuruna olan talebin zayıf olduğuna
+işaret eder, ki bu zayıflık o ülkenin ithalatı için gereken dövizin
+alımını, ya da mevcut döviz bazlı borcun geri ödenmesini zorlaştırır,
+ve yaklaşan bir krize işaret edebilir.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 Değişken: `rer_dev`, gerçek döviz kuru trendinden sapma (Real Exchange
 Rate Deviation)
 
@@ -198,8 +224,6 @@ plt.savefig('curr_01.jpg')
 
 Artık sapmaları hesaplamak gayet basit, ham veriyi trend'den
 çıkartınca geri kalan sapma olacaktır.
-
-### Nihai Kod
 
 
 

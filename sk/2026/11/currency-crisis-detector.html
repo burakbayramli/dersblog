@@ -40,12 +40,11 @@
 <p>Sabitlenmiş bir kur devaluasyon yasamaya yakın mıdır? Bir ülkenin kur
 krizi yaşama ihtimali nedir? The Global Macro Database [1] adı verilen
 veriyi kullanarak kriz tahmini yapma amaçlı bir gösterge (indicator)
-takip eden / saptayıcı / tahminci yazılımı paylaşacağız.</p>
-
-<p>GMD verisi IMF, Dünya Bankası, OECD verilerini birleştirir ve finans,
-kur krizlerini etiketleyerek araştırmacıların rahatça erisebileceği
-bir kaynak sağlar. Veriyi direk [2]'den zip / csv olarak
-indirebiliriz. Bir diğer yöntem,</p>
+takip eden / saptayıcı / tahminci yazılımı paylaşacağız. GMD verisi
+IMF, Dünya Bankası, OECD verilerini birleştirir ve finans, kur
+krizlerini etiketleyerek araştırmacıların rahatça erisebileceği bir
+kaynak sağlar. GMD her çeyrekte güncellenir. Veriyi direk [2]'den zip
+/ csv olarak indirebiliriz. Bir diğer yöntem,</p>
 
 <pre><code>pip install global_macro_data
 </code></pre>
@@ -62,7 +61,17 @@ indirebiliriz. Bir diğer yöntem,</p>
 <p>Bu yöntem eğer güncel yeni veri varsa en son versiyonu indirir, yoksa
 eski versiyonu tutar, veri indirmesi olmaz.</p>
 
-<p>Tasarım</p>
+<p>GMD ham verisine bakınca mevcut seneden ilerideki seneler için de veri
+olduğunu görüyoruz. Mesela 2026'da isek veri içinde
+2027,2028,.. verileri var. Neden? Tabanı yaratanlar ileri seneler için
+de kendi tahminlerini veriye eklemiser. Büyük ihtimalle bazı analiz
+araçları buna ihtiyaç duyuyor, eki ondan yapmışlar. Not olarak buraya
+düşelim, eğer analizinizin böyle bir ihtiyacı yoksa sadece bir
+başlangıç senesi değil, bitiş senesi de filtre şartı olarak koymak
+gerekebilir, çünkü tahmin edilmiş seneleri analize dahil etmek
+istenmeyebilir.</p>
+
+<h3>Tasarım</h3>
 
 <p>Yaklaşmakta olan krizlerin farklı önden gelen göstergeleri (leading
 indicator) olabilir. Altta tahmin amaçlı bizim kullandıklarımızı
@@ -159,6 +168,41 @@ dengesi bozulur, gerçek döviz kuru (yani <code>rer</code>) çok yükselir. Bu
 sinyal analiz için faydalı olacaktır. Ülke ekonomisine zarar veren
 eylemler krize yol açma potansiyeli olan anlara işaret edebilir.</p>
 
+<p>Altta Arjantin ülkesi için tarif edilen hesabın nasıl yapıldığını
+görüyoruz.</p>
+
+<div class="codehilite">
+<pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;/opt/Downloads/gmd/gmd.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">year</span> <span class="o">&gt;</span> <span class="mi">1950</span><span class="p">]</span>
+<span class="n">us_cpi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">ISO3</span> <span class="o">==</span> <span class="s2">&quot;USA&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)[</span><span class="s2">&quot;CPI&quot;</span><span class="p">]</span>
+<span class="n">dlog</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span>
+<span class="n">country</span> <span class="o">=</span> <span class="s2">&quot;ARG&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;year&quot;</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">g</span><span class="p">[</span><span class="s2">&quot;ISO3&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;ISO3&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">ffill</span><span class="p">()</span><span class="o">.</span><span class="n">bfill</span><span class="p">()</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">index</span>
+    <span class="n">rer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">((</span><span class="n">g</span><span class="p">[</span><span class="s2">&quot;USDfx&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">us_cpi</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">/</span> <span class="n">g</span><span class="p">[</span><span class="s2">&quot;CPI&quot;</span><span class="p">])</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="n">s</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">rer</span> <span class="o">=</span> <span class="n">rer</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rer</span>
+
+<span class="n">dfs</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;ISO3&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">country</span><span class="p">]</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">build</span><span class="p">(</span><span class="n">dfs</span><span class="p">)</span>
+
+<span class="n">crisis_years</span> <span class="o">=</span> <span class="n">dfs</span><span class="p">[</span><span class="n">dfs</span><span class="p">[</span><span class="s1">&#39;CurrencyCrisis&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">][</span><span class="s1">&#39;year&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">cy</span> <span class="ow">in</span> <span class="n">crisis_years</span><span class="p">:</span>
+  <span class="n">plt</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">cy</span><span class="p">,</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">res</span><span class="o">.</span><span class="n">plot</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s1">&#39;curr_02.jpg&#39;</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="curr_02.jpg" alt="" /></p>
+
 <p>Fakat salt <code>rer</code> tek başına yeterli değil. Ülkelerin ABD'ye göre kur
 seviyeleri, oran olarak hesaplamış olsak bile, birbirinden değişik
 olabilir, herkesin fiyat seviyesi farklıdır. O zaman tüm ülkeleri
@@ -166,11 +210,9 @@ kapsayacak <code>rer</code> bazlı bir regresyon iyi sonuç vermez.  Fakat her �
 için farklı olsa da <code>rer</code>'den sapma kalıplarına odaklanırsak, daha
 faydalı bir sinyal çıkartabiliriz. İşte <code>rer_dev</code> burada devreye
 girer. Bir trend hesaplarız, o trend'den sapmayı sinyal haline
-getiririz.</p>
-
-<p>Trend hesabını kaydırılan pencereler üzerinde lineer regresyon ile
-hesaplayabiliriz. Altta bu hesabı örnek bir zaman serisi üzerinde
-görüyoruz (Amazon şirketinin senet fiyatı),</p>
+getiririz. Trend hesabını kaydırılan bir pencere üzerinde lineer
+regresyon ile hesaplayabiliriz. Altta bu hesabı örnek bir zaman serisi
+üzerinde görüyoruz (Amazon şirketinin senet fiyatı),</p>
 
 <div class="codehilite">
 <pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -194,6 +236,11 @@ görüyoruz (Amazon şirketinin senet fiyatı),</p>
 </div>
 
 <p><img src="curr_01.jpg" alt="" /></p>
+
+<p>Artık sapmaları hesaplamak gayet basit, ham veriyi trend'den
+çıkartınca geri kalan sapma olacaktır.</p>
+
+<h3>Nihai Kod</h3>
 
 <p>[devam edecek]</p>
 

@@ -84,17 +84,30 @@ Değişken: `exports`, ihracat büyümesi, baz alınan GMD verisi
 Bu değişken için `exports_USD` yani dolar bazında ihracatın log
 değerlerinin farkları alınır ki bu dolaylı olarak bir artış oranı
 hesaplar (matematiksel olarak $log(y_{t}/y_{t-1}) = \log(y_t) -
-\log(y_{t-1})$ olduğunu biliyoruz). Eğer zayıf ya da negatif ihracat
-artışı var ise bu bir ülkenin kuruna olan talebin zayıf olduğuna
-işaret eder, ki bu zayıflık o ülkenin ithalatı için gereken dövizin
-alımını, ya da mevcut döviz bazlı borcun geri ödenmesini zorlaştırır,
-ve yaklaşan bir krize işaret edebilir.
+\log(y_{t-1})$ olduğunu biliyoruz [5]). Eğer zayıf ya da negatif
+ihracat artışı var ise bu bir ülkenin kuruna olan talebin zayıf
+olduğuna işaret eder, ki bu zayıflık o ülkenin ithalatı için gereken
+dövizin alımını, ya da mevcut döviz bazlı borcun geri ödenmesini
+zorlaştırır, ve yaklaşan bir krize işaret edebilir.
 
+Değişken: `output`, Reel GSMH Büyümesi
 
+Kullanılan baz GMD değişkeni `rGDP`, ekonominin reel üretiminin
+büyümesi hızını gösteriri. Üstte bahsedilen loglama tekniği yine
+kullanılır, ve değerin negatifi alınır böylece ekonomik daralmalar,
+yavaşlamalar pozitif değerlere sebep versin, pozitif risk sinyali
+alınabilsin. Yani küçülme (negatif değer) eksi ile çarpılınca pozitif
+(artan risk) haline gelir.
 
+Değişken: `infl`, Enflasyon
 
-
-
+Baz değişken `infl`, bu değerin negatife çevrilmesine gerek yoktur,
+artan enflasyon direk artan kur kriz riski anlamına gelir. Artan
+enflasyon yerel para biriminin nisbi alım gücünü aşağı indirir,
+makroekonomik stabilite bozukluğu, disiplinini kaybetmiş para
+politikasına işaret edebilir. Yükselen enflasyon para birimine olan
+güveni baltalar, onun bir tasarruf aracı olarak kullanılmasını
+engelleyecektir.
 
 
 

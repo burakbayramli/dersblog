@@ -248,8 +248,14 @@ plt.savefig('curr_01.jpg')
 Artık sapmaları hesaplamak gayet basit, ham veriyi trend'den
 çıkartınca geri kalan sapma olacaktır.
 
+### Kodlama
 
 
+
+
+Kodlar
+
+[curr_crisis.py](curr_crisis.py)
 
 [devam edecek]
 

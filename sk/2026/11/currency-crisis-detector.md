@@ -250,8 +250,92 @@ Artık sapmaları hesaplamak gayet basit, ham veriyi trend'den
 
 ### Kodlama
 
+Ekte görülen kod ile sistemın eğitim fazi gerçekleştirilir ve elde
+edilen ağırlıklar üzerinden tahmin yapılabilir. Bir senedeki üstte
+tanımlı değişkenler üzerinden bir sonraki senedeki kriz varlığı 0/1
+etiketi lojistik regresyon üzerinden tahmin edilmeye uğraşılır.
 
+Eğitim verisi oluşturulurken o anda kriz yaşayan seneler bir sonraki
+sene krizi tahmini için kullanılmaz. Bu nokta önemli, bunun
+yapılmasının sebebi kriz olduğu sırada onunla mücadele etmek için
+yapılan eylemlerin makroekonomik sinyalleri bozabilme ihtimali
+yüzünden. Kriz sırasında hükümetler sıra dışı müdaheleler
+yapabilirler, bunları eğitimin dışında tutmak analiz için faydalı
+olur.
 
+```python
+import curr_crisis
+
+logit, tier_ref, cut_amber, cut_red, full, train = curr_crisis.train_logit()
+```
+
+```text
+Train obs: 3892, Test obs: 518
+Test target distribution:
+target
+0.0    510
+1.0      8
+Name: count, dtype: int64
+                           Logit Regression Results                           
+==============================================================================
+Dep. Variable:                 target   No. Observations:                 3892
+Model:                          Logit   Df Residuals:                     3885
+Method:                           MLE   Df Model:                            6
+Date:                Thu, 12 Nov 2026   Pseudo R-squ.:                 0.03404
+Time:                        10:55:31   Log-Likelihood:                -635.44
+converged:                       True   LL-Null:                       -657.83
+Covariance Type:              cluster   LLR p-value:                 5.170e-08
+==============================================================================
+                 coef    std err          z      P>|z|      [0.025      0.975]
+------------------------------------------------------------------------------
+const         -3.2773      0.094    -34.694      0.000      -3.462      -3.092
+ca             0.1090      0.090      1.216      0.224      -0.067       0.285
+rer_dev        0.0597      0.060      0.995      0.320      -0.058       0.177
+exports        0.1758      0.122      1.442      0.149      -0.063       0.415
+output         0.2990      0.098      3.046      0.002       0.107       0.491
+infl           0.1898      0.056      3.385      0.001       0.080       0.300
+credit         0.0752      0.107      0.701      0.483      -0.135       0.285
+==============================================================================
+
+AUC in-sample (train): 0.6892129025656767
+AUC out-of-time (test): 0.7230392156862745
+
+Tier reference (training sample, in-sample):
+          n  crises  hit_rate  lift_vs_train_base
+tier                                             
+AMBER   389    31.0  0.079692            1.975537
+GREEN  3113    84.0  0.026984            0.668919
+RED     390    42.0  0.107692            2.669672
+```
+
+```python
+curr_crisis.predict("TUR", 2027, logit, tier_ref, cut_amber, cut_red, full, train)
+```
+
+```text
+
+=== Single country-year prediction ===
+                            ISO3: TUR
+                     target_year: 2027
+              features_from_year: 2026
+                     probability: 0.0469
+             percentile_vs_train: 80.1901
+                            tier: AMBER
+             tier_train_hit_rate: 0.0797
+                 train_base_rate: 0.0403
+          crisis_in_feature_year: False
+  realized_crisis_in_target_year: nan
+                imputed_features: ['credit']
+
+Feature breakdown:
+         z_score   coef  contribution
+ca         0.462  0.109         0.050
+rer_dev    1.444  0.060         0.086
+exports   -0.237  0.176        -0.042
+output     0.026  0.299         0.008
+infl       0.857  0.190         0.163
+credit     0.000  0.075         0.000
+```
 
 Kodlar
 

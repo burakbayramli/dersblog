@@ -109,13 +109,23 @@ politikasına işaret edebilir. Yükselen enflasyon para birimine olan
 güveni baltalar, onun bir tasarruf aracı olarak kullanılmasını
 engelleyecektir.
 
+Değişken: `credit`
 
-
-
-
-
-
-
+`nGDP` üzerinden hesaplanan nominal GSMH büyümesi paraya olan işlemsel
+(transactional) olan talebin büyümesini gösterir. İşlemsel derken her
+türlü alım / satım işleminden bahsediyoruz, ki bu gerçek ekonominin
+büyümesine işaret ediyor. M2 sayısı ise tüm ekonomideki mevcut likit
+para seviyesidir, bankadaki vadesiz, ya da hızla nakite çevrilebilen
+her tür yatırım onun içindedir, sistemde dolaşım halinde olan
+likiditenin göstergesidir. Nominal GSMH büyümesinden M2 büyümesini
+çıkartırsak elde edilen değer gereğinden fazla tetiklenmiş parasal
+büyümeye işaret eder, yani sistemde gerçek ekonomik büyümenin
+gerektirdiğinden daha fazla para arzı vardır. M2 ekonominin
+kendisinden daha hızlı şekilde büyüyorsa, bu parasal bir şişme
+yaratılmış demektir. Bu fazlalık aşırı kredi talebi, varlık yatırım
+balonları, ithalatta fazla yükseliş, sermaye kaçısı gibi sonuçlara yol
+açabilir, ve tüm bu olası sonuçlar gelmekte olan bir kur krizinin
+habercisi olabilir.
 
 Değişken: `rer_dev`, gerçek döviz kuru trendinden sapma (Real Exchange
 Rate Deviation)

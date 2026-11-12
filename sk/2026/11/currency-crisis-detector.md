@@ -5,7 +5,7 @@ krizi yaşama ihtimali nedir? The Global Macro Database [1] adı verilen
 veriyi kullanarak kriz tahmini yapma amaçlı bir gösterge (indicator)
 takip eden / saptayıcı / tahminci yazılımı paylaşacağız. GMD verisi
 IMF, Dünya Bankası, OECD verilerini birleştirir ve finans, kur
-krizlerini etiketleyerek araştırmacıların rahatça erisebileceği bir
+krizlerini etiketleyerek araştırmacıların rahatça erişebileceği bir
 kaynak sağlar. GMD her çeyrekte güncellenir. Veriyi direk [2]'den zip
 / csv olarak indirebiliriz. Bir diğer yöntem,
 
@@ -27,26 +27,26 @@ eski versiyonu tutar, veri indirmesi olmaz.
 GMD ham verisine bakınca mevcut seneden ilerideki seneler için de veri
 olduğunu görüyoruz. Mesela 2026'da isek veri içinde
 2027,2028,.. verileri var. Neden? Tabanı yaratanlar ileri seneler için
-de kendi tahminlerini veriye eklemiser. Büyük ihtimalle bazı analiz
+de kendi tahminlerini veriye eklemişler. Büyük ihtimalle bazı analiz
 araçları buna ihtiyaç duyuyor, eki ondan yapmışlar. Not olarak buraya
 düşelim, eğer analizinizin böyle bir ihtiyacı yoksa sadece bir
 başlangıç senesi değil, bitiş senesi de filtre şartı olarak koymak
-gerekebilir, çünkü tahmin edilmiş seneleri analize dahil etmek
+gerekebilir, çünkü tahmin edilmiş seneler analize dahil etmek
 istenmeyebilir.
 
 ### Tasarım
 
 Yaklaşmakta olan krizlerin farklı önden gelen göstergeleri (leading
-indicator) olabilir. Altta tahmin amaçlı bizim kullandıklarımızı
-altta, onları saptarken [3,4] yazılarını temel aldık. Tahmin tekniği
-olarak lojistik regresyon istatistik yöntemini kullanıldı. Bir
-senedeki (birazdan listeleyeceğimiz) değişkenler bir *sonraki*
-senedeki kriz varlığı (1/0) ile regresyona verilecek. Kriz kolonu
-GMD'de `CurrencyCrisis`. Ardından tanımladığımız değişkenlerin
-katsayıları bir sonraki adımda tahmin amaçlı kullanılabilecek, tahmini
-istenen T senesi ise T-1 senesindeki değişkenlerin değerleri
-katsayıları ile birlikte lojistik formülüne sorulacak. Bu formül tüm
-katsayıları ile birlikte şu şekilde,
+indicator) olabilir. Altta tahmin amaçlı bizim kullandıklarımız,
+onları saptarken [3,4] yazılarını temel aldık. Tahmin tekniği olarak
+lojistik regresyon istatistik yöntemi kullanıldı. Bir senedeki
+(birazdan listeleyeceğimiz) değişkenler bir *sonraki* senedeki kriz
+varlığı (1/0) ile regresyona verilecek. Kriz kolonu GMD'de
+`CurrencyCrisis`. Ardından tanımladığımız değişkenlerin katsayıları
+bir sonraki adımda tahmin amaçlı kullanılabilecek, tahmini istenen T
+senesi ise T-1 senesindeki değişkenlerin değerleri katsayıları ile
+birlikte lojistik formülüne sorulacak. Bu formül tüm katsayıları ile
+birlikte şu şekilde,
 
 $$\left(
 \text{Crisis}_{t+1}=1\right)=
@@ -355,3 +355,4 @@ Kaynaklar
 
 [5] Bayramlı, *Zaman Serileri - Ekler*
 
+   

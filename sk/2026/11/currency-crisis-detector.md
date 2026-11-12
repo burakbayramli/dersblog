@@ -162,7 +162,7 @@ $\text{USCPI}_t$: ABD fiyat seviyesi
 
 $\text{CPI}_t$: Yerel fiyat seviyesi
 
-Yerel denilen ülke hangi ülkeyi analiz ediyorsak odur, eğer Arjantin'e
+Yerel denilen ülke hangi ülkeyi analiz ediyorsak odur, eğer Arjantin
 inceleniyorsa onun fiyat seviyesinin ABD fiyat seviyesine (aktif kur
 üzerinden ABD yerele çevirildikten sonra) oranına bakılır. Burada
 yakalanmaya uğraşılan sinyaller var; eğer yerel enflasyon ABD
@@ -250,18 +250,18 @@ Artık sapmaları hesaplamak gayet basit, ham veriyi trend'den
 
 ### Kodlama
 
-Ekte görülen kod ile sistemın eğitim fazi gerçekleştirilir ve elde
+Ekte görülen kod ile sistemin eğitim fazı gerçekleştirilir ve elde
 edilen ağırlıklar üzerinden tahmin yapılabilir. Bir senedeki üstte
-tanımlı değişkenler üzerinden bir sonraki senedeki kriz varlığı 0/1
-etiketi lojistik regresyon üzerinden tahmin edilmeye uğraşılır.
+tanımlı değişkenler üzerinden elde edilen veri bir sonraki senedeki
+kriz varlığı 0/1 etiketiyle lojistik regresyona verilir, ve sonraki
+adımda tahmin yapılmaya uğraşılır.
 
-Eğitim verisi oluşturulurken o anda kriz yaşayan seneler bir sonraki
-sene krizi tahmini için kullanılmaz. Bu nokta önemli, bunun
+Dikkat: Eğitim verisi oluşturulurken o anda kriz yaşayan seneler bir
+sonraki sene krizi tahmini için kullanılmaz. Bu nokta önemli, bunun
 yapılmasının sebebi kriz olduğu sırada onunla mücadele etmek için
-yapılan eylemlerin makroekonomik sinyalleri bozabilme ihtimali
-yüzünden. Kriz sırasında hükümetler sıra dışı müdaheleler
-yapabilirler, bunları eğitimin dışında tutmak analiz için faydalı
-olur.
+yapılan eylemlerin makroekonomik sinyalleri bozabilme ihtimali. Kriz
+sırasında hükümetler sıra dışı müdaheleler yapabilirler, bunları
+eğitimin dışında tutmak analiz için faydalı olur.
 
 ```python
 import curr_crisis

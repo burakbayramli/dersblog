@@ -12,3 +12,5 @@
 
 [Kur Krizi Alarmı](11/currency-crisis-detector.html)
 
+[Gürcistan](11/georgia.html)
+
